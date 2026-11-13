@@ -73,8 +73,8 @@ def install_failures(candidate: Candidate) -> list[Failure]:
             if fact_registry_reading(fact) == "ownership_unconfirmed":
                 # A published name nothing ties to this repository (Aspose.3D-FOSS-for-Python:
                 # PyPI's project URL names another repository). The fact is a claim only when the
-                # README prints its command; a README that prints none states the package as
-                # unconfirmed and claims nothing. A printed command is a line-level, repairable
+                # README prints its command; a README that prints none omits the registry claim
+                # (BL-002) and claims nothing. A printed command is a line-level, repairable
                 # defect (the section or placed unit that prints it), not an extraction failure no
                 # repair stage can reach (measured 2026-11-10: 3D Python died at the seal gate on
                 # an authored "Install the published package from PyPI" sentence).

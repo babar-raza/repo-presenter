@@ -97,6 +97,7 @@ from repo_presenter.readme.validation.must_correct import (
     withheld_form,
 )
 from repo_presenter.readme.reconciliation.dispositions import (
+    bound_rationales,
     reconcile_checks,
     reconciliation_batch_facts,
     reconciliation_batches,
@@ -192,12 +193,7 @@ def keep_unflagged_units(
     change, and the reply was refused as a no-op).
     """
     quotes = [quote] if isinstance(quote, str) else list(quote)
-    quotes = [q for q in quotes if q]
-    flagged = {
-        unit.get("slot")
-        for unit in original.get("units", [])
-        if isinstance(unit, dict) and any(q in str(unit.get("text", "")) for q in quotes)
-    }
+    flagged = _flagged_slots(original, quotes)
     flagged.update(named_slots)
     if not flagged:
         return checks
@@ -221,6 +217,18 @@ def keep_unflagged_units(
         return errors
 
     return guarded
+
+
+def _flagged_slots(original: Mapping[str, Any], quotes: Sequence[str]) -> set[Any]:
+    """The slots of ``original`` whose text prints one of ``quotes``, matched as printed
+    (``_printed``: a README quote carries the code spans the renderer adds to a unit)."""
+    keys = [_printed(q) for q in quotes if q and _printed(q)]
+    return {
+        unit.get("slot")
+        for unit in original.get("units", [])
+        if isinstance(unit, dict)
+        and any(key in _printed(str(unit.get("text", ""))) for key in keys)
+    }
 
 
 @dataclass(frozen=True)
@@ -595,6 +603,9 @@ def _citations_for(text: str, citations: Mapping[str, str]) -> list[str]:
 #: The dispositions that need a citation to stand and get the register row's when they have none.
 _CITATION_NEEDED = frozenset({"CORRECT_WITH_EVIDENCE", "OMIT_UNSUPPORTED"})
 _REGISTER_RATIONALE = "The findings register confirms the quoted text false. "
+#: The kept kinds that print without exactly the register-false text when they cite its row
+#: (``must_correct.withheld_form``): lines, sentences, table rows, list items.
+_WITHHOLDING_KINDS = (".code_block", ".paragraph", ".table", ".list")
 
 
 def _cite_register_rows(
@@ -621,7 +632,7 @@ def _cite_register_rows(
     holds = omission_holds(unit, text, [citations[cid] for cid in ids])
     if disposition in _CITATION_NEEDED and not cited:
         pass
-    elif disposition in PLACED and unit.endswith((".code_block", ".paragraph")):
+    elif disposition in PLACED and unit.endswith(_WITHHOLDING_KINDS):
         if all(cid in cited for cid in ids) or not holds:
             return False
     else:
@@ -785,9 +796,9 @@ def _named_units(rc: RepairContext, defect: Defect) -> list[str]:
         return named
     placed = placements(rc.plan, rc.dispositions, rc.facts, rc.entry.ecosystem)
     for record in [defect.record, *defect.record.get("equivalent_findings", [])]:
-        quote = str(record.get("quote") or "")
+        quote = _printed(str(record.get("quote") or ""))
         for placement in placed if quote else ():
-            if quote in placement.text and placement.unit_id not in named:
+            if quote in _printed(placement.text) and placement.unit_id not in named:
                 named.append(placement.unit_id)
     if named:
         return named
@@ -833,6 +844,15 @@ def _repair_reconciliation(
         )
         output = rc.store.get(key)
         if output is not None:
+            # The stored batch as its own contract bounds it. A rationale a deterministic fold
+            # wrote after the schema judged the reply (the 228-character unproven-build omission,
+            # BC-02) broke that bound, and every merged revision was rejected for a unit the repair
+            # never touched: "output rejected twice; last rejection:
+            # revised_output.dispositions[19].rationale: '...' is too long" (hosted run
+            # 43473807336, Cells C++, both of its S4 BC-18 defects). A rationale is internal --
+            # never rendered, withheld from the reviewer -- so bounding it changes no README.
+            output = json.loads(json.dumps(output))
+            bound_rationales(output)
             keys[batch_id], stored[batch_id] = key, output
     scope = patch_scope(
         scope_record(defect, _named_units(rc, defect)),
@@ -847,15 +867,42 @@ def _repair_reconciliation(
         # The quote is not in any inherited unit, so no disposition prints it -- but an authored
         # section may (a BC-18 check's earliest stage is RECONCILING when any of its register rows
         # is printed by a unit, and its unit-less failures ride along in one S4 defect).
-        routes = _authored_routes(rc, defect, rc.prompts["section_authoring"])
+        authoring = rc.prompts["section_authoring"]
+        routes = _authored_routes(rc, defect, authoring)
+        # What no authored unit prints but a fact's rendered summary does is a facts defect
+        # (hosted run 43473803090: the member bullets "- `Borders`: Gets or sets border
+        # settings." and "- `Font`: ..." led this unit-less BC-18 group).
+        routed = {
+            str(finding.get("quote"))
+            for route in routes
+            for finding in _quoted_findings(route.defect.record)
+        }
+        unrouted = [
+            f
+            for f in _quoted_findings(defect.record)
+            if f.get("quote") and str(f["quote"]) not in routed
+        ]
+        printed = (
+            _split_renderer_printed(
+                rc, replace(defect, record=_finding_record(unrouted)), rc.tasks, authoring
+            )[1]
+            if unrouted
+            else []
+        )
         if routes:
-            return _repair_routes(rc, defect, routes, repairs)
-        return _unrepairable(
+            changed = _repair_routes(rc, defect, routes, repairs)
+            _note_facts_defects(defect, repairs, printed)
+            return changed
+        if printed and len(printed) == len(unrouted):
+            return _facts_defect(defect, repairs, printed)
+        _unrepairable(
             defect,
             repairs,
             "no stored disposition of an inherited unit is named by this defect; a whole-batch "
             "revision would regenerate unrelated units",
         )
+        _note_facts_defects(defect, repairs, printed)
+        return False
     batch_facts = reconciliation_batch_facts(rc.facts, batches[scope.batch_id])
     original = stored[scope.batch_id]
     quotes = [
@@ -884,11 +931,32 @@ def _repair_reconciliation(
         checks,
         patch=scope,
         stage_facts=batch_facts,
-        recover=rewrite_printed_quote(scope, texts, quotes, original, citations),
+        recover=bounding_rationales(
+            rewrite_printed_quote(scope, texts, quotes, original, citations)
+        ),
     )
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))
     return _accept(rc, defect, loaded, keys[scope.batch_id], outcome, repairs)
+
+
+def bounding_rationales(
+    recover: Callable[[dict[str, Any]], dict[str, Any] | None] | None,
+) -> Callable[[dict[str, Any]], dict[str, Any] | None]:
+    """``recover`` (an S4 patch's last-resort fold), then the reply's own over-long rationales
+    bounded to the contract. A rationale is the internal record of a disposition, never printed,
+    so a reply rejected only for its length is not a defect worth the fingerprint's one attempt;
+    the bounded reply is re-judged by the same schema, binding and checks before it is stored."""
+
+    def recovered(reply: dict[str, Any]) -> dict[str, Any] | None:
+        folded = recover(reply) if recover is not None else None
+        target = folded if folded is not None else reply
+        revised = target.get("revised_output") if isinstance(target, dict) else None
+        if isinstance(revised, dict) and bound_rationales(revised):
+            return target
+        return folded
+
+    return recovered
 
 
 def _escalate_to_plan(
@@ -1011,23 +1079,14 @@ def _route_section_defect(
     candidates = [t for t in rc.tasks if t.section_id == defect.section_id]
     if len(candidates) <= 1:
         return [_Route(task, defect) for task in candidates]
-    texts: list[list[str]] = []
-    for task in candidates:
-        stored = rc.store.get(_task_key(rc, loaded, task)) or {}
-        texts.append(
-            [
-                str(unit.get("text", ""))
-                for unit in stored.get("units", [])
-                if isinstance(unit, dict)
-            ]
-        )
-    primary = {k: v for k, v in defect.record.items() if k != "equivalent_findings"}
-    findings = [primary, *defect.record.get("equivalent_findings", [])]
+    texts = [_task_texts(rc, loaded, task) for task in candidates]
+    findings = _quoted_findings(defect.record)
     owned: dict[int, list[dict[str, Any]]] = {}
     named: dict[int, set[str]] = {}
     for finding in findings:
         quote = str(finding.get("quote") or "")
-        holders = [i for i, held in enumerate(texts) if quote and any(quote in t for t in held)]
+        key = _printed(quote)
+        holders = [i for i, held in enumerate(texts) if key and any(key in t for t in held)]
         if not holders:
             for i, task in enumerate(candidates):
                 slots = _named_type_slots(task, quote, rc.facts)
@@ -1040,18 +1099,213 @@ def _route_section_defect(
         return [_Route(candidates[0], defect)]
     routes: list[_Route] = []
     for i in sorted(owned):
-        mine = owned[i]
-        record = dict(mine[0])
-        if len(mine) > 1:
-            record["equivalent_findings"] = mine[1:]
         routes.append(
-            _Route(candidates[i], replace(defect, record=record), frozenset(named.get(i, ())))
+            _Route(
+                candidates[i],
+                replace(defect, record=_finding_record(owned[i])),
+                frozenset(named.get(i, ())),
+            )
         )
     return routes
 
 
 def _squash(text: str) -> str:
     return " ".join(text.split())
+
+
+def _printed(text: str) -> str:
+    """``text`` in the form a README quote is matched against a unit: whitespace squashed and
+    code-span backticks dropped on both sides.
+
+    The renderer wraps every known identifier and file extension of an authored unit in a code
+    span (``renderer``'s token code-spanning), so the stored unit "LoadFormat and SaveFormat each
+    declare a single Xlsx member" prints as "`LoadFormat` and `SaveFormat` each declare ...", and a
+    register quote -- README text -- never matched the unit that printed it. Measured on hosted Lane
+    R runs 43473807336 (Cells C++, Scope and Limitations) and 43473803090 (Cells .NET, the Style hub
+    and the samples link): "no stored disposition of an inherited unit is named by this defect",
+    and an S6 repair with no unit flagged answered unchanged (the no-op refusal)."""
+    return _squash(text.replace("`", ""))
+
+
+def _quoted_findings(record: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Every finding a (possibly merged) defect record carries, one per distinct quote.
+
+    A validation defect holds all of a check's failures in one record but copies only the FIRST
+    failure's quote to ``record["quote"]`` (``targeted.validation_defects``); BC-18's unit-less S4
+    group of hosted run 43473803090 led with a renderer-printed member line, so every authored
+    quote behind it went unrouted. Here each failure that carries its own quote is its own finding,
+    with exactly its failures, details and instruction; a record whose failures carry no quote
+    (a review finding, any other check) is returned as it is."""
+    primary = {k: v for k, v in record.items() if k != "equivalent_findings"}
+    found: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for rec in [primary, *record.get("equivalent_findings", [])]:
+        failures = [
+            f for f in rec.get("failures") or [] if isinstance(f, Mapping) and f.get("quote")
+        ]
+        if not failures:
+            quote = str(rec.get("quote") or "")
+            if quote and quote in seen:
+                continue
+            seen.add(quote)
+            found.append(dict(rec))
+            continue
+        by_quote: dict[str, list[Mapping[str, Any]]] = {}
+        for failure in failures:
+            by_quote.setdefault(str(failure["quote"]), []).append(failure)
+        for quote, own in by_quote.items():
+            if quote in seen:
+                continue
+            seen.add(quote)
+            found.append(
+                {
+                    **rec,
+                    "quote": quote,
+                    "instruction": " ".join(
+                        dict.fromkeys(str(f.get("instruction") or "") for f in own)
+                    ).strip(),
+                    "failures": [dict(f) for f in own],
+                    "details": list(dict.fromkeys(str(f.get("detail") or "") for f in own)),
+                }
+            )
+    return found
+
+
+def _finding_record(findings: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """One defect record for ``findings``: the first, the others as its equivalent findings."""
+    record = dict(findings[0])
+    record.pop("equivalent_findings", None)
+    if len(findings) > 1:
+        record["equivalent_findings"] = [dict(f) for f in findings[1:]]
+    return record
+
+
+def _task_texts(rc: RepairContext, loaded: LoadedManifest | None, task: SectionTask) -> list[str]:
+    """What ``task``'s units print, in ``_printed`` form: its stored authoring units, and the
+    coherent units of its own section and slots (the S8 coherence pass may reword a unit after
+    authoring, and the README prints the coherent text)."""
+    stored = rc.store.get(_task_key(rc, loaded, task)) or {}
+    texts = [
+        _printed(str(unit.get("text", "")))
+        for unit in stored.get("units", [])
+        if isinstance(unit, dict)
+    ]
+    coherent = getattr(rc, "units", None)
+    if isinstance(coherent, Mapping):
+        slots = set(task.slots)
+        texts.extend(
+            _printed(str(unit.get("text", "")))
+            for unit in coherent.get("units", [])
+            if isinstance(unit, dict)
+            and unit.get("section") == task.section_id
+            and unit.get("slot") in slots
+        )
+    return [text for text in texts if text]
+
+
+#: The shortest documentation summary taken as evidence that the renderer printed a quote from it.
+_MIN_PRINTED_SUMMARY = 12
+
+
+def renderer_printed_facts(facts: FactsDocument | None, quote: str) -> list[str]:
+    """The SUPPORTED facts whose own documentation summary the renderer prints in ``quote``.
+
+    The API Reference's Detailed Member Reference bullets (``- `Name`: summary``) and Core API rows
+    (``| `Name` | summary |``) are rendered from a ``public_symbol`` fact's ``docstring``
+    (``renderer._member_summary`` / ``_symbol_description``), by no authored or inherited unit, so
+    no revision of any stage output can change them: only the facts can. Measured on hosted run
+    43473803090 (Cells .NET): "- `Borders`: Gets or sets border settings." is
+    ``public_symbol:aspose.cells_foss.style.borders``'s docstring, while ``Style.Borders`` has a
+    private setter. A fact counts when the quote holds its summary and names its short name, or
+    when the quote is a long enough fragment of the summary itself."""
+    if facts is None:
+        return []
+    wanted = _printed(quote)
+    if not wanted:
+        return []
+    found: list[str] = []
+    for fact in facts.facts:
+        if fact.polarity != "SUPPORTED":
+            continue
+        docstring = (fact.attributes or {}).get("docstring")
+        if not isinstance(docstring, str):
+            continue
+        summary = _printed(docstring)
+        if len(summary) < _MIN_PRINTED_SUMMARY:
+            continue
+        short = str(fact.value).rsplit(".", 1)[-1]
+        names_it = bool(short) and re.search(rf"(?<!\w){re.escape(short)}(?!\w)", wanted)
+        if (summary in wanted and names_it) or (
+            len(wanted) >= 2 * _MIN_PRINTED_SUMMARY and wanted in summary
+        ):
+            found.append(fact.id)
+    return found
+
+
+def _split_renderer_printed(
+    rc: RepairContext,
+    defect: Defect,
+    tasks: Sequence[SectionTask],
+    loaded: LoadedManifest | None,
+) -> tuple[Defect | None, list[dict[str, Any]]]:
+    """``defect`` without the findings the renderer printed from facts, and those findings.
+
+    A finding is renderer-printed only on positive evidence: no unit of ``tasks`` prints its quote
+    and ``renderer_printed_facts`` names the fact that does. The rest keep the defect's own
+    fingerprint; ``None`` when nothing is left for a revision to fix."""
+    findings = _quoted_findings(defect.record)
+    if not any(f.get("quote") for f in findings):
+        return defect, []
+    held = [text for task in tasks for text in _task_texts(rc, loaded, task)]
+    printed: list[dict[str, Any]] = []
+    rest: list[dict[str, Any]] = []
+    for finding in findings:
+        quote = str(finding.get("quote") or "")
+        key = _printed(quote)
+        if key and not any(key in text for text in held):
+            fact_ids = renderer_printed_facts(rc.facts, quote)
+            if fact_ids:
+                printed.append({"quote": quote, "fact_ids": fact_ids})
+                continue
+        rest.append(finding)
+    if not printed:
+        return defect, []
+    if not rest:
+        return None, printed
+    return replace(defect, record=_finding_record(rest)), printed
+
+
+def facts_defect_reason(printed: Sequence[Mapping[str, Any]]) -> str:
+    """The ledger's reason for findings only the facts can fix: which fact printed which line."""
+    return "; ".join(
+        f"facts defect: {str(item['quote'])[:120]!r} is printed by the renderer from fact "
+        f"{', '.join(item['fact_ids'])}, not by any authored or inherited unit; fix the facts "
+        "(a repair cannot change renderer-printed text)"
+        for item in printed
+    )
+
+
+def _note_facts_defects(
+    defect: Defect, repairs: RepairLedger, printed: Sequence[Mapping[str, Any]]
+) -> None:
+    """Add the renderer-printed findings to ``defect``'s ledger entry once its routes ran."""
+    entry = repairs.attempts.get(defect.fingerprint)
+    if entry is None or not printed:
+        return
+    entry["facts_defects"] = [dict(item) for item in printed]
+    note = facts_defect_reason(printed)
+    entry["reason"] = f"{entry['reason']}; {note}" if entry.get("reason") else note
+    repairs.write()
+
+
+def _facts_defect(
+    defect: Defect, repairs: RepairLedger, printed: Sequence[Mapping[str, Any]]
+) -> bool:
+    """Record findings only the facts can fix, with no model call: no revision changes them."""
+    repairs.record(replace(defect, reason=facts_defect_reason(printed)), "unrepairable")
+    repairs.attempts[defect.fingerprint]["facts_defects"] = [dict(item) for item in printed]
+    repairs.write()
+    return False
 
 
 def _authored_routes(
@@ -1068,34 +1322,25 @@ def _authored_routes(
     repair that owns it. Whitespace is squashed on both sides, as BC-18 matches the README. A quote
     no task's stored units hold (renderer-owned text) routes nowhere.
     """
-    primary = {k: v for k, v in defect.record.items() if k != "equivalent_findings"}
-    findings = [
-        f for f in [primary, *defect.record.get("equivalent_findings", [])] if f.get("quote")
-    ]
+    findings = [f for f in _quoted_findings(defect.record) if f.get("quote")]
     if not findings:
         return []
     routes: list[_Route] = []
     for task in rc.tasks:
-        stored = rc.store.get(_task_key(rc, loaded, task)) or {}
-        held = [
-            _squash(str(unit.get("text", "")))
-            for unit in stored.get("units", [])
-            if isinstance(unit, dict)
-        ]
+        held = _task_texts(rc, loaded, task)
         mine = [
             f
             for f in findings
-            if _squash(str(f["quote"])) and any(_squash(str(f["quote"])) in t for t in held)
+            if _printed(str(f["quote"])) and any(_printed(str(f["quote"])) in t for t in held)
         ]
         if not mine:
             continue
-        record = dict(mine[0])
-        if len(mine) > 1:
-            record["equivalent_findings"] = mine[1:]
         routes.append(
             _Route(
                 task,
-                replace(defect, stage="S6", section_id=task.section_id, record=record),
+                replace(
+                    defect, stage="S6", section_id=task.section_id, record=_finding_record(mine)
+                ),
             )
         )
     return routes
@@ -1105,7 +1350,18 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
     if not any(t.section_id == defect.section_id for t in rc.tasks):
         return _unrepairable(defect, repairs, "no authoring task holds this section")
     loaded = rc.prompts["section_authoring"]
-    return _repair_routes(rc, defect, _route_section_defect(rc, defect, loaded), repairs)
+    # A finding whose line the renderer printed from a fact (a member bullet, a Core API row) is
+    # not in any unit of this section, so a revision cannot reach it: asked anyway, the model
+    # answered its section unchanged and the no-op refusal spent the fingerprint (hosted run
+    # 43473803090, Cells .NET API Reference). Those findings are recorded as facts defects with no
+    # call; the rest of the defect, if any, is repaired as before under the same fingerprint.
+    tasks = [t for t in rc.tasks if t.section_id == defect.section_id]
+    rest, printed = _split_renderer_printed(rc, defect, tasks, loaded)
+    if rest is None:
+        return _facts_defect(defect, repairs, printed)
+    changed = _repair_routes(rc, rest, _route_section_defect(rc, rest, loaded), repairs)
+    _note_facts_defects(rest, repairs, printed)
+    return changed
 
 
 def _repair_routes(
@@ -1186,15 +1442,14 @@ def _repair_task(
     )
     checks = reject_title_verbatim_opening(checks, task)
     checks = reject_uncarried_units(checks, task)
-    checks = keep_unflagged_units(
-        checks,
-        original,
-        [
-            str(finding.get("quote") or "")
-            for finding in [defect.record, *defect.record.get("equivalent_findings", [])]
-        ],
-        named_slots,
-    )
+    quotes = [str(finding.get("quote") or "") for finding in _quoted_findings(defect.record)]
+    checks = keep_unflagged_units(checks, original, quotes, named_slots)
+    # Name the units that print the defect's text: a register quote is README text, with the code
+    # spans the renderer adds, so the model could not always find it in the stored units and
+    # answered its section unchanged (the no-op refusal, hosted run 43473803090).
+    printed_by = sorted(str(slot) for slot in _flagged_slots(original, quotes) if slot)
+    if printed_by:
+        defect = replace(defect, record={**defect.record, "printed_by_slots": printed_by})
     facts = rc.facts.facts
     probe = SlotSetProbe(
         frozenset(task.slots),

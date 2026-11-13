@@ -30,6 +30,7 @@ from repo_presenter.extractors.surface.registry import (
 from repo_presenter.core.package_registry import (
     RegistryObservation,
     register_observer,
+    vendor_owned,
 )
 from repo_presenter.core.retry import RetryableOperationError, run_with_retry
 
@@ -62,7 +63,10 @@ def observe_pypi(
 
     ``repository`` (``owner/name``) asks the further question a found name does not answer: does
     the project's own ``project_urls`` / ``home_page`` point back at that repository? Only then is
-    the distribution corroborated as the repository's own (``repository_matched``).
+    the distribution corroborated as the repository's own (``repository_matched``) - or when the
+    project's publisher (``author`` / ``maintainer`` and their e-mails) is the product vendor and
+    one of those URLs is a repository or site the vendor owns (``core.package_registry.
+    vendor_owned``).
 
     ``fetch`` defaults to None and is resolved to this module's ``fetch_project_json`` at call
     time, never bound as a default argument: a test replaces that module attribute, and a default
@@ -114,6 +118,11 @@ def observe_pypi(
             for url in (*(info.get("project_urls") or {}).values(), info.get("home_page"))
             if url
         )
+        publishers = tuple(
+            str(info.get(field) or "")
+            for field in ("author", "author_email", "maintainer", "maintainer_email")
+            if info.get(field)
+        )
     except (ValueError, KeyError, TypeError, AttributeError) as exc:
         return RegistryObservation(
             name,
@@ -125,6 +134,11 @@ def observe_pypi(
         )
     published = None if manifest_version is None else manifest_version in releases
     matched = match_repository(urls, repository, resolve_url) if repository and urls else None
+    if matched is not True and repository and vendor_owned(urls, publishers, repository):
+        # Published by the product vendor from a vendor-owned repository or site (a renamed or
+        # legacy repository name included): the repository's own distribution
+        # (docs/DECISION_LOG.md, BL-002).
+        matched = True
     return RegistryObservation(
         name,
         url,

@@ -813,7 +813,7 @@ def _documentation_resources(context: RenderContext) -> list[str]:
         if host.startswith("reference.") and api_included:
             count = _public_type_count(context)
             sentence += (
-                f" It covers all {count} verified public types; the "
+                f" It covers all {count} public types; the "
                 "[API Reference](#api-reference) section above covers the essentials."
             )
         lines.append(f"- **[{link_text(target)}]({target.value})** — {sentence}")
@@ -958,10 +958,11 @@ def renderer_sentences(
             for fact in context.supported("public_symbol")
         ]
         types = sum(1 for kind in kinds if kind in ("class", "enum"))
-        sentences.append(f"The verified public surface has {types} types.")
+        # Reader-facing wording, never the pipeline's "verified public surface" (BL-002 K11).
+        sentences.append(f"The public API has {types} types.")
         count = _public_type_count(context)
         sentences.append(
-            f"It covers all {count} verified public types; the "
+            f"It covers all {count} public types; the "
             "[API Reference](#api-reference) section above covers the essentials."
         )
     closing = _enterprise_paragraph(context)
@@ -1095,7 +1096,7 @@ def _api_reference(context: RenderContext) -> list[str]:
     enums = sorted(by_kind.get("enum", []), key=lambda f: f.value)
     count = len(classes) + len(enums)
     names = api_reference_names(context.facts)
-    lines = [context.unit(sid, "intro"), "", f"The verified public surface has {count} types."]
+    lines = [context.unit(sid, "intro"), "", f"The public API has {count} types."]
     lines += ["", "<details>", f"<summary>{API_SURFACE_SUMMARY}</summary>", ""]
     lines += ["### Core API", "", "| Class | Description |", "| --- | --- |"]
     lines += [f"| `{names[f.value]}` | {_symbol_description(context, f)} |" for f in classes]
@@ -1300,15 +1301,20 @@ def _installation(context: RenderContext) -> list[str]:
         ):
             lines.extend(["", alternative, ""])
             lines.extend(_code_block(fence, body))
-    elif install is not None and package is not None:
-        detail = install.evidence[-1].detail or "the registry could not be checked"
-        registry = context.spec.registry
-        state = (
-            f"is not yet published on {registry}"
-            if install.polarity == "CONTRADICTED"
-            else f"could not be confirmed on {registry}"
-        )
-        lines.append(f"The package `{package.value}` {state} ({detail}).")
+    elif install is not None and package is not None and install.polarity == "CONTRADICTED":
+        # The registry's own answer ("not there"), stated plainly. The fact's evidence detail is
+        # the pipeline's internal record and is never printed (BL-002; BC-07 refuses it).
+        lines.append(f"`{package.value}` is not yet published on {context.spec.registry}.")
+    # An install the registry neither confirmed nor contradicted (unreadable, ambiguous, a name
+    # nothing ties to this repository, no registry at all) is not a reader-facing statement: R36
+    # omits the claim, and the source checkout below - when an executed example proved it - is
+    # the install the README gives (BL-002).
+    unconfirmed = (
+        install is not None
+        and package is not None
+        and install.polarity not in ("SUPPORTED", "CONTRADICTED")
+        and not lines
+    )
     executed = context.supported("example")
     repository = context.fact("identity:repository")
     if executed and repository is not None and not source_kind and not checkout_kind:
@@ -1317,10 +1323,16 @@ def _installation(context: RenderContext) -> list[str]:
         if command and context.spec.source_install_lead:
             lines.append("")
             lines.append(
-                f"To work from a source checkout instead, {context.spec.source_install_lead}:"
+                f"To work from a source checkout, {context.spec.source_install_lead}:"
+                if unconfirmed
+                else f"To work from a source checkout instead, {context.spec.source_install_lead}:"
             )
             lines.append("")
             lines.extend(_code_block("bash", command))
+    if unconfirmed and package is not None and not lines:
+        # Nothing verified to install with: one plain sentence keeps the section (and the live
+        # README's Installation heading) without stating anything about a registry (BL-002).
+        lines.append(f"No install command for `{package.value}` is available.")
     imported = [
         fact.value
         for fact in context.supported("import_path")

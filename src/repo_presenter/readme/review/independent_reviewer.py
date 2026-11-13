@@ -429,7 +429,10 @@ def unprinted_kept_units(
     from repo_presenter.readme.composition.placement import (
         resolve_intra_document_anchors,
     )
-    from repo_presenter.readme.validation.must_correct import cited_finding_quotes
+    from repo_presenter.readme.validation.must_correct import (
+        cited_finding_quotes,
+        withheld_rows_form,
+    )
 
     raw = _inherited_units(facts)
     contradicted = _contradicted_links(facts)
@@ -438,11 +441,9 @@ def unprinted_kept_units(
     def printed(unit: str, row: Mapping[str, Any]) -> bool:
         # The renderer's own form (``placement.placements``): a kept code block citing an OPEN
         # findings-register row prints without the lines that row confirms false.
+        false_quotes = cited_finding_quotes(row.get("fact_ids") or (), facts.repository)
         text = kept_unit_form(
-            unit,
-            raw[unit],
-            facts,
-            cited_finding_quotes(row.get("fact_ids") or (), facts.repository),
+            unit, withheld_rows_form(unit, raw[unit], false_quotes), facts, false_quotes
         )
         destination = row.get("destination_section")
         if _kept_text_printed(

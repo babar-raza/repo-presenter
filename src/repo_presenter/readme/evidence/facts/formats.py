@@ -153,11 +153,16 @@ def format_facts(
     # A declaration that names a direction states the format is reachable that way only through
     # an unimplemented stub (``java_format_declarations``): evidence for the direction's fact,
     # never a corroboration, so the fact is UNRESOLVED unless an executed example proves it.
+    # Such a direction is recorded on the fact as reachable only through a stub (K02, 2026-11-13:
+    # "exports `.dae`" while the dispatcher raises first), unless an example executed it.
+    stubbed: set[tuple[str, str]] = set()
     for declaration in declarations:
         if declaration.kind == "declaration" and declaration.direction is not None:
-            evidence.setdefault((declaration.direction, declaration.extension), []).append(
+            key = (declaration.direction, declaration.extension)
+            evidence.setdefault(key, []).append(
                 Evidence(declaration.source_path, f"line {declaration.line}; {declaration.detail}")
             )
+            stubbed.add(key)
     supported = executed | corroborated
     facts: list[Fact] = []
     for key in sorted(evidence):
@@ -170,6 +175,9 @@ def format_facts(
                 tuple(evidence[key]),
                 polarity="SUPPORTED" if key in supported else "UNRESOLVED",
                 confidence=1.0 if key in supported else 0.5,
+                attributes={"code_path": "stub"}
+                if key in stubbed and key not in supported
+                else None,
             )
         )
     facts.extend(_htm_alias_facts(facts, evidence))

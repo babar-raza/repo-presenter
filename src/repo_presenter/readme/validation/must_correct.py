@@ -155,16 +155,81 @@ def without_quoted_sentences(text: str, quotes: Collection[str]) -> str:
     return kept.rstrip()
 
 
+def without_quoted_rows(text: str, quotes: Collection[str]) -> str:
+    """A kept table's printed form without the body rows that print a cited register row's quote
+    (each row whitespace-squashed, as BC-18 matches). The header and its separator always stay.
+    Unchanged when no row prints a quote, or when every body row does (that table is withheld,
+    not kept)."""
+    wanted = [_squash(quote) for quote in quotes if _squash(quote)]
+    if not wanted:
+        return text
+    lines = text.split("\n")
+    body = [
+        index
+        for index, line in enumerate(lines)
+        if index >= 2 and line.strip().startswith("|")
+    ]
+    drop = {index for index in body if any(quote in _squash(lines[index]) for quote in wanted)}
+    if not drop or set(body) <= drop:
+        return text
+    return "\n".join(line for index, line in enumerate(lines) if index not in drop)
+
+
+_LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
+
+
+def without_quoted_items(text: str, quotes: Collection[str]) -> str:
+    """A kept list's printed form without the items (a marker line and its continuation lines)
+    that print a cited register row's quote. Unchanged when no item prints one, or when every item
+    does (that list is withheld, not kept)."""
+    wanted = [_squash(quote) for quote in quotes if _squash(quote)]
+    if not wanted:
+        return text
+    items: list[list[str]] = []
+    lead: list[str] = []
+    for line in text.split("\n"):
+        if _LIST_ITEM.match(line) and not line.startswith((" ", "\t")):
+            items.append([line])
+        elif items:
+            items[-1].append(line)
+        else:
+            lead.append(line)
+    held = [any(quote in _squash("\n".join(item)) for quote in wanted) for item in items]
+    if not any(held) or all(held):
+        return text
+    kept = [line for item, drop in zip(items, held) if not drop for line in item]
+    return "\n".join([*lead, *kept])
+
+
 def withheld_form(unit_id: str, text: str, quotes: Collection[str]) -> str:
     """The printed form of a kept unit whose disposition cites OPEN register rows with these
     quotes: a code block without the lines that print them, a paragraph without the sentences
-    that do. Any other kind is unchanged (it is corrected or withheld as a whole)."""
+    that do, a table without the rows and a list without the items that do. Any other kind is
+    unchanged (it is corrected or withheld as a whole).
+
+    Tables and lists (hosted Lane R runs 43473790998, 3D .NET ``050.table``, and 43473796319, 3D
+    Python ``060.table`` / ``010.list``): the register confirmed single rows of the maintainers'
+    type table false after the seal that restored it, so keeping the table printed them (BC-18) and
+    superseding it lost its true rows' members (BC-05/BC-17) -- no disposition could pass."""
     if not quotes:
         return text
     if unit_id.endswith(".code_block"):
         return without_quoted_lines(text, quotes)
     if unit_id.endswith(".paragraph"):
         return without_quoted_sentences(text, quotes)
+    if unit_id.endswith(".table"):
+        return without_quoted_rows(text, quotes)
+    if unit_id.endswith(".list"):
+        return without_quoted_items(text, quotes)
+    return text
+
+
+def withheld_rows_form(unit_id: str, text: str, quotes: Collection[str]) -> str:
+    """``withheld_form`` for the kinds ``surface_claims.kept_unit_form`` does not withhold itself
+    (a table's rows, a list's items); every other kind is returned as given. The renderer
+    (``placement``) and the reviewer's printed test apply it before ``kept_unit_form``."""
+    if quotes and unit_id.endswith((".table", ".list")):
+        return withheld_form(unit_id, text, quotes)
     return text
 
 

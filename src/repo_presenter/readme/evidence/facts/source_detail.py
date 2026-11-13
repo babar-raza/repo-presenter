@@ -84,6 +84,13 @@ class _Collector:
         self.ids = set(taken)
         self.facts: list[Fact] = []
         self.counts: dict[str, int] = {}
+        #: member -> "throws" | "none": whether a member whose own body was read throws anywhere
+        #: in it (K02, 2026-11-13: "X throws" is checkable only when the body was read).
+        self.bodies: dict[str, str] = {}
+
+    def body(self, member: str, throws: bool) -> None:
+        if throws or self.bodies.get(member) != "throws":
+            self.bodies[member] = "throws" if throws else "none"
 
     def add(
         self,
@@ -303,6 +310,8 @@ def _python_function(
     accessor = _accessor(node)
     statements = _own_statements(node)
     raises = _raises(node)
+    if statements and not all(isinstance(s, ast.Pass) or (isinstance(s, ast.Expr) and isinstance(getattr(s, "value", None), ast.Constant)) for s in statements):
+        out.body(member, bool(raises))
     for raise_node, exception, message in raises:
         always = len(statements) == 1 and statements[0] is raise_node
         label = f"{member}{' ' + accessor if accessor else ''}"
@@ -639,6 +648,10 @@ def _brace_member(out: _Collector, text: str, offsets: Sequence[int], offset: in
     pattern = _THROW.get(language)
     inner = body.strip()
     inner = inner[2:].strip() if inner.startswith("=>") else inner.strip("{}").strip()
+    name = member.rsplit(".", 1)[-1]
+    if pattern is not None and inner and re.search(rf"\b{re.escape(name)}\s*(?:<[^>]*>)?\s*\(", text[offset:first]):
+        # A method whose own body was read (a signature, then the body): whether it throws at all.
+        out.body(member, bool(pattern.search(body)))
     if pattern is not None:
         for match in pattern.finditer(body):
             exception = match.group(1).rsplit("::", 1)[-1].rsplit(".", 1)[-1]
@@ -872,6 +885,248 @@ def _constants(out: _Collector, text: str, offsets: Sequence[int], path: str, la
             )
 
 
+# --- behaviour through the real code path (K02, 2026-11-13) -----------------------------------
+#
+# docs/investigations/2026-11-13-lane-r-false-claim-review.md, class K02: a fact restated what a
+# member's own body does, never what the code path a caller takes does. Two shapes are read here:
+# an exception type no library code ever throws or constructs (Cells C++ ``FormulaException`` /
+# ``StyleException``: constructors only; 3D Python ``TrialException``: a commercial doc comment),
+# and a public static instance built as a type whose virtual member only throws (3D .NET
+# ``FileFormat.WavefrontOBJ = new FileFormat(...)``, whose ``CreateSaveOptions`` is the base
+# virtual that throws NotImplementedException).
+
+_EXCEPTION_TYPE = re.compile(r"(?:Exception|Error)$")
+_NEVER_THROWN_LANGUAGES = frozenset({"python", "csharp", "java", "cpp", "typescript", "javascript"})
+_STRING_LITERAL = re.compile(r'"(?:\\.|[^"\\\n])*"' + r"|'(?:\\.|[^'\\\n])*'")
+_NOT_A_USE_LINE = re.compile(r"^\s*(?:#\s*include|import\b|using\b|package\b|export\s*(?:\{|\*)|from\b)")
+_BASE_LIST = re.compile(r"\b(?:class|struct|record|interface)\s+(\w+)\b[^{;]*?(?::|\bextends\b|\bimplements\b)([^{;]*)\{")
+
+
+def _python_uses(tree: ast.Module, names: set[str]) -> tuple[set[str], dict[str, set[str]]]:
+    """Exception names a module uses outside their own class body and outside imports, and the
+    base-class edges (``class D(X)`` -> ``{X: {D}}``) it declares."""
+    used: set[str] = set()
+    derived: dict[str, set[str]] = {}
+
+    def visit(node: ast.AST, inside: str | None) -> None:
+        if isinstance(node, ast.Import | ast.ImportFrom):
+            return
+        if isinstance(node, ast.ClassDef):
+            for base in node.bases:
+                base_name = ast.unparse(base).rsplit(".", 1)[-1]
+                if base_name in names:
+                    derived.setdefault(base_name, set()).add(node.name)
+            for child in [*node.decorator_list, *node.keywords, *node.body]:
+                visit(child, node.name)
+            return
+        if isinstance(node, ast.Name) and node.id in names and node.id != inside:
+            used.add(node.id)
+        elif isinstance(node, ast.Attribute) and node.attr in names and node.attr != inside:
+            used.add(node.attr)
+        for child in ast.iter_child_nodes(node):
+            visit(child, inside)
+
+    visit(tree, None)
+    return used, derived
+
+
+def _brace_uses(text: str, language: str, names: set[str], stem: str = "") -> tuple[set[str], dict[str, set[str]]]:
+    """Exception names a brace-language file uses: any mention that is not an include/import
+    line, the type's own declaration or body, an out-of-line definition of its members
+    (``X::X(``), or a base list (``class D : public X``, recorded as an edge instead)."""
+    cleaned = _STRING_LITERAL.sub(lambda m: " " * len(m.group(0)), strip_comments(text, language))
+    used: set[str] = set()
+    derived: dict[str, set[str]] = {}
+    bases: list[tuple[int, int]] = []
+    for match in _BASE_LIST.finditer(cleaned):
+        bases.append(match.span(2))
+        for base in _IDENT.findall(match.group(2)):
+            if base in names:
+                derived.setdefault(base, set()).add(match.group(1))
+    own: list[tuple[int, int]] = []
+    pattern = re.compile(r"\b(" + "|".join(sorted(map(re.escape, names), key=len, reverse=True)) + r")\b")
+    for match in re.finditer(r"\b(?:class|struct|interface|record)\s+(\w+)", cleaned):
+        if match.group(1) in names:
+            span = body_span(cleaned, match.end(), language)
+            own.append((match.start(), span[1] if span else match.end()))
+    offsets = line_offsets(cleaned)
+    for match in pattern.finditer(cleaned):
+        position = match.start()
+        if any(begin <= position < end for begin, end in own) or any(begin <= position < end for begin, end in bases):
+            continue
+        line = line_at(offsets, position)
+        start = offsets[line - 1]
+        end = offsets[line] if line < len(offsets) else len(cleaned)
+        if _NOT_A_USE_LINE.match(cleaned[start:end]):
+            continue
+        name = match.group(1)
+        qualified_by = cleaned[max(0, position - len(name) - 2) : position]
+        if qualified_by == f"{name}::" or cleaned[max(0, position - 1) : position] == "~":
+            continue  # ``X::X(...)``, ``X::~X()``: the type's own constructor/destructor defined
+        if cleaned.startswith("::", match.end()) and stem == name:
+            continue  # ``X::member(...)`` defined out of line in X's own source file
+        used.add(name)
+    return used, derived
+
+
+def _never_thrown(out: _Collector, root: Path, tree_paths: Sequence[str], symbols: list[Fact]) -> None:
+    """An ``implementation`` fact for each public exception type no product source throws,
+    constructs or otherwise uses (directly, or through a type derived from it): it is declared
+    and nothing more, so "throws ``X``" describes no code path."""
+    exceptions: dict[str, Fact] = {}
+    for fact in symbols:
+        kind = (fact.attributes or {}).get("symbol_kind", "")
+        name = fact.value.rsplit(".", 1)[-1].rsplit("::", 1)[-1]
+        located = _declared_line(fact)
+        if kind not in _TYPE_KINDS or not _EXCEPTION_TYPE.search(name) or located is None:
+            continue
+        if language_of(located[0]) not in _NEVER_THROWN_LANGUAGES:
+            continue
+        if name in exceptions:
+            exceptions[name] = None  # type: ignore[assignment]  # two public types, one name: undecidable
+            continue
+        exceptions[name] = fact
+    names = {name for name, fact in exceptions.items() if fact is not None}
+    if not names:
+        return
+    sources = [
+        path for path in product_sources(tree_paths) if (language_of(path) or "") in _NEVER_THROWN_LANGUAGES
+    ]
+    tracked = set(names)
+    used: set[str] = set()
+    derived: dict[str, set[str]] = {}
+    # A type derived from a tracked one is tracked too (it is thrown as its base), to a fixpoint.
+    for _ in range(4):
+        used, derived = set(), {}
+        for path in sources:
+            text = read_text(root, path)
+            if text is None or not any(name in text for name in tracked):
+                continue
+            language = language_of(path) or ""
+            if language == "python":
+                try:
+                    tree = ast.parse(text)
+                except (SyntaxError, ValueError):
+                    return  # a file that does not parse could hold the throw: decide nothing
+                file_used, file_derived = _python_uses(tree, tracked)
+            else:
+                file_used, file_derived = _brace_uses(text, language, tracked, PurePosixPath(path).stem)
+            used |= file_used
+            for base, subs in file_derived.items():
+                derived.setdefault(base, set()).update(subs)
+        grown = tracked | {sub for subs in derived.values() for sub in subs}
+        if grown == tracked:
+            break
+        tracked = grown
+    else:
+        return  # the hierarchy did not settle: decide nothing
+
+    def thrown(name: str, seen: frozenset[str] = frozenset()) -> bool:
+        if name in used:
+            return True
+        return any(sub not in seen and thrown(sub, seen | {name}) for sub in derived.get(name, ()))
+
+    for name in sorted(names):
+        if thrown(name):
+            continue
+        fact = exceptions[name]
+        path, line = _declared_line(fact)  # type: ignore[misc]
+        out.add(
+            "implementation",
+            ["never_thrown", fact.value],
+            f"{fact.value} is never thrown or constructed by the library's own code (declared only)",
+            path,
+            line,
+            "no product source throws, constructs or uses the type outside its own declaration",
+            {"aspect": "never_thrown", "member": fact.value, "type": name},
+        )
+
+
+_STATIC_INSTANCE = re.compile(
+    r"\bstatic\b[^=;(]*?\b[\w.]+(?:<[^>]*>)?\s+(?P<name>\w+)\s*=\s*new\s+(?P<type>[\w.]+)\s*(?:<[^>]*>)?\s*\("
+)
+
+
+def _shared_prefix(left: str, right: str) -> int:
+    shared = 0
+    for a, b in zip(left.split("."), right.split("."), strict=False):
+        if a != b:
+            break
+        shared += 1
+    return shared
+
+
+def _static_instance_throws(out: _Collector, root: Path, symbols: list[Fact]) -> None:
+    """A public static field initialised with ``new T(...)`` carries T's members: each member of
+    T that only throws (its fact already says so, an inherited virtual included) throws when
+    reached through the field, so the field is a stub for that member (one dispatch hop)."""
+    types = {
+        fact.value: fact
+        for fact in symbols
+        if (fact.attributes or {}).get("symbol_kind", "") in _TYPE_KINDS
+    }
+    always: dict[str, list[Fact]] = {}
+    for fact in out.facts:
+        attributes = fact.attributes or {}
+        if fact.kind == "implementation" and attributes.get("aspect") == "throws" and attributes.get("condition") == "always" and not attributes.get("visibility"):
+            owner = attributes.get("member", "").rpartition(".")[0]
+            if owner:
+                always.setdefault(owner, []).append(fact)
+    if not always:
+        return
+    for fact in symbols:
+        located = _declared_line(fact)
+        if located is None or language_of(located[0]) not in ("csharp", "java"):
+            continue
+        text = read_text(root, located[0])
+        if text is None:
+            continue
+        lines = text.splitlines()
+        if located[1] > len(lines):
+            continue
+        match = _STATIC_INSTANCE.search(lines[located[1] - 1])
+        owner, _, field = fact.value.rpartition(".")
+        if match is None or match.group("name") != field or not owner:
+            continue
+        # An inherited copy (the surface lists a base's static on every subclass) is not stated
+        # again: only the type that declares the field, in the field's own file, carries it.
+        declared_owner = _declared_line(types[owner]) if owner in types else None
+        if declared_owner is None or declared_owner[0] != located[0]:
+            continue
+        constructed = match.group("type")
+        suffix = "." + constructed
+        candidates = [value for value in types if value == constructed or value.endswith(suffix)]
+        if not candidates:
+            continue
+        # The type in the field's own namespace wins; two equally close candidates decide nothing.
+        ranked = sorted(candidates, key=lambda value, home=owner: _shared_prefix(value, home), reverse=True)
+        if len(ranked) > 1 and _shared_prefix(ranked[0], owner) == _shared_prefix(ranked[1], owner):
+            continue
+        resolved = ranked[0]
+        for stub in always.get(resolved, []):
+            attributes = stub.attributes or {}
+            member = attributes.get("member", "").rsplit(".", 1)[-1]
+            exception = attributes.get("exception", "")
+            out.add(
+                "implementation",
+                ["throws", fact.value, member, exception],
+                f"{fact.value}.{member} throws {exception} ({field} is constructed as "
+                f"{constructed}, whose {member} only throws)",
+                located[0],
+                located[1],
+                f"static instance constructed as {constructed}; {stub.id}",
+                {
+                    "aspect": "throws",
+                    "member": f"{fact.value}.{member}",
+                    "field": fact.value,
+                    "via": attributes.get("member", ""),
+                    "exception": exception,
+                    "condition": "always",
+                    "dispatch": "static_instance",
+                },
+            )
+
+
 # --- standards --------------------------------------------------------------------------------
 
 _STANDARD = re.compile(
@@ -941,7 +1196,13 @@ def with_source_detail(root: Path, tree_paths: Sequence[str], facts: Sequence[Fa
     updates.update(_python_detail(out, root, tree_paths, symbols))
     updates.update(_brace_detail(out, root, tree_paths, symbols, existing_members))
     _internal_and_exports(out, root, tree_paths, symbols)
+    _static_instance_throws(out, root, symbols)
+    _never_thrown(out, root, tree_paths, symbols)
     _standards(out, root, tree_paths)
+    for fact in symbols:
+        # A method whose own body was read and holds no throw at all (K02: "X throws" is false).
+        if out.bodies.get(fact.value) == "none" and (fact.attributes or {}).get("symbol_kind") in ("method", "function"):
+            updates.setdefault(fact.id, {})["body_throws"] = "no"
     result: list[Fact] = []
     for fact in facts:
         extra = updates.get(fact.id)

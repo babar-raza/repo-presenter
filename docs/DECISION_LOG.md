@@ -5288,3 +5288,154 @@ older pending one.
 trigger after a merge, with its run id and per-lane counts.
 
 Backlog: BL-060
+
+## 2026-11-13 — BL-002: a vendor-published registry package is the repository's own; no evidence wording in any README
+
+**Owner feedback (P0, verbatim in `project/backlog.yaml` BL-002).** The 3D Python Lane R README (seal @ 65b1f577c0f1)
+printed "The package `aspose-3d-foss` could not be confirmed on PyPI (package registry: a distribution of this name
+exists, but ownership not confirmed: the registry's project URLs point at another repository)." Both halves were
+wrong: PyPI `aspose-3d-foss` 26.1.0 is Aspose's (author `Aspose`, homepage `github.com/aspose-3d/Aspose.3D-for-Python`,
+the vendor's legacy repository), and the sentence was an install fact's evidence detail printed verbatim.
+
+**Root causes (two classes, fixed once each).**
+- (A) `core/package_registry.points_at_repository` accepted only the exact `owner/name` (plus a GitHub rename
+  redirect), so a vendor-published package whose URL names a renamed or legacy vendor repository was "another
+  repository's". Portfolio classification of every sealed install/distribution fact (R36(b)(1)): published 30,
+  not_published 10, no_registry 4, ownership_unconfirmed 2 — both 3D Python (Lane R and Lane L).
+- (B) `composition/renderer._installation` printed `install.evidence[-1].detail` for every non-SUPPORTED install, and no
+  check refused evidence vocabulary in a README. Portfolio: 2 stored seal READMEs carried it (3D Python R, Email C++ R).
+  BL-003's review (class K11, routed here) found the same class in renderer text ("The verified public surface has N
+  types.", "It covers all N verified public types") on every Lane R seal with an API Reference, in authored Core API
+  rows ("<qualified name> is a public symbol with members ..."), and `text`/`excel`/`markdown` format facts upper-cased
+  as terms ("region of TEXT").
+
+**Rules.**
+1. **Vendor ownership** (`core/package_registry.vendor_owned`, applied in the PyPI observer and the shared surface
+   observer for NuGet/Maven/npm/Go): a published distribution is the repository's own when (a) the vendor is derived
+   from the repository's organization `<vendor>-<product>-foss` (every `data/registry.json` entry → `aspose`; any other
+   owner has no vendor and keeps the exact-match rule), (b) the registry's publisher is that vendor — an author /
+   maintainer / owner naming it as a whole word, an e-mail at `<vendor>.com|.org`, a Maven group whose reversed domain
+   is the vendor's, a Go module path in a vendor organization — and (c) at least one of the registry's own project /
+   source URLs is vendor-owned: `github.com/<vendor>/…` or `github.com/<vendor>-*/…` (any current, renamed or legacy
+   repository name), or a host `<vendor>.com` / `<vendor>.org` or a subdomain (`products.aspose.org`). Case-insensitive.
+   (d) The name asked about is always the manifest's own or the one the maintainers' README installs (structural in every
+   caller). crates.io's crate document names no publisher (the vendored adapter's `verified_owner` is the crate id), so
+   a crate keeps the exact-match rule. Refused (negative controls, tests): `requests`, `left-pad`, a vendor URL with a
+   foreign publisher, a vendor name with a foreign URL, look-alike organizations (`asposefan`) and hosts
+   (`aspose.com.example.net`, `notaspose.com`).
+2. **No unconfirmed state is a reader-facing statement.** CONTRADICTED is stated plainly ("`x` is not yet published on
+   PyPI."); an install the registry neither confirmed nor contradicted omits the registry claim (R36 alternative "omit
+   the claim") and gives the proven source checkout; with nothing proven, one plain sentence keeps the section ("No
+   install command for `x` is available."). Renderer counts read "The public API has N types." / "It covers all N public
+   types"; the review scope classifier accepts both spellings (sealed bundles carry the old one).
+3. **Blocking check (BC-07, `validation/public_text.analysis_markers`, next to the R9 attribution check).** Any README
+   prose line (code fences excluded) carrying registry-reading details (`package registry:`, "unreachable", "answered
+   ambiguously", "could not be confirmed on", "none could not be read"), ownership verdicts ("ownership not confirmed",
+   "project URLs point at another repository", "the registry's"), fact polarities in upper case (`UNRESOLVED`,
+   `SUPPORTED`, `CONTRADICTED`, `NOT_VERIFIED`), fact-id / record vocabulary (`package:name`, `facts.json`, "fact id",
+   "evidence detail"), "verified public surface/types" or "is a public symbol" fails. Not refused, measured on all 27 live
+   maintainer READMEs (0 matches) and the sealed Lane L READMEs: the plain English words "fact" and "evidence"
+   ("after the fact", "QA evidence report"), "unreachable objects", and "This checkout" (Cells .NET maintainers' own text).
+4. `text`, `excel`, `markdown` join `terminology.WORD_EXTENSIONS`: ordinary words, never upper-cased terms.
+
+**Evidence.** Tests from the real `pypi.org/pypi/<name>/json` documents of 2026-11-13 (3D, Cells, PSD Python;
+`requests` as the foreign control): `tests/core/test_vendor_ownership.py`, fixtures
+`tests/extractors/platforms/fixtures/pypi_bl002/`; `tests/readme/validation/test_public_text_analysis_vocabulary.py`
+(sealed leak lines fail, sealed maintainer lines pass, renderer output clean). Live read 2026-11-13: aspose-3d-foss,
+aspose-cells-foss, aspose-psd-foss → owned; requests → not. Scan of every latest seal (45 bundle refs): stored READMEs
+119 leaking lines in 18 seals (all 18 Lane R; 0 Lane L) → re-rendered by current code (zero calls) 90 lines in 4 seals,
+all stored authored units the renderer cannot change: 3D .NET R (53 rows), Email .NET R (24), Words .NET R (12), PSD .NET
+R (1). Those four were already NEEDS_REPAIR (BC-05/BC-18); BC-07 is added to their `data/recertification_baseline.json`
+rows with an R10 justification (genuine defects). Zero-call R10 gate (`recertify --gate --remote origin
+--base-baseline <origin/main baseline>`): OK, 45 seals, no regression; certified under current code lane R 0, lane L 26
+(unchanged from the base branch). 3D Python Lane R re-renders without the claim (RECERTIFIED on BC-07; NEEDS_REPAIR
+only on BC-18 from BL-003's register); its install fact becomes SUPPORTED only on a hosted re-extraction (stored facts
+are not re-read), so BL-002 stays active until a hosted run re-seals it (R41). Commits: `6ab8782` (rules 1-3), `8587246` (K11, rule 4, baseline).
+
+**Does NOT decide**: whether a registry package whose publisher is the vendor but whose URLs name no vendor site is the
+repository's (it stays unconfirmed); crates.io owner lookups (no owners endpoint is read today); the Lane R re-runs
+themselves (hosted, R37).
+
+Backlog: BL-002, BL-049
+
+## 2026-11-13: BL-062 (K02) and BL-066 (K06) — facts record what the code path and the published package really do; BC-14 rule (j) extended (R41, R36(b), R27, R10)
+
+**Root cause (one per class, portfolio-wide).** The facts restated a member's own body and the product project file,
+never the code path a caller takes or the package a consumer installs; every later stage trusted them
+(`docs/investigations/2026-11-13-lane-r-false-claim-review.md`, classes K02 and K06).
+
+**Fact fixes (existing components only, R27).**
+- `readme/evidence/facts/source_detail.py`: `implementation` facts with aspect `never_thrown` (a public exception type no
+  product source throws, constructs or uses outside its own declaration, a thrown subclass counting for its base;
+  Python, C#, Java, C++, TS/JS), with `dispatch: static_instance` (a public static field `= new T(...)` carries T's
+  always-throwing members, an inherited virtual included; one hop, only in the declaring type's own file), and
+  `body_throws: no` on a method whose own body was read and holds no throw.
+- `extractors/platforms/python_format_declarations.py`: dispatch order is part of the code path. Where a dispatcher loop
+  probes each registered class (`for e in self._exporters: if e.supports_format(f)`), a plugin registered after a class
+  whose probe only raises is unreachable for that direction: a directional declaration (evidence, never corroboration),
+  so `formats.py` keeps the fact UNRESOLVED and marks it `code_path: stub` (unless an example executed it).
+- `extractors/platforms/net.py::_dependency_facts`: the repository's own nuspec for the package id is the consumer's
+  snapshot; without one, the product project plus every `ProjectReference`'d non-test project's non-private
+  `PackageReference`s; `dependency:none` only when the whole snapshot is empty. `_sample_reference_facts` records how
+  sample projects consume the product (`project_file:samples.product_reference`).
+
+**Detector (BC-14 rule (j), `readme/validation/code_path_claims.py`).** j1 stated stubs offered as a capability (the
+abstract-method idiom, a subclass implementing the member, is excluded); j2 never-thrown exceptions; j3 static-instance
+stubs used for load/save; j4 "throws NotImplemented*" where every read body holds no throw; j5 a format direction
+reachable only through a stub; j6 "no dependencies" against a consumer dependency fact; j7 samples said to use the
+package while every sample uses a ProjectReference. Wired only inside `surface_claims._stub_findings` (shared file;
+`_table_findings` and the rest untouched).
+
+**Evidence (zero provider calls).** Real checkouts at the sealed revisions: Words .NET facts now list SkiaSharp 3.119.0,
+BitMiracle.LibTiff.NET 2.4.649, Microsoft.Win32.Registry 5.0.0 (BL-066 acceptance). Replay of the 18 Lane R sealed
+READMEs with facts re-extracted from the pinned checkouts: K02/K06 register rows caught by BC-14 0 -> 12 (3D .NET 3,
+3D Python 4, Cells C++ 3, Cells .NET 1, Words .NET 1); 19 further unregistered never-thrown exception rows (3D .NET,
+3D Python, Cells Java, Note Python, Words .NET), each confirmed by grep. With stored facts (what re-certification sees)
+2 rows (RenderFactory, Material). R10 gate: OK, 45 seals; certified lane R 0 -> 0 and lane L 26 -> 26 from this change
+(Cells Go's lane R seal re-certified from a concurrent seal, not from this change). The 3D .NET Lane R seal, already
+NEEDS_REPAIR, gains BC-14 and REVIEW:claim_contradiction, justified in `data/recertification_baseline.json`.
+
+**Does NOT decide / not done.** Both items are `active`: done needs the next Lane R/L runs to re-extract facts and
+re-verify every candidate (R41) with a run id. Not covered: K02 capability prose with no source-level fact
+(RVM/animation/GlobalTransform/Html5SaveOptions, Words `DigitalSignatureUtil.Sign` throwing on every branch of a
+private helper), conditional throws, the OBJ str-to-'wb' runtime bug; K06 transitive native assets (SkiaSharp on Linux
+needs the dependency's own nuspec) and the Words test-project development dependencies.
+
+Backlog: BL-062, BL-066, BL-074
+
+## 2026-11-13: BL-076 — the targeted-repair failure classes of four hosted Lane R runs, fixed once in the repair stage
+
+**Evidence.** `gh run view <id> --log` of 43473807336 (Cells C++), 43473803090 (Cells .NET), 43473790998 (3D .NET),
+43473796319 (3D Python); the run artifacts could not be downloaded (blob host refused by this session's proxy), so the
+sealed bundle refs `refs/repository-presenter-state/bundles/<repo>` supplied the README, units, dispositions and facts.
+
+| Run | Attempt | Logged outcome | Class | What printed the text | Root cause |
+|---|---|---|---|---|---|
+| Cells C++ | S4 BC-18 `050.list` (FormulaException row) | rejected twice, `dispositions[19].rationale` too long | R1 | inherited unit | stored batch held the 228-char `UNPROVEN_BUILD_RATIONALE` the fold wrote after the schema judged it (contract maxLength 160); every merge failed on that untouched unit |
+| Cells C++ | S4 BC-18 `041.paragraph` (195 public types) | same | R1 | inherited unit (count corrected by renderer) | same |
+| Cells C++ | S4 BC-18 unit-less (LoadFormat/SaveFormat) | "no stored disposition ..." | R2 | authored `scope_limitations/limitation:1` | quote carries renderer code spans; stored unit has none, so no match |
+| Cells .NET | S4 BC-18 unit-less group | "no stored disposition ..." | R2+R3 | led by `- \`Borders\`: ...` (renderer, docstring of `public_symbol:aspose.cells_foss.style.borders`); behind it authored samples/contributor links | only `record["quote"]` (first failure) routed; first was renderer-printed; others code-spanned |
+| Cells .NET | S6 BC-18 (no-op) | "matches the causal stage's own output unchanged" | R3 (+R2) | member bullets Borders/Font/Save from docstrings; Style hub authored but code-spanned | the model was given a section whose units do not print the lines; no unit flagged |
+| Cells .NET | S6 key caps, S6 contributor, S4 `005.paragraph` | repaired | — | authored / inherited | — (contributor re-printed after the round's recomposition; not determinable without the artifact) |
+| 3D .NET | S4 BC-17 / BC-05 `050.table` | rejected twice, "still SUPERSEDE_REDUNDANT" | R4 | inherited table | 7 OPEN register rows quote rows of this table: keeping it prints them (BC-18), superseding loses the true rows' members (BC-05/BC-17); withheld forms existed only for code blocks/paragraphs, so no disposition could pass and the zero-call restore was refused |
+| 3D .NET | S6 BC-18 no-op x2, escalation | no-op / slot set | R3/other | renderer Core API rows (`\`Chunk\` \| Represents ...`) and authored scope | renderer-printed rows; scope escalation unrelated |
+| 3D Python | S4 BC-17 / BC-05 `060.table`, `010.list` | rejected twice | R4 | inherited table / list | 5 + 1 register rows inside them, same as 3D .NET |
+| 3D Python | S6 BC-18 (unit not the finding's own; no-op) | rejected | R2 | authored scope units | unflagged because of code spans |
+
+**Decision (fixes in the existing repair stage, R27; zero calls).** R1: the omission rationales are within the
+contract, `reconcile_checks` bounds every rationale it stores (`bound_rationales`, word boundary, prefix kept), a stored
+batch is bounded before a patch merges into it, and a reply rejected only for rationale length is bounded by the S4
+recover; the rationale is internal (never rendered, withheld from the reviewer), so no README text changes. R2: quotes
+match units with code-span backticks ignored (`_printed`), every failure quote of a merged record is its own finding,
+coherent units are searched too, and the repair packet names `printed_by_slots`. R3: a line the renderer prints from a
+SUPPORTED fact's docstring, held by no unit, is recorded `unrepairable` with `facts_defects` ("printed by the renderer
+from fact X; fix the facts") and never sent to the model. R4: a kept table/list citing OPEN register rows prints without
+exactly those rows/items (`must_correct.withheld_rows_form`, applied by placement and the reviewer), and the zero-call
+restore cites the rows a restored unit prints (or does not restore a unit that would print nothing else).
+`REPAIR_LOGIC_VERSION` 3 so the changed logic gets its attempt. BL-004 section fit played no part (it touches only
+link lists and license paragraphs; both failing units are a table and a capability list).
+
+**Does NOT decide.** The Cells .NET docstring facts (Style.Borders/Font private setters, Workbook.Save) are facts
+defects for the extractor owners. Done only after the four cells re-run under this code (R41).
+
+Backlog: BL-076
