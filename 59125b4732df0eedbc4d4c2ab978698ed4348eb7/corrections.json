@@ -1,14 +1,34 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 1,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "3e9bc7ea033ec50db9575949952894b9ca9f09005a64aa2ff26970f3ae987bac",
-  "edits": [],
+  "corrected_sha256": "636dba478a658dc83d26da8d455c05cde7406aa46d452e7d78033318e897b4f0",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2235,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing CFB container (file, stream, or byte array)\"]\n    i2[\"An existing MSG file (Outlook message)\"]\n  end\n  PRODUCT[\"Aspose.Email FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"CFB container read and write\"]\n    c2[\"MSG document read and write\"]\n    c3[\"High-level message creation, editing, and property access\"]\n    c4[\"EML and MSG conversion through a built-in MIME implementation\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A CFB container (file or byte array)\"]\n    o2[\"An MSG file (Outlook message)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1625 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 480 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing CFB<br/>container (file,<br/>stream, or byte array)\"]\n    i2[\"An existing MSG file<br/>(Outlook message)\"]\n  end\n  PRODUCT[\"Aspose.Email FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"CFB container read and<br/>write\"]\n    c2[\"MSG document read and<br/>write\"]\n    c3[\"High-level message<br/>creation, editing, and<br/>property access\"]\n    c4[\"EML and MSG conversion<br/>through a built-in<br/>MIME implementation\"]\n    c1 ~~~ c3\n    c2 ~~~ c4\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A CFB container (file<br/>or byte array)\"]\n    o2[\"An MSG file (Outlook<br/>message)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1516
+    }
+  ],
   "lane": "L",
   "original_sha256": "3e9bc7ea033ec50db9575949952894b9ca9f09005a64aa2ff26970f3ae987bac",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
   "schema_version": 1,
@@ -18,7 +38,9 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
   "unapplied": [
     {
       "defect": false,

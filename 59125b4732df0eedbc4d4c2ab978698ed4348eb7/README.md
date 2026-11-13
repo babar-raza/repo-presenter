@@ -28,26 +28,30 @@ data directly.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing CFB container (file, stream, or byte array)"]
-    i2["An existing MSG file (Outlook message)"]
+    i1["An existing CFB<br/>container (file,<br/>stream, or byte array)"]
+    i2["An existing MSG file<br/>(Outlook message)"]
   end
   PRODUCT["Aspose.Email FOSS for .NET"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["CFB container read and write"]
-    c2["MSG document read and write"]
-    c3["High-level message creation, editing, and property access"]
-    c4["EML and MSG conversion through a built-in MIME implementation"]
+    c1["CFB container read and<br/>write"]
+    c2["MSG document read and<br/>write"]
+    c3["High-level message<br/>creation, editing, and<br/>property access"]
+    c4["EML and MSG conversion<br/>through a built-in<br/>MIME implementation"]
+    c1 ~~~ c3
+    c2 ~~~ c4
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["A CFB container (file or byte array)"]
-    o2["An MSG file (Outlook message)"]
+    o1["A CFB container (file<br/>or byte array)"]
+    o2["An MSG file (Outlook<br/>message)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
