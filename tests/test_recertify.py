@@ -516,7 +516,7 @@ def test_an_uncalibrated_reviewer_is_reported_as_needing_a_review_only_pass() ->
     [head] = pdc.outcomes_for_lane("o/a", LANE_R, None, [sealed], [], "v2" * 32, calibration, {},
                                    _no_github, certification=_rec("o/a"))
     assert head.bucket == pdc.UNCALIBRATED and head.needs_review_only_pass
-    assert "review-only pass" in head.reason and "no regeneration" in head.reason
+    assert "attested M9 audit" in head.reason and "no regeneration" in head.reason
     assert pdc.summarize([head], calibration)["lane_r"]["needs_review_only_pass"] == ["o/a"]
 
 
@@ -663,3 +663,19 @@ def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_sea
     before = {e["unit_id"]: e for e in json.loads((bundle / "dispositions.json").read_text())["dispositions"]}
     assert after[unit]["disposition"] in kept and before[unit]["disposition"] == "SUPERSEDE_REDUNDANT"
     assert {k: v for k, v in after.items() if k != unit} == {k: v for k, v in before.items() if k != unit}
+
+
+def test_a_lane_l_seal_whose_live_readme_cannot_be_read_is_marked_unreadable() -> None:
+    """R16 fails closed: an unreadable live README never lets a possible no-op seal count."""
+    calibration = Calibration("NOT_PASSED", reviewer_logic_version="10", prompt_version="21")
+    sealed = pdc.SealedEvidence("durable-ref", {"state": "ACCEPTED"},
+                                {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}, b"#\n",
+                                version_set="v1" * 32, commit="c" * 40)
+    certification = Recertification("o/a", LANE_L, "rev", OUTCOME_RECERTIFIED, (), (),
+                                    sealed_version_set="v1" * 32, current_version_set="v2" * 32,
+                                    seal_commit="c" * 40, regenerations=0)
+    [head] = pdc.outcomes_for_lane("o/a", LANE_L, None, [sealed], [], "v2" * 32, calibration, {},
+                                   lambda _args: None, certification=certification)
+    assert head.pipeline_good and head.live_unreadable and not head.no_action
+    pdc.apply_attested([head], {("o/a", LANE_L): "rev"}, {})
+    assert not head.independently_accepted and "R16" in head.reason

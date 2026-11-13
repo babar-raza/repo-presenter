@@ -156,3 +156,13 @@ def test_a_lane_l_seal_equal_to_the_live_readme_is_no_action_never_accepted():
     pdc.apply_attested([outcome], {(REPO, "L"): "rev1"}, {"repositories": [{"repository": REPO, "effects": ["pull_request"]}]})
     assert outcome.bucket == pdc.NO_ACTION
     assert not outcome.independently_accepted and not outcome.publication_ready
+
+
+def test_a_lane_l_seal_whose_live_readme_is_unreadable_is_never_accepted():
+    """R16 fails closed: when the live README cannot be read, a no-op seal cannot be ruled out."""
+    outcome = pdc.LaneOutcome(repository=REPO, lane="L", record_state="ACCEPTED", pipeline_good=True,
+                              bucket=pdc.UNCALIBRATED, revision="rev1", live_unreadable=True)
+    pdc.apply_attested([outcome], {(REPO, "L"): "rev1"}, {"repositories": [{"repository": REPO, "effects": ["pull_request"]}]})
+    assert outcome.bucket == pdc.UNCALIBRATED and "R16" in outcome.reason
+    assert not outcome.independently_accepted and not outcome.publication_ready
+

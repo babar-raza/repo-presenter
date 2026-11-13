@@ -6,7 +6,7 @@ name: supervisor-tick
 # card has new card-tagged commits awaiting independent verification, whether the lease has
 # expired, and which READY card would be dispatched next) and writes the result to the job
 # summary. It never writes the instructions channel, never pushes, never verifies (verification
-# mutates receipts and belongs to the supervisor session), and uses no secrets. Real dispatch to
+# mutates receipts and belongs to the supervisor session), and uses no secrets (only the automatic read-only workflow token). Real dispatch to
 # cloud sessions is done by the supervisor session acting on this signal.
 
 on:
@@ -16,6 +16,10 @@ on:
 
 permissions:
   contents: read
+  # The delivery counter verifies each acceptance record's Sigstore attestation
+  # (`gh attestation verify`) and reads the live README for the R16 no-op check; both need the
+  # automatic workflow token. Without it every record read as unattested and the count was 0.
+  attestations: read
 
 concurrency:
   group: supervisor-tick
@@ -40,6 +44,8 @@ jobs:
 
       - name: doctor / tick / worker-tick --dry-run
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           status=0
           {
