@@ -4732,3 +4732,21 @@ inherited unit, so its unit-less failures (quotes in generated text) become one 
 recorded "no stored disposition ... is named". `repair/loop.py::_repair_reconciliation` now routes such a defect to the
 authoring task(s) whose stored units print the quote (`_authored_routes`, the S6 path); a quote no task prints
 (renderer-owned text) stays unrepairable as before. Regression: `tests/readme/repair/test_s4_authored_quote_route.py`.
+
+---
+
+## 2026-11-13: owner ruling R36 — problem handling: never park, solve at the root
+
+Owner, verbatim: "first of all correct the ruling about how to tackle the upstream blockers with alternative solutions
+and how to best handle the issues in the system" — following the owner's question "How you try to solve problems, do
+you look deeply into the issue and try to find an alternative solutions, especially in event of upstream blockers as
+well as issues in the system", which the supervisor answered by naming its own shortfalls: fixing one failure shape per
+hosted wave instead of classifying all failures first; validating fixes on 10–40 minute hosted runs instead of local
+reproduction; parking PSD Python as "blocked upstream" without evaluating alternatives; and repeating an owner-only ask
+without offering an alternative path.
+
+Recorded as **R36** (full text in `docs/RULINGS.md`, row in `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B, pre-work
+checklist item 8, `CLAUDE.md` summary). Upstream blockers: verify, list honest alternatives, decide one, record it;
+R24 terminal only when none exists. System issues: classify portfolio-wide and fix each class once at its root cause;
+prove fixes zero-call/locally before hosted runs; re-trace, never retry; question checks and their data, not only
+candidates; bring every owner-only ask with an alternative path.

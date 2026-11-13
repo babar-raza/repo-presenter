@@ -24,6 +24,7 @@ by machinery built.**
 5. Does any public README text carry attribution/provenance wording? It must not (R9).
 6. Is it an upstream write? Not before every candidate of both lanes passes (R15), PRs only, drafts, allowlist (R3/R22).
 7. Am I about to ask the owner something I can decide? Decide (R11). Stuck after repeated tries? Change approach (R12).
+8. Is something blocked upstream or failing in the system? Work it by R36: verify, list honest alternatives, decide one — never just park it; classify failures into classes and fix each class once, proven before spending hosted runs.
 
 ## New rulings, 2026-11-13 (owner)
 
@@ -37,6 +38,7 @@ by machinery built.**
 | **R33** | **"Accepted" is defined by the acceptance contract**: a candidate is independently accepted when it re-certifies under current code and holds an attested M9 acceptance record under a PASSED `data/acceptance_calibration.json`. The frozen `data/reviewer_calibration.json` (NOT_PASSED, iteration 5) no longer gates counting or upstream writes; this replaces R3's "reviewer calibration PASSED". Condition: it is used to produce results. |
 | **R34** | **Portfolio grows to 41 products**: the 36 plus OCR .NET, OMR Python, PSD Java, Words Java (R28) and Cells PHP (R29, inactive until its extractor exists). |
 | **R35** | **Lane L finish line**: 25 Lane L candidates that each remove at least one real, verified defect (R21 net improvement). A product with no warranted change is `NO_ACTION_JUSTIFIED` — a terminal outcome reported separately, never counted toward the 25 (R16). |
+| **R36** | **Problem handling: never park, solve at the root.** **(a) Upstream blockers** — a blocker is never just reported. For each: (1) verify it against the pinned source (the blocker itself may be our misreading); (2) list every honest alternative inside the existing system: state the claim as unverified instead of verified, give the source-checkout path, omit the claim citing the fact that contradicts it, keep the maintainer text attributed, mark the item report-only; (3) pick the alternative that yields a certified candidate with no false claim, and record the decision (R14); (4) only when no honest alternative exists, make the repository terminal under R24 with the evidence and a drafted product issue (filed only as R7/R15 allow). **(b) System issues** — (1) before fixing, classify every failure across the whole portfolio by shape and fix each *class* once, at its root cause, never one run at a time; (2) prove a fix with a zero-call or local reproduction (unit test from the real failing shape, local recertify/replay, local end-to-end run where possible) before spending hosted runs, which are for sealing; (3) when a fix does not hold, re-trace the real path — never retry the same thing; (4) question the check and its data as well as the candidate: contradicting rules, wrong register entries and over-broad quotes are system defects; (5) when blocked on an action only the owner can take, bring the ask together with an alternative path the owner can approve instead. (Owner, 2026-11-13.) |
 
 ## All rulings in force (one line each)
 
@@ -69,5 +71,5 @@ by machinery built.**
 | R25 | Budget envelope | Superseded in amount by R31's reset; batches of six, measured cost. |
 | R26 | Prose judge | Measure M8 first; fallback ladder only on a recorded failure. |
 | R27 | **Architecture freeze** | Only fixes that make the existing system work; judge work by certified candidates. |
-| R28–R35 | 2026-11-13 | See the table above. |
+| R28–R36 | 2026-11-13 | See the table above. |
 | Final Directive | Continuous execution | PLAN → DISPATCH → EXECUTE → VERIFY → INTEGRATE → UPDATE STATE → NEXT; never stop at a report. |
