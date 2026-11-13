@@ -3,7 +3,7 @@
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.37s
+17 passed in 0.21s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/acceptance/test_registration.py -q
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.28s
+17 passed in 0.22s
 
 --- stderr ---
 
@@ -22,8 +22,8 @@ mutated: M src/repo_presenter/acceptance/registration.py
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 F.......F......F.                                                        [100%]
-================================== FAILURES ===================================
-___________________ test_digest_is_deterministic_and_pinned ___________________
+=================================== FAILURES ===================================
+___________________ test_digest_is_deterministic_and_pinned ____________________
 
     def test_digest_is_deterministic_and_pinned() -> None:
         records = _fixture_records()
@@ -43,8 +43,8 @@ E
 E         - 9919f36a679ccc015bfbde253a6bbea8bf6619dc05f9e3c6cb65555395047fc9
 E         + b06cfb09887ced4b278a4e757be099c7
 
-tests\acceptance\test_registration.py:85: AssertionError
-___________ test_load_calibration_registration_from_a_small_fixture ___________
+tests/acceptance/test_registration.py:85: AssertionError
+___________ test_load_calibration_registration_from_a_small_fixture ____________
 
     def test_load_calibration_registration_from_a_small_fixture() -> None:
         document = {
@@ -77,8 +77,8 @@ E
 E         - abc123
 E         + 585ade9ca5109a70d7aefbf7d57377c0
 
-tests\acceptance\test_registration.py:243: AssertionError
-_____________ test_real_build_reports_the_honest_zero_call_floor ______________
+tests/acceptance/test_registration.py:243: AssertionError
+______________ test_real_build_reports_the_honest_zero_call_floor ______________
 
     @pytest.mark.skipif(
         not (AUDIT_MARKDOWN.is_file() and CALIBRATION_REGISTRATION.is_file() and SEALED_BASELINE.is_file()),
@@ -120,8 +120,9 @@ _____________ test_real_build_reports_the_honest_zero_call_floor ______________
         # n>=50 minimum from existing data alone. 27: the sealed baseline now holds 35 seals (re-certified
         # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
         # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
-        # number, not a target.
-        assert registration.shortfall.clean_twin_achieved == 78
+        # number, not a target. 78 -> 77 (2026-11-13): the 3D .NET Lane L seal is NEEDS_REPAIR on genuine
+        # defects L-03/L-05 (justified in the baseline, R10), so it is no longer a clean twin.
+        assert registration.shortfall.clean_twin_achieved == 77
         assert registration.shortfall.clean_twin_shortfall == 0
     
         assert len(registration.labelled_cases) == 113
@@ -131,15 +132,15 @@ _____________ test_real_build_reports_the_honest_zero_call_floor ______________
         # The digest is a real SHA-256 hex digest and is itself deterministic across two builds.
 >       assert len(registration.digest) == 64
 E       AssertionError: assert 32 == 64
-E        +  where 32 = len('0fe6f02d89e63dc2476f88b942f07b34')
-E        +    where '0fe6f02d89e63dc2476f88b942f07b34' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='0fe6f02d89e63dc2476f88b942f07b34').digest
+E        +  where 32 = len('71bf791f52e7f14213f4b65f4be5cbf4')
+E        +    where '71bf791f52e7f14213f4b65f4be5cbf4' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='71bf791f52e7f14213f4b65f4be5cbf4').digest
 
-tests\acceptance\test_registration.py:395: AssertionError
-=========================== short test summary info ===========================
+tests/acceptance/test_registration.py:396: AssertionError
+=========================== short test summary info ============================
 FAILED tests/acceptance/test_registration.py::test_digest_is_deterministic_and_pinned
 FAILED tests/acceptance/test_registration.py::test_load_calibration_registration_from_a_small_fixture
 FAILED tests/acceptance/test_registration.py::test_real_build_reports_the_honest_zero_call_floor
-3 failed, 14 passed in 0.49s
+3 failed, 14 passed in 0.24s
 
 --- stderr ---
 

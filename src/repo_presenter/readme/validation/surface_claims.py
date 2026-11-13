@@ -417,13 +417,45 @@ def without_absent_type_rows(text: str, facts: FactsDocument) -> str:
     return "\n".join(line for line in text.split("\n") if line.rstrip("\r") not in drop)
 
 
+def stub_rows(text: str, facts: FactsDocument) -> list[str]:
+    """The table rows of ``text`` that BC-14 rule (j) reads as a stub described as working: the row's
+    subject is a type or member a SUPPORTED maintainers' limitation statement says only throws, and
+    the row's description sells it as working (Aspose.3D-FOSS-for-Python's API table: "`FbxExporter`
+    | FbxExporter.save saves the given Scene ...", while the maintainers' own Scope and Limitations
+    list says ``FbxExporter.save()`` raises ``NotImplementedError``). The same rule, run on the same
+    text, so the filter and the check can never disagree."""
+    from repo_presenter.readme.validation.claims import _lines
+
+    rows = text.splitlines()
+    flagged: list[str] = []
+    for finding in _stub_findings(_lines(text), facts, _Origin(facts)):
+        last = finding.last if finding.last is not None else finding.line
+        for index in range(finding.line, last + 1):
+            if 0 <= index < len(rows) and rows[index].lstrip().startswith("|"):
+                flagged.append(rows[index])
+    return flagged
+
+
+def without_stub_rows(text: str, facts: FactsDocument) -> str:
+    """``text`` with the rows ``stub_rows`` names removed, every other line exactly as written. A
+    row dropped here is dropped on evidence (R14 rule, docs/DECISION_LOG.md 2026-11-13): the
+    maintainers' own SUPPORTED limitation statement says its subject only throws, so printing the
+    row verbatim states a falsehood BC-14 refuses; the type itself stays in the renderer's
+    verified API table, which describes a stub as such."""
+    drop = set(stub_rows(text, facts))
+    if not drop:
+        return text
+    return "\n".join(line for line in text.split("\n") if line.rstrip("\r") not in drop)
+
+
 def kept_table_form(text: str, facts: FactsDocument) -> str:
-    """The ONE printable form of a kept maintainers' table: absent-type rows removed (BC-14) and any
-    unsafe HTML element it names in prose shown in a code span (BC-06). The renderer, BC-05, the
+    """The ONE printable form of a kept maintainers' table: absent-type rows removed (BC-14 rule
+    (i)), rows selling a maintainer-stated stub as working removed (BC-14 rule (j)), and any unsafe
+    HTML element it names in prose shown in a code span (BC-06). The renderer, BC-05, the
     independent reviewer and the restore guard all judge "printed" against this form."""
     from repo_presenter.readme.validation.links import defang_unsafe_html
 
-    return defang_unsafe_html(without_absent_type_rows(text, facts))
+    return defang_unsafe_html(without_stub_rows(without_absent_type_rows(text, facts), facts))
 
 
 #: Kept maintainers' unit kinds whose prose BC-12 judges and ``kept_unit_form`` corrects. A heading

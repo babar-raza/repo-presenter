@@ -45,6 +45,7 @@ from repo_presenter.readme.correction.model import (
     Edit,
     Finding,
 )
+from repo_presenter.readme.validation.claims import other_subject_denial_lines
 
 DETECTOR = "stale_package_version"
 
@@ -81,6 +82,9 @@ def stale_package_version(ctx: Context) -> DetectorResult:
     published = ctx.supported(PUBLISHED_VERSION_FACT_ID)
     edits: list[Edit] = []
     findings: list[Finding] = []
+    # A "not published" statement about another artifact (the converter tool, a sample) is not
+    # this package's publication claim: nothing contradicts it, so it is never rewritten.
+    other_subject = other_subject_denial_lines(ctx.readme, ctx.facts)
     for line in ctx.lines:
         if line.in_fence:
             continue
@@ -119,6 +123,8 @@ def stale_package_version(ctx: Context) -> DetectorResult:
                 )
             )
         sentence_spans: list[tuple[int, int]] = []
+        if line.number - 1 in other_subject:
+            continue
         for match in _NOT_PUBLISHED_SENTENCE.finditer(line.text):
             registry = match.group(2)
             if published is None:

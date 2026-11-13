@@ -41,6 +41,14 @@ def _fact_rows(candidate: Candidate) -> tuple[dict[str, Any], ...]:
             "value": fact.value,
             "polarity": fact.polarity,
             "attributes": fact.attributes,
+            # The evidence rows a sealed facts.json carries: the registry reading lives there, and
+            # ``unconfirmed_registry_packages`` reads it to exempt the registry install BC-02 forbids
+            # printing (Aspose.3D-FOSS-for-Python run 43411932927: without it BC-17 demanded
+            # ``python3 -m pip install aspose-3d-foss`` that BC-02 rejects once restored).
+            "evidence": [
+                {"path": item.path, "detail": item.detail}
+                for item in getattr(fact, "evidence", ())
+            ],
         }
         for fact in candidate.facts.facts
     )

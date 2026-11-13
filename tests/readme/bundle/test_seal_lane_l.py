@@ -330,7 +330,7 @@ def test_a_changed_detector_reopens_only_the_correction_scope_and_never_invalida
 ) -> None:
     sealed = _deps(tmp_path)
     current = json.loads(json.dumps(sealed))
-    current["detectors"]["broken_link"] = "2"
+    current["detectors"]["broken_link"] = str(int(sealed["detectors"]["broken_link"]) + 1)
     changes = evaluate(sealed, current).changes
     assert [(c.dependency, c.scope, c.reopens) for c in changes] == [
         ("detectors.broken_link", "correction", "COMPOSING")

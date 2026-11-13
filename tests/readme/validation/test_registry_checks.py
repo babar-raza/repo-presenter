@@ -2156,9 +2156,15 @@ def test_zero_badge_worthy_facts_needs_no_badge_row() -> None:
 def test_a_badge_worthy_fact_with_no_rendered_badge_still_fails() -> None:
     # Negative control, must not regress: a badge-worthy fact exists (a license claim), but it
     # is incomplete (no license:file fact), so the renderer still emits no badge - and that is
-    # still a real gap, exactly as before the fix.
+    # still a real gap, exactly as before the fix. (A declared license with no file renders its
+    # badge linked to the License section since 2026-11-13, Aspose.3D TypeScript, so the plan here
+    # leaves that section out: no badge target remains, and the gap must still be reported.)
     half_license = _without_badge_worthy_facts(_fact("license:spdx", "license", "MIT"))
-    candidate = _candidate(facts=half_license)
+    plan = {
+        **PLAN,
+        "sections": [s for s in PLAN["sections"] if s.get("section_id") != "license"],
+    }
+    candidate = _candidate(facts=half_license, plan=plan)
     details = [f.detail for f in structure_failures(candidate)]
     assert any("expected one badge row; found 0" in d for d in details), details
 

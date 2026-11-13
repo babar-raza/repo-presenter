@@ -38,8 +38,10 @@ a wrong package name in prose, or a format the product does not read):
     "not yet published on any package registry" beside a NuGet package NuGet lists, wave 3). The
     sentence is read whole, across the physical lines a paragraph wraps it over, and only when it
     is about this package: one that names a different package id and not this package's names
-    (3D-.NET, wave 6: the converter tool "is not published to NuGet") is a statement no fact
-    covers, so it is not judged.
+    (3D-.NET, wave 6: the converter tool "is not published to NuGet"), or whose denial has
+    another artifact as its subject ("a console conversion tool in src/converter/ that ... is not
+    published to NuGet", 3D-.NET Lane R, no package id spelled), is a statement no fact covers,
+    so it is not judged.
 (c) Identity. An install command whose package is a near-miss of the package identity fact (the
     same name without ``-foss``, a prefix, a different separator) is flagged; an unrelated package
     (a test runner), a declared dependency, and a distribution fact a registry confirmed as this
@@ -287,7 +289,10 @@ _TOOLCHAIN_BEFORE = re.compile(
     r"requires-python|python_requires)\b|(?<![\w])\.net\b|>=|<=|~=)|(?-i:\bGo\b)"
 )
 _TOOLCHAIN_AFTER = re.compile(
-    r"(?i)^\s*(?:\+|or\s+(?:later|newer|higher|above|greater)\b|and\s+(?:later|newer|above|higher)\b)"
+    r"(?i)^\s*(?:\+|or\s+(?:later|newer|higher|above|greater)\b|and\s+(?:later|newer|above|higher)\b"
+    # "needs version 3.10 of Python": the runtime is named right after the number
+    r"|of\s+(?:the\s+)?(?:python|pypy|node(?:\.?js)?|java|jdk|jre|kotlin|scala|rust|rustc|"
+    r"typescript|ruby|php|go|golang|\.net|dotnet|cmake|gcc|clang|msvc|c\+\+)(?![\w.+-]))"
 )
 
 
@@ -486,19 +491,55 @@ def _names_a_genuinely_unpublished_version(
     return bool(named) and all(version != published.value for version in named)
 
 
+def _known_names(facts: FactsDocument, identity: Fact | None) -> list[re.Pattern[str]]:
+    """Every name a registry reading covers: the identity, and a distribution a registry confirmed
+    as this repository's own. A sentence naming one of them is about this package."""
+    patterns = [_name_pattern(name) for name in _names(identity.value)] if identity else []
+    return patterns + [
+        _name_pattern(fact.value)
+        for fact in facts.facts
+        if fact.id.startswith(DISTRIBUTION_FACT_PREFIX) and fact.polarity == "SUPPORTED"
+    ]
+
+
+def _denial_is_about_another_subject(
+    sentence: str, plain: str, plain_match: re.Match[str], known: list[re.Pattern[str]]
+) -> bool:
+    """Whether a "not published" sentence denies the publication of something other than this
+    package: it names another package id in a code span, or its denial's subject is another
+    artifact (a tool, converter, sample...)."""
+    return _names_another_package(sentence, known) or _denial_subject_is_another_artifact(
+        plain, plain_match, known
+    )
+
+
+def other_subject_denial_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
+    """The 0-based lines of every "not published" statement whose subject is not this package
+    (rule (b)'s subject test): a statement no registry reading of this package can contradict,
+    so a correction must not rewrite it either. Lane L's ``stale_package_version`` rewrote the
+    3D-.NET converter's "it is not published to NuGet" into "it is published to NuGet" -- a false
+    claim about the converter (bundle 52b0f00e, 2026-11-10)."""
+    identity = _fact(facts, "package:name")
+    known = _known_names(facts, identity)
+    found: set[int] = set()
+    for paragraph in _paragraphs(_lines(readme)):
+        for begin, end in _sentence_spans(paragraph.text):
+            sentence = paragraph.text[begin:end]
+            plain = sentence.replace("`", "")
+            for plain_match in _NOT_PUBLISHED.finditer(plain):
+                if _denial_is_about_another_subject(sentence, plain, plain_match, known):
+                    raw = _NOT_PUBLISHED.search(sentence)
+                    found.add(paragraph.line_at(begin + (raw.start() if raw else 0)))
+    return frozenset(found)
+
+
 def _publication_findings(
     lines: list[_Line], facts: FactsDocument, identity: Fact
 ) -> list[ClaimFinding]:
     if not _positive_registry_reading(facts):
         return []
     patterns = [_name_pattern(name) for name in _names(identity.value)]
-    # Every name a registry reading covers: the identity, and a distribution a registry confirmed
-    # as this repository's own. A sentence naming one of them is about this package.
-    known = patterns + [
-        _name_pattern(fact.value)
-        for fact in facts.facts
-        if fact.id.startswith(DISTRIBUTION_FACT_PREFIX) and fact.polarity == "SUPPORTED"
-    ]
+    known = _known_names(facts, identity)
     findings: list[ClaimFinding] = []
     flagged: set[int] = set()
     for paragraph in _paragraphs(lines):
@@ -510,8 +551,9 @@ def _publication_findings(
                 _PACKAGE_CONTEXT.search(plain) or any(p.search(plain) for p in patterns)
             ):
                 continue
-            if _names_another_package(sentence, known):
-                continue  # about a package no registry reading here covers: nothing contradicts it
+            if _denial_is_about_another_subject(sentence, plain, plain_match, known):
+                continue  # about a package or artifact (the converter tool) no registry reading
+                # here covers: nothing contradicts it
             if _names_a_genuinely_unpublished_version(plain, facts, plain_match):
                 continue  # "this tree is 26.8.0, not yet released" is true when 26.8.0 isn't the
                 # registry's own published version -- a version-scoped disclaimer, not a claim
@@ -601,6 +643,59 @@ def _names_another_package(sentence: str, known: list[re.Pattern[str]]) -> bool:
         _PACKAGE_ID_SPAN.match(token) and not _DOCUMENT_OR_SOURCE_FILE.search(token)
         for token in (span.strip() for span in _CODE_SPAN.findall(sentence))
     )
+
+
+# What the subject of a "not published" clause can be. This package: the package, library or SDK
+# (not "package id"/"package name", which label another artifact's identifier) or one of its
+# names. Another artifact the repository ships beside it: a tool, converter, sample, demo...
+_OWN_REFERENT = re.compile(
+    r"(?i)\b(?:packages?(?!\s+(?:id|name|manager)s?\b)|librar(?:y|ies)|sdks?|assembl(?:y|ies)|"
+    r"distributions?|modules?|bindings?)\b"
+)
+_OTHER_REFERENT = re.compile(
+    r"(?i)\b(?:tools?|toolkits?|converters?|utilit(?:y|ies)|cli|command[- ]line\s+\w+|"
+    r"console\s+(?:app|application|program)s?|apps?|applications?|programs?|samples?|examples?|"
+    r"demos?|benchmarks?|test\s+(?:projects?|suites?|harness(?:es)?)|playgrounds?)\b"
+)
+_RELATIVE_PRONOUN = re.compile(r"(?i)\b(?:that|which|who)\b")
+
+
+def _denial_subject_is_another_artifact(
+    sentence: str, match: re.Match[str], known: list[re.Pattern[str]]
+) -> bool:
+    """Whether the subject of the located "not published" clause is an artifact other than this
+    package -- a tool, converter, sample or demo the repository ships beside the library.
+
+    Real hosted Lane R false positive (aspose-3d-foss/Aspose.3D-FOSS-for-.NET, version set
+    2e1cacfdb7dc): "The repository also includes a console conversion tool in src/converter/ that
+    references the library as a project but is not published to NuGet." The converter is
+    unpublished -- true -- while the registry reading is of the library, so nothing contradicts the
+    sentence; the code-span test (``_names_another_package``) missed it because no package id is
+    spelled. The subject is read conservatively, and only ever to exempt:
+
+    - the denial sits in a relative clause ("X that/which ... is not published"): its subject is
+      the referent nearest before the last relative pronoun, which must be another artifact;
+    - otherwise every referent before the denial in its clause (after the last ``;``) must be
+      another artifact ("the converter and the library are not published" still denies the
+      library).
+
+    No referent at all ("it is not published", "the package is not published") is judged as
+    before."""
+    clause_start = sentence.rfind(";", 0, match.start()) + 1
+    clause = sentence[clause_start : match.start()]
+
+    def referents(text: str) -> list[tuple[int, bool]]:
+        found = [(m.start(), True) for m in _OWN_REFERENT.finditer(text)]
+        found += [(m.start(), False) for m in _OTHER_REFERENT.finditer(text)]
+        found += [(m.start(), True) for pattern in known for m in pattern.finditer(text)]
+        return sorted(found)
+
+    pronouns = list(_RELATIVE_PRONOUN.finditer(clause))
+    if pronouns:
+        before = referents(clause[: pronouns[-1].start()])
+        return bool(before) and not before[-1][1]
+    found = referents(clause)
+    return bool(found) and not any(own for _, own in found)
 
 
 def _exclusivity_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFinding]:

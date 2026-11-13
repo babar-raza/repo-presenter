@@ -81,6 +81,14 @@ _URL_CONTROLS = "".join(chr(code) for code in range(0x21))
 _URL_TAB_OR_NEWLINE = re.compile(r"[\t\n\r]")
 
 
+#: A relative link from the repository-root README to one of the repository's own github.com pages
+#: (two levels up from ``/<owner>/<repo>/blob/<ref>/README.md`` is ``/<owner>/<repo>/``).
+GITHUB_WEB_PAGE = re.compile(
+    r"^\.\./\.\./(?:issues|pulls?|wiki|discussions|actions|releases|projects|security|tags|labels"
+    r"|milestones|compare|commits?)(?:[/?#].*)?$"
+)
+
+
 @dataclass(frozen=True)
 class LinkResult:
     outcome: LinkOutcome
@@ -285,6 +293,12 @@ def link_failures(candidate: Candidate) -> list[Failure]:
                     Failure("COMPOSING", f"{target.href}: {result.detail}", section)
                 )
         elif target.kind == "relative":
+            if GITHUB_WEB_PAGE.match(target.href):
+                # ``../../issues`` from the root README resolves on github.com to the repository's
+                # own issues page, not to a tree path (the Lane L ``broken_link`` detector reads it
+                # the same way). Measured: Aspose.Words-FOSS-for-.NET run 43411924300, whose kept
+                # maintainers' paragraphs say "[open an issue](../../issues)".
+                continue
             result = check_relative(target.href, candidate.tree_paths)
             if result.outcome != "RESOLVED":
                 failures.append(

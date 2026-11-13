@@ -26,14 +26,14 @@ DETECTORS: dict[str, Detector] = {}
 #: change cannot pass quietly.
 DETECTOR_VERSIONS: dict[str, str] = {
     "absent_type_row": "1",
-    "broken_link": "1",
+    "broken_link": "2",
     "dead_link": "1",
     "enterprise_edition_naming": "3",
     "failing_example": "1",
     "format_overclaim": "2",
     "report_gaps": "1",
     "second_h1": "1",
-    "stale_package_version": "4",
+    "stale_package_version": "5",
     "stale_type_count": "1",
     "stray_fence": "1",
     "unclosed_details": "1",

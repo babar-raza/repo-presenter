@@ -62,10 +62,12 @@ from repo_presenter.core.ecosystems import EcosystemSpec, spec_for
 from repo_presenter.core.errors import ConfigError
 from repo_presenter.core.facts import (
     DECLARED_SYMBOL_KINDS,
+    NO_PACKAGE_MANIFEST_FACT_ID,
     REGISTRY_COMMAND_ATTRIBUTE,
     Fact,
     FactsDocument,
     bounded_records,
+    has_no_package_manifest,
 )
 from repo_presenter.core.llm.binding import collect_ids
 from repo_presenter.core.llm.narrowing import Narrowing
@@ -121,6 +123,7 @@ from repo_presenter.readme.reconciliation.destinations import (
     rehomed,
 )
 from repo_presenter.readme.validation.claims import install_identity_findings
+from repo_presenter.readme.validation.text import installs_the_checkout
 
 DISPOSITIONS_FILENAME = "dispositions.json"
 # Ported 2026-10-23 for readme/validation/deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class to
@@ -268,7 +271,8 @@ def unproven_source_build_blocks(facts: FactsDocument) -> dict[str, str]:
     measured build failed, the maintainers' test-suite block was kept ``VERIFIED_PRESERVE``, and a
     BC-02 repair "succeeded" with no change at all (``changes: []``), so the block, and BC-02, stayed."""
     implied = unproven_build_commands(facts)
-    if not implied:
+    manifestless = manifestless_install_ids(facts)
+    if not implied and not manifestless:
         return {}
     blocks = command_block_units(facts)
     found: dict[str, str] = {}
@@ -279,9 +283,20 @@ def unproven_source_build_blocks(facts: FactsDocument) -> dict[str, str]:
         install_id = next(
             (fid for fid, commands in sorted(implied.items()) if lines & commands), ""
         )
+        if not install_id and manifestless and any(
+            installs_the_checkout(line) for line in lines
+        ):
+            # R36(a), PSD Python: with no package manifest, a block that pip-installs the checkout
+            # (`pip install -e ".[dev]"`) cannot work; BC-02 refuses a README that prints it.
+            install_id = manifestless[0]
         if install_id:
             found[unit.id] = install_id
     return found
+
+
+def manifestless_install_ids(facts: FactsDocument) -> list[str]:
+    """The fact that records the checkout root as holding no package manifest, when it does."""
+    return [NO_PACKAGE_MANIFEST_FACT_ID] if has_no_package_manifest(facts.facts) else []
 
 
 RENDERING_FACT_KINDS: dict[str, tuple[str, ...]] = {
@@ -1150,6 +1165,15 @@ UNPROVEN_BUILD_RATIONALE = (
     "states only what the repository documents."
 )
 
+#: The R36(a) omission of a block that pip-installs a checkout holding no package manifest. It
+#: carries "contradicted" for the same reason ``UNPROVEN_BUILD_RATIONALE`` does, and it is true: the
+#: checkout itself contradicts the command - pip has no manifest there to build from.
+NO_MANIFEST_RATIONALE = (
+    "This command is contradicted by the checkout itself: the repository ships no package "
+    "manifest (pyproject.toml, setup.cfg or setup.py), so pip has nothing to build or install "
+    "from it; the Installation section gives only the verified source-checkout path."
+)
+
 
 def edition_labels(text: str) -> list[str]:
     """The edition names BC-06 forbids in prose: a substitute for Enterprise Edition, or any
@@ -1458,7 +1482,11 @@ def normalize(
             entry["fact_ids"] = sorted(cited | {unpublished[unit]})
             continue
         if unit in unproven and disposition not in ("OMIT_UNSUPPORTED", "DEFER_UNRESOLVED"):
-            entry["rationale"] = UNPROVEN_BUILD_RATIONALE
+            entry["rationale"] = (
+                NO_MANIFEST_RATIONALE
+                if unproven[unit] in manifestless_install_ids(facts)
+                else UNPROVEN_BUILD_RATIONALE
+            )
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {unproven[unit]})

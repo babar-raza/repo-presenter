@@ -44,8 +44,10 @@ loop used to repair S4 defects only -- widened to every stage ``repair_defect`` 
 
 from __future__ import annotations
 
+import copy
 import json
 import sys
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -505,6 +507,7 @@ def _compose(
 def _settle_defects(
     *, composed: _Composition, validation: dict[str, Any], verdict: ReviewVerdict,
     entry: RegistryEntry, document: FactsDocument, prompts: PromptRegistry,
+    unrestorable: frozenset[str] = frozenset(),
 ) -> list[Defect]:
     """The defects of this pass that ``repair_defect`` (``readme.repair.loop``) may act on: every
     failing blocking check, routed to whichever causal stage it names -- S4 reconciliation, S5
@@ -541,11 +544,14 @@ def _settle_defects(
         ),
     ]
     repairable = [defect for defect in found if defect.repairable]
-    return _without_restorable(repairable, composed=composed, document=document)
+    return _without_restorable(
+        repairable, composed=composed, document=document, unrestorable=unrestorable
+    )
 
 
 def _without_restorable(
-    defects: list[Defect], *, composed: _Composition, document: FactsDocument
+    defects: list[Defect], *, composed: _Composition, document: FactsDocument,
+    unrestorable: frozenset[str] = frozenset(),
 ) -> list[Defect]:
     """Leave out what the zero-call restore (``_restore_lost_content``) answers, so the model is
     asked only about what restore cannot fix. A BC-05/BC-08/BC-17 failure line naming an inherited
@@ -574,7 +580,9 @@ def _without_restorable(
     _, changes = restore_lost_units(
         composed.dispositions, document, every, holdable_sections(document), included
     )
-    restorable = {change["unit_id"] for change in changes}
+    # A unit the restore already tried and could not keep is not "a restore's to answer": withholding
+    # it left its loss with no stage able to fix it (3D Python 060.table, Words .NET 082.paragraph).
+    restorable = {change["unit_id"] for change in changes} - unrestorable
     if not restorable:
         return defects
     kept: list[Defect] = []
@@ -680,10 +688,13 @@ def _settle_s9(
             break
         # Zero-call restore BEFORE any model repair: when the only blocking failures are content
         # the restore keeps verbatim, the candidate is settled without asking the model anything.
+        # Units the restore tried and could not keep: their losses are the model repair's, never
+        # withheld by ``_without_restorable`` as "a restore's to answer".
+        unrestorable: set[str] = set()
         restored = _restore_lost_content(
             _Settled(composed, validation, verdict, rounds), entry=entry, document=document,
             investigation=investigation, tree_paths=tree_paths, original=original, out_dir=out_dir,
-            require_clean_review=True,
+            require_clean_review=True, unrestorable=unrestorable,
         )
         if restored.composed is not composed:
             if not blocking_failures(restored.validation):
@@ -693,7 +704,7 @@ def _settle_s9(
             composed, validation, verdict = restored.composed, restored.validation, restored.verdict
         defects = _settle_defects(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
-            document=document, prompts=prompts,
+            document=document, prompts=prompts, unrestorable=frozenset(unrestorable),
         )
         if not defects or not _repair_defects(
             defects=defects, composed=composed, investigation=investigation, entry=entry,
@@ -748,9 +759,131 @@ def _strictly_fewer_failures(old: list[dict[str, Any]], new: list[dict[str, Any]
     )
 
 
+def _judge_restore(
+    dispositions: dict[str, Any], *, composed: _Composition, entry: RegistryEntry,
+    document: FactsDocument, investigation: dict, tree_paths: list[str], original: str,
+    out_dir: Path, restored: list[dict[str, str]],
+) -> tuple[str, list[Any], list[Accounted], dict[str, Any], dict[str, Any], ReviewVerdict]:
+    """Render and judge one restore state with the unchanged validators and deterministic reviewer:
+    ``(readme, tasks, accounted, dispositions, validation, verdict)``. Zero provider calls."""
+    readme = render_readme(entry, document, composed.plan, composed.coherent_units, dispositions)
+    tasks = authoring_tasks(
+        entry, document, investigation, dispositions, composed.plan,
+        restored_out=vacated_sections(restored),
+    )
+    candidate = _candidate(
+        entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+        tree_paths, tasks, benchmark=original,
+    )
+    accounted_dispositions, accounted = account_unprinted_units(candidate)
+    if accounted and render_readme(
+        entry, document, composed.plan, composed.coherent_units, accounted_dispositions
+    ) == readme:
+        dispositions = accounted_dispositions
+    else:
+        accounted = []
+    candidate = _candidate(
+        entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+        tree_paths, tasks, benchmark=original,
+    )
+    validation = validate_candidate(candidate, out_dir, [])
+    verdict = review_candidate(
+        readme_text=readme, units=composed.coherent_units.get("units", []), facts=document,
+        dispositions=dispositions, original_readme=original,
+    )
+    return readme, tasks, accounted, dispositions, validation, verdict
+
+
+def _new_failure_units(
+    old: list[dict[str, Any]], new: list[dict[str, Any]], restored: set[str]
+) -> dict[str, str]:
+    """``{unit_id: check id}`` for every restored unit a NON-restorable blocking check names for a
+    failure the pre-restore candidate did not have: the units whose restore traded a loss for a new
+    defect. Restorable checks (BC-05/BC-08/BC-17) are not read here; their items are what the
+    restore answers and escalates on (``choose_units``)."""
+    before = {
+        (str(check["id"]), str(detail))
+        for check in old
+        for detail in check.get("details") or []
+    }
+    offenders: dict[str, str] = {}
+    for check in new:
+        check_id = str(check["id"])
+        if check_id in RESTORABLE_CHECKS:
+            continue
+        for failure in check.get("failures") or []:
+            unit = failure.get("unit_id")
+            if unit in restored and (check_id, str(failure.get("detail", ""))) not in before:
+                offenders.setdefault(str(unit), check_id)
+    return offenders
+
+
+def _new_unattributed(old: list[dict[str, Any]], new: list[dict[str, Any]]) -> set[tuple[str, str]]:
+    """The non-restorable ``(check id, detail)`` failures of ``new`` that ``old`` did not have and
+    that name no unit."""
+    before = {
+        (str(check["id"]), str(detail)) for check in old for detail in check.get("details") or []
+    }
+    found: set[tuple[str, str]] = set()
+    for check in new:
+        check_id = str(check["id"])
+        if check_id in RESTORABLE_CHECKS:
+            continue
+        records = check.get("failures") or [{"detail": d} for d in check.get("details") or []]
+        for failure in records:
+            item = (check_id, str(failure.get("detail", "")))
+            if failure.get("unit_id") is None and item not in before:
+                found.add(item)
+    return found
+
+
+def _unattributed_offenders(
+    old: list[dict[str, Any]], new: list[dict[str, Any]], dispositions: dict[str, Any],
+    restored: list[dict[str, str]], *, composed: _Composition, entry: RegistryEntry,
+    document: FactsDocument, investigation: dict, tree_paths: list[str], original: str,
+    out_dir: Path,
+) -> dict[str, str]:
+    """``{unit_id: check id}`` for each restored unit whose rollback ALONE clears at least one new,
+    unattributed failure and adds no failure of its own. Empty when there is no such failure."""
+    wanted = _new_unattributed(old, new)
+    if not wanted:
+        return {}
+    offenders: dict[str, str] = {}
+    for unit in dict.fromkeys(str(change["unit_id"]) for change in restored):
+        trial = _rolled_back(dispositions, composed.dispositions, {unit})
+        *_, validation, _verdict = _judge_restore(
+            trial, composed=composed, entry=entry, document=document,
+            investigation=investigation, tree_paths=tree_paths, original=original,
+            out_dir=out_dir, restored=[c for c in restored if c["unit_id"] != unit],
+        )
+        remaining = _new_unattributed(old, blocking_failures(validation))
+        cleared = wanted - remaining
+        if cleared and remaining <= wanted:
+            offenders[unit] = sorted(cleared)[0][0]
+    return offenders
+
+
+def _rolled_back(
+    current: dict[str, Any], original: Mapping[str, Any], units: Collection[str]
+) -> dict[str, Any]:
+    """``current`` with each of ``units`` returned to its entry in ``original``."""
+    first = {
+        str(row.get("unit_id")): row for row in original.get("dispositions", [])
+    }
+    output = copy.deepcopy(current)
+    output["dispositions"] = [
+        copy.deepcopy(first[str(row.get("unit_id"))])
+        if str(row.get("unit_id")) in units and str(row.get("unit_id")) in first
+        else row
+        for row in output.get("dispositions", [])
+    ]
+    return output
+
+
 def _restore_lost_content(
     settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
     tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+    unrestorable: set[str] | None = None,
 ) -> _Settled:
     """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
     they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -806,32 +939,45 @@ def _restore_lost_content(
         if not changes:
             break
         restored.extend(changes)
-        readme = render_readme(entry, document, composed.plan, composed.coherent_units, dispositions)
-        tasks = authoring_tasks(
-            entry, document, investigation, dispositions, composed.plan,
-            restored_out=vacated_sections(restored),
-        )
-        candidate = _candidate(
-            entry, document, composed.plan, composed.coherent_units, dispositions, readme,
-            tree_paths, tasks, benchmark=original,
-        )
-        accounted_dispositions, accounted = account_unprinted_units(candidate)
-        if accounted and render_readme(
-            entry, document, composed.plan, composed.coherent_units, accounted_dispositions
-        ) == readme:
-            dispositions = accounted_dispositions
-        else:
-            accounted = []
-        candidate = _candidate(
-            entry, document, composed.plan, composed.coherent_units, dispositions, readme,
-            tree_paths, tasks, benchmark=original,
-        )
-        validation = validate_candidate(candidate, out_dir, [])
-        verdict = review_candidate(
-            readme_text=readme, units=composed.coherent_units.get("units", []), facts=document,
-            dispositions=dispositions, original_readme=original,
-        )
-        failing = blocking_failures(validation)
+        restored_dispositions = dispositions
+        for _rollback in range(RESTORE_ROUNDS):
+            readme, tasks, accounted, dispositions, validation, verdict = _judge_restore(
+                restored_dispositions, composed=composed, entry=entry, document=document,
+                investigation=investigation, tree_paths=tree_paths, original=original,
+                out_dir=out_dir, restored=restored,
+            )
+            failing = blocking_failures(validation)
+            # A restored unit that a non-restorable check now names for a failure the candidate did
+            # not have before (BC-14 on a maintainers' row, BC-02 on a registry install, BC-07 on a
+            # dangling colon) is rolled back ALONE and the rest of the restore re-judged: one such
+            # unit used to discard every other unit's clean restore with it, leaving BC-05/BC-17
+            # losses that ``_without_restorable`` then withheld from the model repair as well
+            # (Aspose.3D-FOSS-for-Python run 43411932927, Aspose.Words-FOSS-for-.NET 43411924300).
+            offenders = _new_failure_units(
+                blocking_failures(settled.validation), failing,
+                {change["unit_id"] for change in restored},
+            )
+            if not offenders:
+                # A new failure no failure record attributes to a unit (BC-07's "expected one badge
+                # row; found 5" when a kept unit prints badge lines above the first heading, BC-06 on
+                # a link): find the restored unit(s) whose restore alone brings it, by re-judging
+                # with each rolled back in turn (zero provider calls).
+                offenders = _unattributed_offenders(
+                    blocking_failures(settled.validation), failing, restored_dispositions,
+                    restored, composed=composed, entry=entry, document=document,
+                    investigation=investigation, tree_paths=tree_paths, original=original,
+                    out_dir=out_dir,
+                )
+            if not offenders:
+                break
+            restored_dispositions = _rolled_back(
+                restored_dispositions, composed.dispositions, offenders
+            )
+            restored[:] = [change for change in restored if change["unit_id"] not in offenders]
+            skipped.extend(
+                {"unit_id": unit, "reason": f"new_failure:{check}"}
+                for unit, check in sorted(offenders.items())
+            )
         if not failing:
             break
     if restored and failing:
@@ -842,8 +988,20 @@ def _restore_lost_content(
             + "; ".join(str(c['id']) + ' ' + '|'.join(str(d)[:140] for d in (c.get('details') or [])[:3]) for c in failing),
             file=sys.stderr,
         )
+    # Units this restore could not keep (rolled back, or refused by ``restore_lost_units``): their
+    # losses go on to the model repair instead of being withheld as "a restore's to answer".
+    # ``unrestorable`` (when the caller passes a set) receives them; the return value is unchanged.
+    refused = {str(s["unit_id"]) for s in skipped}
+    if unrestorable is not None:
+        unrestorable.update(refused)
     if not restored:
         return settled
+
+    def discarded() -> _Settled:
+        if unrestorable is not None:
+            unrestorable.update(str(change["unit_id"]) for change in restored)
+        return settled
+
     if failing:
         # Partial restore: kept only when the blocking failures strictly shrink and nothing outside
         # the old set appears (BC-07 must not newly fail), and the deterministic review gains no
@@ -851,7 +1009,7 @@ def _restore_lost_content(
         if not _strictly_fewer_failures(blocking_failures(settled.validation), failing) or len(
             verdict.blocking_findings
         ) > len(settled.verdict.blocking_findings):
-            return settled
+            return discarded()
     elif require_clean_review and verdict.blocking_findings:
         return settled  # the S9 loop still has review defects to repair; write nothing yet
     write_dispositions(dispositions, out_dir / "dispositions.json")

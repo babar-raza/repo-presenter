@@ -48,12 +48,12 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "84730a9041b74da6f35270ce2aa9e814490eac8417a8847eccb44676f2b4861e",
     ),
     "links.py": (
-        ("1",),
-        "831000cf4390bb73d51bcff348a6c914c23c80e1a3fc414e386d0fc84d85adb5",
+        ("2",),
+        "59fa698291ad1610f892ba7d5a452dc17054d979d43eb29da50bc2dc2f90d881",
     ),
     "stale_package_version.py": (
-        ("4",),
-        "67dbec29314cb666e285cb9efe64a9129fc7256baabf178435fd01cbe028ed2c",
+        ("5",),
+        "ea69011d1a78451b640269cbad80b965e4364d9c7d58613bc31cfcaac2f1f0ff",
     ),
     "stale_type_count.py": (
         ("1",),

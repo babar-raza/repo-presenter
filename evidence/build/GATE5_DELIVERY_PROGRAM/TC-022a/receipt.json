@@ -3,19 +3,21 @@
   "card": "TC-022a",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-11T14:54:35Z",
-  "base_rev": "0b993a83c8b5d8b70688e074655395e9588541df",
-  "head_rev": "48509cc76c1c5081c0fe399af04e3ceea15cbb2d",
+  "generated_at": "2026-11-13T12:37:11Z",
+  "base_rev": "c724380f78db77ab852a21923283cb063259f8ab",
+  "head_rev": "58d0905120ee13fc48b03a76a3ec832343c6f47f",
   "card_sha256": "a47c78f9ef3f6c35b9ac6498cdb046bc5660ad01a28a5eb322a43cbe518ac5e5",
-  "checker_fileset_sha256": "1d547f0522941d876fe988f201e1fef013700f33f20a47649da2c0d2c64efefc",
+  "checker_fileset_sha256": "43fab9e90f462d83d69adbb632e38d4d6cb0902042bf57a06c12d54024e85e01",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v445-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/acceptance/test_registration.py"
+    ],
     "violations": [],
     "evaluated": true
   },
@@ -26,8 +28,8 @@
         {
           "command": "python -m pytest tests/acceptance/test_registration.py -q",
           "exit_code": 0,
-          "duration_s": 2.253,
-          "stdout_sha256": "70e2fde983e6c77304072a431785ef41f35c169a1796879290ccec488c8f8911"
+          "duration_s": 1.206,
+          "stdout_sha256": "74a9f4f9259985abd8c51e87abbd6304e7372b6398fff4673cab10bc05c34141"
         }
       ],
       "all_passed": true
@@ -38,8 +40,8 @@
         {
           "command": "python -m pytest tests/acceptance/test_registration.py -q",
           "exit_code": 0,
-          "duration_s": 1.593,
-          "stdout_sha256": "47696f928685c672618ae15b7619c9bcd40cf896615bf5b17fab21ff3e2e43ba"
+          "duration_s": 1.174,
+          "stdout_sha256": "f54f24419c787ef8e276c816417daf19d41d14c97e1e5f07f6e3f78478d15aab"
         }
       ],
       "all_passed": true

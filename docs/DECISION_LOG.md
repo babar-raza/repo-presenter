@@ -4750,3 +4750,32 @@ checklist item 8, `CLAUDE.md` summary). Upstream blockers: verify, list honest a
 R24 terminal only when none exists. System issues: classify portfolio-wide and fix each class once at its root cause;
 prove fixes zero-call/locally before hosted runs; re-trace, never retry; question checks and their data, not only
 candidates; bring every owner-only ask with an alternative path.
+
+---
+
+## 2026-11-13: R14 drop rule — a kept maintainers' table row that sells a maintainer-stated stub as working is not printed; the zero-call restore is kept per unit
+
+Supervisor decision under R14/R36 (fixes only, R27). **Rule.** A kept maintainers' table prints in its one printable form
+(`surface_claims.kept_table_form`); besides the absent-type rows (BC-14 rule i, already recorded), a row whose subject a
+SUPPORTED maintainers' limitation statement says only throws and whose description sells it as working (BC-14 rule j,
+`stub_rows`, the same detector run on the same text) is left out. Evidence: Aspose.3D-FOSS-for-Python's live API table
+(`inherited_unit:060.table`) describes `FbxExporter.save`, `Scene` rendering and `Watermark` encode/decode as working
+while the same README's Scope and Limitations list (`067.list`) says they raise `NotImplementedError`; the type stays in
+the renderer's verified API table, which describes a stub as such. The renderer, BC-05, the reviewer and the restore all
+read the same form, so they cannot disagree.
+
+**Restore (class C2).** `cascade._restore_lost_content` rolled back the WHOLE restore when any one restored unit brought
+a new failing check, and `_without_restorable` then withheld every one of those losses from the model repair — so BC-05/
+BC-17 could never clear (3D Python run 43411932927, Words .NET run 43411924300). A restored unit a non-restorable check
+newly names (or whose rollback alone clears a new unit-less failure, e.g. BC-07's badge-row count) is now rolled back
+alone; the rest is kept; the rolled-back units' losses go to the S4 repair. Related root causes fixed with it: BC-17's
+candidate view dropped fact evidence, so it owed the unconfirmed registry install BC-02 forbids (3D Python
+`013.code_block`); BC-06 read `../../issues` (the repository's github.com issues page, as the Lane L `broken_link`
+detector already does) as a missing tree path (Words .NET); a restored colon lead-in now brings the block it introduces
+(Words .NET `082.paragraph` / `083.list`). Regressions: `tests/readme/validation/test_restore_blocker_shapes.py`,
+`tests/test_cascade_restore_rollback.py`.
+
+**License badge.** A SUPPORTED manifest-declared license with no license file now fills the badge row's license slot,
+linked to the rendered License section (`#license`), so the maintainers' own `[![License: MIT](...)](#license)` badge is
+carried, not lost (Aspose.3D-FOSS-for-TypeScript run 43413892363, its only BC-17 blocker). Regression:
+`tests/readme/composition/test_declared_license_badge.py`.

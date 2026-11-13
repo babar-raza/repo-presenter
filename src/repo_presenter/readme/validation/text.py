@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shlex
 from collections.abc import Sequence
 from typing import Any
 
@@ -27,6 +28,27 @@ COMMAND = re.compile(
     r"cargo|cmake|make|git)\b(?!-)",
     re.IGNORECASE,
 )
+
+# A pip install whose target is the checkout itself (``pip install .``, ``pip install -e ".[dev]"``):
+# pip builds it from the manifest at that path, so it cannot work where there is none.
+_PIP_INSTALL = re.compile(
+    r"(?i)^\s*(?:[$>]\s*)?(?:python3?\s+-m\s+)?pip3?\s+install\b(?P<args>.*)$"
+)
+
+
+def installs_the_checkout(line: str) -> bool:
+    """Whether one command line pip-installs a local path (``.``, ``./sub``, ``".[dev]"``)."""
+    match = _PIP_INSTALL.match(line)
+    if match is None:
+        return False
+    try:
+        words = shlex.split(match.group("args"))
+    except ValueError:
+        words = match.group("args").split()
+    return any(
+        word == "." or word.startswith((".[", "./", "../")) or word == ".."
+        for word in words
+    )
 
 
 def sha256(data: bytes) -> str:

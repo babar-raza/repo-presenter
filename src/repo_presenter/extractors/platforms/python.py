@@ -79,6 +79,14 @@ _DYNAMIC_DEPENDENCIES = (
 )
 
 
+# The field each manifest spells the interpreter floor with.
+_FLOOR_FIELDS: dict[str, str] = {
+    "pyproject.toml": "requires-python",
+    "setup.cfg": "python_requires",
+    "setup.py": "python_requires",
+}
+
+
 def _requirement_fact(identifier: str, requirement: str, path: str, detail: str) -> Fact:
     """A dependency fact for one declared requirement string.
 
@@ -381,7 +389,13 @@ class PythonPlugin:
                     merged[key] = value
                     sources[key] = filename
 
-        def add(kind: Any, slug: str, key: str, detail: str) -> None:
+        def add(
+            kind: Any,
+            slug: str,
+            key: str,
+            detail: str,
+            attributes: dict[str, str] | None = None,
+        ) -> None:
             if key in merged:
                 facts.append(
                     Fact(
@@ -389,12 +403,24 @@ class PythonPlugin:
                         kind,
                         merged[key],
                         (Evidence(sources[key], detail),),
+                        attributes=attributes,
                     )
                 )
 
         add("package", "name", "name", "distribution name declared by the manifest")
         add("package", "version", "version", "version declared by the manifest")
-        add("package", "python_requires", "requires_python", "python_requires declared")
+        # The floor's field name differs by manifest: PEP 621 `requires-python` in pyproject.toml,
+        # setuptools' `python_requires` in setup.cfg/setup.py. The renderer cites this attribute,
+        # so a pyproject-only repository is never said to declare `python_requires` (real Lane R
+        # false claims: Cells, Email and HTML Python).
+        floor_field = _FLOOR_FIELDS.get(sources.get("requires_python", ""), "python_requires")
+        add(
+            "package",
+            "python_requires",
+            "requires_python",
+            f"{floor_field} declared",
+            {"floor_declaration": floor_field},
+        )
         add("package", "python_versions", "python_classifier_versions", "Python classifiers")
         add("package", "license", "license", "license declared by the manifest")
         # The dependency snapshot: every required requirement, or the verified-zero marker citing

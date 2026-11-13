@@ -35,6 +35,7 @@ from repo_presenter.readme.composition.placement import placed_texts, placements
 from repo_presenter.readme.repair.targeted import Defect, review_defects
 from repo_presenter.readme.review.findings import Finding
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
+from repo_presenter.readme.review.matching import plain
 
 #: Stands in for a reviewer prompt's hash in ``defect_fingerprint``'s ``context`` (old repo's
 #: review_defects was built for an LLM reviewer; this one is deterministic-only in v1). Bump this
@@ -70,7 +71,27 @@ def _locate_section(quote: str, units: Sequence[Mapping[str, Any]], placed: Mapp
         if isinstance(text, str) and quote in text:
             section = unit.get("section")
             return str(section) if section else None
+    # A deterministic rule quotes the README as rendered: identifiers wrapped in code spans and
+    # abbreviations raised, which the stored unit text does not carry. Compared as a reader sees
+    # them (Markdown, case and spacing aside), the quote still names the unit that printed it
+    # (Aspose.BarCode-FOSS-for-Python run 43413875680: a duplicate_paragraph finding located nowhere
+    # because its quote held `to_png` and the unit held to_png).
+    wanted = _reader_form(quote)
+    if not wanted:
+        return None
+    for section, texts in placed.items():
+        if any(wanted in _reader_form(text) for text in texts):
+            return section
+    for unit in units:
+        text = unit.get("text")
+        if isinstance(text, str) and wanted in _reader_form(text):
+            section = unit.get("section")
+            return str(section) if section else None
     return None
+
+
+def _reader_form(text: str) -> str:
+    return " ".join(plain(text).casefold().split())
 
 
 def _claim(finding: Finding) -> dict[str, Any]:
