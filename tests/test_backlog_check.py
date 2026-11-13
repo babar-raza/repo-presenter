@@ -52,3 +52,12 @@ def test_a_done_item_citing_an_unlanded_commit_is_refused() -> None:
     assert bc.unlanded_done(doc, lambda sha: False) == ["BL-1: done, but cited commit abc1234 is not in this history (not landed)"]
     assert bc.unlanded_done(doc, lambda sha: True) == []
     assert bc.unlanded_done(doc, lambda sha: None) == []
+
+
+def test_a_feedback_or_defect_item_is_done_only_after_portfolio_reverification() -> None:
+    base = dict(GOOD, status="done", evidence=["fixed in abc1234"])
+    for kind in ("feedback", "defect"):
+        assert any("R41" in p for p in bc.problems({"items": [dict(base, type=kind)]}))
+        ok = dict(base, type=kind, evidence=["reverified: run 123, lane R 5/5, lane L 26/26"])
+        assert not any("R41" in p for p in bc.problems({"items": [ok]}))
+    assert not any("R41" in p for p in bc.problems({"items": [dict(base, type="task")]}))

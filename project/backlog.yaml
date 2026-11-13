@@ -121,8 +121,8 @@ items:
     status: active
     implementation_path: "renderer At a Glance layout (TB, grouped, bounded rows); Lane L re-layout only if verified and recorded (R14)"
     acceptance: "all diagrams render within ~800px width without horizontal scroll (measured with mermaid 10.9.1); R10 gate OK"
-    evidence: []
-    next_action: "layout worker running"
+    evidence: ["layout fix 9e08023 (glance.py, Lane L detector glance_layout v1): 26 diagrams 509-3054px -> 398-741px at 800px, labels 16px; R10 gate OK 45 seals; not yet merged, candidates change only on re-certification"]
+    next_action: "merge (PR #64), recertify --write through the hosted loop; then capability sub-groups (BL-059)"
 
   - id: BL-008
     title: "Every printed example verified (owner question \"Are all examples verified globally?\")"
@@ -720,3 +720,28 @@ items:
     acceptance: "trigger tests pass"
     evidence: ["verified 2026-11-13: `python -m pytest -q tests/test_lane_l_trigger.py tests/test_rulings_in_focus.py` -> 24 passed"]
     next_action: "none"
+
+  - id: BL-059
+    title: "At a Glance: group Core Capabilities into named, verifiable categories (owner asked for further grouping)"
+    type: feedback
+    source: "owner feedback d820dad695 (Cells Java, 2026-11-13); layout worker declined named groups because no verified per-capability category exists"
+    priority: P1
+    status: open
+    implementation_path: "derive a verified category per capability from facts (module/namespace of the API it cites; input vs output formats vs API areas) and group by it; never invent a category"
+    acceptance: "each capability node sits in a group whose title is backed by its facts; diagrams stay within 800px; R10 gate OK"
+    evidence: []
+    next_action: "after BL-007 merges"
+    updated: "2026-11-13"
+
+  - id: BL-060
+    title: "R41: after every merge that changes the pipeline, re-verify every candidate of both lanes automatically"
+    type: requirement
+    source: "owner ruling R41 (2026-11-13)"
+    priority: P0
+    status: open
+    implementation_path: "hosted workflow on push to main touching src/, prompts/ or data/ (non-operational): run recertify --all --write (zero-call; applies renderer/correction fixes to seals), publish the re-certified seals, then queue every cell that no longer certifies for the cohort engine; job summary gives per-lane before/after; reuse recertify.yml and the run-request recertify job"
+    acceptance: "a merge of a global fix produces, with no manual step, a hosted run that re-verifies all seals of both lanes and queues failures; evidence = run id + per-lane counts"
+    evidence: []
+    next_action: "worker after PR #64 merges"
+    updated: "2026-11-13"
+

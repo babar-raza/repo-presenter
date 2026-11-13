@@ -5105,3 +5105,18 @@ the real Cells Java diagram re-laid out with equal content and fitting the budge
 estimated as a column), `tests/readme/correction/detectors/test_glance_layout.py` (fence-confined redraw, CRLF kept,
 narrow and foreign diagrams untouched, nested fence ignored, the engine applying the redraw alone and beside a content
 fix, deterministic and idempotent). R10: zero-call `recertify --gate` against origin/main's baseline (see the commit).
+
+## 2026-11-13 — R41: feedback is global; every candidate is re-verified after a global fix
+
+**Ruling (owner).** "feedbacks are for global, both lanes and all candiates so all must be reverified after a global
+fix." Recorded as R41 in `docs/RULINGS.md` (checklist item 12), `docs/CONSOLIDATED_GOALS_2026-11-06.md`, `AGENTS.md`
+and `CLAUDE.md`. Placement: a binding ruling, not a process note, because it changes what "done" means for every
+feedback and defect item.
+
+**Enforcement.** `ops/checks/backlog_check.py` refuses a `done` feedback/defect item whose evidence does not record a
+portfolio-wide re-verification (`reverified: <run id>, lane R x/y, lane L x/y`); test in `tests/test_backlog_check.py`.
+`tests/test_rulings_in_focus.py` now requires R41. The re-verification itself must be hosted and automatic (R37):
+BL-060 adds a post-merge job that re-certifies every seal of both lanes with zero calls (`recertify --all --write`)
+and queues every cell that no longer certifies for the cohort engine.
+
+Backlog: BL-060

@@ -58,6 +58,10 @@ def problems(doc: dict) -> list[str]:
             found.append(f"{iid}: priority {item.get('priority')!r} not in {sorted(PRIORITIES)}")
         if item.get("status") == "done" and not item.get("evidence"):
             found.append(f"{iid}: done without evidence (R40 req 7)")
+        if (item.get("status") == "done" and item.get("type") in ("feedback", "defect")
+                and not any("reverified" in str(e).lower() for e in item.get("evidence") or [])):
+            found.append(f"{iid}: a {item.get('type')} item is done only with portfolio-wide re-verification evidence "
+                         "('reverified: <run id>, lane R x/y, lane L x/y') (R41)")
         for dep in item.get("depends_on") or []:
             if dep not in known:
                 found.append(f"{iid}: depends_on unknown item {dep}")
