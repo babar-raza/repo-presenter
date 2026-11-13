@@ -10,12 +10,30 @@ other bullet, and BC-18 has nothing left to fail.
 
 from __future__ import annotations
 
+from pathlib import Path
+
+import pytest
+
 from typing import Any
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.readme.composition.renderer import render_readme
+from repo_presenter.readme.validation import must_correct
 from repo_presenter.readme_findings import LANE_R, regression_rows
 from tests.readme.repair.test_accounting import ENTRY, UNITS, _dispositions, _facts, _plan
+
+
+@pytest.fixture(autouse=True)
+def real_register(monkeypatch: pytest.MonkeyPatch) -> None:
+    """These tests are about the real committed register row, so they read it (the suite's
+    default isolates every test from it, ``tests/conftest.py``)."""
+    from repo_presenter.readme.validation import must_correct
+
+    monkeypatch.setattr(
+        must_correct,
+        "DEFAULT_FINDINGS_PATH",
+        Path(__file__).resolve().parents[3] / "data" / "readme_findings.json",
+    )
 
 CELLS = "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET"
 SAVE_DOC = "Saves the workbook to an XLSX file using default save options."
@@ -49,7 +67,7 @@ def _render(repository: str) -> str:
 
 
 def test_the_real_register_row_is_open_for_cells_net() -> None:
-    rows = regression_rows(CELLS, LANE_R)
+    rows = regression_rows(CELLS, LANE_R, must_correct.DEFAULT_FINDINGS_PATH)
     assert any(row.quote == QUOTE for row in rows)
 
 

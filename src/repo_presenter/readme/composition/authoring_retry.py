@@ -285,7 +285,7 @@ def authoring_narrowing(task: SectionTask, manifest: LoadedManifest) -> Narrowin
     ) -> tuple[Mapping[str, Any], dict[str, Any]]:
         narrowed = _narrowed_task(task, manifest, slots, content, rejection, repeated)
         return narrowed.packet, bound_authoring_citations(
-            authoring_schema(manifest, narrowed), narrowed
+            authoring_schema(manifest, narrowed), narrowed, manifest.manifest.sampling.max_output_tokens
         )
 
     return Narrowing(
