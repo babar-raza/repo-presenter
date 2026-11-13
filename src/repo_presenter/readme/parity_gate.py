@@ -612,6 +612,27 @@ class Accounting:
             or not row_accounts_for_item(row, self.facts, code=code)
         )
 
+    def _title(self) -> str | None:
+        """The inherited document's h1 title text, or ``None`` when it opens with no h1."""
+        for unit_id in sorted(self.units):
+            unit = self.units[unit_id]
+            if unit_id.endswith(".heading"):
+                value = str(unit.get("value") or "").strip()
+                match = re.match(r"#(?!#)\s+(.*?)\s*#*\s*$", value) or re.match(
+                    r"([^\n]+)\n=+$", value
+                )
+                return match.group(1).strip() if match else None
+        return None
+
+    @staticmethod
+    def _ancestors(section: str, title: str | None) -> list[str]:
+        """The headings a unit sits beneath: its own (innermost) heading, as before, plus every
+        enclosing heading except the document title."""
+        segments = [part for part in section.split(" > ") if part]
+        if len(segments) > 1 and title is not None and segments[0] == title:
+            segments = segments[1:]
+        return segments
+
     def section_reason(self, heading: str) -> str | None:
         """Lane R: every content unit of the benchmark section has a non-loss disposition (or the
         section has none). Lane L: the heading line itself is inside an evidenced edit."""
@@ -622,15 +643,23 @@ class Accounting:
         empty for Lane L and for a section with no content unit."""
         if self.candidate.lane == LANE_L:
             return self.reason(heading), ()
+        # A section holds every unit beneath it, not only the units directly under its heading: a
+        # benchmark h2 whose content sits entirely in h3 subsections ("Production Workflows >
+        # 1. Web Font Optimization", measured on Font Python) is held by those subsection units.
+        # Matching only the path's last segment found no member, so the loss was routed to
+        # PLANNING with no unit for the restore to carry. The document title (the h1 every path
+        # starts with) is never a section ancestor.
+        title = self._title()
         members = [
             unit_id
             for unit_id, unit in self.units.items()
-            if topics_match(
-                str((unit.get("attributes") or {}).get("section", "")).split(" > ")[-1],
-                heading,
+            if not unit_id.endswith(".heading")
+            and any(
+                topics_match(segment, heading)
+                for segment in self._ancestors(
+                    str((unit.get("attributes") or {}).get("section", "")), title
+                )
             )
-            and not unit_id.endswith(".heading")
-            and str((unit.get("attributes") or {}).get("section", ""))
         ]
         if not members:
             return None, ()
