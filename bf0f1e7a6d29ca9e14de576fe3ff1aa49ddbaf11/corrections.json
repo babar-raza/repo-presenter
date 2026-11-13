@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 8,
+    "edits": 9,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "feff9066c36aa144cd85c53647181734b7adbaa823611e0ea43e302dd7b284ad",
+  "corrected_sha256": "829eeafe11ae7b98521816928991eb7e86a7c2cd16bcc83c7bf7ebb0b35cb884",
   "edits": [
     {
       "detector": "glance_layout",
@@ -87,6 +87,67 @@
       "start": 8336
     },
     {
+      "detector": "listed_type_count",
+      "end": 8375,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_html",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.element_matches",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.element_matches"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.css.select",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.css.select"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.css.supports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSS.supports"
+        },
+        {
+          "fact_id": "public_symbol:aspose_html.cssom.csscounterstylerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_html.cssom.CSSCounterStyleRule"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 213,
+      "original": "listed below",
+      "rationale": "line 213 says its 303 public types are 'listed below', but the table rows that follow list 238; the total is the facts' and stays, and the sentence now states how many are listed (no row dropped)",
+      "replacement": "238 of them listed below",
+      "start": 8363
+    },
+    {
       "detector": "absent_type_row",
       "end": 10315,
       "evidence": [
@@ -139,7 +200,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 2,
+      "index": 3,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 256,
       "original": "| `CSSDeclarationBlock` | A small CSSStyleDeclaration-compatible declaration container. |\n",
@@ -200,7 +261,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 3,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 283,
       "original": "| `BrowsingContext` | Internal owner of navigation lifecycle/document state. |\n",
@@ -261,7 +322,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 4,
+      "index": 5,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 446,
       "original": "| `WindowEventLoop` | Internal task-source scheduler used by `Window`/`BrowsingContext`. |\n",
@@ -322,7 +383,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 5,
+      "index": 6,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 463,
       "original": "| `ModuleLoadPolicy` | Constants governing how a JSContext resolves module specifiers. |\n",
@@ -383,7 +444,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 6,
+      "index": 7,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 474,
       "original": "| `BreakHints` | CSS fragmentation break hints (`break_before`, `break_after`, `break_inside`, `widows`, `orphans`) consumed by the layout engine. |\n",
@@ -444,7 +505,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 7,
+      "index": 8,
       "kind": "FALSE_CLAIM_FIX",
       "line": 566,
       "original": "243",
@@ -467,7 +528,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 2,
+    "FALSE_CLAIM_FIX": 3,
     "TABLE_ROW_REMOVAL": 5
   },
   "unapplied": [

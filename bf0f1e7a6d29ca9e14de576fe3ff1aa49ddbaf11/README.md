@@ -212,7 +212,7 @@ print(tokens[0].tag_name)  # "p"
 
 ## API Reference
 
-The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and the specialized `HTMLElement` subclasses. The DOM tree can be queried and mutated directly, styled through the CSS/CSSOM surface, serialized back to markup, and optionally scripted through `JSContext`. The library exposes 303 public types in total, listed below by module, with curated highlights following.
+The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and the specialized `HTMLElement` subclasses. The DOM tree can be queried and mutated directly, styled through the CSS/CSSOM surface, serialized back to markup, and optionally scripted through `JSContext`. The library exposes 303 public types in total, 238 of them listed below by module, with curated highlights following.
 
 <details>
 <summary>View the Supported Public API Surface</summary>
