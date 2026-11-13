@@ -1014,8 +1014,9 @@ items:
     implementation_path: "present.yml least-privilege 'chain' job (actions: write only, always(), dispatched runs only) dispatches cohort-chain.yml on main; cohort-chain.yml accepts workflow_dispatch from main; planner's in-flight hold keeps one cohort at a time"
     acceptance: "after merge, the last run of a hosted cohort is followed by a cohort-chain run (event workflow_dispatch) that plans the next cohort, with no manual kick; evidence = both run ids"
     evidence:
+      - "hosted proof 2026-11-13: cohort present runs 43513031042/43513034263/43513037866 each ended with chain job success; cohort-chain workflow_dispatch runs 43513808080, 43514156052, 43515654432 followed with no manual step; the last (after the last run finished) dispatched the next cohort 43516323114, 43516326802, 43516330798, 43516334907 at 22:05"
       - "tests: test_cohort_chain.py (trigger + main-only request), test_present_cohort.py, test_present_lanes.py, test_present_schedule.py::test_a_planner_dispatched_run_requests_the_next_planner_pass_with_least_privilege; TC-012 re-verified ACCEPTED"
-    next_action: "merge, then confirm on the next hosted cohort"
+    next_action: "proven on hosted runs; close with the R41 re-verification line once the next portfolio re-certification records per-lane counts"
   - id: BL-079
     title: "Repair accepted revisions that still printed the false claim (or a sibling one), repaired sections never reached the README after a partial restore, and the renderer printed never-thrown exception docstrings"
     type: defect
