@@ -56,6 +56,13 @@ MAX_LINKS = 40
 #: Most characters of the original README a unit carries (about 1,500 tokens).
 EXCERPT_CHARS = 6_000
 _EXCLUDED = frozenset({"identity:revision"})
+#: Fact kinds whose evidence detail (and ``message`` attribute) a record carries: what makes a
+#: format UNRESOLVED or a member unimplemented is stated there, not in the value.
+_EVIDENCED_KINDS = frozenset({"format", "implementation"})
+EVIDENCE_DETAILS = 3
+EVIDENCE_CHARS = 360
+#: Most facts the plan's citations for a unit's sections may add (``unit_facts``'s ``cited``).
+MAX_CITED = 60
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::)[A-Za-z_][A-Za-z0-9_]*)*")
 _WORD = re.compile(r"[A-Za-z][A-Za-z0-9_]{3,}")
 _STOP = frozenset(
@@ -173,6 +180,24 @@ def _record(fact: Fact) -> dict[str, str]:
         text = (fact.attributes or {}).get(name)
         if text:
             record[name] = text if len(text) <= limit else text[:limit] + " ..."
+    if fact.kind in _EVIDENCED_KINDS:
+        # What the extractor read is the claim's proof for these kinds: a format UNRESOLVED
+        # because its only dispatch is "an unimplemented stub", a member that "throws
+        # UnsupportedOperationException" with the source's own message. Without it the reviewer
+        # sees `.fbx UNRESOLVED` and cannot verify "no working load or save path" (Aspose.3D
+        # Java Lane R, run 43413886429: six such scope_limitations sentences filed unsupported).
+        message = (fact.attributes or {}).get("message")
+        if message:
+            record["message"] = (
+                message if len(message) <= DOC_CHARS else message[:DOC_CHARS] + " ..."
+            )
+        details = "; ".join(
+            dict.fromkeys(e.detail for e in fact.evidence[:EVIDENCE_DETAILS] if e.detail)
+        )
+        if details:
+            record["evidence"] = (
+                details if len(details) <= EVIDENCE_CHARS else details[:EVIDENCE_CHARS] + " ..."
+            )
     return record
 
 
@@ -237,7 +262,13 @@ def _format_members(text: str, enum_members: list[Fact]) -> list[Fact]:
     return sorted(chosen, key=lambda fact: fact.id)[:MAX_FORMAT_MEMBERS]
 
 
-def _term_support(names: Iterable[str], candidates: list[Fact]) -> list[Fact]:
+def _stems(text_words: Iterable[str]) -> frozenset[str]:
+    return frozenset(word[:5] for word in text_words if len(word) >= 5)
+
+
+def _term_support(
+    names: Iterable[str], candidates: list[Fact], unit_words: frozenset[str] = frozenset()
+) -> list[Fact]:
     """Facts of the evidence kinds whose id or value spells a name the unit writes as code, so a
     claim about ``Document.light_document_model`` is shown what the source says that attribute
     does (here: its getter raises ``ValueError``), whatever its word overlap with the unit."""
@@ -249,7 +280,17 @@ def _term_support(names: Iterable[str], candidates: list[Fact]) -> list[Fact]:
             for fact in candidates
             if wanted in fact.id.lower() or wanted in fact.value.lower()
         ]
-        hits.sort(key=lambda fact: (len(fact.id), fact.id))
+        # The facts about this name that also share the unit's other words come first: for
+        # "`Scene` rendering is not implemented" that is ``scene.render`` throwing, not the
+        # shortest ``scene.*`` ids (``Scene.save``, ``Scene.VERSION``).
+        stems = _stems(unit_words - {wanted})
+        hits.sort(
+            key=lambda fact: (
+                -sum(stem in fact.id.lower() or stem in fact.value.lower() for stem in stems),
+                len(fact.id),
+                fact.id,
+            )
+        )
         for fact in hits[:MAX_TERM_FACTS_PER_NAME]:
             chosen.setdefault(fact.id, fact)
         if len(chosen) >= MAX_TERM_FACTS:
@@ -258,10 +299,17 @@ def _term_support(names: Iterable[str], candidates: list[Fact]) -> list[Fact]:
 
 
 def unit_facts(
-    document: FactsDocument, text: str, *, sections: Iterable[str]
+    document: FactsDocument,
+    text: str,
+    *,
+    sections: Iterable[str],
+    cited: Iterable[str] = (),
 ) -> list[dict[str, str]]:
     """The fact records one unit carries, bounded to ``FACTS_CHARS``. ``text`` is the unit's
-    reviewable text; ``sections`` names its sections (an example lead-in carries the examples)."""
+    reviewable text; ``sections`` names its sections (an example lead-in carries the examples).
+    ``cited`` are the fact ids the plan carries into those sections (a limitation's or
+    capability's ``fact_ids``): the facts the text was written from, carried right after the core
+    facts so no word-overlap ranking can leave them out."""
     wanted = set(sections)
     facts = [fact for fact in document.facts if fact.id not in _EXCLUDED]
     unit_words = words(text)
@@ -272,8 +320,14 @@ def unit_facts(
     )
     enum_members = [fact for fact in facts if fact.kind == "enum_member"]
     support = _format_members(text, enum_members) + _term_support(
-        identifiers(text), [fact for fact in facts if fact.kind in _TERM_EVIDENCE_KINDS]
+        identifiers(text),
+        [fact for fact in facts if fact.kind in _TERM_EVIDENCE_KINDS],
+        unit_words,
     )
+    by_id = {fact.id: fact for fact in facts}
+    citations = [by_id[fact_id] for fact_id in dict.fromkeys(cited) if fact_id in by_id][
+        :MAX_CITED
+    ]
     ranked = _ranked(
         unit_words,
         [
@@ -298,7 +352,7 @@ def unit_facts(
     size = 2
     # ``support`` is last: it only spends budget the groups above left over, so adding it can never
     # displace a fact the reviewer was already shown.
-    for group in (core, ranked, symbols, examples, links, support):
+    for group in (core, citations, ranked, symbols, examples, links, support):
         for fact in group:
             if fact.id in seen:
                 continue

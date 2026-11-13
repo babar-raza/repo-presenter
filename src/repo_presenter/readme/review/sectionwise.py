@@ -157,7 +157,9 @@ def unit_packet(
     ``maintainer_lines`` (``scope.maintainer_lines``) are sent only as the shown line numbers that
     are attributed maintainer text -- a structural label, not a disposition or a rationale."""
     text = unit_text(unit, candidate_readme)
-    records = unit_facts(facts, text, sections=unit.sections)
+    records = unit_facts(
+        facts, text, sections=unit.sections, cited=plan_cited_fact_ids(plan, unit.sections, facts)
+    )
     rows = candidate_readme.splitlines()
     entries = [
         entry
@@ -188,6 +190,36 @@ def unit_packet(
             {n: _shown(unit, rows[n - 1]) for n in unit.lines}, records
         ),
     }
+
+
+def plan_cited_fact_ids(
+    plan: Mapping[str, Any], sections: Sequence[str], facts: FactsDocument
+) -> list[str]:
+    """The fact ids the plan carries into ``sections``, in plan order: every fact id found in the
+    plan fields that feed those sections (``repair.targeted.SECTION_PLAN_CARRIERS``, the planning
+    contract's own wiring -- ``material_limitations`` into Scope and Limitations,
+    ``core_capabilities`` into Key Capabilities...). These are what the unit's text was written
+    from, so the reviewer is shown them whatever their word overlap with it."""
+    from repo_presenter.readme.repair.targeted import SECTION_PLAN_CARRIERS
+
+    known = {fact.id for fact in facts.facts}
+    found: list[str] = []
+
+    def walk(node: Any) -> None:
+        if isinstance(node, str):
+            if node in known:
+                found.append(node)
+        elif isinstance(node, Mapping):
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, (list, tuple)):
+            for value in node:
+                walk(value)
+
+    for section in sections:
+        for field, _kind in SECTION_PLAN_CARRIERS.get(section, ()):
+            walk(plan.get(field))
+    return list(dict.fromkeys(found))
 
 
 def unit_schema(loaded: LoadedManifest, unit: ReviewUnit) -> dict[str, Any]:
