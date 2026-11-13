@@ -5,7 +5,7 @@
   "provider_repository_id": 1193864496,
   "registry_revision": null,
   "active_transaction_id": "95fbae1fe6094527b16b3ff976136658",
-  "state": "RETRYABLE",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,14 +17,7 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": {
-    "classification": "transient",
-    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
-    "resume_state": "INVALIDATED",
-    "occurred_at": "2026-11-13T10:50:00.536445+00:00",
-    "resume_predicate": null,
-    "recovery_count": 9
-  },
+  "failure": null,
   "lease": {
     "holder_id": "present:43411940594",
     "acquired_at": "2026-11-13T10:50:02.995224+00:00",
@@ -46,7 +39,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 58,
+  "state_version": 59,
   "recent_trigger_dedup_keys": {
     "run:41298086175:aspose-email-foss/Aspose.Email-FOSS-for-.Net": "95fbae1fe6094527b16b3ff976136658"
   },
