@@ -3,41 +3,16 @@
 $ python -m pytest tests/test_lane_l_trigger.py -q
 --- stdout ---
 ...................                                                      [100%]
-19 passed in 5.45s
+19 passed in 0.19s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 44%]
-........................................................................ [ 89%]
-.................                                                        [100%]
-161 passed in 1.05s
-
---- stderr ---
-
-$ python -m pytest tests/test_readme_findings.py -q
---- stdout ---
-.................                                                        [100%]
-17 passed in 0.24s
-
---- stderr ---
-
-
-===== CLEAN RUN 2 =====
-$ python -m pytest tests/test_lane_l_trigger.py -q
---- stdout ---
-...................                                                      [100%]
-19 passed in 0.21s
-
---- stderr ---
-
-$ python -m pytest tests/readme/correction -q
---- stdout ---
-........................................................................ [ 44%]
-........................................................................ [ 89%]
-.................                                                        [100%]
-161 passed in 1.13s
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.............................                                            [100%]
+173 passed in 0.85s
 
 --- stderr ---
 
@@ -49,33 +24,58 @@ $ python -m pytest tests/test_readme_findings.py -q
 --- stderr ---
 
 
-===== NEGATIVE CONTROL (checks MUST now fail) =====
-mutated: M src/repo_presenter/readme_findings.py
+===== CLEAN RUN 2 =====
 $ python -m pytest tests/test_lane_l_trigger.py -q
 --- stdout ---
 ...................                                                      [100%]
-19 passed in 0.19s
+19 passed in 0.22s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 44%]
-........................................................................ [ 89%]
-.........F.......                                                        [100%]
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.............................                                            [100%]
+173 passed in 1.01s
+
+--- stderr ---
+
+$ python -m pytest tests/test_readme_findings.py -q
+--- stdout ---
+.................                                                        [100%]
+17 passed in 0.23s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme_findings.py
+$ python -m pytest tests/test_lane_l_trigger.py -q
+--- stdout ---
+...................                                                      [100%]
+19 passed in 0.22s
+
+--- stderr ---
+
+$ python -m pytest tests/readme/correction -q
+--- stdout ---
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.....................F.......                                            [100%]
 =================================== FAILURES ===================================
 ________________ test_finding_rows_feed_append_finding_directly ________________
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-568/test_finding_rows_feed_append_0')
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-591/test_finding_rows_feed_append_0')
 
     def test_finding_rows_feed_append_finding_directly(tmp_path: Any) -> None:
 >       from repo_presenter.readme_findings import append_finding, read_findings
-E       ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.claude/worktrees/agent-a95d43a7fc5584c74/.gatectl-worktrees/wt-lc26tcxk/src/repo_presenter/readme_findings.py)
+E       ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.gatectl-worktrees/wt-vpcg2zue/src/repo_presenter/readme_findings.py)
 
-tests/readme/correction/test_net_improvement.py:137: ImportError
+tests/readme/correction/test_net_improvement.py:151: ImportError
 =========================== short test summary info ============================
 FAILED tests/readme/correction/test_net_improvement.py::test_finding_rows_feed_append_finding_directly
-1 failed, 160 passed in 0.92s
+1 failed, 172 passed in 1.03s
 
 --- stderr ---
 
@@ -84,7 +84,7 @@ $ python -m pytest tests/test_readme_findings.py -q
 
 ==================================== ERRORS ====================================
 ________________ ERROR collecting tests/test_readme_findings.py ________________
-ImportError while importing test module '/home/user/repo-presenter/.claude/worktrees/agent-a95d43a7fc5584c74/.gatectl-worktrees/wt-lc26tcxk/tests/test_readme_findings.py'.
+ImportError while importing test module '/home/user/repo-presenter/.gatectl-worktrees/wt-vpcg2zue/tests/test_readme_findings.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
 /usr/local/lib/python3.13/importlib/__init__.py:88: in import_module
@@ -92,11 +92,11 @@ Traceback:
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_readme_findings.py:15: in <module>
     from repo_presenter.readme_findings import (
-E   ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.claude/worktrees/agent-a95d43a7fc5584c74/.gatectl-worktrees/wt-lc26tcxk/src/repo_presenter/readme_findings.py)
+E   ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.gatectl-worktrees/wt-vpcg2zue/src/repo_presenter/readme_findings.py)
 =========================== short test summary info ============================
 ERROR tests/test_readme_findings.py
 !!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-1 error in 0.10s
+1 error in 0.09s
 
 --- stderr ---
 
