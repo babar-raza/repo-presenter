@@ -754,11 +754,14 @@ items:
     type: requirement
     source: "owner ruling R41 (2026-11-13)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "hosted workflow on push to main touching src/, prompts/ or data/ (non-operational): run recertify --all --write (zero-call; applies renderer/correction fixes to seals), publish the re-certified seals, then queue every cell that no longer certifies for the cohort engine; job summary gives per-lane before/after; reuse recertify.yml and the run-request recertify job"
     acceptance: "a merge of a global fix produces, with no manual step, a hosted run that re-verifies all seals of both lanes and queues failures; evidence = run id + per-lane counts"
-    evidence: []
-    next_action: "worker after PR #64 merges"
+    evidence:
+      - "built (branch bl-060-post-merge-reverify): .github/workflows/recertify.yml push trigger on main for src/**, prompts/**, pyproject.toml, data/** minus core.llm.budget.OPERATIONAL_DATA_FILES; runs recertify --all --write --summary (per-lane before/after + 'reverified: <run id>, lane R x/y, lane L x/y' + cells no longer certifying); job-level concurrency group recertify; set -o pipefail"
+      - "queueing: cohort-chain.yml workflow_run now includes recertify; scripts/select_scheduled_cohort.py::plan_cohort already selects every cell whose latest seal does not certify (idempotent/diagnose skips key on the code fingerprint, which the change moves)"
+      - "tests: tests/test_recertify_workflow.py (trigger = code_fingerprint set, concurrency, zero-call, summary/evidence line, planner selects the queued cells, write-mode summary), tests/test_cohort_chain.py recertify cases; DECISION_LOG 2026-11-13 BL-060 entry"
+    next_action: "merge, then record the first hosted recertify run id and its per-lane counts; mark done"
     updated: "2026-11-13"
 
   - id: BL-061

@@ -31,7 +31,7 @@ A seal is never deleted or demoted by this module.
 CLI (read-only unless ``--write``):
 
     python -m repo_presenter.recertify --repository OWNER/NAME --lane R|L [--write]
-    python -m repo_presenter.recertify --all [--write] [--json]
+    python -m repo_presenter.recertify --all [--write [--summary PATH] [--base-baseline PATH]] [--json]
     python -m repo_presenter.recertify --gate [--base-baseline PATH]
     python -m repo_presenter.recertify --write-baseline
 
@@ -39,6 +39,12 @@ CLI (read-only unless ``--write``):
 working tree's code and compared with ``data/recertification_baseline.json``; any seal RECERTIFIED
 in the (base) baseline that is NEEDS_REPAIR now fails the gate unless the baseline in the same
 change records it as NEEDS_REPAIR with a ``justification`` naming every newly failing check.
+
+``--write --summary PATH`` also writes the R41 re-verification summary (``reverification_summary``):
+certified per lane before (``--base-baseline``, the previous code's committed baseline) and after,
+the evidence line ``reverified: <run id>, lane R x/y, lane L x/y``, and every cell that no longer
+certifies (the cohort planner's work queue). ``.github/workflows/recertify.yml`` runs it on every
+push to ``main`` that changes the code a run executes (owner ruling R41).
 """
 
 from __future__ import annotations
@@ -946,6 +952,83 @@ def _print_table(results: Sequence[Recertification], out: Any = sys.stdout) -> N
     print(f"certified under current code: lane R {certified[LANE_R]}, lane L {certified[LANE_L]}", file=out)
 
 
+def lane_counts(results: Iterable[Recertification]) -> dict[str, tuple[int, int]]:
+    """(certified, latest seals) per lane under current code."""
+    rows = list(results)
+    return {
+        lane: (sum(1 for r in rows if r.lane == lane and r.certified), sum(1 for r in rows if r.lane == lane))
+        for lane in LANES
+    }
+
+
+def baseline_lane_counts(document: Mapping[str, Any] | None) -> dict[str, tuple[int, int]]:
+    """(RECERTIFIED, rows) per lane as a committed baseline records them -- the standing of every
+    latest seal under the code that baseline was written for."""
+    rows = list(_rows(document).values())
+    return {
+        lane: (
+            sum(1 for r in rows if r.get("lane") == lane and r.get("outcome") == OUTCOME_RECERTIFIED),
+            sum(1 for r in rows if r.get("lane") == lane),
+        )
+        for lane in LANES
+    }
+
+
+def reverification_summary(
+    results: Sequence[Recertification],
+    before: Mapping[str, Any] | None,
+    *,
+    run_id: str,
+    run_url: str = "",
+    published: Sequence[str] = (),
+    publish_failed: Sequence[str] = (),
+) -> str:
+    """The R41 job summary of a portfolio-wide re-verification (pure), results first (R11): per-lane
+    certified counts before (the previous code's committed baseline) and after (every latest seal
+    re-certified under this code), the evidence line ``reverified: <run id>, lane R x/y, lane L x/y``
+    that ``ops/checks/backlog_check.py`` requires of a done feedback/defect item, and every cell that
+    no longer certifies -- which the cohort planner (``scripts/select_scheduled_cohort.py``) selects
+    for re-production, because it picks exactly the cells whose latest seal does not certify under
+    current code."""
+    was = baseline_lane_counts(before)
+    now = lane_counts(results)
+    evidence = f"reverified: {run_id}, " + ", ".join(
+        f"lane {lane} {now[lane][0]}/{now[lane][1]}" for lane in LANES
+    )
+    lines = [
+        "## R41 portfolio re-verification",
+        "",
+        f"**{evidence}**" + (f" ([run]({run_url}))" if run_url else ""),
+        "",
+        "| lane | certified before (previous code's baseline) | certified after (this code) |",
+        "|---|---|---|",
+    ]
+    for lane in LANES:
+        lines.append(f"| {lane} | {was[lane][0]}/{was[lane][1]} | {now[lane][0]}/{now[lane][1]} |")
+    lines.append("")
+    lines.append(f"Seals re-written under this code: {len(published)}; publish failures: {len(publish_failed)}.")
+    for item in publish_failed:
+        lines.append(f"- publish failed: {item}")
+    failing = [r for r in results if not r.certified]
+    lines.append("")
+    if failing:
+        lines.append(
+            f"### Queued for re-production ({len(failing)} cells no longer certify; "
+            "the cohort planner selects them -- cohort-chain.yml runs it when this run completes)"
+        )
+        lines.append("")
+        lines.append("| repository | lane | seal | failing checks |")
+        lines.append("|---|---|---|---|")
+        for rec in sorted(failing, key=lambda r: (r.lane, r.repository)):
+            lines.append(
+                f"| {rec.repository} | {rec.lane} | {rec.seal_commit[:12]} | "
+                f"{', '.join(rec.failing_checks) or rec.outcome} |"
+            )
+    else:
+        lines.append("Every latest seal of both lanes certifies under this code; nothing to re-produce.")
+    return "\n".join(lines) + "\n"
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="repo_presenter.recertify", description=__doc__.splitlines()[0])
     mode = parser.add_mutually_exclusive_group(required=True)
@@ -972,8 +1055,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--prompts", type=Path, default=Path("prompts"))
     parser.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
     parser.add_argument("--base-baseline", type=Path, default=None,
-                        help="the target branch's baseline (the gate's 'before'); default: --baseline")
+                        help="the target branch's baseline (the gate's 'before', and with --write the "
+                        "summary's 'before'); default: --baseline")
+    parser.add_argument("--summary", type=Path, default=None,
+                        help="with --write: write the R41 re-verification summary (markdown) here")
+    parser.add_argument("--run-id", default=os.environ.get("GITHUB_RUN_ID", "local"),
+                        help="the run id the summary's evidence line names (default: $GITHUB_RUN_ID)")
     args = parser.parse_args(argv)
+    if args.summary is not None and not args.write:
+        parser.error("--summary needs --write")
     if args.repository and not args.lane:
         parser.error("--repository needs --lane")
     if (args.gate or args.write_baseline) and args.write:
@@ -1041,6 +1131,8 @@ def _write_mode(args: Any, token: str | None, lanes: Sequence[str]) -> int:
     prompts = load_manifests(args.prompts)
     current = current_fingerprints(args.prompts)
     failed = 0
+    published: list[str] = []
+    publish_failed: list[str] = []
     with tempfile.TemporaryDirectory(prefix="recertify-write-") as tmp:
         scratch = Path(tmp)
         history = seal_history(remote=args.remote, token=token, scratch=scratch / "seals")
@@ -1074,11 +1166,32 @@ def _write_mode(args: Any, token: str | None, lanes: Sequence[str]) -> int:
                 )
             except PresenterError as exc:
                 failed += 1
+                publish_failed.append(f"{rec.repository} lane {rec.lane}: {exc}")
                 print(f"publish failed: {rec.repository} lane {rec.lane}: {exc}")
                 continue
+            published.append(f"{rec.repository} lane {rec.lane}")
             print(f"recertified seal: {publication.ref} {publication.commit[:12]} "
                   f"(from {rec.seal_commit[:12]})")
+    summary = getattr(args, "summary", None)
+    if summary is not None:
+        _write_summary(args, results, published, publish_failed)
     return 1 if failed else 0
+
+
+def _write_summary(args: Any, results: Sequence[Recertification], published: Sequence[str],
+                   publish_failed: Sequence[str]) -> None:
+    before_path = getattr(args, "base_baseline", None) or args.baseline
+    try:
+        before = json.loads(Path(before_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        before = None  # reported as 0/0 before, never invented
+    server, repository = os.environ.get("GITHUB_SERVER_URL", ""), os.environ.get("GITHUB_REPOSITORY", "")
+    run_id = str(getattr(args, "run_id", "") or "local")
+    run_url = f"{server}/{repository}/actions/runs/{run_id}" if server and repository and run_id != "local" else ""
+    text = reverification_summary(results, before if isinstance(before, dict) else None, run_id=run_id,
+                                  run_url=run_url, published=published, publish_failed=publish_failed)
+    args.summary.parent.mkdir(parents=True, exist_ok=True)
+    args.summary.write_text(text, encoding="utf-8")
 
 
 if __name__ == "__main__":

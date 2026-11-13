@@ -6,7 +6,12 @@ name: cohort-chain
 # idle loop; this workflow plans the next cohort the moment work finishes:
 #
 #   * a present run the planner dispatched (a workflow_dispatch run of present.yml) completes, or
-#   * an M9 round completes (audit-seed, or a standalone acceptance-write, which closes the batch).
+#   * an M9 round completes (audit-seed, or a standalone acceptance-write, which closes the batch);
+#   * a portfolio re-certification completes (recertify.yml, which runs on every push to main that
+#     changes the pipeline -- owner ruling R41, backlog BL-060): every cell that no longer certifies
+#     under the fixed code is what the planner selects, so this queues them for re-production. A
+#     recertify run called by run-request-execute.yml is that workflow's run, not recertify's, and
+#     does not chain (the supervisor's run-request `cohort` is its override).
 #
 # It runs only present.yml's cohort job (a call with no target), from the default branch (a
 # workflow_run run always executes main's copy of this file, and the call resolves to main's
@@ -27,7 +32,7 @@ name: cohort-chain
 
 on:
   workflow_run:
-    workflows: ["present", "audit-seed", "acceptance-write"]
+    workflows: ["present", "audit-seed", "acceptance-write", "recertify"]
     types: [completed]
     branches: [main]
 
