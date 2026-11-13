@@ -26,34 +26,36 @@ SDK to install.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
-    direction LR
-    i1["An existing OBJ, STL, glTF, COLLADA, or 3MF file"]
+    direction TB
+    i1["An existing OBJ, STL,<br/>glTF, COLLADA, or 3MF<br/>file"]
   end
   PRODUCT["Aspose.3D FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Multi-format scene import (OBJ, STL, glTF, COLLADA, 3MF)"]
-      c2["Multi-format scene export (OBJ, STL, glTF, 3MF)"]
-      c3["Scene-graph construction and traversal"]
-      c4["Mesh authoring and editing"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c5["Parameterized primitive geometry"]
-      c6["Lambert, Phong, and PBR material assignment"]
-      c7["Polygon triangulation"]
-      c8["Keyframe animation and skeletal pose data"]
-    end
+    direction TB
+    c1["Multi-format scene<br/>import (OBJ, STL,<br/>glTF, COLLADA, 3MF)"]
+    c2["Multi-format scene<br/>export (OBJ, STL,<br/>glTF, 3MF)"]
+    c3["Scene-graph<br/>construction and<br/>traversal"]
+    c4["Mesh authoring and<br/>editing"]
+    c5["Parameterized<br/>primitive geometry"]
+    c6["Lambert, Phong, and<br/>PBR material<br/>assignment"]
+    c7["Polygon triangulation"]
+    c8["Keyframe animation and<br/>skeletal pose data"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["OBJ, STL, glTF, or 3MF file"]
+    o1["OBJ, STL, glTF, or 3MF<br/>file"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

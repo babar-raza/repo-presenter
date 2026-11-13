@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 2,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "208c82c9a59ef701260d8d5af0a9c667c90e51898a891ccb6e8dfcd8cd521d2d",
+  "corrected_sha256": "96cc406cd8b1d801488e9ab3f13640db9b4385373ecad9de0e58f061d8920871",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2321,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:28"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 29,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction LR\n    i1[\"An existing OBJ, STL, glTF, COLLADA, or 3MF file\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Multi-format scene import (OBJ, STL, glTF, COLLADA, 3MF)\"]\n      c2[\"Multi-format scene export (OBJ, STL, glTF, 3MF)\"]\n      c3[\"Scene-graph construction and traversal\"]\n      c4[\"Mesh authoring and editing\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c5[\"Parameterized primitive geometry\"]\n      c6[\"Lambert, Phong, and PBR material assignment\"]\n      c7[\"Polygon triangulation\"]\n      c8[\"Keyframe animation and skeletal pose data\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"OBJ, STL, glTF, or 3MF file\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1611 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 646 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing OBJ, STL,<br/>glTF, COLLADA, or 3MF<br/>file\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Multi-format scene<br/>import (OBJ, STL,<br/>glTF, COLLADA, 3MF)\"]\n    c2[\"Multi-format scene<br/>export (OBJ, STL,<br/>glTF, 3MF)\"]\n    c3[\"Scene-graph<br/>construction and<br/>traversal\"]\n    c4[\"Mesh authoring and<br/>editing\"]\n    c5[\"Parameterized<br/>primitive geometry\"]\n    c6[\"Lambert, Phong, and<br/>PBR material<br/>assignment\"]\n    c7[\"Polygon triangulation\"]\n    c8[\"Keyframe animation and<br/>skeletal pose data\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c8\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"OBJ, STL, glTF, or 3MF<br/>file\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1417
+    },
     {
       "detector": "stale_type_count",
       "end": 41375,
@@ -59,7 +78,7 @@
           "value": "aspose.threed"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 712,
       "original": "305",
@@ -81,6 +100,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 1
   },
   "unapplied": [
@@ -110,6 +130,17 @@
       "line": 274,
       "reason": "the example verifier recorded a failure for the example on lines 274-286: example 8: FAILED; TypeError",
       "text": "from aspose.threed import Scene"
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.threed.fileformat"
+      ],
+      "line": 481,
+      "reason": "the count only cell does not describe FileFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 9 methods and 8 properties and 49 members."
     }
   ]
 }
