@@ -789,11 +789,18 @@ items:
     type: defect
     source: "BL-003 review (2026-11-13), class K02: 29 findings, 29 registered (largest class)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "readme/evidence/facts/source_detail.py — propagate implementation:always-throws one hop (static field built as the base type whose virtual throws; dispatcher list whose earlier entry raises in supports_format); readme/evidence/facts/formats.py — direction facts honour dispatch order; readme/validation/surface_claims.py::_stub_findings — rule (j) also fires on SUPPORTED implementation facts, plus an inverse rule failing 'X throws' when X's body has no throw"
     acceptance: "regression tests from the real shapes (3D .NET FileFormat statics, 3D Python IOService exporter order, NurbsSurface.ToMesh no-throw); re-running BC-14 on the five seals flags the K02 rows deterministically; R10 gate OK"
-    evidence: ["docs/investigations/2026-11-13-lane-r-false-claim-review.md (K02 row, 11 of 29 on lines the reviewer is never shown)"]
-    next_action: "fix worker"
+    evidence:
+      - "docs/investigations/2026-11-13-lane-r-false-claim-review.md (K02 row, 11 of 29 on lines the reviewer is never shown)"
+      - "built (branch k02-k06-facts): source_detail.py implementation facts aspect never_thrown (public exception no product source throws/constructs, subclass-aware, C++/C#/Java/Python/TS), dispatch static_instance (static field `= new T(...)` carries T's always-throw members, one hop), public_symbol body_throws=no (body read, no throw); python_format_declarations.py dispatch order (a plugin registered after a class whose probe method only raises is unreachable -> directional declaration); formats.py code_path=stub on such facts"
+      - "detector: readme/validation/code_path_claims.py rules j1 (stated stubs offered as capabilities, abstract-method idiom excluded), j2 (never-thrown), j3 (static instance), j4 (throws claimed, body has none), j5 (unreachable format direction); wired only inside surface_claims._stub_findings (BC-14)"
+      - "zero-call replay on the sealed READMEs (facts re-extracted from the pinned checkouts, revisions equal): K02 register rows caught 0 -> 10 (3D .NET 3: FileFormat statics, NurbsSurface.ToMesh, RenderFactory; 3D Python 4: .dae export x2, Material texture maps, TrialException; Cells C++ 3: FormulaException/StyleException); with stored facts only (what recertify sees today) 2 (RenderFactory, Material). Also flags 19 unregistered genuine never-thrown exception rows (3D .NET/Python, Cells Java, Note Python, Words .NET), each verified by grep"
+      - "tests: tests/readme/evidence/facts/test_code_path_facts.py, tests/readme/validation/test_code_path_claims.py (real register-row text + negative controls)"
+      - "R10 gate: OK (45 seals); 3D .NET Lane R (already NEEDS_REPAIR) gains BC-14 + REVIEW:claim_contradiction, justified in data/recertification_baseline.json; certified lane R 0->0 from this change, lane L 26->26"
+    next_action: "active, not done (R41): merge; the next Lane R run per cell re-extracts facts and re-verifies (R41); then record the run id; remaining K02 rows (capability prose: RVM/animation/GlobalTransform/Html5SaveOptions/Words Sign, conditional throws) need source-level facts not yet modelled"
+    updated: "2026-11-13"
 
   - id: BL-063
     title: "K03 — API tables call properties/fields/consts methods, static factories constructors, get-only properties 'Gets or sets'"
@@ -833,11 +840,18 @@ items:
     type: defect
     source: "BL-003 review (2026-11-13), class K06: 6 findings (Words 'No required third-party package dependencies' while the nuspec declares SkiaSharp/LibTiff/Win32.Registry; Cells Linux PDF needs SkiaSharp.NativeAssets.Linux; Words dev-dependency list incomplete)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "extractors/platforms/net.py::_dependency_facts — prefer the published package's dependencyGroups (registry, already fetched for package:published_version) or the nuspec; include ProjectReference'd projects' PackageReferences; dependency:none only when the registry agrees; record transitive native-asset gaps"
     acceptance: "Words facts list SkiaSharp 3.119.0, BitMiracle.LibTiff.NET 2.4.649, Microsoft.Win32.Registry 5.0.0 (netstandard2.0); unit test from the real Words layout; R10 gate OK"
-    evidence: ["Package/Aspose.Words.FOSS.nuspec:19-29@0d3f1add920f; Aspose.Foundation.csproj:79-87"]
-    next_action: "fix worker"
+    evidence:
+      - "Package/Aspose.Words.FOSS.nuspec:19-29@0d3f1add920f; Aspose.Foundation.csproj:79-87"
+      - "built (branch k02-k06-facts): extractors/platforms/net.py::_dependency_facts reads the repository's own nuspec for the package id (dependency groups, target frameworks) when there is one, else the product project plus every ProjectReference'd non-test project's non-private PackageReferences; dependency:none only when that whole snapshot is empty. Real Words checkout @0d3f1add920f: SkiaSharp 3.119.0, BitMiracle.LibTiff.NET 2.4.649 (.NETStandard2.0, net8.0), Microsoft.Win32.Registry 5.0.0 (.NETStandard2.0), ILRepack development; no dependency:none"
+      - "samples case: _sample_reference_facts -> project_file:samples.product_reference (Cells .NET @f71fe5595ebd: all 15 sample projects ProjectReference, 0 PackageReference; Email .NET 3, PSD .NET 4)"
+      - "detector: readme/validation/code_path_claims.py rules j6 (no-dependencies sentence vs a consumer dependency fact) and j7 (samples said to use the package version vs the samples fact), wired in surface_claims._stub_findings (BC-14)"
+      - "zero-call replay: Words 'No required third-party package dependencies' row and Cells .NET 'example projects ... version 26.10.0' row caught (0 -> 2); with the fixed facts the renderer no longer prints the Words none-sentence at all"
+      - "tests: tests/readme/evidence/facts/test_code_path_facts.py (real Words nuspec/csproj layout, closure without nuspec, Cells samples), tests/readme/validation/test_code_path_claims.py; R10 gate OK"
+    next_action: "active, not done (R41): merge, then the next Lane R/L runs re-extract facts and re-verify every candidate; open remainder: Cells .NET Linux PDF needs SkiaSharp.NativeAssets.Linux (a transitive native-asset fact needs the dependency's own nuspec, not read offline) and the Words test-project development dependencies list"
+    updated: "2026-11-13"
 
   - id: BL-067
     title: "K07 — linked repository documents described from their file name, never read"
@@ -929,8 +943,9 @@ items:
     status: open
     implementation_path: "for every class in docs/investigations/2026-11-13-lane-r-false-claim-review.md (K01-K10; K11 via BL-002, K12 via BL-004) a deterministic rule in readme/validation (surface_claims/claims/structure) or a fact-model fix (BL-061..BL-070), each proven by a test from the real failing shape, then run portfolio-wide (all seals) through recertify"
     acceptance: "each class has a named check id and a regression test; a portfolio scan reports every other repository's instances; R10 gate OK with justifications"
-    evidence: []
-    next_action: "start with K02/K03/K05 (Pareto: 43 of 68 registered rows)"
+    evidence:
+      - "K02 and K06 (BL-062, BL-066, branch k02-k06-facts): named checks BC-14 rule (j1)-(j5) (K02) and (j6)-(j7) (K06) in readme/validation/code_path_claims.py, regression tests from the real register rows; portfolio replay over all 18 Lane R seals reports other repositories' instances (Cells Java, Note Python, Words .NET never-thrown exception rows)"
+    next_action: "K02/K06 checks in (BL-062/BL-066); next K03/K05 (other worker), then K01, K07-K10"
     depends_on: [BL-062, BL-063, BL-064, BL-065, BL-066]
 
   - id: BL-075

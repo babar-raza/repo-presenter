@@ -5357,3 +5357,48 @@ repository's (it stays unconfirmed); crates.io owner lookups (no owners endpoint
 themselves (hosted, R37).
 
 Backlog: BL-002, BL-049
+
+## 2026-11-13: BL-062 (K02) and BL-066 (K06) — facts record what the code path and the published package really do; BC-14 rule (j) extended (R41, R36(b), R27, R10)
+
+**Root cause (one per class, portfolio-wide).** The facts restated a member's own body and the product project file,
+never the code path a caller takes or the package a consumer installs; every later stage trusted them
+(`docs/investigations/2026-11-13-lane-r-false-claim-review.md`, classes K02 and K06).
+
+**Fact fixes (existing components only, R27).**
+- `readme/evidence/facts/source_detail.py`: `implementation` facts with aspect `never_thrown` (a public exception type no
+  product source throws, constructs or uses outside its own declaration, a thrown subclass counting for its base;
+  Python, C#, Java, C++, TS/JS), with `dispatch: static_instance` (a public static field `= new T(...)` carries T's
+  always-throwing members, an inherited virtual included; one hop, only in the declaring type's own file), and
+  `body_throws: no` on a method whose own body was read and holds no throw.
+- `extractors/platforms/python_format_declarations.py`: dispatch order is part of the code path. Where a dispatcher loop
+  probes each registered class (`for e in self._exporters: if e.supports_format(f)`), a plugin registered after a class
+  whose probe only raises is unreachable for that direction: a directional declaration (evidence, never corroboration),
+  so `formats.py` keeps the fact UNRESOLVED and marks it `code_path: stub` (unless an example executed it).
+- `extractors/platforms/net.py::_dependency_facts`: the repository's own nuspec for the package id is the consumer's
+  snapshot; without one, the product project plus every `ProjectReference`'d non-test project's non-private
+  `PackageReference`s; `dependency:none` only when the whole snapshot is empty. `_sample_reference_facts` records how
+  sample projects consume the product (`project_file:samples.product_reference`).
+
+**Detector (BC-14 rule (j), `readme/validation/code_path_claims.py`).** j1 stated stubs offered as a capability (the
+abstract-method idiom, a subclass implementing the member, is excluded); j2 never-thrown exceptions; j3 static-instance
+stubs used for load/save; j4 "throws NotImplemented*" where every read body holds no throw; j5 a format direction
+reachable only through a stub; j6 "no dependencies" against a consumer dependency fact; j7 samples said to use the
+package while every sample uses a ProjectReference. Wired only inside `surface_claims._stub_findings` (shared file;
+`_table_findings` and the rest untouched).
+
+**Evidence (zero provider calls).** Real checkouts at the sealed revisions: Words .NET facts now list SkiaSharp 3.119.0,
+BitMiracle.LibTiff.NET 2.4.649, Microsoft.Win32.Registry 5.0.0 (BL-066 acceptance). Replay of the 18 Lane R sealed
+READMEs with facts re-extracted from the pinned checkouts: K02/K06 register rows caught by BC-14 0 -> 12 (3D .NET 3,
+3D Python 4, Cells C++ 3, Cells .NET 1, Words .NET 1); 19 further unregistered never-thrown exception rows (3D .NET,
+3D Python, Cells Java, Note Python, Words .NET), each confirmed by grep. With stored facts (what re-certification sees)
+2 rows (RenderFactory, Material). R10 gate: OK, 45 seals; certified lane R 0 -> 0 and lane L 26 -> 26 from this change
+(Cells Go's lane R seal re-certified from a concurrent seal, not from this change). The 3D .NET Lane R seal, already
+NEEDS_REPAIR, gains BC-14 and REVIEW:claim_contradiction, justified in `data/recertification_baseline.json`.
+
+**Does NOT decide / not done.** Both items are `active`: done needs the next Lane R/L runs to re-extract facts and
+re-verify every candidate (R41) with a run id. Not covered: K02 capability prose with no source-level fact
+(RVM/animation/GlobalTransform/Html5SaveOptions, Words `DigitalSignatureUtil.Sign` throwing on every branch of a
+private helper), conditional throws, the OBJ str-to-'wb' runtime bug; K06 transitive native assets (SkiaSharp on Linux
+needs the dependency's own nuspec) and the Words test-project development dependencies.
+
+Backlog: BL-062, BL-066, BL-074

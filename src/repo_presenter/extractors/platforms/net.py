@@ -43,7 +43,10 @@ from repo_presenter.extractors.platforms.net_examples import verify_net_examples
 from repo_presenter.extractors.platforms.net_format_declarations import (
     format_declarations as net_format_declarations,
 )
-from repo_presenter.extractors.surface.extractor import surface_symbols, with_enum_members
+from repo_presenter.extractors.surface.extractor import (
+    surface_symbols,
+    with_enum_members,
+)
 from repo_presenter.extractors.surface.manifest import (
     PackageIdentity,
     read_identity,
@@ -169,8 +172,116 @@ def _floor(identity: PackageIdentity) -> str:
     return ";".join(sorted(unique, key=_framework_order)) or identity.floor
 
 
-def _dependency_facts(project: Path, where: str) -> list[Fact]:
-    """The dependency snapshot from the product project's package references.
+def _project_references(project: Path) -> list[Path]:
+    """The project files a project references (``<ProjectReference Include="..">``), resolved
+    against its own directory; a reference to a file that is not there is dropped."""
+    try:
+        root = ElementTree.parse(project).getroot()
+    except (OSError, ElementTree.ParseError):
+        return []
+    found: list[Path] = []
+    for element in root.iter():
+        if element.tag.rsplit("}", 1)[-1].lower() != "projectreference":
+            continue
+        include = (element.get("Include") or "").strip().replace(_BACKSLASH, "/")
+        if not include:
+            continue
+        target = (project.parent / include).resolve()
+        if target.is_file():
+            found.append(target)
+    return found
+
+
+_BACKSLASH = chr(92)
+
+
+def _referenced_closure(project: Path) -> list[Path]:
+    """Every project reachable through ``ProjectReference`` from ``project`` (itself excluded),
+    test projects left out, in a stable breadth-first order."""
+    seen = {project.resolve()}
+    order: list[Path] = []
+    queue = [project.resolve()]
+    while queue:
+        current = queue.pop(0)
+        for target in _project_references(current):
+            if target in seen:
+                continue
+            seen.add(target)
+            if _declares(target)[0]:
+                continue
+            order.append(target)
+            queue.append(target)
+    return order
+
+
+def _local(tag: str) -> str:
+    return tag.rsplit("}", 1)[-1]
+
+
+def _nuspec_dependencies(
+    root: Path, package_id: str
+) -> tuple[str, list[tuple[str, str, list[str], int]]] | None:
+    """The dependency groups of the repository's own ``.nuspec`` for ``package_id`` -- the file
+    NuGet publishes the package from, so what a consumer really installs: ``(path, [(id, version,
+    target frameworks, line)])``. ``None`` when the repository carries no such nuspec."""
+    if not package_id:
+        return None
+    for path in sorted(root.rglob("*.nuspec")):
+        relative = path.relative_to(root)
+        if any(
+            part in _IGNORED_DIRECTORIES or part.lower() in _NOT_THE_PRODUCT
+            for part in relative.parts[:-1]
+        ):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8-sig")
+            document = ElementTree.fromstring(text)
+        except (OSError, ElementTree.ParseError, UnicodeDecodeError):
+            continue
+        metadata = next((e for e in document if _local(e.tag) == "metadata"), None)
+        if metadata is None:
+            continue
+        identifier = next((e.text or "" for e in metadata if _local(e.tag) == "id"), "")
+        if identifier.strip().lower() != package_id.lower():
+            continue
+        lines = text.splitlines()
+        found: dict[str, tuple[str, str, list[str], int]] = {}
+        for container in metadata:
+            if _local(container.tag) != "dependencies":
+                continue
+            groups = [g for g in container if _local(g.tag) == "group"] or [container]
+            for group in groups:
+                framework = (group.get("targetFramework") or "").strip()
+                for dependency in group:
+                    name = (dependency.get("id") or "").strip()
+                    if _local(dependency.tag) != "dependency" or not name:
+                        continue
+                    line = next((n for n, row in enumerate(lines, 1) if f'id="{name}"' in row), 0)
+                    entry = found.setdefault(
+                        name.lower(), (name, (dependency.get("version") or "").strip(), [], line)
+                    )
+                    if framework and framework not in entry[2]:
+                        entry[2].append(framework)
+        return relative.as_posix(), list(found.values())
+    return None
+
+
+def _is_private(reference: dict[str, str]) -> bool:
+    return "all" in {reference.get("privateassets", ""), reference.get("excludeassets", "")}
+
+
+def _dependency_facts(
+    project: Path, where: str, root: Path | None = None, package_id: str = ""
+) -> list[Fact]:
+    """The dependency snapshot a consumer of the published package gets.
+
+    K06 (2026-11-13): read from the product project file alone, Words for .NET printed "No
+    required third-party package dependencies" while its published package declares SkiaSharp,
+    BitMiracle.LibTiff.NET and Microsoft.Win32.Registry (they are references of a
+    ``ProjectReference``'d project, and the nuspec declares them). So the repository's own nuspec
+    for the package, when there is one, is the consumer's snapshot; otherwise the product
+    project's references plus those of every project it references. ``dependency:none`` only
+    when that whole snapshot is empty.
 
     A reference marked `PrivateAssets="all"` or `ExcludeAssets="all"` is not passed on to a
     consumer of the package - it is an analyser or a build tool - so it is a development
@@ -178,39 +289,128 @@ def _dependency_facts(project: Path, where: str) -> list[Fact]:
     """
     _, references = _read_project(project)
     facts: list[Fact] = []
+    taken: set[str] = set()
+
+    def add(name: str, version: str, source: str, detail: str, private: bool) -> None:
+        identifier = (
+            fact_id("dependency", "development", name) if private else fact_id("dependency", name)
+        )
+        if not name or identifier in taken:
+            return
+        taken.add(identifier)
+        facts.append(
+            Fact(
+                identifier,
+                "dependency",
+                f"{name} {version}".strip(),
+                (Evidence(source, f"{detail}, not passed on to consumers" if private else detail),),
+            )
+        )
+
+    nuspec = _nuspec_dependencies(root, package_id) if root is not None else None
     for reference in references:
-        name = reference.get("include", "")
-        if not name:
-            continue
-        private = "all" in {reference.get("privateassets", ""), reference.get("excludeassets", "")}
-        version = reference.get("version", "")
-        value = f"{name} {version}".strip()
-        detail = "package reference declared by the project file"
-        facts.append(
-            Fact(
-                fact_id("dependency", "development", name)
-                if private
-                else fact_id("dependency", name),
-                "dependency",
-                value,
-                (
-                    Evidence(
-                        where,
-                        f"{detail}, not passed on to consumers" if private else detail,
-                    ),
-                ),
+        if nuspec is None or _is_private(reference):
+            add(
+                reference.get("include", ""),
+                reference.get("version", ""),
+                where,
+                "package reference declared by the project file",
+                _is_private(reference),
             )
-        )
+    if nuspec is not None:
+        path, dependencies = nuspec
+        for name, version, frameworks, line in dependencies:
+            groups = f" (target frameworks {', '.join(frameworks)})" if frameworks else ""
+            add(
+                name,
+                version,
+                path,
+                f"line {line}; dependency the published package's nuspec declares{groups}",
+                False,
+            )
+    elif root is not None:
+        base = root.resolve()
+        for referenced in _referenced_closure(project):
+            if not referenced.is_relative_to(base):
+                continue
+            relative = referenced.relative_to(base).as_posix()
+            for reference in _read_project(referenced)[1]:
+                if _is_private(reference):
+                    continue  # a build tool of a referenced project never reaches a consumer
+                add(
+                    reference.get("include", ""),
+                    reference.get("version", ""),
+                    relative,
+                    f"package reference of {relative}, which the product project references "
+                    "(ProjectReference), so a consumer of the package receives it",
+                    False,
+                )
     if not any(not fact.id.startswith("dependency:development.") for fact in facts):
-        facts.append(
-            Fact(
-                fact_id("dependency", "none"),
-                "dependency",
-                "none",
-                (Evidence(where, "no `PackageReference` a consumer would install is declared"),),
-            )
+        evidence = (
+            Evidence(nuspec[0], "the published package's nuspec declares no dependency")
+            if nuspec is not None
+            else Evidence(where, "no `PackageReference` a consumer would install is declared")
         )
+        facts.append(Fact(fact_id("dependency", "none"), "dependency", "none", (evidence,)))
     return facts
+
+
+_SAMPLE_DIRECTORIES = frozenset({"samples", "sample", "examples", "example", "demo", "demos"})
+
+
+def _sample_reference_facts(root: Path, manifest: Path, package_id: str) -> list[Fact]:
+    """How the repository's sample projects consume the product (K06, 2026-11-13: Cells for
+    .NET's README said its samples use "`Aspose.Cells.FOSS` version 26.10.0" while all 15 build
+    against the source through a ``ProjectReference``). One ``project_file`` fact counting the
+    sample projects that reference the product project and those that reference the package."""
+    product = manifest.resolve()
+    by_project: list[str] = []
+    by_package: list[str] = []
+    for path in sorted(root.rglob("*.csproj")):
+        relative = path.relative_to(root)
+        parts = [part.lower() for part in relative.parts[:-1]]
+        if any(part in _IGNORED_DIRECTORIES for part in parts) or not any(
+            part in _SAMPLE_DIRECTORIES for part in parts
+        ):
+            continue
+        if product in _project_references(path):
+            by_project.append(relative.as_posix())
+        elif package_id and any(
+            reference.get("include", "").lower() == package_id.lower()
+            for reference in _read_project(path)[1]
+        ):
+            by_package.append(relative.as_posix())
+    total = len(by_project) + len(by_package)
+    if not total:
+        return []
+    if by_package:
+        value = (
+            f"{len(by_package)} of {total} sample projects reference the published package "
+            f"{package_id}; {len(by_project)} reference the product project (ProjectReference)"
+        )
+    else:
+        value = (
+            f"all {total} sample projects reference the product project by ProjectReference; "
+            "none references the published package"
+        )
+    evidence = tuple(
+        Evidence(path, "ProjectReference to the product project") for path in by_project[:10]
+    ) + tuple(Evidence(path, f"PackageReference to {package_id}") for path in by_package[:10])
+    return [
+        Fact(
+            fact_id("project_file", "samples", "product_reference"),
+            "project_file",
+            value,
+            evidence,
+            attributes={
+                "aspect": "sample_reference",
+                "samples": str(total),
+                "project_reference": str(len(by_project)),
+                "package_reference": str(len(by_package)),
+                "package": package_id,
+            },
+        )
+    ]
 
 
 class NetPlugin:
@@ -320,7 +520,8 @@ class NetPlugin:
                     attributes={"floor_declaration": "TargetFrameworks"} if several else None,
                 )
             )
-        facts.extend(_dependency_facts(manifest, where))
+        facts.extend(_dependency_facts(manifest, where, root, name))
+        facts.extend(_sample_reference_facts(root, manifest, name))
         return facts
 
     def surface_facts(self, root: Path, tree_paths: list[str]) -> list[Fact]:
