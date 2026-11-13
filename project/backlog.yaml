@@ -52,7 +52,7 @@ items:
       - "2026-11-13: sources read: docs/CONSOLIDATED_GOALS_2026-11-06.md (Parts A-E), docs/RULINGS.md, docs/R38_PIPELINE_FIRST.md, docs/R40_BACKLOG.md, docs/DELIVERY_PLAN_2026-11-07.md, docs/DECISION_LOG.md (open/not-done/follow-up entries), project/mission_matrix.yaml, project/state.yaml, project/taskcards/*.yaml, docs/wip/r15-portfolio-gate.patch, evidence/build/*/*/draft_upstream_issue.md"
       - "2026-11-13: `python ops/gatecli.py validate` -> OK; not-ACCEPTED cards TC-005 VERIFICATION_FAILED, TC-009b/TC-010a AWAITING_OWNER_DECISION, TC-011/TC-012b READY, TC-012a AWAITING_PREREQUISITE"
       - "2026-11-13: `python -m repo_presenter.recertify --all --json --remote origin` rc=0 (numbers in the header)"
-      - "2026-11-13: `python ops/checks/portfolio_delivery_count.py --json` could not complete a verified count here: sigstore TUF hosts (tuf-repo-cdn.sigstore.dev, tuf-repo.github.com) refused by the session proxy"
+      - "2026-11-13: `python ops/checks/portfolio_delivery_count.py --json` ran locally (exit 1: 'Lane R independently_accepted 0 < 25; Lane L independently_accepted 0 < 25'; recertified R 5 / L 26; no_action_justified 0 in both lanes); every Lane L reason reads 'R33: no attested M9 acceptance record at this revision' because the sigstore TUF hosts (tuf-repo-cdn.sigstore.dev, tuf-repo.github.com) are refused by this session's proxy, so the hosted supervisor-tick count is the authoritative one"
     next_action: "supervisor verifies this reconciliation and merges it; the PR's CI run of backlog_check/mission_matrix is the closing evidence"
 
   - id: BL-002
@@ -339,7 +339,7 @@ items:
     acceptance: "40 of 40 active repositories show a Lane L terminal outcome, reported beside n/25 (never instead of it)"
     evidence:
       - "2026-11-13: 27 Lane L seals; data/terminal_cells.json records only GIS .NET L (NOT_APPLICABLE) and PSD Java R (BLOCKED_EXTERNAL); 12 active repositories have neither a Lane L seal nor a terminal record"
-      - "previously not tracked anywhere: no machine-readable NO_ACTION_JUSTIFIED record exists (grep data/terminal_cells.json)"
+      - "previously not tracked anywhere: no machine-readable NO_ACTION_JUSTIFIED record exists (data/terminal_cells.json), and the local counter run reports no_action_justified 0 in Lane L"
     depends_on: [BL-014]
     next_action: "INTERPRETATION: R16 outcomes belong in data/terminal_cells.json (existing record), not a new store"
 
