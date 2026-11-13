@@ -23,34 +23,36 @@ Aspose.HTML FOSS for Python is a free, open-source, MIT-licensed Python toolkit 
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Inputs and formats"]
     direction TB
-    i1["An existing HTML document (string, bytes, or file)"]
-    i2["Existing CSS (stylesheet text)"]
+    i1["An existing HTML<br/>document (string,<br/>bytes, or file)"]
+    i2["Existing CSS<br/>(stylesheet text)"]
   end
   PRODUCT["Aspose.HTML FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["HTML parsing (strings, bytes, fragments, and files)"]
-      c2["DOM tree construction, traversal, and mutation"]
-      c3["HTML element type surface (forms, tables, media, and more)"]
-      c4["Serialization of DOM subtrees back to markup"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c5["CSS selector matching and CSSOM style computation"]
-      c6["URL parsing and character-encoding detection"]
-      c7["Optional JavaScript execution against the DOM (QuickJS)"]
-    end
+    direction TB
+    c1["HTML parsing (strings,<br/>bytes, fragments, and<br/>files)"]
+    c2["DOM tree construction,<br/>traversal, and<br/>mutation"]
+    c3["HTML element type<br/>surface (forms,<br/>tables, media, and<br/>more)"]
+    c4["Serialization of DOM<br/>subtrees back to<br/>markup"]
+    c5["CSS selector matching<br/>and CSSOM style<br/>computation"]
+    c6["URL parsing and<br/>character-encoding<br/>detection"]
+    c7["Optional JavaScript<br/>execution against the<br/>DOM (QuickJS)"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c7
+    c6 ~~~ c7
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["Serialized HTML (string)"]
+    o1["Serialized HTML<br/>(string)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

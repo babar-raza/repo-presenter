@@ -1,6 +1,61 @@
 --- a/README.md
 +++ b/README.md
-@@ -210,7 +210,7 @@
+@@ -23,34 +23,36 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Inputs and formats"]
+     direction TB
+-    i1["An existing HTML document (string, bytes, or file)"]
+-    i2["Existing CSS (stylesheet text)"]
++    i1["An existing HTML<br/>document (string,<br/>bytes, or file)"]
++    i2["Existing CSS<br/>(stylesheet text)"]
+   end
+   PRODUCT["Aspose.HTML FOSS for Python"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["HTML parsing (strings, bytes, fragments, and files)"]
+-      c2["DOM tree construction, traversal, and mutation"]
+-      c3["HTML element type surface (forms, tables, media, and more)"]
+-      c4["Serialization of DOM subtrees back to markup"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c5["CSS selector matching and CSSOM style computation"]
+-      c6["URL parsing and character-encoding detection"]
+-      c7["Optional JavaScript execution against the DOM (QuickJS)"]
+-    end
++    direction TB
++    c1["HTML parsing (strings,<br/>bytes, fragments, and<br/>files)"]
++    c2["DOM tree construction,<br/>traversal, and<br/>mutation"]
++    c3["HTML element type<br/>surface (forms,<br/>tables, media, and<br/>more)"]
++    c4["Serialization of DOM<br/>subtrees back to<br/>markup"]
++    c5["CSS selector matching<br/>and CSSOM style<br/>computation"]
++    c6["URL parsing and<br/>character-encoding<br/>detection"]
++    c7["Optional JavaScript<br/>execution against the<br/>DOM (QuickJS)"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c7
++    c6 ~~~ c7
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+-    o1["Serialized HTML (string)"]
++    o1["Serialized HTML<br/>(string)"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities
+@@ -210,7 +212,7 @@
  
  ## API Reference
  
@@ -9,7 +64,7 @@
  
  <details>
  <summary>View the Supported Public API Surface</summary>
-@@ -253,7 +253,6 @@
+@@ -253,7 +255,6 @@
  |---|---|
  | `CSS` | Namespace class for CSS static utilities (CSS Conditional Rules §6). |
  | `CSSCounterStyleRule` | A `@counter-style` rule (CSS Counter Styles Level 3 §3, CSSOM §5.4 type 11). |
@@ -17,7 +72,7 @@
  | `CSSFontFaceRule` | A `@font-face` rule holding font descriptor declarations (CSS Fonts §4.4). |
  | `CSSImportRule` | An `@import` statement rule (CSSOM §6.7). |
  | `CSSKeyframeRule` | A single keyframe descriptor within a `@keyframes` rule (CSSOM Animations §7). |
-@@ -280,7 +279,6 @@
+@@ -280,7 +281,6 @@
  | `Attr` | An attribute attached to an Element. |
  | `BarProp` | Represents a browser toolbar object (WHATWG HTML §7.7.3). |
  | `BroadcastChannel` | Deterministic same-runtime BroadcastChannel fan-out delivery. |
@@ -25,7 +80,7 @@
  | `CDATASection` | A CDATA section node (extends Text per WHATWG DOM Standard). |
  | `CSSStyleDeclaration` | A live view of an element's inline style attribute. |
  | `CharacterData` | Abstract base for Text, Comment, CDATASection, and ProcessingInstruction. |
-@@ -443,7 +441,6 @@
+@@ -443,7 +443,6 @@
  | `ValidityState` | Constraint-validation flags for a form control. |
  | `VisualViewport` | CSSOM View §9 VisualViewport — all values are headless stubs. |
  | `Window` | Per-document window object with EventTarget behavior. |
@@ -33,7 +88,7 @@
  | `WrongDocumentError` | Raised when a node belongs to a different document. |
  | `XMLSerializer` | Serialise DOM nodes to strings. |
  
-@@ -460,7 +457,6 @@
+@@ -460,7 +459,6 @@
  |---|---|
  | `JSContext` | A JavaScript execution context backed by QuickJS, pre-wired to a DOM. |
  | `JSEvaluationError` | Raised when a JavaScript expression throws an exception. |
@@ -41,7 +96,7 @@
  | `ModuleNotFoundError` | Raised when a module specifier has no registered source. |
  | `ModuleRegistry` | Maps module specifiers to ES module source strings. |
  
-@@ -471,7 +467,6 @@
+@@ -471,7 +469,6 @@
  | `BlockFragment` | Geometry fragment for a block-level box. |
  | `BoxNode` | Single box-tree node produced by `build_box_tree`. |
  | `BoxRoot` | Root wrapper returned by `build_box_tree`. |
@@ -49,7 +104,7 @@
  | `ComputedStyle` | Immutable layout-facing snapshot of an element's resolved style. |
  | `Display` | Resolved display triple per CSS Display L3 §2. |
  | `EdgeSizes` | Logical edge sizes in CSS px units. |
-@@ -563,7 +558,7 @@
+@@ -563,7 +560,7 @@
  
  - **[Getting started guide](https://docs.aspose.org/html/python/)** — installation, walkthroughs, and feature guides for this library.
  - **[How-to guides & FAQ](https://kb.aspose.org/html/python/)** — task-focused answers for common HTML/DOM/CSS-processing questions.

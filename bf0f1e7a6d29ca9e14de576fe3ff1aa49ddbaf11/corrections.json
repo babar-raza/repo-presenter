@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 7,
+    "edits": 8,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "a39460946fad6add2df60c4e674acfc9e4ae36faeef2a68b15e946baec126e7c",
+  "corrected_sha256": "feff9066c36aa144cd85c53647181734b7adbaa823611e0ea43e302dd7b284ad",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2387,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:25"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 26,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Inputs and formats\"]\n    direction TB\n    i1[\"An existing HTML document (string, bytes, or file)\"]\n    i2[\"Existing CSS (stylesheet text)\"]\n  end\n  PRODUCT[\"Aspose.HTML FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"HTML parsing (strings, bytes, fragments, and files)\"]\n      c2[\"DOM tree construction, traversal, and mutation\"]\n      c3[\"HTML element type surface (forms, tables, media, and more)\"]\n      c4[\"Serialization of DOM subtrees back to markup\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c5[\"CSS selector matching and CSSOM style computation\"]\n      c6[\"URL parsing and character-encoding detection\"]\n      c7[\"Optional JavaScript execution against the DOM (QuickJS)\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"Serialized HTML (string)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1854 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Inputs and formats\"]\n    direction TB\n    i1[\"An existing HTML<br/>document (string,<br/>bytes, or file)\"]\n    i2[\"Existing CSS<br/>(stylesheet text)\"]\n  end\n  PRODUCT[\"Aspose.HTML FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"HTML parsing (strings,<br/>bytes, fragments, and<br/>files)\"]\n    c2[\"DOM tree construction,<br/>traversal, and<br/>mutation\"]\n    c3[\"HTML element type<br/>surface (forms,<br/>tables, media, and<br/>more)\"]\n    c4[\"Serialization of DOM<br/>subtrees back to<br/>markup\"]\n    c5[\"CSS selector matching<br/>and CSSOM style<br/>computation\"]\n    c6[\"URL parsing and<br/>character-encoding<br/>detection\"]\n    c7[\"Optional JavaScript<br/>execution against the<br/>DOM (QuickJS)\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c7\n    c6 ~~~ c7\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"Serialized HTML<br/>(string)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1408
+    },
     {
       "detector": "stale_type_count",
       "end": 8339,
@@ -59,7 +78,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 213,
       "original": "243",
@@ -120,7 +139,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 256,
       "original": "| `CSSDeclarationBlock` | A small CSSStyleDeclaration-compatible declaration container. |\n",
@@ -181,7 +200,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 2,
+      "index": 3,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 283,
       "original": "| `BrowsingContext` | Internal owner of navigation lifecycle/document state. |\n",
@@ -242,7 +261,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 3,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 446,
       "original": "| `WindowEventLoop` | Internal task-source scheduler used by `Window`/`BrowsingContext`. |\n",
@@ -303,7 +322,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 4,
+      "index": 5,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 463,
       "original": "| `ModuleLoadPolicy` | Constants governing how a JSContext resolves module specifiers. |\n",
@@ -364,7 +383,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 5,
+      "index": 6,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 474,
       "original": "| `BreakHints` | CSS fragmentation break hints (`break_before`, `break_after`, `break_inside`, `widows`, `orphans`) consumed by the layout engine. |\n",
@@ -425,7 +444,7 @@
           "value": "aspose_html.cssom.CSSCounterStyleRule"
         }
       ],
-      "index": 6,
+      "index": 7,
       "kind": "FALSE_CLAIM_FIX",
       "line": 566,
       "original": "243",
@@ -447,6 +466,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 2,
     "TABLE_ROW_REMOVAL": 5
   },
