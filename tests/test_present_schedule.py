@@ -28,24 +28,29 @@ def test_a_schedule_trigger_exists_with_a_real_cron():
 
 
 def test_the_facts_job_resolves_a_real_target_for_either_trigger():
+    """R37 (2026-11-13): a schedule fire no longer resolves a target inside the facts job. The
+    schedule-only cohort job calls the authorization gate and dispatches explicit runs; the facts
+    job is skipped on a schedule event and every run it does serve carries explicit inputs."""
     workflow = _load_workflow()
+    assert "github.event_name != 'schedule'" in str(workflow["jobs"]["facts"].get("if", "")), (
+        "a schedule fire must never run the facts job with empty inputs"
+    )
+    cohort = workflow["jobs"]["cohort"]
+    assert "github.event_name == 'schedule'" in str(cohort.get("if", ""))
+    plan_step = next(s for s in cohort["steps"] if s.get("id") == "plan")
+    assert "scheduled_execution_gate.py" in str(plan_step["run"]), (
+        "the schedule must call the real authorization-gated selector, not the bare cohort "
+        "picker (which enforces no predicate at all) or a placeholder"
+    )
     steps = facts_steps(workflow)
     target_steps = [s for s in steps if s.get("id") == "target"]
     assert len(target_steps) == 1, "exactly one target-resolution step must exist"
     run = str(target_steps[0]["run"])
-    assert "github.event_name" in run and "schedule" in run, (
-        "the step must actually branch on trigger type, not just exist"
-    )
-    assert "scheduled_execution_gate.py" in run, (
-        "the scheduled branch must call the real authorization-gated selector, not the bare "
-        "cohort picker (which enforces no predicate at all) or a placeholder"
-    )
     assert "inputs.repository" in run and "inputs.ecosystem" in run, (
-        "the manual-dispatch branch must still pass inputs through unchanged"
+        "the explicit-run branch must still pass inputs through unchanged"
     )
     assert 'echo "authorized=true"' in run, (
-        "a manual dispatch is its own explicit authorization and must set authorized=true "
-        "itself, never defer to the gate script"
+        "an explicit run is its own authorization and must set authorized=true itself"
     )
 
     outputs = workflow["jobs"]["facts"].get("outputs", {})
@@ -99,14 +104,15 @@ def test_no_permissive_negative_comparison_remains_anywhere_in_the_workflow():
 def test_a_blocked_schedule_still_produces_a_successful_no_op_not_a_red_job():
     """directive: 'An empty cohort must produce a successful, explicitly evidenced no-op, not an
     unexplained failed run.' The gate script itself must never be the thing that fails the job --
-    only the provider-consuming steps are conditionally skipped."""
+    only the reserve and dispatch steps are conditionally skipped (R37: in the cohort job)."""
     workflow = _load_workflow()
-    target_step = next(s for s in facts_steps(workflow) if s.get("id") == "target")
-    run = str(target_step["run"])
-    # the schedule branch's only command is the gate script -- no `exit 1` / `|| exit` escape
-    # that would turn "nothing authorized" into a failed step.
-    schedule_branch = run.split('"schedule" ]; then', 1)[1].split("else", 1)[0]
-    assert "exit 1" not in schedule_branch and "|| exit" not in schedule_branch
+    cohort = workflow["jobs"]["cohort"]
+    plan_step = next(s for s in cohort["steps"] if s.get("id") == "plan")
+    run = str(plan_step["run"])
+    assert "exit 1" not in run and "|| exit" not in run
+    for step in cohort["steps"]:
+        if step.get("name", "").startswith(("Reserve", "Dispatch")):
+            assert "steps.plan.outputs.authorized == 'true'" in str(step.get("if", "")), step["name"]
 
 
 def test_target_resolution_runs_before_any_ecosystem_conditional_toolchain_step():
