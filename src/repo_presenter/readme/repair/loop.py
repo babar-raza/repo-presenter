@@ -544,6 +544,75 @@ def reject_printed_quote(
     return guarded
 
 
+#: What ``rewrite_printed_quote`` may fold: prose kept as written (``_fold_dangling_rewrites``'s own
+#: set). PRESERVE_ATTRIBUTED is unverified, so it is never re-authored from facts.
+_REWRITABLE_KEPT = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE"})
+_REWRITABLE_KINDS = frozenset({"paragraph", "list"})
+_REWRITE_RATIONALE_LIMIT = 160  # the reconciliation contract's rationale ceiling
+
+
+def rewrite_printed_quote(
+    scope: PatchScope,
+    texts: Mapping[str, str],
+    quotes: Collection[str],
+    original: Mapping[str, Any],
+) -> Callable[[dict[str, Any]], dict[str, Any] | None] | None:
+    """The last-resort ``recover`` for a reply ``reject_printed_quote`` refused: each quoted prose
+    unit the reply still keeps as written is folded to VERIFIED_REWRITE, in place, keeping its
+    destination and citations. No model call; ``run_job`` re-judges the folded reply through the
+    same schema, binding and checks before anything is stored.
+
+    Measured (Aspose.3D-FOSS-for-Java, hosted Lane R run 43394954743): the reviewer quoted an
+    inherited Enterprise paragraph ("It adds broader format support (including glTF, FBX, USD, ...")
+    printed as VERIFIED_MOVE in scope_limitations; both asks of the S4 patch handed back
+    VERIFIED_MOVE and the candidate was REJECTed. VERIFIED_REWRITE is the remedy that needs no new
+    fact and loses nothing: the section's authoring job re-authors the unit from verified facts
+    (``authoring._placed_units`` makes it a citable unit of that section) and BC-05's
+    ``obligation_failures`` still requires its must-carry substance under that disposition. The
+    same lever as ``reconciliation.dispositions._fold_dangling_rewrites``; a command block, a table
+    and an attributed unit are left to the refusal. ``None`` when no quoted unit qualifies."""
+    quoted = [
+        unit
+        for unit in scope.unit_ids
+        if unit.rsplit(".", 1)[-1] in _REWRITABLE_KINDS
+        and any(quote and quote in texts.get(unit, "") for quote in quotes)
+    ]
+    if not quoted:
+        return None
+    stored = {
+        str(entry.get("unit_id")): entry
+        for entry in original.get("dispositions", [])
+        if isinstance(entry, Mapping)
+    }
+
+    def recover(reply: dict[str, Any]) -> dict[str, Any] | None:
+        revised = reply.get("revised_output")
+        entries = revised.get("dispositions") if isinstance(revised, dict) else None
+        if not isinstance(entries, list):
+            return None
+        by_unit = {
+            str(entry.get("unit_id")): entry for entry in entries if isinstance(entry, dict)
+        }
+        folded = False
+        for unit in quoted:
+            entry = by_unit.get(unit)
+            if entry is None and unit in stored:
+                # Left out of the reply: the merge would keep the stored disposition, so the
+                # fold is applied to a copy of it, inside the patch's own units.
+                entry = json.loads(json.dumps(stored[unit]))
+                entries.append(entry)
+            if entry is None or entry.get("disposition") not in _REWRITABLE_KEPT:
+                continue
+            entry["disposition"] = "VERIFIED_REWRITE"
+            entry["rationale"] = (
+                "Re-authored from the facts: the review found its text unsupported as written. "
+                + str(entry.get("rationale") or "")
+            )[:_REWRITE_RATIONALE_LIMIT]
+            folded = True
+        return reply if folded else None
+
+    return recover
+
 
 def scope_record(defect: Defect, units: Sequence[str]) -> dict[str, Any]:
     """The record a patch scope is cut from: each named unit with the details its failures carry.
@@ -628,17 +697,25 @@ def _repair_reconciliation(
         str(record.get("quote") or "")
         for record in [defect.record, *defect.record.get("equivalent_findings", [])]
     ]
+    texts = {fact.id: fact.value for fact in batch_facts.by_kind("inherited_unit")}
     checks = patch_checks(
         scope,
         reject_printed_quote(
             refuse_noop(original, partial(reconcile_checks, facts=batch_facts)),
             scope,
-            {fact.id: fact.value for fact in batch_facts.by_kind("inherited_unit")},
+            texts,
             quotes,
         ),
     )
     outcome = _targeted_call(
-        rc, defect, loaded, original, checks, patch=scope, stage_facts=batch_facts
+        rc,
+        defect,
+        loaded,
+        original,
+        checks,
+        patch=scope,
+        stage_facts=batch_facts,
+        recover=rewrite_printed_quote(scope, texts, quotes, original),
     )
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))
