@@ -93,6 +93,18 @@ _TYPE_OBJECTIVE = (
     "its name: what it represents or does for a visitor. Never mechanical filler such as a "
     "member count or 'extends X', never a count, never a claim the signature does not carry."
 )
+# A type's own ``implementation`` facts (a member that always raises, one that only returns a
+# literal) travel with its batch. Measured on Aspose.BarCode-FOSS-for-Python (hosted run
+# 43394959529): the batch carried only the symbol fact, so a type whose ``render`` raises
+# NotImplementedError was glossed from its name as rendering to PDF and the independent review
+# rejected it. The rule is added only to a batch that carries such a fact, so every other batch's
+# packet stays byte-identical.
+_TYPE_IMPLEMENTATION_CAP = 6
+_TYPE_IMPLEMENTATION_RULE = (
+    "Some types carry implementation facts; read them before the name. Where one shows a member "
+    "always raises or throws (such as a not-implemented error), say plainly that the member is "
+    "not implemented, and never describe work the implementation facts show the type does not do."
+)
 NORMALISATION_VERSION = "36"
 _EXCEPTION_SUFFIXES = ("Error", "Exception", "Warning")
 EDITION_SUBSTITUTE = re.compile(
@@ -692,18 +704,50 @@ def undocumented_types(facts: FactsDocument) -> list[Fact]:
     )
 
 
+def type_implementation_facts(
+    type_fact: Fact, facts: FactsDocument, limit: int = _TYPE_IMPLEMENTATION_CAP
+) -> list[Fact]:
+    """The SUPPORTED ``implementation`` facts about ``type_fact``'s own members (their ``member``
+    is ``<type value>.<member>``; a nested type's members belong to that type, not this one): an
+    unconditional raise first, then a conditional one, then a constant return, at most ``limit``."""
+    prefix = f"{type_fact.value}."
+
+    def own(fact: Fact) -> bool:
+        member = str((fact.attributes or {}).get("member", ""))
+        return member.startswith(prefix) and "." not in member[len(prefix) :]
+
+    def rank(fact: Fact) -> tuple[int, str]:
+        attributes = fact.attributes or {}
+        if attributes.get("aspect") == "throws":
+            return (0 if attributes.get("condition") == "always" else 1, fact.id)
+        return (2, fact.id)
+
+    found = [
+        fact
+        for fact in facts.by_kind("implementation")
+        if fact.polarity == "SUPPORTED" and own(fact)
+    ]
+    return sorted(found, key=rank)[:limit]
+
+
 def _type_batches(
     entry: RegistryEntry, facts: FactsDocument, do_not_claim: list[dict[str, str]]
 ) -> list[SectionTask]:
-    """One bounded task per batch of undocumented types."""
+    """One bounded task per batch of undocumented types, each type carrying its own
+    implementation facts (``type_implementation_facts``) so a stub is never glossed as working."""
     types = undocumented_types(facts)
     name = product_name(entry)
     tasks: list[SectionTask] = []
     for index in range(0, len(types), _TYPE_BATCH):
         batch = types[index : index + _TYPE_BATCH]
+        implementation = {fact.id: type_implementation_facts(fact, facts) for fact in batch}
+        detail = [found for fact in batch for found in implementation[fact.id]]
         ids = [fact.id for fact in batch]
         slots = tuple(f"type:{fact.id}" for fact in batch)
-        slot_facts = {f"type:{fact.id}": frozenset({fact.id}) for fact in batch}
+        slot_facts = {
+            f"type:{fact.id}": frozenset({fact.id, *(found.id for found in implementation[fact.id])})
+            for fact in batch
+        }
         accepted = [
             {
                 "id": fact.id,
@@ -717,14 +761,18 @@ def _type_batches(
             }
             for fact in batch
         ]
+        accepted.extend(
+            {"id": found.id, "kind": found.kind, "value": found.value} for found in detail
+        )
         spellings = section_spellings(ids, facts)
+        implementation_rule = f"{_TYPE_IMPLEMENTATION_RULE} " if detail else ""
         packet = {
             "repository": entry.repository,
             "product_name": name,
             "mode": "author",
             "section_id": "api_reference",
             "objective": (
-                f"{_TYPE_OBJECTIVE} {slots_clause(slots)} "
+                f"{_TYPE_OBJECTIVE} {implementation_rule}{slots_clause(slots)} "
                 f"Identifiers the prose may spell, exactly as written: {', '.join(spellings)}; "
                 "any other API name, member, attribute, or parameter is rejected."
             ),
@@ -740,7 +788,7 @@ def _type_batches(
             SectionTask(
                 "api_reference",
                 packet,
-                frozenset(ids),
+                frozenset([*ids, *(found.id for found in detail)]),
                 slots,
                 key=f"api_reference#types-{number}",
                 slot_facts=slot_facts,
