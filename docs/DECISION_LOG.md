@@ -5483,3 +5483,32 @@ test. Certified on the same seals: origin/main code R 1 / L 26; this branch R 1 
 correction that would make a "listed below" count agree with its rows is a follow-up on BL-065.
 
 Backlog: BL-063, BL-064, BL-065
+
+## 2026-11-13: BL-078 — Lane L's zero-job refusal path read its call count with the no-op proof's measure
+
+**Shape.** Hosted run 43489976823 (aspose-3d-foss/Aspose.3D-FOSS-for-.NET) Lane L failed in 12 s with
+`NoOpProofError: [LEDGER_NO_RECORDS] ledger.jsonl: no record belongs to invocation 3ffcb442...`; run 43473790998 failed
+the same way. Those are the only two Lane L executions in the last 30 present runs, so every Lane L run that reached
+`run_lane_l` hit it.
+
+**Root cause (first principles).** Not a missing recording and not an id or path mismatch between lanes (Lane R and
+Lane L use separate workspaces, `cascade/` and `lane-l/`, and separate invocations). `lane_l_review.review_correction`
+folds the verdict from `holdout_findings` without dispatching any job when a holdout fails, so the invocation correctly
+writes no ledger record. `run_lane_l` then measured provider calls with `measure_invocation` whenever `ledger.jsonl`
+existed, and the workflow's cache restore (`.present-work/lane-l/llm_cache`, key ...-43473790998) leaves the previous
+run's ledger in place. `measure_invocation`'s premise ("a rerun that reused stored outputs records each reuse") is
+right for a no-op proof, wrong for an invocation that dispatched no job. On a fresh runner (no ledger) the same run
+reported the refusal correctly (`test_a_defect_the_engine_may_not_repair_is_refused_before_the_model_is_asked`), so the
+outcome depended on cache state, and the real refusal naming Lane R was masked.
+
+**Fix (existing component, R27).** `run_lane_l` uses `measure_invocation` (strict) only when `verdict.model_reviewed`;
+a folded verdict counts its stamped provider calls with the new `noop_proof.count_provider_calls` (no records = 0; a
+stray call is still counted and reported). The proof is not weakened: `measure_invocation`, `verify_noop_pair` and
+`seal_candidate` are unchanged, and a model-reviewed verdict whose invocation stamped nothing still fails
+`LEDGER_NO_RECORDS` (falsifier test). A folded verdict never reaches a seal (`_lane_l_and_seal` raises on REJECT /
+no model review). Lane R's cascade always dispatches authoring jobs before measuring, so it is outside this class.
+
+**Evidence.** The regression test reproduces the logged message verbatim on origin/main code (same version set
+7e884dc3acd6) and passes with the fix. Zero provider calls.
+
+Backlog: BL-078
