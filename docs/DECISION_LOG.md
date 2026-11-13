@@ -4709,3 +4709,26 @@ Counter: the hosted `supervisor-tick` ran `ops/checks/portfolio_delivery_count.p
 `gh attestation verify` failed and all seven attested Lane L records read as unattested (count 0). The step now carries
 the automatic read-only token and `attestations: read`. The R16 no-op check now fails closed: a Lane L seal whose live
 README cannot be read is never counted.
+
+---
+
+## 2026-11-13: two findings-register rows refuted by a registry fact; an authored BC-18 quote routes to S6
+
+Supervisor decision under R10/R14 (fixes only, R27). **Register.** Every one of the 72 rows of
+`data/readme_findings.json` was checked against the mechanical facts (package, install_command, dependency, license,
+build_test_asset) in the sealed `facts.json` of its repository's latest Lane R bundle. Two rows are contradicted by a
+SUPPORTED registry fact and are closed RESOLVED (the schema has OPEN/RESOLVED only, no REFUTED status; the refutation
+and the fact are recorded in each row's `evidence`): Aspose.Email-FOSS-for-.Net `<PackageReference ... Version="26.7.0" />`
+and `NuGet (\`Aspose.Email.Foss\`, version 26.7.0)` -- `package:published_version = 26.7.0` (nuget registry, the only
+version it lists). BC-14 requires the registry's version, so no candidate could satisfy both checks; hosted run
+43405254498's repair even rewrote the PackageReference to 0.1.0 and BC-14 then failed. No other row is contradicted by a
+mechanical fact (the Python `python_requires` rows stand: `package:python_requires` is read from `requires-python`;
+Cells Go's "22 test files" row stands: the fact counts 22 test sources among 23 files, which does not refute "23
+`*_test.go` files"). `data/recertification_baseline.json`'s Email .NET Lane R justification now names 2 open rows (the
+seal still fails BC-18 on `dotnet build` and `ValidationIssues`; outcome unchanged).
+
+**Repair routing.** A BC-18 check's earliest causal stage is RECONCILING whenever one of its rows is printed by an
+inherited unit, so its unit-less failures (quotes in generated text) become one S4 defect that names no unit and was
+recorded "no stored disposition ... is named". `repair/loop.py::_repair_reconciliation` now routes such a defect to the
+authoring task(s) whose stored units print the quote (`_authored_routes`, the S6 path); a quote no task prints
+(renderer-owned text) stays unrepairable as before. Regression: `tests/readme/repair/test_s4_authored_quote_route.py`.

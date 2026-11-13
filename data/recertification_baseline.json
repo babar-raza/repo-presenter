@@ -201,7 +201,7 @@
       "failing_checks": [
         "BC-18"
       ],
-      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 4 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-.Net, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"<PackageReference Include=\"Aspose.Email.Foss\" Version=\"26.7.0\" />\" -- Source package version is 0.1.0, contradicting README line 184. (evidence: src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:5@59125b4732df0eedbc4d4c2ab978698ed4348eb7). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-.Net (4 at re-land; the two 26.7.0 version rows were RESOLVED as refuted on 2026-11-13 by the sealed facts' SUPPORTED package:published_version = 26.7.0 from the nuget registry), each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"dotnet build\" -- The repo root has no .sln or .csproj (only Directory.Build.props), so a bare `dotnet build` there fails (evidence: repo root@59125b4732df0eedbc4d4c2ab978698ed4348eb7). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 3,
