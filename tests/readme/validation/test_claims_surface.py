@@ -342,6 +342,40 @@ def test_a_format_list_is_silent_without_any_supported_format_fact() -> None:
     assert claim_findings(readme("Handles `.fbx`, `.iges` and `.step`."), facts()) == []
 
 
+# Words-Python (Lane R, version set 2e1cacfdb7dc): the live README's own sentences. The product
+# reads .doc/.docx/.rtf -- executed examples staging tests/data/input/*.doc|.docx|.rtf prove it
+# at the same pinned source -- so the flag came from a facts set missing those input facts, not
+# from the rule: with the input facts present nothing is flagged; without them a listed format
+# no fact states is still unverified, and rule (g) still holds it (it is not weakened).
+WORDS_SENTENCES = (
+    "- Load documents with the reader chosen automatically from the "
+    "`.docx`/`.doc`/`.rtf`/`.md`/`.txt` file extension.",
+    "- `Document(filepath=None, *, stream=None, data=None)` — loads a `.doc`, `.docx`, `.rtf`, "
+    "`.txt`, or `.md` file.",
+)
+WORDS_OUTPUTS = tuple(
+    fact(f"format:output.{ext}", "format", f".{ext}") for ext in ("docx", "md", "pdf", "txt")
+)
+WORDS_INPUTS = tuple(
+    fact(f"format:input.{ext}", "format", f".{ext}") for ext in ("doc", "docx", "md", "rtf")
+)
+
+
+@pytest.mark.parametrize("sentence", WORDS_SENTENCES)
+def test_words_python_format_lists_pass_with_the_executed_input_format_facts(
+    sentence: str,
+) -> None:
+    assert claim_findings(readme(sentence), facts(*WORDS_OUTPUTS, *WORDS_INPUTS)) == []
+
+
+@pytest.mark.parametrize("sentence", WORDS_SENTENCES)
+def test_words_python_format_lists_are_still_held_when_no_fact_states_the_inputs(
+    sentence: str,
+) -> None:
+    [finding] = claim_findings(readme(sentence), facts(*WORDS_OUTPUTS))
+    assert ".doc" in finding.detail and ".rtf" in finding.detail
+
+
 @pytest.mark.parametrize(
     "sentence",
     [

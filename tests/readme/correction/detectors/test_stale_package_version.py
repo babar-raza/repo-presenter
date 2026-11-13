@@ -161,7 +161,10 @@ def test_the_whole_but_not_published_sentence_is_rewritten_not_just_its_verb(
         "The package metadata is defined in this repository, but `Aspose.PSD.FOSS` is not "
         "published to NuGet yet.\n"
     )
-    ctx = make_context(readme, make_facts(published(make_fact, "26.10.0")))
+    # the real repository's identity: the sentence names this package, so the registry reading
+    # of it contradicts the denial
+    identity = make_fact("package:name", "Aspose.PSD.FOSS")
+    ctx = make_context(readme, make_facts(published(make_fact, "26.10.0"), identity))
     (edit,) = stale_package_version(ctx).edits
     assert edit.original == readme.strip()
     assert edit.replacement == "`Aspose.PSD.FOSS` is published to NuGet."
@@ -175,3 +178,46 @@ def test_a_not_published_clause_that_is_not_a_but_sentence_keeps_the_plain_rewri
     ctx = make_context(readme, make_facts(published(make_fact, "26.10.0")))
     (edit,) = stale_package_version(ctx).edits
     assert edit.replacement == "is published to NuGet"
+
+
+# --- a "not published" statement whose subject is another artifact ------------------------------
+
+
+def test_the_converter_tools_not_published_statement_is_never_rewritten(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """Real Aspose.3D-FOSS-for-.NET Lane L bundle (52b0f00e, 2026-11-10): the live README's
+    converter paragraph says the *converter tool* is not published to NuGet -- true -- and the
+    detector rewrote it to "it is published to NuGet", a false claim about the converter. The
+    registry reading is of the library, so nothing contradicts the sentence."""
+    readme = (
+        "The repository also contains a separate console conversion tool\n"
+        "(`src/converter/Converter.csproj`, package id `Aspose.3D.Converter`) that references the "
+        "library\nas a project; it is not published to NuGet.\n"
+    )
+    result = stale_package_version(make_context(readme, make_facts(published(make_fact))))
+    assert result.edits == () and result.findings == ()
+    unspelled = (
+        "The repository also includes a console conversion tool in src/converter/ that "
+        "references the library as a project but is not published to NuGet.\n"
+    )
+    result = stale_package_version(make_context(unspelled, make_facts(published(make_fact))))
+    assert result.edits == ()
+
+
+def test_the_librarys_own_denial_beside_the_converter_is_still_corrected(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    readme = "The converter tool ships here; the library is not published to NuGet.\n"
+    (edit,) = stale_package_version(make_context(readme, make_facts(published(make_fact)))).edits
+    assert edit.replacement == "is published to NuGet"
+
+
+def test_a_denial_naming_only_a_package_id_other_than_this_one_is_not_rewritten(
+    make_context: Any, make_facts: Any, make_fact: Any
+) -> None:
+    """The registry reading is of this package's identity; a sentence that names only another
+    package id (and none of this package's names) is not a claim that reading contradicts."""
+    readme = "The metadata is defined here, but `Aspose.PSD.FOSS` is not published to NuGet yet.\n"
+    result = stale_package_version(make_context(readme, make_facts(published(make_fact))))
+    assert result.edits == ()
