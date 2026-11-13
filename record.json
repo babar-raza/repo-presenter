@@ -5,7 +5,7 @@
   "provider_repository_id": 1332915817,
   "registry_revision": null,
   "active_transaction_id": "66295dd1073d41ea9dcf89a58630a4f7",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 68277adca33b: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-13T12:22:11.824221+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43419183454",
     "acquired_at": "2026-11-13T11:43:51.291853+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "5e9555ca42704e42b0f571e13f8ddb55",
+    "transition_id": "e78a5525c7e045638c834fff63590a1e",
     "transaction_id": "66295dd1073d41ea9dcf89a58630a4f7",
     "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-09T20:12:45.180267+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-13T12:22:11.397004+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-psd-foss__Aspose.PSD-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 20,
+  "state_version": 21,
   "recent_trigger_dedup_keys": {
     "run:41290980069:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "420a41ac7b7b4ee8a4282def04b3cee9",
     "run:41294881468:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "a46cdcf117be4c239142b216c9a17ef6",
