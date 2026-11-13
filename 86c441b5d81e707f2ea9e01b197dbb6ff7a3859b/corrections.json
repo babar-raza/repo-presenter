@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 2,
+    "edits": 3,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "eba1a891f97d153d722164a304a66e6813d31d34023c44d44f1fc68cd7784458",
+  "corrected_sha256": "14affdaafa99aeb78966743a8dd9f01e03315916a8bfe3b140a6d525675cd931",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2105,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:21"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 22,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing PPTX presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Presentation, slide, and section creation and editing\"]\n      c2[\"Shape creation (AutoShape, Table, Connector, PictureFrame)\"]\n      c3[\"Text formatting (TextFrame, Paragraph, Portion)\"]\n      c4[\"Fill, line, and 3D shape styling\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c5[\"Visual effects (shadow, glow, blur, reflection)\"]\n      c6[\"Document properties (core, app, custom)\"]\n      c7[\"Speaker notes and classic comments\"]\n      c8[\"Image embedding\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PPTX, PPSX or POTX package\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1786 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 684 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing PPTX<br/>presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Presentation, slide,<br/>and section creation<br/>and editing\"]\n    c2[\"Shape creation<br/>(AutoShape, Table,<br/>Connector,<br/>PictureFrame)\"]\n    c3[\"Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)\"]\n    c4[\"Fill, line, and 3D<br/>shape styling\"]\n    c5[\"Visual effects<br/>(shadow, glow, blur,<br/>reflection)\"]\n    c6[\"Document properties<br/>(core, app, custom)\"]\n    c7[\"Speaker notes and<br/>classic comments\"]\n    c8[\"Image embedding\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c8\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PPTX, PPSX or POTX<br/>package\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1198
+    },
     {
       "detector": "enterprise_edition_naming",
       "end": 21800,
@@ -17,7 +36,7 @@
           "value": "https://products.aspose.com/slides/net/"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 511,
       "original": "the commercial product",
@@ -36,7 +55,7 @@
           "value": "https://products.aspose.com/slides/net/"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "FALSE_CLAIM_FIX",
       "line": 519,
       "original": "the commercial product",
@@ -58,6 +77,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 2
   },
   "unapplied": [
