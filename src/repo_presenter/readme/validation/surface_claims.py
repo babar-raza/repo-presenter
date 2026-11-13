@@ -55,7 +55,7 @@ defect, not a composition one) and every other to COMPOSING with its section.
 from __future__ import annotations
 
 import re
-from collections.abc import Iterable
+from collections.abc import Collection, Iterable
 from pathlib import Path
 
 from repo_presenter.core.facts import Fact, FactKind, FactsDocument
@@ -483,13 +483,24 @@ def canonical_name_form(text: str, facts: FactsDocument) -> str:
     return canonicalise_name_variants(text, canonical, protect=_NAME_PROTECTED)
 
 
-def kept_unit_form(unit_id: str, text: str, facts: FactsDocument) -> str:
+def kept_unit_form(
+    unit_id: str, text: str, facts: FactsDocument, false_quotes: Collection[str] = ()
+) -> str:
     """The ONE printable form of a kept maintainers' unit, whatever its kind: a table without the
     rows naming absent types and with unsafe HTML in code spans (``kept_table_form``), and any
     paragraph, list, blockquote or table with the product named as BC-12 requires
     (``canonical_name_form``). The renderer, BC-05, the independent reviewer and the restore guard
     all judge "printed" against this form, so a restore of the maintainers' own wording no longer
     fails BC-12 on a short name (measured: PDF Cpp, Slides Cpp, Cells Cpp, Cells Go, 2026-11-11)."""
+    if false_quotes and unit_id.endswith((".code_block", ".paragraph")):
+        # A unit kept while its disposition cites an OPEN findings-register row prints without
+        # exactly what that row confirms false (must_correct.withheld_form): a code block without
+        # those lines, a paragraph without those sentences; everything else is kept as written.
+        from repo_presenter.readme.validation.must_correct import withheld_form
+
+        text = withheld_form(unit_id, text, false_quotes)
+        if unit_id.endswith(".code_block"):
+            return text
     if unit_id.endswith(".table"):
         text = kept_table_form(text, facts)
     if unit_id.endswith(_NAME_CORRECTED_KINDS):

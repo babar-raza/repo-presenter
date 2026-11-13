@@ -558,8 +558,17 @@ def placements(
         text = unit.value
         # ONE printable form per kept unit (BC-05, disposition_coverage, BC-12): a table without
         # the rows naming types the public surface lacks (BC-14 i), and the product named as BC-12
-        # requires wherever the maintainers' own wording used a short variant of it.
-        text = kept_unit_form(unit_id, text, facts)
+        # requires wherever the maintainers' own wording used a short variant of it; a code block
+        # whose disposition cites an OPEN findings-register row, without the lines it confirms
+        # false (``must_correct.without_quoted_lines``).
+        from repo_presenter.readme.validation.must_correct import cited_finding_quotes
+
+        text = kept_unit_form(
+            unit_id,
+            text,
+            facts,
+            cited_finding_quotes(entry.get("fact_ids") or (), facts.repository),
+        )
         also: tuple[str, ...] = ()
         topical = False
         if destinations is not None:

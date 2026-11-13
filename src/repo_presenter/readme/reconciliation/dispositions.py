@@ -123,7 +123,7 @@ from repo_presenter.readme.reconciliation.destinations import (
     rehomed,
 )
 from repo_presenter.readme.validation.claims import install_identity_findings
-from repo_presenter.readme.validation.text import installs_the_checkout
+from repo_presenter.readme.validation.text import COMMAND, SPAN, installs_the_checkout
 
 DISPOSITIONS_FILENAME = "dispositions.json"
 # Ported 2026-10-23 for readme/validation/deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class to
@@ -1424,6 +1424,7 @@ def normalize(
     api_listings = api_listing_units(facts)
     _fold_api_listings(output, facts, api_listings)
     _fold_uncovered(output, facts, coverage)
+    _fold_register_corrections(output, facts)
     for entry in output.get("dispositions", []):
         unit = str(entry.get("unit_id", "?"))
         destination = entry.get("destination_section")
@@ -1895,6 +1896,54 @@ def _fold_table_of_contents(
             "A table of contents: the generated Navigation lists the document's own sections. "
             + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
+
+
+_REGISTER_KEPT_RATIONALE = (
+    "Kept as written without the sentence the findings register confirms false; its commands "
+    "are true. "
+)
+
+
+def _fold_register_corrections(output: dict[str, Any], facts: FactsDocument) -> None:
+    """A CORRECT_WITH_EVIDENCE paragraph that prints an OPEN findings-register quote AND true
+    commands is kept as written in the section it names, citing the register rows, so it prints
+    without exactly the false sentence (``must_correct.withheld_form``), in place.
+
+    Nothing authors a correction in Lane R (the section-authoring contract forbids a literal
+    command in prose), so a corrected unit prints nothing and BC-08 holds each of its commands to
+    the README. Measured on Aspose.Cells-FOSS-for-Rust, hosted Lane R run 43419190710: the BC-18
+    repair corrected ``079.paragraph`` (its false CI sentence) into development_testing and BC-08
+    then failed on ``cargo bench`` and ``cargo doc --no-deps --open``. Here, not in the repair,
+    because the corrected batch is already stored: every later run re-judges it through these
+    checks with no call. Only when the register backs it, the destination is placeable and a
+    sentence is left to print; every other correction is left as the model gave it."""
+    from repo_presenter.readme.validation.must_correct import (
+        omission_holds,
+        open_finding_citations,
+    )
+
+    units = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    candidates = [
+        entry
+        for entry in output.get("dispositions", [])
+        if entry.get("disposition") == "CORRECT_WITH_EVIDENCE"
+        and str(entry.get("unit_id", "")).endswith(".paragraph")
+        and entry.get("destination_section") in placeable_section_ids()
+        and any(COMMAND.match(span) for span in SPAN.findall(units.get(str(entry["unit_id"]), "")))
+    ]
+    if not candidates:
+        return
+    rows = open_finding_citations(facts.repository)
+    for entry in candidates:
+        text = units[str(entry["unit_id"])]
+        squashed = " ".join(text.split())
+        ids = [cid for cid, row in rows.items() if " ".join(row.quote.split()) in squashed]
+        if not ids or not omission_holds(str(entry["unit_id"]), text, [rows[c].quote for c in ids]):
+            continue
+        cited = [str(fid) for fid in entry.get("fact_ids") or []]
+        entry["disposition"] = "VERIFIED_PRESERVE"
+        entry["fact_ids"] = [*cited, *(cid for cid in ids if cid not in cited)]
+        entry["rationale"] = (_REGISTER_KEPT_RATIONALE + str(entry.get("rationale") or ""))[:160]
 
 
 def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> None:
@@ -2733,6 +2782,23 @@ def _settle_lead_in(
     if block in PLACING and target in placeable_section_ids() and target != destination:
         entry["destination_section"] = target
         entry["rationale"] = _LEAD_IN_FOLLOWED_RATIONALE
+        return
+    if (
+        block == "SUPERSEDE_REDUNDANT"
+        and target
+        and _bare_lead_in(lead.value)
+        and examples.get(payload, ("", ""))[0] != "CONTRADICTED"
+    ):
+        # The block is printed by the section that supersedes it (its own content, not a kept
+        # unit), so a label kept as written elsewhere introduces nothing: BC-07's dangling colon
+        # ("ends with a colon but nothing follows it before the next heading"). Measured on
+        # Aspose.Cells-FOSS-for-Java, hosted run 43419171411: ``014.paragraph`` "Gradle (Groovy
+        # DSL):" kept while the snippet it introduces was not printed after it, and an S4 repair
+        # of the lead-in alone could not move the block. Same fate, same section: the lead-in is
+        # superseded with its block (BC-05 exempts a superseded lead-in by this rationale). A
+        # CONTRADICTED example's block is not printed by the section it names, so that shape keeps
+        # its own path (``test_a_lead_in_is_not_followed_when_the_example_is_contradicted``).
+        _supersede_lead_in(entry, str(target))
 
 
 def _omit_lead_in(entry: dict[str, Any], neighbor: Mapping[str, Any], payload: str) -> None:

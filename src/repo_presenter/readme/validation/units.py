@@ -412,6 +412,24 @@ def protected_fragments(candidate: Candidate) -> list[tuple[str, str, str]]:
     return fragments
 
 
+def _withheld_on_evidence(command: str, entry: Mapping[str, Any], candidate: Candidate) -> bool:
+    """Whether a kept unit's command is one its disposition withholds on evidence: it sits in the
+    line (code block) or sentence (paragraph) that prints the quote of an OPEN findings-register
+    row the disposition cites, which the renderer leaves out (``must_correct.withheld_form``).
+    Every other command of the unit is still held to the README."""
+    from repo_presenter.readme.validation.must_correct import (
+        cited_finding_quotes,
+        withheld_text_holds,
+    )
+
+    quotes = cited_finding_quotes(entry.get("fact_ids") or (), candidate.facts.repository)
+    if not quotes:
+        return False
+    unit_id = str(entry.get("unit_id", ""))
+    unit = next((f for f in candidate.facts.by_kind("inherited_unit") if f.id == unit_id), None)
+    return unit is not None and withheld_text_holds(unit_id, unit.value, quotes, command)
+
+
 def protected_failures(candidate: Candidate) -> list[Failure]:
     """BC-08: every command, example and kept unit a placing disposition keeps is rendered."""
     failures: list[Failure] = []
@@ -426,6 +444,8 @@ def protected_failures(candidate: Candidate) -> list[Failure]:
         if disposition not in PLACING or category == "unit":
             continue
         if normalized(text) in normalized_readme:
+            continue
+        if category == "command" and _withheld_on_evidence(text, entry, candidate):
             continue
         # The disposition names the destination section a dropped command or example belongs to,
         # so a COMPOSING failure routes to the section that may re-author it.

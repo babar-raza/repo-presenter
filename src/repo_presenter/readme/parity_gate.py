@@ -531,6 +531,32 @@ def row_accounts_for_item(
     )
 
 
+def withheld_by_finding(
+    row: Mapping[str, Any], item: str, unit: Mapping[str, Any] | None = None
+) -> bool:
+    """Whether ``row`` withholds ``item`` on a confirmed findings-register row it cites: the item
+    is (or holds) the quote of an OPEN register row the disposition cites, or -- given the unit --
+    sits in the line or sentence the renderer leaves out for it (``must_correct.withheld_form``).
+    BC-18 forbids printing the quote; the register row is the recorded, evidenced decision (R14).
+    An item outside the withheld text gets no exemption."""
+    from repo_presenter.readme.validation.must_correct import (
+        cited_finding_quotes,
+        withheld_text_holds,
+    )
+
+    quotes = cited_finding_quotes(row.get("fact_ids") or (), None)
+    wanted = " ".join(item.split())
+    if not wanted or not quotes:
+        return False
+    if any((quote := " ".join(q.split())) and (quote in wanted or wanted in quote) for q in quotes):
+        return True
+    if unit is None:
+        return False
+    return withheld_text_holds(
+        str(row.get("unit_id", "")), str(unit.get("value") or ""), quotes, item
+    )
+
+
 def _edit_is_evidenced(edit: Mapping[str, Any]) -> bool:
     return bool(edit.get("evidence") or edit.get("fact_ids") or edit.get("locators"))
 
@@ -591,7 +617,11 @@ class Accounting:
             return None
         rows = [self.rows.get(unit_id) for unit_id in unit_ids]
         if all(
-            row is not None and row_accounts_for_item(row, self.facts, code=code)
+            row is not None
+            and (
+                row_accounts_for_item(row, self.facts, code=code)
+                or withheld_by_finding(row, item, self.units.get(str(row.get("unit_id"))))
+            )
             for row in rows
         ):
             return "disposition " + ",".join(
@@ -609,7 +639,10 @@ class Accounting:
             unit_id
             for unit_id in self._units_containing(item, code=code)
             if (row := self.rows.get(unit_id)) is None
-            or not row_accounts_for_item(row, self.facts, code=code)
+            or not (
+                row_accounts_for_item(row, self.facts, code=code)
+                or withheld_by_finding(row, item, self.units.get(unit_id))
+            )
         )
 
     def _title(self) -> str | None:

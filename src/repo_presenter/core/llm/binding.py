@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
+from repo_presenter.readme_findings import CITATION_PREFIX as FINDING_CITATION_PREFIX
 
 Binding = str
 _FACT_KEY_SUFFIXES = ("_fact_id", "_fact_ids", "_example_id", "_example_ids", "_format_ids")
@@ -223,8 +224,30 @@ def binding_errors(payload: Any, facts: FactsDocument, binding: Binding) -> list
     cited = collect_ids(payload)
     errors: list[str] = []
     require_supported = binding in {"fact_ids", "selection_ids", "revision_ids"}
+    findings: dict[str, Any] | None = None
     for fact_id in dict.fromkeys(cited.fact_ids):
         fact = known.get(fact_id)
+        if fact is None and fact_id.startswith(FINDING_CITATION_PREFIX):
+            # A confirmed findings-register row is evidence that a claim is FALSE (the row BC-18
+            # enforces), never support for one: citable where existence is the rule, refused
+            # where a SUPPORTED fact is required, and only when it is an OPEN row of this very
+            # repository (``must_correct.open_finding_citations``), so it cannot be invented.
+            if findings is None:
+                from repo_presenter.readme.validation.must_correct import (
+                    open_finding_citations,
+                )
+
+                findings = dict(open_finding_citations(facts.repository))
+            if fact_id not in findings:
+                errors.append(
+                    f"unknown fact ID {fact_id}: no OPEN findings-register row of "
+                    f"{facts.repository} has that citation"
+                )
+            elif require_supported:
+                errors.append(
+                    f"fact {fact_id} is a confirmed false claim (findings register), not SUPPORTED"
+                )
+            continue
         if fact is None:
             errors.append(f"unknown fact ID {fact_id}")
         elif require_supported and fact.polarity != "SUPPORTED":

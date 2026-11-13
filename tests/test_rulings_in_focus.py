@@ -22,7 +22,7 @@ def test_the_rulings_file_exists_and_states_the_goal_and_checklist() -> None:
 def test_every_ruling_in_the_top_authority_is_in_the_rulings_file() -> None:
     goals = (ROOT / "docs" / "CONSOLIDATED_GOALS_2026-11-06.md").read_text(encoding="utf-8")
     ids = sorted({int(m) for m in re.findall(r"^\| R(\d+) \|", goals, re.M)})
-    assert ids and ids[-1] >= 36
+    assert ids and ids[-1] >= 37
     text = RULINGS.read_text(encoding="utf-8")
     missing = [f"R{i}" for i in ids if not re.search(rf"\bR{i}\b", text)]
     assert not missing, f"rulings missing from docs/RULINGS.md: {missing}"
