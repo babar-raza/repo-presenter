@@ -5,7 +5,7 @@
   "provider_repository_id": 1246258574,
   "registry_revision": null,
   "active_transaction_id": "743ec0d97311433195edb2047c11145c",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set a6b436407f14: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-13T17:49:12.397146+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-13T19:13:29.778952+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 12
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 136,
+  "state_version": 137,
   "recent_trigger_dedup_keys": {
     "run:40555595204:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "a355a427933a4c5e8d543429f22050e0",
     "run:40571540396:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "886cefd3f4934c8b90359a383ef158f6",
@@ -62,5 +62,5 @@
     "run:41109510803:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "4c25b8b12f604c6e938adde96424da2b",
     "run:41304454389:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "743ec0d97311433195edb2047c11145c"
   },
-  "recovery_count": 11
+  "recovery_count": 12
 }
