@@ -3,19 +3,21 @@
   "card": "TC-019c",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-11T16:31:20Z",
-  "base_rev": "04f91578188d0b03f19c21ad4c0607804deb1222",
-  "head_rev": "caaa8a21fd5eafe4557fdc6fa0dd7bd83089a0bb",
+  "generated_at": "2026-11-13T11:54:49Z",
+  "base_rev": "d6081b6081b8b3b121b95498df2e08905e8376d2",
+  "head_rev": "50e780b09b5113b46ca2a9effbedff8492bd7218",
   "card_sha256": "68ab3eaea267b23589b117041952f65a85c649f67546531ff7f44127f445bec6",
-  "checker_fileset_sha256": "47f80c8b204dffae7360fb9627f0cf00687fbd94f567783e4f8419b403f4f999",
+  "checker_fileset_sha256": "8f08932d315a22621fded0653598a64b5f15d3c9e8d1ad5989366bd6a3f1a9b8",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v445-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "src/repo_presenter/cascade.py"
+    ],
     "violations": [],
     "evaluated": true
   },
@@ -26,8 +28,8 @@
         {
           "command": "python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q",
           "exit_code": 0,
-          "duration_s": 19.938,
-          "stdout_sha256": "4c6358992468efcf55a8d73dc6664664525398561b165f8c25ea4ccd3a36aab4"
+          "duration_s": 10.101,
+          "stdout_sha256": "a146b08697ce954536de71ccd9f347c43a02050ea6eb2771cefb862d923d4f13"
         }
       ],
       "all_passed": true
@@ -38,8 +40,8 @@
         {
           "command": "python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q",
           "exit_code": 0,
-          "duration_s": 18.573,
-          "stdout_sha256": "57da4fe9fd819a5b06df674ced620820e4b55127a0ee39e7ac9e0c56bf580cad"
+          "duration_s": 11.927,
+          "stdout_sha256": "b61877dd0a2f6350e8d3331a7f4f36080a6f3599436790ef018bfc230c83131e"
         }
       ],
       "all_passed": true
