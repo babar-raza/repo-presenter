@@ -5031,3 +5031,15 @@ failed with CS0234 on pointer files (10 printed, both lanes); best effort, no gi
 Not yet fixed (next classes): inputs no repository file or example provides (26), fragments that need an earlier
 fence's statements (16 incl. Rust), the extractor missing list-indented fences (1). Proof needing a hosted facts run:
 Words .NET (LFS + dotnet), PDF .NET (dotnet), Cells Rust and 3D TS on the runner's own toolchains.
+
+---
+
+## 2026-11-13: how silently dropped work is tracked from now on (owner: "how to best track it. Make necessary changes")
+
+Root causes of the dropped items the R40 reconciliation found: follow-ups living only in prose, no freshness signal,
+no comparison of "done" claims with the history. Changes (existing checker extended, R38): open task cards must be named
+by a backlog item; decision-log entries from 2026-11-14 must carry a `Backlog:` line; a `done` item citing an unlanded
+commit is refused; staleness by status age is reported every hosted tick (`supervisor-tick` "Backlog" section, after the
+delivery numbers) and fails under `--strict`; RULINGS checklist item 11. Details in `docs/R40_BACKLOG.md`.
+
+Backlog: BL-001
