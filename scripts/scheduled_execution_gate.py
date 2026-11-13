@@ -31,6 +31,9 @@ Owner ruling R37 (2026-11-13): once the predicates hold, the gate plans the whol
 (repository, lane) cells, R25 -- through scripts/select_scheduled_cohort.plan_cohort (needs-work,
 terminal, idempotency and bounded-retry rules live there) and writes it with --plan for
 present.yml's cohort job, which reserves budget and dispatches one present run per repository.
+The same job, and so this gate, also runs when cohort-chain.yml reacts to a finished run or M9
+round and on a run-request `cohort` override; while the previous cohort is in flight the plan is
+`held` and the gate prints authorized=false with a `held:` reason (a no-op, never a second cohort).
 
 Usage: python scripts/scheduled_execution_gate.py [--max 6] [--remote origin]
            [--plan plan.json] [--summary summary.md]
@@ -197,6 +200,18 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     _write(args.plan, json.dumps(plan, indent=1) + "\n")
     _write(args.summary, render_summary(plan))
+    if not plan["runs"] and plan.get("held"):
+        held = plan["held"]
+        _print_blocked(
+            [
+                (
+                    "held: the previous cohort is still in flight "
+                    f"({held['in_flight_cells']} cells, {', '.join(held['reservations'])}); "
+                    "the run that finishes it plans the next cohort"
+                )
+            ]
+        )
+        return 0
     if not plan["runs"]:
         _print_blocked(
             [

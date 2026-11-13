@@ -5,7 +5,8 @@ name: present
 # owner ruling R37 (2026-11-13: "the system has to run autonomously on GitHub actions") -- driven
 # by its own hourly schedule through the third job below:
 #
-#   cohort  schedule only. Plans the fire (scripts/scheduled_execution_gate.py: the authorization
+#   cohort  schedule, or a call with no target (cohort-chain.yml when a dispatched run or an M9
+#           round completes; run-request-execute.yml's `cohort` override). Plans the fire (scripts/scheduled_execution_gate.py: the authorization
 #           predicates, then up to six (repository, lane) cells that need work -- R25), reserves
 #           each run's provider budget in the durable ledger on the state remote
 #           (core/llm/budget.py, refs/repository-presenter-state/ledger/provider-spend; main is a
@@ -65,17 +66,25 @@ on:
   # only leave funded, ready cells idle between fires (a run takes up to ~2.5 h; the per-repository
   # concurrency group below already serialises runs of one repository).
   # Called by run-request-execute.yml (a validated run request, run from main via workflow_run; owner ruling 2026-11-06).
+  # A call WITH a target (run-request `present`: the validator always supplies all three) runs the
+  # facts and present jobs for it. A call with NO target runs only the cohort job: that is how
+  # cohort-chain.yml continues the loop the moment a dispatched run or an M9 round completes, and how
+  # a run-request `cohort` kicks the engine when the cron is late (R37: cron punctuality is not a
+  # dependency). The inputs are optional only so that a no-target call cannot fail at startup.
   workflow_call:
     inputs:
       repository:
-        required: true
+        required: false
         type: string
+        default: ""
       ecosystem:
-        required: true
+        required: false
         type: string
+        default: ""
       lane:
-        required: true
+        required: false
         type: string
+        default: ""
   schedule:
     - cron: "17 * * * *"
 
@@ -94,11 +103,19 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # R37: the autonomous engine. Schedule-only; see the header. contents: write only for the
-  # provider-spend ledger ref in this repository's state namespace (it never pushes a branch);
-  # actions: write only to dispatch this workflow.
+  # R37: the autonomous engine. The schedule is its heartbeat; a no-target call (both callers run
+  # from main on a workflow_run event) continues it. contents: write only for the provider-spend
+  # ledger ref in this repository's state namespace (it never pushes a branch); actions: write only
+  # to dispatch this workflow.
   cohort:
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_run' && inputs.repository == '')
+    # One planner at a time, whoever started it (heartbeat, chain or override): a second planner
+    # waits and then reads the reservations the first one wrote, so it holds instead of dispatching
+    # a second cohort (scripts/select_scheduled_cohort.py, `held`). A job-level group, so it binds
+    # the same way when this workflow is called.
+    concurrency:
+      group: present-cohort-planner
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -183,8 +200,9 @@ jobs:
           PY
 
   facts:
-    # A schedule fire runs only the cohort job; every run it starts is a workflow_dispatch.
-    if: github.event_name != 'schedule'
+    # A schedule fire (or a no-target call) runs only the cohort job; every run it starts is a
+    # workflow_dispatch with explicit inputs.
+    if: github.event_name != 'schedule' && inputs.repository != ''
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:

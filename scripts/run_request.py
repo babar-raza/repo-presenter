@@ -7,6 +7,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "present", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
     {"job": "mint"}
     {"job": "recertify"}
+    {"job": "cohort"}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -83,7 +84,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write")
-JOBS = {"present", "mint", "recertify", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -290,6 +291,13 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("a recertify request takes no other field (it re-certifies every seal)")
         return {"job": "recertify", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "cohort":
+        # Owner ruling R37: the override that kicks the autonomous engine once when the cron is late.
+        # It runs present.yml's cohort job exactly as the schedule does (authorization gate, one
+        # cohort at a time, budget reservation, dispatch); no target field, the planner picks.
+        if set(request) != {"job"}:
+            raise RequestError("a cohort request takes no other field (the planner picks the cells)")
+        return {"job": "cohort", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
     allowed_keys = {"job", "repository", "ecosystem", "lane"}

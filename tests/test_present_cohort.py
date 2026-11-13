@@ -26,10 +26,16 @@ def test_the_schedule_is_hourly() -> None:
     assert [c["cron"] for c in triggers["schedule"]] == ["17 * * * *"]
 
 
-def test_the_cohort_job_runs_only_on_schedule_with_least_privilege_and_no_secret() -> None:
+def test_the_cohort_job_runs_only_as_the_planner_with_least_privilege_and_no_secret() -> None:
+    """The planner runs on the schedule (heartbeat) or on a no-target call from main
+    (cohort-chain.yml, run-request `cohort`); never on a dispatch or a targeted call."""
     workflow = _load_workflow()
     cohort = _cohort(workflow)
-    assert cohort["if"] == "github.event_name == 'schedule'"
+    assert cohort["if"] == (
+        "github.event_name == 'schedule' || "
+        "(github.event_name == 'workflow_run' && inputs.repository == '')"
+    )
+    assert cohort["concurrency"] == {"group": "present-cohort-planner", "cancel-in-progress": False}
     assert cohort["permissions"] == {"contents": "write", "actions": "write"}
     rendered = json.dumps(cohort)
     assert "secrets." not in rendered and "GPT_OSS" not in rendered
@@ -41,8 +47,8 @@ def test_the_cohort_job_runs_only_on_schedule_with_least_privilege_and_no_secret
         step["with"].get("persist-credentials") is False
         for step in cohort["steps"] if "actions/checkout" in str(step.get("uses", ""))
     )
-    # the facts job (and so the present job) never runs on a schedule event
-    assert workflow["jobs"]["facts"]["if"] == "github.event_name != 'schedule'"
+    # the facts job (and so the present job) never runs on a schedule event or a no-target call
+    assert workflow["jobs"]["facts"]["if"] == "github.event_name != 'schedule' && inputs.repository != ''"
 
 
 def test_the_cohort_plans_through_the_gate_then_funds_then_dispatches_then_reports() -> None:

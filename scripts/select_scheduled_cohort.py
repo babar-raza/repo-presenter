@@ -25,6 +25,14 @@ a run refused any budget is not an attempt. Cells are ordered NEEDS_REPAIR first
 repair away), then never-attempted, then retries after a code or upstream change; a repository
 whose two lanes both need work runs as one ``both`` run (two cells).
 
+One cohort at a time (R25 batches of six; R37 self-continuing loop): while any cell a previous
+planner dispatched is still in flight (an unsettled, unexpired reservation whose id carries
+``COHORT_ID_PREFIX``), the fire is ``held`` -- it dispatches nothing and every cell that needs work is
+``queued``. The run that settles the last cell of the cohort triggers the next planner
+(``cohort-chain.yml``), so the loop continues by itself without fanning out, and an idle portfolio
+ends the chain (no work, no dispatch, no further completion to react to). A manual or run-request
+run reserves under its own id and never holds the engine (its own cell is still skipped as in flight).
+
 Read-only as a CLI: it prints the plan (``--json``) without writing a ref, dispatching or calling
 a provider. ``scripts/scheduled_execution_gate.py`` is the authorization boundary that calls it.
 
@@ -59,6 +67,9 @@ TERMINAL_CELLS = REPO_ROOT / "data" / "terminal_cells.json"
 MAX_CELLS = 6
 #: Consecutive failures on unchanged code before a cell is set aside for diagnosis.
 MAX_CONSECUTIVE_FAILURES = 3
+#: present.yml's cohort job reserves every run it dispatches as ``cohort-<run id>-<attempt>-<n>``
+#: (``core.llm.budget.reserve_cohort``); a rerun of such a run reserves ``<that id>-a<attempt>``.
+COHORT_ID_PREFIX = "cohort-"
 
 PRIORITY_NEEDS_REPAIR = 0
 PRIORITY_NEVER_ATTEMPTED = 1
@@ -286,6 +297,17 @@ def plan_cohort(
     runs: list[dict[str, Any]] = []
     queued: list[dict[str, Any]] = []
     room = max(0, max_cells)
+    # One cohort at a time: a planner that fires while the previous cohort is still running (the
+    # hourly heartbeat, or the completion of one of its first runs) holds, and the completion of
+    # its last run plans the next cohort. Never more than one batch of six in flight.
+    held: dict[str, Any] | None = None
+    cohort_cells = sorted(cell for cell, rid in flying.items() if rid.startswith(COHORT_ID_PREFIX))
+    if cohort_cells:
+        held = {
+            "in_flight_cells": len(cohort_cells),
+            "reservations": sorted({flying[cell] for cell in cohort_cells}),
+        }
+        room = 0
     for repository in ranked:
         lanes = sorted(needs[repository], key=lambda lane: (needs[repository][lane][0], LANES.index(lane)))
         take = lanes[: min(len(lanes), room)]
@@ -311,6 +333,7 @@ def plan_cohort(
         "queued": queued,
         "certified": certified,
         "notes": notes,
+        "held": held,
         "code": code,
         "planned_at": now.isoformat(timespec="seconds"),
     }
@@ -333,6 +356,14 @@ def render_summary(plan: dict[str, Any], budget_lines: list[str] | None = None,
     ]
     if plan.get("blocked"):
         lines += [f"**Not authorized:** {plan['blocked']}", ""]
+    if plan.get("held"):
+        held = plan["held"]
+        lines += [
+            f"**Held:** the previous cohort is still in flight ({held.get('in_flight_cells', 0)} "
+            f"cells: {', '.join(held.get('reservations') or [])}); the run that finishes it plans "
+            "the next one",
+            "",
+        ]
     if budget_lines:
         lines += ["### Budget", "", *[f"- {line}" for line in budget_lines], ""]
     if recent:
