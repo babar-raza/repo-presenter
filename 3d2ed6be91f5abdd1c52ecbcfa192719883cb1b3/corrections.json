@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 2,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "4fee37b3fea564aa114009bd351b9fa776647357ee2278f28c770f4c32f87562",
+  "corrected_sha256": "c9b887c6424e253cb7900de43bf23243e6a5d54c25adb4e1a83db9024f527a8a",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2592,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:32"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 33,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing STL file (binary or ASCII)\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Scene-graph construction with Scene, Node, and Entity\"]\n      c2[\"Primitive mesh geometry (Box, Cylinder, Sphere, Dish)\"]\n      c3[\"PBR material definitions\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"NURBS curve control-point and knot data\"]\n      c5[\"Vector, matrix, and quaternion math\"]\n      c6[\"STL import and export\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"STL file (binary or ASCII)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1248 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing STL file<br/>(binary or ASCII)\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Scene-graph<br/>construction with<br/>Scene, Node, and<br/>Entity\"]\n    c2[\"Primitive mesh<br/>geometry (Box,<br/>Cylinder, Sphere,<br/>Dish)\"]\n    c3[\"PBR material<br/>definitions\"]\n    c4[\"NURBS curve<br/>control-point and knot<br/>data\"]\n    c5[\"Vector, matrix, and<br/>quaternion math\"]\n    c6[\"STL import and export\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"STL file (binary or<br/>ASCII)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1806
+    },
     {
       "detector": "enterprise_edition_naming",
       "end": 39040,
@@ -17,7 +36,7 @@
           "value": "https://products.aspose.com/3d/java/"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 634,
       "original": "the commercial Aspose.3D for Java",
@@ -39,6 +58,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 1
   },
   "unapplied": [
@@ -52,6 +72,457 @@
       "line": 0,
       "reason": "2 verified format(s) named nowhere in the README; would fill At a Glance or Key Capabilities: format:input.glb, format:output.glb",
       "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.arraylistadapter"
+      ],
+      "line": 249,
+      "reason": "the count only cell does not describe ArrayListAdapter, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 23 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.dummyfilesystem"
+      ],
+      "line": 279,
+      "reason": "the count only cell does not describe DummyFileSystem, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 8 methods."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.fvector2"
+      ],
+      "line": 288,
+      "reason": "the count only cell does not describe FVector2, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 methods."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.fileformat"
+      ],
+      "line": 293,
+      "reason": "the count only cell does not describe FileFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 methods and 59 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.nurbsdirection"
+      ],
+      "line": 338,
+      "reason": "the count only cell does not describe NurbsDirection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 12 methods and 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.plysaveoptions"
+      ],
+      "line": 351,
+      "reason": "the count only cell does not describe PlySaveOptions, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 methods and 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.renderparameters"
+      ],
+      "line": 366,
+      "reason": "the count only cell does not describe RenderParameters, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.renderqueuegroupid"
+      ],
+      "line": 367,
+      "reason": "the count only cell does not describe RenderQueueGroupId, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.renderresource"
+      ],
+      "line": 368,
+      "reason": "the count only cell does not describe RenderResource, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.renderstate"
+      ],
+      "line": 370,
+      "reason": "the count only cell does not describe RenderState, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.renderer"
+      ],
+      "line": 371,
+      "reason": "the count only cell does not describe Renderer, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.rendererexception"
+      ],
+      "line": 372,
+      "reason": "the count only cell does not describe RendererException, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.shaderprogram"
+      ],
+      "line": 382,
+      "reason": "the count only cell does not describe ShaderProgram, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.shadersource"
+      ],
+      "line": 383,
+      "reason": "the boilerplate label cell does not describe ShaderSource, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.stream"
+      ],
+      "line": 391,
+      "reason": "the doc bookkeeping cell does not describe Stream, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Created by lexchou on 12/14/2016."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vector3"
+      ],
+      "line": 409,
+      "reason": "the count only cell does not describe Vector3, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 40 methods and 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementdoublestemplate"
+      ],
+      "line": 416,
+      "reason": "the count only cell does not describe VertexElementDoublesTemplate, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementedgecrease"
+      ],
+      "line": 417,
+      "reason": "the count only cell does not describe VertexElementEdgeCrease, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 18 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementfvector"
+      ],
+      "line": 418,
+      "reason": "the count only cell does not describe VertexElementFVector, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 19 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementhole"
+      ],
+      "line": 419,
+      "reason": "the count only cell does not describe VertexElementHole, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementintstemplate"
+      ],
+      "line": 420,
+      "reason": "the count only cell does not describe VertexElementIntsTemplate, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementpolygongroup"
+      ],
+      "line": 423,
+      "reason": "the count only cell does not describe VertexElementPolygonGroup, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 18 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementsmoothinggroup"
+      ],
+      "line": 424,
+      "reason": "the count only cell does not describe VertexElementSmoothingGroup, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 18 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementspecular"
+      ],
+      "line": 425,
+      "reason": "the count only cell does not describe VertexElementSpecular, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 20 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementvector4"
+      ],
+      "line": 430,
+      "reason": "the count only cell does not describe VertexElementVector4, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementvertexcolor"
+      ],
+      "line": 431,
+      "reason": "the count only cell does not describe VertexElementVertexColor, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 21 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.vertexelementvertexcrease"
+      ],
+      "line": 432,
+      "reason": "the count only cell does not describe VertexElementVertexCrease, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 18 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.ibuffer"
+      ],
+      "line": 451,
+      "reason": "the boilerplate label cell does not describe IBuffer, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.idescriptorset"
+      ],
+      "line": 452,
+      "reason": "the boilerplate label cell does not describe IDescriptorSet, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.iindexbuffer"
+      ],
+      "line": 453,
+      "reason": "the boilerplate label cell does not describe IIndexBuffer, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.ipipeline"
+      ],
+      "line": 458,
+      "reason": "the boilerplate label cell does not describe IPipeline, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.irenderqueue"
+      ],
+      "line": 459,
+      "reason": "the boilerplate label cell does not describe IRenderQueue, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.irendertarget"
+      ],
+      "line": 460,
+      "reason": "the boilerplate label cell does not describe IRenderTarget, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.irendertexture"
+      ],
+      "line": 461,
+      "reason": "the boilerplate label cell does not describe IRenderTexture, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.irenderwindow"
+      ],
+      "line": 462,
+      "reason": "the boilerplate label cell does not describe IRenderWindow, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.itextureunit"
+      ],
+      "line": 463,
+      "reason": "the boilerplate label cell does not describe ITextureUnit, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.ivertexbuffer"
+      ],
+      "line": 464,
+      "reason": "the boilerplate label cell does not describe IVertexBuffer, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface in the 3D JAVA API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.cubeface"
+      ],
+      "line": 485,
+      "reason": "the count only cell does not describe CubeFace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 6 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.indexdatatype"
+      ],
+      "line": 492,
+      "reason": "the count only cell does not describe IndexDataType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 2 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.presetshaders"
+      ],
+      "line": 503,
+      "reason": "the count only cell does not describe PresetShaders, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 2 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:com.aspose.threed.texturetype"
+      ],
+      "line": 513,
+      "reason": "the count only cell does not describe TextureType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 5 members."
     }
   ]
 }

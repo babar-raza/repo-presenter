@@ -30,32 +30,31 @@ also available for Python, .NET, and TypeScript. Aspose.3D — commercial On-Pre
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing STL file (binary or ASCII)"]
+    i1["An existing STL file<br/>(binary or ASCII)"]
   end
   PRODUCT["Aspose.3D FOSS for Java"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Scene-graph construction with Scene, Node, and Entity"]
-      c2["Primitive mesh geometry (Box, Cylinder, Sphere, Dish)"]
-      c3["PBR material definitions"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c4["NURBS curve control-point and knot data"]
-      c5["Vector, matrix, and quaternion math"]
-      c6["STL import and export"]
-    end
+    direction TB
+    c1["Scene-graph<br/>construction with<br/>Scene, Node, and<br/>Entity"]
+    c2["Primitive mesh<br/>geometry (Box,<br/>Cylinder, Sphere,<br/>Dish)"]
+    c3["PBR material<br/>definitions"]
+    c4["NURBS curve<br/>control-point and knot<br/>data"]
+    c5["Vector, matrix, and<br/>quaternion math"]
+    c6["STL import and export"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["STL file (binary or ASCII)"]
+    o1["STL file (binary or<br/>ASCII)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
