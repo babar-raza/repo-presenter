@@ -1004,3 +1004,16 @@ items:
       - "2026-11-13: tests/test_lane_l_hosted.py::test_a_deterministic_refusal_over_a_restored_call_store_reports_the_refusal_not_a_noop_proof fails on origin/main with the exact logged message (version set 7e884dc3acd6) and passes with the fix; ...::test_a_model_reviewed_run_that_recorded_nothing_over_a_restored_ledger_still_fails_the_proof passes"
     next_action: "supervisor merges; the next hosted Lane L run of 3D .NET (and every Lane L cell refused by its holdouts) is the closing evidence (R41)"
     updated: "2026-11-13"
+
+  - id: BL-077
+    title: "Autonomous engine stops after every cohort: workflow_run never fires for GITHUB_TOKEN-dispatched present runs"
+    type: defect
+    source: "hosted 2026-11-13: cohorts dispatched at 17:32 and 19:12 finished; no cohort-chain run followed either"
+    priority: P0
+    status: active
+    implementation_path: "present.yml least-privilege 'chain' job (actions: write only, always(), dispatched runs only) dispatches cohort-chain.yml on main; cohort-chain.yml accepts workflow_dispatch from main; planner's in-flight hold keeps one cohort at a time"
+    acceptance: "after merge, the last run of a hosted cohort is followed by a cohort-chain run (event workflow_dispatch) that plans the next cohort, with no manual kick; evidence = both run ids"
+    evidence:
+      - "tests: test_cohort_chain.py (trigger + main-only request), test_present_cohort.py, test_present_lanes.py, test_present_schedule.py::test_a_planner_dispatched_run_requests_the_next_planner_pass_with_least_privilege; TC-012 re-verified ACCEPTED"
+    next_action: "merge, then confirm on the next hosted cohort"
+    updated: "2026-11-13"

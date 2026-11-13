@@ -5553,3 +5553,19 @@ no model review). Lane R's cascade always dispatches authoring jobs before measu
 7e884dc3acd6) and passes with the fix. Zero provider calls.
 
 Backlog: BL-078
+
+## 2026-11-13 — BL-077: the engine continues itself after every cohort
+
+**Finding.** `cohort-chain.yml` never ran after a present run finished. It ran only after recertify runs,
+which a push starts. GitHub does not start `workflow_run` workflows for runs created with `GITHUB_TOKEN`,
+and the cohort planner dispatches every present run that way. So the loop stopped after each cohort:
+cohorts were dispatched at 17:32 and 19:12 on 2026-11-13, and nothing followed either. The hourly cron
+did not restart it reliably (R37).
+
+**Decision.** Each planner-dispatched present run ends with a least-privilege `chain` job: actions:
+write only, no checkout, no secret, always(). The job dispatches `cohort-chain.yml` on main. A
+`workflow_dispatch` made with `GITHUB_TOKEN` is allowed to start a run. The planner's in-flight hold is
+unchanged, so only the last finishing run of a cohort dispatches the next one, and the chain cannot fan
+out. The credentialed present job keeps `contents: write` alone.
+
+Backlog: BL-077
