@@ -32,36 +32,41 @@ general-purpose crates: `zip` (package container), `roxmltree` (XML parsing), `c
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing .xlsx workbook"]
+    i1["An existing .xlsx<br/>workbook"]
   end
   PRODUCT["Aspose.Cells FOSS for Rust"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Workbook and worksheet management"]
-      c2["Cell values and formulas"]
-      c3["Styling: fonts, fills, borders, number formats"]
-      c4["Rows, columns, and merged ranges"]
-      c5["Data validation and conditional formatting"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c6["Charts via ChartType"]
-      c7["Pictures and shapes"]
-      c8["List objects, auto-filters, and sparklines"]
-      c9["Hyperlinks, defined names, and comments"]
-      c10["Document properties and page setup"]
-    end
+    direction TB
+    c1["Workbook and worksheet<br/>management"]
+    c2["Cell values and<br/>formulas"]
+    c3["Styling: fonts, fills,<br/>borders, number<br/>formats"]
+    c4["Rows, columns, and<br/>merged ranges"]
+    c5["Data validation and<br/>conditional formatting"]
+    c6["Charts via ChartType"]
+    c7["Pictures and shapes"]
+    c8["List objects,<br/>auto-filters, and<br/>sparklines"]
+    c9["Hyperlinks, defined<br/>names, and comments"]
+    c10["Document properties<br/>and page setup"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c9
+    c7 ~~~ c10
+    c8 ~~~ c10
+    c9 ~~~ c10
   end
   subgraph Outputs["Outputs"]
     direction TB
     o1[".xlsx workbook (file path, binary stream, or in-memory Vec<u8>)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

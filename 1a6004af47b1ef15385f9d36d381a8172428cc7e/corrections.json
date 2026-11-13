@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 5,
+    "edits": 6,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "91e3b0e16bef702ab498ed8122118fcaf52999de9ed8b1ec4641529227055943",
+  "corrected_sha256": "942fb22ccb9ccd52f3cc3471abddab91322c7f868dfae542e9ab0b3641008f02",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2566,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:34"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 35,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx workbook\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for Rust\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Workbook and worksheet management\"]\n      c2[\"Cell values and formulas\"]\n      c3[\"Styling: fonts, fills, borders, number formats\"]\n      c4[\"Rows, columns, and merged ranges\"]\n      c5[\"Data validation and conditional formatting\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c6[\"Charts via ChartType\"]\n      c7[\"Pictures and shapes\"]\n      c8[\"List objects, auto-filters, and sparklines\"]\n      c9[\"Hyperlinks, defined names, and comments\"]\n      c10[\"Document properties and page setup\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\".xlsx workbook (file path, binary stream, or in-memory Vec<u8>)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1769 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 684 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx<br/>workbook\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for Rust\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Workbook and worksheet<br/>management\"]\n    c2[\"Cell values and<br/>formulas\"]\n    c3[\"Styling: fonts, fills,<br/>borders, number<br/>formats\"]\n    c4[\"Rows, columns, and<br/>merged ranges\"]\n    c5[\"Data validation and<br/>conditional formatting\"]\n    c6[\"Charts via ChartType\"]\n    c7[\"Pictures and shapes\"]\n    c8[\"List objects,<br/>auto-filters, and<br/>sparklines\"]\n    c9[\"Hyperlinks, defined<br/>names, and comments\"]\n    c10[\"Document properties<br/>and page setup\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n    c7 ~~~ c10\n    c8 ~~~ c10\n    c9 ~~~ c10\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\".xlsx workbook (file path, binary stream, or in-memory Vec<u8>)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1593
+    },
     {
       "detector": "absent_type_row",
       "end": 24722,
@@ -59,7 +78,7 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 540,
       "original": "| `BorderStyle` | Enum with 14 members. |\n",
@@ -120,7 +139,7 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 544,
       "original": "| `CellValueKind` | Enum with 7 members. |\n",
@@ -181,7 +200,7 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 2,
+      "index": 3,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 551,
       "original": "| `FillPatternKind` | Enum with 18 members. |\n",
@@ -242,7 +261,7 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 3,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 563,
       "original": "| `SheetVisibility` | SheetVisibility enum defines three visibility states: Visible, Hidden, and VeryHidden. |\n",
@@ -303,7 +322,7 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 4,
+      "index": 5,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 569,
       "original": "| `ValidationMessageSeverity` | Enum with 3 members. |\n",
@@ -325,7 +344,86 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "TABLE_ROW_REMOVAL": 5
   },
-  "unapplied": []
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:cellobjectvalue"
+      ],
+      "line": 542,
+      "reason": "the count only cell does not describe CellObjectValue, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 14 methods and 5 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:cellvalue"
+      ],
+      "line": 543,
+      "reason": "the count only cell does not describe CellValue, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 8 methods and 7 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:cellserror"
+      ],
+      "line": 546,
+      "reason": "the count only cell does not describe CellsError, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 9 methods and 10 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:datesystem"
+      ],
+      "line": 548,
+      "reason": "the count only cell does not describe DateSystem, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 2 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:diagnosticseverity"
+      ],
+      "line": 549,
+      "reason": "the count only cell does not describe DiagnosticSeverity, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 4 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:horizontalalignment"
+      ],
+      "line": 555,
+      "reason": "the count only cell does not describe HorizontalAlignment, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 8 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:verticalalignment"
+      ],
+      "line": 571,
+      "reason": "the count only cell does not describe VerticalAlignment, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 5 members."
+    }
+  ]
 }
