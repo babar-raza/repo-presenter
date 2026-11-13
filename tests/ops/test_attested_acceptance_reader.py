@@ -166,3 +166,23 @@ def test_a_lane_l_seal_whose_live_readme_is_unreadable_is_never_accepted():
     assert outcome.bucket == pdc.UNCALIBRATED and "R16" in outcome.reason
     assert not outcome.independently_accepted and not outcome.publication_ready
 
+
+
+def test_a_lane_l_seal_whose_live_readme_cannot_be_read_is_marked_unreadable():
+    """R16 fails closed in classify_lane too: an unreadable live README marks the seal, so the
+    attested reader never counts it."""
+    from repo_presenter.readme.review.calibration_status import Calibration
+    from repo_presenter.recertify import OUTCOME_RECERTIFIED, Recertification
+
+    calibration = Calibration("NOT_PASSED", reviewer_logic_version="10", prompt_version="21")
+    sealed = pdc.SealedEvidence("durable-ref", {"state": "ACCEPTED"},
+                                {"verdict": "ACCEPT", "model_verdict": "ACCEPT"}, b"#\n",
+                                version_set="v1" * 32, commit="c" * 40)
+    certification = Recertification(REPO, "L", "rev", OUTCOME_RECERTIFIED, (), (),
+                                    sealed_version_set="v1" * 32, current_version_set="v2" * 32,
+                                    seal_commit="c" * 40, regenerations=0)
+    [head] = pdc.outcomes_for_lane(REPO, "L", None, [sealed], [], "v2" * 32, calibration, {},
+                                   lambda _args: None, certification=certification)
+    assert head.pipeline_good and head.live_unreadable and not head.no_action
+    pdc.apply_attested([head], {(REPO, "L"): "rev"}, ALLOW)
+    assert not head.independently_accepted and "R16" in head.reason

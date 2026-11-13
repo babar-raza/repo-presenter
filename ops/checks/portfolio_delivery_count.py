@@ -481,7 +481,7 @@ def certified_outcomes(
         head.notes.append(head.reason)
     elif head.bucket == UNCALIBRATED:
         head.needs_review_only_pass = True
-        head.reason += "; needs an attested M9 audit (no regeneration)"
+        head.reason += "; needs a review-only pass: an attested M9 audit (no regeneration)"
     if lane == "L" and certified and latest is not None and latest.readme is not None and head.revision:
         live = github([f"repos/{repository}/contents/README.md?ref={head.revision}", "-H", "Accept: application/vnd.github.raw"])
         if live is None:
