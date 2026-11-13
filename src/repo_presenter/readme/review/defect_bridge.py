@@ -153,6 +153,13 @@ def build_defects(
                 "criterion": finding.criterion or finding.rule,
                 "quote": finding.quote,
                 "message": finding.message,
+                # A deterministic rule's own detail, the text the repair guard re-judges by
+                # (``repair.loop.reject_still_failing``, BL-077).
+                **(
+                    {"evidence": finding.evidence}
+                    if finding.source == "deterministic" and finding.evidence
+                    else {}
+                ),
                 **_claim(finding),
             }
             for index, finding in enumerate(findings)

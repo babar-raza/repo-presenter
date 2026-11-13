@@ -663,17 +663,23 @@ def _settle_s9(
 
     ``dispositions_override`` carries a prior round's zero-call restore into this call's FIRST
     ``_compose`` only (see ``_compose``'s own docstring) -- an S4 defect repaired during THIS
-    call's own loop (below) genuinely changes dispositions, so every round after the first goes
-    back to a fresh ``_run_reconciliation``, exactly as before this parameter existed."""
+    call's own loop (below) genuinely changes dispositions, so a round after one that repaired
+    anything but the plan or a section goes back to a fresh ``_run_reconciliation``, exactly as
+    before this parameter existed; after plan/section repairs only, the next round recomposes from
+    the dispositions this round's calls were made from, so those repairs' keys are looked up."""
     rounds = 0
+    override = dispositions_override
     while True:
         rounds += 1
         composed = _compose(
             entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
             tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
             prompts=prompts, config=config, ledger=ledger, store=store, context=context,
-            dispositions_override=dispositions_override if rounds == 1 else None,
+            dispositions_override=override,
         )
+        # The composition this round's calls were made from, and the one the next round
+        # reproduces: repairs are keyed against it (below), never against a partial restore's.
+        base = composed
         candidate = _candidate(
             entry, document, composed.plan, composed.coherent_units, composed.dispositions,
             composed.readme, tree_paths, composed.tasks, benchmark=original,
@@ -706,12 +712,30 @@ def _settle_s9(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
             document=document, prompts=prompts, unrestorable=frozenset(unrestorable),
         )
+        # The repair is keyed against ``base``, the composition whose S5/S6 calls are in the store
+        # and which the next round's ``_compose`` reproduces -- not the partial restore's, whose
+        # tasks are built from the restored dispositions. Keyed against the restore, an S6 repair
+        # was stored under a request hash the next round never looks up, the next round served the
+        # pre-repair section from the store, and the "repaired" text never reached the README
+        # (BL-077: hosted Lane R runs 43489976823, 43489981024, 43489984973 and 43489988826 each
+        # logged a partial restore; their final READMEs printed the pre-repair quotes, and repairs of
+        # 3D Python and Cells C++ found "the causing section was not in the call store" -- the
+        # signature of a key the round's own calls never made -- and spent a fresh
+        # section_authoring call). The final ``_restore_lost_content`` re-applies the restore.
         if not defects or not _repair_defects(
-            defects=defects, composed=composed, investigation=investigation, entry=entry,
+            defects=defects, composed=base, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
             context=context, repairs=repairs, benchmark=original,
         ):
             break
+        # Only an S4 repair changes what reconciliation returns: after plan and section repairs the
+        # next round recomposes from the same dispositions this round's did, so the repairs' keys
+        # match; after anything else it goes back to a fresh reconciliation, as before.
+        override = (
+            base.planned_dispositions
+            if base.planned_dispositions is not None
+            else base.dispositions
+        ) if all(getattr(d, "stage", None) in ("S5", "S6") for d in defects) else None
     return _Settled(composed, validation, verdict, rounds)
 
 

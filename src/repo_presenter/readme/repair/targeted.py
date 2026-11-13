@@ -421,7 +421,11 @@ def merge_equivalent(defects: Sequence[Defect]) -> list[Defect]:
 # (fact docstring) line is recorded as a facts defect with no call, and a stored S4 batch's
 # rationales are bounded to its contract before a patch merges into it (hosted Lane R runs
 # 43473807336 and 43473803090, BL-076).
-REPAIR_LOGIC_VERSION = "3"
+# "4": a repair is accepted only when its revision, rendered, no longer fails the defect's own
+# BC-02/BC-14/BC-18 rule and fails none of them anew (``loop.reject_still_failing``); the packet
+# carries the facts the rule text names (``contradicting_facts``); S9 repairs are keyed against the
+# composition the next pass reproduces, not a partial restore's (BL-077).
+REPAIR_LOGIC_VERSION = "4"
 
 
 @dataclass
@@ -665,6 +669,15 @@ def repair_packet(
     still_missing = uncarried_units(stage_output, carried)
     if still_missing:
         defect_record["uncarried_superseded_units"] = still_missing
+    # The facts the defect's own rule text names as contradicting the claim (BL-077): evidence-only
+    # kinds (``implementation:never_thrown.*``, ``project_file:samples.product_reference``) and an
+    # UNRESOLVED install fact are never in ``facts``, so the model was told "a fact says otherwise"
+    # without the fact, and wrote the same claim again (hosted runs 43489976823, 43489981024,
+    # 43489984973, 43489988826). Present only when the rule text names one, so every other packet
+    # is byte-identical.
+    contradicting = contradicting_facts(defect, facts)
+    if contradicting:
+        defect_record["contradicting_facts"] = contradicting
     packet: dict[str, Any] = {
         "repository": entry.repository,
         "defect": defect_record,
@@ -789,6 +802,56 @@ def omission_carriers(
         },
         "items": items,
     }
+
+
+_FACT_ID_TOKEN = re.compile(r"\b[a-z][a-z_]*:[A-Za-z0-9_][A-Za-z0-9_.\-:/@+]*")
+_CONTRADICTING_VALUE_BOUND = 400
+#: Kinds the packet already carries by their own rule (``_named_inherited_units``).
+_NOT_CONTRADICTING_KINDS = frozenset({"inherited_unit"})
+
+
+def _defect_texts(defect: Defect) -> list[str]:
+    texts: list[str] = []
+    for record in [defect.record, *defect.record.get("equivalent_findings", [])]:
+        texts.extend(str(item) for item in record.get("details") or [])
+        texts.extend(
+            str(failure.get("detail", ""))
+            for failure in record.get("failures") or []
+            if isinstance(failure, Mapping)
+        )
+        for key in ("evidence", "message", "text"):
+            if record.get(key):
+                texts.append(str(record[key]))
+    return texts
+
+
+def contradicting_facts(defect: Defect, facts: FactsDocument) -> list[dict[str, Any]]:
+    """The fact records the defect's own rule text names by exact fact ID, in the order named:
+    what the rule holds the claim to (``id``, ``kind``, ``polarity``, ``value``, ``attributes``),
+    so a repair is handed the truth and not only the verdict. Never an inherited unit (those have
+    their own record, ``_named_inherited_units``) and never a fact the text does not name."""
+    by_id = {fact.id: fact for fact in facts.facts}
+    named: list[str] = []
+    for text in _defect_texts(defect):
+        for token in _FACT_ID_TOKEN.findall(text):
+            fact_id = token.rstrip(":.,;)")
+            if fact_id in by_id and fact_id not in named:
+                named.append(fact_id)
+    records: list[dict[str, Any]] = []
+    for fact_id in named:
+        fact = by_id[fact_id]
+        if fact.kind in _NOT_CONTRADICTING_KINDS:
+            continue
+        records.append(
+            {
+                "id": fact.id,
+                "kind": fact.kind,
+                "polarity": fact.polarity,
+                "value": fact.value[:_CONTRADICTING_VALUE_BOUND],
+                **({"attributes": dict(fact.attributes)} if fact.attributes else {}),
+            }
+        )
+    return records
 
 
 def _facts_named_by(
