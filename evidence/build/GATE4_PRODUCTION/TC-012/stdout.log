@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
 .............................................................            [100%]
-61 passed in 11.53s
+61 passed in 11.63s
 
 --- stderr ---
 
@@ -18,7 +18,7 @@ OK: Dockerfile contains all 1 required marker(s)
 $ python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q
 --- stdout ---
 .............................................................            [100%]
-61 passed in 10.05s
+61 passed in 11.40s
 
 --- stderr ---
 
@@ -42,12 +42,12 @@ _______________ test_a_schedule_trigger_exists_with_a_real_cron ________________
         triggers = workflow["on"] if "on" in workflow else workflow[True]
 >       assert "schedule" in triggers, "no schedule: trigger -- TC-012 is not actually done"
 E       AssertionError: no schedule: trigger -- TC-012 is not actually done
-E       assert 'schedule' in {'workflow_dispatch': {'inputs': {'repository': {'description': 'owner/name of a repository listed in data/registry.js...uired': True, 'type': 'string'}, 'lane': {'required': True, 'type': 'string'}}}, 'removed': [{'cron': '17 */6 * * *'}]}
+E       assert 'schedule' in {'workflow_dispatch': {'inputs': {'repository': {'description': 'owner/name of a repository listed in data/registry.js...equired': True, 'type': 'string'}, 'lane': {'required': True, 'type': 'string'}}}, 'removed': [{'cron': '17 * * * *'}]}
 
 tests/test_present_schedule.py:24: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_present_schedule.py::test_a_schedule_trigger_exists_with_a_real_cron
-1 failed, 60 passed in 20.56s
+1 failed, 60 passed in 11.30s
 
 --- stderr ---
 

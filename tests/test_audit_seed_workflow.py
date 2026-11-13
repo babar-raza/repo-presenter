@@ -1,6 +1,7 @@
-"""Structural checks on .github/workflows/audit-seed.yml (the M9 hosted seeder): manual dispatch
-only, the Environment is declared (so AUDIT_SEED_KEY actually resolves), and the key is read
-only through `secrets.*`, never hardcoded or read from any other source.
+"""Structural checks on .github/workflows/audit-seed.yml (the M9 round): the schedule, dispatch and
+workflow_call triggers only (R37, 2026-11-13: the round runs itself; a gate job spends a seed only when
+no batch is open), the Environment is declared on the seed job (so AUDIT_SEED_KEY actually resolves),
+and the key is read only through `secrets.*`, never hardcoded or read from any other source.
 """
 
 from __future__ import annotations
@@ -26,11 +27,14 @@ def test_workflow_file_exists_and_parses():
     assert "seed" in doc["jobs"]
 
 
-def test_dispatch_is_manual_only_no_push_or_schedule_trigger():
-    _doc, text = _load()
-    assert "workflow_dispatch:" in text
-    assert "schedule:" not in text
+def test_triggers_are_schedule_dispatch_and_call_never_push():
+    doc, text = _load()
+    triggers = doc["on"] if "on" in doc else doc[True]
+    assert set(triggers) == {"schedule", "workflow_dispatch", "workflow_call"}
     assert "\non:\n  push:" not in text
+    # the seed job only runs when the gate (one open batch at a time) said so
+    assert doc["jobs"]["seed"]["needs"] == "gate"
+    assert doc["jobs"]["seed"]["if"] == "needs.gate.outputs.action == 'seed'"
 
 
 def test_the_environment_is_declared_so_audit_seed_key_resolves():
@@ -50,7 +54,9 @@ def test_audit_seed_key_is_read_only_through_secrets_never_hardcoded():
 
 def test_permissions_are_minimal_contents_write_only_for_the_commitment_commit():
     doc, _text = _load()
-    assert doc.get("permissions") == {"contents": "write"}
+    assert doc.get("permissions") == {"contents": "read"}
+    assert doc["jobs"]["gate"]["permissions"] == {"contents": "read"}
+    assert doc["jobs"]["seed"]["permissions"] == {"contents": "write"}
 
 
 def test_candidates_and_manifest_are_uploaded_as_ephemeral_artifacts_not_committed():

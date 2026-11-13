@@ -333,3 +333,216 @@ def test_the_recertify_workflow_carries_no_llm_secret():
     text = (Path(__file__).resolve().parent.parent / ".github/workflows/recertify.yml").read_text()
     assert "GPT_OSS" not in text and "secrets." not in text
     assert "--all --write" in text
+
+
+# --- the M9 audit jobs (owner R37, 2026-11-13): strict fields, a verified seed run, one open batch ----------
+
+SEED = "43217648963"
+FINDINGS = f"evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-{SEED}.json"
+ADJ = f"evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/adjudications-{SEED}.json"
+CLOSED_HEADS = [
+    "main",
+    "audit-seed/run-43208002268", "acceptance-record/run-43208002268",  # the legacy, suffix-less record
+    f"audit-seed/run-{SEED}", f"acceptance-record/run-{SEED}-43221294654",
+    f"audit-findings/run-{SEED}",
+]
+ALL_FILES = (("main", FINDINGS), ("main", ADJ), (f"audit-findings/run-{SEED}", FINDINGS))
+
+
+def _ctx(heads=CLOSED_HEADS, files=ALL_FILES, verify=None):
+    calls = []
+
+    def verify_seed_run(run_id):
+        calls.append(run_id)
+        if verify is not None:
+            verify(run_id)
+
+    ctx = rr.AuditContext(heads=heads, exists=lambda ref, path: (ref, path) in set(files),
+                          verify_seed_run=verify_seed_run)
+    ctx.calls = calls
+    return ctx
+
+
+def test_open_seed_batches_reads_the_real_branch_conventions():
+    assert rr.open_seed_batches(CLOSED_HEADS) == []
+    assert rr.open_seed_batches([*CLOSED_HEADS, "audit-seed/run-9", "audit-seed/run-10"]) == ["9", "10"]
+    # a record of ANOTHER seed, or a malformed record branch, closes nothing
+    assert rr.open_seed_batches(["audit-seed/run-5", "acceptance-record/run-55-1", "acceptance-record/run-5x"]) == ["5"]
+
+
+def test_an_audit_seed_request_passes_only_while_no_batch_is_open():
+    assert rr.validate({"job": "audit-seed"}, REGISTRY, OK, True, _ctx())["job"] == "audit-seed"
+    with pytest.raises(rr.RequestError, match="seed batch run 77 is still open"):
+        rr.validate({"job": "audit-seed"}, REGISTRY, OK, True, _ctx(heads=[*CLOSED_HEADS, "audit-seed/run-77"]))
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "audit-seed", "salt": "1"}, REGISTRY, OK, True, _ctx())
+    with pytest.raises(rr.RequestError, match="cannot be verified"):
+        rr.validate({"job": "audit-seed"}, REGISTRY, OK, True)
+
+
+def test_audit_score_and_acceptance_write_pass_with_exact_fields_and_a_verified_seed_run():
+    ctx = _ctx()
+    out = rr.validate({"job": "audit-score", "seed_run_id": SEED, "findings_path": FINDINGS}, REGISTRY, OK, True, ctx)
+    assert out == {"job": "audit-score", "repository": "", "ecosystem": "", "lane": "", "seed_run_id": SEED,
+                   "findings_path": FINDINGS, "findings_ref": "", "adjudications_path": ""}
+    assert ctx.calls == [SEED]
+    out = rr.validate({"job": "acceptance-write", "seed_run_id": SEED, "findings_path": FINDINGS,
+                       "findings_ref": f"audit-findings/run-{SEED}", "adjudications_path": ADJ},
+                      REGISTRY, OK, True, _ctx())
+    assert out["findings_ref"] == f"audit-findings/run-{SEED}" and out["adjudications_path"] == ADJ
+
+
+@pytest.mark.parametrize(
+    "job, fields, fragment",
+    [
+        ("audit-score", {"seed_run_id": 43217648963, "findings_path": FINDINGS}, "not a run id"),
+        ("audit-score", {"seed_run_id": "4321x", "findings_path": FINDINGS}, "not a run id"),
+        ("audit-score", {"seed_run_id": "0123", "findings_path": FINDINGS}, "not a run id"),
+        ("audit-score", {"seed_run_id": f"{SEED};rm", "findings_path": FINDINGS}, "not a run id"),
+        ("audit-score", {"seed_run_id": SEED}, "findings_path None"),
+        ("audit-score", {"seed_run_id": SEED, "findings_path": FINDINGS.replace("M9_AUDIT/", "M9_AUDIT/../")},
+         "is not"),
+        ("audit-score", {"seed_run_id": SEED, "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/"
+                         "findings-43213595013.json"}, "is not"),  # another round's findings
+        ("audit-score", {"seed_run_id": SEED, "findings_path": "data/registry.json"}, "is not"),
+        ("audit-score", {"seed_run_id": SEED, "findings_path": FINDINGS, "findings_ref": "main"}, "findings_ref"),
+        ("audit-score", {"seed_run_id": SEED, "findings_path": FINDINGS, "findings_ref": "audit-findings/run-1"},
+         "findings_ref"),
+        ("audit-score", {"seed_run_id": SEED, "findings_path": FINDINGS, "adjudications_path": ADJ},
+         "unknown fields"),  # adjudications are acceptance-write's alone
+        ("audit-score", {"seed_run_id": SEED, "findings_path": FINDINGS, "token": "x"}, "unknown fields"),
+        ("acceptance-write", {"seed_run_id": SEED, "findings_path": FINDINGS, "adjudications_path": "x.json"},
+         "adjudications_path"),
+    ],
+)
+def test_every_other_audit_field_is_refused(job, fields, fragment):
+    with pytest.raises(rr.RequestError, match=re.escape(fragment)):
+        rr.validate({"job": job, **fields}, REGISTRY, OK, True, _ctx())
+
+
+def test_the_files_branches_and_seed_run_must_really_exist():
+    request = {"job": "audit-score", "seed_run_id": SEED, "findings_path": FINDINGS}
+    with pytest.raises(rr.RequestError, match="does not exist on main"):
+        rr.validate(request, REGISTRY, OK, True, _ctx(files=()))
+    with pytest.raises(rr.RequestError, match="is not a seed batch"):
+        rr.validate(request, REGISTRY, OK, True, _ctx(heads=["main"]))
+    with pytest.raises(rr.RequestError, match="there is no audit-findings"):
+        rr.validate({**request, "findings_ref": f"audit-findings/run-{SEED}"}, REGISTRY, OK, True,
+                    _ctx(heads=[h for h in CLOSED_HEADS if not h.startswith("audit-findings/")]))
+    with pytest.raises(rr.RequestError, match="does not exist on main"):
+        rr.validate({**request, "job": "acceptance-write", "adjudications_path": ADJ}, REGISTRY, OK, True,
+                    _ctx(files=(("main", FINDINGS),)))
+
+    def refuse(run_id):
+        raise rr.RequestError(f"run {run_id} has no successful seed job")
+
+    with pytest.raises(rr.RequestError, match="no successful seed job"):
+        rr.validate(request, REGISTRY, OK, True, _ctx(verify=refuse))
+
+
+# --- the seed run, verified through the GitHub API (faked: no network) -------------------------------------
+
+
+def _api(run=None, jobs=None, artifacts=None, fail=False):
+    base_run = {"id": int(SEED), "repository": {"full_name": OWN}, "path": ".github/workflows/audit-seed.yml",
+                "event": "schedule", "head_branch": "main", "status": "completed", "conclusion": "success"}
+    base_run.update(run or {})
+    if jobs is None:
+        jobs = [{"name": "gate", "conclusion": "success"}, {"name": "seed", "conclusion": "success"},
+                {"name": "audit", "conclusion": "failure"}]
+    if artifacts is None:
+        artifacts = [{"name": f"m9-seed-manifest-{SEED}", "expired": False}]
+    responses = {
+        f"/actions/runs/{SEED}": base_run,
+        f"/actions/runs/{SEED}/jobs?per_page=100": {"jobs": jobs},
+        f"/actions/runs/{SEED}/artifacts?name=m9-seed-manifest-{SEED}": {"artifacts": artifacts},
+    }
+
+    def get(path):
+        if fail:
+            raise OSError("HTTP Error 404")
+        return responses[path]
+    return get
+
+
+def test_a_completed_seed_run_with_a_successful_seed_job_and_its_manifest_artifact_is_verified():
+    rr.verify_seed_run(SEED, OWN, _api())  # a later chain job failing does not unmake the seed
+    rr.verify_seed_run(SEED, OWN, _api(run={"event": "workflow_dispatch"}))
+    # the run-request override path: run-request-execute.yml calling audit-seed.yml (nested job name)
+    rr.verify_seed_run(SEED, OWN, _api(
+        run={"path": ".github/workflows/run-request-execute.yml", "event": "workflow_run", "head_branch": "main"},
+        jobs=[{"name": "validate", "conclusion": "success"}, {"name": "audit-seed / seed", "conclusion": "success"}]))
+
+
+@pytest.mark.parametrize(
+    "api, fragment",
+    [
+        (_api(fail=True), "could not read run"),
+        (_api(run={"id": 1}), "was not found"),
+        (_api(run={"repository": {"full_name": "attacker/fork"}}), "belongs to"),
+        (_api(run={"path": ".github/workflows/present.yml"}), "not of a seeding workflow"),
+        (_api(run={"path": ".github/workflows/evil.yml@x/.github/workflows/audit-seed.yml"}), "not of a seeding"),
+        (_api(run={"event": "push"}), "was started by"),
+        (_api(run={"path": ".github/workflows/run-request-execute.yml", "event": "schedule"}), "was started by"),
+        (_api(run={"event": "workflow_dispatch", "head_branch": "feature"}), "not main"),
+        (_api(run={"status": "in_progress"}), "has not completed"),
+        (_api(jobs=[{"name": "seed", "conclusion": "failure"}]), "no successful seed job"),
+        (_api(jobs=[{"name": "present", "conclusion": "success"}]), "no successful seed job"),
+        (_api(artifacts=[]), "no unexpired"),
+        (_api(artifacts=[{"name": f"m9-seed-manifest-{SEED}", "expired": True}]), "no unexpired"),
+        (_api(artifacts=[{"name": "m9-seed-manifest-1", "expired": False}]), "no unexpired"),
+    ],
+)
+def test_every_other_seed_run_is_refused(api, fragment):
+    with pytest.raises(rr.RequestError, match=re.escape(fragment)):
+        rr.verify_seed_run(SEED, OWN, api)
+
+
+def test_an_audit_score_request_end_to_end_through_real_git(remote, monkeypatch, capsys):
+    """main holds the findings; the seed branch exists on origin; the API (faked) vouches for the run."""
+    remote.commit_on("main", {FINDINGS: "[]\n"}, "findings via PR")
+    remote.commit_on(f"audit-seed/run-{SEED}", {"x": "y"}, "seed")
+    _git(remote.work, "pull", "-q", "--ff-only")
+    monkeypatch.setattr(rr, "github_get_json", lambda repository, token: _api())
+    sha = remote.request({"job": "audit-score", "seed_run_id": SEED, "findings_path": FINDINGS})
+    assert remote.run(sha, monkeypatch=monkeypatch) == 0
+    out = capsys.readouterr().out.splitlines()
+    assert "job=audit-score" in out and f"seed_run_id={SEED}" in out and f"findings_path={FINDINGS}" in out
+
+    sha = remote.request({"job": "audit-seed"}, branch="run-requests/2")
+    _refused(remote, monkeypatch, capsys, sha, f"seed batch run {SEED} is still open", branch="run-requests/2")
+
+
+def test_a_findings_file_that_exists_only_on_the_request_branch_is_refused(remote, monkeypatch, capsys):
+    remote.commit_on(f"audit-seed/run-{SEED}", {"x": "y"}, "seed")
+    monkeypatch.setattr(rr, "github_get_json", lambda repository, token: _api())
+    sha = remote.request({"job": "audit-score", "seed_run_id": SEED, "findings_path": FINDINGS},
+                         extra={FINDINGS: "[]\n"})
+    _refused(remote, monkeypatch, capsys, sha, "must change only")
+
+
+def test_the_executor_calls_the_m9_workflows_with_validated_inputs_and_minimal_permissions():
+    wf, _ = _wf("run-request-execute.yml")
+    validate = wf["jobs"]["validate"]
+    assert validate["permissions"] == {"contents": "read", "actions": "read"}
+    for key in ("seed_run_id", "findings_path", "findings_ref", "adjudications_path"):
+        assert validate["outputs"][key] == f"${{{{ steps.check.outputs.{key} }}}}"
+    expected = {
+        "audit-seed": ("./.github/workflows/audit-seed.yml", set(),
+                       {"contents": "write", "actions": "read", "id-token": "write", "attestations": "write"}),
+        "audit-score": ("./.github/workflows/audit-score.yml", {"seed_run_id", "findings_path", "findings_ref"},
+                        {"contents": "write", "actions": "read"}),
+        "acceptance-write": ("./.github/workflows/acceptance-write.yml",
+                             {"seed_run_id", "findings_path", "findings_ref", "adjudications_path"},
+                             {"contents": "write", "actions": "read", "id-token": "write", "attestations": "write"}),
+    }
+    for name, (path, inputs, permissions) in expected.items():
+        job = wf["jobs"][name]
+        assert job["needs"] == "validate"
+        assert job["if"] == f"needs.validate.outputs.job == '{name}'"
+        assert job["uses"] == path
+        assert job["secrets"] == "inherit"
+        assert job["permissions"] == permissions
+        assert set(job.get("with") or {}) == inputs
+        for key, value in (job.get("with") or {}).items():
+            assert value == f"${{{{ needs.validate.outputs.{key} }}}}"

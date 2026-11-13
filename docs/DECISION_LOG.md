@@ -4838,3 +4838,36 @@ does not render as its label; the reviewer judged the raw text, so `disposition_
 also compares with intra-document links read as labels on both sides (every word must still be printed), and a finding
 whose quote is a unit's source text is routed to that unit's stored disposition. Attribution wording is not involved
 (R9 holds: nothing is printed for it). Regression: `tests/readme/review/test_kept_unit_unlinked_anchor.py`.
+## 2026-11-13: the scheduled present path is the autonomous engine (owner, 2026-11-13: "think from that point of view")
+
+Supervisor decision under R11/R37, implemented in existing components only (R27). Owner's words: "in goals, we have
+defined that the system has to run autonomously on GitHub actions, think from that point of view" (goals §7, Part E
+Final Directive). What the supervisor did by hand each wave -- pick cells, open a budget batch by PR, push run
+requests, record measured spend -- now happens on every hourly fire of `present.yml`:
+
+- **Cohort** (`scripts/scheduled_execution_gate.py` -> `scripts/select_scheduled_cohort.plan_cohort`): after the
+  three authorization predicates, up to six (repository, lane) cells (R25) whose latest seal does not certify under
+  current code (no seal, or `NEEDS_REPAIR`; zero-call `recertify`). Skipped, each with its reason in the fire's
+  summary: inactive or unauthorized entries, terminal cells (`data/terminal_cells.json`), certified cells, cells in
+  flight, cells whose last hosted attempt ran the same code fingerprint on the same upstream revision without
+  sealing (idempotent), and cells failing 3 consecutive times on unchanged code (listed for R36(b) diagnosis).
+- **Fan-out**: the schedule-only `cohort` job dispatches one ordinary `workflow_dispatch` run of `present.yml` per
+  repository with its own lane (R, L or both); each run keeps the existing two-job trust boundary and the
+  per-repository concurrency group.
+- **Budget**: `main` is protected (required status check `test`), so hosted spend cannot be committed to
+  `data/provider_budget.json` from Actions. It is recorded durably in `refs/repository-presenter-state/ledger/
+  provider-spend` (compare-and-swap, the namespace the bot token already writes). The committed file keeps every
+  owner-only number (envelope caps, batch size, both multipliers, epoch); `core/llm/budget.py` folds the ledger
+  into it. Each run reserves its allowance before its lanes (its local budget file holds only that allowance, so
+  concurrent runs cannot overspend a batch), and settles its measured provider calls and tokens from its own call
+  ledgers afterwards, on success or failure (an unsettled reservation stays charged in full). When the last batch
+  cannot fund a cell, the cohort opens the next one at 1.5x the measured median run cost x 6 (R25), unless the stop
+  rule fires (cost per sealed candidate > 2x the previous measured batch's), which stops all spending until a batch
+  is committed to the file.
+- **Cadence**: hourly (`17 * * * *`): each fire is bounded by the predicates, six cells, the fundable budget and the
+  stop rule, and dispatches nothing when nothing changed, so a faster fire costs only a zero-call planning job while a
+  slower one would leave ready, funded cells idle.
+- **Terminal list**: `data/terminal_cells.json` records PSD Java Lane R (R24, above) and GIS .NET Lane L
+  (`NOT_APPLICABLE`, R20: the repository has no README, so there is no live README for Lane L to maintain; Lane R
+  stays eligible), each pinned to the upstream revision it was verified at so an upstream change lapses it
+  automatically (R24), with the 7-day re-check date reported when overdue.

@@ -27,9 +27,15 @@ Absent that, the run selects nothing, spends nothing, and writes nothing -- a cl
 no-op (exit 0, authorized=false, reason= naming exactly what is missing), never a crashed job and
 never a silent partial authorization.
 
-Usage: python scripts/scheduled_execution_gate.py [--max 1] [--remote origin]
-Always prints `authorized=`, `reason=`, `repository=` and `ecosystem=` as GITHUB_OUTPUT-style
-lines (the latter two empty when authorized=false). Always exits 0.
+Owner ruling R37 (2026-11-13): once the predicates hold, the gate plans the whole fire -- up to six
+(repository, lane) cells, R25 -- through scripts/select_scheduled_cohort.plan_cohort (needs-work,
+terminal, idempotency and bounded-retry rules live there) and writes it with --plan for
+present.yml's cohort job, which reserves budget and dispatches one present run per repository.
+
+Usage: python scripts/scheduled_execution_gate.py [--max 6] [--remote origin]
+           [--plan plan.json] [--summary summary.md]
+Always prints `authorized=`, `reason=`, `repository=`, `ecosystem=`, `lane=` (the first run) and
+`runs=` as GITHUB_OUTPUT-style lines (empty / 0 when authorized=false). Always exits 0.
 """
 from __future__ import annotations
 
@@ -43,14 +49,12 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.select_scheduled_cohort import select_eligible  # noqa: E402
-
-from repo_presenter.core.portfolio_matrix import (  # noqa: E402
-    backend_reader,
-    build_matrix,
-    stored_bundle_refs,
+from scripts.select_scheduled_cohort import (  # noqa: E402
+    MAX_CELLS,
+    build_plan,
+    render_summary,
 )
-from repo_presenter.core.registry.loader import load_registry  # noqa: E402
+
 from repo_presenter.readme.review.calibration_status import (  # noqa: E402
     PASSED,
     load_calibration,
@@ -132,14 +136,30 @@ def _print_blocked(reasons: list[str]) -> None:
     print("authorized=false")
     print("repository=")
     print("ecosystem=")
+    print("lane=")
+    print("runs=0")
     print("reason=" + " | ".join(reasons))
 
 
+def _write(path: Path | None, text: str) -> None:
+    if path is not None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+
+
 def main(argv: list[str] | None = None) -> int:
+    """Owner ruling R37 (2026-11-13): a scheduled fire plans a whole cohort -- up to six cells
+    (R25), each with its own lane -- through ``scripts/select_scheduled_cohort.plan_cohort``,
+    and only after every predicate above holds. ``--plan`` writes the plan for the fire's
+    dispatcher; the printed lines name the first run (the ``--max 1`` contract this gate always
+    had) and the number of runs."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--max", type=int, default=1)
+    parser.add_argument("--max", type=int, default=MAX_CELLS, help="cells per fire (R25: six)")
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--registry", type=Path, default=REPO_ROOT / "data" / "registry.json")
+    parser.add_argument("--prompts", type=Path, default=REPO_ROOT / "prompts")
+    parser.add_argument("--plan", type=Path, default=None, help="write the cohort plan (JSON) here")
+    parser.add_argument("--summary", type=Path, default=None, help="write the fire's markdown summary here")
     args = parser.parse_args(argv)
 
     decision_log_text = (
@@ -150,32 +170,50 @@ def main(argv: list[str] | None = None) -> int:
         decision_log_text=decision_log_text, calibration=CALIBRATION, policy=policy
     )
     if reasons:
+        blocked = {"runs": [], "skipped": [], "diagnose": [], "queued": [], "certified": {},
+                   "blocked": " | ".join(reasons)}
+        _write(args.plan, json.dumps(blocked, indent=1) + "\n")
+        _write(args.summary, render_summary(blocked))
         _print_blocked(reasons)
         return 0
 
     authorized_repos = {
         str(r) for r in (policy.get("authorized_repositories") or []) if isinstance(r, str)
     }
-    entries = {e.repository: e for e in load_registry(args.registry).entries}
-    with backend_reader(args.remote) as read_state:
-        rows = build_matrix(
-            list(entries.values()), read_state, REPO_ROOT, stored_bundle_refs(args.remote)
-        )
+    from repo_presenter.core.llm.budget import state_token
 
-    chosen = select_eligible(entries, rows, authorized_repos=authorized_repos, max_n=args.max)
-    if not chosen:
+    try:
+        plan = build_plan(
+            registry=args.registry, remote=args.remote, authorized_repos=authorized_repos,
+            prompts=args.prompts, token=state_token(), max_cells=args.max,
+        )
+    except Exception as error:  # noqa: BLE001 -- fail closed: an unreadable input selects nothing
+        reason = f"the cohort inputs could not be read ({type(error).__name__}: {error})"
+        blocked = {"runs": [], "skipped": [], "diagnose": [], "queued": [], "certified": {},
+                   "blocked": reason}
+        _write(args.plan, json.dumps(blocked, indent=1) + "\n")
+        _write(args.summary, render_summary(blocked))
+        _print_blocked([reason])
+        return 0
+    _write(args.plan, json.dumps(plan, indent=1) + "\n")
+    _write(args.summary, render_summary(plan))
+    if not plan["runs"]:
         _print_blocked(
             [
-                "every predicate cleared, but no authorized, eligible, not-yet-both-lane-"
-                "pipeline-good repository remains in authorized_repositories"
+                (
+                    "every predicate cleared, but no authorized cell needs work this fire "
+                    f"({len(plan['skipped'])} skipped, {len(plan['diagnose'])} need diagnosis)"
+                )
             ]
         )
         return 0
 
-    row = chosen[0]
+    first = plan["runs"][0]
     print("authorized=true")
-    print(f"repository={row.repository}")
-    print(f"ecosystem={entries[row.repository].ecosystem}")
+    print(f"repository={first['repository']}")
+    print(f"ecosystem={first['ecosystem']}")
+    print(f"lane={first['lane']}")
+    print(f"runs={len(plan['runs'])}")
     print("reason=all predicates satisfied")
     return 0
 

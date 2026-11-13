@@ -16,6 +16,13 @@ name: run-request-execute
 #             repository or wrong ecosystem, a bad lane, and a mint request with any other field.
 #   present / mint  call the default-branch copies of the reusable workflows (local `./` paths resolve to this
 #             run's commit, i.e. main) with `secrets: inherit`, only after validate passed.
+#   audit-seed / audit-score / acceptance-write  the M9 round's override path (owner R37, 2026-11-13): the
+#             same reusable workflows the scheduled audit-seed.yml chain calls. validate also refuses a seed
+#             while an earlier batch is open, a seed_run_id that is not a completed, successful seed run of
+#             this repository (GitHub API, read-only `actions: read` token), and any findings/adjudications
+#             path but the exact committed file of that seed run. GITHUB_REF here is the default branch, so
+#             the acceptance-audit environment's main-only rule and each workflow's main-only guard hold,
+#             and the attestation is still signed by acceptance-write.yml@refs/heads/main.
 #
 # Residual risk (not closed here, see docs/DECISION_LOG.md): any account with push access can add a NEW
 # workflow file on any branch and reach repository-level secrets; only moving the secrets to an Environment
@@ -43,11 +50,16 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      actions: read  # verify an M9 seed run through the API (read-only)
     outputs:
       job: ${{ steps.check.outputs.job }}
       repository: ${{ steps.check.outputs.repository }}
       ecosystem: ${{ steps.check.outputs.ecosystem }}
       lane: ${{ steps.check.outputs.lane }}
+      seed_run_id: ${{ steps.check.outputs.seed_run_id }}
+      findings_path: ${{ steps.check.outputs.findings_path }}
+      findings_ref: ${{ steps.check.outputs.findings_ref }}
+      adjudications_path: ${{ steps.check.outputs.adjudications_path }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,6 +70,8 @@ jobs:
           python-version: "3.13"
       - name: Validate the request with main's validator (request read as data, never executed)
         id: check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: python scripts/run_request.py --event "$GITHUB_EVENT_PATH" >> "$GITHUB_OUTPUT"
 
   present:
@@ -86,3 +100,43 @@ jobs:
     permissions:
       contents: write  # recertify writes new seal commits to this repository's state refs only
     uses: ./.github/workflows/recertify.yml
+
+  audit-seed:
+    needs: validate
+    if: needs.validate.outputs.job == 'audit-seed'
+    permissions:
+      contents: write       # the seed, findings, attempt, scorecard and record bot branches
+      actions: read         # artifacts of the seed run
+      id-token: write       # the nested acceptance-write attestation (Sigstore)
+      attestations: write
+    uses: ./.github/workflows/audit-seed.yml
+    secrets: inherit
+
+  audit-score:
+    needs: validate
+    if: needs.validate.outputs.job == 'audit-score'
+    permissions:
+      contents: write  # the scorecard's own bot branch
+      actions: read    # the seed run's manifest artifact
+    uses: ./.github/workflows/audit-score.yml
+    with:
+      seed_run_id: ${{ needs.validate.outputs.seed_run_id }}
+      findings_path: ${{ needs.validate.outputs.findings_path }}
+      findings_ref: ${{ needs.validate.outputs.findings_ref }}
+    secrets: inherit
+
+  acceptance-write:
+    needs: validate
+    if: needs.validate.outputs.job == 'acceptance-write'
+    permissions:
+      contents: write       # the record's own bot branch
+      id-token: write       # Sigstore signing for the attestation
+      attestations: write
+      actions: read         # the seed run's artifacts
+    uses: ./.github/workflows/acceptance-write.yml
+    with:
+      seed_run_id: ${{ needs.validate.outputs.seed_run_id }}
+      findings_path: ${{ needs.validate.outputs.findings_path }}
+      findings_ref: ${{ needs.validate.outputs.findings_ref }}
+      adjudications_path: ${{ needs.validate.outputs.adjudications_path }}
+    secrets: inherit

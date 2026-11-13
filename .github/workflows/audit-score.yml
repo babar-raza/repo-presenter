@@ -1,22 +1,45 @@
 name: audit-score
 
 # M9 hosted scorer (TC-014's score.py logic, wired 2026-11-09 -- docs/design/2026-11-06-
-# acceptance-redesign.md section 4.3). Downloads a prior audit-seed.yml run's encrypted
-# manifest artifact, decrypts it with AUDIT_SEED_KEY (environment: acceptance-audit), reads the
-# COMMITTED, FROZEN auditor findings for that same run, and computes the real seeded-recall and
-# false-flag-rate gates. Decryption only happens here, after the findings are already committed
-# (unchangeable) -- never before, and never by the supervisor locally.
+# acceptance-redesign.md section 4.3). Downloads a prior seed run's encrypted manifest artifact,
+# decrypts it with AUDIT_SEED_KEY (environment: acceptance-audit), reads the COMMITTED, FROZEN
+# auditor findings for that same run, and computes the real seeded-recall and false-flag-rate
+# gates. Decryption only happens here, after the findings are already committed (unchangeable) --
+# never before, and never by the supervisor locally.
+#
+# Findings come from main (findings_ref empty: blind reviewers' file merged by PR) or from the hosted
+# auditor's frozen bot branch audit-findings/run-<seed_run_id> (findings_ref), resolved and checked by
+# scripts/run_m9_auditor.py resolve (exactly one github-actions[bot] commit on top of main adding only
+# that file). Called by audit-seed.yml (the scheduled round) and by run-request-execute.yml (the
+# run-request override, R37) through workflow_call; manual dispatch stays.
 
 on:
   workflow_dispatch:
     inputs:
       seed_run_id:
-        description: "the audit-seed.yml run id whose manifest artifact to score"
+        description: "the seed run id whose manifest artifact to score"
         required: true
         type: string
       findings_path:
-        description: "path (in this repository) to the committed, frozen auditor findings JSON"
+        description: "path to the committed, frozen auditor findings JSON"
         required: true
+        type: string
+      findings_ref:
+        description: "empty (main) or audit-findings/run-<seed_run_id> (the hosted auditor's frozen branch)"
+        required: false
+        default: ""
+        type: string
+  workflow_call:
+    inputs:
+      seed_run_id:
+        required: true
+        type: string
+      findings_path:
+        required: true
+        type: string
+      findings_ref:
+        required: false
+        default: ""
         type: string
 
 permissions:
@@ -33,7 +56,16 @@ jobs:
     timeout-minutes: 10
     environment: acceptance-audit
     steps:
+      - name: Refuse to run anywhere but main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "audit-score must run on refs/heads/main, got $GITHUB_REF" >&2
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the frozen-findings check needs main's history
 
       - uses: actions/setup-python@v5
         with:
@@ -41,6 +73,16 @@ jobs:
 
       - name: Install
         run: python -m pip install -e .
+
+      - name: Resolve the frozen findings (main, or the hosted auditor's bot branch)
+        env:
+          SEED: ${{ inputs.seed_run_id }}
+          FINDINGS_PATH: ${{ inputs.findings_path }}
+          FINDINGS_REF: ${{ inputs.findings_ref }}
+        run: |
+          python scripts/run_m9_auditor.py resolve --seed-run-id "$SEED" \
+            --findings-path "$FINDINGS_PATH" --findings-ref "$FINDINGS_REF" \
+            --out "$RUNNER_TEMP/m9-score/findings.json"
 
       - name: Download the seeder run's encrypted manifest artifact
         uses: actions/download-artifact@v4
@@ -56,17 +98,19 @@ jobs:
         run: |
           python scripts/run_m9_scorer.py \
             --manifest "${{ runner.temp }}/m9-score/seed_manifest.enc" \
-            --findings "${{ inputs.findings_path }}" \
+            --findings "${{ runner.temp }}/m9-score/findings.json" \
             --out "${{ runner.temp }}/m9-score/scorecard.json"
 
       - name: Commit the scorecard (permanent, public -- never the manifest plaintext)
+        env:
+          SEED: ${{ inputs.seed_run_id }}
         run: |
           mkdir -p evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT
           cp "${{ runner.temp }}/m9-score/scorecard.json" \
-            "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/scorecard-${{ inputs.seed_run_id }}.json"
+            "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/scorecard-${SEED}.json"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "audit-score/seed-run-${{ inputs.seed_run_id }}"
+          git checkout -b "audit-score/seed-run-${SEED}"
           git add -f evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/
-          git commit -m "M9 audit scorecard for seed run ${{ inputs.seed_run_id }} (GATE5_DELIVERY_PROGRAM/M9_AUDIT)"
-          git push origin "audit-score/seed-run-${{ inputs.seed_run_id }}"
+          git commit -m "M9 audit scorecard for seed run ${SEED} (GATE5_DELIVERY_PROGRAM/M9_AUDIT)"
+          git push origin "audit-score/seed-run-${SEED}"

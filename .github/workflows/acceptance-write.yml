@@ -12,15 +12,42 @@ on:
   workflow_dispatch:
     inputs:
       seed_run_id:
-        description: "the audit-seed.yml run id whose manifest + case index to use"
+        description: "the seed run id whose manifest + case index to use"
         required: true
         type: string
       findings_path:
-        description: "path (on main) to the committed, frozen auditor findings JSON"
+        description: "path to the committed, frozen auditor findings JSON"
         required: true
+        type: string
+      findings_ref:
+        description: "empty (main) or audit-findings/run-<seed_run_id> (the hosted auditor's frozen branch)"
+        required: false
+        default: ""
         type: string
       adjudications_path:
         description: "optional path (on main) to the committed, frozen adjudications of flags on clean controls"
+        required: false
+        default: ""
+        type: string
+  # R37 (owner, 2026-11-13): called by audit-seed.yml (the scheduled round) and run-request-execute.yml
+  # (the override). The attestation's signer is still THIS file: Sigstore's certificate names the
+  # reusable workflow's own job_workflow_ref (.../acceptance-write.yml@refs/heads/main) as the Build
+  # Signer, which is what `gh attestation verify --signer-workflow` matches; the caller only appears
+  # as the Build Config. The main-only guard below still holds (GITHUB_REF is the caller's ref, main
+  # for schedule and workflow_run). tests/test_m9_autonomous_round.py pins both.
+  workflow_call:
+    inputs:
+      seed_run_id:
+        required: true
+        type: string
+      findings_path:
+        required: true
+        type: string
+      findings_ref:
+        required: false
+        default: ""
+        type: string
+      adjudications_path:
         required: false
         default: ""
         type: string
@@ -78,6 +105,16 @@ jobs:
           run-id: ${{ inputs.seed_run_id }}
           github-token: ${{ github.token }}
 
+      - name: Resolve the frozen findings (main, or the hosted auditor's bot branch)
+        env:
+          SEED: ${{ inputs.seed_run_id }}
+          FINDINGS_PATH: ${{ inputs.findings_path }}
+          FINDINGS_REF: ${{ inputs.findings_ref }}
+        run: |
+          python scripts/run_m9_auditor.py resolve --seed-run-id "$SEED" \
+            --findings-path "$FINDINGS_PATH" --findings-ref "$FINDINGS_REF" \
+            --out "$RUNNER_TEMP/acc/findings/findings.json"
+
       - name: Write the acceptance records
         env:
           AUDIT_SEED_KEY: ${{ secrets.AUDIT_SEED_KEY }}
@@ -87,7 +124,7 @@ jobs:
           python scripts/run_acceptance_writer.py \
             --seed-run-id "${{ inputs.seed_run_id }}" \
             --manifest "$RUNNER_TEMP/acc/manifest/seed_manifest.enc" \
-            --findings "${{ inputs.findings_path }}" \
+            --findings "$RUNNER_TEMP/acc/findings/findings.json" \
             --case-index "$RUNNER_TEMP/acc/candidates/case_index.json" \
             ${ADJ:+--adjudications "$ADJ"} \
             --out "$RUNNER_TEMP/acc/out/acceptance-records-${{ inputs.seed_run_id }}.json"
