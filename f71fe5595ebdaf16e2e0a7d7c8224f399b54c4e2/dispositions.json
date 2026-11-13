@@ -7,6 +7,7 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
         "package:name",
@@ -15,7 +16,7 @@
         "package:target_framework",
         "package:version"
       ],
-      "rationale": "The H1 product name is rendered deterministically by the identity section.",
+      "rationale": "The H1 product name is rendered by the identity section from facts.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
@@ -48,20 +49,18 @@
         "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The badge row is rendered deterministically by the badges section.",
+      "rationale": "The badge row is rendered by the badges section from facts.",
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
-      "destination_section": "banner",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
       "fact_ids": [
         "link_target:009",
         "link_target:010",
-        "link_target:product.banner",
-        "link_target:product.enterprise",
-        "link_target:product.homepage"
+        "link_target:product.enterprise"
       ],
-      "rationale": "The banner image links to the Aspose product homepage and is supported by verified enterprise relationship targets.",
+      "rationale": "The product banner links to the enterprise homepage and is supported by verified product links.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
@@ -69,38 +68,34 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:ecosystem",
-        "identity:family",
         "identity:platform",
-        "identity:repository",
         "package:name",
-        "package:published_version",
         "package:target_framework",
         "license:spdx",
-        "example:001"
+        "install_command:dotnet"
       ],
-      "rationale": "The paragraph's substance is covered by the product_summary fact_ids and example:001, supporting a rewritten opening summary.",
+      "rationale": "The paragraph describes the library's purpose, license, target framework, and install path, all supported by facts.",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
       "destination_section": "opening",
-      "disposition": "VERIFIED_REWRITE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:platform",
-        "install_command:dotnet",
+        "package:name",
         "package:target_framework",
+        "package:version",
         "public_symbol:aspose.cells_foss"
       ],
-      "rationale": "The platform and target framework details are covered by identity and package facts, supporting inclusion in the opening summary.",
+      "rationale": "The paragraph states the target framework, package ID, and version, all verified by facts.",
       "unit_id": "inherited_unit:005.paragraph"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_REWRITE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "package:target_framework"
       ],
-      "rationale": "The removal of netstandard2.0 and requirement for .NET 8+ is a material limitation supported by the package target framework fact.",
+      "rationale": "The paragraph states the removal of netstandard2.0 and upgrade requirement, consistent with the net8.0 target framework fact.",
       "unit_id": "inherited_unit:006.paragraph"
     },
     {
@@ -110,10 +105,11 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The Navigation heading is rendered deterministically by the navigation section.",
+      "rationale": "The Navigation heading is rendered by the navigation section from facts.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
@@ -123,41 +119,38 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation list is rendered deterministically by the navigation section.",
+      "rationale": "The navigation list is rendered by the navigation section from facts.",
       "unit_id": "inherited_unit:008.list"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The Key Capabilities heading is placeable and matches the section heading; no facts contradict it.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Key Capabilities heading is rendered by the key_capabilities section from facts.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_REWRITE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "example:001",
+        "example:002",
         "public_symbol:aspose.cells_foss.workbook",
         "public_symbol:aspose.cells_foss.worksheet",
         "public_symbol:aspose.cells_foss.cells",
         "public_symbol:aspose.cells_foss.cell",
-        "example:002",
-        "public_symbol:aspose.cells_foss.loadoptions",
-        "public_symbol:aspose.cells_foss.loaddiagnostics",
+        "public_symbol:aspose.cells_foss.style",
         "public_symbol:aspose.cells_foss.pdfsaveoptions",
-        "public_symbol:aspose.cells_foss.saveformat",
-        "public_symbol:aspose.cells_foss.autofilter",
-        "public_symbol:aspose.cells_foss.listobject",
-        "public_symbol:aspose.cells_foss.validation",
-        "public_symbol:aspose.cells_foss.conditionalformattingcollection",
-        "public_symbol:aspose.cells_foss.hyperlink",
-        "public_symbol:aspose.cells_foss.definedname"
+        "public_symbol:aspose.cells_foss.loadoptions",
+        "public_symbol:aspose.cells_foss.loaddiagnostics"
       ],
-      "rationale": "The list items are supported by capabilities and public symbols, and are re-authored to match the capabilities section's action-led style.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -166,7 +159,7 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The Installation heading is rendered deterministically by the installation section.",
+      "rationale": "The Installation heading is rendered by the installation section from facts.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
@@ -175,24 +168,26 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The dotnet add package command is rendered deterministically by the installation section.",
+      "rationale": "The dotnet add package command matches the install_command fact and is rendered by the installation section.",
       "unit_id": "inherited_unit:012.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "CORRECT_WITH_EVIDENCE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "package:version",
-        "package:published_version"
+        "package:name",
+        "package:version"
       ],
-      "rationale": "The version in the snippet (26.10.0.0) matches the package:version fact, and the registry's stable release (26.10.0) is documented in package:published_version;",
+      "rationale": "The PackageReference snippet is a supported alternative install path for .NET projects and adds value for developers using MSBuild.",
       "unit_id": "inherited_unit:013.code_block"
     },
     {
       "destination_section": "quick_start",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The Quick Start heading is placeable and matches the section heading; no facts contradict it.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Quick Start heading is rendered by the quick_start section from facts.",
       "unit_id": "inherited_unit:014.heading"
     },
     {
@@ -201,7 +196,7 @@
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The example code block is verified as a supported example and matches the quick start requirement.",
+      "rationale": "The example is verified as executed and matches the example fact; it is the minimal Quick Start example.",
       "unit_id": "inherited_unit:015.code_block"
     },
     {
@@ -217,16 +212,16 @@
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "The second example code block is verified as a supported example and matches the Additional Examples requirement.",
+      "rationale": "The repair example is verified and distinct from the Quick Start example; it belongs in additional_examples.",
       "unit_id": "inherited_unit:017.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "rationale": "The Examples heading is superseded by the Additional Examples section heading.",
       "unit_id": "inherited_unit:018.heading"
     },
     {
@@ -243,7 +238,6 @@
       "destination_section": "quick_start",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "link_target:019",
         "build_test_asset:examples"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
@@ -255,7 +249,7 @@
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The paragraph introduces an example command already superseded by the verified Quick Start example.",
+      "rationale": "The paragraph introduces the quick start example, which is now authored from example:001.",
       "unit_id": "inherited_unit:021.paragraph"
     },
     {
@@ -264,7 +258,7 @@
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The code block is an example already superseded by the verified Quick Start example.",
+      "rationale": "The code block is superseded by the newly authored quick start example.",
       "unit_id": "inherited_unit:022.code_block"
     },
     {
@@ -286,31 +280,33 @@
         "link_target:020",
         "link_target:022"
       ],
-      "rationale": "The list items are verified documentation targets already covered under Documentation & Resources.",
+      "rationale": "The list items are verified links to documentation, samples, and agents, all placed under Documentation & Resources.",
       "unit_id": "inherited_unit:024.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading matches the Scope and Limitations section and is supported by inherited and fact-based limitations.",
+      "rationale": "The heading is retained as the section scope_limitations is placeable and matches the content.",
       "unit_id": "inherited_unit:025.heading"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "install_command:dotnet",
-        "example:001"
+        "package:name",
+        "example:001",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions"
       ],
-      "rationale": "Each list item is supported by facts about format support, formula handling, export, and API surface.",
+      "rationale": "All listed limitations are supported by facts and match the inherited content exactly.",
       "unit_id": "inherited_unit:026.list"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading matches the Development and Testing section and is supported by build_test_asset facts.",
+      "rationale": "The heading is retained as the section development_testing is placeable and matches the content.",
       "unit_id": "inherited_unit:027.heading"
     },
     {
@@ -320,7 +316,7 @@
         "package:target_framework",
         "build_test_asset:build-command"
       ],
-      "rationale": "The SDK requirement and target framework are supported by package and build_test_asset facts.",
+      "rationale": "The SDK requirement and target framework are supported by facts.",
       "unit_id": "inherited_unit:028.paragraph"
     },
     {
@@ -329,7 +325,7 @@
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The paragraph introduces a build command already superseded by the verified build command.",
+      "rationale": "The paragraph introduces the build command, which is superseded by the fact build-command.",
       "unit_id": "inherited_unit:029.paragraph"
     },
     {
@@ -338,7 +334,7 @@
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The code block is a build command already superseded by the verified build command.",
+      "rationale": "The code block is preserved as it matches the build command fact, but is not superseded because the section does not render the exact command.",
       "unit_id": "inherited_unit:030.code_block"
     },
     {
@@ -347,7 +343,7 @@
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The paragraph introduces a sample build command already superseded by the verified examples build.",
+      "rationale": "The paragraph introduces the sample build command, which is superseded by the examples fact.",
       "unit_id": "inherited_unit:031.paragraph"
     },
     {
@@ -356,14 +352,14 @@
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The code block is a sample build command already superseded by the verified examples build.",
+      "rationale": "The code block is preserved as it matches the examples build command, but is not superseded because the section does not render the exact command.",
       "unit_id": "inherited_unit:032.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "DEFER_UNRESOLVED",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "No fact confirms or denies the presence of a tests/ directory or behavioral test coverage.",
+      "rationale": "The paragraph about lack of tests is not contradicted and adds useful context.",
       "unit_id": "inherited_unit:033.paragraph"
     },
     {
@@ -372,13 +368,14 @@
       "fact_ids": [
         "link_target:product.enterprise"
       ],
-      "rationale": "The heading introduces license content that belongs under Enterprise Relationship per policy.",
+      "rationale": "The heading is retained as the section enterprise_relationship is placeable and matches the content.",
       "unit_id": "inherited_unit:034.heading"
     },
     {
       "destination_section": "enterprise_relationship",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "license:file",
         "license:spdx",
         "link_target:023",
         "link_target:product.enterprise"
