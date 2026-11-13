@@ -1,8 +1,18 @@
 name: present
 
 # One repository, one durable transaction, run on hosted GitHub Actions runners in TWO jobs with a
-# trust boundary between them. Dispatchable by hand here; a scheduled trigger is an owner decision
-# (cadence and provider spend) not yet made.
+# trust boundary between them. Dispatchable by hand, callable by run-request-execute.yml, and --
+# owner ruling R37 (2026-11-13: "the system has to run autonomously on GitHub actions") -- driven
+# by its own hourly schedule through the third job below:
+#
+#   cohort  schedule only. Plans the fire (scripts/scheduled_execution_gate.py: the authorization
+#           predicates, then up to six (repository, lane) cells that need work -- R25), reserves
+#           each run's provider budget in the durable ledger on the state remote
+#           (core/llm/budget.py, refs/repository-presenter-state/ledger/provider-spend; main is a
+#           protected branch a hosted job cannot commit spend to), opens the next batch itself
+#           under R25's sizing and stop rule, dispatches one run of THIS workflow per repository
+#           with its own lane, and writes the fire's summary (certified counts per lane first,
+#           R11). It runs no repository code and holds no provider secret.
 #
 #   facts   executes the upstream repository's own code (example builds: dotnet, javac, ...). It
 #           references no secret, has a read-only token, installs the ecosystem toolchain, and can
@@ -40,21 +50,20 @@ on:
         type: choice
         options: [both, R, L]
         default: both
-  # 2026-11-04 (TC-012, follow-up directive §10): adding `schedule:` alone does NOT create a
-  # valid portfolio schedule -- `inputs.*` is only populated for workflow_dispatch, so a naive
-  # schedule trigger would launch a run with an empty repository/ecosystem and nothing to do.
-  # The "Select this run's target" step in the facts job below resolves the real target for
-  # either trigger; scheduled runs always run `lane: both` (inputs.lane is empty for a schedule
-  # trigger, and the existing Lane R/L step conditions -- `inputs.lane != 'L'` /
-  # `inputs.lane != 'R'` -- are both true on an empty string, which is the same as `both`, not a
-  # new code path). Cadence is intentionally wide (owner can tighten after observing real cost
-  # and failure rate): one target per run, at most once every 6 hours.
-  # 2026-11-04 (P0 follow-up directive section 2): a scheduled run must fail closed until
-  # scripts/scheduled_execution_gate.py's three independent predicates (explicit per-repository
-  # authorization, the 2026-10-31 sweep pause actually lifted, reviewer calibration PASSED) all
-  # hold. All three fail today, so this cron currently selects and spends nothing on every fire
-  # -- a deliberate, evidenced no-op (see "Select this run's target" below), not a live schedule
-  # waiting to be noticed.
+      dispatch_id:
+        description: "set by the scheduled cohort job only: the budget reservation this run claims"
+        required: false
+        type: string
+        default: ""
+  # The schedule (TC-012; R37 2026-11-13): a fire runs only the cohort job, which plans and
+  # dispatches; every dispatched run is an ordinary workflow_dispatch of this file with explicit
+  # inputs, so the facts/present jobs never have to guess a target. Hourly: every fire is bounded
+  # by the authorization predicates, by R25's six cells, by the budget the durable ledger can
+  # fund (an unfunded cell is never dispatched) and by the stop rule; it skips cells in flight and
+  # cells whose last attempt ran the same code on the same upstream revision, so a fire with
+  # nothing new to do dispatches nothing and costs one short zero-call job. A slower cadence would
+  # only leave funded, ready cells idle between fires (a run takes up to ~2.5 h; the per-repository
+  # concurrency group below already serialises runs of one repository).
   # Called by run-request-execute.yml (a validated run request, run from main via workflow_run; owner ruling 2026-11-06).
   workflow_call:
     inputs:
@@ -68,7 +77,7 @@ on:
         required: true
         type: string
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 * * * *"
 
 permissions:
   contents: read
@@ -78,21 +87,23 @@ concurrency:
   # -- `steps.*`/`needs.*` are not yet available here, only `inputs.*`/`github.*`. For a
   # workflow_dispatch this still gives real per-repository granularity. For a schedule trigger
   # `inputs.repository` is empty, so every scheduled run shares one group and queues serially --
-  # a conservative, safe default (never two scheduled runs in flight at once), not a bug.
+  # a conservative, safe default (never two scheduled runs in flight at once), not a bug: the
+  # cohort job of a schedule fire is serialised against the next fire, and the runs it dispatches
+  # are workflow_dispatch runs that get the per-repository group.
   group: present-${{ inputs.repository }}
   cancel-in-progress: false
 
 jobs:
-  facts:
+  # R37: the autonomous engine. Schedule-only; see the header. contents: write only for the
+  # provider-spend ledger ref in this repository's state namespace (it never pushes a branch);
+  # actions: write only to dispatch this workflow.
+  cohort:
+    if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
     permissions:
-      contents: read
-    outputs:
-      facts_sha256: ${{ steps.digest.outputs.sha256 }}
-      repository: ${{ steps.target.outputs.repository }}
-      ecosystem: ${{ steps.target.outputs.ecosystem }}
-      authorized: ${{ steps.target.outputs.authorized }}
+      contents: write
+      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -105,23 +116,108 @@ jobs:
       - name: Install
         run: python -m pip install -e .
 
-      # Resolves the real repository/ecosystem for EITHER trigger: a manual dispatch passes
-      # them as inputs and IS its own explicit authorization (preserved exactly, unchanged). A
-      # schedule trigger has no inputs at all and nobody is watching it start, so it goes
-      # through scripts/scheduled_execution_gate.py instead -- the actual fail-closed boundary
-      # (P0 follow-up directive section 2), not merely a cohort pick. The gate always exits 0 and
-      # always emits authorized=true|false; every downstream step that would spend a provider
-      # call or touch repository code is gated on that output, below and in the present job.
-      - name: Select this run's target (authorization-gated for schedule, passthrough for manual dispatch)
+      # Zero provider calls: the predicates, the re-certification of every latest seal under
+      # current code, the ledger's attempts and reservations, data/terminal_cells.json.
+      - name: Plan this fire's cohort (authorization-gated)
+        id: plan
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .cohort
+          python scripts/scheduled_execution_gate.py --max 6 \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --plan .cohort/plan.json --summary .cohort/plan.md >> "$GITHUB_OUTPUT"
+
+      # Opens the next batch when the last one cannot fund a cell (R25 sizing; the stop rule
+      # refuses to when cost per sealed candidate exceeded its multiplier) and reserves each run's
+      # allowance before it is dispatched, so concurrent runs can never overspend a batch.
+      - name: Reserve each run's provider budget
+        if: steps.plan.outputs.authorized == 'true'
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python -m repo_presenter.core.llm.budget reserve-cohort \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --plan .cohort/plan.json --out .cohort/dispatch.json \
+            --id-prefix "cohort-${{ github.run_id }}-${{ github.run_attempt }}" \
+            --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}"
+
+      - name: Dispatch one present run per funded repository
+        if: steps.plan.outputs.authorized == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > .cohort/dispatch.tsv
+          import json
+          for run in json.load(open(".cohort/dispatch.json"))["runs"]:
+              if run.get("reservation"):
+                  print("\t".join([run["repository"], run["ecosystem"], run["lane"], run["dispatch_id"]]))
+          PY
+          while IFS=$'\t' read -r repository ecosystem lane dispatch_id; do
+            if gh workflow run present.yml --repo "${{ github.repository }}" --ref "${{ github.ref_name }}" \
+                -f repository="$repository" -f ecosystem="$ecosystem" -f lane="$lane" \
+                -f dispatch_id="$dispatch_id"; then
+              echo "dispatched $repository lane $lane ($dispatch_id)"
+            else
+              echo "::warning::dispatch failed for $repository; releasing $dispatch_id"
+              python -m repo_presenter.core.llm.budget release \
+                --remote "https://github.com/${{ github.repository }}.git" \
+                --id "$dispatch_id" --repository "$repository" --reason "dispatch failed" \
+                --run-id "${{ github.run_id }}"
+            fi
+          done < .cohort/dispatch.tsv
+
+      - name: Report the fire (certified counts first)
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib, sys
+          sys.path.insert(0, ".")
+          from scripts.select_scheduled_cohort import render_summary
+          plan_path = pathlib.Path(".cohort/plan.json")
+          dispatch_path = pathlib.Path(".cohort/dispatch.json")
+          plan = json.loads(plan_path.read_text()) if plan_path.exists() else {"blocked": "the plan step did not complete"}
+          dispatch = json.loads(dispatch_path.read_text()) if dispatch_path.exists() else {}
+          print(render_summary(plan, dispatch.get("budget"), dispatch.get("runs") if dispatch else None, dispatch.get("recent")))
+          PY
+
+  facts:
+    # A schedule fire runs only the cohort job; every run it starts is a workflow_dispatch.
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    outputs:
+      facts_sha256: ${{ steps.digest.outputs.sha256 }}
+      repository: ${{ steps.target.outputs.repository }}
+      ecosystem: ${{ steps.target.outputs.ecosystem }}
+      authorized: ${{ steps.target.outputs.authorized }}
+      source_revision: ${{ steps.digest.outputs.source_revision }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      # Every run of this job has explicit inputs (a manual dispatch, run-request-execute.yml's
+      # workflow_call, or a run the scheduled cohort job dispatched after its own authorization
+      # gate, scripts/scheduled_execution_gate.py): an explicit, named run IS its own
+      # authorization. authorized=true is still emitted and checked downstream, so an absent or
+      # malformed output fails every provider-consuming step closed.
+      - name: Select this run's target (explicit inputs; the schedule plans in the cohort job)
         id: target
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            python scripts/scheduled_execution_gate.py --max 1 >> "$GITHUB_OUTPUT"
-          else
-            echo "authorized=true" >> "$GITHUB_OUTPUT"
-            echo "repository=${{ inputs.repository }}" >> "$GITHUB_OUTPUT"
-            echo "ecosystem=${{ inputs.ecosystem }}" >> "$GITHUB_OUTPUT"
-          fi
+          echo "authorized=true" >> "$GITHUB_OUTPUT"
+          echo "repository=${{ inputs.repository }}" >> "$GITHUB_OUTPUT"
+          echo "ecosystem=${{ inputs.ecosystem }}" >> "$GITHUB_OUTPUT"
 
       # Example verification compiles the README's own code against the product, so the SDK it
       # needs must exist on this runner; each toolchain is installed only for the ecosystem that
@@ -203,7 +299,9 @@ jobs:
       - name: Record the facts digest
         id: digest
         if: steps.target.outputs.authorized == 'true'
-        run: echo "sha256=$(sha256sum .present-facts/facts.json | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "sha256=$(sha256sum .present-facts/facts.json | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          echo "source_revision=$(python -c "import json; print(json.load(open('.present-facts/facts-manifest.json'))['source_revision'])")" >> "$GITHUB_OUTPUT"
 
       - name: Hand the facts to the present job
         if: steps.target.outputs.authorized == 'true'
@@ -217,6 +315,10 @@ jobs:
 
   present:
     needs: facts
+    # Runs after a FAILED facts job too, so the run's outcome is recorded in the durable ledger
+    # (a facts failure is an attempt of the cell); every lane step still requires the fetched
+    # facts artifact, so nothing is presented without verified facts.
+    if: ${{ !cancelled() && needs.facts.result != 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     # contents: write only so the job's own token can write the durable-state refs
@@ -270,6 +372,40 @@ jobs:
           name: present-facts-${{ github.run_id }}
           path: .present-facts
 
+      # The budget this run may spend (owner ruling R37): a run the cohort job dispatched claims the
+      # reservation made for it; any other run reserves its own share of the open batch. The local
+      # data/provider_budget.json is rewritten to hold exactly that allowance, so check_budget
+      # refuses a call past it; no reservation means zero-call work only.
+      - name: Name this run's budget reservation
+        id: budget
+        # always(): the settle step below needs the id even when fetching the facts failed.
+        if: always()
+        run: |
+          if [ -n "${{ inputs.dispatch_id }}" ] && [ "${{ github.run_attempt }}" = "1" ]; then
+            echo "id=${{ inputs.dispatch_id }}" >> "$GITHUB_OUTPUT"
+          elif [ -n "${{ inputs.dispatch_id }}" ]; then
+            echo "id=${{ inputs.dispatch_id }}-a${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "id=run-${{ github.run_id }}-a${{ github.run_attempt }}" >> "$GITHUB_OUTPUT"
+          fi
+          case "${{ inputs.lane }}" in
+            R) echo "lanes=R" >> "$GITHUB_OUTPUT" ;;
+            L) echo "lanes=L" >> "$GITHUB_OUTPUT" ;;
+            *) echo "lanes=R,L" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Reserve this run's provider budget
+        if: needs.facts.outputs.authorized == 'true' && steps.fetch_facts.outcome == 'success'
+        env:
+          INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python -m repo_presenter.core.llm.budget reserve \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --id "${{ steps.budget.outputs.id }}" --repository "$INPUT_REPOSITORY" \
+            --lanes "${{ steps.budget.outputs.lanes }}" --workdir .present-work \
+            --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}"
+
       # Each lane is its own process, so its own durable-state record, candidate pointer and seal.
       # Lane L carries a status function (!cancelled()) so it runs whether or not Lane R failed:
       # neither lane is measured by the other's delivery. It still needs the facts, so it is gated
@@ -280,6 +416,7 @@ jobs:
       # place a scheduled run's provider call and durable-state write are physically prevented
       # when unauthorized, not merely recorded as blocked in a taskcard.
       - name: Present (Lane R)
+        id: lane_r
         if: ${{ needs.facts.outputs.authorized == 'true' && inputs.lane != 'L' }}
         env:
           INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
@@ -305,6 +442,7 @@ jobs:
             --expected-facts-sha256 "$FACTS_SHA256"
 
       - name: Present (Lane L)
+        id: lane_l
         if: ${{ !cancelled() && steps.fetch_facts.outcome == 'success' && inputs.lane != 'R' && needs.facts.outputs.authorized == 'true' }}
         env:
           INPUT_REPOSITORY: ${{ needs.facts.outputs.repository }}
@@ -328,6 +466,26 @@ jobs:
             --workdir .present-work \
             --facts-dir .present-facts \
             --expected-facts-sha256 "$FACTS_SHA256"
+
+      # Success or failure: this run's measured provider calls and tokens (its own call ledgers,
+      # less what the cache restored), its lane outcomes, seals, code fingerprint and upstream
+      # revision go to the durable ledger -- the next fire's idempotency, retry bound, batch
+      # sizing and stop rule all read them.
+      - name: Record this run's measured spend and outcome
+        if: always()
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python -m repo_presenter.core.llm.budget settle \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --id "${{ steps.budget.outputs.id }}" --repository "$INPUT_REPOSITORY" \
+            --workdir .present-work --lanes "${{ steps.budget.outputs.lanes }}" \
+            --outcome "R=${{ steps.lane_r.outcome }}" --outcome "L=${{ steps.lane_l.outcome }}" \
+            --facts-result "${{ needs.facts.result }}" \
+            --source-revision "${{ needs.facts.outputs.source_revision }}" \
+            --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Save the sealed bundle and call store for the next run
         if: always() && needs.facts.outputs.authorized == 'true'
@@ -358,7 +516,9 @@ jobs:
   # per-repository transaction. permissions: {} and no secret anywhere in this job -- it has
   # nothing worth stealing and nothing to authenticate with, by design.
   sandbox-execute:
-    if: github.event_name == 'workflow_dispatch'
+    # Not for the runs the scheduled cohort job dispatches (dispatch_id set): this proof is
+    # infrastructure validation, not part of any repository's transaction.
+    if: github.event_name == 'workflow_dispatch' && inputs.dispatch_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions: {}
