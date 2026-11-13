@@ -65,24 +65,53 @@ def _entry(output: dict[str, Any]) -> dict[str, Any]:
     return output["dispositions"][0]
 
 
-def test_a_kept_list_filed_in_documentation_resources_is_rehomed() -> None:
+def test_a_kept_links_list_filed_in_documentation_resources_stays_there() -> None:
+    """BL-004 (owner P0): a list whose every item is a link the plan can assign IS Documentation
+    and Resources' material; planning owes each of its links to that section's own link lines
+    (``planning._kept_list_links``), so it is no longer re-homed into Scope and Limitations."""
     for disposition in ("VERIFIED_PRESERVE", "VERIFIED_MOVE"):
         output = _table(disposition, "documentation_resources")
         normalize(output, _facts(_LINKS_LIST))
         entry = _entry(output)
-        assert entry["destination_section"] != "documentation_resources"
+        assert entry["destination_section"] == "documentation_resources"
         assert entry["disposition"] == disposition
         assert "link_target:038" in entry["fact_ids"]
+
+
+def test_a_kept_list_with_an_unlinked_item_filed_in_documentation_resources_is_rehomed() -> None:
+    """A list the section cannot carry as link lines (an item with no link) is still re-homed."""
+    text = _LINKS_LIST + "- Community support is available on the forum.\n"
+    for disposition in ("VERIFIED_PRESERVE", "VERIFIED_MOVE"):
+        output = _table(disposition, "documentation_resources")
+        normalize(output, _facts(text))
+        entry = _entry(output)
+        assert entry["destination_section"] != "documentation_resources"
+        assert entry["disposition"] == disposition
         assert "prints nothing from a placed unit" in entry["rationale"].lower()
         assert len(entry["rationale"]) <= 160
 
 
+_LIMITS_LIST = (
+    "- Formula recalculation is not implemented; cached values are kept as written.\n"
+    "- Charts are read but not rendered.\n"
+)
+
+
 def test_a_unit_already_in_a_section_that_prints_it_is_left_alone() -> None:
     output = _table("VERIFIED_PRESERVE", "scope_limitations")
-    normalize(output, _facts(_LINKS_LIST, heading="Scope and Limitations"))
+    normalize(output, _facts(_LIMITS_LIST, heading="Scope and Limitations"))
     entry = _entry(output)
     assert entry["destination_section"] == "scope_limitations"
     assert entry["rationale"] == "The list of documentation links is kept as written."
+
+
+def test_a_links_list_filed_in_scope_and_limitations_moves_to_documentation_resources() -> None:
+    """BL-004 section fit: resource links are never a limitation."""
+    output = _table("VERIFIED_PRESERVE", "scope_limitations")
+    normalize(output, _facts(_LINKS_LIST, heading="Scope and Limitations"))
+    entry = _entry(output)
+    assert entry["destination_section"] == "documentation_resources"
+    assert entry["rationale"].startswith("Kept in documentation_resources: a list of resource links")
 
 
 def test_a_paragraph_filed_in_documentation_resources_is_also_rehomed() -> None:
