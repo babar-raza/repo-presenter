@@ -4795,3 +4795,19 @@ the product issue is drafted (not filed) at
 `evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/draft_upstream_issue.md`.
 Side finding recorded, not fixed (unblocks nothing here): the vendored Java `package_root.py` knows no `main/java`
 layout and falls back to the repository root.
+
+---
+
+## 2026-11-13: owner ruling R37 — the system runs itself on GitHub Actions
+
+Owner, verbatim, answering whether the supervisor should wire the M9 audit chain to run requests: "this should be wired
+to the system so everything is autonomous", and then: "in goals, we have defined that the system has to run
+autonomously on GitHub actions, think from that point of view" (Consolidated goals §7; Part E Final Directive).
+
+Recorded as **R37** (`docs/RULINGS.md` row and checklist item 9; Part B row; `CLAUDE.md` summary). The whole loop —
+cell selection, batches of six, measured spend, M9 seeding, hosted blind auditors, scoring, attested acceptance,
+counting — is driven by scheduled and chained workflows with no owner dispatch and no supervisor-session step; the
+supervisor session oversees, diagnoses and fixes. Trust safeguards unchanged and now explicit: seed key only in the
+`acceptance-audit` environment, every seed burned once, one open seed batch at a time, auditor findings frozen
+before scoring, the attested writer the only road to acceptance, owner-only budget caps. Owner authorization of the
+trust-boundary change (the supervisor-triggered audit chain) is this entry.
