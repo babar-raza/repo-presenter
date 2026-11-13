@@ -32,35 +32,37 @@ output, and everything it cannot do is listed under
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["Nothing — authored from scratch"]
-    i2["An existing PPTX presentation"]
+    i1["Nothing — authored<br/>from scratch"]
+    i2["An existing PPTX<br/>presentation"]
   end
   PRODUCT["Aspose.Slides FOSS for Java"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Presentation and slide creation and editing"]
-      c2["Shape creation (AutoShape, Table, Connector, PictureFrame)"]
-      c3["Text formatting (TextFrame, Paragraph, Portion)"]
-      c4["Fill, line, and 3D shape styling"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c5["Visual effects (shadow, glow, blur, reflection)"]
-      c6["Document properties (core, app, custom)"]
-      c7["Speaker notes and threaded comments"]
-      c8["Image embedding"]
-    end
+    direction TB
+    c1["Presentation and slide<br/>creation and editing"]
+    c2["Shape creation<br/>(AutoShape, Table,<br/>Connector,<br/>PictureFrame)"]
+    c3["Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)"]
+    c4["Fill, line, and 3D<br/>shape styling"]
+    c5["Visual effects<br/>(shadow, glow, blur,<br/>reflection)"]
+    c6["Document properties<br/>(core, app, custom)"]
+    c7["Speaker notes and<br/>threaded comments"]
+    c8["Image embedding"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
   end
   subgraph Outputs["Outputs"]
     direction TB
     o1["A PPTX presentation"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

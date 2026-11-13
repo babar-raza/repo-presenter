@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 2,
+    "edits": 3,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "8b4dce19d259fbb1b51c94071ac6be95c46df6b134dcafaa7a2c38a58a8c5149",
+  "corrected_sha256": "69982b225bc2cbda0f3385fd3eeec2023cd7ebe2cc022f371b94986d6e11a418",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 3499,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:34"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 35,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"Nothing — authored from scratch\"]\n    i2[\"An existing PPTX presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Presentation and slide creation and editing\"]\n      c2[\"Shape creation (AutoShape, Table, Connector, PictureFrame)\"]\n      c3[\"Text formatting (TextFrame, Paragraph, Portion)\"]\n      c4[\"Fill, line, and 3D shape styling\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c5[\"Visual effects (shadow, glow, blur, reflection)\"]\n      c6[\"Document properties (core, app, custom)\"]\n      c7[\"Speaker notes and threaded comments\"]\n      c8[\"Image embedding\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A PPTX presentation\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1710 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"Nothing — authored<br/>from scratch\"]\n    i2[\"An existing PPTX<br/>presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Presentation and slide<br/>creation and editing\"]\n    c2[\"Shape creation<br/>(AutoShape, Table,<br/>Connector,<br/>PictureFrame)\"]\n    c3[\"Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)\"]\n    c4[\"Fill, line, and 3D<br/>shape styling\"]\n    c5[\"Visual effects<br/>(shadow, glow, blur,<br/>reflection)\"]\n    c6[\"Document properties<br/>(core, app, custom)\"]\n    c7[\"Speaker notes and<br/>threaded comments\"]\n    c8[\"Image embedding\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c8\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A PPTX presentation\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 2566
+    },
     {
       "detector": "enterprise_edition_naming",
       "end": 39592,
@@ -17,7 +36,7 @@
           "value": "https://products.aspose.com/slides/java/"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 710,
       "original": "the commercial Aspose.Slides for Java product",
@@ -36,7 +55,7 @@
           "value": "https://products.aspose.com/slides/java/"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "FALSE_CLAIM_FIX",
       "line": 754,
       "original": "the commercial product",
@@ -58,6 +77,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 2
   },
   "unapplied": [
