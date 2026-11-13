@@ -404,3 +404,65 @@ class GitStateBackend:
                 raise StateBackendError(f"push of {remote_ref} failed: {push.stderr}")
 
             return SaveResult(outcome="saved", record=new_record)
+
+
+class GitJsonRef(GitStateBackend):
+    """One JSON document under one ref on the state remote, updated by the same compare-and-swap
+    plumbing :class:`GitStateBackend` uses for a repository record (fetch the ref, commit the new
+    payload on top of exactly that parent, push; a non-fast-forward means another writer won, so
+    re-read and re-apply). Used for the hosted provider-spend ledger
+    (``core/llm/budget.py``): several hosted jobs append to it concurrently, and the bot token
+    can write ``refs/repository-presenter-state/*`` where it cannot write a protected ``main``."""
+
+    def __init__(self, ref: str, *, remote: str = "origin", token: str | None = None) -> None:
+        super().__init__(remote=remote, token=token, lane="R")
+        if not ref.startswith("refs/repository-presenter-state/"):
+            raise StateBackendError(f"{ref!r} is outside the state namespace")
+        self._ref = ref
+
+    def read(self) -> tuple[str | None, object]:
+        """``(commit sha, decoded document)``, or ``(None, None)`` when the ref does not exist."""
+        import json
+
+        with self._lock:
+            sha = self._fetch_remote_sha(self._ref)
+            if sha is None:
+                return None, None
+            payload = self._read_blob(sha, RECORD_BLOB_PATH)
+        try:
+            return sha, json.loads(payload)
+        except ValueError as exc:
+            raise StateBackendError(f"{self._ref} holds invalid JSON: {exc}") from exc
+
+    def update(self, mutate, *, attempts: int = 12, sleep=None):  # type: ignore[no-untyped-def]
+        """Apply ``mutate(document_or_None) -> new_document`` atomically; returns the document
+        written. ``mutate`` must be a pure function of its argument: it is re-applied to the newer
+        document after every lost race."""
+        import json
+        import random
+        import time
+
+        sleep = sleep or time.sleep
+        for attempt in range(attempts):
+            parent, current = self.read()
+            new_document = mutate(current)
+            if parent is not None and new_document == current:
+                return new_document  # nothing to write (e.g. a reservation claimed as it stands)
+            payload = json.dumps(new_document, indent=1, sort_keys=True) + "\n"
+            with self._lock:
+                commit_sha = self._write_commit(
+                    payload=payload,
+                    parent_sha=parent,
+                    message=f"state: {self._ref.rsplit('/', 1)[-1]} #{uuid4().hex[:12]}",
+                )
+                push = self._push_with_retry(
+                    ["push", self._remote, f"{commit_sha}:{self._ref}"], remote_ref=self._ref
+                )
+            if push.returncode == 0:
+                return new_document
+            if not _is_non_fast_forward(push.stderr):
+                moved = self.read()[0]
+                if moved is None or moved == parent:
+                    raise StateBackendError(f"push of {self._ref} failed: {push.stderr}")
+            sleep(min(8.0, 0.25 * 2**attempt) * (0.5 + random.random()))
+        raise StateBackendError(f"{self._ref}: lost the compare-and-swap {attempts} times")
