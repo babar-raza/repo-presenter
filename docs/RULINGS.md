@@ -27,6 +27,7 @@ by machinery built.**
 8. Is something blocked upstream or failing in the system? Work it by R36: verify, list honest alternatives, decide one — never just park it; classify failures into classes and fix each class once, proven before spending hosted runs.
 9. Is the supervisor session about to do by hand something the hosted system should do (R37)? Make the system do it.
 10. Is this being executed through the governed pipeline, and will it be done only when reproducible, verified and evidenced (R38)? Re-read `docs/R38_CHECKPOINT.md` from time to time.
+11. Did everything I called next / not done / left for later / blocked become a `project/backlog.yaml` item, and did every decision-log entry get a `Backlog:` line (R40)? Prose-only follow-ups are how work was silently dropped.
 
 ## New rulings, 2026-11-13 (owner)
 

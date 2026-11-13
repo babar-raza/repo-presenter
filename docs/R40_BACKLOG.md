@@ -60,3 +60,16 @@ resources. Prioritize verified outcomes over apparent activity.
   landing through PR + CI + the gates; Actions reports the next eligible item every tick.
 - **Contradiction check:** "close only with reproducible evidence" (requirement 7) matches the matrix rule; "do not invent
   requirements" (1) means every backlog item cites its source (owner message, ruling, decision-log entry, feedback id).
+
+## How dropped work is prevented (owner: "how to best track it", 2026-11-13)
+
+Root causes of the silently dropped items found by the 2026-11-13 reconciliation: follow-ups that existed only in prose
+(decision log, plans, worker reports); items with no freshness signal; nothing comparing claims with reality (four
+"done" branches existed only locally). Mechanical answers, all in the existing checker `ops/checks/backlog_check.py`
+(CI via `tests/test_backlog_check.py`; printed by the hourly hosted `supervisor-tick` under "Backlog"):
+1. Every task card not ACCEPTED/SUPERSEDED on the release-gate dashboard must be named by a backlog item (CI fails).
+2. Every decision-log entry dated 2026-11-14 or later must carry a `Backlog:` line naming BL ids or `none` (CI fails).
+3. A `done` item citing a commit that is not in the history is refused (not landed).
+4. Staleness by status age (`updated` field; active 3 days, blocked 7 days per R24, open 14 days) is reported every
+   tick and fails with `--strict`.
+5. Pre-work checklist item 11 in `docs/RULINGS.md`; every worker brief asks for follow-ups as backlog items.

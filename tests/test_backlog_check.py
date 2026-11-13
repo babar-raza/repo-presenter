@@ -26,3 +26,29 @@ def test_duplicates_unknown_dependencies_and_missing_fields_are_refused() -> Non
     assert any("duplicate id BL-1" in p for p in found)
     assert any("BL-2: missing source" in p for p in found)
     assert any("unknown item BL-9" in p for p in found)
+
+
+def test_an_open_task_card_no_item_names_is_refused() -> None:
+    state = {"release_gate_dashboard": {"cards": [{"id": "TC-077", "status": "READY"}, {"id": "TC-001", "status": "ACCEPTED"}]}}
+    assert bc.untracked_cards({"items": [GOOD]}, state) == ["task card TC-077 is READY but no backlog item names it"]
+    assert bc.untracked_cards({"items": [dict(GOOD, title="fix TC-077")]}, state) == []
+
+
+def test_a_new_decision_log_entry_without_a_backlog_line_is_refused() -> None:
+    log = "## 2026-11-13: old\nno line needed\n## 2026-11-15: new decision\ntext\n## 2026-11-16: tracked\nBacklog: BL-001\n"
+    found = bc.untracked_decisions(log)
+    assert len(found) == 1 and "2026-11-15" in found[0]
+
+
+def test_stale_items_are_reported_by_status_age() -> None:
+    import datetime as dt
+    doc = {"items": [dict(GOOD, status="active", updated="2026-11-01"), dict(GOOD, id="BL-2", status="open", updated="2026-11-10")]}
+    old = bc.stale(doc, dt.date(2026, 11, 13))
+    assert len(old) == 1 and old[0].startswith("BL-1")
+
+
+def test_a_done_item_citing_an_unlanded_commit_is_refused() -> None:
+    doc = {"items": [dict(GOOD, status="done", evidence=["merged in abc1234"])]}
+    assert bc.unlanded_done(doc, lambda sha: False) == ["BL-1: done, but cited commit abc1234 is not in this history (not landed)"]
+    assert bc.unlanded_done(doc, lambda sha: True) == []
+    assert bc.unlanded_done(doc, lambda sha: None) == []
