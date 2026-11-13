@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set a6b436407f14: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says `DriverException` is thrown, but implementation:never_thrown.aspose.threed.render.driverexception states no library code throws or constructs it (it is only declared): drop the claim or say it is unused)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-13T21:34:40.682695+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43506729349",
     "acquired_at": "2026-11-13T21:02:03.490521+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 62,
+  "state_version": 63,
   "recent_trigger_dedup_keys": {
     "run:40460371379:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "75063506c30143c58ee317e5750b8f6f",
     "run:40461345611:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "2669b9698e32449a9507a5029f98def5",
