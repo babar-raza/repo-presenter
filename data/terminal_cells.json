@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "meaning": "Machine-readable list of (repository, lane) cells with a recorded terminal outcome (R24 BLOCKED_EXTERNAL, R20 NOT_APPLICABLE), read by the scheduled cohort selector (scripts/select_scheduled_cohort.py) so the autonomous loop never spends a hosted run on them. Each entry cites its decision in docs/DECISION_LOG.md. `revision` pins the upstream revision the decision was verified at: when the upstream default branch moves past it the terminal lapses automatically and the cell is eligible again (R24: it unblocks once the upstream fix lands and the repository is re-run). `recheck_by` is R24's 7-day re-check; the selector reports an overdue one. A new terminal decision is added here in the same commit as its decision-log entry.",
+  "cells": [
+    {
+      "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
+      "lane": "R",
+      "outcome": "BLOCKED_EXTERNAL",
+      "ruling": "R24 after R36(a)",
+      "revision": "a7b05fdd3a51e1a87660254cf09519d3dc74a9f2",
+      "decided": "2026-11-13",
+      "recheck_by": "2026-11-20",
+      "evidence": "docs/DECISION_LOG.md 2026-11-13 'PSD Java Lane R terminal under R24 after the R36(a) alternatives were exhausted'; evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/draft_upstream_issue.md"
+    },
+    {
+      "repository": "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+      "lane": "L",
+      "outcome": "NOT_APPLICABLE",
+      "ruling": "R20",
+      "revision": "1d3875808ec4eef334683f505c9c3fb9076a3ea5",
+      "decided": "2026-11-13",
+      "recheck_by": "2026-11-20",
+      "evidence": "docs/DECISION_LOG.md 'Genuine upstream data gap' (the repository has no README.md at all) and 2026-11-10 'GIS .NET is BLOCKED_EXTERNAL': Lane L maintains a live README and there is none to maintain; Lane R stays eligible (C7 missing-README fix)"
+    }
+  ]
+}
