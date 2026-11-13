@@ -5,7 +5,7 @@
   "provider_repository_id": 1332915817,
   "registry_revision": null,
   "active_transaction_id": "148c20bebfff4245b1e9907075654cc3",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "0f3d8c50d12c40029199245fb630d1e4",
-    "transaction_id": "f9239bf8d6c043b8b47a2828310455e9",
+    "transition_id": "f9b95f1f7bfe40fb80052349291ec259",
+    "transaction_id": "148c20bebfff4245b1e9907075654cc3",
     "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-30T21:20:14.001654+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-13T08:49:39.432872+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-psd-foss__Aspose.PSD-FOSS-for-.NET/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 16,
+  "state_version": 17,
   "recent_trigger_dedup_keys": {
     "run:41130142104:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "f9239bf8d6c043b8b47a2828310455e9",
     "run:41167968081:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "2e2548c6b5f64dc7a45053919c318772",
