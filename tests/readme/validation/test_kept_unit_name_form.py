@@ -70,6 +70,13 @@ def test_the_real_go_list_fails_bc12_as_written_and_passes_once_printed_in_its_k
 
 def test_a_platform_written_cplusplus_is_rewritten_to_the_registrys_spelling() -> None:
     assert _bc12(SLIDES_CPP, SLIDES_PARAGRAPH)
+    # Another edition named in prose, or a link whose text is not the name of the repository it
+    # targets, proves nothing about which product it names: still BC-12's to flag.
+    assert _bc12(SLIDES_NET, "Aspose.Slides FOSS for Java provides charts.")
+    assert _bc12(
+        SLIDES_NET,
+        "- [Aspose.Slides FOSS](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java)",
+    )
     printed = canonical_name_form(SLIDES_PARAGRAPH, _facts(SLIDES_CPP))
     assert printed.startswith("Aspose.Slides FOSS for Cpp is a free")
     assert "MIT-licensed C++ library" in printed  # the language name elsewhere is untouched
@@ -131,3 +138,39 @@ def test_placement_and_the_reviewer_agree_on_the_corrected_printed_form() -> Non
     # printed there; what matters is that the corrected form -- the one the renderer now prints --
     # is never reported as a kept unit the README fails to print.
     assert kept_unit_form(unit, SLIDES_PARAGRAPH, facts) == placed.text
+
+
+SLIDES_NET = "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET"
+# Slides .NET inherited_unit:083.list, verbatim (README lines 493-495 at 86c441b5): the maintainers'
+# links to the sibling editions, each named in full.
+SLIDES_NET_SIBLINGS = (
+    "- [Aspose.Slides FOSS for Java](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java)\n"
+    "- [Aspose.Slides FOSS for C++](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp)\n"
+    "- [Aspose.Slides FOSS for Python](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python)"
+)
+
+
+def test_a_sibling_edition_named_in_full_is_another_product_not_a_misspelling() -> None:
+    """Run 43413917875: BC-12 read "Aspose.Slides FOSS for Java" as this product's short name, so the
+    zero-call restore rolled 083.list back as a new BC-12 failure and the reviewer then refused the
+    three sibling links as lost. The printable form already leaves the list untouched (another
+    product), and BC-12 now agrees with it."""
+    assert kept_unit_form("inherited_unit:083.list", SLIDES_NET_SIBLINGS, _facts(SLIDES_NET)) == (
+        SLIDES_NET_SIBLINGS
+    )
+    assert _bc12(SLIDES_NET, SLIDES_NET_SIBLINGS) == []
+
+
+def test_the_products_own_short_name_and_its_cplusplus_tail_still_fail() -> None:
+    """The sibling rule exempts only "for <another platform>": the bare short name, a variant of
+    this product's own tail, and the C++ spelling of the Cpp tail are still this product."""
+    assert _bc12(SLIDES_NET, "Aspose.Slides FOSS reads decks.")
+    assert _bc12(SLIDES_NET, "Aspose.Slides FOSS for .Net reads decks.")
+    assert _bc12(SLIDES_CPP, SLIDES_PARAGRAPH)
+    # Another edition named in prose, or a link whose text is not the name of the repository it
+    # targets, proves nothing about which product it names: still BC-12's to flag.
+    assert _bc12(SLIDES_NET, "Aspose.Slides FOSS for Java provides charts.")
+    assert _bc12(
+        SLIDES_NET,
+        "- [Aspose.Slides FOSS](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java)",
+    )
