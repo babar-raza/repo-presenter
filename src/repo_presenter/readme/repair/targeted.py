@@ -412,8 +412,11 @@ def merge_equivalent(defects: Sequence[Defect]) -> list[Defect]:
 # changes in a way that could resolve a defect an earlier version could not; an attempt recorded
 # under another value no longer counts, so the changed code gets its one attempt. "1": the first
 # version to record it; entries written before it carry no value and keep counting exactly as
-# they did, so a sealed bundle's repairs.json is read and rewritten byte for byte.
-REPAIR_LOGIC_VERSION = "1"
+# they did, so a sealed bundle's repairs.json is read and rewritten byte for byte. "2": an S6
+# defect is routed to the authoring task(s) whose units its merged findings name (loop.
+# _route_section_defect), not the section's first task (Aspose.BarCode-FOSS-for-Python, hosted
+# run 43394959529, whose api_reference finding "1" spent on the hubs task).
+REPAIR_LOGIC_VERSION = "2"
 
 
 @dataclass
@@ -631,6 +634,16 @@ def repair_packet(
     if allowed is not None:
         permitted = set(allowed)
         records = [record for record in records if record["id"] in permitted]
+        # An evidence-only fact the causing section itself accepted (a type batch's own
+        # ``implementation`` facts, authoring._type_batches) is part of what that section was
+        # told, so its repair is told it too; never the corpus-wide evidence-only facts.
+        records.extend(
+            {"id": fact.id, "kind": fact.kind, "value": fact.value}
+            for fact in facts.facts
+            if fact.id in permitted
+            and fact.kind in EVIDENCE_ONLY_KINDS
+            and fact.polarity == "SUPPORTED"
+        )
     records = [
         *records,
         *_named_inherited_units(defect, facts),
