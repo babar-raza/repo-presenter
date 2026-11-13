@@ -5031,3 +5031,51 @@ failed with CS0234 on pointer files (10 printed, both lanes); best effort, no gi
 Not yet fixed (next classes): inputs no repository file or example provides (26), fragments that need an earlier
 fence's statements (16 incl. Rust), the extractor missing list-indented fences (1). Proof needing a hosted facts run:
 Words .NET (LFS + dotnet), PDF .NET (dotnet), Cells Rust and 3D TS on the runner's own toolchains.
+
+---
+
+## 2026-11-13: hosted M9 round 43445578226 failed its gates — root causes, fixes (BL-013)
+
+**Score** (scorecard `audit-score/seed-run-43445578226`, writer `acceptance-record/run-43445578226-43445578226`):
+seeded recall 5/21 = 0.238, false-flag 15/24 = 0.625; batch failed, nothing counts. By shape (shapes of the caught
+cases re-derived from the seals with the seeder's own operators, each matching a frozen finding line): A 4/6
+(invent_api_name 3/3, count_mismatch 1/3), D 0/5, D9 1/4, D14 0/6. Zero-call diagnosis from the frozen findings, the
+published missed list, the public case index and the seals at the audited revisions (no manifest, no key, no model).
+
+**Root causes.** (1) *Blind spot, 11 of 16 misses (all D and D14):* the D/D14 operators append to the first paragraph,
+which in every README is the `# Title` line; the reviewer never shows a heading (`scope.line_sections`: markup), so the
+seeded sentence was in no review unit. Supervisor-subagent auditors read the whole file and caught these. (2) *Join, 2
+of 16 (count_mismatch):* the deterministic claim rule caught both counts, but on a wrapped sentence the finding was
+written at the quote's first line (279, 352) and the count sat on the second (280, 353); the scorer joins on the exact
+line. (3) *D9, 3 of 16:* the seeded row was shown and the row type's fact was in the packet; a model miss (Lane R/L
+whole-document packets also lacked the authored-row type facts the production Lane R review gives). (4) *False flags:*
+of the 99 flags on controls, 29 Lane L flags (26 unsupported, 3 contradiction) were on unchanged maintainer text
+(not the candidate's claim: R21 residuals at most) and 7 were claim-detector contradictions, 13 Lane R flags were on
+renderer-printed lines and 44 on authored Lane R lines; Lane L flags on the corrections' own computed counts ("303 public types": the number is in no fact value);
+Lane R authored type rows flagged for want of the members the production review is given; and 8 of 24 controls (7 of
+the 8 Lane R ones) do not re-certify under current code at the audited revision. No flag was adjudicated, so every one
+counted against the auditor (the hosted chain had no adjudicator).
+
+**Fixes (smallest change to existing components).** `review_with_model(..., audit=True)` (auditor only; every
+production request unchanged): heading lines reviewable, authored API rows get their type facts with
+`rendered=False`, and the review scope carries the facts' computed type counts. The auditor judges a Lane L case as the
+production Lane L review judges a correction (lines differing from the live README, `{"lane": "L"}` only — nothing
+from the seal, so nothing says which differing line is genuine), keeps deterministic findings on changed lines, and
+writes a finding at every line of a quote of at most three lines (located by the whole quote). The writer adjudicates
+every flag deterministically after the freeze: CONFIRMED when the claim detector proves the line contradicts the pinned
+facts; REFUTED when the line of an unmodified, re-certifying seal is a deterministic derivation from the facts (Lane R
+renderer-printed; Lane L evidenced zero-call correction) and the detector finds nothing; otherwise unadjudicated (fail
+closed); a CONFIRMED verdict is never overturned. A control whose seal does not re-certify is reported
+(`controls_not_recertified`) and left out of the false-flag population: an independent deterministic check, decided
+without the findings, already says it is not a clean candidate (R33), and it can never be accepted. Thresholds
+unchanged.
+
+**Zero-call proof (replay of the frozen round).** All 16 missed seeds are now in a review unit and in scope; the 2
+count misses are caught deterministically at the seeded line (recall floor 7/21 without any model). False flags,
+frozen findings through the fixed writer: 15/24 → 14/24 with adjudication (7 confirmed, 6 refuted) → 11/16 without the
+8 non-recertifying controls → 5/16 with the Lane L scope simulated. Of those 5, 4 controls' flags (888c rows; e253,
+ab8a, c086 counts) are on exactly the evidence the fix now adds to the packet (members on 19 rows; computed counts 303,
+198, 618), and 5584's is a model contradiction on an evidenced NuGet-version edit. What only a hosted round can show:
+the model now flags the 11 title-line seeds and ≥ 1 more D9 (recall ≥ 0.90 needs 19/21), and stops flagging evidenced
+rows and counts (false-flag ≤ 0.10 over the re-certifying controls). Follow-ups: the seeder should not spend control
+slots on non-re-certifying seals; 7 of 8 Lane R controls being stale is itself a re-certification backlog.

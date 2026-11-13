@@ -12,6 +12,21 @@ unreadable finding sets ``audit_passed`` false for EVERY record and the file sti
 Only a CLEAN CONTROL (the real sealed candidate, unmodified) can ever pass; a seeded copy is
 audit material, never a candidate. ``--dry-run`` takes a plaintext manifest, never reads a key,
 and marks the document ``dry_run`` so the counter ignores it.
+
+Deterministic adjudication of flags (docs/DECISION_LOG.md 2026-11-12; BL-013): after the findings are
+frozen, every flag is checked by ``deterministic_adjudications`` -- no model, nothing of the auditor's:
+CONFIRMED when the repository's claim detector (``readme.validation.claims.claim_findings``) proves the
+flagged line contradicts the pinned facts; REFUTED when the flagged line of an UNMODIFIED, re-certifying
+seal is a deterministic derivation from the pinned facts (a Lane R line the renderer printed, not an
+author; a Lane L line an evidenced zero-call correction wrote) and the claim detector finds nothing there.
+Anything else stays unadjudicated (fail closed). A committed adjudication file can add to it; a CONFIRMED
+verdict is never overturned by a later REFUTED one.
+
+The false-flag population is the clean controls that can become accepted records: a control whose seal
+does not re-certify under current code at the audited revision is already known not to be a clean
+candidate by an independent deterministic check decided without the findings (R33), so it is reported
+(``controls_not_recertified``) and left out of the false-flag rate, never counted for or against the
+auditor; it can never be accepted either way.
 """
 
 from __future__ import annotations
@@ -20,9 +35,9 @@ import argparse
 import json
 import os
 import sys
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
@@ -80,20 +95,142 @@ def _adjudication_index(adjudications: Sequence[Mapping[str, Any]]) -> dict[tupl
     adjudication is a second, independent check of the flag against the pinned source: a CONFIRMED
     flag is a real defect in the candidate (the candidate fails, the auditor was right); a REFUTED
     flag is an auditor false flag. Anything else is ignored, so an unadjudicated flag keeps
-    counting against the auditor (fail closed)."""
+    counting against the auditor (fail closed). CONFIRMED wins over REFUTED for the same line."""
     index: dict[tuple[str, int], str] = {}
     for item in adjudications:
         verdict = item.get("adjudication")
         line = item.get("line")
         if verdict in ("confirmed", "refuted") and isinstance(line, int) and not isinstance(line, bool):
-            index[(str(item.get("candidate_id")), line)] = verdict
+            key = (str(item.get("candidate_id")), line)
+            if index.get(key) != "confirmed":
+                index[key] = verdict
     return index
+
+
+# --- deterministic adjudication (see the module docstring) -------------------------------------------
+
+
+class CaseEvidence(NamedTuple):
+    """What the deterministic adjudicator knows about one audited seal, none of it from the auditor:
+    its lane, the facts it was sealed with, its sealed README, the lines of that README that are
+    deterministic derivations from those facts, and whether it re-certifies at the audited revision."""
+
+    lane: str
+    facts: Any
+    sealed: str
+    derived: frozenset[int]
+    certified: bool
+
+
+def contradicted_lines(text: str, facts: Any) -> frozenset[int]:
+    """The 1-based lines of ``text`` the claim detector proves contradict ``facts``."""
+    from repo_presenter.readme.validation.claims import claim_findings
+
+    lines: set[int] = set()
+    for finding in claim_findings(text, facts):
+        last = finding.last if finding.last is not None else finding.line
+        lines.update(range(finding.line + 1, last + 2))
+    return frozenset(lines)
+
+
+def derived_lines(lane: str, sealed: str, facts: Any, bundle: Path | None = None, original: str = "") -> frozenset[int]:
+    """The lines of ``sealed`` that are deterministic derivations from ``facts``.
+
+    Lane R: every non-blank line the renderer printed rather than an author (``scope.line_sections``
+    with the authored table rows, the production Lane R review's own split). Lane L: the lines the
+    correction changed, when ``corrections.json`` records a deterministic, zero-call run whose every
+    edit cites evidence that is all SUPPORTED; otherwise none."""
+    from repo_presenter.readme.review.llm_review import lane_l_changed_lines
+    from repo_presenter.readme.review.scope import authored_table_lines, line_sections
+
+    rows = sealed.splitlines()
+    if lane == "R":
+        sections = line_sections(sealed, True, authored_table_lines(sealed, facts))
+        return frozenset(n for n, (row, section) in enumerate(zip(rows, sections), 1)
+                         if row.strip() and section is None)
+    if bundle is None or not (bundle / "corrections.json").is_file() or not original:
+        return frozenset()
+    record = json.loads((bundle / "corrections.json").read_text(encoding="utf-8"))
+    stability = record.get("stability") or {}
+    edits = record.get("edits") or []
+    evidenced = all(
+        isinstance(edit, Mapping) and edit.get("evidence")
+        and all(isinstance(e, Mapping) and e.get("status") == "SUPPORTED" for e in edit["evidence"])
+        for edit in edits
+    )
+    if not edits or not evidenced or stability.get("deterministic") is not True or stability.get("provider_calls") != 0:
+        return frozenset()
+    return lane_l_changed_lines(sealed, original)
+
+
+def deterministic_adjudications(
+    findings: Sequence[Mapping[str, Any]],
+    texts: Mapping[str, str],
+    evidence: Mapping[str, CaseEvidence],
+    contradicted_by: Callable[[str, Any], frozenset[int]] = contradicted_lines,
+) -> list[dict[str, Any]]:
+    """One adjudication per flagged (case, line) the deterministic checks decide (module docstring)."""
+    out: list[dict[str, Any]] = []
+    done: set[tuple[str, int]] = set()
+    contradicted: dict[str, frozenset[int]] = {}
+    for item in findings:
+        case_id, line = str(item.get("candidate_id")), item.get("line")
+        if item.get("verdict") not in FLAGGED_VERDICTS or not isinstance(line, int) or (case_id, line) in done:
+            continue
+        case, text = evidence.get(case_id), texts.get(case_id)
+        if case is None or text is None:
+            continue
+        done.add((case_id, line))
+        if case_id not in contradicted:
+            contradicted[case_id] = contradicted_by(text, case.facts)
+        if line in contradicted[case_id]:
+            out.append({"candidate_id": case_id, "line": line, "adjudication": "confirmed",
+                        "rule": "claim_detector", "evidence": "the claim detector proves this line contradicts the pinned facts"})
+        elif case.certified and text == case.sealed and line in case.derived:
+            out.append({"candidate_id": case_id, "line": line, "adjudication": "refuted",
+                        "rule": "derived_from_pinned_facts",
+                        "evidence": f"unmodified re-certifying Lane {case.lane} seal; the line is a deterministic "
+                                    "derivation from the pinned facts and the claim detector finds no contradiction"})
+    return out
+
+
+def case_evidence(
+    case_index: Sequence[Mapping[str, Any]],
+    history: Mapping[tuple[str, str], Sequence[Any]],
+    recertified: Recertified,
+) -> dict[str, CaseEvidence]:
+    """``CaseEvidence`` for every case whose audited seal is readable in ``history``."""
+    from repo_presenter.core.facts import read_facts
+
+    found: dict[str, CaseEvidence] = {}
+    for entry in case_index:
+        repository, lane, revision = str(entry["repository"]), str(entry["lane"]), str(entry["revision"])
+        seal = next((s for s in reversed(list(history.get((repository, lane), ())))
+                     if s.revision == revision and getattr(s, "bundle", None) is not None and not s.error), None)
+        if seal is None:
+            continue
+        bundle = Path(seal.bundle)
+        try:
+            facts = read_facts(bundle / "facts.json")
+            sealed = (bundle / "README.md").read_text(encoding="utf-8")
+            original_path = bundle / "README.original.md"
+            original = original_path.read_text(encoding="utf-8") if original_path.is_file() else ""
+        except (OSError, ValueError):
+            continue
+        seal_revision, certified = recertified.get((repository, lane), ("", False))
+        found[str(entry["case_id"])] = CaseEvidence(
+            lane=lane, facts=facts, sealed=sealed,
+            derived=derived_lines(lane, sealed, facts, bundle, original),
+            certified=bool(certified) and seal_revision == revision,
+        )
+    return found
 
 
 def evaluate_gates(
     manifest: Sequence[Mapping[str, Any]],
     findings: Sequence[Mapping[str, Any]],
     adjudications: Sequence[Mapping[str, Any]] = (),
+    not_recertified: Collection[str] = (),
 ) -> tuple[dict[str, Any], list[str]]:
     """(gate numbers, reasons the audit fails). An empty reason list means every gate holds."""
     reasons: list[str] = []
@@ -106,7 +243,12 @@ def evaluate_gates(
     gates["evidence_validity"] = valid
     if not valid:
         reasons.append(f"evidence validity: {why}")
-    clean_ids = [str(m["candidate_id"]) for m in manifest if m.get("shape") == CLEAN_SHAPE]
+    excluded = set(not_recertified)
+    clean_ids = [str(m["candidate_id"]) for m in manifest
+                 if m.get("shape") == CLEAN_SHAPE and str(m["candidate_id"]) not in excluded]
+    gates["controls_not_recertified"] = sorted(
+        str(m["candidate_id"]) for m in manifest if m.get("shape") == CLEAN_SHAPE and str(m["candidate_id"]) in excluded
+    )
     try:
         recall = seeded_recall(findings, manifest)
         gates["seeded_recall"] = {"matched": recall.matched, "total": recall.total, "rate": recall.rate}
@@ -141,9 +283,14 @@ def build_records_document(
     adjudications: Sequence[Mapping[str, Any]] = (),
     verbatim_baseline: Callable[[str, int], bool] | None = None,
 ) -> dict[str, Any]:
-    gates, reasons = evaluate_gates(manifest, findings, adjudications)
-    adjudicated = _adjudication_index(adjudications)
     shapes = {str(m.get("candidate_id")): m.get("shape") for m in manifest}
+    not_recertified = []
+    for entry in case_index:
+        seal_revision, certified = recertified.get((str(entry["repository"]), str(entry["lane"])), ("", False))
+        if shapes.get(str(entry["case_id"])) == CLEAN_SHAPE and not (certified and seal_revision == str(entry["revision"])):
+            not_recertified.append(str(entry["case_id"]))
+    gates, reasons = evaluate_gates(manifest, findings, adjudications, not_recertified)
+    adjudicated = _adjudication_index(adjudications)
     lanes = {str(e["case_id"]): str(e["lane"]) for e in case_index}
     # R21/R20: a CONFIRMED defect on a Lane L line that is verbatim maintainer text in the baseline
     # README is a recorded residual (the candidate did not introduce it), not a blocker.
@@ -196,6 +343,7 @@ def build_records_document(
         "schema": SCHEMA, "seed_run_id": str(seed_run_id), "dry_run": dry_run,
         "gates": gates, "batch_passed": batch_passed, "failed_reasons": reasons,
         "missed_seeded": missed,
+        "adjudications": [dict(a) for a in adjudications],
         "records": records,
     }
 
@@ -236,7 +384,33 @@ def baseline_checker(case_index: Sequence[Mapping[str, Any]], candidates_dir: Pa
     return verbatim
 
 
-def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertified] | None = None) -> int:
+def recertified_with_history(remote: str, scratch: Path) -> tuple[Recertified, dict[tuple[str, str], list[Any]]]:
+    """``recertified_from_remote`` plus the seal history it read, kept readable under ``scratch``."""
+    from repo_presenter.recertify import portfolio_recertification
+
+    results, history = portfolio_recertification(
+        remote=remote, registry=REPO_ROOT / "data" / "registry.json", prompts_dir=REPO_ROOT / "prompts",
+        scratch=scratch,
+    )
+    return {(r.repository, r.lane): (r.revision, bool(r.certified)) for r in results}, history
+
+
+def read_texts(case_index: Sequence[Mapping[str, Any]], candidates_dir: Path) -> dict[str, str]:
+    """The audited case texts, as the auditor read them."""
+    texts = {}
+    for entry in case_index:
+        path = candidates_dir / f"{entry['case_id']}.md"
+        if path.is_file():
+            texts[str(entry["case_id"])] = path.read_text(encoding="utf-8")
+    return texts
+
+
+def main(
+    argv: Sequence[str] | None = None,
+    *,
+    recertify: Callable[[], Recertified] | None = None,
+    evidence: Callable[[Sequence[Mapping[str, Any]], Recertified], Mapping[str, CaseEvidence]] | None = None,
+) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--seed-run-id", required=True)
     parser.add_argument("--manifest", type=Path, required=True, help="seed_manifest.enc (plain JSON with --dry-run)")
@@ -261,7 +435,21 @@ def main(argv: Sequence[str] | None = None, *, recertify: Callable[[], Recertifi
     findings = json.loads(args.findings.read_text(encoding="utf-8"))
     case_index = json.loads(args.case_index.read_text(encoding="utf-8"))
     adjudications = json.loads(args.adjudications.read_text(encoding="utf-8")) if args.adjudications else []
-    recertified = (recertify or (lambda: recertified_from_remote(args.remote)))()
+    import tempfile
+
+    with tempfile.TemporaryDirectory(prefix="acceptance-writer-") as work:
+        history: dict[tuple[str, str], list[Any]] = {}
+        if recertify is not None:
+            recertified = recertify()
+        else:
+            recertified, history = recertified_with_history(args.remote, Path(work))
+        cases = (evidence or (lambda index, recert: case_evidence(index, history, recert)))(case_index, recertified)
+        derived = deterministic_adjudications(
+            findings, read_texts(case_index, args.case_index.parent / "candidates"), cases
+        )
+    print(f"deterministic adjudication: {sum(a['adjudication'] == 'confirmed' for a in derived)} confirmed, "
+          f"{sum(a['adjudication'] == 'refuted' for a in derived)} refuted")
+    adjudications = [*adjudications, *derived]
     document = build_records_document(
         args.seed_run_id, case_index, manifest, findings, recertified, dry_run=args.dry_run,
         adjudications=adjudications,
