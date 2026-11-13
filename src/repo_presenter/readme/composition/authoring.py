@@ -88,11 +88,21 @@ _FENCED_BLOCK = re.compile(r"^[ \t]*```([^\n`]*)\n(.*?)^[ \t]*```", re.DOTALL | 
 _COMMAND_FENCES = frozenset({"bash", "sh", "shell", "console", "zsh", "powershell", "pwsh", "cmd"})
 _MEMBER_CAP = 60
 _TYPE_BATCH = 40
+# An undocumented type has no verified statement of purpose, so its sentence states only what its
+# facts verify. Measured: the earlier objective asked for "what it represents" from the name, and
+# the independent review rejected every such gloss as unsupported (Aspose.3D-FOSS-for-Java hosted
+# run 43405236397, 19 factuality findings: "Matrix4 represents a 4x4 matrix ...", "NurbsCurve
+# represents a Non-Uniform Rational B-Spline curve ..."; Aspose.BarCode-FOSS-for-Python run
+# 43405225313: "PdfRenderer renders barcodes to PDF format").
 _TYPE_OBJECTIVE = (
-    "One sentence per public type in this batch, from its verified signature (its bases) and "
-    "its name: what it represents or does for a visitor. Never mechanical filler such as a "
-    "member count or 'extends X', never a count, never a claim the signature does not carry."
+    "One sentence per public type in this batch, stating only what its listed facts verify: its "
+    "kind and verified signature (its bases), the verified members listed with it, and what its "
+    "implementation facts record. Never a purpose, domain, format or behaviour inferred from the "
+    "type's or a member's name (no 'represents', 'specifies', 'is used for', 'renders ... to'), "
+    "never a count, never a claim no listed fact carries."
 )
+_TYPE_MEMBER_CAP = 8
+_REEXPORT_OF = re.compile(r"\bre-export of ([A-Za-z_][\w.]*)")
 # A type's own ``implementation`` facts (a member that always raises, one that only returns a
 # literal) travel with its batch. Measured on Aspose.BarCode-FOSS-for-Python (hosted run
 # 43394959529): the batch carried only the symbol fact, so a type whose ``render`` raises
@@ -704,17 +714,69 @@ def undocumented_types(facts: FactsDocument) -> list[Fact]:
     )
 
 
+def type_paths(type_fact: Fact, facts: FactsDocument) -> frozenset[str]:
+    """Every path ``type_fact``'s own member facts may be recorded under: its value, its
+    ``defined_at`` and ``public_paths``, and -- for a re-export the surface keeps as its own fact
+    (``python_surface.public_symbol_facts``' loose alias, evidence "re-export of X") -- the
+    paths of the class it names, followed through further re-exports. Measured on
+    Aspose.BarCode-FOSS-for-Python (run 43405225313): ``aspose_barcode_foss.PdfRenderer``
+    re-exports ``aspose_barcode_foss.renderers.PdfRenderer``, whose ``render`` raises
+    NotImplementedError, but the alias matched no member by its own path and got no facts."""
+    by_value: dict[str, list[Fact]] = {}
+    for fact in facts.by_kind("public_symbol"):
+        by_value.setdefault(fact.value, []).append(fact)
+    paths: set[str] = set()
+    pending = [type_fact]
+    while pending:
+        fact = pending.pop()
+        attributes = fact.attributes or {}
+        own = {fact.value, attributes.get("defined_at", "")}
+        own.update(p.strip() for p in attributes.get("public_paths", "").split(","))
+        targets = {
+            match.group(1)
+            for evidence in fact.evidence
+            for match in _REEXPORT_OF.finditer(evidence.detail or "")
+        }
+        for path in (own | targets) - {""}:
+            if path in paths:
+                continue
+            paths.add(path)
+            pending.extend(
+                other
+                for other in by_value.get(path, [])
+                if other.polarity == "SUPPORTED" and other is not fact
+            )
+    return frozenset(paths)
+
+
+def type_members(
+    type_fact: Fact, facts: FactsDocument, limit: int = _TYPE_MEMBER_CAP
+) -> list[str]:
+    """The verified public method names of ``type_fact`` (or the class an alias names), sorted,
+    at most ``limit``: the same method facts ``surface_members`` lets the prose spell."""
+    paths = type_paths(type_fact, facts)
+    names: set[str] = set()
+    for fact in facts.by_kind("public_symbol"):
+        detail = fact.evidence[0].detail or "" if fact.evidence else ""
+        owner, _, name = fact.value.rpartition(".")
+        if fact.polarity == "SUPPORTED" and "; method;" in detail and owner in paths:
+            names.add(name)
+    return sorted(names)[:limit]
+
+
 def type_implementation_facts(
     type_fact: Fact, facts: FactsDocument, limit: int = _TYPE_IMPLEMENTATION_CAP
 ) -> list[Fact]:
     """The SUPPORTED ``implementation`` facts about ``type_fact``'s own members (their ``member``
     is ``<type value>.<member>``; a nested type's members belong to that type, not this one): an
-    unconditional raise first, then a conditional one, then a constant return, at most ``limit``."""
-    prefix = f"{type_fact.value}."
+    unconditional raise first, then a conditional one, then a constant return, at most ``limit``.
+    A re-exported alias reads the facts of the class it names (``type_paths``)."""
+    paths = type_paths(type_fact, facts)
 
     def own(fact: Fact) -> bool:
         member = str((fact.attributes or {}).get("member", ""))
-        return member.startswith(prefix) and "." not in member[len(prefix) :]
+        owner, _, name = member.rpartition(".")
+        return bool(name) and owner in paths
 
     def rank(fact: Fact) -> tuple[int, str]:
         attributes = fact.attributes or {}
@@ -742,6 +804,7 @@ def _type_batches(
         batch = types[index : index + _TYPE_BATCH]
         implementation = {fact.id: type_implementation_facts(fact, facts) for fact in batch}
         detail = [found for fact in batch for found in implementation[fact.id]]
+        members = {fact.id: type_members(fact, facts) for fact in batch}
         ids = [fact.id for fact in batch]
         slots = tuple(f"type:{fact.id}" for fact in batch)
         slot_facts = {
@@ -758,6 +821,7 @@ def _type_batches(
                     if (fact.attributes or {}).get("signature")
                     else {}
                 ),
+                **({"members": members[fact.id]} if members[fact.id] else {}),
             }
             for fact in batch
         ]
