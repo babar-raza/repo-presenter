@@ -40,7 +40,11 @@ from repo_presenter.extractors.surface._vendor.aspose_extraction import (
     publication_probe,
 )
 from repo_presenter.core.facts import Fact, Polarity
-from repo_presenter.core.package_registry import install_verdict, points_at_repository
+from repo_presenter.core.package_registry import (
+    install_verdict,
+    points_at_repository,
+    vendor_owned,
+)
 from repo_presenter.core.retry import RETRY_POLICIES, RetryableOperationError, run_with_retry
 
 Fetch = Callable[..., Any]
@@ -427,6 +431,30 @@ def _nuget_source_urls(
     return (project.strip(),) if isinstance(project, str) and project.strip() else ()
 
 
+def _publishers(kind: str, package_name: str, live: dict[str, Any]) -> tuple[str, ...]:
+    """Who the registry says publishes ``package_name``: the probe's own ``verified_owner``
+    (PyPI author, NuGet authors, npm maintainer), and for Maven the group's verified domain
+    (``com.aspose`` -> ``https://aspose.com``: Maven Central admits a group only to the owner of
+    the domain it reverses). A Go module path is its own publisher (``github.com/<org>/...``).
+    crates.io's crate document names no owner, so a crate gets no publisher here and only the
+    exact repository match can confirm it."""
+    found: list[str] = []
+    # The vendored cargo adapter fills ``verified_owner`` with the crate's own id (its name),
+    # which names no publisher at all.
+    owner = live.get("verified_owner") if kind != "cargo" else None
+    if isinstance(owner, str) and owner.strip():
+        found.append(owner.strip())
+    elif isinstance(owner, list):
+        found.extend(str(item) for item in owner if item)
+    if kind == "maven" and ":" in package_name:
+        group = package_name.split(":", 1)[0].strip(".")
+        if group:
+            found.append("https://" + ".".join(reversed(group.split("."))))
+    elif kind == "go_modules":
+        found.append(package_name)
+    return tuple(found)
+
+
 def observe(
     ecosystem: str,
     package_name: str,
@@ -519,6 +547,13 @@ def observe(
         elif live.get("project_url"):
             urls = (str(live["project_url"]),)
         matched = match_repository(urls, repository, resolve_url) if urls else None
+        if matched is not True and vendor_owned(
+            urls, _publishers(kind, package_name, live), repository
+        ):
+            # Published by the product vendor from a vendor-owned repository or site (a renamed
+            # or legacy repository name included): the repository's own distribution
+            # (docs/DECISION_LOG.md, BL-002).
+            matched = True
     return RegistryObservation(
         registry=kind,
         name=package_name,

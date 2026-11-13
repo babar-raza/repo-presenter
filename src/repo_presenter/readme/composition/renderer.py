@@ -1300,15 +1300,20 @@ def _installation(context: RenderContext) -> list[str]:
         ):
             lines.extend(["", alternative, ""])
             lines.extend(_code_block(fence, body))
-    elif install is not None and package is not None:
-        detail = install.evidence[-1].detail or "the registry could not be checked"
-        registry = context.spec.registry
-        state = (
-            f"is not yet published on {registry}"
-            if install.polarity == "CONTRADICTED"
-            else f"could not be confirmed on {registry}"
-        )
-        lines.append(f"The package `{package.value}` {state} ({detail}).")
+    elif install is not None and package is not None and install.polarity == "CONTRADICTED":
+        # The registry's own answer ("not there"), stated plainly. The fact's evidence detail is
+        # the pipeline's internal record and is never printed (BL-002; BC-07 refuses it).
+        lines.append(f"`{package.value}` is not yet published on {context.spec.registry}.")
+    # An install the registry neither confirmed nor contradicted (unreadable, ambiguous, a name
+    # nothing ties to this repository, no registry at all) is not a reader-facing statement: R36
+    # omits the claim, and the source checkout below - when an executed example proved it - is
+    # the install the README gives (BL-002).
+    unconfirmed = (
+        install is not None
+        and package is not None
+        and install.polarity not in ("SUPPORTED", "CONTRADICTED")
+        and not lines
+    )
     executed = context.supported("example")
     repository = context.fact("identity:repository")
     if executed and repository is not None and not source_kind and not checkout_kind:
@@ -1317,10 +1322,16 @@ def _installation(context: RenderContext) -> list[str]:
         if command and context.spec.source_install_lead:
             lines.append("")
             lines.append(
-                f"To work from a source checkout instead, {context.spec.source_install_lead}:"
+                f"To work from a source checkout, {context.spec.source_install_lead}:"
+                if unconfirmed
+                else f"To work from a source checkout instead, {context.spec.source_install_lead}:"
             )
             lines.append("")
             lines.extend(_code_block("bash", command))
+    if unconfirmed and package is not None and not lines:
+        # Nothing verified to install with: one plain sentence keeps the section (and the live
+        # README's Installation heading) without stating anything about a registry (BL-002).
+        lines.append(f"No install command for `{package.value}` is available.")
     imported = [
         fact.value
         for fact in context.supported("import_path")

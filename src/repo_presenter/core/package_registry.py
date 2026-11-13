@@ -63,6 +63,108 @@ def points_at_repository(urls: Iterable[str], repository: str) -> bool | None:
     return False
 
 
+# A portfolio organization is named `<vendor>-<product>-foss` (data/registry.json: every entry's
+# owner is `aspose-<family>-foss`), so the vendor that publishes the product is the first segment.
+_VENDOR_ORGANIZATION = re.compile(r"^([a-z0-9]+)-[a-z0-9][a-z0-9-]*-foss$", re.IGNORECASE)
+_URL_HOST = re.compile(r"^(?:[a-z][a-z0-9+.-]*:)?//(?:[^@/\s]+@)?([^/:\s?#]+)", re.IGNORECASE)
+_SCP_HOST = re.compile(r"^[^@/\s]+@([^:/\s]+):", re.IGNORECASE)
+# The registry suffixes a vendor's own web presence uses (aspose.com, products.aspose.org).
+_VENDOR_SITE_SUFFIXES = ("com", "org")
+
+
+def vendor_of(repository: str | None) -> str | None:
+    """The product vendor of ``repository`` (``owner/name``), derived from its organization.
+
+    ``aspose-3d-foss/Aspose.3D-FOSS-for-Python`` -> ``aspose``: the portfolio registry admits only
+    `<vendor>-<product>-foss` organizations, and the vendor is the segment they all share. Any
+    other owner has no derivable vendor (None), and then only the exact repository match counts.
+    """
+    owner = (repository or "").strip().split("/", 1)[0]
+    found = _VENDOR_ORGANIZATION.fullmatch(owner)
+    return found.group(1).lower() if found else None
+
+
+def _host(url: str) -> str:
+    text = url.strip()
+    if text.lower().startswith("git+"):
+        text = text[4:]
+    found = _URL_HOST.match(text) or _SCP_HOST.match(text)
+    if found is None and "://" not in text and "/" in text:
+        # A scheme-less registry value (``github.com/aspose-3d/x``, a Go module path).
+        found = re.match(r"^([^/\s:]+)/", text)
+    return found.group(1).lower().removeprefix("www.") if found else ""
+
+
+def is_vendor_url(url: str, vendor: str) -> bool:
+    """Whether ``url`` points at a repository or site ``vendor`` owns.
+
+    A GitHub repository counts when its organization is the vendor's own or one of its
+    ``<vendor>-*`` organizations (``aspose-3d``, ``aspose-cells-foss``), whatever the repository's
+    current or legacy name; a site counts when its host is ``<vendor>.com`` / ``<vendor>.org`` or a
+    subdomain of one (``products.aspose.org``). Case-insensitive.
+    """
+    vendor = vendor.lower()
+    host = _host(url)
+    if not host:
+        return False
+    if host == "github.com":
+        found = _GITHUB_REPOSITORY.search(url)
+        owner = found.group(1).lower() if found else ""
+        return owner == vendor or owner.startswith(f"{vendor}-")
+    return any(
+        host == f"{vendor}.{suffix}" or host.endswith(f".{vendor}.{suffix}")
+        for suffix in _VENDOR_SITE_SUFFIXES
+    )
+
+
+def is_vendor_publisher(publishers: Iterable[str], vendor: str) -> bool:
+    """Whether a registry's publisher fields name ``vendor``: an author / maintainer / owner whose
+    name carries the vendor as a whole word (``Aspose``, ``Aspose Pty Ltd``), an e-mail at a vendor
+    domain, or a vendor-owned URL (a Maven group's domain, a Go module path)."""
+    vendor = vendor.lower()
+    word = re.compile(rf"(?<![a-z0-9]){re.escape(vendor)}(?![a-z0-9])", re.IGNORECASE)
+    for publisher in publishers:
+        text = str(publisher or "").strip()
+        if not text:
+            continue
+        if "@" in text and "/" not in text:
+            # One or more addresses (``Aspose Pty <sales@aspose.com>, Aspose PSD Team <...>``):
+            # only the domain counts, never the display name in front of it.
+            domains = [d.lower().rstrip(".") for d in re.findall(r"@([a-z0-9.-]+)", text, re.IGNORECASE)]
+            if any(
+                domain == f"{vendor}.{s}" or domain.endswith(f".{vendor}.{s}")
+                for domain in domains
+                for s in _VENDOR_SITE_SUFFIXES
+            ):
+                return True
+            continue
+        if "/" in text and is_vendor_url(text, vendor):
+            return True
+        if word.search(text):
+            return True
+    return False
+
+
+def vendor_owned(urls: Iterable[str], publishers: Iterable[str], repository: str | None) -> bool:
+    """Whether a published distribution is the repository's own through its vendor.
+
+    The registry's publisher is the product vendor (derived from the repository's organization,
+    ``vendor_of``) AND at least one of the registry's own project / source URLs points at a
+    repository or site that vendor owns. A caller asks only for the distribution name the manifest
+    declares or the maintainers' README installs, so that conjunct holds by construction.
+    Aspose.3D-FOSS-for-Python: PyPI ``aspose-3d-foss``, author ``Aspose``, homepage
+    ``github.com/aspose-3d/Aspose.3D-for-Python`` (the vendor's legacy repository). A package whose
+    publisher or URLs name anyone else stays unconfirmed.
+    """
+    vendor = vendor_of(repository)
+    if vendor is None:
+        return False
+    listed = [url for url in urls if url]
+    return any(is_vendor_url(url, vendor) for url in listed) and is_vendor_publisher(
+        publishers, vendor
+    )
+
+
 def install_verdict(
     *, conclusive: bool, published: bool | None, repository_matched: bool | None, summary: str
 ) -> tuple[Polarity, float, str]:
@@ -177,7 +279,8 @@ def is_unconfirmed_registry_install(text: str, packages: frozenset[str]) -> bool
     """Whether ``text`` (one command line) is the registry install of a package in ``packages``.
 
     BC-02 forbids printing such a command, so no inherited unit that carried it is owed it: the
-    Installation section states the package as unconfirmed and gives the source install instead."""
+    Installation section omits the registry claim and gives the source install instead (BL-002:
+    no unconfirmed state is ever printed as analysis wording)."""
     if not packages:
         return False
     words = text.strip().removeprefix("$ ").lower().split()
