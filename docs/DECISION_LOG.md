@@ -4811,3 +4811,30 @@ supervisor session oversees, diagnoses and fixes. Trust safeguards unchanged and
 `acceptance-audit` environment, every seed burned once, one open seed batch at a time, auditor findings frozen
 before scoring, the attested writer the only road to acceptance, owner-only budget caps. Owner authorization of the
 trust-boundary change (the supervisor-triggered audit chain) is this entry.
+## 2026-11-13: R14 drop rule — a confirmed findings-register row is citable evidence; a kept unit prints without exactly the text it confirms false
+
+Supervisor decision under R14/R36 (fixes only, R27). **Rule.** An OPEN Lane R findings-register row that carries a quote
+(the rows BC-18 enforces) is cited as `finding:<12 hex>` (`FindingRecord.citation_id`, a hash of the row's dedup key);
+binding admits the ID only for an OPEN row of the repository being judged, never where a SUPPORTED fact is required. A
+unit kept as written (VERIFIED_PRESERVE/MOVE, PRESERVE_ATTRIBUTED) that cites such a row prints without exactly the lines
+(code block) or sentences (paragraph) holding the quote (`must_correct.withheld_form`); everything else is printed as
+written, and a unit that would be left empty is not kept that way. The renderer, BC-05, BC-08, BC-17 and the reviewer
+read the same form, and BC-08/BC-17 exempt only what sits in the withheld text. A CORRECT_WITH_EVIDENCE paragraph that
+prints a register quote and true commands is kept that way (`dispositions._fold_register_corrections`): a Lane R
+correction is never authored (the authoring contract forbids literal commands), so it would lose every command.
+Evidence: PSD .NET run 43419183454 (CORRECT_WITH_EVIDENCE with nothing to cite), Cells Java run 43419171411 (`mvn
+javadoc:javadoc   # generates docs/apidocs/index.html` among true build commands), Cells Rust run 43419190710 (BC-08 on
+`cargo bench` / `cargo doc --no-deps --open` after the CI sentence was corrected). The S4 zero-call fold cites the row
+when both asks are refused. Regressions: `tests/readme/repair/test_s4_register_citation.py`.
+
+**Lead-in (BC-07).** A bare colon lead-in kept while the block it introduces is SUPERSEDE_REDUNDANT is superseded with
+it into the same section (`_settle_lead_in`): the block is printed by that section's own content, so the label
+introduced nothing (Cells Java `014.paragraph` "Gradle (Groovy DSL):", run 43419171411). The C2 restore fix covers only a
+lead-in the restore itself brings back. Regression: `tests/readme/reconciliation/test_lead_in_superseded_block.py`.
+
+**Kept unit printed with an unlinked anchor (class C4).** Placement prints an intra-document link to a section the plan
+does not render as its label; the reviewer judged the raw text, so `disposition_coverage` reported Email Cpp
+`030.paragraph` (PRESERVE_ATTRIBUTED) unprinted (run 43419173061, reproduced from its sealed bundle). The reviewer now
+also compares with intra-document links read as labels on both sides (every word must still be printed), and a finding
+whose quote is a unit's source text is routed to that unit's stored disposition. Attribution wording is not involved
+(R9 holds: nothing is printed for it). Regression: `tests/readme/review/test_kept_unit_unlinked_anchor.py`.

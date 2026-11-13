@@ -425,20 +425,57 @@ def unprinted_kept_units(
     The accounting stage passes ``False`` so it still records such a row explicitly as
     SUPERSEDE_REDUNDANT whenever it can; the reviewer's lenient reading is the backstop for the rows
     it cannot supersede (a link of the row printed nowhere else)."""
-    units = {
-        unit_id: kept_unit_form(unit_id, text, facts)
-        for unit_id, text in _inherited_units(facts).items()
-    }
+    from repo_presenter.readme.composition.placement import (
+        resolve_intra_document_anchors,
+    )
+    from repo_presenter.readme.validation.must_correct import cited_finding_quotes
+
+    raw = _inherited_units(facts)
     contradicted = _contradicted_links(facts)
+    unlinked_readme: str | None = None
+
+    def printed(unit: str, row: Mapping[str, Any]) -> bool:
+        # The renderer's own form (``placement.placements``): a kept code block citing an OPEN
+        # findings-register row prints without the lines that row confirms false.
+        text = kept_unit_form(
+            unit,
+            raw[unit],
+            facts,
+            cited_finding_quotes(row.get("fact_ids") or (), facts.repository),
+        )
+        destination = row.get("destination_section")
+        if _kept_text_printed(
+            text, unit, readme_text, destination, contradicted, slot_equivalence
+        ):
+            return True
+        if unit.endswith(".code_block"):
+            return False
+        # Placement also prints an intra-document link whose section the PLAN does not render as
+        # its bare label (``resolve_intra_document_anchors`` against the planned headings, applied
+        # after ``kept_unit_form``); the reviewer has no plan, so both sides are compared with
+        # every intra-document link read as its label. Measured (class C4, hosted Lane R run
+        # 43419173061, Aspose.Email-FOSS-for-Cpp): ``030.paragraph`` ("... under [Additional
+        # Examples](#additional-examples) below.") printed with the label unlinked and was
+        # reported "kept (PRESERVE_ATTRIBUTED) but its text is not printed in the README".
+        # Only link markup is relaxed: every word of the unit must still be printed.
+        nonlocal unlinked_readme
+        if unlinked_readme is None:
+            unlinked_readme = resolve_intra_document_anchors(readme_text, frozenset())
+        return _kept_text_printed(
+            resolve_intra_document_anchors(text, frozenset()),
+            unit,
+            unlinked_readme,
+            destination,
+            contradicted,
+            slot_equivalence,
+        )
+
     return [
         (unit, str(row.get("disposition")))
         for row in _dispositions_list(dispositions)
         if row.get("disposition") in KEPT_DISPOSITIONS
-        and (unit := str(row.get("unit_id", ""))) in units
-        and not _kept_text_printed(
-            units[unit], unit, readme_text, row.get("destination_section"), contradicted,
-            slot_equivalence,
-        )
+        and (unit := str(row.get("unit_id", ""))) in raw
+        and not printed(unit, row)
     ]
 
 

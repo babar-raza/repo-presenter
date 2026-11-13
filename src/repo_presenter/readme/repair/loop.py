@@ -90,6 +90,12 @@ from repo_presenter.readme.composition.planning import (
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
 from repo_presenter.readme.composition.renderer import line_counts, render_readme
 from repo_presenter.readme.validation.rules import effective_visible_lines_budget
+from repo_presenter.readme.validation.must_correct import (
+    cited_finding_quotes,
+    omission_holds,
+    open_finding_citations,
+    withheld_form,
+)
 from repo_presenter.readme.reconciliation.dispositions import (
     reconcile_checks,
     reconciliation_batch_facts,
@@ -509,14 +515,40 @@ def _measure_by_render(
     return measure
 
 
+def _withholds_quoted_lines(
+    unit: str,
+    text: str,
+    entry: Mapping[str, Any],
+    quotes: Collection[str],
+    repository: str | None,
+) -> bool:
+    """Whether a kept code block or paragraph stops printing every quote it holds because its
+    disposition cites the OPEN register rows confirming that text false: the renderer then prints
+    it without exactly those lines or sentences (``must_correct.withheld_form``)."""
+    held = [quote for quote in quotes if quote and _squash(quote) in _squash(text)]
+    cited = cited_finding_quotes(entry.get("fact_ids") or (), repository)
+    printed = _squash(withheld_form(unit, text, cited))
+    return bool(held) and omission_holds(unit, text, cited) and all(
+        _squash(quote) not in printed for quote in held
+    )
+
+
 def reject_printed_quote(
-    checks: Checks, scope: PatchScope, texts: Mapping[str, str], quotes: Collection[str]
+    checks: Checks,
+    scope: PatchScope,
+    texts: Mapping[str, str],
+    quotes: Collection[str],
+    repository: str | None = None,
 ) -> Checks:
     """Refuse an S4 revision that keeps printing the text the finding quotes.
 
     A kept disposition (``PLACED``) prints its unit as written, so a unit whose text holds the
     quote and is still kept, in this section or another, has not been repaired: moving a wrong
     command is not fixing it. Run after ``checks`` so the disposition judged is the normalised one.
+    The one kept form that does stop printing it: a code block or paragraph citing the OPEN
+    register rows whose quotes are its false lines or sentences, which prints without exactly
+    those (a register-backed correction that would lose true commands is already folded to that
+    form by the batch's own checks, ``dispositions._fold_register_corrections``).
     """
     quoted = [
         unit
@@ -534,8 +566,11 @@ def reject_printed_quote(
             if isinstance(entry, Mapping)
         }
         for unit in quoted:
-            disposition = by_unit.get(unit, {}).get("disposition")
-            if disposition in PLACED:
+            entry = by_unit.get(unit, {})
+            disposition = entry.get("disposition")
+            if disposition in PLACED and not _withholds_quoted_lines(
+                unit, texts.get(unit, ""), entry, quotes, repository
+            ):
                 errors.append(
                     f"{unit}: still {disposition}, which prints the quoted text as written; the "
                     "finding is about that text, so keeping it in any section leaves the defect"
@@ -552,11 +587,58 @@ _REWRITABLE_KINDS = frozenset({"paragraph", "list"})
 _REWRITE_RATIONALE_LIMIT = 160  # the reconciliation contract's rationale ceiling
 
 
+def _citations_for(text: str, citations: Mapping[str, str]) -> list[str]:
+    """The register citations (``citation_id -> quote``) whose quote ``text`` prints."""
+    return [cid for cid, quote in citations.items() if quote and _squash(quote) in _squash(text)]
+
+
+#: The dispositions that need a citation to stand and get the register row's when they have none.
+_CITATION_NEEDED = frozenset({"CORRECT_WITH_EVIDENCE", "OMIT_UNSUPPORTED"})
+_REGISTER_RATIONALE = "The findings register confirms the quoted text false. "
+
+
+def _cite_register_rows(
+    unit: str,
+    entry: dict[str, Any],
+    ids: Sequence[str],
+    text: str,
+    citations: Mapping[str, str],
+) -> bool:
+    """Make ``entry`` answer the register rows its unit prints, citing them as its evidence; False
+    when this entry is not one the register rows can settle (it is then left to the other folds
+    and to the refusal).
+
+    * CORRECT_WITH_EVIDENCE / OMIT_UNSUPPORTED citing nothing (the PSD .NET shape, hosted run
+      43419183454: "CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence") cites the rows.
+    * A code block or paragraph kept as written (the Cells Java shape, hosted run 43419171411:
+      ``mvn javadoc:javadoc   # generates docs/apidocs/index.html`` among true build commands)
+      cites the rows and keeps everything else: it prints without exactly the lines or sentences
+      the rows confirm false. Only when something is left to print (``omission_holds``); a unit
+      that is nothing but false text is left to the refusal.
+    """
+    disposition = entry.get("disposition")
+    cited = [str(fid) for fid in entry.get("fact_ids") or []]
+    holds = omission_holds(unit, text, [citations[cid] for cid in ids])
+    if disposition in _CITATION_NEEDED and not cited:
+        pass
+    elif disposition in PLACED and unit.endswith((".code_block", ".paragraph")):
+        if all(cid in cited for cid in ids) or not holds:
+            return False
+    else:
+        return False
+    entry["fact_ids"] = [*cited, *(cid for cid in ids if cid not in cited)]
+    entry["rationale"] = (_REGISTER_RATIONALE + str(entry.get("rationale") or ""))[
+        :_REWRITE_RATIONALE_LIMIT
+    ]
+    return True
+
+
 def rewrite_printed_quote(
     scope: PatchScope,
     texts: Mapping[str, str],
     quotes: Collection[str],
     original: Mapping[str, Any],
+    citations: Mapping[str, str] | None = None,
 ) -> Callable[[dict[str, Any]], dict[str, Any] | None] | None:
     """The last-resort ``recover`` for a reply ``reject_printed_quote`` refused: each quoted prose
     unit the reply still keeps as written is folded to VERIFIED_REWRITE, in place, keeping its
@@ -578,7 +660,12 @@ def rewrite_printed_quote(
         if unit.rsplit(".", 1)[-1] in _REWRITABLE_KINDS
         and any(quote and quote in texts.get(unit, "") for quote in quotes)
     ]
-    if not quoted:
+    cite = {
+        unit: ids
+        for unit in scope.unit_ids
+        if (ids := _citations_for(texts.get(unit, ""), citations or {}))
+    }
+    if not quoted and not cite:
         return None
     stored = {
         str(entry.get("unit_id")): entry
@@ -595,14 +682,22 @@ def rewrite_printed_quote(
             str(entry.get("unit_id")): entry for entry in entries if isinstance(entry, dict)
         }
         folded = False
-        for unit in quoted:
+        for unit in dict.fromkeys([*cite, *quoted]):
             entry = by_unit.get(unit)
             if entry is None and unit in stored:
                 # Left out of the reply: the merge would keep the stored disposition, so the
                 # fold is applied to a copy of it, inside the patch's own units.
                 entry = json.loads(json.dumps(stored[unit]))
                 entries.append(entry)
-            if entry is None or entry.get("disposition") not in _REWRITABLE_KEPT:
+                by_unit[unit] = entry
+            if entry is None:
+                continue
+            if unit in cite and _cite_register_rows(
+                unit, entry, cite[unit], texts.get(unit, ""), citations or {}
+            ):
+                folded = True
+                continue
+            if unit not in quoted or entry.get("disposition") not in _REWRITABLE_KEPT:
                 continue
             entry["disposition"] = "VERIFIED_REWRITE"
             entry["rationale"] = (
@@ -634,6 +729,52 @@ def scope_record(defect: Defect, units: Sequence[str]) -> dict[str, Any]:
         ]
     }
 
+def _register_citations(repository: str, quotes: Collection[str]) -> dict[str, str]:
+    """``citation_id -> quote`` for the OPEN register rows of ``repository`` this defect quotes
+    (BC-18's own failures carry the row's quote): the evidence the repair may cite for them."""
+    wanted = {_squash(quote) for quote in quotes if quote}
+    if not wanted:
+        return {}
+    return {
+        cid: row.quote
+        for cid, row in open_finding_citations(repository).items()
+        if _squash(row.quote) in wanted
+    }
+
+
+def _citable(contract: Mapping[str, Any], citations: Mapping[str, str]) -> dict[str, Any]:
+    """The patch contract with the register citations added to what a disposition may cite.
+
+    The contract's ``fact_ids`` enum lists only facts; the defect's own register rows are the
+    evidence BC-18 trusts, and binding admits them (OPEN rows of this repository only), so the
+    reply -- the model's, or ``rewrite_printed_quote``'s zero-call fold -- may cite them too."""
+    widened = json.loads(json.dumps(contract))
+    for node in _fact_id_nodes(widened):
+        items = node.get("items")
+        if isinstance(items, dict) and isinstance(items.get("enum"), list):
+            items["enum"] = [*items["enum"], *(c for c in citations if c not in items["enum"])]
+            if isinstance(node.get("maxItems"), int):
+                node["maxItems"] = max(node["maxItems"], len(citations))
+        elif node.get("maxItems") == 0:
+            node["items"] = {"type": "string", "enum": list(citations)}
+            node["maxItems"] = len(citations)
+    return widened
+
+
+def _fact_id_nodes(node: Any) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key == "fact_ids" and isinstance(value, dict):
+                found.append(value)
+            else:
+                found.extend(_fact_id_nodes(value))
+    elif isinstance(node, list):
+        for item in node:
+            found.extend(_fact_id_nodes(item))
+    return found
+
+
 def _named_units(rc: RepairContext, defect: Defect) -> list[str]:
     """The inherited units a defect is about: those its failure records name in their ``unit_id``
     field, else (a review finding, which carries a quote and no unit) those whose placed text holds
@@ -648,6 +789,23 @@ def _named_units(rc: RepairContext, defect: Defect) -> list[str]:
         for placement in placed if quote else ():
             if quote in placement.text and placement.unit_id not in named:
                 named.append(placement.unit_id)
+    if named:
+        return named
+    # A finding about a kept unit the README does NOT print (``disposition_coverage``, whose quote
+    # is the unit's own text; ``live_readme_loss``, whose quote is a heading, block or link of it)
+    # quotes the source text, which the printed form need not contain: placement unlinks an
+    # intra-document link to a section the plan omits, corrects names and counts. Measured on
+    # Aspose.Email-FOSS-for-Cpp, hosted Lane R run 43419173061: "030.paragraph is kept
+    # (PRESERVE_ATTRIBUTED) but its text is not printed" was unrepairable, "no stored disposition
+    # of an inherited unit is named by this defect". The quote is then matched against the units'
+    # source text, the same field-to-field test as above; a unit with no stored disposition is
+    # never named (the patch scope only revises stored dispositions).
+    stored = {str(entry.get("unit_id")) for entry in rc.dispositions.get("dispositions", [])}
+    for record in [defect.record, *defect.record.get("equivalent_findings", [])]:
+        quote = _squash(str(record.get("quote") or ""))
+        for fact in rc.facts.by_kind("inherited_unit") if quote and rc.facts else ():
+            if fact.id in stored and quote in _squash(fact.value) and fact.id not in named:
+                named.append(fact.id)
     return named
 
 
@@ -705,6 +863,9 @@ def _repair_reconciliation(
         for record in [defect.record, *defect.record.get("equivalent_findings", [])]
     ]
     texts = {fact.id: fact.value for fact in batch_facts.by_kind("inherited_unit")}
+    citations = _register_citations(rc.facts.repository, quotes)
+    if citations:
+        scope = replace(scope, contract=_citable(scope.contract, citations))
     checks = patch_checks(
         scope,
         reject_printed_quote(
@@ -712,6 +873,7 @@ def _repair_reconciliation(
             scope,
             texts,
             quotes,
+            rc.facts.repository,
         ),
     )
     outcome = _targeted_call(
@@ -722,7 +884,7 @@ def _repair_reconciliation(
         checks,
         patch=scope,
         stage_facts=batch_facts,
-        recover=rewrite_printed_quote(scope, texts, quotes, original),
+        recover=rewrite_printed_quote(scope, texts, quotes, original, citations),
     )
     if isinstance(outcome, JobError):
         return _unrepairable(defect, repairs, str(outcome))

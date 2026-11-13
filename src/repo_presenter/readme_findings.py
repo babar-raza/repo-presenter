@@ -24,6 +24,7 @@ left exactly as it was -- it ages, it is never silently dropped; only an explici
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass, replace
 from datetime import date
@@ -44,6 +45,12 @@ ROUTES: tuple[str, ...] = (LANE_L, LANE_R)
 STATUS_OPEN = "OPEN"
 STATUS_RESOLVED = "RESOLVED"
 STATUSES: tuple[str, ...] = (STATUS_OPEN, STATUS_RESOLVED)
+
+#: How a disposition cites a register row as its evidence (``FindingRecord.citation_id``): the
+#: row's stable key, hashed, under a prefix no fact kind uses. ``core/llm/binding.py`` accepts such
+#: an ID only when it names an OPEN must-correct row of the very repository being judged
+#: (``readme/validation/must_correct.py::open_finding_citations``), so a model cannot invent one.
+CITATION_PREFIX = "finding:"
 
 
 class FindingsRegisterError(ValueError):
@@ -98,6 +105,13 @@ class FindingRecord:
         """The dedup identity: a later report of the same repository and description is this same
         row, updated in place, never a duplicate."""
         return (self.repository, self.description)
+
+    def citation_id(self) -> str:
+        """The ID a disposition cites this row by: ``finding:`` and 12 hex digits of the sha256 of
+        its dedup key. Stable for as long as the row is (its key never changes), and unique per
+        repository, so a citation can never be read as another repository's row."""
+        digest = hashlib.sha256(f"{self.repository}\n{self.description}".encode())
+        return CITATION_PREFIX + digest.hexdigest()[:12]
 
     def to_record(self) -> dict[str, Any]:
         record: dict[str, Any] = {
