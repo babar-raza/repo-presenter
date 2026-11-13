@@ -32,6 +32,7 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "failing_example": "1",
     "format_overclaim": "2",
     "glance_layout": "1",
+    "listed_type_count": "1",
     "report_gaps": "1",
     "second_h1": "1",
     "stale_package_version": "5",

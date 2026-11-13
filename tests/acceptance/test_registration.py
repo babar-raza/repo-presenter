@@ -390,8 +390,8 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     # independent fact-check registered confirmed false claims in both, so they are NEEDS_REPAIR on BC-18.
     # 77 -> 76 (2026-11-13, BL-063..BL-065 baseline rewrite): Cells C++ and HTML Python Lane L are
     # NEEDS_REPAIR on the justified K05 listed-count defect (-2); Cells Go Lane R's newer seal
-    # re-certifies (+1).
-    assert registration.shortfall.clean_twin_achieved == 76
+    # re-certifies (+1). 76 -> 78 (2026-11-13, BL-065 listed_type_count): both re-certify again.
+    assert registration.shortfall.clean_twin_achieved == 78
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113

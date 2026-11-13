@@ -60,14 +60,17 @@ def test_the_absent_row_is_a_residual_when_the_count_edit_made_the_run_a_net_imp
     make_context: Any, make_facts: Any, make_fact: Any
 ) -> None:
     ctx, result, findings = _run(make_context, make_facts, make_fact)
-    assert [(e.original, e.replacement) for e in result.edits] == [("243", "303")]
+    # BL-065 (K05): "listed below" over 5 rows was a second pre-existing contradiction; the
+    # listed_type_count edit now states the listed number, so it is repaired, not carried.
+    assert [(e.original, e.replacement) for e in result.edits] == [
+        ("243", "303"),
+        ("listed below", "5 of them listed below"),
+    ]
     assert net_improvement(ctx, result)
     assert [f for f in findings if f.rule == RULE_CLAIMS] == []  # L-03 no longer blocks
     assert findings == []
     rows = [r for r in findings.residuals if r["kind"] == "claim_contradiction"]
-    # BL-065 (K05): "listed below" over 5 rows is a second pre-existing contradiction, carried as
-    # a residual too -- the count edit did not introduce it.
-    assert len(rows) == 2 and any("list only 5" in r["detail"] for r in rows)
+    assert len(rows) == 1 and not any("list only" in r["detail"] for r in rows)
     (row,) = [r for r in rows if "CSSDeclarationBlock" in r["detail"]]
     assert row["rule"] == RULE_CLAIMS
     assert row["line"] is not None
@@ -81,16 +84,21 @@ def test_residuals_are_recorded_in_the_holdouts_document_and_never_in_the_readme
     assert document["summary"]["fail"] == 0
     assert any("CSSDeclarationBlock" in r["detail"] for r in document["residuals"])
     assert "residual" not in result.corrected.lower()  # R9: the README text carries no such wording
-    assert result.corrected == README.replace("243", "303")  # only the evidenced edit changed it
+    # only the evidenced edits changed it
+    assert result.corrected == README.replace("243", "303").replace(
+        "listed below", "5 of them listed below"
+    )
 
 
 def test_without_any_edit_the_same_contradiction_still_blocks(
     make_context: Any, make_facts: Any, make_fact: Any
 ) -> None:
-    ctx, result, findings = _run(make_context, make_facts, make_fact, classes=243)
+    # The count line without its "listed below" claim (which listed_type_count would repair).
+    readme = README.replace(", listed below by module,", ",")
+    ctx, result, findings = _run(make_context, make_facts, make_fact, readme=readme, classes=243)
     assert result.edits == []  # the count is already right: nothing to improve
     assert not net_improvement(ctx, result)
-    # unchanged behavior: blocks (the absent row, and BL-065's "listed below" over 5 rows)
+    # unchanged behavior: blocks (the absent row)
     assert {f.rule for f in findings} == {RULE_CLAIMS}
     assert findings.residuals == []
     assert "residuals" not in holdouts_document(findings, idempotent=True, source_revision="0")
