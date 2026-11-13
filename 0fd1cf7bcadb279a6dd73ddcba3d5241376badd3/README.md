@@ -25,32 +25,31 @@ no Microsoft OneNote installation or COM automation involved.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing OneNote (.one) file"]
+    i1["An existing OneNote<br/>(.one) file"]
   end
   PRODUCT["Aspose.Note FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Parse the MS-ONE/OneStore binary container"]
-      c2["Traverse the Document/Page/Outline DOM"]
-      c3["Extract rich text and hyperlinks"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c4["Extract images and attached files"]
-      c5["Inspect tables, tags, and numbered lists"]
-      c6["Export pages to PDF"]
-    end
+    direction TB
+    c1["Parse the<br/>MS-ONE/OneStore binary<br/>container"]
+    c2["Traverse the<br/>Document/Page/Outline<br/>DOM"]
+    c3["Extract rich text and<br/>hyperlinks"]
+    c4["Extract images and<br/>attached files"]
+    c5["Inspect tables, tags,<br/>and numbered lists"]
+    c6["Export pages to PDF"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
   end
   subgraph Outputs["Outputs"]
     direction TB
     o1["PDF file"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

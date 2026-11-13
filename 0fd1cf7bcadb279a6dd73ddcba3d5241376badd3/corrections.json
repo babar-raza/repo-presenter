@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 2,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "ef660f575cfa79c32deb633f5c20643ee9dd9821573f13dd639b46565cac129f",
+  "corrected_sha256": "0c8e664c8d69ede17d5a707bca04d604191f413799e5f3cd25ef77608bf60390",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2217,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:27"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 28,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing OneNote (.one) file\"]\n  end\n  PRODUCT[\"Aspose.Note FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Parse the MS-ONE/OneStore binary container\"]\n      c2[\"Traverse the Document/Page/Outline DOM\"]\n      c3[\"Extract rich text and hyperlinks\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"Extract images and attached files\"]\n      c5[\"Inspect tables, tags, and numbered lists\"]\n      c6[\"Export pages to PDF\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF file\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1111 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 714 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing OneNote<br/>(.one) file\"]\n  end\n  PRODUCT[\"Aspose.Note FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Parse the<br/>MS-ONE/OneStore binary<br/>container\"]\n    c2[\"Traverse the<br/>Document/Page/Outline<br/>DOM\"]\n    c3[\"Extract rich text and<br/>hyperlinks\"]\n    c4[\"Extract images and<br/>attached files\"]\n    c5[\"Inspect tables, tags,<br/>and numbered lists\"]\n    c6[\"Export pages to PDF\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF file\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1473
+    },
     {
       "detector": "enterprise_edition_naming",
       "end": 19714,
@@ -17,7 +36,7 @@
           "value": "https://products.aspose.com/note/"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 451,
       "original": "the commercial product",
@@ -39,6 +58,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 1
   },
   "unapplied": [
