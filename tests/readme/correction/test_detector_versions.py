@@ -27,6 +27,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1",),
         "606536ac28df7e7d520a363c931701b3dd459d204cec700267a421dc15573079",
     ),
+    "dead_link.py": (
+        ("1",),
+        "d480a78c7be3887f66fac0c341ef91ba90edeb240bac3e603b3a0393c4b648d1",
+    ),
     "enterprise_edition.py": (
         ("3",),
         "3188e0ca8c12f622b766aa43559f441880e041f7a150a38da18d2d08e4f88bcc",
