@@ -1,29 +1,54 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 2,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "c1fce1751129792a393d56806efa09ac9ecac3c11e5a4ac5e7a9e89cb5df7ef9",
+  "corrected_sha256": "d8e96e8803306e615ee2a4cedf1812b90e1af3ba55fb38742d9baf1c52e8472c",
   "edits": [
     {
-      "detector": "stale_package_version",
-      "end": 5237,
+      "detector": "glance_layout",
+      "end": 2619,
       "evidence": [
         {
-          "fact_id": "package:published_version",
-          "kind": "package",
-          "status": "SUPPORTED",
-          "value": "26.1.0"
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
         }
       ],
       "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing FBX, COLLADA, OBJ, STL, PLY, or U3D file\"]\n    i2[\"An existing glTF file (.gltf/.glb)\"]\n    i3[\"An existing 3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Scene graph construction (Scene, Node hierarchy)\"]\n      c2[\"Primitive and IFC profile geometry\"]\n      c3[\"Material assignment (Lambert, Phong, PBR)\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"Skeletal animation (bones, keyframes, morph targets)\"]\n      c5[\"NURBS curve and surface definition\"]\n      c6[\"Format import and export\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"FBX, COLLADA, OBJ, STL, PLY, or U3D file\"]\n    o2[\"glTF file (.gltf/.glb)\"]\n    o3[\"3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)\"]\n    o4[\"AMF or HTML5 (Aspose 3D Web viewer) output\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1458 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 692 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing FBX,<br/>COLLADA, OBJ, STL,<br/>PLY, or U3D file\"]\n    i2[\"An existing glTF file<br/>(.gltf/.glb)\"]\n    i3[\"An existing 3MF or RVM<br/>file (Microsoft 3MF,<br/>AVEVA PDMS RVM)\"]\n  end\n  PRODUCT[\"Aspose.3D FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Scene graph<br/>construction (Scene,<br/>Node hierarchy)\"]\n    c2[\"Primitive and IFC<br/>profile geometry\"]\n    c3[\"Material assignment<br/>(Lambert, Phong, PBR)\"]\n    c4[\"Skeletal animation<br/>(bones, keyframes,<br/>morph targets)\"]\n    c5[\"NURBS curve and<br/>surface definition\"]\n    c6[\"Format import and<br/>export\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"FBX, COLLADA, OBJ,<br/>STL, PLY, or U3D file\"]\n    o2[\"glTF file (.gltf/.glb)\"]\n    o3[\"3MF or RVM file<br/>(Microsoft 3MF, AVEVA<br/>PDMS RVM)\"]\n    o4[\"AMF or HTML5 (Aspose<br/>3D Web viewer) output\"]\n    o1 ~~~ o3\n    o2 ~~~ o4\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1538
+    },
+    {
+      "detector": "type_description",
+      "end": 24123,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.threed.utilities.watermark",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.ThreeD.Utilities.Watermark"
+        },
+        {
+          "fact_id": "inherited_unit:061.list",
+          "kind": "inherited_unit",
+          "status": "SUPPORTED",
+          "value": "- Rendering is not implemented in this FOSS build — `Scene.Render`, `RenderFactory`, and the\n  `IRenderTarget`/`IRenderWindow` rendering pipeline all throw `Not"
+        }
+      ],
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
-      "line": 104,
-      "original": "is not published to NuGet",
-      "rationale": "line 104 says the package is not published to NuGet; the package registry already lists it at '26.1.0'",
-      "replacement": "is published to NuGet",
-      "start": 5212
+      "line": 451,
+      "original": "Embeds and extracts text watermarks in 3D files, with optional password protection.",
+      "rationale": "line 451: the cell 'Embeds and extracts text watermarks in 3D files, with optional password protection.' describes a stub as working; inherited_unit:061.list says so",
+      "replacement": "Not implemented.",
+      "start": 24040
     }
   ],
   "lane": "L",
@@ -39,6 +64,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 1
   },
   "unapplied": [

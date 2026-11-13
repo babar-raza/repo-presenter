@@ -40,10 +40,31 @@
   "lane": "L",
   "residuals": [
     {
-      "detail": "the README describes `Watermark` as working ('| Watermark | Embeds and extracts text watermarks in 3D files, with optional password protection.'), but inherited_unit:061.list states `Watermark` only throws (a stub): describe it as not implemented or omit it",
+      "detail": "the API table row for `Property` names `GetExtra`, a member of `Aspose.ThreeD.Property`, not of `Aspose.ThreeD.Formats.GLTF.Property`",
       "kind": "claim_contradiction",
-      "line": 450,
-      "quote": "| `Watermark` | Embeds and extracts text watermarks in 3D files, with optional password protection. |",
+      "line": 367,
+      "quote": "| `Property-GLTF` | Exposes `GetExtra`/`SetExtra` for arbitrary user data and `GetBindPoint` for animation bind points. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table row for `Property` names `SetExtra`, a member of `Aspose.ThreeD.Property`, not of `Aspose.ThreeD.Formats.GLTF.Property`",
+      "kind": "claim_contradiction",
+      "line": 367,
+      "quote": "| `Property-GLTF` | Exposes `GetExtra`/`SetExtra` for arbitrary user data and `GetBindPoint` for animation bind points. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the API table row for `VertexElementTangent` names `Tangents`, which no fact states (no member or type of the public surface has that name)",
+      "kind": "claim_contradiction",
+      "line": 440,
+      "quote": "| `VertexElementTangent` | Per-vertex tangent data, exposed via `Tangents`. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README says `RenderFactory` throws a not-implemented exception, but its body was read and holds no throw (it returns a value): describe what it really does",
+      "kind": "claim_contradiction",
+      "line": 576,
+      "quote": "- Rendering is not implemented in this FOSS build — `Scene.Render`, `RenderFactory`, and the\n  `IRenderTarget`/`IRenderWindow` rendering pipeline all throw `Not",
       "rule": "claim_contradiction"
     },
     {
@@ -96,7 +117,7 @@
       "rule": "lane_l_unrepaired_defect"
     }
   ],
-  "review_logic_version": "3",
+  "review_logic_version": "4",
   "schema_version": 1,
   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
   "summary": {

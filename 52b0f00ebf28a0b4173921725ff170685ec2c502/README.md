@@ -28,37 +28,38 @@ Universal 3D, as pure managed code with no native dependencies.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing FBX, COLLADA, OBJ, STL, PLY, or U3D file"]
-    i2["An existing glTF file (.gltf/.glb)"]
-    i3["An existing 3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"]
+    i1["An existing FBX,<br/>COLLADA, OBJ, STL,<br/>PLY, or U3D file"]
+    i2["An existing glTF file<br/>(.gltf/.glb)"]
+    i3["An existing 3MF or RVM<br/>file (Microsoft 3MF,<br/>AVEVA PDMS RVM)"]
   end
   PRODUCT["Aspose.3D FOSS for .NET"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Scene graph construction (Scene, Node hierarchy)"]
-      c2["Primitive and IFC profile geometry"]
-      c3["Material assignment (Lambert, Phong, PBR)"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c4["Skeletal animation (bones, keyframes, morph targets)"]
-      c5["NURBS curve and surface definition"]
-      c6["Format import and export"]
-    end
+    direction TB
+    c1["Scene graph<br/>construction (Scene,<br/>Node hierarchy)"]
+    c2["Primitive and IFC<br/>profile geometry"]
+    c3["Material assignment<br/>(Lambert, Phong, PBR)"]
+    c4["Skeletal animation<br/>(bones, keyframes,<br/>morph targets)"]
+    c5["NURBS curve and<br/>surface definition"]
+    c6["Format import and<br/>export"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["FBX, COLLADA, OBJ, STL, PLY, or U3D file"]
+    o1["FBX, COLLADA, OBJ,<br/>STL, PLY, or U3D file"]
     o2["glTF file (.gltf/.glb)"]
-    o3["3MF or RVM file (Microsoft 3MF, AVEVA PDMS RVM)"]
-    o4["AMF or HTML5 (Aspose 3D Web viewer) output"]
+    o3["3MF or RVM file<br/>(Microsoft 3MF, AVEVA<br/>PDMS RVM)"]
+    o4["AMF or HTML5 (Aspose<br/>3D Web viewer) output"]
+    o1 ~~~ o3
+    o2 ~~~ o4
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
@@ -101,7 +102,7 @@ The library (`src/main/Aspose.ThreeD/Aspose.ThreeD.csproj`) targets `net6.0`, `n
 `net10.0`, and `netcoreapp3.1` in Release builds, so it can be consumed by any compatible modern
 .NET runtime. The repository also contains a separate console conversion tool
 (`src/converter/Converter.csproj`, package id `Aspose.3D.Converter`) that references the library
-as a project; it is published to NuGet.
+as a project; it is not published to NuGet.
 
 ## Dependencies
 
@@ -448,7 +449,7 @@ saving via the `FileFormat` registry.
 | `VertexElementWeight` | Per-vertex blend weight. |
 | `VertexField` | Describes a custom vertex attribute's data type, semantic, alias, index, offset, and size. |
 | `Viewport` | One or more render viewports for a scene (rendering is out of scope in this FOSS build). |
-| `Watermark` | Embeds and extracts text watermarks in 3D files, with optional password protection. |
+| `Watermark` | Not implemented. |
 | `WindowHandle` | Encapsulated window handle for different platforms. |
 | `XLoadOptions` | Load options for DirectX `.x` files. |
 | `ZShape` | IFC-compatible Z-shape profile defined by parameters. |
