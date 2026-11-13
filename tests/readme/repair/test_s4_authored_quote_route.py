@@ -129,7 +129,16 @@ def test_a_quote_no_task_prints_stays_unrepairable(rc: Any, tmp_path: Any) -> No
         defect.label,
         defect.section_id,
         defect.stage,
-        {**defect.record, "quote": "text only the renderer prints"},
+        {
+            **defect.record,
+            "quote": "text only the renderer prints",
+            # Every failure's own quote is a finding (``loop._quoted_findings``), so the
+            # unprinted quote is the failures' too.
+            "failures": [
+                {**failure, "quote": "text only the renderer prints"}
+                for failure in defect.record["failures"]
+            ],
+        },
     )
     assert loop_module.repair_defect(rc, defect, repairs) is False
     entry = repairs.attempts[defect.fingerprint]

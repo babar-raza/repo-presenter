@@ -5402,3 +5402,40 @@ private helper), conditional throws, the OBJ str-to-'wb' runtime bug; K06 transi
 needs the dependency's own nuspec) and the Words test-project development dependencies.
 
 Backlog: BL-062, BL-066, BL-074
+
+## 2026-11-13: BL-076 — the targeted-repair failure classes of four hosted Lane R runs, fixed once in the repair stage
+
+**Evidence.** `gh run view <id> --log` of 43473807336 (Cells C++), 43473803090 (Cells .NET), 43473790998 (3D .NET),
+43473796319 (3D Python); the run artifacts could not be downloaded (blob host refused by this session's proxy), so the
+sealed bundle refs `refs/repository-presenter-state/bundles/<repo>` supplied the README, units, dispositions and facts.
+
+| Run | Attempt | Logged outcome | Class | What printed the text | Root cause |
+|---|---|---|---|---|---|
+| Cells C++ | S4 BC-18 `050.list` (FormulaException row) | rejected twice, `dispositions[19].rationale` too long | R1 | inherited unit | stored batch held the 228-char `UNPROVEN_BUILD_RATIONALE` the fold wrote after the schema judged it (contract maxLength 160); every merge failed on that untouched unit |
+| Cells C++ | S4 BC-18 `041.paragraph` (195 public types) | same | R1 | inherited unit (count corrected by renderer) | same |
+| Cells C++ | S4 BC-18 unit-less (LoadFormat/SaveFormat) | "no stored disposition ..." | R2 | authored `scope_limitations/limitation:1` | quote carries renderer code spans; stored unit has none, so no match |
+| Cells .NET | S4 BC-18 unit-less group | "no stored disposition ..." | R2+R3 | led by `- \`Borders\`: ...` (renderer, docstring of `public_symbol:aspose.cells_foss.style.borders`); behind it authored samples/contributor links | only `record["quote"]` (first failure) routed; first was renderer-printed; others code-spanned |
+| Cells .NET | S6 BC-18 (no-op) | "matches the causal stage's own output unchanged" | R3 (+R2) | member bullets Borders/Font/Save from docstrings; Style hub authored but code-spanned | the model was given a section whose units do not print the lines; no unit flagged |
+| Cells .NET | S6 key caps, S6 contributor, S4 `005.paragraph` | repaired | — | authored / inherited | — (contributor re-printed after the round's recomposition; not determinable without the artifact) |
+| 3D .NET | S4 BC-17 / BC-05 `050.table` | rejected twice, "still SUPERSEDE_REDUNDANT" | R4 | inherited table | 7 OPEN register rows quote rows of this table: keeping it prints them (BC-18), superseding loses the true rows' members (BC-05/BC-17); withheld forms existed only for code blocks/paragraphs, so no disposition could pass and the zero-call restore was refused |
+| 3D .NET | S6 BC-18 no-op x2, escalation | no-op / slot set | R3/other | renderer Core API rows (`\`Chunk\` \| Represents ...`) and authored scope | renderer-printed rows; scope escalation unrelated |
+| 3D Python | S4 BC-17 / BC-05 `060.table`, `010.list` | rejected twice | R4 | inherited table / list | 5 + 1 register rows inside them, same as 3D .NET |
+| 3D Python | S6 BC-18 (unit not the finding's own; no-op) | rejected | R2 | authored scope units | unflagged because of code spans |
+
+**Decision (fixes in the existing repair stage, R27; zero calls).** R1: the omission rationales are within the
+contract, `reconcile_checks` bounds every rationale it stores (`bound_rationales`, word boundary, prefix kept), a stored
+batch is bounded before a patch merges into it, and a reply rejected only for rationale length is bounded by the S4
+recover; the rationale is internal (never rendered, withheld from the reviewer), so no README text changes. R2: quotes
+match units with code-span backticks ignored (`_printed`), every failure quote of a merged record is its own finding,
+coherent units are searched too, and the repair packet names `printed_by_slots`. R3: a line the renderer prints from a
+SUPPORTED fact's docstring, held by no unit, is recorded `unrepairable` with `facts_defects` ("printed by the renderer
+from fact X; fix the facts") and never sent to the model. R4: a kept table/list citing OPEN register rows prints without
+exactly those rows/items (`must_correct.withheld_rows_form`, applied by placement and the reviewer), and the zero-call
+restore cites the rows a restored unit prints (or does not restore a unit that would print nothing else).
+`REPAIR_LOGIC_VERSION` 3 so the changed logic gets its attempt. BL-004 section fit played no part (it touches only
+link lists and license paragraphs; both failing units are a table and a capability list).
+
+**Does NOT decide.** The Cells .NET docstring facts (Style.Borders/Font private setters, Workbook.Save) are facts
+defects for the extractor owners. Done only after the four cells re-run under this code (R41).
+
+Backlog: BL-076

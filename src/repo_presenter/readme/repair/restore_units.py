@@ -53,6 +53,25 @@ _SHELL_RENDERED = frozenset({"heading", "badge_row", "html_block"})
 _GENERATED_ONLY_DESTINATIONS = frozenset({"documentation_resources"})
 
 
+def _printed_register_rows(unit_id: str, text: str, repository: str | None) -> list[str] | None:
+    """The OPEN findings-register rows (``citation_id``) whose quote ``text`` prints; ``None``
+    when citing them would leave nothing of the unit to print (``must_correct.omission_holds``)."""
+    from repo_presenter.readme.validation.must_correct import (
+        omission_holds,
+        open_finding_citations,
+    )
+
+    squashed = " ".join(text.split())
+    rows = {
+        cid: row.quote
+        for cid, row in open_finding_citations(repository).items()
+        if " ".join(row.quote.split()) and " ".join(row.quote.split()) in squashed
+    }
+    if not rows:
+        return []
+    return list(rows) if omission_holds(unit_id, text, list(rows.values())) else None
+
+
 def failing_unit_ids(
     details: Sequence[str], checks: Collection[str] = ("BC-05", "BC-17")
 ) -> list[str]:
@@ -324,6 +343,16 @@ def restore_lost_units(
             )
             entry["destination_section"] = destination
             continue
+        # A unit printing a quote the findings register confirms false is kept citing that row, so
+        # it prints without exactly that row, item, line or sentence (``withheld_form``); restored
+        # as written it traded BC-05/BC-17 for BC-18 and was refused, leaving no disposition able
+        # to pass (3D .NET 050.table, 3D Python 060.table / 010.list, hosted runs 43473790998 and
+        # 43473796319). A unit that would print nothing else is not restored.
+        register = _printed_register_rows(unit_id, unit.value, facts.repository)
+        if register is None:
+            if skipped is not None:
+                skipped.append({"unit_id": unit_id, "reason": "register_false_throughout"})
+            continue
         printed = kept_table_form(unit.value, facts) if unit_id.endswith(".table") else unit.value
         if unsafe_html_failures(printed):
             # Raw HTML BC-06 forbids outside a fence or a code span (<base>, <meta>, <iframe>, ...)
@@ -342,6 +371,11 @@ def restore_lost_units(
         )
         entry["disposition"] = disposition
         entry["destination_section"] = destination
+        if register:
+            entry["fact_ids"] = [
+                *(entry.get("fact_ids") or []),
+                *(cid for cid in register if cid not in (entry.get("fact_ids") or [])),
+            ]
         if disposition == "VERIFIED_PRESERVE" and not entry.get("fact_ids"):
             entry["fact_ids"] = []
         marker = (
