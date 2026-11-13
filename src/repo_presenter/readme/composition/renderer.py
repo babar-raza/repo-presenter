@@ -1034,7 +1034,9 @@ def _stub_marked(context: RenderContext, fact: Fact, description: str) -> str:
 
 def _member_summary(context: RenderContext, fact: Fact) -> str:
     """A hub member's own documentation summary, table-safe, or an empty string."""
-    docstring = (fact.attributes or {}).get("docstring") or ""
+    from repo_presenter.readme.validation.surface_claims import caller_true_summary
+
+    docstring = caller_true_summary((fact.attributes or {}).get("docstring") or "", fact)
     if not docstring:
         return ""
     text, _ = elide_noncanonical(docstring, context.name)

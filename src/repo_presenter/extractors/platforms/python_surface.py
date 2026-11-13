@@ -45,6 +45,12 @@ class PublicSymbol:
     reexported_from: str | None = None
     docstring: str | None = None  # the first line of the symbol's own docstring
     signature: str | None = None  # the definition line as the source states it
+    #: BL-063 (K03): for a method entry, what it really is -- "property" for an ``@property`` (or
+    #: ``cached_property``), "method" otherwise -- and, for a property, whether a ``@<name>.setter``
+    #: lets a caller assign it ("true"/"false"). Aspose.3D Python's ``GlobalTransform`` exposes
+    #: five read-only properties a README sold "for direct manipulation" (GlobalTransform.py:16-20).
+    member_kind: str | None = None
+    settable: str | None = None
 
 
 def _first_docstring_line(node: ast.AST) -> str | None:
@@ -214,12 +220,22 @@ def _methods(
     """The public methods a class body defines, each once, in source order."""
     found: list[PublicSymbol] = []
     seen: set[str] = set()
+    setters = {
+        decorator.value.id
+        for item in node.body
+        if isinstance(item, ast.FunctionDef | ast.AsyncFunctionDef)
+        for decorator in item.decorator_list
+        if isinstance(decorator, ast.Attribute)
+        and decorator.attr == "setter"
+        and isinstance(decorator.value, ast.Name)
+    }
     for item in node.body:
         if not isinstance(item, ast.FunctionDef | ast.AsyncFunctionDef):
             continue
         if item.name.startswith("_") or item.name in seen:
             continue
         seen.add(item.name)
+        is_property = any(_is_property_decorator(d) for d in item.decorator_list)
         found.append(
             PublicSymbol(
                 f"{module}.{node.name}.{item.name}",
@@ -231,9 +247,23 @@ def _methods(
                 public_by,
                 docstring=_first_docstring_line(item),
                 signature=_signature(item),
+                member_kind="property" if is_property else "method",
+                settable=("true" if item.name in setters else "false") if is_property else None,
             )
         )
     return found
+
+
+_PROPERTY_DECORATORS = frozenset({"property", "cached_property", "abstractproperty"})
+
+
+def _is_property_decorator(decorator: ast.expr) -> bool:
+    """``@property``, ``@functools.cached_property``, ``@abc.abstractproperty`` and the like."""
+    if isinstance(decorator, ast.Name):
+        return decorator.id in _PROPERTY_DECORATORS
+    if isinstance(decorator, ast.Attribute):
+        return decorator.attr in _PROPERTY_DECORATORS
+    return False
 
 
 def _origin_kind(
@@ -450,6 +480,10 @@ def public_symbol_facts(surface: PublicSurface) -> list[Fact]:
             attributes["signature"] = symbol.signature
         if symbol.docstring:
             attributes["docstring"] = symbol.docstring
+        if symbol.member_kind:
+            attributes["member_kind"] = symbol.member_kind
+        if symbol.settable:
+            attributes["settable"] = symbol.settable
         attributes.update(extra)
         verified = symbol.kind != "unknown" and "shadowed_by" not in extra
         facts.append(
