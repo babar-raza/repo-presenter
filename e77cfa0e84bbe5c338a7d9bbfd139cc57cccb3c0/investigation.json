@@ -1,0 +1,304 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:go_version",
+      "dependency:none",
+      "build_test_asset:build-command",
+      "build_test_asset:test-command",
+      "install_command:go"
+    ],
+    "text": "Go developers building applications that need to generate, read, or modify Excel spreadsheets programmatically without external native dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint"
+      ],
+      "text": "Read and write cell values using A1-style references with Cells.Get and Cells.Set, supporting string, float64, int, and bool types.",
+      "title": "Cell data read/write"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.getformula",
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror"
+      ],
+      "text": "Store formulas with Cell.SetFormula and evaluate them using CalculateFormula, supporting 22 functions, arithmetic, comparison, and cross-sheet references.",
+      "title": "Formula evaluation"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:newstyle",
+        "public_symbol:style",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.getstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment"
+      ],
+      "text": "Apply font, fill, alignment, border, and number format settings via Style objects and Cell.SetStyle, with automatic style deduplication on save.",
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addmergedcells",
+        "public_symbol:worksheet.frozencol",
+        "public_symbol:worksheet.frozenrow",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.insertrow",
+        "public_symbol:worksheet.deleterow",
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.addhyperlink"
+      ],
+      "text": "Support merged cells, freeze panes, auto-filters, row/column insert/delete, column widths, row heights, and hyperlinks.",
+      "title": "Worksheet layout features"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "example:005",
+        "public_symbol:newtable",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addconditionalformatting",
+        "public_symbol:pivottable",
+        "public_symbol:worksheet.addpivottable"
+      ],
+      "text": "Create and manage structured tables, data validation rules, conditional formatting (color scales, data bars, icon sets, top-N), and pivot tables.",
+      "title": "Structured data features"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addchart",
+        "public_symbol:chart",
+        "public_symbol:worksheet.addpicture",
+        "public_symbol:picture"
+      ],
+      "text": "Add charts (bar, line, pie, scatter, area) with axis titles and legends, and embed PNG or JPEG pictures into worksheets.",
+      "title": "Charting and embedding"
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.importfromcsv",
+        "format:input.csv",
+        "format:output.csv"
+      ],
+      "text": "Export workbooks to CSV with Workbook.ExportToCSV and import CSV with Workbook.ImportFromCSV, supporting custom delimiters and type inference.",
+      "title": "CSV import/export"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadfrom",
+        "public_symbol:saveworkbook",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "example:007"
+      ],
+      "text": "Read and write workbooks from any io.Reader/io.Writer, including HTTP responses, zip entries, and network streams, using LoadFrom, SaveTo, and StreamingReader.",
+      "title": "Streaming and I/O"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go",
+        "install_command:go"
+      ],
+      "text": "Cell references are A1-style strings only; tuple/array indices are not supported."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror"
+      ],
+      "text": "CalculateFormula supports 22 functions, arithmetic/comparison operators, and same-workbook cross-sheet references; external-workbook references and full Excel function library are not included."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timetoserial",
+        "public_symbol:serialtotime"
+      ],
+      "text": "Number formats use the 1900 date system only; 1904 date system is not supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chart",
+        "public_symbol:pivottable"
+      ],
+      "text": "Charts do not support 3D, combo charts, secondary axes, data labels, or gridline styling; pivot tables lack calculated fields, grouping, and custom aggregations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vbaproject",
+        "public_symbol:workbook.getvbaproject"
+      ],
+      "text": "Hidden rows/columns, outline grouping, print setup, and sheet protection are not modeled; VBA support is storage-only."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.sourcexml"
+      ],
+      "text": "Modified content regenerates XML; unmodified content reuses original XML byte-for-byte on round-trip."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "dependency:none",
+        "package:go_version",
+        "format:input.xlsx",
+        "format:output.xlsx"
+      ],
+      "text": "Enables programmatic Excel file creation and editing in Go using a pure-Go implementation with no third-party dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader",
+        "public_symbol:streamingreader.processrows"
+      ],
+      "text": "Supports low-memory streaming of large Excel files via row-by-row processing without loading the entire workbook into memory."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror",
+        "public_symbol:cell.setformula"
+      ],
+      "text": "Provides a built-in formula engine to evaluate common Excel formulas and propagate error values like #DIV/0!."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadwithpassword",
+        "public_symbol:loadfromwithpassword",
+        "public_symbol:workbook.setpassword",
+        "public_symbol:workbook.checkpassword"
+      ],
+      "text": "Allows round-tripping of Excel workbooks with password protection using ECMA-376 Agile Encryption."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "package:go_version",
+      "package:name",
+      "package:published_version",
+      "format:input.xlsx",
+      "format:output.xlsx",
+      "dependency:none"
+    ],
+    "text": "Aspose.Cells FOSS for Go is a pure-Go library for creating, reading, and writing Excel workbooks in ECMA-376 Office Open XML formats with no third-party dependencies."
+  },
+  "uncertainties": [
+    "The exact set of supported formula functions beyond the 22 listed is not fully enumerated in the fact dossier.",
+    "Whether conditional formatting supports Excel 2010+ extensions like x14 gradient data bars is not confirmed by the fact dossier.",
+    "The behavior of InsertRow/DeleteRow on formula text rewriting is stated as not rewriting, but the full scope of range updates is not detailed.",
+    "The exact behavior of streaming reader when encountering malformed or unsupported cell types is not specified.",
+    "Whether the library supports .xlsm format beyond .xlsx is not explicitly confirmed in the fact dossier.",
+    "The exact encryption parameters for password-protected workbooks beyond SHA-512/AES-256-CBC are not detailed.",
+    "Whether the library supports embedded OLE objects beyond pictures is not specified.",
+    "The exact behavior of the formula engine on circular references is not documented in the fact dossier."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:newworkbook",
+        "public_symbol:workbook.worksheets",
+        "public_symbol:worksheet.cells",
+        "public_symbol:cells.set",
+        "public_symbol:workbook.save"
+      ],
+      "name": "Create and save a workbook",
+      "text": "Create a new workbook with NewWorkbook, access the first worksheet, write cell values using Cells.Set, and save to disk with Workbook.Save."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:loadworkbook",
+        "public_symbol:worksheet.cells",
+        "public_symbol:cells.get",
+        "public_symbol:cell.asstring",
+        "public_symbol:cells.set",
+        "public_symbol:workbook.save"
+      ],
+      "name": "Load, modify, and save an existing workbook",
+      "text": "Load an existing workbook with LoadWorkbook, read a cell value with Cell.AsString, update it with Cells.Set, and save the modified workbook."
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader"
+      ],
+      "name": "Stream large Excel files row-by-row",
+      "text": "Use NewStreamingReader to process large Excel files with ProcessRows, accumulating totals or filtering data without loading the full workbook into memory."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:newstyle",
+        "public_symbol:style",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.getstyle"
+      ],
+      "name": "Apply styles and formatting",
+      "text": "Create Style objects with font, fill, alignment, and border settings, then apply them to cells using Cell.SetStyle."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.importfromcsv",
+        "public_symbol:workbook",
+        "format:input.csv"
+      ],
+      "name": "Import data from CSV",
+      "text": "Import data from a CSV file into a new workbook using Workbook.ImportFromCSV, specifying the delimiter and target sheet name."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:datavalidation",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "name": "Add data validation rules",
+      "text": "Create a DataValidation object with type, formula, and error settings, then add it to a worksheet range using Worksheet.AddDataValidation."
+    }
+  ]
+}

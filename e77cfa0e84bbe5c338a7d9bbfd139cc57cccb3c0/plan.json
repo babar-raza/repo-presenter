@@ -1,0 +1,572 @@
+{
+  "additional_example_ids": [
+    "example:004",
+    "example:005",
+    "example:007",
+    "example:008",
+    "example:009",
+    "example:010"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cells.all",
+        "public_symbol:cells.remove"
+      ],
+      "symbol_fact_id": "public_symbol:cells"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint",
+        "public_symbol:cell.formula",
+        "public_symbol:cell.getformula",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.getstyle",
+        "public_symbol:cell.setstyle"
+      ],
+      "symbol_fact_id": "public_symbol:cell"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newworkbook",
+        "public_symbol:loadworkbook",
+        "public_symbol:workbook.worksheets",
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.saveto",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.importfromcsv"
+      ],
+      "symbol_fact_id": "public_symbol:workbook"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.cells",
+        "public_symbol:worksheet.addmergedcells",
+        "public_symbol:worksheet.frozencol",
+        "public_symbol:worksheet.frozenrow",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.insertrow",
+        "public_symbol:worksheet.deleterow",
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.addhyperlink"
+      ],
+      "symbol_fact_id": "public_symbol:worksheet"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newstyle",
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.border",
+        "public_symbol:style.alignment",
+        "public_symbol:style.numberformat"
+      ],
+      "symbol_fact_id": "public_symbol:style"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datavalidation.type",
+        "public_symbol:datavalidation.formula1",
+        "public_symbol:datavalidation.operator",
+        "public_symbol:worksheet.adddatavalidation"
+      ],
+      "symbol_fact_id": "public_symbol:datavalidation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:conditionalformatting.ref",
+        "public_symbol:conditionalformatting.rules",
+        "public_symbol:worksheet.addconditionalformatting"
+      ],
+      "symbol_fact_id": "public_symbol:conditionalformatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newtable",
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:table.stylename",
+        "public_symbol:worksheet.addtable"
+      ],
+      "symbol_fact_id": "public_symbol:table"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chart.type",
+        "public_symbol:chart.series",
+        "public_symbol:chart.title",
+        "public_symbol:chart.legend",
+        "public_symbol:worksheet.addchart"
+      ],
+      "symbol_fact_id": "public_symbol:chart"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pivottable.ref",
+        "public_symbol:pivottable.rowfields",
+        "public_symbol:pivottable.colfields",
+        "public_symbol:pivottable.datafields",
+        "public_symbol:worksheet.addpivottable"
+      ],
+      "symbol_fact_id": "public_symbol:pivottable"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newpicture",
+        "public_symbol:picture.data",
+        "public_symbol:picture.setanchor",
+        "public_symbol:worksheet.addpicture"
+      ],
+      "symbol_fact_id": "public_symbol:picture"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamingreader.processrowswithcolumns",
+        "public_symbol:streamingreader.processrowswithfilter",
+        "public_symbol:streamingreader.processrowswithrange"
+      ],
+      "symbol_fact_id": "public_symbol:streamingreader"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Cell data read/write",
+      "Formula evaluation",
+      "Styling and formatting",
+      "Worksheet layout features",
+      "Structured data features",
+      "Charting and embedding",
+      "CSV import/export",
+      "Streaming and I/O"
+    ],
+    "input_format_ids": [
+      "format:input.csv",
+      "format:input.withpassword",
+      "format:input.xlsx"
+    ],
+    "output_format_ids": [
+      "format:output.csv",
+      "format:output.xlsx"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set",
+        "public_symbol:cell.asstring",
+        "public_symbol:cell.asfloat64",
+        "public_symbol:cell.asint"
+      ],
+      "shared_fact_ids": [],
+      "title": "Cell data read/write"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:cell.setformula",
+        "public_symbol:cell.getformula",
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror"
+      ],
+      "shared_fact_ids": [],
+      "title": "Formula evaluation"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:newstyle",
+        "public_symbol:style",
+        "public_symbol:cell.setstyle",
+        "public_symbol:cell.getstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:alignment"
+      ],
+      "shared_fact_ids": [],
+      "title": "Styling and formatting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addmergedcells",
+        "public_symbol:worksheet.frozencol",
+        "public_symbol:worksheet.frozenrow",
+        "public_symbol:worksheet.setautofilter",
+        "public_symbol:worksheet.insertrow",
+        "public_symbol:worksheet.deleterow",
+        "public_symbol:worksheet.setcolumnwidth",
+        "public_symbol:worksheet.setrowheight",
+        "public_symbol:worksheet.addhyperlink"
+      ],
+      "shared_fact_ids": [],
+      "title": "Worksheet layout features"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "example:005",
+        "public_symbol:newtable",
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addconditionalformatting",
+        "public_symbol:pivottable",
+        "public_symbol:worksheet.addpivottable"
+      ],
+      "shared_fact_ids": [],
+      "title": "Structured data features"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:worksheet.addchart",
+        "public_symbol:chart",
+        "public_symbol:worksheet.addpicture",
+        "public_symbol:picture"
+      ],
+      "shared_fact_ids": [],
+      "title": "Charting and embedding"
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:workbook.exporttocsv",
+        "public_symbol:workbook.importfromcsv",
+        "format:input.csv",
+        "format:output.csv"
+      ],
+      "shared_fact_ids": [],
+      "title": "CSV import/export"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadfrom",
+        "public_symbol:saveworkbook",
+        "public_symbol:newstreamingreader",
+        "public_symbol:streamingreader.processrows",
+        "example:007"
+      ],
+      "shared_fact_ids": [],
+      "title": "Streaming and I/O"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "package:published_version",
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "dependency:none",
+        "identity:product-knowledge-refresh"
+      ],
+      "section_id": "identity",
+      "text": "The H1 product name is rendered deterministically from identity and package facts."
+    },
+    {
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012"
+      ],
+      "section_id": "badges",
+      "text": "The badge row is rendered deterministically from verified link targets."
+    },
+    {
+      "fact_ids": [
+        "link_target:009",
+        "link_target:010",
+        "link_target:product.banner",
+        "link_target:product.homepage"
+      ],
+      "section_id": "banner",
+      "text": "The banner image links to the product homepage and is moved to the enterprise relationship section."
+    },
+    {
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "section_id": "dependencies",
+      "text": "The dependency fact states zero third-party dependencies."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:examples",
+        "build_test_asset:test-command"
+      ],
+      "section_id": "development_testing",
+      "text": "The examples module is its own Go module with a replace directive pointing back at the repository root."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alignment",
+        "public_symbol:border",
+        "public_symbol:cell",
+        "public_symbol:cells",
+        "public_symbol:chart",
+        "public_symbol:conditionalformatting",
+        "public_symbol:datavalidation",
+        "public_symbol:errorvalue",
+        "public_symbol:fill",
+        "public_symbol:font",
+        "public_symbol:hyperlink",
+        "public_symbol:picture"
+      ],
+      "section_id": "api_reference",
+      "text": "The API reference section includes the complete verified public surface."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula",
+        "public_symbol:chart",
+        "public_symbol:formulaerror",
+        "public_symbol:pivottable",
+        "public_symbol:serialtotime",
+        "public_symbol:timetoserial",
+        "public_symbol:vbaproject",
+        "public_symbol:workbook.save"
+      ],
+      "section_id": "scope_limitations",
+      "text": "The scope and limitations section includes every material limitation from evidence and inherited units."
+    },
+    {
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition relationship is stated in one or two sentences."
+    },
+    {
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "section_id": "license",
+      "text": "The license section states the license from facts."
+    }
+  ],
+  "flagship_example_id": "example:004",
+  "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:039",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:040",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:041",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:045",
+      "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:042",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:043",
+      "section_id": "documentation_resources"
+    }
+  ],
+  "material_limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:calculateformula",
+        "public_symbol:formulaerror"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timetoserial",
+        "public_symbol:serialtotime"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chart",
+        "public_symbol:pivottable"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vbaproject",
+        "public_symbol:workbook.getvbaproject"
+      ],
+      "unit_ids": [
+        "inherited_unit:057.list"
+      ]
+    },
+    {
+      "fact_ids": [
+        "public_symbol:workbook.save",
+        "public_symbol:workbook.sourcexml"
+      ],
+      "unit_ids": [
+        "inherited_unit:073.list"
+      ]
+    }
+  ],
+  "quick_start_example_id": "example:002",
+  "second_quick_start_example_id": "example:003",
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}
