@@ -48,7 +48,7 @@ def test_the_document_carries_the_r2_ruling_and_a_meaning_sentence():
 
 def test_load_registry_repositories_matches_the_real_registry():
     repos = load_registry_repositories(REGISTRY_PATH)
-    assert len(repos) == 36
+    assert len(repos) == 41  # R34 (2026-11-13): 36 plus OCR .NET, OMR Python, PSD Java, Words Java, Cells PHP
     assert "aspose-3d-foss/Aspose.3D-FOSS-for-.NET" in repos
 
 
