@@ -104,7 +104,7 @@ def test_the_chain_reacts_to_finished_work_on_main_and_never_to_itself() -> None
     assert set(on) == {"workflow_run"}, "no schedule/push of its own: present.yml's schedule is the heartbeat"
     run = on["workflow_run"]
     assert run["types"] == ["completed"] and run["branches"] == ["main"]
-    assert set(run["workflows"]) == {"present", "audit-seed", "acceptance-write"}
+    assert set(run["workflows"]) == {"present", "audit-seed", "acceptance-write", "recertify"}
     assert doc["name"] not in run["workflows"], "a chain link must never trigger itself"
     assert doc["permissions"] == {"contents": "read"}
 
@@ -126,6 +126,10 @@ def test_the_chain_only_calls_the_planner_with_least_privilege() -> None:
         ({"name": "audit-seed", "event": "schedule", "head_branch": "main"}, True),
         ({"name": "audit-seed", "event": "workflow_dispatch", "head_branch": "main"}, True),
         ({"name": "acceptance-write", "event": "workflow_dispatch", "head_branch": "main"}, True),
+        # R41 (BL-060): a portfolio re-certification after a pipeline change queues what no longer certifies
+        ({"name": "recertify", "event": "push", "head_branch": "main"}, True),
+        ({"name": "recertify", "event": "workflow_dispatch", "head_branch": "main"}, True),
+        ({"name": "recertify", "event": "workflow_dispatch", "head_branch": "feature"}, False),
     ],
 )
 def test_the_chain_fires_on_worker_and_m9_completions_only(run, fires) -> None:

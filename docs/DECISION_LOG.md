@@ -5257,3 +5257,34 @@ accepted; Lane L 12 unsealed, 1 NEEDS_REPAIR, 26 not accepted; terminals: PSD Ja
 **Does NOT decide**: issues (R39 pilot effects `issue`/`issue_comment`) and control-repository writes are outside R15
 and never consult the gate; R3/R22 allowlist, draft and token gates are unchanged and still apply on top.
 `docs/wip/r15-portfolio-gate.patch` is superseded by this entry and kept only as history.
+
+## 2026-11-13: BL-060 — every pipeline change on main re-verifies every candidate of both lanes, hosted and automatic (R41, R37)
+
+**Decision.** No new subsystem (R27): the existing `recertify.yml` gains a `push` trigger on `main` for exactly the
+files the planner's code fingerprint covers (`src/**`, `prompts/**`, `pyproject.toml`, `data/**` minus
+`core.llm.budget.OPERATIONAL_DATA_FILES`; `tests/test_recertify_workflow.py` keeps the two sets equal). It runs the
+same zero-call `python -m repo_presenter.recertify --all --write` (renderer/correction fixes applied to every seal that
+re-certifies, published to the state refs) and now writes, via the new `--summary`, the R41 evidence: per-lane
+certified before (the previous main's committed `data/recertification_baseline.json`, read from `github.event.before`)
+and after (every latest seal under the pushed code), the line `reverified: <run id>, lane R x/y, lane L x/y`, and the
+list of cells that no longer certify. `cohort-chain.yml` now also reacts to a completed `recertify` run, so the cohort
+planner runs immediately after.
+
+**Why the failing cells are queued without a new queue (verified from code, not assumed).**
+`scripts/select_scheduled_cohort.py::plan_cohort` selects every active, authorized, non-terminal cell whose latest seal
+does not certify under current code (`portfolio_recertification`, the same function), ranks NEEDS_REPAIR first, and
+its two skips that could hold such a cell back -- `idempotent` (same code fingerprint and upstream revision as the last
+attempt) and `diagnose` (consecutive failures on the current code) -- both key on the code fingerprint, which a
+pipeline change moves. So triggering the planner is sufficient; `test_the_planner_selects_exactly_the_cells_the_summary_queues`
+proves it on the real planner. Batches stay six and one cohort in flight (the planner's own `held` rule).
+
+**Fixes on the way.** The re-certification step piped into `tee` without `pipefail`, so a failed seal publish was
+reported green; now `set -o pipefail`. The concurrency group moved from workflow level to job level (as present.yml's
+cohort job), so it also binds the run-request call; one re-certification at a time, a newer pending run replaces an
+older pending one.
+
+**Does NOT decide.** A `recertify` run called by `run-request-execute.yml` is that workflow's run and does not chain
+(the run-request `cohort` job is the override). BL-060 is `active`, not `done`: done needs a real hosted run of this
+trigger after a merge, with its run id and per-lane counts.
+
+Backlog: BL-060
