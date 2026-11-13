@@ -1016,4 +1016,19 @@ items:
     evidence:
       - "tests: test_cohort_chain.py (trigger + main-only request), test_present_cohort.py, test_present_lanes.py, test_present_schedule.py::test_a_planner_dispatched_run_requests_the_next_planner_pass_with_least_privilege; TC-012 re-verified ACCEPTED"
     next_action: "merge, then confirm on the next hosted cohort"
+  - id: BL-079
+    title: "Repair accepted revisions that still printed the false claim (or a sibling one), repaired sections never reached the README after a partial restore, and the renderer printed never-thrown exception docstrings"
+    type: defect
+    source: "hosted Lane R runs 43489976823 (3D .NET), 43489981024 (3D Python), 43489984973 (Cells .NET) and 43489988826 (Cells C++) all failed after repair (code after BL-076, before PR #67); supervisor brief 2026-11-13 (classes A and B)"
+    priority: P0
+    status: active
+    depends_on: [BL-076]
+    implementation_path: "existing repair stage and renderer only (R27): repair/loop.py (reject_still_failing: every S4/S5/S6 revision is rendered and re-judged by the BC-02/BC-14/BC-18 judges before it is accepted; the defect's own failure still printed, or any of them printed anew, rejects it with the rule's own text for the job's re-ask); repair/targeted.py (repair_packet names the facts the rule text cites, contradicting_facts; REPAIR_LOGIC_VERSION 4); review/defect_bridge.py (a deterministic finding carries its evidence); cascade._settle_s9 (repairs keyed against the composition the next round reproduces, not a partial restore's; plan/section-only rounds recompose from the same dispositions); validation/code_path_claims.py (rule j7 reads 'usage of' and the package's own version; refuted_thrown_description); composition/renderer.py (_not_thrown_marked: a never-thrown type's Core API row prints 'Declared; not thrown by library code.')"
+    acceptance: "a hosted re-run of the four cells under the fixed code records no 'repaired' attempt whose revision the final validation or deterministic review rejects for the same or a BC-02/BC-14/BC-18 sibling rule, no 'the causing section was not in the call store' after a partial restore, and no Core API row saying a never-thrown type is thrown; R10 gate OK; R41: every candidate of both lanes re-verified under the fixed code (recertify run id and per-lane result)"
+    evidence:
+      - "2026-11-13: classification of every accepted-but-failed repair attempt in the four logs (gh run view <id> --log) recorded in the DECISION_LOG entry for BL-079"
+      - "2026-11-13: tests/readme/repair/test_repair_revalidation.py (23 tests from the logged shapes) pass; with the guard, the base-composition keying or the renderer fix reverted, 6 of them fail (negative control)"
+      - "2026-11-13: facts re-extracted locally (present --stage facts) at the four pinned revisions; the sealed bundles' plan/units/dispositions re-rendered under them print 'Declared; not thrown by library code.' for 3D Python's 7 and 3D .NET's 1 never-thrown types and claim_findings finds no never-thrown row; the Cells .NET repair revision 'demonstrating usage of Aspose.Cells FOSS for .NET version 26.10.0.0' is now a BC-14 (j7) finding, the BC-18 revision 'via a local project reference' is not"
+      - "2026-11-13: PYTHONPATH=src python -m repo_presenter.recertify --gate --remote origin --base-baseline <origin/main baseline>: OK, no seal that re-certified in the baseline regressed (45 seals checked; certified lane R 1, lane L 24)"
+    next_action: "supervisor merges; the hosted re-run of the four cells and the R41 re-verification of every candidate (recertify.yml) are the closing evidence. Not decided here: the mixed round (an S4 repair beside S6 repairs after a reshaping restore) still recomposes from fresh reconciliation; ASSUMPTION: rare, to be confirmed from the re-run's repairs.json"
     updated: "2026-11-13"

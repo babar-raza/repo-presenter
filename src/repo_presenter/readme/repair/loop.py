@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections import Counter
 from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from functools import partial
@@ -89,6 +90,8 @@ from repo_presenter.readme.composition.planning import (
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
 from repo_presenter.readme.composition.renderer import line_counts, render_readme
+from repo_presenter.readme.validation.blocking import JUDGES
+from repo_presenter.readme.validation.failures import Candidate
 from repo_presenter.readme.validation.rules import effective_visible_lines_budget
 from repo_presenter.readme.validation.must_correct import (
     cited_finding_quotes,
@@ -229,6 +232,180 @@ def _flagged_slots(original: Mapping[str, Any], quotes: Sequence[str]) -> set[An
         if isinstance(unit, dict)
         and any(key in _printed(str(unit.get("text", ""))) for key in keys)
     }
+
+
+#: The deterministic blocking checks every revision is re-judged by before it is accepted
+#: (BL-079). A repair used to be accepted on its causing stage's own checks alone, so a reply that
+#: still printed the false claim -- reworded, kept, or moved -- was recorded "repaired" and the final
+#: check rejected the candidate: hosted Lane R runs 43489984973 (Cells .NET, BC-14 "repaired" with
+#: the samples-use-the-package claim), 43489988826 (Cells C++, BC-02 "repaired" by a
+#: VERIFIED_PRESERVE of the block printing ``cmake --build build``), 43489976823 / 43489981024
+#: (3D .NET / Python, never-thrown exceptions). These three judge claims line by line against the
+#: facts, so a render of the revision answers them exactly as the final validation will. The
+#: content-loss checks (BC-05/BC-08/BC-17) are not re-run here: a VERIFIED_REWRITE prints only
+#: after re-authoring, so a render taken before it would refuse every honest S4 rewrite; they keep
+#: their own guards (``patch_checks``' supersession rule, ``reject_uncarried_units``).
+REVALIDATED_CHECKS: tuple[str, ...] = ("BC-02", "BC-14", "BC-18")
+#: A deterministic reviewer rule and the blocking check that judges the same claims with the same
+#: detail text (``claim_contradiction_rule`` reuses ``claim_findings``, as BC-14 does).
+_RULE_CHECKS: Mapping[str, str] = {"claim_contradiction": "BC-14"}
+#: What a guard composes a revision into: the plan, units document and dispositions to render.
+Composed = tuple[dict[str, Any], dict[str, Any], dict[str, Any]]
+
+
+def owned_failures(defect: Defect) -> Counter[tuple[str, str]]:
+    """The ``(check, detail)`` failures of ``REVALIDATED_CHECKS`` the defect is about: a validation
+    defect's own failure records, a deterministic review finding's own evidence (its rule mapped to
+    the check that judges the same claims). Read from fields, never from prose."""
+    owned: Counter[tuple[str, str]] = Counter()
+    primary = getattr(defect, "record", None) or {}
+    for record in [primary, *primary.get("equivalent_findings", [])]:
+        if getattr(defect, "source", None) == "validation":
+            check = str(record.get("id") or getattr(defect, "label", ""))
+            details = [
+                str(failure.get("detail") or "")
+                for failure in record.get("failures") or []
+                if isinstance(failure, Mapping)
+            ]
+        else:
+            check = _RULE_CHECKS.get(str(record.get("criterion") or ""), "")
+            details = [str(record["evidence"])] if record.get("evidence") else []
+        if check in REVALIDATED_CHECKS:
+            owned.update((check, detail) for detail in details if detail)
+    return owned
+
+
+def revalidation_failures(
+    rc: "RepairContext", composed: Composed, checks: Sequence[str] = REVALIDATED_CHECKS
+) -> Counter[tuple[str, str]] | None:
+    """The ``(check, detail)`` failures of ``checks`` on the README ``composed`` renders, judged by
+    the blocking checks' own functions (``validation.blocking.JUDGES``); ``None`` when it cannot be
+    rendered or judged (the guard then decides nothing)."""
+    plan, units, dispositions = composed
+    try:
+        readme = render_readme(rc.entry, rc.facts, plan, units, dispositions)
+        candidate = Candidate(
+            entry=rc.entry,
+            facts=rc.facts,
+            plan=plan,
+            units=units,
+            dispositions=dispositions,
+            readme=readme,
+            original_readme=None,
+            source_revision=rc.facts.source_revision,
+            readme_sha256=None,
+            tree_paths=(),
+            tasks=rc.tasks,
+            benchmark_readme=rc.benchmark or None,
+        )
+        found: Counter[tuple[str, str]] = Counter()
+        for check in checks:
+            found.update((check, failure.detail) for failure in JUDGES[check](candidate))
+    except Exception:  # noqa: BLE001 - "cannot judge" is not a verdict on the revision
+        return None
+    return found
+
+
+def reject_still_failing(
+    checks: Checks,
+    rc: "RepairContext",
+    defect: Defect,
+    original: Mapping[str, Any],
+    compose: Callable[[Mapping[str, Any]], Composed | None],
+) -> Checks:
+    """Refuse a revision whose render still fails the defect's own BC-02/BC-14/BC-18 rule, or fails
+    one of them anew, with the rule's own text, so the job's re-ask is told exactly what is still
+    false (and, through the packet's ``contradicting_facts``, what is true).
+
+    Judged against the causing stage's own stored output rendered the same way (``original``, the
+    baseline), never against the README the defect was found in: both renders share every input but
+    the revision, so a failure the baseline already has and the revision does not add is another
+    defect's, and nothing about the render inputs (tree paths, a restore) can make the guard
+    disagree with itself. "Still failing" is a failure of the defect's own that the revision does
+    not print fewer times than the baseline; "anew" is one it prints more times. Runs after
+    ``checks``, on the normalised revision, only when they pass."""
+    owned = owned_failures(defect)
+    baseline_cache: list[Counter[tuple[str, str]] | None] = []
+
+    def baseline() -> Counter[tuple[str, str]] | None:
+        if not baseline_cache:
+            composed = compose(original)
+            baseline_cache.append(None if composed is None else revalidation_failures(rc, composed))
+        return baseline_cache[0]
+
+    def guarded(revised: dict[str, Any]) -> list[str]:
+        errors = checks(revised)
+        if errors:
+            return errors
+        before = baseline()
+        composed = compose(revised)
+        after = None if composed is None or before is None else revalidation_failures(rc, composed)
+        if before is None or after is None:
+            return errors
+        for (check, detail), count in sorted(after.items()):
+            if (check, detail) in owned and before.get((check, detail), 0) and count >= before[(check, detail)]:
+                errors.append(
+                    f"revised_output: {check} still fails on this revision, which is the defect: "
+                    f"{detail}"
+                )
+            elif count > before.get((check, detail), 0):
+                errors.append(f"revised_output: this revision makes {check} fail: {detail}")
+        return errors
+
+    return guarded
+
+
+def section_composer(
+    rc: "RepairContext", task: SectionTask
+) -> Callable[[Mapping[str, Any]], Composed | None]:
+    """An S6 revision (``task``'s units) put in place of that task's units in the coherent units the
+    README is rendered from; ``None`` without them."""
+    if not isinstance(rc.units, Mapping) or not rc.units.get("units"):
+        return lambda _output: None
+    slots = set(task.slots)
+
+    def compose(output: Mapping[str, Any]) -> Composed | None:
+        revised = [u for u in output.get("units") or [] if isinstance(u, Mapping)]
+        by_slot = {u.get("slot"): u for u in revised}
+        units: list[dict[str, Any]] = []
+        for unit in rc.units.get("units", []):
+            mine = unit.get("section") == task.section_id and unit.get("slot") in slots
+            if not mine:
+                units.append(unit)
+            elif unit.get("slot") in by_slot:
+                units.append({**unit, **dict(by_slot.pop(unit.get("slot"))), "section": task.section_id})
+        units.extend({**dict(u), "section": task.section_id} for u in by_slot.values())
+        return rc.plan, {**rc.units, "units": units}, rc.dispositions
+
+    return compose
+
+
+def dispositions_composer(rc: "RepairContext") -> Callable[[Mapping[str, Any]], Composed | None]:
+    """An S4 revision (one merged batch) put in place of its units' dispositions."""
+    if not isinstance(rc.units, Mapping) or not rc.units.get("units"):
+        return lambda _output: None
+
+    def compose(output: Mapping[str, Any]) -> Composed | None:
+        revised = {
+            str(entry.get("unit_id")): entry
+            for entry in output.get("dispositions") or []
+            if isinstance(entry, Mapping)
+        }
+        entries = [
+            revised.pop(str(entry.get("unit_id")), entry)
+            for entry in rc.dispositions.get("dispositions", [])
+        ]
+        entries.extend(revised.values())
+        return rc.plan, rc.units, {**rc.dispositions, "dispositions": entries}
+
+    return compose
+
+
+def plan_composer(rc: "RepairContext") -> Callable[[Mapping[str, Any]], Composed | None]:
+    """An S5 revision (the plan) rendered over the same units and dispositions."""
+    if not isinstance(rc.units, Mapping) or not rc.units.get("units"):
+        return lambda _output: None
+    return lambda output: (dict(output), rc.units, rc.dispositions)
 
 
 @dataclass(frozen=True)
@@ -441,6 +618,7 @@ def _repair_plan(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bo
     hint = _budget_hint(rc, defect, original)
     if hint is not None:
         checks = _fits_the_budget(rc, checks, hint)
+    checks = reject_still_failing(checks, rc, defect, original, plan_composer(rc))
     outcome = _targeted_call(
         rc, defect, loaded, original, checks,
         visible_line_budget=hint,
@@ -913,15 +1091,21 @@ def _repair_reconciliation(
     citations = _register_citations(rc.facts.repository, quotes)
     if citations:
         scope = replace(scope, contract=_citable(scope.contract, citations))
-    checks = patch_checks(
-        scope,
-        reject_printed_quote(
-            refuse_noop(original, partial(reconcile_checks, facts=batch_facts)),
+    checks = reject_still_failing(
+        patch_checks(
             scope,
-            texts,
-            quotes,
-            rc.facts.repository,
+            reject_printed_quote(
+                refuse_noop(original, partial(reconcile_checks, facts=batch_facts)),
+                scope,
+                texts,
+                quotes,
+                rc.facts.repository,
+            ),
         ),
+        rc,
+        defect,
+        original,
+        dispositions_composer(rc),
     )
     outcome = _targeted_call(
         rc,
@@ -1444,6 +1628,7 @@ def _repair_task(
     checks = reject_uncarried_units(checks, task)
     quotes = [str(finding.get("quote") or "") for finding in _quoted_findings(defect.record)]
     checks = keep_unflagged_units(checks, original, quotes, named_slots)
+    checks = reject_still_failing(checks, rc, defect, original, section_composer(rc, task))
     # Name the units that print the defect's text: a register quote is README text, with the code
     # spans the renderer adds, so the model could not always find it in the stored units and
     # answered its section unchanged (the no-op refusal, hosted run 43473803090).

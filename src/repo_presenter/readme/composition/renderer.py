@@ -997,7 +997,33 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
         return f"Defined as `{signature}`."
     if not text:
         text = f"Public {attributes.get('symbol_kind', 'symbol')}."
-    return _stub_marked(context, fact, context.canonical(text.replace("|", "/").replace("`", "")))
+    described = context.canonical(text.replace("|", "/").replace("`", ""))
+    return _stub_marked(context, fact, _not_thrown_marked(context, fact, described))
+
+
+def _not_thrown_marked(context: RenderContext, fact: Fact, description: str) -> str:
+    """``description`` unless it says when the type is thrown while an ``implementation`` fact
+    says no library code throws or constructs it (BC-14 rule (j2)); then the fact-true
+    ``NOT_THROWN_DESCRIPTION``.
+
+    Decision (BL-079, 2026-11-13): replace the row's text, do not drop the row. The type is real
+    public API (the row stays); only the docstring's "thrown when ..." clause is false, and a
+    docstring's clauses cannot be split reliably ("Exception raised by internal rendering
+    drivers.", "This is raised in Scene.Open/Scene.Save when no licenses are applied."), so the
+    whole description gives way to what the facts prove. Measured: hosted Lane R runs 43489976823
+    (3D .NET ``DriverException``) and 43489981024 (3D Python ``ExportException``,
+    ``ImportException``, ``ParseException``, ``TrialException``, ``DriverException``,
+    ``InitializationException``, ``ShaderException``), each a renderer-printed Core API row no
+    repair could reach. The judgement is the rule's own (``refuted_thrown_description``), so the
+    renderer and the validator cannot disagree about a row."""
+    from repo_presenter.readme.validation.code_path_claims import (
+        NOT_THROWN_DESCRIPTION,
+        refuted_thrown_description,
+    )
+
+    if refuted_thrown_description(fact.value, description, context.facts) is None:
+        return description
+    return NOT_THROWN_DESCRIPTION
 
 
 def _stub_marked(context: RenderContext, fact: Fact, description: str) -> str:

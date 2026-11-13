@@ -214,6 +214,27 @@ def _never_thrown(facts: FactsDocument) -> dict[str, str]:
     return found
 
 
+#: What the renderer prints for a never-thrown exception type's row in place of a docstring that
+#: says when it is thrown (BL-079 decision, docs/DECISION_LOG.md 2026-11-13): fact-true, and
+#: matched by ``_NOT_THROWN`` so rule (j2) reads it as the disclaimer it is.
+NOT_THROWN_DESCRIPTION = "Declared; not thrown by library code."
+
+
+def refuted_thrown_description(name: str, description: str, facts: FactsDocument) -> str | None:
+    """The ``implementation`` fact id that refutes ``description`` as the row text of type
+    ``name`` (rule (j2)'s row form: a description saying when the type is raised, for a type no
+    library code throws or constructs), else ``None``. The renderer calls this with exactly what
+    it prints, so it and the rule can never disagree about a Core API row (hosted runs
+    43489976823 / 43489981024: ``DriverException`` "Exception thrown when rendering driver
+    fails.", ``ExportException`` "Exceptions when Aspose.3D failed to export ...")."""
+    fact_id = _never_thrown(facts).get(_last(name))
+    if fact_id is None:
+        return None
+    if _WHEN_RAISED.search(description) and not _NOT_THROWN.search(description):
+        return fact_id
+    return None
+
+
 def _never_thrown_findings(sentences: Iterable[Sentence], facts: FactsDocument, make: Make) -> list[ClaimFinding]:
     never = _never_thrown(facts)
     if not never:
@@ -507,7 +528,11 @@ def _dependency_findings(sentences: Iterable[Sentence], facts: FactsDocument, ma
 _SAMPLES = re.compile(
     r"(?i)\bsamples\b|\bsamples?/|\b(?:sample|example)s?\s+(?:projects?|programs?|apps?|applications?|directory|folder)\b"
 )
-_CONSUME = re.compile(r"(?i)\b(?:use|uses|using|reference|references|referencing|consume|consumes|built?\s+(?:against|with|on)|demonstrat\w*\s+how\s+to\s+use)\b")
+# "usage of" / "demonstrating usage of" (BL-079, hosted run 43489984973): a Cells .NET repair
+# reworded "demonstrating how to use `Aspose.Cells.FOSS` version 26.10.0" to "demonstrating usage
+# of Aspose.Cells FOSS for .NET version 26.10.0.0" -- the same false claim, which the verb list
+# did not read, so the repair was accepted as having cleared it.
+_CONSUME = re.compile(r"(?i)\b(?:use|uses|using|usage\s+of|reference|references|referencing|consume|consumes|built?\s+(?:against|with|on)|demonstrat\w*\s+how\s+to\s+use)\b")
 _VERSION = re.compile(r"\bversion\s+\d+(?:\.\d+)+\b|\b\d+\.\d+\.\d+\b|\bNuGet\s+package\b|\bPackageReference\b", re.IGNORECASE)
 
 
@@ -520,12 +545,24 @@ def _sample_findings(sentences: Iterable[Sentence], facts: FactsDocument, make: 
     if fact is None or attributes.get("package_reference") != "0" or attributes.get("project_reference", "0") == "0":
         return []
     package = attributes.get("package", "")
+    # The package's own versions: a sentence that names the product by its prose name and gives one
+    # of these ("usage of Aspose.Cells FOSS for .NET version 26.10.0.0", BL-079, hosted run
+    # 43489984973) claims the samples use that package as surely as one naming its id.
+    own_versions = [
+        re.compile(rf"(?<![\w.]){re.escape(fact.value)}(?![\w]|\.\d)")
+        for fact in facts.facts
+        if fact.id in ("package:version", "package:published_version") and fact.value
+    ]
     findings: list[ClaimFinding] = []
     for sentence, first, last in sentences:
         plain = sentence.replace("`", "")
         if not (_SAMPLES.search(plain) and _CONSUME.search(plain) and _VERSION.search(plain)):
             continue
-        if package and package.lower() not in plain.lower():
+        if (
+            package
+            and package.lower() not in plain.lower()
+            and not any(version.search(plain) for version in own_versions)
+        ):
             continue
         findings.append(
             make(
@@ -553,4 +590,9 @@ def code_path_findings(sentences: Iterable[Sentence], facts: FactsDocument, make
     ]
 
 
-__all__ = ["code_path_findings", "stub_members"]
+__all__ = [
+    "NOT_THROWN_DESCRIPTION",
+    "code_path_findings",
+    "refuted_thrown_description",
+    "stub_members",
+]
