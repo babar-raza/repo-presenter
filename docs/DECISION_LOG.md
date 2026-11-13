@@ -4911,3 +4911,21 @@ from time to time" is enforced mechanically: a `UserPromptSubmit` hook in `.clau
 `docs/R38_CHECKPOINT.md` into the working agent's context on every owner prompt (in addition to the SessionStart print of
 `docs/RULINGS.md`), the supervisor includes the R38 check in every worker brief, and `tests/test_rulings_in_focus.py`
 fails CI if the full text, the checkpoint or the hook disappears.
+
+---
+
+## 2026-11-13: owner ruling R39 — issue management system
+
+Owner, verbatim: "Update the goals for issue management system requirement 1. It should be using repository-presenter
+as on https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues, for issue management. 2. It should be able
+to periodically check the issue status against what has been fixed, and update the issue status. 3. It should be an
+autonomous system managing issues in everyway possible. 4. we will pilot with issue recording and monitoring & periodic
+maintenance for open & close."
+
+Recorded as **R39** (`docs/RULINGS.md`, Part B row, goals §7 bullet). Supervisor findings recorded with it: the five open
+issues on Aspose.3D-FOSS-for-TypeScript were filed by `repository-presenter[bot]` (the repository-presenter GitHub App);
+the issue lifecycle already exists in `src/repo_presenter/issues/` (discovery, dedup, file, labels, track, approval,
+close, reopen; end-to-end test) and is reused per R38. Supervisor decisions under R11: the pilot starts on
+Aspose.3D-FOSS-for-TypeScript (the owner's example; its five open issues are the first monitored set), widening is the
+owner's call; R39 amends R22 ("issue filing stays off"), R17 (sandbox only) and R7 for issues on pilot repositories only —
+every issue must still be a verified, reproducible, deduplicated product/source defect; PRs stay under R15/R22.
