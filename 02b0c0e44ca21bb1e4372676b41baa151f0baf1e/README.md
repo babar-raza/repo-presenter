@@ -34,30 +34,33 @@ See [the split examples](examples/split_documents.py) for ten compatible workflo
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing PDF file or stream"]
+    i1["An existing PDF file<br/>or stream"]
   end
   PRODUCT["Aspose.PDF FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Document creation, loading, and merging"]
-      c2["Text authoring with complex-script shaping"]
-      c3["Text extraction and search"]
-      c4["Text replacement and redaction"]
-      c5["Page rendering to raster images"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c6["Interactive form fields"]
-      c7["Annotations with generated appearances"]
-      c8["Encryption and signature validation"]
-      c9["PDF/A, PDF/UA and PDF/X validation"]
-      c10["Resource optimization"]
-    end
+    direction TB
+    c1["Document creation,<br/>loading, and merging"]
+    c2["Text authoring with<br/>complex-script shaping"]
+    c3["Text extraction and<br/>search"]
+    c4["Text replacement and<br/>redaction"]
+    c5["Page rendering to<br/>raster images"]
+    c6["Interactive form<br/>fields"]
+    c7["Annotations with<br/>generated appearances"]
+    c8["Encryption and<br/>signature validation"]
+    c9["PDF/A, PDF/UA and<br/>PDF/X validation"]
+    c10["Resource optimization"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c9
+    c7 ~~~ c10
+    c8 ~~~ c10
+    c9 ~~~ c10
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -66,6 +69,8 @@ flowchart TD
     o3["TIFF file"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
@@ -2040,7 +2045,7 @@ and delete workflows. 385 public types are organized by module below.
 | `License` | License management class for Aspose.PDF. |
 | `ListItem` | One item of a list: what it says, and what hangs under it. |
 | `Margin` | The Margin class provides top, left, bottom, and right properties for defining page margins. |
-| `MarkdownSaveOptions` | Class with 1 method and 4 properties. |
+| `MarkdownSaveOptions` | Options for saving PDF documents as Markdown. |
 | `Matrix3D` | Represents a 3D transformation matrix. |
 | `MemoryFontSource` | Expose a font program supplied as in-memory bytes. |
 | `MergeOptions` | Options for :class:`Merger`: concatenate all inputs in order. |
@@ -2085,7 +2090,7 @@ and delete workflows. 385 public types are organized by module below.
 | `PdfXValidationResult` | Detailed result of a PDF/X validation run (heuristic). |
 | `PdfXValidator` | Plugin that runs heuristic PDF/X validation on one or more inputs. |
 | `Permissions` | What a reader may do with an encrypted document: `/P`, with names. |
-| `PerformanceLogger` | Class with 2 methods and 1 property. |
+| `PerformanceLogger` | Collects named phase timings, and free-form lines. |
 | `Plugin` | Identifiers for the available low-code plugins. |
 | `PluginOptions` | Hold input/output data sources and their PDF resource-limit policy. |
 | `Point` | Represents a point in 2D space. |
@@ -2135,7 +2140,7 @@ and delete workflows. 385 public types are organized by module below.
 | `ValidationOptions` | Configuration for signature validation. |
 | `ValidationResult` | Structured result returned by signature validation. |
 | `ValidationStatus` | Outcome of a :class:`ValidationResult`. |
-| `VirtualizationPerformance` | Class with 5 methods. |
+| `VirtualizationPerformance` | A process-global stopwatch. Nothing in this package writes to it. |
 | `WarichuWPElement` | Minimal tagged-element type for API compatibility. |
 | `XYZDestination` | Position `(left, top)` at the upper-left with an optional zoom. |
 
@@ -2240,7 +2245,7 @@ and delete workflows. 385 public types are organized by module below.
 | `PdfParseError` | Base exception for PDF parsing errors. |
 | `PdfParseWarning` | Non-fatal parsing issue that was recovered from. |
 | `PdfSecurityError` | Encryption or permission related error. |
-| `PdfStream` | Class with 3 methods and 2 properties. |
+| `PdfStream` | A stream object: a dictionary plus a byte payload. |
 | `PdfString` | Class with 1 method and 1 property. |
 | `PdfTrailerable` | Class with 1 method. |
 | `PdfValidationError` | PDF/A or general structural validation error. |

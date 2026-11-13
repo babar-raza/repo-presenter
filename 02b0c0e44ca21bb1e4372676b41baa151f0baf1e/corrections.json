@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 5,
+    "edits": 10,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "af1cb0dde5b83b945d72a0ce0c6be6e249cbdfb1d80855c9e8d6efda87a18bee",
+  "corrected_sha256": "32d3dd33c58e4e4bd8a8e00400064199a6d718eb3a23b5f24bd7c35883de211f",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2848,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:36"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 37,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing PDF file or stream\"]\n  end\n  PRODUCT[\"Aspose.PDF FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Document creation, loading, and merging\"]\n      c2[\"Text authoring with complex-script shaping\"]\n      c3[\"Text extraction and search\"]\n      c4[\"Text replacement and redaction\"]\n      c5[\"Page rendering to raster images\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c6[\"Interactive form fields\"]\n      c7[\"Annotations with generated appearances\"]\n      c8[\"Encryption and signature validation\"]\n      c9[\"PDF/A, PDF/UA and PDF/X validation\"]\n      c10[\"Resource optimization\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF file\"]\n    o2[\"PNG file\"]\n    o3[\"TIFF file\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1701 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 692 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing PDF file<br/>or stream\"]\n  end\n  PRODUCT[\"Aspose.PDF FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Document creation,<br/>loading, and merging\"]\n    c2[\"Text authoring with<br/>complex-script shaping\"]\n    c3[\"Text extraction and<br/>search\"]\n    c4[\"Text replacement and<br/>redaction\"]\n    c5[\"Page rendering to<br/>raster images\"]\n    c6[\"Interactive form<br/>fields\"]\n    c7[\"Annotations with<br/>generated appearances\"]\n    c8[\"Encryption and<br/>signature validation\"]\n    c9[\"PDF/A, PDF/UA and<br/>PDF/X validation\"]\n    c10[\"Resource optimization\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n    c7 ~~~ c10\n    c8 ~~~ c10\n    c9 ~~~ c10\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF file\"]\n    o2[\"PNG file\"]\n    o3[\"TIFF file\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1899
+    },
     {
       "detector": "stale_type_count",
       "end": 88545,
@@ -59,13 +78,70 @@
           "value": "aspose_pdf.actions.ActionCollection.keys"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 1965,
       "original": "277",
       "rationale": "line 1965 states '277 public types'; the facts record 385 public types (354 classes), so a count of 277 is refuted and is replaced by the computed 385",
       "replacement": "385",
       "start": 88542
+    },
+    {
+      "detector": "type_description",
+      "end": 94540,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_pdf.markdown.markdownsaveoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_pdf.markdown.MarkdownSaveOptions"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 2043,
+      "original": "Class with 1 method and 4 properties.",
+      "rationale": "line 2043: the count only cell 'Class with 1 method and 4 properties.' does not describe MarkdownSaveOptions; its own doc comment does, and replaces it",
+      "replacement": "Options for saving PDF documents as Markdown.",
+      "start": 94503
+    },
+    {
+      "detector": "type_description",
+      "end": 98049,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_pdf.visualization.performancelogger",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_pdf.visualization.PerformanceLogger"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 2088,
+      "original": "Class with 2 methods and 1 property.",
+      "rationale": "line 2088: the count only cell 'Class with 2 methods and 1 property.' does not describe PerformanceLogger; its own doc comment does, and replaces it",
+      "replacement": "Collects named phase timings, and free-form lines.",
+      "start": 98013
+    },
+    {
+      "detector": "type_description",
+      "end": 101813,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_pdf.visualization.virtualizationperformance",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_pdf.visualization.VirtualizationPerformance"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 2138,
+      "original": "Class with 5 methods.",
+      "rationale": "line 2138: the count only cell 'Class with 5 methods.' does not describe VirtualizationPerformance; its own doc comment does, and replaces it",
+      "replacement": "A process-global stopwatch. Nothing in this package writes to it.",
+      "start": 101792
     },
     {
       "detector": "absent_type_row",
@@ -120,7 +196,7 @@
           "value": "aspose_pdf.actions.ActionCollection.keys"
         }
       ],
-      "index": 1,
+      "index": 5,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 2194,
       "original": "| `Codestream` | Class with 2 methods and 8 properties. |\n",
@@ -181,7 +257,7 @@
           "value": "aspose_pdf.actions.ActionCollection.keys"
         }
       ],
-      "index": 2,
+      "index": 6,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 2216,
       "original": "| `Jpeg2000Error` | A JPEG 2000 codestream that cannot be decoded. |\n",
@@ -242,13 +318,32 @@
           "value": "aspose_pdf.actions.ActionCollection.keys"
         }
       ],
-      "index": 3,
+      "index": 7,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 2223,
       "original": "| `MQDecoder` | The MQ arithmetic decoder of Annex C. |\n",
       "rationale": "line 2223 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
       "replacement": "",
       "start": 106802
+    },
+    {
+      "detector": "type_description",
+      "end": 108564,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose_pdf.engine.cos.pdfstream",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose_pdf.engine.cos.PdfStream"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 2246,
+      "original": "Class with 3 methods and 2 properties.",
+      "rationale": "line 2246: the count only cell 'Class with 3 methods and 2 properties.' does not describe PdfStream; its own doc comment does, and replaces it",
+      "replacement": "A stream object: a dictionary plus a byte payload.",
+      "start": 108526
     },
     {
       "detector": "absent_type_row",
@@ -303,7 +398,7 @@
           "value": "aspose_pdf.actions.ActionCollection.keys"
         }
       ],
-      "index": 4,
+      "index": 9,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 2269,
       "original": "| `TagTree` | The tag tree of ISO 32000-2 clause 14.8, used for structure inclusion. |\n",
@@ -325,7 +420,8 @@
     "provider_calls": 0
   },
   "summary": {
-    "FALSE_CLAIM_FIX": 1,
+    "DIAGRAM_FIX": 1,
+    "FALSE_CLAIM_FIX": 5,
     "TABLE_ROW_REMOVAL": 4
   },
   "unapplied": [
@@ -515,6 +611,182 @@
       "line": 1878,
       "reason": "the example verifier recorded a failure for the example on lines 1878-1883: example 74: FAILED; NameError",
       "text": "with Document(\"before.pdf\") as before, Document(\"after.pdf\") as after:"
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.printing.duplex"
+      ],
+      "line": 1986,
+      "reason": "the count only cell does not describe Duplex, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 4 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.svg.pageinfo"
+      ],
+      "line": 2060,
+      "reason": "the count only cell does not describe PageInfo, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.pdf_consts.pdfconsts"
+      ],
+      "line": 2068,
+      "reason": "the count only cell does not describe PdfConsts, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 methods."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.printing.printersettings"
+      ],
+      "line": 2093,
+      "reason": "the count only cell does not describe PrinterSettings, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 11 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.printing.printrange"
+      ],
+      "line": 2094,
+      "reason": "the count only cell does not describe PrintRange, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 4 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.logical_structure.structuretypestandard"
+      ],
+      "line": 2107,
+      "reason": "the count only cell does not describe StructureTypeStandard, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 15 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.tagged.taggedcontext"
+      ],
+      "line": 2113,
+      "reason": "the count only cell does not describe TaggedContext, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.annotations.pdf3d.pdf3dlightingscheme"
+      ],
+      "line": 2165,
+      "reason": "the count only cell does not describe PDF3DLightingScheme, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 5 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.data.encoding"
+      ],
+      "line": 2205,
+      "reason": "the count only cell does not describe Encoding, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 4 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.data.encodingtype"
+      ],
+      "line": 2206,
+      "reason": "the count only cell does not describe EncodingType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 5 members."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.data.pdfobjectid"
+      ],
+      "line": 2241,
+      "reason": "the count only cell does not describe PdfObjectID, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.cos.pdfstring"
+      ],
+      "line": 2247,
+      "reason": "the count only cell does not describe PdfString, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.data.pdftrailerable"
+      ],
+      "line": 2248,
+      "reason": "the count only cell does not describe PdfTrailerable, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.revocation.revocationresult"
+      ],
+      "line": 2256,
+      "reason": "the count only cell does not describe RevocationResult, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.engine.rich_text.richrun"
+      ],
+      "line": 2257,
+      "reason": "the count only cell does not describe RichRun, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose_pdf.security.compromisecheckresult"
+      ],
+      "line": 2301,
+      "reason": "the count only cell does not describe CompromiseCheckResult, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
     }
   ]
 }
