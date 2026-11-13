@@ -78,6 +78,10 @@ from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
 from repo_presenter.core.facts import FactsDocument
+from repo_presenter.core.package_registry import (
+    is_unconfirmed_registry_install,
+    unconfirmed_registry_packages,
+)
 from repo_presenter.readme.composition.authoring import preserved_opening_text
 from repo_presenter.readme.composition.coverage import (
     carries_hard_tokens,
@@ -559,11 +563,25 @@ def live_readme_loss_rule(
         key = _heading_key(text)
         if key not in new_headings and key not in accounted_headings:
             lost.append((text, f"heading {text!r}"))
+    # BC-02 refuses to print the registry install of a package whose ownership the registry does
+    # not confirm (Aspose.3D-FOSS-for-Python: the PyPI project names another repository), so a live
+    # fence holding only that command is replaced by design -- the same exemption BC-05 applies
+    # (``validation/supersession.py``); without it the two rules contradict each other and the
+    # candidate can never be sealed.
+    unconfirmed = unconfirmed_registry_packages(facts.by_kind("install_command"))
+
+    def refused_install(fence: str) -> bool:
+        lines = [line for line in fence.splitlines() if line.strip()]
+        return bool(lines) and all(
+            is_unconfirmed_registry_install(line, unconfirmed) for line in lines
+        )
+
     for fence in old.fences:
         if (
             not any(fence in other for other in new.fences)
             and not accounted(fence)
             and not any(fence in _code(unit) for unit in fence_accounting)
+            and not refused_install(fence)
         ):
             lost.append(
                 (fence, f"code block {fence.splitlines()[0][:50] if fence else ''!r}")

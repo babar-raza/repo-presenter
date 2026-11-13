@@ -541,3 +541,21 @@ def test_the_bc03_marker_never_accounts_for_a_dropped_link_or_heading() -> None:
         )
     )
     assert any("link https://widget.example.com/docs/" in m for m in messages)
+
+
+def test_a_live_fence_holding_only_an_unconfirmed_registry_install_is_not_a_loss() -> None:
+    """BC-02 refuses to print a registry install whose ownership the registry does not confirm
+    (Aspose.3D-FOSS-for-Python, hosted run 43394972494: 'python3 -m pip install aspose-3d-foss'),
+    so live_readme_loss must not demand it back -- the same exemption BC-05 applies."""
+    live = "# W\n\n## Installation\n\n```bash\npython3 -m pip install widget-foss\n```\n"
+    candidate = "# W\n\n## Installation\n\n```bash\npip install .\n```\n"
+    unconfirmed = Fact(
+        "install_command:registry", "install_command", "pip install widget-foss",
+        (Evidence("pypi", "package registry: a distribution exists, ownership not confirmed"),),
+        polarity="UNRESOLVED",
+    )
+    lost = live_readme_loss_rule(live, candidate, facts=_facts(unconfirmed), dispositions={})
+    assert not [f for f in lost if "code block" in f.evidence]
+    # Without that fact the same drop is still a loss.
+    lost = live_readme_loss_rule(live, candidate, facts=_facts(), dispositions={})
+    assert [f for f in lost if "code block" in f.evidence]
