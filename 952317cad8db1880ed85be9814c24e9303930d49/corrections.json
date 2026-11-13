@@ -1,0 +1,93 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "e2a3169d348cf5a4a637ec1d5cd7bf5b4d5abb32eb7deda918a77cbe90d0b80d",
+  "edits": [
+    {
+      "detector": "dead_link",
+      "end": 4796,
+      "evidence": [
+        {
+          "fact_id": "link_target:012",
+          "kind": "link_target",
+          "status": "CONTRADICTED",
+          "value": "RELEASE_NOTES.md"
+        }
+      ],
+      "index": 0,
+      "kind": "BROKEN_LINK",
+      "line": 164,
+      "original": "[release notes](RELEASE_NOTES.md)",
+      "rationale": "the tree does not contain 'RELEASE_NOTES.md' and holds no file that stands in for it; the dead link is removed and its text kept word for word",
+      "replacement": "release notes",
+      "start": 4763
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "21bf0e4067a1590e41b68f4b345618df6e0d9bf27cb9617c67031358fa03829e",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "952317cad8db1880ed85be9814c24e9303930d49",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "BROKEN_LINK": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "format:output.xlsm"
+      ],
+      "line": 0,
+      "reason": "1 verified format(s) named nowhere in the README; would fill At a Glance or Key Capabilities: format:output.xlsm",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.agileencryptionparameters",
+        "public_symbol:aspose.cells_foss.auto_filter.autofilter",
+        "public_symbol:aspose.cells_foss.auto_filter.filtercolumn",
+        "public_symbol:aspose.cells_foss.cell",
+        "public_symbol:aspose.cells_foss.cell_value_handler.cellvaluehandler",
+        "public_symbol:aspose.cells_foss.cfb_handler.cfbreader",
+        "public_symbol:aspose.cells_foss.cfb_handler.cfbwriter",
+        "public_symbol:aspose.cells_foss.cfb_writer.cfbwriter"
+      ],
+      "line": 0,
+      "reason": "157 of 160 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.cells_foss.agileencryptionparameters, public_symbol:aspose.cells_foss.auto_filter.autofilter, public_symbol:aspose.cells_foss.auto_filter.filtercolumn, public_symbol:aspose.cells_foss.cell, public_symbol:aspose.cells_foss.cell_value_handler.cellvaluehandler, public_symbol:aspose.cells_foss.cfb_handler.cfbreader, public_symbol:aspose.cells_foss.cfb_handler.cfbwriter, public_symbol:aspose.cells_foss.cfb_writer.cfbwriter (+149 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (UNRESOLVED, https://products.aspose.com/cells/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "broken_link",
+      "fact_ids": [
+        "link_target:012"
+      ],
+      "line": 164,
+      "reason": "'RELEASE_NOTES.md' is not in the tree and no unique file stands in for it",
+      "text": "- Read the current [release notes](RELEASE_NOTES.md)."
+    }
+  ]
+}
