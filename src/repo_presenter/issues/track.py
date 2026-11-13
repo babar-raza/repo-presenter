@@ -20,7 +20,12 @@ from typing import Any, Literal
 from repo_presenter.issues.file import FileResult
 from repo_presenter.issues.model import Handoff, IssueRef
 
-OccurrenceEvent = Literal["FILED", "DEDUPED", "RECONCILED", "REOPENED"]
+#: FILED/DEDUPED/RECONCILED/REOPENED come from filing (``apply_file_result``); IMPORTED, CLOSED,
+#: REOPENED and RECHECK_COMMENTED from the R39 pilot monitor (``issues/monitor.py``) through
+#: :func:`record_event`.
+OccurrenceEvent = Literal[
+    "FILED", "DEDUPED", "RECONCILED", "REOPENED", "IMPORTED", "CLOSED", "RECHECK_COMMENTED"
+]
 
 
 class LedgerError(ValueError):
@@ -39,6 +44,9 @@ class OccurrenceEntry:
     count: int
     issue_number: int
     event: OccurrenceEvent
+    #: The hidden upstream marker of the comment this event posted (monitor events only); part of
+    #: the idempotency key, so a dated re-check at an unchanged revision is a distinct entry.
+    marker: str | None = None
 
 
 @dataclass(frozen=True)
@@ -94,7 +102,56 @@ def apply_file_result(
     return TrackingUpdate(updated, (*ledger, entry))
 
 
+def record_event(
+    ledger: tuple[OccurrenceEntry, ...],
+    key: tuple[str, str],
+    *,
+    revision: str,
+    observed_at: str,
+    issue_number: int,
+    event: OccurrenceEvent,
+    marker: str | None = None,
+) -> tuple[OccurrenceEntry, ...]:
+    """Append one monitor event, idempotently: recording the same ``(key, revision, issue,
+    event, marker)`` again returns the ledger unchanged, so a replayed cycle never inflates it."""
+    for entry in ledger:
+        if (entry.key, entry.revision, entry.issue_number, entry.event, entry.marker) == (
+            key, revision, issue_number, event, marker,
+        ):
+            return ledger
+    count = sum(1 for e in ledger if e.key == key) + 1
+    return (
+        *ledger,
+        OccurrenceEntry(
+            key=key, revision=revision, observed_at=observed_at, count=count,
+            issue_number=issue_number, event=event, marker=marker,
+        ),
+    )
+
+
+def entry_to_dict(e: OccurrenceEntry) -> dict[str, Any]:
+    return _entry_to_dict(e)
+
+
+def entry_from_dict(d: dict[str, Any]) -> OccurrenceEntry:
+    return OccurrenceEntry(
+        key=(d["repository"], d["defect_fingerprint"]),
+        revision=d["revision"],
+        observed_at=d["observed_at"],
+        count=int(d["count"]),
+        issue_number=int(d["issue_number"]),
+        event=d["event"],
+        marker=d.get("marker"),
+    )
+
+
 def _entry_to_dict(e: OccurrenceEntry) -> dict[str, Any]:
+    if e.marker is not None:
+        return {**_base_dict(e), "marker": e.marker}
+    return _base_dict(e)
+
+
+def _base_dict(e: OccurrenceEntry) -> dict[str, Any]:
     return {
         "repository": e.key[0],
         "defect_fingerprint": e.key[1],
@@ -117,17 +174,7 @@ def load_ledger(path: Path) -> tuple[OccurrenceEntry, ...]:
         payload = json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(payload, list):
             raise LedgerError(f"{path}: top level must be a JSON list")
-        return tuple(
-            OccurrenceEntry(
-                key=(d["repository"], d["defect_fingerprint"]),
-                revision=d["revision"],
-                observed_at=d["observed_at"],
-                count=int(d["count"]),
-                issue_number=int(d["issue_number"]),
-                event=d["event"],
-            )
-            for d in payload
-        )
+        return tuple(entry_from_dict(d) for d in payload)
     except LedgerError:
         raise
     except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:

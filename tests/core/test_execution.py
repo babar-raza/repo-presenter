@@ -233,3 +233,26 @@ def test_a_process_that_cannot_start_is_a_typed_error_not_a_raw_traceback(
             workspace=tmp_path,
             timeout_seconds=5,
         )
+
+
+@pytest.mark.skipif(os.name == "nt", reason="a POSIX symlink and shebang script")
+def test_a_symlinked_multi_call_tool_starts_under_its_own_name(tmp_path: Path) -> None:
+    """`~/.cargo/bin/cargo` is a symlink to `rustup`, which dispatches on the name it was started
+    by: resolving the link ran rustup itself, which answered `cargo --version` with its own
+    banner, and every Rust example was recorded "the Cargo toolchain did not report a version"
+    (Aspose.Cells-FOSS-for-Rust, 7 of 7)."""
+    bin_directory = tmp_path / "bin"
+    bin_directory.mkdir()
+    multicall = bin_directory / "rustup"
+    multicall.write_text(
+        f"#!{sys.executable}\nimport os, sys\nprint(os.path.basename(sys.argv[0]))\n",
+        encoding="utf-8",
+    )
+    multicall.chmod(0o755)
+    (bin_directory / "cargo").symlink_to("rustup")
+    result = execute(
+        [str(bin_directory / "cargo"), "--version"], workspace=tmp_path, timeout_seconds=30
+    )
+    assert result.return_code == 0
+    assert result.stdout.strip() == "cargo"
+    assert result.argv[0] == str(bin_directory / "cargo")

@@ -8,12 +8,25 @@
         "L-03",
         "L-05"
       ],
+      "justification": "L-03, L-05: genuine defects, not a regression of the mechanism (R10). Under stale_package_version v5 (claims.other_subject_denial_lines, 2026-11-13) the Lane L correction no longer rewrites the live README's TRUE 'not published to NuGet' (said of src/converter/, not the library) into the FALSE 'it is published to NuGet' this seal printed; re-certified under that correct behaviour, the seal's README also fails L-03 (it describes `Watermark` as working, 'Embeds and extracts text watermarks in 3D files, with optional password protection', while inherited_unit:061.list states Watermark only throws -- a stub) and L-05 (format_overclaim: 'U3D' marked supported with no SUPPORTED format or capability fact). The seal is kept, not deleted; the next Lane L run corrects these.",
       "lane": "L",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
-      "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
-      "justification": "L-03, L-05: genuine defects, not a regression of the mechanism (R10). Under stale_package_version v5 (claims.other_subject_denial_lines, 2026-11-13) the Lane L correction no longer rewrites the live README's TRUE 'not published to NuGet' (said of src/converter/, not the library) into the FALSE 'it is published to NuGet' this seal printed; re-certified under that correct behaviour, the seal's README also fails L-03 (it describes `Watermark` as working, 'Embeds and extracts text watermarks in 3D files, with optional password protection', while inherited_unit:061.list states Watermark only throws -- a stub) and L-05 (format_overclaim: 'U3D' marked supported with no SUPPORTED format or capability fact). The seal is kept, not deleted; the next Lane L run corrects these."
+      "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502"
+    },
+    {
+      "commit": "03b940a46f7b85343d5931901dc0b0910390c536",
+      "failing_checks": [
+        "BC-05",
+        "BC-18"
+      ],
+      "justification": "BC-05: genuine defect, not a regression of the mechanism (R10). BL-004 section fit (owner P0, docs/DECISION_LOG.md 2026-11-13): the sealed README prints the maintainers' Documentation & Resources links list (inherited_unit:059.list) under Scope and Limitations -- docs/kb/reference and repository links, plus the license sentence 'This project is licensed under the MIT License' as a limitation (license-only limitation slot) -- because reconciliation re-homed it out of documentation_resources; validation/units.py section_fit_failures now blocks it. Re-sealed by the next hosted Lane R run, where the list stays in documentation_resources and planning owes every link there. | BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json holds 19 OPEN lane_r row(s) for aspose-3d-foss/Aspose.3D-FOSS-for-.NET (19 added 2026-11-13 from the BL-003 independent fact-check of this seal, docs/investigations/2026-11-13-lane-r-false-claim-review.md; each re-checked for an exact, uniquely printed quote), each a confirmed false, unsupported or misleading claim with truth and evidence path; BC-18 finds this seal still printing 19 of them. First row: 'AVEVA PDMS RVM format registration \u2014 core geometry import/export works' -- No RVM importer or exporter exists: IOService registers only OBJ, STL, glTF, FBX, 3MF, COLLADA, PLY and 3DS readers/writers, RvmFormat is not in the FileFormat . R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair is handed each quote and truth.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
+      "regenerations": 0,
+      "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+      "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502"
     },
     {
       "commit": "3400c694185b4e1205aeb1a8fedf7914c3c4fa49",
@@ -32,6 +45,18 @@
       "regenerations": 0,
       "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
       "revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02"
+    },
+    {
+      "commit": "4812255e83c204e12cfac721da95752ab1dca3c1",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
+      "regenerations": 0,
+      "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+      "revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json holds 18 OPEN lane_r row(s) for aspose-3d-foss/Aspose.3D-FOSS-for-Python (18 added 2026-11-13 from the BL-003 independent fact-check of this seal, docs/investigations/2026-11-13-lane-r-false-claim-review.md; each re-checked for an exact, uniquely printed quote), each a confirmed false, unsupported or misleading claim with truth and evidence path; BC-18 finds this seal still printing 18 of them. First row: 'Aspose.3D FOSS for Python reads and writes OBJ, STL, glTF, and COLLADA files' -- COLLADA and OBJ cannot be written via Scene.save() (the README's own bullet below admits COLLADA export is unreachable); 3MF, which does round-trip, is omitted.. R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair is handed each quote and truth."
     },
     {
       "commit": "5b22a2676f080dac312f4a4f67e1fa1404e98e72",
@@ -61,16 +86,16 @@
       "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
     },
     {
-      "commit": "d36d92f9ab68fb2789f273fbcdcbb96486240873",
+      "commit": "269b6ae5d8f7859b27e027a49cc5f15b2cbdfeda",
       "failing_checks": [
         "BC-18"
       ],
-      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-.NET, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Aspose.Cells FOSS for .NET provides core workbook and worksheet functionality through the `Aspose.Cells_FOSS.Workbook` c\" -- Workbook exposes only Worksheets, DefinedNames, Settings, Properties, DocumentProperties and LoadDiagnostics; charts live on Worksheet.Charts and workbook prote (evidence: src/Aspose.Cells_FOSS/Workbook.cs:26-142@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
-      "regenerations": 1,
+      "regenerations": 2,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
-      "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+      "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json holds 12 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-.NET (10 added 2026-11-13 from the BL-003 independent fact-check of this seal, docs/investigations/2026-11-13-lane-r-false-claim-review.md; each re-checked for an exact, uniquely printed quote), each a confirmed false, unsupported or misleading claim with truth and evidence path; BC-18 finds this seal still printing 10 of them. First row: '- `Borders`: Gets or sets border settings.' -- Style.Borders has a private setter (`public Borders Borders { get; private set; }`), so it is get-only for callers; mutate the returned Borders instead.. R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair is handed each quote and truth."
     },
     {
       "commit": "0945eb8af6adb92ecbe77d439f729a092b8e4063",
@@ -84,9 +109,10 @@
     {
       "commit": "e6583bda4b1cda69bd181aded96cea9f13b1e4a9",
       "failing_checks": [
+        "BC-05",
         "BC-18"
       ],
-      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 8 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- **Read and write cell values and formulas.** It writes values of multiple types\u2014including strings, integers, doubles, \" -- Cell::SetFormula (Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153) only normalizes and stores the text, and FormulaException is never thrown anywhere i (evidence: 6595098b7a1c7448.md). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 8 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- **Read and write cell values and formulas.** It writes values of multiple types\u2014including strings, integers, doubles, \" -- Cell::SetFormula (Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153) only normalizes and stores the text, and FormulaException is never thrown anywhere i (evidence: 6595098b7a1c7448.md). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction. BC-05: also a genuine BL-004 section-fit defect (R10): the Documentation & Resources links list (inherited_unit:053.list) prints under Scope and Limitations. | BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 8 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- **Read and write cell values and formulas.** It writes values of multiple types\u2014including strings, integers, doubles, \" -- Cell::SetFormula (Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153) only normalizes and stores the text, and FormulaException is never thrown anywhere i (evidence: 6595098b7a1c7448.md). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 1,
@@ -100,7 +126,7 @@
         "BC-17",
         "BC-18"
       ],
-      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Go, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Runnable programs for every capability live under `examples/`\" -- No example covers password encryption (SetPassword is not used anywhere under examples/), nor charts, pivot tables or conditional formatting. (evidence: examples/@99c789e9175f2b12ad82bafeeba148ddcc1367fb). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction. BC-05, BC-17 already failed before this change and are unchanged by it.",
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Go, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Runnable programs for every capability live under `examples/`\" -- No example covers password encryption (SetPassword is not used anywhere under examples/), nor charts, pivot tables or conditional formatting. (evidence: examples/@99c789e9175f2b12ad82bafeeba148ddcc1367fb). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction. BC-05, BC-17 already failed before this change and are unchanged by it. BC-05: also a genuine BL-004 section-fit defect (R10): Scope and Limitations states the license ('provided without warranty under the MIT License'). | BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Go, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Runnable programs for every capability live under `examples/`\" -- No example covers password encryption (SetPassword is not used anywhere under examples/), nor charts, pivot tables or conditional formatting. (evidence: examples/@99c789e9175f2b12ad82bafeeba148ddcc1367fb). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction. BC-05, BC-17 already failed before this change and are unchanged by it.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
@@ -201,14 +227,15 @@
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
     {
-      "commit": "550e60d915a54ec7cbddd2ea410bc9bf87c2f151",
+      "commit": "e8cc8cca4d3a6c9a4643800f267d8ed6837ad22b",
       "failing_checks": [
+        "BC-05",
         "BC-18"
       ],
-      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-.Net (4 at re-land; the two 26.7.0 version rows were RESOLVED as refuted on 2026-11-13 by the sealed facts' SUPPORTED package:published_version = 26.7.0 from the nuget registry), each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"dotnet build\" -- The repo root has no .sln or .csproj (only Directory.Build.props), so a bare `dotnet build` there fails (evidence: repo root@59125b4732df0eedbc4d4c2ab978698ed4348eb7). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "justification": "BC-05: genuine defect, not a regression of the mechanism (R10). BL-004 section fit (owner P0, docs/DECISION_LOG.md 2026-11-13): the sealed README prints the maintainers' Documentation & Resources links list (inherited_unit:055.list) under Scope and Limitations -- docs/kb/reference, PUBLIC_API.md and CHANGELOG.md links -- because reconciliation re-homed it out of documentation_resources; validation/units.py section_fit_failures now blocks it. Re-sealed by the next hosted Lane R run, where the list stays in documentation_resources and planning owes every link there. | BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json holds 10 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-.Net (8 added 2026-11-13 from the BL-003 independent fact-check of this seal, docs/investigations/2026-11-13-lane-r-false-claim-review.md; each re-checked for an exact, uniquely printed quote), each a confirmed false, unsupported or misleading claim with truth and evidence path; BC-18 finds this seal still printing 8 of them. First row: 'Aspose.Email.Foss.Cfb.DirectoryEntry is a public symbol that exposes the properties IsRoot, IsStorage, and IsStream.' -- On DirectoryEntry, IsStorage(), IsStream() and IsRoot() are methods; the record's actual properties are StreamId, Name, ObjectType, ChildId, StreamSize, etc. (t. R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair is handed each quote and truth.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
-      "regenerations": 3,
+      "regenerations": 4,
       "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
@@ -421,6 +448,19 @@
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
+      "revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
+    },
+    {
+      "commit": "56668e8abf634943280af9a8a6df4751a84a463b",
+      "failing_checks": [
+        "BC-05",
+        "BC-18"
+      ],
+      "justification": "BC-05: genuine defect, not a regression of the mechanism (R10). BL-004 section fit (owner P0, docs/DECISION_LOG.md 2026-11-13): the sealed README prints the maintainers' Documentation & Resources links list (inherited_unit:080.list) under Scope and Limitations -- docs/kb/reference and AGENTS.md links -- because reconciliation re-homed it out of documentation_resources; validation/units.py section_fit_failures now blocks it. Re-sealed by the next hosted Lane R run, where the list stays in documentation_resources and planning owes every link there. | BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json holds 13 OPEN lane_r row(s) for aspose-words-foss/Aspose.Words-FOSS-for-.NET (13 added 2026-11-13 from the BL-003 independent fact-check of this seal, docs/investigations/2026-11-13-lane-r-false-claim-review.md; each re-checked for an exact, uniquely printed quote), each a confirmed false, unsupported or misleading claim with truth and evidence path; BC-18 finds this seal still printing 13 of them. First row: 'Chart chart = doc.FirstSection.Body.Shapes[0].Chart;' -- Story.Shapes (inherited by Body) and ShapeCollection are declared internal in the .NET build, so consumer code cannot compile this line. Only the test assemblie. R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair is handed each quote and truth.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
       "revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"

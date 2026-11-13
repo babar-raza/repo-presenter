@@ -1,0 +1,264 @@
+{
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+  "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "seal": "03b940a46f7b85343d5931901dc0b0910390c536",
+  "readme": "git show 03b940a46f7b:52b0f00ebf28a0b4173921725ff170685ec2c502/README.md",
+  "items": [
+    {
+      "quote": "scene.Save(\"output.fbx\", FileFormat.FBX7400Binary);",
+      "verdict": "FALSE",
+      "truth": "Scene.Save(string, FileFormat) calls format.CreateSaveOptions(); FileFormat.FBX7400Binary is a plain FileFormat instance whose CreateSaveOptions is the base virtual that throws NotImplementedException, so the first Quick Start example throws at runtime (only the internal registry formats, or explicit options such as new FbxSaveOptions(FileFormat.FBX7700Binary), work).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:425-428@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/FileFormat.cs:66,347-350@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Quick Start",
+      "index": 0,
+      "root_cause": "K01_EXAMPLE_NOT_EXECUTED",
+      "reverified": true
+    },
+    {
+      "quote": "scene.Save(\"output.obj\", FileFormat.WavefrontOBJ);",
+      "verdict": "FALSE",
+      "truth": "FileFormat.WavefrontOBJ is a base FileFormat whose CreateSaveOptions throws NotImplementedException, so Save(path, FileFormat.WavefrontOBJ) throws; the repo's own test only asserts that this call throws an exception; scene.Save(\"output.obj\") (extension-based) would work.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/FileFormat.cs:83,347-350@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:425-428@52b0f00ebf28a0b4173921725ff170685ec2c502; src/test/Aspose.ThreeD.Tests/roundtrip/SceneSaveErrorTests.cs:118-121@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Quick Start",
+      "index": 1,
+      "root_cause": "K01_EXAMPLE_NOT_EXECUTED",
+      "reverified": true
+    },
+    {
+      "quote": "per-format static members (`WavefrontOBJ`, `STLBinary`, `GLTF2`, `Collada`, `Discreet3DS`, `Microsoft3MF`) used with `Scene.Save()`/`FromFile()`",
+      "verdict": "FALSE",
+      "truth": "Of these, only FileFormat.Discreet3DS (aliased to the internal registered Discreet3DSFormat) overrides CreateLoadOptions/CreateSaveOptions; WavefrontOBJ, STLBinary, GLTF2, Collada and Microsoft3MF (Formats.Microsoft3MFFormat, no override) throw NotImplementedException when passed to Scene.Save(path, format) or Scene.FromFile(path, format, token).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/FileFormat.cs:79,83,87,94,99,339-350,368@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/Microsoft3MFFormat.cs:12-66@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:217-220,425-428@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 2,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`.dae`, and `.3mf` files through `Scene.Open`, `Scene.FromFile`, `Scene.Save`, and `Scene.FromStream` with full round-trip fidelity",
+      "verdict": "FALSE",
+      "truth": "Stream-based Scene.Open/FromStream maps only Obj/Stl/Gltf/Fbx/Ply/3ds load options to a format and throws NotSupportedException for the BasicLoadOptions used by .dae and .3mf, so FromStream cannot load COLLADA or 3MF; nothing in the source or tests establishes 'full round-trip fidelity' (no animation, skinning or morph data is read or written by any reader/writer).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:155-171@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/FileFormat.cs:451-482@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Key Capabilities",
+      "index": 3,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`NurbsSurface.ToMesh` throw `NotImplementedException`",
+      "verdict": "FALSE",
+      "truth": "NurbsSurface.ToMesh does not throw; it returns a placeholder flat grid mesh without evaluating the NURBS basis (code comments say 'Simple linear interpolation for now').",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Entities/NurbsSurface.cs:45-70@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Scope and Limitations",
+      "index": 4,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": true
+    },
+    {
+      "quote": "`Scene.Render`, `RenderFactory`, and the `IRenderTarget`/`IRenderWindow` rendering pipeline all throw `NotImplementedException`",
+      "verdict": "FALSE",
+      "truth": "Only Scene.Render throws; RenderFactory is an abstract class whose virtual Create* methods return null (no throw statements), and IRenderTarget/IRenderWindow are interfaces with no implementation that could throw.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:460-502@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Render/RenderFactory.cs:11-58@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Render/IRenderTarget.cs:14@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Render/IRenderWindow.cs:11@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Scope and Limitations",
+      "index": 5,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": true
+    },
+    {
+      "quote": "AVEVA PDMS RVM format registration — core geometry import/export works",
+      "verdict": "FALSE",
+      "truth": "No RVM importer or exporter exists: IOService registers only OBJ, STL, glTF, FBX, 3MF, COLLADA, PLY and 3DS readers/writers, RvmFormat is not in the FileFormat registry, and RvmFormat only exposes LoadAttributes which throws.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/IOService.cs:55-90@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/FileFormat.cs:372-379@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/RvmFormat.cs:26-37@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 6,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`Property-GLTF` | Exposes `GetExtra`/`SetExtra` for arbitrary user data and `GetBindPoint` for animation bind points.",
+      "verdict": "FALSE",
+      "truth": "Aspose.ThreeD.Formats.GLTF.StructuralMetadata.Property has only Name, DisplayName, Description, Type, EnumType, Normalized, Count and a throwing ToString; GetExtra/SetExtra/GetBindPoint belong to Aspose.ThreeD.Property (descriptions are swapped).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/GLTF/StructuralMetadata.cs:134-159@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Property.cs:64,74,89@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 7,
+      "root_cause": "K04_MEMBER_MISATTRIBUTION",
+      "reverified": false
+    },
+    {
+      "quote": "`PropertyTable` | A table of `PropertyCollection` entries indexed by name.",
+      "verdict": "FALSE",
+      "truth": "GLTF PropertyTable holds Name, MetaClass (ClassType) and a Dictionary<string, object> Values; it has no PropertyCollection entries, and its GetValue/AddValue throw NotImplementedException.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/GLTF/StructuralMetadata.cs:177-200@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 8,
+      "root_cause": "K04_MEMBER_MISATTRIBUTION",
+      "reverified": false
+    },
+    {
+      "quote": "`VertexElementTangent` | Per-vertex tangent data, exposed via `Tangents`.",
+      "verdict": "FALSE",
+      "truth": "No member named Tangents exists anywhere in the source; VertexElementTangent derives from VertexElementFVector and exposes its data through the inherited Data/SetData members.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Entities/VertexElementExtras.cs:21@52b0f00ebf28a0b4173921725ff170685ec2c502 (grep -rn 'Tangents' returns no matches)",
+      "section": "API Reference",
+      "index": 9,
+      "root_cause": "K04_MEMBER_MISATTRIBUTION",
+      "reverified": true
+    },
+    {
+      "quote": "`Chunk` | Represents a 3DS chunk header. |",
+      "verdict": "FALSE",
+      "truth": "Chunk is a struct nested inside the internal static class ChunkHelper, so it is not part of the public API.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/3DSHelper.cs:52,108@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 10,
+      "root_cause": "K05_SURFACE_COUNT_VISIBILITY",
+      "reverified": true
+    },
+    {
+      "quote": "`Text` watermarking is not currently functional",
+      "verdict": "MISLEADING",
+      "truth": "Text is a font/text profile with no watermark members; the stubbed watermark API is the separate static class Aspose.ThreeD.Utilities.Watermark, whose EncodeWatermark/DecodeWatermark throw NotImplementedException.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Profiles/Text.cs:9-28@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Utilities/Watermark.cs:6-31@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Scope and Limitations",
+      "index": 11,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "The product handles skeletal animation with bones, keyframes, and morph targets",
+      "verdict": "MISLEADING",
+      "truth": "Bone/SkinDeformer/MorphTargetDeformer/AnimationClip exist only as in-memory object model classes; no importer or exporter under Formats reads or writes animation, skin or morph-target data (grep of Formats/*Reader.cs and *Writer.cs finds no animation/deformer/skin references).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Deformers/SkinDeformer.cs:8-31@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/IOService.cs:55-90@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Intro",
+      "index": 12,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`GlobalTransform` | The immutable final evaluated transformation, similar to `Transform` but read-only.",
+      "verdict": "MISLEADING",
+      "truth": "GlobalTransform is a stub: Translation returns Vector3.Zero, Scale Vector3.One, EulerAngles Zero, Rotation Quaternion.Identity and TransformMatrix Matrix4.Identity regardless of the node.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/GlobalTransform.cs:18-38@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 13,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "their equivalents for FBX, glTF, STL, and 3MF",
+      "verdict": "MISLEADING",
+      "truth": "3MF has only Microsoft3MFSaveOptions (no 3MF load options type; 3MF and COLLADA load with an internal BasicLoadOptions), and there is no ColladaLoadOptions either.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/FormatOptions.cs:391@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/FileFormat.cs:457-460,474-477@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Key Capabilities",
+      "index": 14,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`Html5SaveOptions` | Save options for HTML5 (Aspose 3D Web viewer) export.",
+      "verdict": "MISLEADING",
+      "truth": "No HTML5 exporter exists (IOService has no HTML/AMF/U3D/Draco/PDF exporter and Scene.Save(stream, options) rejects these option types with NotSupportedException), so these options cannot be used to export anything.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Formats/IOService.cs:76-90@52b0f00ebf28a0b4173921725ff170685ec2c502; src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:371-385@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 15,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "`Version`: Version of the Aspose.3D library.",
+      "verdict": "MISLEADING",
+      "truth": "Scene.Version is the constant string \"FOSS\", not a library version number (the package version is 26.1.0).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Scene.cs:508@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 16,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": true
+    },
+    {
+      "quote": "**[Release 26.2.0 notes](docs/release-26.2.0.md)** — change log for this release",
+      "verdict": "MISLEADING",
+      "truth": "The only released package and the csproj version are 26.1.0; the 26.2.0 notes describe an unreleased version (and state Target Framework .NET 10.0 only).",
+      "evidence": "src/main/Aspose.ThreeD/Aspose.ThreeD.csproj:9@52b0f00ebf28a0b4173921725ff170685ec2c502; https://api.nuget.org/v3-flatcontainer/aspose.3d.foss/index.json versions=[\"26.1.0\"]; docs/release-26.2.0.md:5-6@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Documentation & Resources",
+      "index": 17,
+      "root_cause": "K07_REPO_DOCUMENT_UNREAD",
+      "reverified": false
+    },
+    {
+      "quote": "`AGENTS.md` outlines the project's contribution guidelines and expectations for community participants.",
+      "verdict": "MISLEADING",
+      "truth": "AGENTS.md is titled 'AI Agent Guide' and contains the implementation strategy, API classification and implementation status, not community contribution guidelines.",
+      "evidence": "AGENTS.md:1-30@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Documentation & Resources",
+      "index": 18,
+      "root_cause": "K07_REPO_DOCUMENT_UNREAD",
+      "reverified": false
+    },
+    {
+      "quote": "This project is licensed under the MIT `License`, as stated in the LICENSE file.",
+      "verdict": "MISPLACED",
+      "truth": "License statement (true: MIT) sits in Scope and Limitations and duplicates the License section; it also code-formats `License` as if it were the API class.",
+      "evidence": "LICENSE:1@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Scope and Limitations",
+      "index": 19,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "- **[Getting started guide](https://docs.aspose.org/3d/net/)**",
+      "verdict": "MISPLACED",
+      "truth": "A second resources link list (docs, KB, reference, progress notes, release notes, AGENTS.md, issues) is placed inside Scope and Limitations, duplicating the Documentation & Resources section.",
+      "evidence": "README structure; docs/foss-net-progress.md and docs/release-26.2.0.md exist at 52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "Scope and Limitations",
+      "index": 20,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "dotnet add package Aspose.3D.FOSS --version 26.1.0",
+      "verdict": "MISPLACED",
+      "truth": "A consumer install command (true: 26.1.0 is on NuGet) is placed under Development and Testing, duplicating Installation.",
+      "evidence": "https://api.nuget.org/v3-flatcontainer/aspose.3d.foss/index.json versions",
+      "section": "Development and Testing",
+      "index": 21,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "The verified public surface has 293 types.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "'verified public surface' is analysis wording; the count is also not reproducible as stated (294 public class/struct/interface/enum declarations plus 3 public delegates, one of which, Chunk, is nested in an internal class).",
+      "evidence": "grep of public type declarations under src/main/Aspose.ThreeD/Aspose/ThreeD@52b0f00ebf28a0b4173921725ff170685ec2c502; Formats/3DSHelper.cs:52,108",
+      "section": "API Reference",
+      "index": 22,
+      "root_cause": "K05_SURFACE_COUNT_VISIBILITY",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "Aspose.ThreeD.Animation.Extrapolation is a public symbol with members RepeatCount and Type.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "Dozens of first-table descriptions are extractor output ('is a public symbol with members ...', 'throw ArgumentNullException (conditionally)') rather than user-facing descriptions, and the table duplicates the second full API table below it.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose/ThreeD/Animation/Extrapolation.cs@52b0f00ebf28a0b4173921725ff170685ec2c502",
+      "section": "API Reference",
+      "index": 23,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "in `src/main/Aspose.ThreeD/Aspose.ThreeD.csproj`, no `PackageReference` a consumer would install is declared",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "The claim is true (no PackageReference; NuGet dependency groups are empty) but is phrased as an analysis note citing a build file rather than as user documentation.",
+      "evidence": "src/main/Aspose.ThreeD/Aspose.ThreeD.csproj:1-29@52b0f00ebf28a0b4173921725ff170685ec2c502; https://api.nuget.org/v3/registration5-semver1/aspose.3d.foss/index.json dependencyGroups (no dependencies)",
+      "section": "Dependencies",
+      "index": 24,
+      "root_cause": "K06_DEPENDENCY_FROM_PROJECT_FILE",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    }
+  ]
+}

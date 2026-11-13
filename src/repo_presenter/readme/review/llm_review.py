@@ -430,14 +430,19 @@ def planned_requests(
     dispositions: Mapping[str, Any],
     rendered: bool = True,
     validation: Mapping[str, Any] | None = None,
+    audit: bool = False,
 ) -> tuple[tuple[ReviewUnit, ...], frozenset[int], tuple[PlannedRequest, ...]]:
     """The review units of ``candidate_readme``, its attributed maintainer lines, and each unit's
     packet, call schema and request hash. No call is made: this is the part of
     ``review_with_model`` that decides WHAT is asked, so a dry run counts exactly the requests a
-    live review would send (``calibration/estimate.py``)."""
+    live review would send (``calibration/estimate.py``).
+
+    ``audit`` is the M9 blind auditor's whole-document review (``scripts/run_m9_auditor.py``):
+    heading lines are reviewable and authored API reference rows carry their type facts even with
+    ``rendered=False``. Every production caller leaves it ``False`` (requests unchanged)."""
     loaded = prompts[JOB]
     authored = authored_table_lines(candidate_readme, facts) if rendered else frozenset()
-    units = plan_units(candidate_readme, rendered=rendered, authored=authored)
+    units = plan_units(candidate_readme, rendered=rendered, authored=authored, headings=audit)
     attributed = (
         maintainer_lines(candidate_readme, facts, dispositions) if rendered else frozenset()
     )
@@ -459,6 +464,7 @@ def planned_requests(
             facts=facts,
             plan=plan,
             maintainer_lines=attributed,
+            audit=audit,
         )
         if changed is not None:
             packet["review_scope"] = {
@@ -487,6 +493,7 @@ def review_with_model(
     validation: Mapping[str, Any],
     deterministic_findings: Sequence[Finding] = (),
     rendered: bool = True,
+    audit: bool = False,
 ) -> ReviewVerdict:
     """The model-reviewed verdict for ``candidate_readme``; ``ReviewUnavailable`` when no valid
     review could be obtained. ``dispositions`` and ``validation`` are the deterministic stage's
@@ -509,6 +516,7 @@ def review_with_model(
         dispositions=dispositions,
         rendered=rendered,
         validation=validation,
+        audit=audit,
     )
     changed = edit_scope(
         rendered=rendered, validation=validation,

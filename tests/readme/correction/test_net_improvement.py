@@ -14,6 +14,7 @@ a reader, never blocked on here and never printed into the README itself.
 from __future__ import annotations
 
 import dataclasses
+from pathlib import Path
 from typing import Any
 
 from repo_presenter.lane_l_review import (
@@ -104,6 +105,19 @@ def test_zero_edits_beside_an_unrepaired_defect_still_blocks_the_holdout() -> No
     """The old, strict rule stands without a net improvement to point to."""
     ctx, result = corrected(README, failing_example())
     assert result.edits == []
+    findings = holdout_findings(ctx, result, deterministic=True)
+    assert RULE_UNREPAIRED_DEFECT in rules(findings)
+
+
+def test_a_lone_diagram_redraw_never_carries_an_unrepaired_defect() -> None:
+    """2026-11-13: the At a Glance redraw (``glance_layout``) is applied on its own, but it is a
+    layout repair, not the content improvement R21 lets residual defects ride on. Real case:
+    Aspose.3D-FOSS-for-.NET Lane L (L-03/L-05) re-certified on nothing but a redrawn diagram."""
+    live = (Path(__file__).resolve().parents[2] / "fixtures" / "glance" / "cells_java_live.mmd")
+    readme = README + "\n## At a Glance\n\n```mermaid\n" + live.read_text("utf-8") + "```\n"
+    ctx, result = corrected(readme, failing_example())
+    assert [edit.detector for edit in result.edits] == ["glance_layout"]
+    assert net_improvement(ctx, result) is False
     findings = holdout_findings(ctx, result, deterministic=True)
     assert RULE_UNREPAIRED_DEFECT in rules(findings)
 

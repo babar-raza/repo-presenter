@@ -3,22 +3,23 @@
 $ python -m pytest tests/test_lane_l_trigger.py -q
 --- stdout ---
 ...................                                                      [100%]
-19 passed in 0.22s
+19 passed in 0.25s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 60%]
-................................................                         [100%]
-120 passed in 9.90s
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.............................                                            [100%]
+173 passed in 0.88s
 
 --- stderr ---
 
 $ python -m pytest tests/test_readme_findings.py -q
 --- stdout ---
-...............                                                          [100%]
-15 passed in 0.52s
+.................                                                        [100%]
+17 passed in 0.20s
 
 --- stderr ---
 
@@ -33,16 +34,17 @@ $ python -m pytest tests/test_lane_l_trigger.py -q
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 60%]
-................................................                         [100%]
-120 passed in 1.27s
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.............................                                            [100%]
+173 passed in 1.00s
 
 --- stderr ---
 
 $ python -m pytest tests/test_readme_findings.py -q
 --- stdout ---
-...............                                                          [100%]
-15 passed in 0.27s
+.................                                                        [100%]
+17 passed in 0.21s
 
 --- stderr ---
 
@@ -52,48 +54,49 @@ mutated: M src/repo_presenter/readme_findings.py
 $ python -m pytest tests/test_lane_l_trigger.py -q
 --- stdout ---
 ...................                                                      [100%]
-19 passed in 0.21s
+19 passed in 0.20s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 60%]
-...............................................F                         [100%]
-================================== FAILURES ===================================
-_______________ test_finding_rows_feed_append_finding_directly ________________
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.....................F.......                                            [100%]
+=================================== FAILURES ===================================
+________________ test_finding_rows_feed_append_finding_directly ________________
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-875/test_finding_rows_feed_append_0')
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-605/test_finding_rows_feed_append_0')
 
     def test_finding_rows_feed_append_finding_directly(tmp_path: Any) -> None:
 >       from repo_presenter.readme_findings import append_finding, read_findings
-E       ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-n1977e7_\src\repo_presenter\readme_findings.py)
+E       ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.gatectl-worktrees/wt-liulgqb5/src/repo_presenter/readme_findings.py)
 
-tests\readme\correction\test_net_improvement.py:137: ImportError
-=========================== short test summary info ===========================
+tests/readme/correction/test_net_improvement.py:151: ImportError
+=========================== short test summary info ============================
 FAILED tests/readme/correction/test_net_improvement.py::test_finding_rows_feed_append_finding_directly
-1 failed, 119 passed in 1.51s
+1 failed, 172 passed in 0.94s
 
 --- stderr ---
 
 $ python -m pytest tests/test_readme_findings.py -q
 --- stdout ---
 
-=================================== ERRORS ====================================
-_______________ ERROR collecting tests/test_readme_findings.py ________________
-ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-n1977e7_\tests\test_readme_findings.py'.
+==================================== ERRORS ====================================
+________________ ERROR collecting tests/test_readme_findings.py ________________
+ImportError while importing test module '/home/user/repo-presenter/.gatectl-worktrees/wt-liulgqb5/tests/test_readme_findings.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
-C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+/usr/local/lib/python3.13/importlib/__init__.py:88: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests\test_readme_findings.py:15: in <module>
+tests/test_readme_findings.py:15: in <module>
     from repo_presenter.readme_findings import (
-E   ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-n1977e7_\src\repo_presenter\readme_findings.py)
-=========================== short test summary info ===========================
+E   ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.gatectl-worktrees/wt-liulgqb5/src/repo_presenter/readme_findings.py)
+=========================== short test summary info ============================
 ERROR tests/test_readme_findings.py
-!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-1 error in 0.29s
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.13s
 
 --- stderr ---
 

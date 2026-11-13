@@ -303,6 +303,7 @@ OPERATIONAL_DATA_FILES = frozenset(
         "terminal_cells.json",
         "recertification_baseline.json",
         "registry_observations.json",
+        "issue_pilot.json",
     }
 )
 #: The local file a hosted job keeps its reservation and its call ledgers' baseline in.

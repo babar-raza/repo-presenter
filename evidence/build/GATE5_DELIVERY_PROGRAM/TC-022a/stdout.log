@@ -3,7 +3,7 @@
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.21s
+17 passed in 1.48s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/acceptance/test_registration.py -q
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.22s
+17 passed in 5.61s
 
 --- stderr ---
 
@@ -121,7 +121,10 @@ ______________ test_real_build_reports_the_honest_zero_call_floor ______________
         # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
         # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
         # number, not a target. 78 -> 77 (2026-11-13): the 3D .NET Lane L seal is NEEDS_REPAIR on genuine
-        # defects L-03/L-05 (justified in the baseline, R10), so it is no longer a clean twin.
+        # defects L-03/L-05 (justified in the baseline, R10), so it is no longer a clean twin. 77 -> 79
+        # (2026-11-13, BL-004 baseline rewrite): the 3D Python and Cells .NET Lane R seals, RECERTIFIED and
+        # previously absent from the baseline, are now recorded in it. 79 -> 77 (2026-11-13, BL-003): the
+        # independent fact-check registered confirmed false claims in both, so they are NEEDS_REPAIR on BC-18.
         assert registration.shortfall.clean_twin_achieved == 77
         assert registration.shortfall.clean_twin_shortfall == 0
     
@@ -135,12 +138,12 @@ E       AssertionError: assert 32 == 64
 E        +  where 32 = len('71bf791f52e7f14213f4b65f4be5cbf4')
 E        +    where '71bf791f52e7f14213f4b65f4be5cbf4' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='71bf791f52e7f14213f4b65f4be5cbf4').digest
 
-tests/acceptance/test_registration.py:396: AssertionError
+tests/acceptance/test_registration.py:399: AssertionError
 =========================== short test summary info ============================
 FAILED tests/acceptance/test_registration.py::test_digest_is_deterministic_and_pinned
 FAILED tests/acceptance/test_registration.py::test_load_calibration_registration_from_a_small_fixture
 FAILED tests/acceptance/test_registration.py::test_real_build_reports_the_honest_zero_call_floor
-3 failed, 14 passed in 0.24s
+3 failed, 14 passed in 5.86s
 
 --- stderr ---
 

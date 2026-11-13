@@ -161,8 +161,12 @@ def execute(
     # workspace instead of the caller's directory (hosted run 9: '.present-work/examples/venv/
     # bin/python' was not found). Absolute here, whatever the caller passed.
     workspace = workspace.resolve()
+    # Absolute, but never through a symlink: a multi-call binary dispatches on the name it was
+    # started by. `~/.cargo/bin/cargo` is a symlink to `rustup`, and resolving it ran rustup
+    # itself, which answered `cargo --version` with its own banner - every Rust example was
+    # recorded "the Cargo toolchain did not report a version" (Aspose.Cells-FOSS-for-Rust, 7 of 7).
     if os.sep in argv[0] or "/" in argv[0]:
-        argv = [str(Path(argv[0]).resolve()), *argv[1:]]
+        argv = [os.path.abspath(argv[0]), *argv[1:]]
     source = dict(os.environ if base_environment is None else base_environment)
     overlay = dict(extra_environment or {})
     removed_secret_values = [

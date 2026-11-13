@@ -122,3 +122,19 @@ def no_ambient_github_run_id(monkeypatch: pytest.MonkeyPatch) -> None:
     hosted CI (run 41832146529) and not in any local run. Deleted by default, matching every
     other test that cares about workflow_run_id semantics, which already passes it explicitly."""
     monkeypatch.delenv("GITHUB_RUN_ID", raising=False)
+
+
+@pytest.fixture(autouse=True)
+def r15_portfolio_reader_is_injected(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Owner ruling R15: ``github.client.authorize_write`` computes the portfolio predicate on every
+    upstream ``pull_request`` authorization, which reads the state remote, the attested record
+    branches and the upstream heads (network). Tests of the allowlist/transport shape are about a
+    portfolio that is complete, so the READER is substituted with a ready one here; the decision
+    itself is never stubbed. ``tests/propose/test_portfolio_gate.py`` injects incomplete, stale and
+    failing readers (and the real predicate over synthetic data) to prove the refusal."""
+    from repo_presenter.github import client
+    from repo_presenter.propose.portfolio_gate import PortfolioReadiness
+
+    monkeypatch.setattr(
+        client, "portfolio_readiness", lambda: PortfolioReadiness(ready=True, active=1)
+    )

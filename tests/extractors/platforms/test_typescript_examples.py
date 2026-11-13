@@ -626,3 +626,61 @@ def test_neither_registry_nor_path_offers_tsc(
     monkeypatch.setenv(typescript_examples._REGISTRY_VARIABLE, str(tmp_path / "absent.txt"))
     monkeypatch.setattr(typescript_examples.shutil, "which", lambda name: None)
     assert typescript_examples.typescript_compiler() is None
+
+
+def test_a_machine_tsc_that_refuses_the_packages_options_yields_to_the_packages_own(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """Aspose.3D-FOSS-for-TypeScript declares `moduleResolution: "node"` and pins `typescript:
+    ^5.8.3`; the hosted tsc 7 refuses node10 (TS5108) and every example was NOT_VERIFIED. The
+    package's own `npm install` puts the compiler it is built with in the build copy, and the
+    snippets are checked with that one (measured locally: 3 of 4 then type-check, 1 is a real
+    TS2339)."""
+    root = tmp_path / "repository"
+    root.mkdir()
+    barrel = _repository(root)
+    candidate = ExampleCandidate(1, "typescript", GOOD, "README.md", 1, 4, "unit:001")
+    used: list[str] = []
+
+    def build(source: Path, workspace: Path, npm: object, timeout: float) -> MeasuredBuild:
+        own = workspace / typescript_examples.PRODUCT_DIRECTORY / "node_modules" / ".bin"
+        own.mkdir(parents=True)
+        (own / "tsc").write_text("", encoding="utf-8")
+        return MeasuredBuild(True, "npm install", "succeeded (`npm install` exited 0)")
+
+    def probe(compiler: str, workspace: Path, flags: object) -> str:
+        return "" if compiler.endswith("/.bin/tsc") else "error TS5108: node10 has been removed"
+
+    def run(argv: list[str], **kwargs: object) -> object:
+        used.append(argv[0])
+        return typescript_examples.ExecutionResult(
+            argv=tuple(argv), return_code=0, stdout="", stderr="", timed_out=False,
+            environment_names=(),
+        )
+
+    monkeypatch.setattr(typescript_examples, "typescript_compiler", lambda: "/machine/tsc")
+    monkeypatch.setattr(typescript_examples, "build_product", build)
+    monkeypatch.setattr(typescript_examples, "probe_compiler", probe)
+    monkeypatch.setattr(
+        typescript_examples,
+        "_version",
+        lambda compiler, workspace: "Version 5.9.3" if ".bin" in compiler else "Version 7.0.2",
+    )
+    monkeypatch.setattr(typescript_examples, "execute", run)
+    receipts = typescript_examples.verify_typescript_examples(
+        root, barrel, [candidate], tmp_path / "run", 180.0
+    )
+    assert receipts[0].outcome == "EXECUTED"
+    assert "Version 5.9.3" in receipts[0].detail
+    assert used and all(path.endswith("/.bin/tsc") for path in used)
+    # No own compiler (the package declares none): the refusal stands, nothing is checked.
+    monkeypatch.setattr(
+        typescript_examples,
+        "build_product",
+        lambda *a: MeasuredBuild(False, "", "failed"),
+    )
+    receipts = typescript_examples.verify_typescript_examples(
+        root, barrel, [candidate], tmp_path / "run2", 180.0
+    )
+    assert receipts[0].outcome == "NOT_VERIFIED"
+    assert "TS5108" in receipts[0].detail

@@ -99,13 +99,18 @@ from repo_presenter.readme.composition.placement import (
     renderer_fact_ids,
     resolve_intra_document_anchors,
 )
-from repo_presenter.readme.composition.planning import section_conditions
+from repo_presenter.readme.composition.planning import (
+    link_list_targets,
+    section_conditions,
+)
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY, PlanningPolicy
 from repo_presenter.readme.composition.references import dangling_references
 from repo_presenter.readme.composition.source_topics import (
+    is_license_statement,
     path_topic,
     root_heading,
     source_heading,
+    under_license_heading,
 )
 from repo_presenter.readme.evidence.facts.links import extract_links, heading_slug
 from repo_presenter.readme.evidence.facts.product_pages import (
@@ -1139,7 +1144,21 @@ def _rehome_unprintable_kind_units(
         old = entry.get("destination_section")
         if old not in GENERATED_ONLY_DESTINATIONS:
             continue
-        heading = source_heading(units.get(unit_id))
+        unit = units.get(unit_id)
+        if (
+            old == "documentation_resources"
+            and unit is not None
+            and _unit_kind(unit_id) == "list"
+            and link_list_targets(unit.value, facts) is not None
+        ):
+            # Section fit (BL-004): a list of resource links whose every link the plan can assign
+            # IS Documentation and Resources' material; the planning backstop
+            # (``planning._kept_list_links``) owes every one of its links to that section's own
+            # link lines, so it is carried there in full. Re-homing it to the "nearest" printable
+            # section put docs.aspose.org/kb/reference under Scope and Limitations (4 of 18 Lane
+            # R seals: 3D .NET, Cells C++, Email .NET, Words .NET).
+            continue
+        heading = source_heading(unit)
         home = nearest_holdable(unit_id, heading, holdable, root)
         if home is None or home == old:
             continue
@@ -1150,6 +1169,66 @@ def _rehome_unprintable_kind_units(
             reason = reason[: max(room - 3, 0)].rstrip() + "..."
         entry["destination_section"] = home
         entry["rationale"] = (lead + reason).strip()
+
+
+RESOURCE_FIT_RATIONALE = "Kept in documentation_resources: a list of resource links, not {old}. "
+LICENSE_FIT_RATIONALE = "Superseded by the License section, which states the license from facts. "
+#: The sections a resource-links list or a license statement is never material of (BL-004): Scope
+#: and Limitations holds only what the product does not do; Key Capabilities only what it does.
+_NOT_RESOURCES = frozenset({"scope_limitations", "key_capabilities"})
+
+
+def _fit_resource_and_license_units(
+    output: dict[str, Any], facts: FactsDocument, units: Mapping[str, Fact], ctx: _Coverage
+) -> None:
+    """Section fit, in place (BL-004, owner P0 on Aspose.3D FOSS for .NET: "Documentation &
+    Resources is not complete because its content is shown in Scope and Limitations ... This
+    project is licensed under the MIT License ... does not fit Scope and Limitations").
+
+    * A kept list of resource links (every item a link the plan can assign,
+      ``planning.link_list_targets``) filed under Scope and Limitations or Key Capabilities is
+      moved to Documentation and Resources, which carries every one of its links as its own link
+      lines (``planning._kept_list_links``).
+    * A kept paragraph that states the project's license (``source_topics.is_license_statement``,
+      or sat under the source's License heading) and rests on nothing the License section does
+      not render is superseded by that section, citing the facts it renders. A paragraph that
+      also says something else (it cites other facts) is left to the existing checks."""
+    holdable = holdable_sections(facts)
+    license_ids = rendering_fact_ids("license", facts)
+    for entry in output.get("dispositions", []):
+        if entry.get("disposition") not in PLACED:
+            continue
+        unit_id = str(entry.get("unit_id", "?"))
+        unit = units.get(unit_id)
+        old = entry.get("destination_section")
+        if unit is None or old in (None, "license", "documentation_resources"):
+            continue
+        kind = _unit_kind(unit_id)
+        if (
+            kind == "list"
+            and old in _NOT_RESOURCES
+            and "documentation_resources" in holdable
+            and link_list_targets(unit.value, facts) is not None
+        ):
+            lead = RESOURCE_FIT_RATIONALE.format(old=old)
+            reason = str(entry.get("rationale") or "").strip()
+            entry["destination_section"] = "documentation_resources"
+            entry["rationale"] = (lead + reason)[:_RATIONALE_LIMIT].strip()
+            continue
+        if kind != "paragraph" or not license_ids:
+            continue
+        if not (
+            is_license_statement(unit.value) or under_license_heading(source_heading(unit))
+        ):
+            continue
+        cited = {str(i) for i in entry.get("fact_ids") or []}
+        if _supersession_gap(unit_id, "license", cited, ctx) is not None:
+            continue
+        entry["disposition"] = "SUPERSEDE_REDUNDANT"
+        entry["destination_section"] = "license"
+        entry["fact_ids"] = sorted(cited | set(license_ids))
+        reason = str(entry.get("rationale") or "").strip()
+        entry["rationale"] = (LICENSE_FIT_RATIONALE + reason)[:_RATIONALE_LIMIT].strip()
 
 
 _PROSE_PRINTED_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
@@ -1772,6 +1851,7 @@ def normalize(
         entry["fact_ids"] = sorted(cited | set(ids))
     _rehome_misfiled_units(output, facts, units_by_id)
     _rehome_unprintable_kind_units(output, facts, units_by_id)
+    _fit_resource_and_license_units(output, facts, units_by_id, coverage)
     claims: Claims = {}
     for entry in output.get("dispositions", []):
         destination = entry.get("destination_section")

@@ -51,6 +51,9 @@ from repo_presenter.core.llm.jobs import CallStore, JobContext
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import PromptRegistry
 from repo_presenter.readme.correction.apply import apply_edits, confinement_violations
+from repo_presenter.readme.correction.detectors.glance_layout import (
+    LAYOUT_ONLY_DETECTORS,
+)
 from repo_presenter.readme.correction.engine import correct
 from repo_presenter.readme.correction.model import Context, CorrectionResult
 from repo_presenter.readme.correction.report import (
@@ -71,7 +74,7 @@ from repo_presenter.readme.review.llm_review import review_with_model
 #: Bump whenever a holdout, the accounting of edits as dispositions, or the call into the reviewer
 #: changes meaning. A Lane L bundle records it as ``components.correction_review``: the reviewer
 #: scope, so a bump rechecks the review and regenerates nothing.
-LANE_L_REVIEW_VERSION = "3"
+LANE_L_REVIEW_VERSION = "4"
 HOLDOUTS_FILENAME = "holdouts.json"
 
 RULE_CONFINEMENT = "lane_l_confinement"
@@ -153,8 +156,10 @@ def net_improvement(
 ) -> bool:
     """R21 (TC-025 point 4, replacing the old all-or-nothing L-05), defined strictly:
 
-    1. at least one evidenced edit was made (zero edits is never an improvement: there is nothing
-       to point to);
+    1. at least one evidenced CONTENT edit was made (zero edits is never an improvement: there is
+       nothing to point to; a layout-only redraw, ``LAYOUT_ONLY_DETECTORS``, is applied but never
+       the improvement residual content defects ride on -- 2026-11-13, Aspose.3D-FOSS-for-.NET
+       Lane L, whose L-03/L-05 failures a lone diagram redraw would otherwise have carried);
     2. the corrected text is the original plus exactly those edits and nothing else
        (:func:`confinement_findings`, re-proved here from the edit list);
     3. a second detector pass over the corrected text (``compute``, the engine's own ``correct``
@@ -171,7 +176,7 @@ def net_improvement(
     unconditional ``REFUSED_LANE_R_RECOMMENDED`` when a defect remains -- that record never
     changes.
     """
-    if not result.edits:
+    if not any(edit.detector not in LAYOUT_ONLY_DETECTORS for edit in result.edits):
         return False
     if confinement_findings(ctx.readme, result):
         return False

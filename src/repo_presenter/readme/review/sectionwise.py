@@ -54,11 +54,11 @@ class ReviewUnit:
 
 
 def _runs(
-    readme: str, rendered: bool, authored: Collection[int] = ()
+    readme: str, rendered: bool, authored: Collection[int] = (), headings: bool = False
 ) -> list[tuple[str, list[int]]]:
     """``(section, line numbers)`` for each run of reviewable lines under one section."""
     runs: list[tuple[str, list[int]]] = []
-    for number, section in enumerate(line_sections(readme, rendered, authored), 1):
+    for number, section in enumerate(line_sections(readme, rendered, authored, headings=headings), 1):
         if section is None:
             continue
         if runs and runs[-1][0] == section:
@@ -74,19 +74,20 @@ def plan_units(
     *,
     rendered: bool = True,
     authored: Collection[int] = (),
+    headings: bool = False,
 ) -> tuple[ReviewUnit, ...]:
     """The review units of ``readme``, in document order: whole sections packed together while
     their text fits ``max_chars``, a longer section split between lines. Every reviewable line is
     in exactly one unit. A candidate with no author-written text has no units. ``authored``
     (``scope.authored_table_lines``) adds the renderer-printed table rows whose cell an author
-    wrote."""
+    wrote. ``headings`` (M9 auditor only) makes heading lines reviewable (``scope.line_sections``)."""
     rows = readme.splitlines()
 
     def size(numbers: Sequence[int]) -> int:
         return sum(len(rows[n - 1]) + 1 for n in numbers)
 
     pieces: list[tuple[str, list[int]]] = []
-    for section, numbers in _runs(readme, rendered, authored):
+    for section, numbers in _runs(readme, rendered, authored, headings):
         if size(numbers) <= max_chars:
             pieces.append((section, numbers))
             continue
@@ -150,14 +151,18 @@ def unit_packet(
     facts: FactsDocument,
     plan: Mapping[str, Any],
     maintainer_lines: Collection[int] = (),
+    audit: bool = False,
 ) -> dict[str, Any]:
     """The packet ``prompts/independent_review.yaml`` declares, for one unit. Evidence only: the
     author's rationale for a plan entry is dropped, and the dispositions and the deterministic
     validation result are not sent (they are the deterministic stage's, not the reviewer's).
     ``maintainer_lines`` (``scope.maintainer_lines``) are sent only as the shown line numbers that
-    are attributed maintainer text -- a structural label, not a disposition or a rationale."""
+    are attributed maintainer text -- a structural label, not a disposition or a rationale.
+    ``audit`` (M9 auditor only) gives authored API reference rows their type facts even in a
+    whole-document review (``rendered=False``), exactly as the production Lane R review gives them,
+    and adds the facts' computed type counts to the review scope (``computed_counts``)."""
     text = unit_text(unit, candidate_readme)
-    given, members = type_row_facts(unit, candidate_readme, facts)
+    given, members = type_row_facts(unit, candidate_readme, facts, force=audit)
     records = unit_facts(
         facts,
         text,
@@ -172,18 +177,21 @@ def unit_packet(
         for entry in plan.get("sections", [])
         if isinstance(entry, Mapping) and entry.get("section_id") in unit.sections
     ]
+    scope: dict[str, Any] = {
+        "unit": unit.label,
+        "sections": list(unit.sections),
+        "other_units": [
+            {"unit": other.label, "sections": list(other.sections)}
+            for other in units
+            if other.index != unit.index
+        ],
+        "plan": without_narrative(entries),
+    }
+    if audit:
+        scope["computed_counts"] = computed_counts(facts)
     return {
         "repository": repository,
-        "review_scope": {
-            "unit": unit.label,
-            "sections": list(unit.sections),
-            "other_units": [
-                {"unit": other.label, "sections": list(other.sections)}
-                for other in units
-                if other.index != unit.index
-            ],
-            "plan": without_narrative(entries),
-        },
+        "review_scope": scope,
         "candidate_section": delimited(
             "candidate_section", text, shown=numbered_unit(unit, candidate_readme)
         ),
@@ -198,14 +206,31 @@ def unit_packet(
     }
 
 
+def computed_counts(facts: FactsDocument) -> dict[str, Any]:
+    """The type counts the validators compute from the facts (``surface_claims.type_counts``: the
+    SUPPORTED type-level ``public_symbol`` facts), for the M9 audit packet only. A count such as "303
+    public types" appears in no fact value, so a blind reviewer could not tell a computed count from an
+    invented one (hosted round 43445578226: every Lane L control whose correction restated a count was
+    flagged for it). Derived from the facts alone -- nothing from the seal -- so it is blind."""
+    from repo_presenter.readme.validation.surface_claims import type_counts
+
+    types, classes = type_counts(facts)
+    return {
+        "public_types": types,
+        "public_classes": classes,
+        "note": "computed from the SUPPORTED type-level public_symbol facts; a stated count of public "
+        "types (or classes) equal to one of these is evidenced by that computation, any other count is not",
+    }
+
+
 def type_row_facts(
-    unit: ReviewUnit, readme: str, facts: FactsDocument
+    unit: ReviewUnit, readme: str, facts: FactsDocument, *, force: bool = False
 ) -> tuple[list[str], dict[str, list[str]]]:
     """For the authored API reference rows the unit shows (``scope.authored_type_rows``), the fact
     ids each row's ``type:<fact id>`` unit was given and the member names listed with each type,
     read through the same function the type batch is built from (``authoring.type_unit_facts``):
     what the reviewer is shown for a row is exactly what its author was told it may state."""
-    if not unit.rendered or "api_reference" not in unit.sections:
+    if not (unit.rendered or force) or "api_reference" not in unit.sections:
         return [], {}
     from repo_presenter.readme.composition.authoring import type_unit_facts
 

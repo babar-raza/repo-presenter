@@ -274,3 +274,151 @@ def must_correct_rows(
         and record.status == STATUS_OPEN
         and record.quote
     ]
+
+
+#: How a row records that its claim was disproved rather than fixed: a RESOLVED row whose
+#: ``evidence`` starts with this word (the 2026-11-13 convention, e.g. the two Email .NET 26.7.0
+#: rows a SUPPORTED registry fact refuted). The schema has OPEN/RESOLVED only; a refuted row is
+#: RESOLVED with this marker and is never a regression check -- its quote may be true text.
+REFUTED_MARKER = "REFUTED"
+
+
+def is_refuted(record: FindingRecord) -> bool:
+    """Whether ``record`` was disproved (its claim was true after all), not corrected."""
+    return record.evidence.lstrip().upper().startswith(REFUTED_MARKER)
+
+
+def regression_rows(
+    repository: str, route: str = LANE_R, path: Path = DEFAULT_FINDINGS_PATH
+) -> list[FindingRecord]:
+    """Every quoted row of one repository and route that is a permanent regression check (owner,
+    2026-11-13: "an already caught problem should not reappear"): OPEN rows (owed a correction)
+    AND RESOLVED rows (corrected once; printing the quote again is a regression), never a refuted
+    row (``is_refuted``). BC-18 (``readme/validation/must_correct.py``) fails a candidate of that
+    route that prints any of these quotes. A missing register is an empty list; an unreadable one
+    raises ``FindingsRegisterError``."""
+    return [
+        record
+        for record in read_findings(path)
+        if record.repository == repository
+        and record.route == route
+        and record.quote
+        and not is_refuted(record)
+    ]
+
+
+# --- importing an independent fact-check review ------------------------------------------------
+
+#: The verdicts of an independent fact-check review that are factual defects and become register
+#: rows. ``INTERNAL_WORDING`` and ``MISPLACED`` are owned by deterministic checks (BL-002, BL-004)
+#: and are imported only when an item says ``"register": true`` (also factually wrong).
+FACTUAL_VERDICTS: tuple[str, ...] = ("FALSE", "UNSUPPORTED", "MISLEADING")
+
+
+def _squashed(text: str) -> str:
+    return " ".join(text.split())
+
+
+def review_description(verdict: str, quote: str) -> str:
+    """The dedup description of an imported review row: the verdict and the quote's first 90
+    characters (the a963daa convention, ``confirmed false claim: <quote[:90]>``)."""
+    return f"confirmed {verdict.strip().lower()} claim: {_squashed(quote)[:90]}"
+
+
+def import_review(
+    path: Path,
+    *,
+    repository: str,
+    readme: str,
+    items: list[dict[str, Any]],
+    first_seen_at: str,
+    route: str = LANE_R,
+) -> tuple[list[FindingRecord], list[tuple[dict[str, Any], str]]]:
+    """Register one repository's independent fact-check items as OPEN rows (``append_finding``,
+    so a re-import updates in place and never duplicates). Returns ``(registered, skipped)``,
+    each skipped item with its reason.
+
+    An item is ``{"quote", "verdict", "truth", "evidence"}`` plus optional ``"register"`` (bool;
+    default: the verdict is in ``FACTUAL_VERDICTS``) and ``"occurrences"`` (int, default 1). The
+    quote must be the README's exact text (whitespace-squashed, as BC-18 matches) and printed
+    exactly ``occurrences`` times in ``readme`` -- an over-broad quote that also matches correct
+    text (the 2026-11-13 bare ``dotnet build`` row) is refused, never registered. Nothing is
+    written unless every item to register passes."""
+    text = _squashed(readme)
+    planned: list[dict[str, Any]] = []
+    skipped: list[tuple[dict[str, Any], str]] = []
+    problems: list[str] = []
+    for item in items:
+        verdict = str(item.get("verdict", "")).upper()
+        wanted = item.get("register")
+        if wanted is None:
+            wanted = verdict in FACTUAL_VERDICTS
+        if not wanted:
+            skipped.append((item, str(item.get("skip_reason") or f"verdict {verdict} not registered")))
+            continue
+        quote = str(item.get("quote", ""))
+        expected = int(item.get("occurrences", 1))
+        found = text.count(_squashed(quote)) if _squashed(quote) else 0
+        if found != expected:
+            problems.append(f"quote printed {found} time(s), expected {expected}: {quote[:80]!r}")
+            continue
+        if not str(item.get("truth", "")).strip() or not str(item.get("evidence", "")).strip():
+            problems.append(f"quote has no truth or evidence: {quote[:80]!r}")
+            continue
+        planned.append(item)
+    if problems:
+        raise FindingsRegisterError(f"{repository}: " + "; ".join(problems))
+    registered = [
+        append_finding(
+            path,
+            repository=repository,
+            description=review_description(str(item["verdict"]), str(item["quote"])),
+            evidence=str(item["evidence"]),
+            route=route,
+            first_seen_at=first_seen_at,
+            quote=str(item["quote"]),
+            truth=str(item["truth"]),
+        )
+        for item in planned
+    ]
+    return registered, skipped
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``python -m repo_presenter.readme_findings import --repository R --readme README.md
+    --review items.json --date YYYY-MM-DD [--register PATH]``: register a review's factual items."""
+    import argparse
+
+    parser = argparse.ArgumentParser(prog="repo_presenter.readme_findings")
+    sub = parser.add_subparsers(dest="command", required=True)
+    imp = sub.add_parser("import", help="register an independent fact-check review's items")
+    imp.add_argument("--repository", required=True)
+    imp.add_argument("--readme", type=Path, required=True, help="the reviewed (sealed) README")
+    imp.add_argument("--review", type=Path, required=True, help="JSON list of review items")
+    imp.add_argument("--date", required=True, help="first_seen_at, YYYY-MM-DD")
+    imp.add_argument("--register", type=Path, default=DEFAULT_FINDINGS_PATH)
+    args = parser.parse_args(argv)
+    raw = json.loads(args.review.read_text(encoding="utf-8"))
+    items = raw.get("items", raw) if isinstance(raw, dict) else raw
+    if not isinstance(items, list):
+        print(f"FAIL: {args.review} holds no item list")
+        return 1
+    try:
+        registered, skipped = import_review(
+            args.register,
+            repository=args.repository,
+            readme=args.readme.read_text(encoding="utf-8"),
+            items=items,
+            first_seen_at=args.date,
+        )
+    except FindingsRegisterError as exc:
+        print(f"FAIL: {exc}")
+        return 1
+    print(f"{args.repository}: registered {len(registered)}, skipped {len(skipped)}")
+    for item, reason in skipped:
+        print(f"  skipped [{item.get('verdict')}] {str(item.get('quote', ''))[:70]!r}: {reason}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

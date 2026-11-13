@@ -14,6 +14,10 @@ name: run-request-execute
 #             is no longer the branch tip (replay), checked-out code that is not current main, a request
 #             commit that is not exactly current main plus run-request.json, an unknown job, an unregistered
 #             repository or wrong ecosystem, a bad lane, and a mint request with any other field.
+#   cohort    the engine's override (owner R37, 2026-11-13): present.yml called with NO target runs only
+#             its cohort job -- the same authorization-gated planner the hourly schedule and
+#             cohort-chain.yml run, under the same one-planner group -- for when the cron is late.
+#   issues    calls issues.yml (owner R39, 2026-11-13): one pilot issue-maintenance cycle, no input.
 #   present / mint  call the default-branch copies of the reusable workflows (local `./` paths resolve to this
 #             run's commit, i.e. main) with `secrets: inherit`, only after validate passed.
 #   audit-seed / audit-score / acceptance-write  the M9 round's override path (owner R37, 2026-11-13): the
@@ -90,6 +94,15 @@ jobs:
       lane: ${{ needs.validate.outputs.lane }}
     secrets: inherit
 
+  cohort:
+    needs: validate
+    if: needs.validate.outputs.job == 'cohort'
+    permissions:
+      contents: write  # the provider-spend ledger ref (present.yml's cohort job)
+      actions: write   # the cohort job dispatches present.yml runs
+    # No target and no secret: only present.yml's cohort job runs (it holds no secret).
+    uses: ./.github/workflows/present.yml
+
   mint:
     needs: validate
     if: needs.validate.outputs.job == 'mint'
@@ -104,6 +117,14 @@ jobs:
     permissions:
       contents: write  # recertify writes new seal commits to this repository's state refs only
     uses: ./.github/workflows/recertify.yml
+
+  issues:
+    needs: validate
+    if: needs.validate.outputs.job == 'issues'
+    permissions:
+      contents: write  # issues.yml's state ref in this repository only; upstream writes use the App token
+    uses: ./.github/workflows/issues.yml
+    secrets: inherit
 
   audit-seed:
     needs: validate

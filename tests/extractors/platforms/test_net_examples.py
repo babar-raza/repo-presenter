@@ -92,6 +92,10 @@ def test_a_snippet_that_compiles_is_executed_and_carries_the_sdk_version(
     # every time, and its own warnings - in an order the compiler does not guarantee between
     # builds - filled the 4000-character clip before either run reached the same content twice.
     assert "-p:WarningLevel=0" in calls[-1]
+    # The restore-time vulnerability audit reads a live advisory feed: its NU190x warnings (an
+    # error under the product's TreatWarningsAsErrors) left all 12 Aspose.PDF-FOSS-for-.NET
+    # examples NOT_VERIFIED before any C# was compiled. The example build turns it off.
+    assert "-p:NuGetAudit=false" in calls[-1]
     # The wrapper references the product's own project and targets what this SDK builds.
     written = (tmp_path / "run" / "example_001" / "Example.csproj").read_text("utf-8")
     assert "net10.0" in written and "Aspose.Widget.csproj" in written

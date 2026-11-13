@@ -47,6 +47,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1",),
         "84730a9041b74da6f35270ce2aa9e814490eac8417a8847eccb44676f2b4861e",
     ),
+    "glance_layout.py": (
+        ("1",),
+        "ea2956b8beed9d4f9f1bb3af15ffd3cdb02f9ab83d62f6a1f7a1d68a51f80fe7",
+    ),
     "links.py": (
         ("2",),
         "59fa698291ad1610f892ba7d5a452dc17054d979d43eb29da50bc2dc2f90d881",
@@ -62,6 +66,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
     "structure.py": (
         ("1", "1", "1"),
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
+    ),
+    "type_description.py": (
+        ("1",),
+        "77d72be4a90eddaa366c27a8c8c555429d9f23aff9f5803c926399934c7f0ccf",
     ),
     "versioned_link_target.py": (
         ("1",),

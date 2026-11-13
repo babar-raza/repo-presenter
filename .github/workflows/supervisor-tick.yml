@@ -58,6 +58,15 @@ jobs:
             python ops/checks/portfolio_delivery_count.py --per-lane 25 2>&1 | tail -20
             set -e
             echo '```'
+            echo
+            # R40 (owner, 2026-11-13): silently dropped work is the failure mode -- every tick shows what is next,
+            # what has gone stale and what is untracked, right after the delivery numbers.
+            echo "### Backlog"
+            echo '```'
+            set +e
+            python ops/checks/backlog_check.py --report 2>&1 | tail -30
+            set -e
+            echo '```'
             for cmd in "doctor" "tick" "worker-tick --dry-run --holder supervisor"; do
               echo
               echo "### gatecli.py $cmd"

@@ -122,7 +122,11 @@ def test_the_objective_asks_for_facts_only_never_a_name_derived_purpose() -> Non
     objective = task.packet["objective"]
     assert "what it represents" not in objective
     assert "its name:" not in objective
-    assert "Never a purpose" in objective and "inferred from the" in objective
+    assert "never a purpose" in objective and "inferred from the" in objective
+    # 2026-11-13 owner review: the sentence says what the type is FOR, in its facts' words, and
+    # never takes the structural form "<qualified name> is a public symbol with members ...".
+    assert "saying what the type is for" in objective
+    assert "never 'is a public symbol'" in objective and "never the fully qualified name" in objective.lower()
     records = {record["id"]: record for record in task.packet["accepted_facts"]}
     assert records[MATRIX]["members"] == ["decompose"]
     assert records[MATRIX]["signature"] == "class Matrix4"

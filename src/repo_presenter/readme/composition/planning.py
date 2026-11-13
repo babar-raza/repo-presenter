@@ -56,9 +56,17 @@ from repo_presenter.readme.composition.link_budget import (
     plan_time_budget,
     slot_violations,
 )
-from repo_presenter.readme.composition.list_coverage import list_items
+from repo_presenter.readme.composition.list_coverage import (
+    is_link_list,
+    item_links,
+    list_items,
+)
 from repo_presenter.readme.composition.placement import PLACED, placements
-from repo_presenter.readme.composition.policy import DEFAULT_POLICY, PlanningPolicy, policy_packet
+from repo_presenter.readme.composition.policy import (
+    DEFAULT_POLICY,
+    PlanningPolicy,
+    policy_packet,
+)
 from repo_presenter.readme.evidence.facts.assets import CI_BADGE_FACT_ID
 from repo_presenter.readme.evidence.facts.links import extract_links, heading_slug
 from repo_presenter.readme.evidence.facts.product_pages import (
@@ -595,9 +603,50 @@ def _kept_list_links(
             if str(i) in assignable
             and (not corrected or values.get(str(i), "") in texts.get(unit, ""))
         ]
-        if planned_here.intersection(targets):
+        if not corrected:
+            # BL-004 (owner P0, Aspose.3D FOSS for .NET): a links list kept in Documentation and
+            # Resources is printed there ONLY as the plan's own link lines, so every link its
+            # items carry is owed to that section -- including links the disposition did not
+            # cite and links the model's plan did not already assign there. Reconciliation keeps
+            # such a list in this section (``link_list_targets``) instead of re-homing it into
+            # Scope and Limitations, which printed docs.aspose.org/kb/reference as "limitations"
+            # while Documentation and Resources showed only part of the list.
+            carried = {values.get(t, "") for t in targets}
+            for target in link_list_targets(texts.get(unit, ""), facts) or []:
+                if values.get(target, "") not in carried:
+                    targets.append(target)
+                    carried.add(values.get(target, ""))
+            required.update(dict.fromkeys(targets, "documentation_resources"))
+        elif planned_here.intersection(targets):
             required.update(dict.fromkeys(targets, "documentation_resources"))
     return required
+
+
+def link_list_targets(text: str, facts: FactsDocument) -> list[str] | None:
+    """The plan-assignable ``link_target`` fact for every link of a resource-links list, or
+    ``None`` when ``text`` is not such a list or one of its items carries no link the plan can
+    assign (a SUPPORTED, numbered, non-shell, non-anchor link target with that exact URL).
+
+    Only such a list can be carried by Documentation and Resources, which prints one generated
+    line per planned link and never a kept unit's text; reconciliation keeps it there exactly
+    when this is not ``None`` (BL-004)."""
+    if not is_link_list(text):
+        return None
+    by_value: dict[str, str] = {}
+    for fact in sorted(facts.by_kind("link_target"), key=lambda f: f.id):
+        if (
+            fact.polarity == "SUPPORTED"
+            and fact.id not in _SHELL_OWNED_LINKS
+            and not fact.value.startswith("#")
+        ):
+            by_value.setdefault(fact.value, fact.id)
+    targets: list[str] = []
+    for item in list_items(text):
+        ids = [by_value[link] for link in item_links(item) if link in by_value]
+        if not ids:
+            return None
+        targets.extend(i for i in ids if i not in targets)
+    return targets
 
 
 def _missing_kept_list_links(
@@ -639,6 +688,42 @@ def _hand_off_dropped_lists(
         output["material_limitations"] = limitations
     for item in limitations:
         item["unit_ids"] = [*dict.fromkeys([*(item.get("unit_ids") or []), *dropped])]
+
+
+def _drop_license_limitations(output: dict[str, Any], facts: FactsDocument) -> None:
+    """Section fit (BL-004): the project's license is what the License section prints from the
+    ``license`` facts, never a limitation. A ``material_limitations`` slot cites no ``license``
+    fact; a slot left citing no fact, whose inherited units another slot already hands to the
+    section (or that hands none), is dropped (Aspose.3D FOSS for .NET: slot 6 cited only
+    ``license:file``/``license:spdx`` and was authored "This project is licensed under the MIT
+    License" under Scope and Limitations)."""
+    limitations = output.get("material_limitations")
+    if not isinstance(limitations, list):
+        return
+    license_ids = {fact.id for fact in facts.by_kind("license")}
+    if not license_ids:
+        return
+    kept: list[Any] = []
+    for index, item in enumerate(limitations):
+        if not isinstance(item, dict):
+            kept.append(item)
+            continue
+        cited = [i for i in item.get("fact_ids") or [] if i not in license_ids]
+        if len(cited) == len(item.get("fact_ids") or []):
+            kept.append(item)
+            continue
+        units = [str(u) for u in item.get("unit_ids") or []]
+        handed_elsewhere = {
+            str(u)
+            for other in [*kept, *limitations[index + 1 :]]
+            if isinstance(other, dict)
+            for u in other.get("unit_ids") or []
+        }
+        if not cited and all(unit in handed_elsewhere for unit in units):
+            continue
+        kept.append({**item, "fact_ids": cited})
+    if kept != limitations:
+        output["material_limitations"] = kept
 
 
 def _placed_into(dispositions: dict[str, Any] | None, section: str) -> bool:
@@ -910,6 +995,7 @@ def plan_checks(
     if ("api_reference" in included) != bool(hubs):
         errors.append("api_hubs are given exactly when api_reference is included")
 
+    _drop_license_limitations(output, facts)
     for item in output.get("material_limitations", []):
         if not item.get("fact_ids") and not item.get("unit_ids"):
             errors.append("a material limitation cites at least one fact or inherited unit")

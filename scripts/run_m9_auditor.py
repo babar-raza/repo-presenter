@@ -17,22 +17,38 @@ takes the encrypted manifest or the key; the workflow job that runs it has no ``
 environment and downloads only the candidates artifact. Each case is reviewed as a whole document
 (``rendered=False``, no Lane L edit scope), so nothing tells the reviewer which lines differ from the seal.
 
+Scope (BL-013, the R36(b) diagnosis of hosted round 43445578226): the review is ``audit=True``, so the
+reviewer is shown every heading line too (a sentence written onto the ``# Title`` line is prose; the round
+missed all 11 of its D/D14 seeds there) and authored API reference rows carry their type facts as in the
+production Lane R review. A Lane L case is judged as the production Lane L review judges a correction: the
+lines that differ from the live README at the audited revision (``README.original.md``, the public upstream
+file -- never the seal, whose edit list would tell the reviewer which change is genuine), with the live
+text around them as context. Unchanged maintainer text is not the candidate's claim (R21: a defect that
+already existed there is a recorded residual, never a blocker), and in that round 26 of the 31 model
+flags on Lane L controls were on such text. The deterministic claim rule keeps every finding on a Lane R
+case and, on a Lane L case, every finding whose quote touches a changed line.
+
 Verdict mapping: a finding the reviewer's own clearances proved false is ``supported``; a BLOCKING
 ``contradiction``/``name_denial`` is ``false`` (class A/D9: a checkable claim the facts contradict); any
-other BLOCKING finding is ``unverifiable`` (class D: not grounded). A finding's line is the case line that
-holds the first line of its quote (the reviewer derives the quote from the lines it cites); a finding with
-no locatable line is written at line ``len(lines) + 1``, past the end of the text: it still flags its
-candidate (fail closed for a clean control) and can never match a seeded line by accident.
+other BLOCKING finding is ``unverifiable`` (class D: not grounded). A finding is written at every case
+line its quote spans, up to ``MAX_ANCHOR_LINES`` (one wrapped sentence; the reviewer derives the quote from
+the lines it cites); a longer quote is written at its first line only, so a wide citation can never cover
+a seed by accident. In round 43445578226 two class A seeds were caught on the right sentence but written
+one line early (the count sat on the second line of a wrapped sentence). A finding with no locatable line
+is written at line ``len(lines) + 1``, past the end of the text: it still flags its candidate (fail closed
+for a clean control) and can never match a seeded line by accident. Each row records the finding's
+``source`` (``llm`` or ``deterministic``) for the post-freeze adjudication (``run_acceptance_writer.py``).
 
 Fail closed: a case whose review stays unavailable after one retry, a budget refusal or a missing seal ends
 the run with exit 1 and NO findings file, so nothing incomplete is ever frozen; the workflow's bounded
 attempts (``run_m9_seeder.MAX_AUDIT_ATTEMPTS``) decide what happens next.
 
 Adjudication of flags on clean controls (docs/DECISION_LOG.md 2026-11-12) is NOT done here: a second pass
-of the same model, prompt and evidence is not an independent check, so hosted rounds leave every flag
-unadjudicated, which ``run_acceptance_writer.py`` counts against both the candidate and the auditor (fail
-closed). Independent adjudications enter only as a committed file on main through the run-request
-``acceptance-write`` override.
+of the same model, prompt and evidence is not an independent check. It is done after the findings are
+frozen, by the acceptance writer's deterministic adjudicator (no model: the pinned facts, the renderer's
+line ownership, the Lane L engine's recorded derivations and re-certification), plus any committed
+adjudication file on main through the run-request ``acceptance-write`` override; every flag neither
+decides stays unadjudicated and counts against both the candidate and the auditor (fail closed).
 
 ``resolve`` copies a FROZEN findings file out of git for the scorer and the writer: from main (the
 checkout), or from the hosted auditor's bot branch ``audit-findings/run-<seed_run_id>``, which must hold
@@ -67,6 +83,8 @@ _rr_spec.loader.exec_module(run_request)
 
 FALSE_KINDS = frozenset({"contradiction", "name_denial"})
 DEFAULT_MAX_CALLS = 600
+#: The most case lines one finding is written at: a wrapped sentence (see the module docstring).
+MAX_ANCHOR_LINES = 3
 
 
 class AuditError(RuntimeError):
@@ -90,6 +108,38 @@ def locate(quote: str, rows: Sequence[str]) -> int | None:
     return None
 
 
+def quote_lines(quote: str, rows: Sequence[str]) -> tuple[int, ...]:
+    """The 1-based case lines ``quote`` spans, ``()`` when it cannot be located. The first place where
+    every line of the quote matches consecutively wins (a quote whose first line is common -- a
+    ```` ```python ```` fence, a table delimiter -- is located by the whole quote, not by the first
+    row equal to its first line); otherwise its first line (``locate``) and each following case line
+    that holds the quote's next non-blank line."""
+    whole = [ln.strip() for ln in (quote or "").strip("\n").splitlines()]
+    if len(whole) > 1:
+        for start in range(len(rows) - len(whole) + 1):
+            if all(rows[start + k].strip() == piece for k, piece in enumerate(whole)):
+                return tuple(range(start + 1, start + 1 + len(whole)))
+    first = locate(quote, rows)
+    if first is None:
+        return ()
+    wanted = [ln.strip() for ln in (quote or "").splitlines() if ln.strip()]
+    found = [first]
+    number = first
+    for piece in wanted[1:]:
+        if number >= len(rows) or piece not in rows[number]:
+            break
+        number += 1
+        found.append(number)
+    return tuple(found)
+
+
+def anchor_lines(quote: str, rows: Sequence[str]) -> tuple[int, ...]:
+    """The lines one finding is written at: every line of a quote of at most ``MAX_ANCHOR_LINES``
+    lines, else the quote's first line only (see the module docstring)."""
+    spanned = quote_lines(quote, rows)
+    return spanned if len(spanned) <= MAX_ANCHOR_LINES else spanned[:1]
+
+
 def findings_for(case_id: str, text: str, findings: Sequence[Any]) -> list[dict[str, Any]]:
     """The M9 rows for one case from the reviewer's final ``Finding`` objects (see module docstring)."""
     rows = text.splitlines()
@@ -102,17 +152,44 @@ def findings_for(case_id: str, text: str, findings: Sequence[Any]) -> list[dict[
             verdict = "false"
         else:
             verdict = "unverifiable"
-        line = locate(finding.quote, rows)
-        out.append({
-            "candidate_id": case_id,
-            "claim": f"[{finding.claim_kind}] {finding.message}".strip()[:2000],
-            "verdict": verdict,
-            "path": f"{case_id}.md",
-            "line": line if line is not None else past_end,
-            "evidence": (finding.evidence or finding.rule or finding.source)[:500],
-            "located": line is not None,
-        })
+        lines = anchor_lines(finding.quote, rows)
+        for line in lines or (past_end,):
+            out.append({
+                "candidate_id": case_id,
+                "claim": f"[{finding.claim_kind}] {finding.message}".strip()[:2000],
+                "verdict": verdict,
+                "path": f"{case_id}.md",
+                "line": line,
+                "evidence": (finding.evidence or finding.rule or finding.source)[:500],
+                "located": bool(lines),
+                "source": finding.source,
+            })
     return out
+
+
+def scoped_deterministic(
+    findings: Sequence[Any], text: str, changed: frozenset[int] | None
+) -> tuple[Any, ...]:
+    """The deterministic claim findings one case's review carries: all of them when ``changed`` is
+    ``None`` (Lane R), else those whose quote touches a changed line (Lane L, see the module docstring)."""
+    if changed is None:
+        return tuple(findings)
+    rows = text.splitlines()
+    return tuple(f for f in findings if set(quote_lines(f.quote, rows)) & changed)
+
+
+def audit_scope(lane: str, source: Any, text: str) -> tuple[Mapping[str, Any], frozenset[int] | None]:
+    """(the ``validation`` the review is given, the Lane L changed lines or ``None``). A Lane L case gets
+    ``{"lane": "L"}`` and nothing else from its seal -- no edit list, no derivations, no residuals -- so
+    ``llm_review.edit_scope`` scopes it to the lines that differ from the live README (blind: a seed is
+    one more differing line, and nothing says which differing line is a genuine edit)."""
+    from repo_presenter.readme.review.llm_review import edit_scope
+
+    if lane == "L":
+        validation: Mapping[str, Any] = {"lane": "L"}
+        return validation, edit_scope(rendered=False, validation=validation,
+                                      candidate_readme=text, original_readme=source.original)
+    return source.validation, None
 
 
 # --- sources: each case's own seal, as the reviewer's evidence -----------------------------------------
@@ -168,7 +245,8 @@ def source_for(seal: Any, case_id: str) -> Any:
 
 # --- the audit -------------------------------------------------------------------------------------------
 
-#: (source, case text) -> the reviewer's ReviewVerdict; raises ReviewUnavailable when no valid review exists.
+#: ((lane, source), case text) -> the reviewer's ReviewVerdict; raises ReviewUnavailable when no valid review
+#: exists.
 Reviewer = Callable[[Any, str], Any]
 
 
@@ -220,14 +298,16 @@ def live_reviewer(ledger_path: Path, store_dir: Path, max_calls: int) -> Reviewe
     ledger = Ledger(ledger_path, call_budget=max_calls)
     store = CallStore(store_dir)
 
-    def review(source: Any, text: str) -> Any:
+    def review(case: Any, text: str) -> Any:
+        lane, source = case
+        validation, changed = audit_scope(lane, source, text)
         return review_with_model(
             prompts=prompts, config=config, ledger=ledger, store=store,
             context=JobContext(repository=source.repository, source_revision=source.facts.source_revision),
             candidate_readme=text, original_readme=source.original, facts=source.facts,
-            plan=source.plan, dispositions=source.dispositions, validation=source.validation,
-            deterministic_findings=tuple(claim_contradiction_rule(text, source.facts)),
-            rendered=False,
+            plan=source.plan, dispositions=source.dispositions, validation=validation,
+            deterministic_findings=scoped_deterministic(claim_contradiction_rule(text, source.facts), text, changed),
+            rendered=False, audit=True,
         )
 
     return review
@@ -247,7 +327,7 @@ def cmd_audit(args: argparse.Namespace) -> int:
 
     def sources(entry: Mapping[str, Any]) -> Any:
         seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]))
-        return source_for(seal, str(entry["case_id"]))
+        return str(entry["lane"]), source_for(seal, str(entry["case_id"]))
 
     try:
         findings = audit_cases(case_index, texts, sources, review)

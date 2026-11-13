@@ -31,11 +31,13 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "enterprise_edition_naming": "3",
     "failing_example": "1",
     "format_overclaim": "2",
+    "glance_layout": "1",
     "report_gaps": "1",
     "second_h1": "1",
     "stale_package_version": "5",
     "stale_type_count": "1",
     "stray_fence": "1",
+    "type_description": "1",
     "unclosed_details": "1",
     "versioned_link_target": "1",
 }

@@ -1,0 +1,304 @@
+<title>README Candidate Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: a reviewer's desk — a narrow index of candidates on the left, the rendered README as the page on the right, a verdict bar pinned above it. */
+:root{
+  --bg:#f6f7f5; --panel:#ffffff; --ink:#1d2321; --muted:#5d6763; --line:#dde2df;
+  --accent:#1f6f5c; --accent-soft:#e3f0ec; --warn:#a15c00; --warn-soft:#fbefdc;
+  --bad:#a3302a; --bad-soft:#f8e3e1; --code:#eef1ef;
+  --f-display:"Fraunces",Georgia,serif; --f-body:"IBM Plex Sans",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141917; --panel:#1b211f; --ink:#e4ebe8; --muted:#9aa6a1; --line:#2c3532;
+  --accent:#5fc3a6; --accent-soft:#1d3530; --warn:#e0a85a; --warn-soft:#3a2d1a;
+  --bad:#e88a84; --bad-soft:#3d2321; --code:#232b28; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141917; --panel:#1b211f; --ink:#e4ebe8; --muted:#9aa6a1; --line:#2c3532;
+  --accent:#5fc3a6; --accent-soft:#1d3530; --warn:#e0a85a; --warn-soft:#3a2d1a;
+  --bad:#e88a84; --bad-soft:#3d2321; --code:#232b28; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
+.wrap{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px}
+header.top{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 24px}
+h1{font:600 26px/1.2 var(--f-display);margin:0;text-wrap:balance}
+.summary{color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:6px 18px}
+.summary b{color:var(--ink);font-variant-numeric:tabular-nums}
+aside{min-width:0}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.filters button,.verdicts button,.tabs button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:5px 10px;cursor:pointer}
+.filters button[aria-pressed="true"],.tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+button:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+ul.list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:8px;background:var(--panel);max-height:calc(100vh - 160px);overflow:auto}
+ul.list li button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:8px;align-items:center;width:100%;padding:9px 10px;border-bottom:1px solid var(--line);cursor:pointer}
+ul.list li:last-child button{border-bottom:0}
+ul.list li button[aria-current="true"]{background:var(--accent-soft)}
+ul.list li button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.lane{font:600 11px var(--f-mono);border-radius:4px;padding:2px 0;text-align:center;background:var(--code);color:var(--muted)}
+.name{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.name small{display:block;color:var(--muted);font-size:11.5px}
+.pill{font:500 10.5px var(--f-body);letter-spacing:.03em;text-transform:uppercase;border-radius:999px;padding:2px 7px;white-space:nowrap}
+.p-audited{background:var(--accent-soft);color:var(--accent)} .p-noop{background:var(--warn-soft);color:var(--warn)}
+.p-approve{background:var(--accent);color:var(--panel)} .p-changes{background:var(--warn);color:var(--panel)} .p-reject{background:var(--bad);color:var(--panel)}
+.mobile-pick{display:none;width:100%;font:14px var(--f-body);padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);margin-bottom:10px}
+main{min-width:0}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-bottom:10px;display:grid;gap:10px}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.meta h2{font:600 20px/1.25 var(--f-display);margin:0;overflow-wrap:anywhere}
+.meta .facts{font:12px var(--f-mono);color:var(--muted)}
+.meta a{color:var(--accent)}
+.notice{font-size:13px;border-radius:6px;padding:8px 10px;background:var(--warn-soft);color:var(--ink)}
+.review{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px}
+.verdicts{display:flex;gap:6px;flex-wrap:wrap}
+.verdicts button[aria-pressed="true"][data-v="approve"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.verdicts button[aria-pressed="true"][data-v="changes"]{background:var(--warn);border-color:var(--warn);color:var(--panel)}
+.verdicts button[aria-pressed="true"][data-v="reject"]{background:var(--bad);border-color:var(--bad);color:var(--panel)}
+textarea{width:100%;min-height:38px;resize:vertical;font:14px var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px}
+.save{display:grid;gap:4px;justify-items:end}
+.save button{font:600 13px var(--f-body);background:var(--accent);color:var(--panel);border:0;border-radius:6px;padding:8px 14px;cursor:pointer}
+.save button:disabled{opacity:.5;cursor:default}
+.status{font-size:12px;color:var(--muted);min-height:16px}
+.tabs{display:flex;gap:6px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px 26px;min-width:0}
+.md{max-width:78ch}
+.md h1,.md h2,.md h3{font-family:var(--f-display);line-height:1.25;text-wrap:balance}
+.md h1{font-size:26px} .md h2{font-size:20px;border-bottom:1px solid var(--line);padding-bottom:4px;margin-top:1.6em} .md h3{font-size:16.5px}
+.md code{font:13px var(--f-mono);background:var(--code);border-radius:4px;padding:1px 4px}
+.md pre{background:var(--code);border-radius:6px;padding:12px;overflow-x:auto}
+.md pre code{background:none;padding:0}
+.md table{border-collapse:collapse;display:block;overflow-x:auto;font-size:13.5px}
+.md th,.md td{border:1px solid var(--line);padding:5px 8px;vertical-align:top}
+.md img{max-width:100%;vertical-align:middle}
+.md img.badge{display:inline-block;max-height:22px}
+.md img.figure{display:block;height:auto;border-radius:6px;margin:8px 0}
+.md img.missing{display:inline-block;font:11px var(--f-mono);color:var(--muted)}
+.md a{color:var(--accent)}
+.md .mermaid-diagram{overflow-x:auto;margin:14px 0;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.md .mermaid-diagram svg{display:block;max-width:100%;height:auto;margin:0 auto}
+.md .mermaid-note{font-size:12px;color:var(--warn);margin:-6px 0 14px}
+.md blockquote{margin:0;padding-left:12px;border-left:3px solid var(--line);color:var(--muted)}
+pre.raw,pre.diff{font:12.5px/1.5 var(--f-mono);white-space:pre;overflow-x:auto;margin:0}
+.diff .add{background:var(--accent-soft);display:block} .diff .del{background:var(--bad-soft);display:block} .diff .hunk{color:var(--muted);display:block}
+@media (max-width:820px){.wrap{grid-template-columns:minmax(0,1fr)} ul.list,.filters{display:none} .mobile-pick{display:block} .review{grid-template-columns:minmax(0,1fr)} .save{justify-items:start} article{padding:16px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<script type="application/json" id="data">__DATA__</script>
+<script type="application/json" id="images">__IMAGES__</script>
+<div class="wrap">
+  <header class="top">
+    <h1>README Candidate Review</h1>
+    <div class="summary" id="summary"></div>
+  </header>
+  <aside>
+    <div class="filters" role="group" aria-label="Filter candidates">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="R" aria-pressed="false">Lane R</button>
+      <button type="button" data-f="L" aria-pressed="false">Lane L</button>
+      <button type="button" data-f="todo" aria-pressed="false">Not reviewed</button>
+    </div>
+    <select class="mobile-pick" id="mobilePick" aria-label="Choose a candidate"></select>
+    <ul class="list" id="list"></ul>
+  </aside>
+  <main>
+    <div class="bar">
+      <div class="meta" id="meta"></div>
+      <div class="notice" id="notice" hidden></div>
+      <div class="review">
+        <div class="verdicts" role="group" aria-label="Verdict">
+          <button type="button" data-v="approve" aria-pressed="false">Approve</button>
+          <button type="button" data-v="changes" aria-pressed="false">Needs changes</button>
+          <button type="button" data-v="reject" aria-pressed="false">Reject</button>
+        </div>
+        <textarea id="note" placeholder="What should change? Name the section or quote the line."></textarea>
+        <div class="save"><button type="button" id="saveBtn">Save feedback</button><span class="status" id="status" aria-live="polite"></span></div>
+      </div>
+      <div class="tabs" role="tablist" id="tabs">
+        <button type="button" data-t="rendered" aria-pressed="true">Rendered</button>
+        <button type="button" data-t="diff" aria-pressed="false" id="diffTab">Changes vs live</button>
+        <button type="button" data-t="source" aria-pressed="false">Markdown</button>
+      </div>
+    </div>
+    <article id="view"></article>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
+<script>/* mermaid 10.9.1 (npm, MIT), inlined: the page must not depend on a CDN for diagrams */
+__MERMAID__
+</script>
+<script>
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const IMAGES = JSON.parse(document.getElementById("images").textContent);
+const feedback = {};           // id -> {verdict, note}
+let current = DATA[0].id, filter = "all", tab = "rendered", db = null, verdict = null, dirty = false;
+const $ = (id) => document.getElementById(id);
+const byId = Object.fromEntries(DATA.map(c => [c.id, c]));
+const short = (r) => r.split("/")[1].replace(/^Aspose[.-]/, "").replace("-FOSS-for-", " · ").replace(".FOSS-for-", " · ");
+const ghUrl = (c) => "https://github.com/" + c.repository + "/blob/" + c.revision + "/README.md";
+
+function summary(){
+  const R = DATA.filter(c=>c.lane==="R").length, L = DATA.filter(c=>c.lane==="L").length;
+  const noop = DATA.filter(c=>c.noop).length, aud = DATA.filter(c=>c.audited && !c.noop).length;
+  const done = Object.values(feedback).filter(f=>f.verdict).length;
+  $("summary").innerHTML = "";
+  [["Lane R", R],["Lane L", L],["Lane L no-op (never counted, R16)", noop],["audit-accepted", aud],["reviewed by you", done + " / " + DATA.length]]
+    .forEach(([k,v])=>{const s=document.createElement("span"); s.innerHTML="<b></b> "; s.querySelector("b").textContent=v; s.append(k); $("summary").append(s);});
+}
+function visible(){ return DATA.filter(c => filter==="all" || (filter==="todo" ? !feedback[c.id]?.verdict : c.lane===filter)); }
+function renderList(){
+  const ul=$("list"); ul.innerHTML=""; const pick=$("mobilePick"); pick.innerHTML="";
+  visible().forEach(c=>{
+    const li=document.createElement("li"), b=document.createElement("button");
+    b.type="button"; b.setAttribute("aria-current", c.id===current ? "true":"false");
+    const lane=document.createElement("span"); lane.className="lane"; lane.textContent=c.lane;
+    const nm=document.createElement("span"); nm.className="name"; nm.textContent=short(c.repository);
+    const sm=document.createElement("small"); sm.textContent=c.repository.split("/")[0]; nm.append(sm);
+    const st=document.createElement("span"); const f=feedback[c.id];
+    if(f?.verdict){st.className="pill p-"+f.verdict; st.textContent={approve:"approved",changes:"changes",reject:"rejected"}[f.verdict];}
+    else if(c.noop){st.className="pill p-noop"; st.textContent="no-op";}
+    else if(c.audited){st.className="pill p-audited"; st.textContent="audited";}
+    b.append(lane,nm,st); b.onclick=()=>select(c.id); li.append(b); ul.append(li);
+    const o=document.createElement("option"); o.value=c.id; o.textContent="["+c.lane+"] "+short(c.repository)+(f?.verdict?" ✓":""); if(c.id===current) o.selected=true; pick.append(o);
+  });
+}
+function renderMeta(){
+  const c=byId[current]; const m=$("meta"); m.innerHTML="";
+  const h=document.createElement("h2"); h.textContent=short(c.repository)+"  ·  Lane "+c.lane;
+  const f=document.createElement("span"); f.className="facts"; f.textContent=c.repository+" @ "+c.revision+" · seal "+c.seal;
+  const a=document.createElement("a"); a.href=ghUrl(c); a.target="_blank"; a.rel="noopener"; a.textContent="Live README at this revision ↗";
+  m.append(h,f,a);
+  const n=$("notice");
+  if(c.noop){ n.hidden=false; n.textContent="No-op: this Lane L seal is byte-identical to the live README, so it can never count toward the 25 (R16). Feedback on the live README itself is still useful."; }
+  else n.hidden=true;
+  $("diffTab").hidden = !c.diff;
+  if($("diffTab").hidden && tab==="diff") tab="rendered";
+}
+function renderView(){
+  const c=byId[current], v=$("view"); v.innerHTML="";
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.t===tab?"true":"false"));
+  if(tab==="source"){ const p=document.createElement("pre"); p.className="raw"; p.textContent=c.readme; v.append(p); return; }
+  if(tab==="diff"){ const p=document.createElement("pre"); p.className="diff";
+    c.diff.split("\n").forEach(line=>{const s=document.createElement("span"); s.textContent=line+"\n";
+      if(line.startsWith("+")&&!line.startsWith("+++")) s.className="add"; else if(line.startsWith("-")&&!line.startsWith("---")) s.className="del"; else if(line.startsWith("@@")) s.className="hunk"; p.append(s);});
+    v.append(p); return; }
+  const d=document.createElement("div"); d.className="md";
+  if(window.marked && window.DOMPurify){ d.innerHTML=DOMPurify.sanitize(marked.parse(c.readme)); fixLinks(d, c); }
+  else { const p=document.createElement("pre"); p.className="raw"; p.textContent=c.readme; d.append(p); }
+  v.append(d);
+  renderMermaid(d);
+}
+// Mermaid fences arrive from marked as <pre><code class="language-mermaid">; swap each for a rendered diagram.
+// On any failure the source stays visible with a short note, so a diagram is never silently blank.
+let mermaidTheme = null, mermaidSeq = 0;
+function prefersDark(){
+  const t = document.documentElement.dataset.theme;
+  if (t === "dark") return true; if (t === "light") return false;
+  return !!window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+}
+function mermaidOk(){
+  if (!window.mermaid?.render) return false;
+  const theme = prefersDark() ? "dark" : "default";
+  if (theme !== mermaidTheme) {
+    try { mermaid.initialize({startOnLoad:false, securityLevel:"strict", theme, fontFamily:'"IBM Plex Sans", system-ui, sans-serif'}); mermaidTheme = theme; }
+    catch { return false; }
+  }
+  return true;
+}
+function mermaidFailed(pre, why){
+  if (pre.nextElementSibling?.classList.contains("mermaid-note")) return;
+  const n = document.createElement("p"); n.className = "mermaid-note";
+  n.textContent = "Diagram could not be rendered" + (why ? ": " + why : "") + ". Showing the Mermaid source instead.";
+  pre.after(n);
+}
+async function renderMermaid(root){
+  const blocks = [...root.querySelectorAll("pre > code.language-mermaid")];
+  if (!blocks.length) return;
+  const seq = ++mermaidSeq, ok = mermaidOk();
+  for (let i = 0; i < blocks.length; i++) {
+    const pre = blocks[i].parentElement, text = blocks[i].textContent;
+    if (!ok) { mermaidFailed(pre, "the Mermaid library did not load"); continue; }
+    const id = "mmd-" + seq + "-" + i;
+    try {
+      const { svg } = await mermaid.render(id, text);
+      if (seq !== mermaidSeq || !pre.isConnected) return;   // the view changed while rendering
+      const div = document.createElement("div"); div.className = "mermaid-diagram";
+      div.innerHTML = svg; pre.replaceWith(div);
+    } catch (e) {
+      document.getElementById(id)?.remove(); document.getElementById("d" + id)?.remove();
+      if (seq !== mermaidSeq || !pre.isConnected) return;
+      mermaidFailed(pre, String(e?.message || e || "").split("\n")[0].slice(0, 160).replace(/[:.\s]+$/, ""));
+    }
+  }
+}
+// Re-render diagrams when the colour scheme changes so the Mermaid theme follows the page.
+const rerenderOnTheme = () => { if (tab === "rendered" && window.mermaid && mermaidTheme !== (prefersDark() ? "dark" : "default")) renderView(); };
+window.matchMedia?.("(prefers-color-scheme: dark)").addEventListener?.("change", rerenderOnTheme);
+new MutationObserver(rerenderOnTheme).observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+// GitHub-style heading slugs so in-page #anchors resolve the way they do on github.com.
+function slug(text, seen){
+  let s = text.trim().toLowerCase().replace(/[^\p{L}\p{N}\s_-]/gu, "").replace(/\s/g, "-");
+  const n = seen[s] || 0; seen[s] = n + 1;
+  return n ? s + "-" + n : s;
+}
+function fixLinks(root, c){
+  const seen = {}, ids = new Set();
+  root.querySelectorAll("h1,h2,h3,h4,h5,h6").forEach(h => { h.id = "md-" + slug(h.textContent, seen); ids.add(h.id); });
+  // Relative links resolve against the README's own location in the repository at the pinned revision,
+  // exactly as GitHub resolves them ("../../issues" lands on the repository's issues page).
+  const base = "https://github.com/" + c.repository + "/blob/" + c.revision + "/";
+  root.querySelectorAll("a[href]").forEach(a => {
+    const href = a.getAttribute("href");
+    if (href.startsWith("#")) {
+      const target = "md-" + decodeURIComponent(href.slice(1)).toLowerCase();
+      a.addEventListener("click", e => { e.preventDefault(); const t = document.getElementById(target); if (t) t.scrollIntoView({block: "start"}); });
+      if (!ids.has(target)) a.title = "No heading with this anchor in the candidate";
+      return;
+    }
+    let url;
+    try { url = new URL(href, base); } catch { return; }
+    if (url.protocol !== "https:" && url.protocol !== "http:") return;
+    a.href = url.href; a.target = "_blank"; a.rel = "noopener";
+  });
+  // External images cannot load inside the page, so each README image was fetched when the page was
+  // built and embedded; look it up by the exact src the README writes.
+  const embedded = IMAGES[c.repository] || {};
+  root.querySelectorAll("img[src]").forEach(img => {
+    const src = img.getAttribute("src");
+    if (embedded[src]) { img.src = embedded[src]; img.classList.add(src.includes("shields.io") || src.includes("badge") ? "badge" : "figure"); }
+    else if (!src.startsWith("data:")) img.classList.add("missing");
+  });
+}
+function renderReview(){
+  const f=feedback[current]||{}; verdict=f.verdict||null; $("note").value=f.note||""; dirty=false;
+  document.querySelectorAll(".verdicts button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===verdict?"true":"false"));
+  $("status").textContent = f.verdict ? "Saved" : (db ? "" : "Saving needs you to be signed in");
+}
+function select(id){ current=id; renderList(); renderMeta(); renderView(); renderReview(); window.scrollTo({top:0}); }
+document.querySelectorAll(".filters button").forEach(b=>b.onclick=()=>{filter=b.dataset.f; document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); renderList();});
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t; renderView();});
+$("mobilePick").onchange=(e)=>select(e.target.value);
+document.querySelectorAll(".verdicts button").forEach(b=>b.onclick=()=>{verdict = verdict===b.dataset.v ? null : b.dataset.v; dirty=true;
+  document.querySelectorAll(".verdicts button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.v===verdict?"true":"false")); $("status").textContent="Unsaved";});
+$("note").oninput=()=>{dirty=true; $("status").textContent="Unsaved";};
+$("saveBtn").onclick=async()=>{
+  if(!db){ $("status").textContent="Can't save here: open the page signed in to claude.ai."; return; }
+  const c=byId[current], body={verdict:verdict||"", note:$("note").value.trim(), repository:c.repository, lane:c.lane, revision:c.revision, seal:c.seal, updatedAt:new Date().toISOString()};
+  $("saveBtn").disabled=true; $("status").textContent="Saving…";
+  try{ await db.doc("feedback/"+c.id).set(body); feedback[c.id]={verdict:body.verdict,note:body.note}; dirty=false; $("status").textContent="Saved"; summary(); renderList(); }
+  catch(e){ $("status").textContent="Not saved: "+(e?.message||e?.code||"try again"); }
+  finally{ $("saveBtn").disabled=false; }
+};
+summary(); renderList(); renderMeta(); renderView(); renderReview();
+(async()=>{
+  try{
+    db = await window.claude?.use?.("db");
+    if(!db){ renderReview(); return; }
+    db.collection("feedback").onSnapshot(snap=>{
+      (snap.docs||[]).forEach(d=>{ const x=d.data(); if(x) feedback[d.id]={verdict:x.verdict||"", note:x.note||""}; });
+      summary(); renderList(); if(!dirty) renderReview();
+    }, ()=>{});
+  }catch(e){ db=null; renderReview(); }
+})();
+</script>

@@ -31,6 +31,7 @@ from repo_presenter.readme.composition.list_coverage import (
     OWED_SECTIONS,
     list_items,
     missing_items,
+    resource_link_items,
 )
 from repo_presenter.readme.composition.placement import Placement
 from repo_presenter.readme.composition.renderer import (
@@ -41,6 +42,7 @@ from repo_presenter.readme.composition.retained_examples import (
     active_retained,
     block_lines,
 )
+from repo_presenter.readme.composition.source_topics import is_license_statement
 from repo_presenter.readme.validation.deferrals import review_deferrals
 from repo_presenter.readme.validation.failures import Candidate, CausalStage, Failure
 from repo_presenter.readme.validation.supersession import superseded_failures
@@ -379,6 +381,64 @@ def disposition_failures(candidate: Candidate) -> list[Failure]:
                     "COMPOSING",
                     f"{placement.unit_id} was placed in {destination} but the candidate does "
                     "not render it there",
+                )
+            )
+    failures.extend(section_fit_failures(candidate, texts))
+    return failures
+
+
+_FIT_SECTION = "scope_limitations"
+
+
+def section_fit_failures(
+    candidate: Candidate, texts: Mapping[str, str] | None = None
+) -> list[Failure]:
+    """BC-05 section fit (BL-004, owner P0): Scope and Limitations states only what the product
+    does not do. It never prints a resource-link item (a bullet that leads with a document link:
+    that is Documentation and Resources' material) and never states the project's license (the
+    License section's). Judged on the rendered section, whichever stage put the text there; the
+    stage named is the one that did -- a kept unit (RECONCILING) or an authored one (PLANNING when
+    a limitation slot cites a ``license`` fact, COMPOSING otherwise)."""
+    texts = texts if texts is not None else section_texts(candidate.readme)
+    section = texts.get(_FIT_SECTION, "")
+    if not section.strip():
+        return []
+    body = "\n".join(outside_fences(section.split(ENTERPRISE_SENTENCE_LEAD, 1)[0]))
+    placed = [
+        normalized(p.text)
+        for p in placements_of(candidate)
+        if p.outcome == "placed" and p.destination == _FIT_SECTION
+    ]
+    license_ids = {fact.id for fact in candidate.facts.by_kind("license")}
+    license_slot = any(
+        set(item.get("fact_ids") or []) & license_ids
+        for item in candidate.plan.get("material_limitations", [])
+        if isinstance(item, dict)
+    )
+
+    def stage(text: str) -> CausalStage:
+        if any(normalized(text) in kept for kept in placed):
+            return "RECONCILING"
+        return "PLANNING" if license_slot else "COMPOSING"
+
+    failures: list[Failure] = []
+    for item in resource_link_items(body):
+        failures.append(
+            Failure(
+                stage(item),
+                "section fit: Scope and Limitations prints a resource link, which belongs in "
+                f"Documentation and Resources: {' '.join(item.split())[:120]!r}",
+                _FIT_SECTION,
+            )
+        )
+    for line in body.splitlines():
+        if line.strip() and is_license_statement(line):
+            failures.append(
+                Failure(
+                    stage(line.strip().lstrip("-*+ ").strip()),
+                    "section fit: Scope and Limitations states the project's license, which the "
+                    f"License section states: {' '.join(line.split())[:120]!r}",
+                    _FIT_SECTION,
                 )
             )
     return failures

@@ -92,6 +92,10 @@ REPORT_ONLY_REASONS: dict[str, str] = {
         "no fact contradicts the claim and the extracted facts do not cover it, so it is "
         "reported for review rather than treated as a defect"
     ),
+    "NO_DOC_COMMENT": (
+        "the cell does not describe its type and the source has no doc comment that does; only "
+        "authored prose can describe it, so it is reported rather than guessed"
+    ),
 }
 #: A diagram body is a few dozen lines, never more than this.
 MAX_DIAGRAM = 8000

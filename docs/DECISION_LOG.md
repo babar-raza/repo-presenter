@@ -4929,3 +4929,331 @@ close, reopen; end-to-end test) and is reused per R38. Supervisor decisions unde
 Aspose.3D-FOSS-for-TypeScript (the owner's example; its five open issues are the first monitored set), widening is the
 owner's call; R39 amends R22 ("issue filing stays off"), R17 (sandbox only) and R7 for issues on pilot repositories only —
 every issue must still be a verified, reproducible, deduplicated product/source defect; PRs stay under R15/R22.
+
+---
+
+## 2026-11-13: owner ruling R40 — persistent, autonomously managed backlog; owner review feedback recorded
+
+Owner ruling recorded verbatim in `docs/R40_BACKLOG.md` with the supervisor's independent verification (the existing
+`project/mission_matrix.yaml` is reused and extended, not replaced; Actions executes repeatable pipeline work, while code
+changes are selected and worked by scheduled agent sessions and always land through PR + CI + gates — the one stated
+feasibility limit). Backlog seeded as `project/backlog.yaml` (BL-001..BL-018), CI-checked by `ops/checks/backlog_check.py`.
+Owner review-page feedback recorded as items: BL-002 (P0 false claim, 3D Python Lane R: aspose-3d-foss "not confirmed on
+PyPI" — verified wrong: PyPI author Aspose, homepage the Aspose-owned github.com/aspose-3d/Aspose.3D-for-Python — and raw
+internal evidence wording printed publicly), BL-003 (independent false-claim review of every Lane R candidate), BL-004
+(3D .NET section placement), BL-005 (API descriptions), BL-007 (At a Glance layout), BL-009 (review page, Lane R diff),
+BL-010 (release-notes link: RELEASE_NOTES.md verified absent at the pinned revision, at HEAD and in all history; prefer a
+verified Releases target over unlinking).
+
+---
+
+## 2026-11-13: type-description rule — a type's API table description says what it is FOR, from its doc comment or its verified facts; never a count, a label or file-header bookkeeping
+
+Owner feedback on the Aspose.3D FOSS for Java Lane L candidate (3d2ed6be): `RenderParameters` "Class with 1 method.",
+`VertexElementPolygonGroup` "Class with 18 methods and 6 properties.", `Stream` "Created by lexchou on 12/14/2016.",
+`IRenderTarget` "Interface in the 3D JAVA API.", `PresetShaders` "Enum with 2 members." — "all wrong"; "RenderStage
+provides a default constructor ...", "Load options for AVEVA ... RVM file.", "Segment of CompositeCurve.", "ReferenceMode
+enum defines how vertex attributes reference data, supporting DIRECT, INDEX_TO_DIRECT, and INDEX modes." — good. Every
+one of these rows is the maintainers' live README text, kept verbatim by Lane L.
+
+**Pareto (R36/R38), measured by `scripts/measure_type_descriptions.py` over every latest seal (zero calls, re-certified
+by current code).** 10,489 type rows: 7,891 the type's doc comment, 2,361 other prose, **237 non-descriptive**: 134
+count-only, 102 boilerplate label, 1 bookkeeping. Two classes cover them: (1) maintainers' count/label cells for types
+the source does not document (Lane L 3D Java 41, Words Python 28, Cells TypeScript 25, PDF Python 20, Cells Rust 7, 3D Python 1; the
+same text carried into Lane R by restore, e.g. 3D Python `FileFormat`); (2) Lane R's own authored rows "<qualified
+name> is a public symbol with members ..." (89: 3D .NET 53, Email .NET 24, Words .NET 12), produced by the facts-only
+type objective. Only 4 non-descriptive Lane L cells (PDF Python) belong to a type with a usable doc comment, and exactly
+one stored type docstring in the portfolio is bookkeeping (`com.aspose.threed.Stream`).
+
+**Rule.** (i) A type is described by its doc comment summary when the source has one that is a real description;
+file-header bookkeeping (author/date, copyright with a year or "(c)"/"rights", license, to-do, generator stamp) is not
+one and is refused where every doc comment is judged (`extractors/surface/doc_text.is_bookkeeping`, inside
+`doc_defect`, so the extractor drops it from the fact and no stage quotes it). (ii) Else the sentence says what the type
+is for in the words of its verified facts only — its enum values, its members and what their own doc comments say, its
+bases, its implementation facts — naming the values or members it rests on; the author is given exactly those facts
+(`authoring.type_unit_facts`: `type_values`, `type_documented_members`) and the reviewer is shown the same
+(`review.sectionwise.type_row_facts`), so the sentence is verifiable. (iii) Never a count, a label ("Interface in the X
+API", "Public class.", "X is a public symbol ..."), the fully qualified name, or a purpose inferred from a name alone.
+The renderer's last-resort fallback for an enum with no authored sentence lists its verified values instead of "Public
+enum.".
+
+**Lane L (R5/R21).** A two-column API table cell of a count, label or bookkeeping shape whose type has a usable doc
+comment is a verified defect: new detector `type_description` (v1; no existing detector version moves, R10) replaces
+that cell alone with the summary (`FALSE_CLAIM_FIX`, cites the type fact). When the type has no usable doc comment
+Lane L does not guess: the cell is reported `NO_DOC_COMMENT` (report-only, not a defect, so no seal is blocked); its
+description is Lane R's to author under rule (ii).
+
+**Effect, measured.** Lane L PDF Python: 4 cells corrected on its next re-certification (non-descriptive 237 -> 233
+portfolio-wide under current code); 232 remaining cells have no usable doc comment and are reported. Lane R's 89 rows
+change only when those types are next authored (their text is a stored model output; re-certification never
+regenerates, R10). R10 gate (`--gate` against origin/main's baseline): no regression, 45 seals checked, lane R 5 / lane
+L 26 re-certified. Known limit: the Java extractor records no enum constants (`ReferenceMode`, `PresetShaders` have no
+`enum_member` facts), so a Java enum has no values to state until that gap is fixed. Regressions:
+`tests/readme/correction/detectors/test_type_description.py`, `tests/extractors/surface/test_doc_text.py`,
+`tests/readme/composition/test_type_purpose_facts.py`.
+
+---
+
+## 2026-11-13: are the printed examples verified? Exact audit, and five verifier root causes fixed once
+
+Supervisor decision under R36(b)/R27 (fixes to the existing example verifier only; no check weakened).
+**Exact audit** (`scripts/printed_example_audit.py`, zero calls, regression `tests/test_printed_example_audit.py`): every
+fence of a certified README whose language is one of the ecosystem's example aliases (the fences BC-03 judges) is mapped
+to its `example` fact by the pipeline's own identity (normalized code of the value or of `printed_example`, the
+prelude-carrying program). Over the 31 seals RECERTIFIED on 2026-11-13: 273 printed examples, 174 SUPPORTED, 72
+UNRESOLVED, 26 CONTRADICTED, 1 never extracted (an indented fence inside a list item, PDF Python). Causes of the 99:
+needs an input file nothing provides 26; Python NameError on an import the README makes in another fence 18;
+NuGet vulnerability audit as error 12; fragment (unbound local) 10; product build failed on LFS pointer DLLs 10;
+genuinely failing code 8; rustup proxy started as rustup 7; machine tsc refuses the package's options 4; other 4.
+
+**Policy findings.** (a) Lane R may print an UNRESOLVED example: BC-03 (`validation/provenance.py`) admits a retained
+inherited example (`composition/retained_examples.py`) printed exactly as the maintainers wrote it, with its unverified
+status internal (R9 removed the public note). This is the mission's "NOT_VERIFIED is not FALSE" plus R14, not "every
+claim verified"; tightening BC-03 now would fail the Words .NET and 3D Python Lane R seals (9 printed), and both have a
+fixable execution cause, so the decision is to make them run, not to drop them. (b) Lane L keeps CONTRADICTED examples:
+`failing_example` is a report-only detector (the honest repair is code), its findings are the bundle's `unapplied`
+residuals, and R21 accepts a Lane L candidate on net improvement with residuals recorded internally, so nothing blocks
+it. 18 of the 26 printed CONTRADICTED examples were the verifier's defect (below), not the README's.
+
+**Rules (fixes).** 1. `core/execution.execute` makes argv[0] absolute without following symlinks: rustup's proxies
+dispatch on their own name, and resolving `~/.cargo/bin/cargo -> rustup` ran rustup (Cells Rust 7/7 "did not report a
+version"; locally now cargo 1.97.0, 1 COMPILED, 6 honest fragments); `rust_examples.rustup_home` also finds rustup's
+default `~/.rustup`. 2. The .NET example build passes `-p:NuGetAudit=false`: the restore audit reads a live advisory feed,
+so NU1902 under TreatWarningsAsErrors depends on the date, not the revision (PDF .NET 12/12); the product's own `dotnet
+build` claim keeps the audit on. 3. The TypeScript verifier, when the machine tsc refuses the package's declared options,
+checks with the compiler the package's own `npm install` installed (3D TS pins typescript ^5.8.3; hosted tsc 7 refuses
+`moduleResolution: node`; locally 3 of 4 now type-check, 1 is a real TS2339). 4. A Python example failing on
+`NameError` is re-run with exactly the README's own import statements that bind the missing name as its prelude (printed
+with it, like a .NET using); a lower-case name nothing binds is a fragment (NOT_VERIFIED), a capitalised one stays
+FAILED (PDF Python: 48 -> 59 EXECUTED, 17 CONTRADICTED -> 0, 3 fragments). 5. The pinned clone pulls LFS objects for
+compiled build inputs only (`*.dll`, `*.jar`, `*.nupkg`): Words .NET references LFS-tracked DLLs by path, so its build
+failed with CS0234 on pointer files (10 printed, both lanes); best effort, no git-lfs leaves the pointers as before.
+Not yet fixed (next classes): inputs no repository file or example provides (26), fragments that need an earlier
+fence's statements (16 incl. Rust), the extractor missing list-indented fences (1). Proof needing a hosted facts run:
+Words .NET (LFS + dotnet), PDF .NET (dotnet), Cells Rust and 3D TS on the runner's own toolchains.
+
+---
+
+## 2026-11-13: how silently dropped work is tracked from now on (owner: "how to best track it. Make necessary changes")
+
+Root causes of the dropped items the R40 reconciliation found: follow-ups living only in prose, no freshness signal,
+no comparison of "done" claims with the history. Changes (existing checker extended, R38): open task cards must be named
+by a backlog item; decision-log entries from 2026-11-14 must carry a `Backlog:` line; a `done` item citing an unlanded
+commit is refused; staleness by status age is reported every hosted tick (`supervisor-tick` "Backlog" section, after the
+delivery numbers) and fails under `--strict`; RULINGS checklist item 11. Details in `docs/R40_BACKLOG.md`.
+
+Backlog: BL-001
+## 2026-11-13: At a Glance reads at a glance — top-to-bottom layout (Lane R renderer) and a layout-only Lane L redraw
+
+Owner feedback, verbatim, on the certified Lane L candidate aspose-cells-foss/Aspose.Cells-FOSS-for-Java @ c65329e7257b:
+"Mermaid layout should be improved. Organize the items Core capabilities in further groups, and align groups veristically
+[vertically]. Right now At a Glance is too much to absorb and needs a lot of horizontal scrolling in browser. may be
+organize in some different way. Think on it. provide professional approach for At a Glance mermaid"; and in chat: "the
+feedback is also global requirement. At a Glance should practically be At a Glance".
+
+**Measured (Pareto), real Mermaid 10.9.1 in Chromium at an 800 px container, the 26 certified diagrams.** Natural width
+509–3054 px (median ~1640); 19 of 26 over 800 px, so the browser either scrolls or scales the labels down to 4.2–11.7 px
+(Cells Java: 3054 px, 4.2 px). Two shapes cause all of it: (1) the 21 live Lane L diagrams (the earlier
+repository-presenter's `flowchart TD` with `capl`/`capr` columns) list each group's nodes with **no links between them**;
+Mermaid ranks unlinked siblings together, so a group draws as ONE ROW whatever its `direction TB` says (Cells Java: 15
+capabilities across two 8- and 7-wide rows of unwrapped labels up to 73 characters); (2) the 5 Lane R diagrams were a
+`flowchart LR` chain of four ranks whose long input/output sentences add up across (3D .NET 1535 px). Node count is not
+the driver — label length times unlinked siblings per rank is.
+
+**Design (first principles, every node still one verified input, capability or output).** `flowchart TB`; Starting Points,
+the product, Core Capabilities and Outputs chained top to bottom (`StartingPoints --> PRODUCT --> Capabilities -->
+Outputs`, a group with nothing verified omitted with its hop); inside each group at most three nodes to a row (two for
+two or four), rows held by invisible `~~~` links where every node of a non-last row is linked (an unlinked node is free
+to sink to any rank — measured); labels wrapped at 22 characters with `<br/>` (never shortened, never reordered; a label
+holding `&`, `<` or `>` is left byte-for-byte); the product node emphasised by one `classDef` (white on #1f6feb, legible
+in GitHub's light and dark themes). Implemented once in `readme/composition/components/glance.py` (`layout_glance`,
+`parse_glance`, `estimated_width`, calibrated against the 26 real renders within ~8%); the Lane R renderer's
+`draw_at_a_glance` uses it (`RENDERER_VERSION` 37). **Further groups:** the owner asked for capabilities in further
+groups. No verified category exists to group them by — a capability carries only its title (Lane R: the plan's
+capability titles, at most six; Lane L: the live diagram's labels, whose `capl`/`capr` split is an untitled
+half-and-half cut). Untitled bands were tried and rejected: an arbitrary cut drawn as a box reads as a grouping nobody
+verified. The grid of rows of three is the grouping that is true; a titled grouping needs a verified per-capability
+category first (recorded here as the condition for it, not built — R27).
+
+**Lane L decision (R5, R14, R21, R35).** A new Lane L detector `glance_layout` (version 1, pinned) redraws a live diagram
+as a `DIAGRAM_FIX` only when (a) the body is entirely in the presenter's own diagram grammar (one product node, titled
+groups of labelled nodes, optionally in untitled bands, directions, invisible links, one chain, the product style —
+anything else, e.g. a `click` line or a titled inner group, is left alone), (b) its estimated natural width exceeds
+800 px, and (c) re-parsing the redraw yields exactly the same content: every node id and label text, every group title,
+the product label and the chain (labels gain `<br/>` breaks only) and the redraw fits. R14: nothing is dropped — the edit
+is confined to the fence body and its content equality is proved per edit. The "every node maps to a verified fact"
+condition the brief offered is replaced by this content-equality proof: a layout edit asserts nothing new, and the
+labels' truth is exactly what it was in the live README. R5/R21/R35: the owner named the sprawl a defect
+and a portfolio-wide requirement, and it is measured, so the redraw is an evidenced edit in its own right — including on
+a no-change candidate: Cells Java, the candidate the feedback was given on, is one, and a guard that applied the redraw
+only beside a content correction was built, measured (it left Cells Java and six other no-change candidates
+untouched — the opposite of the feedback) and withdrawn. But a redraw is not the content improvement R21 lets residual
+defects ride on: measured on the zero-call gate, a lone redraw re-certified Aspose.3D-FOSS-for-.NET Lane L (seal
+fa996859550e, NEEDS_REPAIR on L-03 claim contradiction / L-05 unrepaired defect) by carrying those as residuals — a
+README still stating what a verified fact contradicts, certified by a diagram. So `lane_l_review.net_improvement` needs a
+content edit (`LAYOUT_ONLY_DETECTORS`; `LANE_L_REVIEW_VERSION` 4): a layout-only run is CORRECTED when nothing else is
+wrong and blocks exactly as before when something is. `glance_layout` is informational in `report.py`: a diagram it
+declines is never a defect that refuses a run. On the 21 certified live diagrams: 19 over budget, 19 redrawn (Cells
+Rust's `Vec<u8>` label kept unwrapped), Imaging .NET (667 px) and PSD Python (522 px, a `direction LR` group, which draws
+stacked) left alone. Rule: **a live At a Glance diagram in the presenter's grammar wider than 800 px is redrawn top to
+bottom with identical content.**
+
+**Evidence.** Before/after natural widths of all 26 (Mermaid 10.9.1, 800 px container): every after-width 398–741 px
+(labels at the full 16 px), Cells Java 3054×651 → 704×996. Regressions: `tests/readme/composition/components/
+test_glance.py` (TB, chain order, ≤ 3 per row in document order, every non-last-row node linked, wrap keeps every word,
+the real Cells Java diagram re-laid out with equal content and fitting the budget, foreign grammar refused, LR group
+estimated as a column), `tests/readme/correction/detectors/test_glance_layout.py` (fence-confined redraw, CRLF kept,
+narrow and foreign diagrams untouched, nested fence ignored, the engine applying the redraw alone and beside a content
+fix, deterministic and idempotent). R10: zero-call `recertify --gate` against origin/main's baseline (see the commit).
+
+## 2026-11-13 — R41: feedback is global; every candidate is re-verified after a global fix
+
+**Ruling (owner).** "feedbacks are for global, both lanes and all candiates so all must be reverified after a global
+fix." Recorded as R41 in `docs/RULINGS.md` (checklist item 12), `docs/CONSOLIDATED_GOALS_2026-11-06.md`, `AGENTS.md`
+and `CLAUDE.md`. Placement: a binding ruling, not a process note, because it changes what "done" means for every
+feedback and defect item.
+
+**Enforcement.** `ops/checks/backlog_check.py` refuses a `done` feedback/defect item whose evidence does not record a
+portfolio-wide re-verification (`reverified: <run id>, lane R x/y, lane L x/y`); test in `tests/test_backlog_check.py`.
+`tests/test_rulings_in_focus.py` now requires R41. The re-verification itself must be hosted and automatic (R37):
+BL-060 adds a post-merge job that re-certifies every seal of both lanes with zero calls (`recertify --all --write`)
+and queues every cell that no longer certifies for the cohort engine.
+
+Backlog: BL-060
+
+## 2026-11-13: BL-004 — section-fit rule: resource links go to Documentation & Resources, the license to License, Scope and Limitations holds limitations only (R14, R36(b), R10)
+
+Owner feedback (P0, verbatim, Lane R aspose-3d-foss/Aspose.3D-FOSS-for-.NET @ 52b0f00ebf28, seal 03b940a46f7b):
+"Documentation & Resources is not complete because its content is shown in Scope and Limitations section. AND This project
+is licensed under the MIT License, as stated in the LICENSE file. Above line does not fit Scope and Limitations. this is
+major problem."
+
+**Root cause (measured on the sealed dispositions/plan/content units, zero calls).** (1) The model filed the maintainers'
+"Documentation & Resources" links list (`inherited_unit:059.list`) in `documentation_resources` — correctly — but
+`reconciliation/dispositions.py::_rehome_unprintable_kind_units` (a Cells Go fix: that section prints only the plan's
+own link lines, never a kept unit's text) re-homed it to the "nearest" printable section, which for a `resources`-topic
+list is `scope_limitations` (`destinations._HOMES["resources"]`). With the list no longer in Documentation & Resources,
+`planning._kept_list_links` never owed its docs/kb/reference links (link_target:020-022) to that section, so the list
+printed verbatim under Scope and Limitations while Documentation & Resources showed only the four links the plan had
+assigned. (2) The model kept the License paragraph (`070.paragraph`) as VERIFIED_PRESERVE in `scope_limitations`, and the
+planner made limitation slot 6 of `license:file`/`license:spdx`, authored "This project is licensed under the MIT
+License, as stated in the LICENSE file." No rule said a resource list or a license statement does not fit Scope and
+Limitations, and no check caught it before sealing.
+
+**Pareto (every latest Lane R seal, 18):** 5 affected. Resource-links list under Scope and Limitations: 4 (3D .NET 059,
+Cells C++ 053, Email .NET 055, Words .NET 080) — all four via the same re-homing. License statement under Scope and
+Limitations: 2 (3D .NET authored slot; Cells Go authored limitation "provided without warranty under the MIT License");
+the License paragraph itself was filed in scope_limitations on 3 (3D .NET 070, Cells C++ 065, Cells Go 075).
+
+**Rule (decided, R11), in the existing components (R27/R38):**
+- Reconciliation (`normalize`): a kept list whose every item is a link the plan can assign
+  (`planning.link_list_targets`: SUPPORTED, numbered, non-shell, non-anchor link target) stays in / moves to
+  `documentation_resources` from `scope_limitations`/`key_capabilities`; it is never re-homed out of it. A kept paragraph
+  that states the license (`source_topics.is_license_statement`, or sat under the source's License heading) and rests on
+  nothing the License section does not render is SUPERSEDE_REDUNDANT by `license` (citing the facts it renders). Nothing
+  is dropped: the list's every link is printed as a Documentation & Resources line and the license text is the License
+  section's own (R14).
+- Planning: `_kept_list_links` owes every link of such a list to `documentation_resources` (no longer only when the plan
+  already assigned one of them there); `_drop_license_limitations` strips `license` facts from `material_limitations`
+  and drops a slot left citing no fact whose units another slot already hands.
+- Check (before sealing, BC-05 `validation/units.py::section_fit_failures`): the rendered Scope and Limitations prints no
+  item that leads with a document link and no license statement; the failure names the causal stage.
+
+**R10:** the gate (`recertify --gate --base-baseline <origin/main>`) passes; three seals the dashboard counted lose
+certification on this genuine defect — 3D .NET R `03b940a46f7b`, Email .NET R `e8cc8cca4d3a`, Words .NET R
+`56668e8abf63` (BC-05 section fit only) — and are recorded NEEDS_REPAIR with justification in
+`data/recertification_baseline.json`; `progress.lane_r_accepted` is resynced 5 → 2 honestly. Cells C++ and Cells Go were
+already NEEDS_REPAIR and gain the BC-05 section-fit finding. Re-sealing needs the new Documentation & Resources link lines
+authored, i.e. a governed hosted Lane R re-run of the five cells (R37), not a hand edit.
+
+## 2026-11-13: BL-003 Lane R false-claim review registered (68 rows); BC-18 made a permanent no-recurrence check
+
+Supervisor decision under R10/R14/R36(b)/R40 and owner message 2026-11-13 ("These registers must be auto filled, and an
+already caught problem should not reappear"). **Register.** Five independent fact-check reviews of the five certified
+Lane R seals (3D .NET 03b940a46f7b, 3D Python 4812255e83c2, Cells .NET 269b6ae5d8f7, Email .NET e8cc8cca4d3a, Words .NET
+56668e8abf63) gave 105 findings; 36 were re-verified against pinned clones and the registries, 3 dropped (Words "307 test
+files" refuted -- exactly 307 .cs files declare a test method; Words CodePages line true for the source build; Words
+ILRepack line true, an omission only), 6 quotes tightened so none can match correct text, 1 second printing added. 68
+FALSE/UNSUPPORTED/MISLEADING rows were appended (72 -> 140) through the new importer
+`python -m repo_presenter.readme_findings import`, which refuses a quote not printed exactly N times (the bare
+`dotnet build` lesson). INTERNAL_WORDING/MISPLACED stay with BL-002/BL-004. Inputs, decisions and the 12 root-cause
+classes: `docs/investigations/2026-11-13-lane-r-false-claim-review.md`; one backlog item per class (BL-061..BL-071).
+**R10.** All five seals now fail BC-18 only -- genuine defects, justified per seal in
+`data/recertification_baseline.json` (superseded Cells/Email Lane R rows replaced by their latest seals); Lane R live
+certified 5 -> 0, `project/state.yaml` resynced. **No recurrence.** BC-18 now holds a candidate to every quoted register
+row of its repository and lane, OPEN or RESOLVED (`readme_findings.regression_rows`); a row whose evidence begins
+`REFUTED` never blocks (the two Email .NET 26.7.0 rows). A RESOLVED row printed again gets its stored truth as the repair
+instruction and is not citable. No RESOLVED non-refuted row exists today, so no seal newly fails from this change.
+Auto-fill (hosted fact-check stage writing the register to a bot store) and class generalisation are BL-073/BL-074.
+
+## 2026-11-13: hosted M9 round 43445578226 failed its gates — root causes, fixes (BL-013)
+
+**Score** (scorecard `audit-score/seed-run-43445578226`, writer `acceptance-record/run-43445578226-43445578226`):
+seeded recall 5/21 = 0.238, false-flag 15/24 = 0.625; batch failed, nothing counts. By shape (shapes of the caught
+cases re-derived from the seals with the seeder's own operators, each matching a frozen finding line): A 4/6
+(invent_api_name 3/3, count_mismatch 1/3), D 0/5, D9 1/4, D14 0/6. Zero-call diagnosis from the frozen findings, the
+published missed list, the public case index and the seals at the audited revisions (no manifest, no key, no model).
+
+**Root causes.** (1) *Blind spot, 11 of 16 misses (all D and D14):* the D/D14 operators append to the first paragraph,
+which in every README is the `# Title` line; the reviewer never shows a heading (`scope.line_sections`: markup), so the
+seeded sentence was in no review unit. Supervisor-subagent auditors read the whole file and caught these. (2) *Join, 2
+of 16 (count_mismatch):* the deterministic claim rule caught both counts, but on a wrapped sentence the finding was
+written at the quote's first line (279, 352) and the count sat on the second (280, 353); the scorer joins on the exact
+line. (3) *D9, 3 of 16:* the seeded row was shown and the row type's fact was in the packet; a model miss (Lane R/L
+whole-document packets also lacked the authored-row type facts the production Lane R review gives). (4) *False flags:*
+of the 99 flags on controls, 29 Lane L flags (26 unsupported, 3 contradiction) were on unchanged maintainer text
+(not the candidate's claim: R21 residuals at most) and 7 were claim-detector contradictions, 13 Lane R flags were on
+renderer-printed lines and 44 on authored Lane R lines; Lane L flags on the corrections' own computed counts ("303 public types": the number is in no fact value);
+Lane R authored type rows flagged for want of the members the production review is given; and 8 of 24 controls (7 of
+the 8 Lane R ones) do not re-certify under current code at the audited revision. No flag was adjudicated, so every one
+counted against the auditor (the hosted chain had no adjudicator).
+
+**Fixes (smallest change to existing components).** `review_with_model(..., audit=True)` (auditor only; every
+production request unchanged): heading lines reviewable, authored API rows get their type facts with
+`rendered=False`, and the review scope carries the facts' computed type counts. The auditor judges a Lane L case as the
+production Lane L review judges a correction (lines differing from the live README, `{"lane": "L"}` only — nothing
+from the seal, so nothing says which differing line is genuine), keeps deterministic findings on changed lines, and
+writes a finding at every line of a quote of at most three lines (located by the whole quote). The writer adjudicates
+every flag deterministically after the freeze: CONFIRMED when the claim detector proves the line contradicts the pinned
+facts; REFUTED when the line of an unmodified, re-certifying seal is a deterministic derivation from the facts (Lane R
+renderer-printed; Lane L evidenced zero-call correction) and the detector finds nothing; otherwise unadjudicated (fail
+closed); a CONFIRMED verdict is never overturned. A control whose seal does not re-certify is reported
+(`controls_not_recertified`) and left out of the false-flag population: an independent deterministic check, decided
+without the findings, already says it is not a clean candidate (R33), and it can never be accepted. Thresholds
+unchanged.
+
+**Zero-call proof (replay of the frozen round).** All 16 missed seeds are now in a review unit and in scope; the 2
+count misses are caught deterministically at the seeded line (recall floor 7/21 without any model). False flags,
+frozen findings through the fixed writer: 15/24 → 14/24 with adjudication (7 confirmed, 6 refuted) → 11/16 without the
+8 non-recertifying controls → 5/16 with the Lane L scope simulated. Of those 5, 4 controls' flags (888c rows; e253,
+ab8a, c086 counts) are on exactly the evidence the fix now adds to the packet (members on 19 rows; computed counts 303,
+198, 618), and 5584's is a model contradiction on an evidenced NuGet-version edit. What only a hosted round can show:
+the model now flags the 11 title-line seeds and ≥ 1 more D9 (recall ≥ 0.90 needs 19/21), and stops flagging evidenced
+rows and counts (false-flag ≤ 0.10 over the re-certifying controls). Follow-ups: the seeder should not spend control
+slots on non-re-certifying seals; 7 of 8 Lane R controls being stale is itself a re-certification backlog.
+
+## 2026-11-13: R15 portfolio gate restored at the one write authority (BL-026), with the R16/R20/R24 terminal cases
+
+**Decision**: owner ruling R15 is enforced in code again, at `github.client.authorize_write` (the single R22 write
+authority; every upstream branch ref, contents write and pull-request create/update reaches it through
+`authorize_request` before any HTTP request). An upstream `pull_request` effect is refused with
+`PortfolioIncompleteError` ("R15 PORTFOLIO_INCOMPLETE") unless every active `data/registry.json` repository has, in
+Lane R and in Lane L, a terminal outcome: ACCEPTED (latest seal re-certifies under current code and holds an attested
+M9 acceptance record at that revision, R33), NO_ACTION_JUSTIFIED (Lane L, R16), BLOCKED_EXTERNAL in
+`data/terminal_cells.json` with a fresh re-check (last `decided`/`rechecked` at most 7 days ago and `recheck_by` not
+passed) and the upstream still at the pinned revision (R24), or NOT_APPLICABLE there (R20). The predicate
+(`src/repo_presenter/propose/portfolio_gate.py`) reuses `ops/checks/portfolio_delivery_count.collect` rather than
+re-implementing acceptance; it is recomputed on every authorization, never cached, and any reading failure refuses.
+
+**Why**: commit 6b7bc6e (2026-11-06) saved `docs/wip/r15-portfolio-gate.patch` and reverted the code because it was
+unverified. That patch gated only `propose_candidate` (not the write authority), counted re-certification alone (no
+R33 acceptance) and had no terminal cases, so an R24-blocked repository would have blocked R15 forever. Meanwhile 9
+repositories are allowlisted for PRs, so R15 held by policy only.
+
+**State today**: BLOCKED -- 78 of 80 cells lack a terminal outcome (Lane R 21 unsealed, 13 NEEDS_REPAIR, 5 not
+accepted; Lane L 12 unsealed, 1 NEEDS_REPAIR, 26 not accepted; terminals: PSD Java R, GIS .NET L). Evidence:
+`evidence/build/GATE5_DELIVERY_PROGRAM/BL-026/r15_portfolio_readiness_2026-11-13.json`.
+
+**Does NOT decide**: issues (R39 pilot effects `issue`/`issue_comment`) and control-repository writes are outside R15
+and never consult the gate; R3/R22 allowlist, draft and token gates are unchanged and still apply on top.
+`docs/wip/r15-portfolio-gate.patch` is superseded by this entry and kept only as history.

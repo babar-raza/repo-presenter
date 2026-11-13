@@ -1,6 +1,7 @@
 """Pinned, push-neutered, read-only clones under ``runs/``.
 
-The only git verbs ever issued against a real remote here are ``ls-remote`` and ``clone``. The
+The only git verbs ever issued against a real remote here are ``ls-remote``, ``clone`` and, for
+compiled build inputs only, ``lfs pull`` (``pull_lfs_build_inputs``); every one only reads. The
 remote's default-branch revision is observed first, the clone is taken, and the checked-out
 revision must equal the observed one or the clone fails closed; a race with an upstream push is
 therefore a visible failure, never a silently different snapshot. Every clone is neutered and
@@ -155,12 +156,60 @@ def clone_pinned(
             f"default branch of {clone_url} moved from {revision} to {checked_out} during clone"
         )
 
+    pull_lfs_build_inputs(destination, token=token, clone_url=clone_url)
     neuter_push(destination)
     install_pre_push_hook(destination)
     proof = verify_push_blocked(destination)
     if not proof.ok:
         raise GitSafetyError(f"push is not proven blocked in {destination}: {proof.detail}")
     return ReadOnlyClone(path=destination, clone_url=clone_url, revision=revision, proof=proof)
+
+
+#: Compiled artifacts a product's own build references by path (a .NET `<Reference
+#: Include="..\\packages\\X.dll">`, a vendored jar). Only these are fetched through LFS: test data,
+#: golden images and documents stay pointers, as GIT_LFS_SKIP_SMUDGE leaves everything else.
+LFS_BUILD_INPUTS = ("*.dll", "*.jar", "*.nupkg")
+LFS_TIMEOUT_SECONDS = 300.0
+
+
+def declares_lfs(destination: Path) -> bool:
+    """Whether the checkout's root ``.gitattributes`` routes any path through the LFS filter."""
+    attributes = destination / ".gitattributes"
+    try:
+        text = attributes.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return False
+    return any(
+        "filter=lfs" in line and not line.lstrip().startswith("#") for line in text.splitlines()
+    )
+
+
+def pull_lfs_build_inputs(
+    destination: Path, *, token: str | None = None, clone_url: str = ""
+) -> bool:
+    """Replace the LFS pointer files of compiled build inputs with their real bytes.
+
+    The clone is taken with ``GIT_LFS_SKIP_SMUDGE=1`` so a repository's LFS-tracked test corpus is
+    never downloaded. But a product whose build references a vendored assembly by path then
+    compiles against a 130-byte pointer: Aspose.Words-FOSS-for-.NET tracks ``*.dll`` in LFS, its
+    ``Aspose.Foundation.csproj`` references ``packages/Aspose.JavaAttributes/.../*.dll``, and every
+    one of its README examples (5 in each lane) was recorded "the product's own build failed"
+    on ``CS0234: The type or namespace name 'JavaAttributes' does not exist``. Best effort: no
+    ``git lfs``, or a fetch that fails, leaves the pointers - and the verifier's honest
+    NOT_VERIFIED - exactly as before. Returns whether a pull ran and exited 0.
+    """
+    if not declares_lfs(destination):
+        return False
+    version = run_git(["lfs", "version"], cwd=destination, timeout=30)
+    if version.returncode != 0:
+        return False
+    result = run_git(
+        ["lfs", "pull", "--include", ",".join(LFS_BUILD_INPUTS)],
+        cwd=destination,
+        timeout=LFS_TIMEOUT_SECONDS,
+        env=_github_read_auth_env(clone_url, token) if clone_url else None,
+    )
+    return result.returncode == 0
 
 
 def pinned_read_only_clone(

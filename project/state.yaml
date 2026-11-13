@@ -102,7 +102,18 @@ progress:
   # 2026-11-09, not a suppression. Lane L left as recorded (live is above it; --no-loss only warns).
   # RESYNCED 2026-11-13 (lane_r_accepted 0 -> 5) after re-running `ops/checks/dashboard_matches_live.py --no-loss`:
   # Cells .NET, Email .NET, 3D .NET, Words .NET, 3D Python re-sealed and re-certify under current code.
-  lane_r_accepted: 5
+  # RESYNCED 2026-11-13 (lane_r_accepted 5 -> 2, BL-004) after re-running `ops/checks/dashboard_matches_live.py`
+  # (live R=2) and `python -m repo_presenter.recertify --gate`: the owner's P0 section-fit feedback (3D .NET:
+  # resource links and the license sentence printed under Scope and Limitations) is now a BC-05 check; it fails
+  # 3D .NET, Email .NET and Words .NET on BC-05 section fit alone -- a justified genuine defect per R10, recorded
+  # per seal in data/recertification_baseline.json; no seal is deleted. Re-sealed by the next hosted Lane R run.
+  # RESYNCED 2026-11-13 (lane_r_accepted 5 -> 0) after re-running `ops/checks/dashboard_matches_live.py --no-loss`
+  # (live R=0) and `python -m repo_presenter.recertify --gate` (OK): the BL-003 independent fact-check of those five
+  # seals registered 68 confirmed false/unsupported/misleading claims in data/readme_findings.json (72 -> 140 rows;
+  # docs/investigations/2026-11-13-lane-r-false-claim-review.md), so BC-18 fails all five -- genuine defects, a
+  # recorded demotion, each justified per seal in data/recertification_baseline.json (R10). No seal is deleted; the
+  # next Lane R run's targeted repair is handed each quote and truth. Lane L left as recorded.
+  lane_r_accepted: 0
   # Lane L 11 -> 9: BC-14 mechanical rules find genuine false claims in two live READMEs (HTML Python, Words Python:
   # non-exported or nonexistent types, wrong type counts) -- justified in data/recertification_baseline.json; Lane L corrects them.
   # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.
@@ -196,7 +207,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-13T13:49:08Z'
+  generated_at: '2026-11-13T17:18:57Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -426,7 +437,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 58d0905120ee13fc48b03a76a3ec832343c6f47f
+    commit: b2b03b3964700880caefba14ff9228dafd687c3b
     receipt: GATE5_DELIVERY_PROGRAM/TC-022a/receipt.json
   - id: TC-022b
     gate: GATE5_DELIVERY_PROGRAM
@@ -468,7 +479,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 14eba8cc99c47a38ffe5c712e8a831a3d5d9c3a4
+    commit: b2b03b3964700880caefba14ff9228dafd687c3b
     receipt: GATE5_DELIVERY_PROGRAM/TC-025/receipt.json
   - id: TC-026
     gate: GATE5_DELIVERY_PROGRAM

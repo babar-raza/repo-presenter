@@ -50,7 +50,9 @@ CANDIDATE_OUTCOMES = frozenset({OUTCOME_CORRECTED, OUTCOME_NO_CHANGE})
 #: Detectors whose findings are an opportunity (verified information the README does not state and
 #: that only authored prose can add), not a falsehood or a break in what the README does state.
 #: Everything else a detector reports is a defect the run could not repair.
-INFORMATIONAL_DETECTORS: frozenset[str] = frozenset({"report_gaps"})
+#: ``glance_layout`` reports a diagram it would not (or may not) redraw: a presentation matter,
+#: never a defect that refuses the run.
+INFORMATIONAL_DETECTORS: frozenset[str] = frozenset({"report_gaps", "glance_layout"})
 #: Report-only reasons that mean an addition was legitimately not made. A skipped *fix* carries a
 #: different reason (or none) and stays a defect.
 NOT_A_DEFECT_REASONS: frozenset[str] = frozenset(
@@ -64,6 +66,7 @@ NOT_A_DEFECT_REASONS: frozenset[str] = frozenset(
         "BUILD_RECEIPT_FAILED",
         "DOCS_HOLDS_NO_DOCUMENTATION",
         "NO_EVIDENCE_OF_ABSENCE",
+        "NO_DOC_COMMENT",
     }
 )
 RULE_UNREPAIRED_DEFECT = "lane_l_unrepaired_defect"

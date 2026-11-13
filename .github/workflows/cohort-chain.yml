@@ -1,0 +1,47 @@
+name: cohort-chain
+
+# The self-continuing half of the autonomous engine (owner ruling R37, 2026-11-13: the loop runs
+# itself on GitHub Actions; it must not depend on cron punctuality -- present.yml's hourly schedule
+# went unfired for hours here). present.yml's `schedule` stays as the heartbeat that restarts an
+# idle loop; this workflow plans the next cohort the moment work finishes:
+#
+#   * a present run the planner dispatched (a workflow_dispatch run of present.yml) completes, or
+#   * an M9 round completes (audit-seed, or a standalone acceptance-write, which closes the batch).
+#
+# It runs only present.yml's cohort job (a call with no target), from the default branch (a
+# workflow_run run always executes main's copy of this file, and the call resolves to main's
+# present.yml). Bounded by construction:
+#
+#   * one planner at a time: the cohort job's own concurrency group, shared with the heartbeat and
+#     the run-request `cohort` override;
+#   * one cohort at a time: while any cell an earlier planner dispatched is still in flight, the
+#     planner holds and dispatches nothing (scripts/select_scheduled_cohort.py, `held`), so only the
+#     completion of a cohort's LAST run dispatches the next one -- a chain never fans out;
+#   * an idle portfolio ends the chain: nothing needs work (or no budget / stop rule) -> nothing is
+#     dispatched -> no present run completes -> this workflow is not triggered again. Its own
+#     completion is not one of its triggers, and present.yml's schedule fires (planner-only runs)
+#     are filtered out below, so a chain link never triggers itself.
+#
+# No secret is passed: the cohort job holds none (the facts/present jobs do not run on a
+# no-target call). tests/test_cohort_chain.py parses this file.
+
+on:
+  workflow_run:
+    workflows: ["present", "audit-seed", "acceptance-write"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  cohort:
+    # A present run counts only when it was a dispatched worker run; a schedule fire of present.yml
+    # is itself a planner run and must not re-trigger the planner.
+    if: >-
+      github.event.workflow_run.head_branch == 'main' &&
+      (github.event.workflow_run.name != 'present' || github.event.workflow_run.event == 'workflow_dispatch')
+    permissions:
+      contents: write  # the provider-spend ledger ref only (present.yml's cohort job)
+      actions: write   # dispatch present.yml runs
+    uses: ./.github/workflows/present.yml

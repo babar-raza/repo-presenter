@@ -384,7 +384,10 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
     # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
     # number, not a target. 78 -> 77 (2026-11-13): the 3D .NET Lane L seal is NEEDS_REPAIR on genuine
-    # defects L-03/L-05 (justified in the baseline, R10), so it is no longer a clean twin.
+    # defects L-03/L-05 (justified in the baseline, R10), so it is no longer a clean twin. 77 -> 79
+    # (2026-11-13, BL-004 baseline rewrite): the 3D Python and Cells .NET Lane R seals, RECERTIFIED and
+    # previously absent from the baseline, are now recorded in it. 79 -> 77 (2026-11-13, BL-003): the
+    # independent fact-check registered confirmed false claims in both, so they are NEEDS_REPAIR on BC-18.
     assert registration.shortfall.clean_twin_achieved == 77
     assert registration.shortfall.clean_twin_shortfall == 0
 

@@ -19,6 +19,7 @@ an example).
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 from collections.abc import Sequence
@@ -356,6 +357,17 @@ def probe_compiler(compiler: str, workspace: Path, flags: Sequence[str]) -> str:
     return said[0][:300] if said else f"exited {result.return_code} and said nothing"
 
 
+def own_compiler(workspace: Path) -> str | None:
+    """The `tsc` the package's own `npm install` put in its build copy, or None when it has none
+    (the package declares no `typescript` dependency, or the install did not finish)."""
+    bin_directory = workspace / _PRODUCT_DIRECTORY / "node_modules" / ".bin"
+    for name in ("tsc.cmd", "tsc") if os.name == "nt" else ("tsc",):
+        candidate = bin_directory / name
+        if candidate.is_file():
+            return str(candidate)
+    return None
+
+
 def _version(compiler: str, workspace: Path) -> str:
     result = execute(
         [compiler, "--version"],
@@ -411,10 +423,21 @@ def verify_typescript_examples(
         return blocked(candidates, f"BLOCKED_TOOLCHAIN: the sources would not stage ({error})")
 
     flags = _flags(root)
+    product = build_product(root, workspace, npm_executable(), install_timeout_seconds)
     refusal = probe_compiler(compiler, workspace, flags)
     if refusal:
-        return blocked(candidates, f"BLOCKED_TOOLCHAIN: this tsc refuses these options - {refusal}")
-    product = build_product(root, workspace, npm_executable(), install_timeout_seconds)
+        # The machine's compiler refuses the package's own declared options (TS5107/TS5108 on
+        # `moduleResolution: "node"` under tsc 6/7, measured on the hosted runner for
+        # Aspose.3D-FOSS-for-TypeScript, whose package.json pins `typescript: ^5.8.3`). The
+        # package's own `npm install` above installed the compiler it is built with; the snippet
+        # is checked the way the library is built, so that compiler is used when it accepts them.
+        own = own_compiler(workspace)
+        if own is None or probe_compiler(own, workspace, flags):
+            return blocked(
+                candidates, f"BLOCKED_TOOLCHAIN: this tsc refuses these options - {refusal}"
+            )
+        compiler = own
+        version = _version(compiler, workspace) or version
     receipts: list[ExampleReceipt] = []
     for candidate in candidates:
         name = f"example_{candidate.ordinal:03d}.ts"

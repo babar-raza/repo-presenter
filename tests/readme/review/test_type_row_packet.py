@@ -161,7 +161,14 @@ def test_the_reviewer_is_shown_exactly_what_the_type_batch_gave_the_author() -> 
             bound.update(slot_ids)
     row_types = {fact.id for fact in authored_type_rows(readme, facts).values()}
     # Each row's facts are its slot's bound facts, and the member list is the author's own.
-    assert set(given) == {i for i in bound if i in row_types or not i.startswith("public_symbol:")}
+    documented = {
+        fact.id
+        for row in authored_type_rows(readme, facts).values()
+        for fact in type_unit_facts(row, facts)[1]
+    }
+    assert set(given) == {
+        i for i in bound if i in row_types or i in documented or not i.startswith("public_symbol:")
+    }
     for type_id, names in members.items():
         assert accepted[type_id]["members"] == names
 
