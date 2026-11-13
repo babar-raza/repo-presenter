@@ -4944,3 +4944,50 @@ internal evidence wording printed publicly), BL-003 (independent false-claim rev
 (3D .NET section placement), BL-005 (API descriptions), BL-007 (At a Glance layout), BL-009 (review page, Lane R diff),
 BL-010 (release-notes link: RELEASE_NOTES.md verified absent at the pinned revision, at HEAD and in all history; prefer a
 verified Releases target over unlinking).
+
+---
+
+## 2026-11-13: type-description rule — a type's API table description says what it is FOR, from its doc comment or its verified facts; never a count, a label or file-header bookkeeping
+
+Owner feedback on the Aspose.3D FOSS for Java Lane L candidate (3d2ed6be): `RenderParameters` "Class with 1 method.",
+`VertexElementPolygonGroup` "Class with 18 methods and 6 properties.", `Stream` "Created by lexchou on 12/14/2016.",
+`IRenderTarget` "Interface in the 3D JAVA API.", `PresetShaders` "Enum with 2 members." — "all wrong"; "RenderStage
+provides a default constructor ...", "Load options for AVEVA ... RVM file.", "Segment of CompositeCurve.", "ReferenceMode
+enum defines how vertex attributes reference data, supporting DIRECT, INDEX_TO_DIRECT, and INDEX modes." — good. Every
+one of these rows is the maintainers' live README text, kept verbatim by Lane L.
+
+**Pareto (R36/R38), measured by `scripts/measure_type_descriptions.py` over every latest seal (zero calls, re-certified
+by current code).** 10,489 type rows: 7,891 the type's doc comment, 2,361 other prose, **237 non-descriptive**: 134
+count-only, 102 boilerplate label, 1 bookkeeping. Two classes cover them: (1) maintainers' count/label cells for types
+the source does not document (Lane L 3D Java 41, Words Python 28, Cells TypeScript 25, PDF Python 20, Cells Rust 7, 3D Python 1; the
+same text carried into Lane R by restore, e.g. 3D Python `FileFormat`); (2) Lane R's own authored rows "<qualified
+name> is a public symbol with members ..." (89: 3D .NET 53, Email .NET 24, Words .NET 12), produced by the facts-only
+type objective. Only 4 non-descriptive Lane L cells (PDF Python) belong to a type with a usable doc comment, and exactly
+one stored type docstring in the portfolio is bookkeeping (`com.aspose.threed.Stream`).
+
+**Rule.** (i) A type is described by its doc comment summary when the source has one that is a real description;
+file-header bookkeeping (author/date, copyright with a year or "(c)"/"rights", license, to-do, generator stamp) is not
+one and is refused where every doc comment is judged (`extractors/surface/doc_text.is_bookkeeping`, inside
+`doc_defect`, so the extractor drops it from the fact and no stage quotes it). (ii) Else the sentence says what the type
+is for in the words of its verified facts only — its enum values, its members and what their own doc comments say, its
+bases, its implementation facts — naming the values or members it rests on; the author is given exactly those facts
+(`authoring.type_unit_facts`: `type_values`, `type_documented_members`) and the reviewer is shown the same
+(`review.sectionwise.type_row_facts`), so the sentence is verifiable. (iii) Never a count, a label ("Interface in the X
+API", "Public class.", "X is a public symbol ..."), the fully qualified name, or a purpose inferred from a name alone.
+The renderer's last-resort fallback for an enum with no authored sentence lists its verified values instead of "Public
+enum.".
+
+**Lane L (R5/R21).** A two-column API table cell of a count, label or bookkeeping shape whose type has a usable doc
+comment is a verified defect: new detector `type_description` (v1; no existing detector version moves, R10) replaces
+that cell alone with the summary (`FALSE_CLAIM_FIX`, cites the type fact). When the type has no usable doc comment
+Lane L does not guess: the cell is reported `NO_DOC_COMMENT` (report-only, not a defect, so no seal is blocked); its
+description is Lane R's to author under rule (ii).
+
+**Effect, measured.** Lane L PDF Python: 4 cells corrected on its next re-certification (non-descriptive 237 -> 233
+portfolio-wide under current code); 232 remaining cells have no usable doc comment and are reported. Lane R's 89 rows
+change only when those types are next authored (their text is a stored model output; re-certification never
+regenerates, R10). R10 gate (`--gate` against origin/main's baseline): no regression, 45 seals checked, lane R 5 / lane
+L 26 re-certified. Known limit: the Java extractor records no enum constants (`ReferenceMode`, `PresetShaders` have no
+`enum_member` facts), so a Java enum has no values to state until that gap is fixed. Regressions:
+`tests/readme/correction/detectors/test_type_description.py`, `tests/extractors/surface/test_doc_text.py`,
+`tests/readme/composition/test_type_purpose_facts.py`.

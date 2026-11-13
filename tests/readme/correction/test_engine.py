@@ -73,6 +73,7 @@ def test_every_registered_detector_is_loaded_by_name() -> None:
         "stale_package_version",
         "stale_type_count",
         "stray_fence",
+        "type_description",
         "unclosed_details",
         "versioned_link_target",
     ]

@@ -977,6 +977,17 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
         text, _ = elide_noncanonical(docstring, context.name)
     if not text:
         text = context.units.get(("api_reference", f"type:{fact.id}"), "")
+    if not text and attributes.get("symbol_kind") == "enum":
+        # An enum with no authored sentence is still described by its verified values, never by
+        # the label "Public enum." (owner review, 2026-11-13: a label is not a description).
+        from repo_presenter.readme.composition.authoring import type_values
+
+        values = type_values(fact, context.facts, limit=len(context.facts.facts))
+        shown = values[:8]
+        if shown:
+            listed = ", ".join(shown[:-1]) + (" and " if len(shown) > 1 else "") + shown[-1]
+            lead = "Enumerates values including" if len(values) > len(shown) else "Enumerates"
+            text = f"{lead} {listed}."
     if not text and attributes.get("signature"):
         signature = attributes["signature"].replace("|", "/").replace("`", "")
         return f"Defined as `{signature}`."

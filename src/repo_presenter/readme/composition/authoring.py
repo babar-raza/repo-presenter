@@ -94,14 +94,30 @@ _TYPE_BATCH = 40
 # run 43405236397, 19 factuality findings: "Matrix4 represents a 4x4 matrix ...", "NurbsCurve
 # represents a Non-Uniform Rational B-Spline curve ..."; Aspose.BarCode-FOSS-for-Python run
 # 43405225313: "PdfRenderer renders barcodes to PDF format").
+# 2026-11-13 (owner review of the Aspose.3D FOSS for Java Lane L candidate): a description tells the
+# reader what the type is FOR. The facts-only wording above produced the structural form "<fully
+# qualified name> is a public symbol with members A, B, C" (89 rows of the five sealed Lane R
+# candidates' type rows, every non-descriptive one) -- true, and no description; the owner's own
+# good example is "ReferenceMode enum defines how vertex attributes reference data, supporting
+# DIRECT, INDEX_TO_DIRECT, and INDEX modes". The sentence now says what the type is for, but only
+# in the words of its listed facts: its enum values, its members and what their own doc comments
+# say (carried with the batch, ``type_documented_members``), its bases and its implementation
+# facts -- the same facts the reviewer is shown for the row (``review.sectionwise.type_row_facts``).
 _TYPE_OBJECTIVE = (
-    "One sentence per public type in this batch, stating only what its listed facts verify: its "
-    "kind and verified signature (its bases), the verified members listed with it, and what its "
-    "implementation facts record. Never a purpose, domain, format or behaviour inferred from the "
-    "type's or a member's name (no 'represents', 'specifies', 'is used for', 'renders ... to'), "
-    "never a count, never a claim no listed fact carries."
+    "One sentence per public type in this batch saying what the type is for, in the words of its "
+    "listed facts only: open with its short name and its kind (class, enum, interface), then state "
+    "what its verified enum values, members, member doc comments, bases and implementation facts "
+    "show it holds or does, naming the values or members the sentence rests on (for example "
+    "'ReferenceMode enum lists the DIRECT, INDEX_TO_DIRECT and INDEX reference modes.', or 'Body "
+    "class gives the paragraphs and tables of a section body.' where its members' doc comments "
+    "say so). Never the fully qualified name, never 'is a public symbol', never a bare 'with "
+    "members' list, never a count, never a purpose, domain, format or behaviour inferred from the "
+    "type's or a member's name alone that no listed fact states, never a claim no listed fact "
+    "carries."
 )
 _TYPE_MEMBER_CAP = 8
+_TYPE_VALUE_CAP = 12
+_TYPE_DOCUMENTED_MEMBER_CAP = 4
 _REEXPORT_OF = re.compile(r"\bre-export of ([A-Za-z_][\w.]*)")
 # A type's own ``implementation`` facts (a member that always raises, one that only returns a
 # literal) travel with its batch. Measured on Aspose.BarCode-FOSS-for-Python (hosted run
@@ -761,7 +777,51 @@ def type_members(
         owner, _, name = fact.value.rpartition(".")
         if fact.polarity == "SUPPORTED" and "; method;" in detail and owner in paths:
             names.add(name)
-    return sorted(names)[:limit]
+    listed = sorted(names)[:limit]
+    # An enum's verified values are what an enum is for; a value the method list already names is
+    # not repeated.
+    return listed + [value for value in type_values(type_fact, facts) if value not in listed]
+
+
+def type_values(
+    type_fact: Fact, facts: FactsDocument, limit: int = _TYPE_VALUE_CAP
+) -> list[str]:
+    """The verified values of an enum (its SUPPORTED ``enum_member`` facts), in name order, at
+    most ``limit``; empty for anything else."""
+    paths = type_paths(type_fact, facts)
+    return sorted(
+        {
+            fact.value.rsplit(".", 1)[-1]
+            for fact in facts.by_kind("enum_member")
+            if fact.polarity == "SUPPORTED"
+            and str((fact.attributes or {}).get("enum", "")) in paths
+        }
+    )[:limit]
+
+
+def type_documented_members(
+    type_fact: Fact, facts: FactsDocument, limit: int = _TYPE_DOCUMENTED_MEMBER_CAP
+) -> list[Fact]:
+    """The SUPPORTED member facts of ``type_fact`` whose own doc comment is usable, in value order,
+    at most ``limit``: what the type's members say they do is what a purpose sentence for an
+    undocumented type may rest on."""
+    from repo_presenter.extractors.surface.doc_text import usable_doc
+
+    paths = type_paths(type_fact, facts)
+    found: list[Fact] = []
+    for fact in sorted(facts.by_kind("public_symbol"), key=lambda f: f.value):
+        detail = fact.evidence[0].detail or "" if fact.evidence else ""
+        owner = fact.value.rpartition(".")[0]
+        docstring = (fact.attributes or {}).get("docstring") or ""
+        if (
+            fact.polarity == "SUPPORTED"
+            and "; method;" in detail
+            and owner in paths
+            and docstring
+            and usable_doc(docstring, fact.value)
+        ):
+            found.append(fact)
+    return found[:limit]
 
 
 def type_implementation_facts(
@@ -794,15 +854,20 @@ def type_implementation_facts(
 
 def type_unit_facts(type_fact: Fact, facts: FactsDocument) -> tuple[list[str], list[Fact]]:
     """Everything one ``type:<fact id>`` unit is given to state, besides the type fact itself (its
-    kind, value and signature): the verified member names listed with it (``type_members``) and its
-    own implementation facts (``type_implementation_facts``). The type batch's packet is built from
+    kind, value and signature): the verified member names and enum values listed with it
+    (``type_members``), its own implementation facts (``type_implementation_facts``) and its
+    documented members, whose doc comments a purpose sentence may rest on
+    (``type_documented_members``, 2026-11-13). The type batch's packet is built from
     exactly this, and so is the review packet for the row the unit fills
     (``review.sectionwise.unit_packet``), so the reviewer is shown the facts the sentence was
     written from -- no more, no fewer. Measured on Aspose.3D-FOSS-for-TypeScript (hosted run
     43430680427): sixteen true rows such as "ReferenceMode is a public symbol with members DIRECT,
     INDEX, and INDEX_TO_DIRECT." were filed unsupported because the review packet carried neither
     the member list nor the ``Scene.render`` throw the row restated."""
-    return type_members(type_fact, facts), type_implementation_facts(type_fact, facts)
+    return type_members(type_fact, facts), [
+        *type_implementation_facts(type_fact, facts),
+        *type_documented_members(type_fact, facts),
+    ]
 
 
 def _type_batches(
@@ -840,10 +905,24 @@ def _type_batches(
             for fact in batch
         ]
         accepted.extend(
-            {"id": found.id, "kind": found.kind, "value": found.value} for found in detail
+            {
+                "id": found.id,
+                "kind": found.kind,
+                "value": found.value,
+                **(
+                    {"docstring": (found.attributes or {})["docstring"]}
+                    if found.kind == "public_symbol" and (found.attributes or {}).get("docstring")
+                    else {}
+                ),
+            }
+            for found in detail
         )
         spellings = section_spellings(ids, facts)
-        implementation_rule = f"{_TYPE_IMPLEMENTATION_RULE} " if detail else ""
+        implementation_rule = (
+            f"{_TYPE_IMPLEMENTATION_RULE} "
+            if any(found.kind == "implementation" for found in detail)
+            else ""
+        )
         packet = {
             "repository": entry.repository,
             "product_name": name,

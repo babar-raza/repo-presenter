@@ -22,6 +22,9 @@ independent acceptance review of the wave-3 reseal (f69f75c7, 2026-10-11):
    verified signature, a member is not described at all (README_CONTRACT.md row 14).
 3. The vendored engine cuts a summary that has no sentence-ending punctuation at 200 characters,
    mid-word ("... a knot vector The w component in co"). A cut is recognised the same way.
+4. The comment is not a description at all but file-header bookkeeping: "Created by lexchou on
+   12/14/2016." (Aspose.3D for Java ``Stream``), a copyright or license line, a to-do, a
+   generator's stamp. It is refused the same way, so no stage ever quotes it as what a type is for.
 
 The checks are structural and language-neutral; they read no fact and decide nothing about
 whether a sentence is true.
@@ -329,6 +332,25 @@ _COPIED_STUB = re.compile(r"^Description copied from\b", re.IGNORECASE)
 _TRAILING_COMMENT_CLOSE = re.compile(r"\s*\*?/\s*$")
 _OPENED_ABBREVIATION = re.compile(r"[\s,(]*\b(?:e\.g|i\.e|vs|cf|viz)\.$", re.IGNORECASE)
 _CUT_LENGTH = 190
+# A doc comment that is file-header bookkeeping, not a description: who made the file and when,
+# its copyright or license line, a to-do, a generator's stamp. Measured 2026-11-13 (owner review
+# of the Aspose.3D FOSS for Java Lane L candidate): ``Stream``'s only Javadoc is "Created by
+# lexchou on 12/14/2016.", and that sentence reached the API table as the type's description.
+# Anchored at the start, and a bare "Copyright ..." needs a year, a (c) or "rights" after it, so a
+# real summary ("Copyright information (Language Alternative).", "Gets or sets the document's
+# copyright.") is never matched.
+_DATE = re.compile(r"\b\d{1,4}[/.-]\d{1,2}[/.-]\d{1,4}\b|\b(?:19|20)\d{2}\b")
+_AUTHORSHIP = re.compile(r"^(?:created|written|modified|updated)\s+(?:by|on)\b", re.IGNORECASE)
+_HEADER_STAMP = re.compile(
+    r"^(?:copyright\b(?=.*(?:\d{4}|\(c\)|©|rights))|\(c\)\s*\d{4}|©)"
+    r"|\ball rights reserved\b"
+    r"|^licen[cs]ed\s+(?:under|to)\b"
+    r"|^(?:todo|fixme|xxx)\b"
+    r"|^(?:this\s+(?:file|code|class)\s+(?:was|is)\s+)?auto-?generated\b"
+    r"|^(?:generated|created)\s+(?:automatically|by\s+(?:the\s+)?\w*\s*(?:tool|generator))\b"
+    r"|^(?:author|date|version|since)\s*:",
+    re.IGNORECASE,
+)
 
 
 def _name_tail(symbol: str) -> str:
@@ -339,6 +361,19 @@ def _name_tail(symbol: str) -> str:
     """
     words = _NAME_WORDS.findall(symbol.rsplit(".", 1)[-1])
     return words[-1].lower() if words else ""
+
+
+def is_bookkeeping(text: str) -> bool:
+    """Whether ``text`` is file-header bookkeeping (author and date, copyright, license, to-do,
+    generator stamp) rather than a description of anything."""
+    stripped = text.strip()
+    return bool(
+        _HEADER_STAMP.search(stripped)
+        or (
+            _AUTHORSHIP.match(stripped)
+            and (_DATE.search(stripped) or len(stripped.rstrip(".").split()) <= 4)
+        )
+    )
 
 
 def doc_defect(text: str, symbol: str = "") -> str | None:
@@ -352,6 +387,8 @@ def doc_defect(text: str, symbol: str = "") -> str | None:
         return None
     if _COPIED_STUB.match(stripped):
         return "an inherited-description stub, not a description"
+    if is_bookkeeping(stripped):
+        return "file-header bookkeeping (author, date, copyright, to-do), not a description"
     if _LEFTOVER_MARKUP.search(stripped) or _BLOCK_TAG.search(stripped):
         return "unresolved markup"
     if _DOUBLE_SPACE.search(stripped):

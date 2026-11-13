@@ -63,6 +63,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1", "1", "1"),
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
     ),
+    "type_description.py": (
+        ("1",),
+        "77d72be4a90eddaa366c27a8c8c555429d9f23aff9f5803c926399934c7f0ccf",
+    ),
     "versioned_link_target.py": (
         ("1",),
         "bc344c363ce398201946044fdf4c2ac9b92f2e490cfbd26a31b59bc777d3ffff",
