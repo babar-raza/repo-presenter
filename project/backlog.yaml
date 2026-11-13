@@ -990,3 +990,17 @@ items:
       - "2026-11-13: tests/readme/repair/test_repair_robustness_bl076.py (12 regression tests from the logged shapes) pass; replay on the real sealed bundles of 3D .NET and 3D Python: restore keeps 050.table / 060.table / 010.list PRESERVE_ATTRIBUTED citing 7 / 5 / 1 register rows, no register quote printed, every withheld span register-backed (parity_gate.withheld_by_finding)"
     next_action: "supervisor merges; the hosted re-run of the four cells (R41 re-verification of every candidate via recertify.yml) is the closing evidence; renderer-printed facts defects (Cells .NET Style.Borders/Style.Font/Workbook.Save docstrings) are owned by the extractor/facts workers"
     updated: "2026-11-13"
+
+  - id: BL-078
+    title: "Lane L: a deterministic holdout refusal over a restored call store failed LEDGER_NO_RECORDS instead of reporting the refusal"
+    type: defect
+    source: "hosted present run 43489976823 (job present, aspose-3d-foss/Aspose.3D-FOSS-for-.NET), Lane L: NoOpProofError [LEDGER_NO_RECORDS] invocation 3ffcb442763a41a4acc72a8cc121e0f1; same shape in run 43473790998 (invocation df27ef742d534aea802ef7d02730b28c)"
+    priority: P1
+    status: active
+    implementation_path: "existing Lane L stage only (R27): lane_l_run.run_lane_l reads its call count with core/noop_proof.measure_invocation (the no-op proof's measure, which requires >= 1 record) only when the verdict was model-reviewed; a verdict folded by holdout_findings dispatched no job and counts its stamped provider calls with core/noop_proof.count_provider_calls (zero records is a valid zero)"
+    acceptance: "regression test from the logged shape (restored lane-l ledger + deterministic refusal) reports the refusal naming Lane R, not LEDGER_NO_RECORDS; the falsifier (a model-reviewed verdict whose invocation stamped no record, over a restored ledger) still fails LEDGER_NO_RECORDS; R10 gate OK; next hosted Lane L run of 3D .NET reports its real holdout outcome"
+    evidence:
+      - "2026-11-13: gh run view 43489976823 --log: Lane L ran 12 s, no review call, cache restored .present-work/lane-l/llm_cache from key ...-43473790998; gh run list --workflow present.yml -L 30: Lane L ran in 2 runs (43489976823, 43473790998), both failed this way"
+      - "2026-11-13: tests/test_lane_l_hosted.py::test_a_deterministic_refusal_over_a_restored_call_store_reports_the_refusal_not_a_noop_proof fails on origin/main with the exact logged message (version set 7e884dc3acd6) and passes with the fix; ...::test_a_model_reviewed_run_that_recorded_nothing_over_a_restored_ledger_still_fails_the_proof passes"
+    next_action: "supervisor merges; the next hosted Lane L run of 3D .NET (and every Lane L cell refused by its holdouts) is the closing evidence (R41)"
+    updated: "2026-11-13"

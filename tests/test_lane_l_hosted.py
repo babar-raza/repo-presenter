@@ -798,6 +798,69 @@ def test_a_defect_the_engine_may_not_repair_is_refused_before_the_model_is_asked
     assert not (hosted.candidates / "candidates" / SLUG).exists()
 
 
+def restored_call_store(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A real Lane L call store from an earlier, model-reviewed run: what the workflow's cache
+    restore puts under ``.present-work/lane-l/llm_cache`` before the next run starts."""
+    earlier = Hosted(tmp_path / "earlier", monkeypatch)
+    Provider(monkeypatch, default=accept_reply())
+    assert earlier.lane_l("seed", earlier.facts("seed")) == 0
+    store = earlier.root / "work-seed" / "lane-l" / "llm_cache"
+    assert load_records(store / "ledger.jsonl")  # the earlier invocation's own records
+    return store
+
+
+def test_a_deterministic_refusal_over_a_restored_call_store_reports_the_refusal_not_a_noop_proof(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Run 43489976823 (and 43473790998), Lane L of aspose-3d-foss/Aspose.3D-FOSS-for-.NET: the
+    holdouts rejected the candidate before the reviewer was asked (zero jobs, so zero ledger
+    records for this invocation), but the cache restore had left the previous run's ledger.jsonl
+    in place, and the call count was read with the no-op proof's measure, which fails
+    LEDGER_NO_RECORDS. The real outcome -- a refusal naming Lane R -- was masked. A run that
+    dispatched no job owes the ledger no record: the refusal is what must be reported."""
+    import shutil
+
+    store = restored_call_store(tmp_path, monkeypatch)
+    hosted = Hosted(tmp_path / "now", monkeypatch, FAILING_EXAMPLE_README)
+    shutil.copytree(store, hosted.root / "work-bad" / "lane-l" / "llm_cache")
+    before = load_records(hosted.root / "work-bad" / "lane-l" / "llm_cache" / "ledger.jsonl")
+    provider = Provider(monkeypatch)  # a call would raise
+    assert hosted.lane_l("bad", hosted.facts("bad")) == 1
+
+    assert provider.calls == 0
+    record = hosted.record("L")
+    assert record is not None and record.failure is not None
+    detail = record.failure.detail
+    assert "LEDGER_NO_RECORDS" not in detail and "NoOpProofError" not in detail
+    assert "lane_l_unrepaired_defect" in detail
+    assert "Lane R is the recommended lane" in detail
+    after = load_records(hosted.root / "work-bad" / "lane-l" / "llm_cache" / "ledger.jsonl")
+    assert after == before  # nothing was recorded, and nothing needed to be
+
+
+def test_a_model_reviewed_run_that_recorded_nothing_over_a_restored_ledger_still_fails_the_proof(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The falsifier the fix above must not weaken: a run whose verdict claims a model review but
+    whose invocation stamped no record (no provider call and no recorded reuse) proves nothing,
+    restored ledger or not, and still fails LEDGER_NO_RECORDS."""
+    import shutil
+
+    store = restored_call_store(tmp_path, monkeypatch)
+    hosted = Hosted(tmp_path / "now", monkeypatch)
+    shutil.copytree(store, hosted.root / "work-silent" / "lane-l" / "llm_cache")
+    monkeypatch.setattr(
+        lane_l_run,
+        "review_correction",
+        lambda **kwargs: model_verdict("ACCEPT"),
+    )
+    assert hosted.lane_l("silent", hosted.facts("silent")) == 1
+    record = hosted.record("L")
+    assert record is not None and record.failure is not None
+    assert "LEDGER_NO_RECORDS" in record.failure.detail
+    assert not (hosted.candidates / "candidates" / SLUG).exists()
+
+
 # --- 6. the CLI -----------------------------------------------------------------------------------------------
 
 

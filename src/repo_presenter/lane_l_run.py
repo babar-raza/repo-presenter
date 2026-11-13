@@ -49,7 +49,11 @@ from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import load_manifests
-from repo_presenter.core.noop_proof import Invocation, measure_invocation
+from repo_presenter.core.noop_proof import (
+    Invocation,
+    count_provider_calls,
+    measure_invocation,
+)
 from repo_presenter.core.preflight import PreflightDecision, preflight_decision
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
@@ -269,9 +273,19 @@ def run_lane_l(
         invocation.write(
             workspace / "invocations" / f"{invocation.invocation_id}.json", Path("."), 0
         )
-        provider_calls = measure_invocation(
-            ledger_path, invocation.invocation_id
-        ).provider_calls
+        if verdict.model_reviewed:
+            # A model review is a job: answered from the provider or the call store, it leaves at
+            # least one record stamped with this invocation, and none is a failed proof.
+            provider_calls = measure_invocation(
+                ledger_path, invocation.invocation_id
+            ).provider_calls
+        else:
+            # A deterministic holdout folded the verdict before any job was dispatched, so this
+            # invocation owes the ledger no record. The file can still exist: the workflow
+            # restores the previous run's call store (and its ledger) before this run starts
+            # (run 43489976823). Count what this invocation stamped -- zero unless a call was
+            # made anyway, which is then reported, never hidden.
+            provider_calls = count_provider_calls(ledger_path, invocation.invocation_id)
 
     return LaneLResult(
         repository=repository,
