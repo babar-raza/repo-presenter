@@ -102,7 +102,12 @@ progress:
   # 2026-11-09, not a suppression. Lane L left as recorded (live is above it; --no-loss only warns).
   # RESYNCED 2026-11-13 (lane_r_accepted 0 -> 5) after re-running `ops/checks/dashboard_matches_live.py --no-loss`:
   # Cells .NET, Email .NET, 3D .NET, Words .NET, 3D Python re-sealed and re-certify under current code.
-  lane_r_accepted: 5
+  # RESYNCED 2026-11-13 (lane_r_accepted 5 -> 2, BL-004) after re-running `ops/checks/dashboard_matches_live.py`
+  # (live R=2) and `python -m repo_presenter.recertify --gate`: the owner's P0 section-fit feedback (3D .NET:
+  # resource links and the license sentence printed under Scope and Limitations) is now a BC-05 check; it fails
+  # 3D .NET, Email .NET and Words .NET on BC-05 section fit alone -- a justified genuine defect per R10, recorded
+  # per seal in data/recertification_baseline.json; no seal is deleted. Re-sealed by the next hosted Lane R run.
+  lane_r_accepted: 2
   # Lane L 11 -> 9: BC-14 mechanical rules find genuine false claims in two live READMEs (HTML Python, Words Python:
   # non-exported or nonexistent types, wrong type counts) -- justified in data/recertification_baseline.json; Lane L corrects them.
   # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.

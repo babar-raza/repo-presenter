@@ -4944,3 +4944,50 @@ internal evidence wording printed publicly), BL-003 (independent false-claim rev
 (3D .NET section placement), BL-005 (API descriptions), BL-007 (At a Glance layout), BL-009 (review page, Lane R diff),
 BL-010 (release-notes link: RELEASE_NOTES.md verified absent at the pinned revision, at HEAD and in all history; prefer a
 verified Releases target over unlinking).
+
+---
+
+## 2026-11-13: BL-004 — section-fit rule: resource links go to Documentation & Resources, the license to License, Scope and Limitations holds limitations only (R14, R36(b), R10)
+
+Owner feedback (P0, verbatim, Lane R aspose-3d-foss/Aspose.3D-FOSS-for-.NET @ 52b0f00ebf28, seal 03b940a46f7b):
+"Documentation & Resources is not complete because its content is shown in Scope and Limitations section. AND This project
+is licensed under the MIT License, as stated in the LICENSE file. Above line does not fit Scope and Limitations. this is
+major problem."
+
+**Root cause (measured on the sealed dispositions/plan/content units, zero calls).** (1) The model filed the maintainers'
+"Documentation & Resources" links list (`inherited_unit:059.list`) in `documentation_resources` — correctly — but
+`reconciliation/dispositions.py::_rehome_unprintable_kind_units` (a Cells Go fix: that section prints only the plan's
+own link lines, never a kept unit's text) re-homed it to the "nearest" printable section, which for a `resources`-topic
+list is `scope_limitations` (`destinations._HOMES["resources"]`). With the list no longer in Documentation & Resources,
+`planning._kept_list_links` never owed its docs/kb/reference links (link_target:020-022) to that section, so the list
+printed verbatim under Scope and Limitations while Documentation & Resources showed only the four links the plan had
+assigned. (2) The model kept the License paragraph (`070.paragraph`) as VERIFIED_PRESERVE in `scope_limitations`, and the
+planner made limitation slot 6 of `license:file`/`license:spdx`, authored "This project is licensed under the MIT
+License, as stated in the LICENSE file." No rule said a resource list or a license statement does not fit Scope and
+Limitations, and no check caught it before sealing.
+
+**Pareto (every latest Lane R seal, 18):** 5 affected. Resource-links list under Scope and Limitations: 4 (3D .NET 059,
+Cells C++ 053, Email .NET 055, Words .NET 080) — all four via the same re-homing. License statement under Scope and
+Limitations: 2 (3D .NET authored slot; Cells Go authored limitation "provided without warranty under the MIT License");
+the License paragraph itself was filed in scope_limitations on 3 (3D .NET 070, Cells C++ 065, Cells Go 075).
+
+**Rule (decided, R11), in the existing components (R27/R38):**
+- Reconciliation (`normalize`): a kept list whose every item is a link the plan can assign
+  (`planning.link_list_targets`: SUPPORTED, numbered, non-shell, non-anchor link target) stays in / moves to
+  `documentation_resources` from `scope_limitations`/`key_capabilities`; it is never re-homed out of it. A kept paragraph
+  that states the license (`source_topics.is_license_statement`, or sat under the source's License heading) and rests on
+  nothing the License section does not render is SUPERSEDE_REDUNDANT by `license` (citing the facts it renders). Nothing
+  is dropped: the list's every link is printed as a Documentation & Resources line and the license text is the License
+  section's own (R14).
+- Planning: `_kept_list_links` owes every link of such a list to `documentation_resources` (no longer only when the plan
+  already assigned one of them there); `_drop_license_limitations` strips `license` facts from `material_limitations`
+  and drops a slot left citing no fact whose units another slot already hands.
+- Check (before sealing, BC-05 `validation/units.py::section_fit_failures`): the rendered Scope and Limitations prints no
+  item that leads with a document link and no license statement; the failure names the causal stage.
+
+**R10:** the gate (`recertify --gate --base-baseline <origin/main>`) passes; three seals the dashboard counted lose
+certification on this genuine defect — 3D .NET R `03b940a46f7b`, Email .NET R `e8cc8cca4d3a`, Words .NET R
+`56668e8abf63` (BC-05 section fit only) — and are recorded NEEDS_REPAIR with justification in
+`data/recertification_baseline.json`; `progress.lane_r_accepted` is resynced 5 → 2 honestly. Cells C++ and Cells Go were
+already NEEDS_REPAIR and gain the BC-05 section-fit finding. Re-sealing needs the new Documentation & Resources link lines
+authored, i.e. a governed hosted Lane R re-run of the five cells (R37), not a hand edit.
