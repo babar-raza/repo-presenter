@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set 2e1cacfdb7dc: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u7 (api_reference, documentation_resources, scope_limitations): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 722 are maintainer_lines - attributed maintainer text is not an unsupported claim; judge it only for contradiction, misrepresentation, promotion or value; finding F02: lines 726 are maintainer_lines - attributed maintainer text is not an unsupported claim; judge it only for contradiction, misrepresentation, promotion or value; finding F03: lines 727 are maintainer_lines - attributed maintainer text is not an unsupported claim; judge it only for contradiction, misrepresentation, promotion or value; finding F04: lines 728 are maintainer_lines - attributed maintainer text is not an unsupported claim; judge it only for contradiction, misrepresentation, promotion or value; finding F05: lines 731 are maintainer_lines - attributed maintainer text is not an unsupported claim; judge it only for contradiction, misrepresentation, promotion or value; finding F06: lines 734 are maintainer_lines - attributed maintainer text is not an unsupported claim; judge it only for contradiction, misrepresentation, promotion or value",
+    "classification": "validation_failed",
+    "detail": "attempt under version set 68277adca33b: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T21:20:48.952090+00:00",
+    "occurred_at": "2026-11-13T09:07:40.711519+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 36,
+  "state_version": 37,
   "recent_trigger_dedup_keys": {
     "run:40555587482:aspose-3d-foss/Aspose.3D-FOSS-for-Java": "918cb4846361440e928a3067d4de28fb",
     "run:40571532257:aspose-3d-foss/Aspose.3D-FOSS-for-Java": "f858c28995dd41d18dbd51ef2a3f61d7",
