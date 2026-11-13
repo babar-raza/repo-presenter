@@ -4,7 +4,14 @@
 
 [![Aspose.Email FOSS for Python](https://products.aspose.org/media/email/python/banner-readme.png)](https://products.aspose.org/email/python/)
 
-Aspose.Email FOSS for Python reads `.eml` and `.msg` files, writes `.msg` files, and converts between `.eml` and `.msg` formats. It parses Outlook message structures using the CFB format through `email_foss.cfb` and handles MAPI message properties through `email_foss.msg`. The package supports reading and writing `.txt` files as attachment content and provides classes such as `MsgReader`, `MsgWriter`, `CFBReader`, `CFBWriter`, `MapiMessage`, `MapiAttachment`, `MapiRecipient`, and `MapiNamedProperty` for programmatic access to message components. It is licensed under the MIT License and requires no external runtime dependencies.
+Aspose.Email FOSS for Python reads `.msg`, `.eml`, and `.txt` files, writes `.msg` files, and converts between these formats. It reads `.msg` files using the CFB format and provides classes to parse and write message structures. It supports MAPI message objects through the `MapiMessage` class, which can be created from scratch, loaded from files, or converted to and from email messages.
+
+Aspose.Email FOSS for Python is a free, open-source, MIT-licensed, pure-Python library for
+deterministic Compound File Binary (CFB) and Outlook `.msg` message processing — no Microsoft
+Outlook installation, COM interop, or compiled extensions required. It provides low-level CFB and
+MSG readers/writers alongside a high-level, mutable `MapiMessage` API for creating, editing, and
+saving messages, including two-way conversion with Python's own
+[`email.message.EmailMessage`](https://docs.python.org/3/library/email.message.html#email.message.EmailMessage).
 
 ## Navigation
 
@@ -23,43 +30,41 @@ Aspose.Email FOSS for Python reads `.eml` and `.msg` files, writes `.msg` files,
 ## At a Glance
 
 ```mermaid
-flowchart LR
-Start["An existing EML or MSG file"]
-Start --> Product["Aspose.Email FOSS for Python"]
-Product["Aspose.Email FOSS for Python"] --> Cap1["Read and write MSG files"]
-Cap2["Convert between MSG and EML"]
-Cap3["Low-level CFB processing"]
-Cap4["Message composition and editing"]
-Cap5["Property and named property access"]
-Cap6["Pure Python implementation"]
-Product["Aspose.Email FOSS for Python"] --> Cap2["Convert between MSG and EML"]
-Product["Aspose.Email FOSS for Python"] --> Cap3["Low-level CFB processing"]
-Product["Aspose.Email FOSS for Python"] --> Cap4["Message composition and editing"]
-Product["Aspose.Email FOSS for Python"] --> Cap5["Property and named property access"]
-Product["Aspose.Email FOSS for Python"] --> Cap6["Pure Python implementation"]
-Cap1["Read and write MSG files"] --> Output["MSG file"]
-Cap2["Convert between MSG and EML"] --> Output["MSG file"]
-Cap3["Low-level CFB processing"] --> Output["MSG file"]
-Cap4["Message composition and editing"] --> Output["MSG file"]
-Cap5["Property and named property access"] --> Output["MSG file"]
-Cap6["Pure Python implementation"] --> Output["MSG file"]
+flowchart TB
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing MSG, EML,<br/>or TXT file"]
+  end
+  PRODUCT["Aspose.Email FOSS for Python"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Read MSG and CFB files"]
+    c2["Write MSG and CFB<br/>files"]
+    c3["Convert between MSG<br/>and EML"]
+    c4["Create and edit<br/>messages"]
+    c5["Low-level CFB access"]
+    c6["Low-level MSG access"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["MSG file"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
 
-- **Read and write MSG files.** It reads and writes Outlook `.msg` files using `MsgReader` and `MsgWriter`, supporting direct property-stream parsing and file or bytes I/O, and provides a high-level `MapiMessage` API for message creation, editing, and conversion.
-- **Convert between MSG and EML.** It converts between `.msg` and `.eml` formats by parsing `.msg` into `MapiMessage` and exporting to EmailMessage, or importing an EmailMessage and saving as `.msg`.
-- **Low-level CFB processing.** It processes Compound File Binary containers with `CFBReader` and `CFBWriter`, enabling traversal of storages and streams, and building custom CFB documents from scratch.
-- **Message composition and editing.** It composes and edits messages using `MapiMessage`, supporting recipients, attachments, and MAPI properties, with methods to create, load, and save messages.
-- **Property and named property access.** It exposes MAPI property and named property access through `PropertyId`, `property_types`, and `MapiNamedProperty`, allowing custom property reading and writing.
-- **Pure Python implementation.** It runs without external runtime dependencies and requires only Python 3.10 or later.
-
-Aspose.Email FOSS for Python is a free, open-source, MIT-licensed, pure-Python library for
-deterministic Compound File Binary (CFB) and Outlook `.msg` message processing — no Microsoft
-Outlook installation, COM interop, or compiled extensions required. It provides low-level CFB and
-MSG readers/writers alongside a high-level, mutable `MapiMessage` API for creating, editing, and
-saving messages, including two-way conversion with Python's own
-[`email.message.EmailMessage`](https://docs.python.org/3/library/email.message.html#email.message.EmailMessage).
+- **Read MSG and CFB files.** It reads Outlook `.msg` files and Compound File Binary (CFB) containers using `CFBReader`, supporting file paths and raw bytes, with directory traversal, path resolution, and stream data extraction.
+- **Write MSG and CFB files.** It writes Outlook `.msg` files and Compound File Binary (CFB) containers using `CFBWriter`, enabling programmatic creation of CFB documents and direct serialization to bytes or files.
+- **Convert between MSG and EML.** It converts between Outlook `.msg` and standard `.eml` formats by transforming `MapiMessage` objects to EmailMessage instances and vice versa, preserving message content and structure.
+- **Create and edit messages.** It creates and edits messages through `MapiMessage`, supporting subject, body, recipients, attachments, MAPI properties, and named properties, with methods for adding attachments and saving to `.msg` files.
+- **Low-level CFB access.** It provides low-level access to Compound File Binary structures through `CFBDocument`, `CFBStorage`, and `CFBReader`, enabling manual construction, traversal, and inspection of storages and streams.
+- **Low-level MSG access.** It offers low-level Outlook `.msg` document access through `MsgReader`, `MsgDocument`, and `MsgWriter`, supporting direct parsing of property streams and subobject streams for detailed message inspection.
 
 The following features are grouped by processing layer, from low-level CFB and MSG access up
 through the high-level `MapiMessage` API and its `EmailMessage` bridge. Together they cover the
@@ -98,7 +103,7 @@ Verify the install:
 python -c "import aspose.email_foss"
 ```
 
-The package declares `python_requires` as `>=3.10`.
+The package declares `requires-python` as `>=3.10`.
 
 ## Dependencies
 
@@ -108,11 +113,11 @@ No required third-party package dependencies; in `pyproject.toml`, no `project.d
 
 ### Native and System Requirements
 
-- Requires Python 3.10 or later (`python_requires=">=3.10"` in `pyproject.toml`).
+- Requires Python 3.10 or later (`requires-python=">=3.10"` in `pyproject.toml`).
 
 ## Quick Start
 
-It reads a MSG file and prints its subject line using the `MapiMessage` class.
+The first example reads a MSG file and prints its subject line using the `MapiMessage` class.
 
 ```python
 from aspose.email_foss import msg
@@ -121,7 +126,7 @@ with msg.MapiMessage.from_file("sample.msg") as message:
     print(message.subject)
 ```
 
-It creates a new MSG file with sender, recipient, and attachment properties, then converts it to an EML file.
+The second example creates a new MSG file with sender, recipient, and attachment properties, saves it, then loads and exports it to EML format.
 
 ```python
 from aspose.email_foss import msg
@@ -141,9 +146,9 @@ with msg.MapiMessage.from_file("hello.msg") as loaded:
 
 ## Additional Examples
 
-The following workflows demonstrate converting between MSG and EML formats, and building a CFB container directly.
+The following workflows demonstrate converting messages between MSG and EML formats, and reading structured storage streams.
 
-### Convert MSG to EML Using `from_file` And `to_email_message`
+### Convert MSG to EML Using `MapiMessage` and Email Message APIs
 
 ```python
 from aspose.email_foss import msg
@@ -158,7 +163,7 @@ with open("message.eml", "wb") as target:
 <details>
 <summary>View Additional Examples</summary>
 
-### Convert EML to MSG Using `from_email_message` and Save
+### Convert EML to MSG Using Email Parser and `MapiMessage` APIs
 
 ```python
 from email import policy
@@ -173,7 +178,7 @@ message = msg.MapiMessage.from_email_message(email_message)
 message.save("message.msg")
 ```
 
-### Build a CFB Container Directly Using `CFBStorage` And `CFBWriter`
+### Read Structured Storage Streams Using CFB APIs
 
 ```python
 from aspose.email_foss.cfb import CFBDocument, CFBReader, CFBStorage, CFBStream, CFBWriter, ROOT_ENTRY_NAME
@@ -187,6 +192,25 @@ entry = reader.resolve_path(["Summary"])
 print(reader.get_stream_data(entry.stream_id))
 ```
 
+### Inspect Low-Level MSG and CFB Structure
+
+Open a `.msg` through `MsgReader` and inspect the underlying CFB container and property-stream
+header (excerpted from `examples/msg_reader.py`):
+
+```python
+from aspose.email_foss import msg
+
+with msg.MsgReader.from_file(msg_path) as reader:
+    cfb = reader.cfb_reader
+    print(f"major_version={cfb.major_version} sector_size={cfb.sector_size}")
+
+    header = reader.top_level_header
+    print(f"recipient_count={header.recipient_count} attachment_count={header.attachment_count}")
+
+    for entry in reader.iter_recipient_storages():
+        print(f"recipient storage: {entry.name}")
+```
+
 Full runnable examples are available under [`examples/`](examples/) (see
 [`examples/README.md`](examples/README.md) for a task-to-script index).
 
@@ -194,9 +218,9 @@ Full runnable examples are available under [`examples/`](examples/) (see
 
 ## API Reference
 
-Aspose.Email FOSS for Python provides high-level and low-level APIs for reading and writing `.msg` files. The high-level MSG API centers on `email_foss.msg.MapiMessage` for creating, editing, and converting messages, while the low-level MSG API uses `email_foss.msg.MsgReader` and `email_foss.msg.MsgWriter` for direct property-stream access, and the low-level CFB API uses `email_foss.cfb.CFBReader` and `email_foss.cfb.CFBWriter` for raw Compound File Binary container access. The CFB and MSG modules are listed separately in the tables below.
+Aspose.Email FOSS for Python provides high-level MSG and low-level MSG and CFB APIs for reading, writing, and converting email formats. The high-level MSG API centers on `MapiMessage` for message creation, editing, and conversion, while the low-level MSG API uses `MsgReader` and `MsgWriter` for direct property-stream access, and the low-level CFB API uses `CFBReader` and `CFBWriter` for raw Compound File Binary container access.
 
-The verified public surface has 30 types.
+The public API has 30 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -228,7 +252,7 @@ The verified public surface has 30 types.
 | `PropertyStreamHeaderSubobject` | Property stream header used in recipient and attachment storages, containing only reserved bytes. |
 | `PropertyStreamHeaderTopLevel` | Top-level property stream header containing next-id counters and counts for recipients and attachments. |
 | `StorageLayout` | Naming and containment rules for recipient, attachment, embedded message, and nameid storages. |
-| `MapiPropertyCollection` | MapiPropertyCollection represents a collection of MAPI properties associated with a MapiMessage object. |
+| `MapiPropertyCollection` | MapiPropertyCollection class provides methods to add, get, set, remove, and iterate over MAPI properties, with methods add, get, set, remove, and iter_properties. |
 
 #### Enumerations
 
@@ -245,23 +269,38 @@ The verified public surface has 30 types.
 
 ### MapiMessage
 
-The `email_foss.msg.MapiMessage` class provides methods to create messages from scratch, load them from `.msg` files, convert them to and from email messages, and save them back to `.msg` format, while supporting property and attachment manipulation through methods such as `MapiMessage.create`, `MapiMessage.from_file`, `MapiMessage.to_bytes`, `MapiMessage.add_recipient`, and `MapiMessage.add_attachment`.
+The `MapiMessage` class provides methods to create messages from scratch, load them from files or email messages, and convert them to MSG or EML formats, as well as to inspect and modify properties, recipients, and attachments.
 
 ### CFBReader
 
-The `email_foss.cfb.CFBReader` class enables direct access to Compound File Binary containers by reading streams and storages from raw bytes or files, supporting operations such as `CFBReader.from_file`, `CFBReader.get_stream_data`, `CFBReader.resolve_path`, and `CFBReader.iter_tree` to inspect and extract low-level file structure.
+The `CFBReader` class enables reading raw Compound File Binary data from bytes or files, providing access to directory entries, streams, and storages through iteration and path resolution methods.
 
 - `iter_tree`: Yield a depth-first tree traversal as (depth, entry) tuples.
 - `resolve_path`: Resolve a storage/stream path by exact directory-entry names.
 
+### CFBWriter
+
+The `CFBWriter` class provides class methods to serialize a `CFBDocument` into bytes or write it directly to a file.
+
 ### MsgReader
 
-The `email_foss.msg.MsgReader` class parses `.msg` files at the property-stream level, exposing raw message structure through methods like `MsgReader.from_file`, `MsgReader.parse_message_property_stream`, `MsgReader.iter_recipient_storages`, and `MsgReader.iter_attachment_storages`, and provides access to the underlying CFB structure via `MsgReader.cfb_reader`.
+The `MsgReader` class parses MSG files at the property-stream level, exposing the underlying `CFBReader`, storage layout, and methods to iterate over recipients, attachments, and property streams.
 
 - `parse_message_property_stream`: Read the property stream in the top level or an embedded-message storage.
 - `parse_subobject_property_stream`: Read the property stream in recipient/attachment storage and decode fixed-length entries.
 - `parse_subobject_property_stream_data`: Decode recipient/attachment property stream header and fixed-length entries.
 - `parse_top_level_property_stream`: Decode top-level property stream header and fixed-length entries.
+
+### MsgWriter
+
+The `MsgWriter` class provides class methods to serialize a `MsgDocument` into bytes or write it directly to a file.
+
+The library's package entry points are organized into three stable layers, all importable from
+`aspose.email_foss`: the high-level MSG API, centered on `MapiMessage`, for creating, editing, and
+converting messages; the low-level MSG API, centered on `MsgReader`, `MsgWriter`, and
+`MsgDocument`, for direct property-stream access; and the low-level CFB API, centered on
+`CFBReader`, `CFBWriter`, and `CFBDocument`, for raw Compound File Binary container access. The
+CFB and MSG modules are listed separately in the tables below.
 
 - `MapiMessage`
   - `create(subject, body, unicode_strings) -> "MapiMessage"`
@@ -356,7 +395,7 @@ The `email_foss.msg.MsgReader` class parses `.msg` files at the property-stream 
 
 - **[Getting started guide](https://docs.aspose.org/email/python/)** — Installation, walkthroughs, and feature guides for this library.
 - **[How-to guides & FAQ](https://kb.aspose.org/email/python/)** — Task-focused answers for common CFB, MSG, and EML processing questions.
-- **[Full API reference](https://reference.aspose.org/email/python/)** — The complete, browsable reference for all 30 public types. It covers all 30 verified public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[Full API reference](https://reference.aspose.org/email/python/)** — The complete, browsable reference for all 30 public types. It covers all 30 public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[Stable API summary](PUBLIC_API.md)** — The maintained summary of the supported public surface and its package entry points.
 - **[Contributor guide](AGENTS.md)** — Repository layout, API rules, and packaging and changelog conventions for contributors and AI agents.
 - **[Contributing guide](CONTRIBUTING.md)** — Development setup and the release checklist.
@@ -368,22 +407,18 @@ The `email_foss.msg.MsgReader` class parses `.msg` files at the property-stream 
 
 Aspose.Email FOSS for Python reads and writes local CFB and MSG files, and converts to/from EML through Python's own email package.
 
-- It does not connect to mail servers because it lacks IMAP, SMTP, or POP3 support.
-- TNEF (Transport Neutral Encapsulation Format, `winmail.dat`) is not parsed or generated.
+- It does not connect to mail servers because it lacks IMAP, SMTP, or POP3 support, and TNEF (Transport Neutral Encapsulation Format, `winmail.dat`) is not parsed or generated.
 - There is no dedicated calendar/appointment API, although calendar-specific MAPI properties can still be accessed generically through `set_property()` and `get_property_value()`.
 - Direct `.eml` file parsing is not implemented by this library itself; EML support goes through `MapiMessage.from_email_message()` and `to_email_message()` together with Python's own `email.parser` and `email.message.EmailMessage`, not a dedicated `load_from_eml()` method.
+- The library requires Python version 3.10 or later.
 
 These limitations don't apply to [full-featured Aspose.Email for Python — Enterprise Edition](https://products.aspose.com/email/python-net/). It adds broader mail-server connectivity and format coverage — IMAP/SMTP/POP3, TNEF parsing and generation, a dedicated calendar/appointment API, and direct EML file parsing — plus commercial support.
 
 ## Development and Testing
 
-The package targets Python 3.10 or later and ships as pure Python source with no compiled extensions or native dependencies. The test suite resides in the tests/ directory and is run using the unittest framework with verbose output. CI validates the test suite across Python versions 3.10 through 3.13 and checks packaging on every push and pull request to master. Releases are tagged with a version number matching the package version and published to PyPI automatically via the Release GitHub Actions workflow.
+Aspose.Email FOSS for Python requires Python 3.10 or later and is tested on Python 3.10 through 3.13. The test suite resides in the tests directory and is executed with unittest discovery. The repository uses the build and twine tools to create and validate distributable packages.
 
 The suite covers 2 test files under `tests/`. The [ci workflow](.github/workflows/ci.yml) runs with Python 3.10, 3.11, 3.12 and 3.13. Releases run through the [release workflow](.github/workflows/release.yml).
-
-The package targets Python 3.10 or later and ships as pure Python source (`aspose.email_foss`) —
-see [Dependencies](#dependencies) below for the full package, native, and development dependency
-breakdown.
 
 - Ships as pure Python source with no compiled extensions to build and no native/system
   libraries to install.
@@ -400,7 +435,9 @@ python -m build
 python -m twine check --strict dist/*
 ```
 
-See
+CI runs the test suite on Python 3.10 through 3.13 and validates packaging on every push and pull
+request to `master`. Releases are tagged `vYY.M` (for example `v26.3`) and published to PyPI
+automatically by the [`Release`](.github/workflows/release.yml) GitHub Actions workflow. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for the full development and release checklist.
 
 ## License

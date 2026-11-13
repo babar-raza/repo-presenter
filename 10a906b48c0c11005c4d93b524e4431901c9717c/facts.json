@@ -1858,20 +1858,20 @@
     },
     {
       "attributes": null,
-      "confidence": 1.0,
+      "confidence": 0.5,
       "evidence": [
         {
           "detail": "lines 174-186; python fence; unit inherited_unit:035.code_block",
           "path": "README.md"
         },
         {
-          "detail": "example 5: FAILED; NameError",
+          "detail": "example 5: NOT_VERIFIED; fragment, not a contradiction: the fence uses `msg_path` without binding it (NameError)",
           "path": "receipts.json"
         }
       ],
       "id": "example:005",
       "kind": "example",
-      "polarity": "CONTRADICTED",
+      "polarity": "UNRESOLVED",
       "value": "from aspose.email_foss import msg\n\nwith msg.MsgReader.from_file(msg_path) as reader:\n    cfb = reader.cfb_reader\n    print(f\"major_version={cfb.major_version} sector_size={cfb.sector_size}\")\n\n    header = reader.top_level_header\n    print(f\"recipient_count={header.recipient_count} attachment_count={header.attachment_count}\")\n\n    for entry in reader.iter_recipient_storages():\n        print(f\"recipient storage: {entry.name}\")\n"
     },
     {
@@ -8559,11 +8559,13 @@
       "value": "26.3"
     },
     {
-      "attributes": null,
+      "attributes": {
+        "floor_declaration": "requires-python"
+      },
       "confidence": 1.0,
       "evidence": [
         {
-          "detail": "python_requires declared",
+          "detail": "requires-python declared",
           "path": "pyproject.toml"
         }
       ],
@@ -9006,7 +9008,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.CFBDocument.from_file",
+        "member_kind": "method",
         "signature": "def from_file(cls, path: Path | str) -> 'CFBDocument'",
         "symbol_kind": "method"
       },
@@ -9024,7 +9028,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.CFBDocument.from_reader",
+        "member_kind": "method",
         "signature": "def from_reader(cls, reader: CFBReader) -> 'CFBDocument'",
         "symbol_kind": "method"
       },
@@ -9092,7 +9098,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.close",
+        "member_kind": "method",
         "signature": "def close(self) -> None",
         "symbol_kind": "method"
       },
@@ -9110,7 +9118,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.data_size",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def data_size(self) -> int",
         "symbol_kind": "method"
       },
@@ -9128,7 +9139,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.directory_entry_count",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def directory_entry_count(self) -> int",
         "symbol_kind": "method"
       },
@@ -9146,7 +9160,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.fat_sector_count",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def fat_sector_count(self) -> int",
         "symbol_kind": "method"
       },
@@ -9164,7 +9181,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.file_size",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def file_size(self) -> int",
         "symbol_kind": "method"
       },
@@ -9182,7 +9202,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.find_child_by_name",
+        "member_kind": "method",
         "signature": "def find_child_by_name(self, storage_stream_id: StreamId, name: str) -> Optional[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -9200,7 +9222,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.from_file",
+        "member_kind": "method",
         "signature": "def from_file(cls, path: Path | str) -> 'CFBReader'",
         "symbol_kind": "method"
       },
@@ -9218,7 +9242,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.get_entry",
+        "member_kind": "method",
         "signature": "def get_entry(self, stream_id: StreamId) -> DirectoryEntry",
         "symbol_kind": "method"
       },
@@ -9237,6 +9263,7 @@
     {
       "attributes": {
         "defined_at": "email_foss.cfb.reader.CFBReader.get_stream_data",
+        "member_kind": "method",
         "signature": "def get_stream_data(self, stream_id: StreamId) -> bytes",
         "symbol_kind": "method"
       },
@@ -9254,7 +9281,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.iter_children",
+        "member_kind": "method",
         "signature": "def iter_children(self, storage_stream_id: StreamId) -> Iterator[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -9272,7 +9301,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.iter_storages",
+        "member_kind": "method",
         "signature": "def iter_storages(self) -> Iterator[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -9290,7 +9321,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.iter_streams",
+        "member_kind": "method",
         "signature": "def iter_streams(self) -> Iterator[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -9308,8 +9341,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.iter_tree",
         "docstring": "Yield a depth-first tree traversal as `(depth, entry)` tuples.",
+        "member_kind": "method",
         "signature": "def iter_tree(self, start_stream_id: StreamId=ROOT_STREAM_ID) -> Iterator[Tuple[int, DirectoryEntry]]",
         "symbol_kind": "method"
       },
@@ -9327,7 +9362,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.major_version",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def major_version(self) -> int",
         "symbol_kind": "method"
       },
@@ -9345,7 +9383,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.materialized_stream_count",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def materialized_stream_count(self) -> int",
         "symbol_kind": "method"
       },
@@ -9363,7 +9404,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.mini_sector_size",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def mini_sector_size(self) -> int",
         "symbol_kind": "method"
       },
@@ -9381,8 +9425,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.resolve_path",
         "docstring": "Resolve a storage/stream path by exact directory-entry names.",
+        "member_kind": "method",
         "signature": "def resolve_path(self, names: Iterable[str], start_stream_id: StreamId=ROOT_STREAM_ID) -> Optional[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -9400,7 +9446,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.CFBReader.sector_size",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def sector_size(self) -> int",
         "symbol_kind": "method"
       },
@@ -9443,7 +9492,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.CFBStorage.add_storage",
+        "member_kind": "method",
         "signature": "def add_storage(self, storage: 'CFBStorage') -> 'CFBStorage'",
         "symbol_kind": "method"
       },
@@ -9461,7 +9512,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.CFBStorage.add_stream",
+        "member_kind": "method",
         "signature": "def add_stream(self, stream: CFBStream) -> CFBStream",
         "symbol_kind": "method"
       },
@@ -9528,7 +9581,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.CFBWriter.to_bytes",
+        "member_kind": "method",
         "signature": "def to_bytes(cls, document: CFBDocument) -> bytes",
         "symbol_kind": "method"
       },
@@ -9546,7 +9601,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.CFBWriter.write_file",
+        "member_kind": "method",
         "signature": "def write_file(cls, document: CFBDocument, path: Path | str) -> None",
         "symbol_kind": "method"
       },
@@ -9564,6 +9621,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.writer.compare_directory_entry_names",
         "docstring": "Compare names using the [MS-CFB] sibling ordering rules.",
         "public_paths": "email_foss.cfb.writer.compare_directory_entry_names",
@@ -9639,7 +9697,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.DirectoryEntry.is_root",
+        "member_kind": "method",
         "signature": "def is_root(self) -> bool",
         "symbol_kind": "method"
       },
@@ -9657,7 +9717,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.DirectoryEntry.is_storage",
+        "member_kind": "method",
         "signature": "def is_storage(self) -> bool",
         "symbol_kind": "method"
       },
@@ -9675,7 +9737,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.DirectoryEntry.is_stream",
+        "member_kind": "method",
         "signature": "def is_stream(self) -> bool",
         "symbol_kind": "method"
       },
@@ -9760,7 +9824,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.Header.mini_sector_size",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def mini_sector_size(self) -> int",
         "symbol_kind": "method"
       },
@@ -9778,7 +9845,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.cfb.reader.Header.sector_size",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def sector_size(self) -> int",
         "symbol_kind": "method"
       },
@@ -10233,6 +10303,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def add(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | PropertyTypeCode, value: Any, *, flags: int=DEFAULT_PROPERTY_FLAGS, named: MapiNamedProperty | None=None) -> MapiProperty",
         "symbol_kind": "method"
       },
@@ -10250,6 +10322,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def get(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None) -> MapiProperty | None",
         "symbol_kind": "method"
       },
@@ -10267,6 +10341,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def iter_properties(self) -> Iterator[MapiProperty]",
         "symbol_kind": "method"
       },
@@ -10284,6 +10360,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def remove(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None) -> None",
         "symbol_kind": "method"
       },
@@ -10301,6 +10379,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def set(self, property: MapiProperty) -> MapiProperty",
         "symbol_kind": "method"
       },
@@ -10347,7 +10427,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.embedded_storage_name",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def embedded_storage_name(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10365,7 +10448,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.from_bytes",
+        "member_kind": "method",
         "signature": "def from_bytes(cls, filename: str, data: bytes, *, mime_type: str | None=None, content_id: str | None=None) -> 'MapiAttachment'",
         "symbol_kind": "method"
       },
@@ -10383,7 +10468,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.from_embedded_message",
+        "member_kind": "method",
         "signature": "def from_embedded_message(cls, message: 'MapiMessage', *, filename: str | None=None, mime_type: str | None=None) -> 'MapiAttachment'",
         "symbol_kind": "method"
       },
@@ -10401,7 +10488,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.is_embedded_message",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def is_embedded_message(self) -> bool",
         "symbol_kind": "method"
       },
@@ -10419,7 +10509,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.is_storage_attachment",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def is_storage_attachment(self) -> bool",
         "symbol_kind": "method"
       },
@@ -10437,7 +10530,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.set_property",
+        "member_kind": "method",
         "signature": "def set_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type_or_value: int | PropertyTypeCode | Any, value: Any=_MISSING, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
         "symbol_kind": "method"
       },
@@ -10455,7 +10550,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment.storage_name",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def storage_name(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10498,7 +10596,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.add_attachment",
+        "member_kind": "method",
         "signature": "def add_attachment(self, filename: str, data: bytes, *, mime_type: str | None=None, content_id: str | None=None) -> MapiAttachment",
         "symbol_kind": "method"
       },
@@ -10516,7 +10616,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.add_embedded_message_attachment",
+        "member_kind": "method",
         "signature": "def add_embedded_message_attachment(self, message: 'MapiMessage', *, filename: str | None=None, mime_type: str | None=None) -> MapiAttachment",
         "symbol_kind": "method"
       },
@@ -10534,7 +10636,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.add_recipient",
+        "member_kind": "method",
         "signature": "def add_recipient(self, email_address: str, *, display_name: str | None=None, recipient_type: int=RECIPIENT_TYPE_TO) -> MapiRecipient",
         "symbol_kind": "method"
       },
@@ -10552,7 +10656,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.body",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def body(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10570,7 +10677,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.body_html",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def body_html(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10588,7 +10698,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.close",
+        "member_kind": "method",
         "signature": "def close(self) -> None",
         "symbol_kind": "method"
       },
@@ -10606,7 +10718,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.create",
+        "member_kind": "method",
         "signature": "def create(cls, subject: str='', body: str='', *, unicode_strings: bool=True) -> 'MapiMessage'",
         "symbol_kind": "method"
       },
@@ -10624,7 +10738,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.from_email_message",
+        "member_kind": "method",
         "signature": "def from_email_message(cls, email_message: EmailMessage, *, unicode_strings: bool=True) -> 'MapiMessage'",
         "symbol_kind": "method"
       },
@@ -10642,7 +10758,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.from_file",
+        "member_kind": "method",
         "signature": "def from_file(cls, path: Path | str, *, strict: bool=False) -> 'MapiMessage'",
         "symbol_kind": "method"
       },
@@ -10660,7 +10778,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.from_msg_document",
+        "member_kind": "method",
         "signature": "def from_msg_document(cls, document: MsgDocument) -> 'MapiMessage'",
         "symbol_kind": "method"
       },
@@ -10678,7 +10798,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.get_named_property",
+        "member_kind": "method",
         "signature": "def get_named_property(self, named_property: MapiNamedProperty, property_type: int | None=None) -> MapiProperty | None",
         "symbol_kind": "method"
       },
@@ -10696,7 +10818,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.get_property",
+        "member_kind": "method",
         "signature": "def get_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None, *, storage_stream_id: int | None=None, decode: bool | None=None) -> MapiProperty | Any | None",
         "symbol_kind": "method"
       },
@@ -10714,7 +10838,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.get_property_value",
+        "member_kind": "method",
         "signature": "def get_property_value(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type: int | None=None, *, storage_stream_id: int=0, decode: bool=True) -> Any | None",
         "symbol_kind": "method"
       },
@@ -10732,7 +10858,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.iter_attachments_info",
+        "member_kind": "method",
         "signature": "def iter_attachments_info(self) -> Iterator[MapiAttachment]",
         "symbol_kind": "method"
       },
@@ -10750,7 +10878,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.iter_properties",
+        "member_kind": "method",
         "signature": "def iter_properties(self) -> Iterator[MapiProperty]",
         "symbol_kind": "method"
       },
@@ -10768,7 +10898,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.iter_property_keys",
+        "member_kind": "method",
         "signature": "def iter_property_keys(self, storage_stream_id: int=0) -> Iterator[tuple[int, int]]",
         "symbol_kind": "method"
       },
@@ -10786,7 +10918,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.message_class",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def message_class(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10805,6 +10940,8 @@
     {
       "attributes": {
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.msg_reader",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def msg_reader(self) -> MsgReader",
         "symbol_kind": "method"
       },
@@ -10822,7 +10959,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.save",
+        "member_kind": "method",
         "signature": "def save(self, path: Path | str) -> None",
         "symbol_kind": "method"
       },
@@ -10840,7 +10979,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.set_named_property",
+        "member_kind": "method",
         "signature": "def set_named_property(self, named_property: MapiNamedProperty, property_type: int | PropertyTypeCode, value: Any, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
         "symbol_kind": "method"
       },
@@ -10858,7 +10999,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.set_property",
+        "member_kind": "method",
         "signature": "def set_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type_or_value: int | PropertyTypeCode | Any, value: Any=_MISSING, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
         "symbol_kind": "method"
       },
@@ -10876,7 +11019,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.subject",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def subject(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10894,7 +11040,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_bytes",
+        "member_kind": "method",
         "signature": "def to_bytes(self) -> bytes",
         "symbol_kind": "method"
       },
@@ -10912,7 +11060,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_email_bytes",
+        "member_kind": "method",
         "signature": "def to_email_bytes(self, *args, **kwargs) -> bytes",
         "symbol_kind": "method"
       },
@@ -10930,7 +11080,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_email_message",
+        "member_kind": "method",
         "signature": "def to_email_message(self) -> EmailMessage",
         "symbol_kind": "method"
       },
@@ -10948,7 +11100,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_email_string",
+        "member_kind": "method",
         "signature": "def to_email_string(self, *args, **kwargs) -> str",
         "symbol_kind": "method"
       },
@@ -10966,7 +11120,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.to_msg_document",
+        "member_kind": "method",
         "signature": "def to_msg_document(self) -> MsgDocument",
         "symbol_kind": "method"
       },
@@ -10984,7 +11140,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiMessage.validation_issues",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def validation_issues(self) -> tuple[str, ...]",
         "symbol_kind": "method"
       },
@@ -11027,7 +11186,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiNamedProperty.numeric",
+        "member_kind": "method",
         "signature": "def numeric(cls, lid: int, property_set: uuid.UUID | str) -> 'MapiNamedProperty'",
         "symbol_kind": "method"
       },
@@ -11045,7 +11206,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiNamedProperty.string",
+        "member_kind": "method",
         "signature": "def string(cls, name: str, property_set: uuid.UUID | str=PS_PUBLIC_STRINGS) -> 'MapiNamedProperty'",
         "symbol_kind": "method"
       },
@@ -11088,7 +11251,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiProperty.clear_raw",
+        "member_kind": "method",
         "signature": "def clear_raw(self) -> None",
         "symbol_kind": "method"
       },
@@ -11106,7 +11271,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiProperty.clone",
+        "member_kind": "method",
         "signature": "def clone(self) -> 'MapiProperty'",
         "symbol_kind": "method"
       },
@@ -11124,7 +11291,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiProperty.property_tag",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def property_tag(self) -> int",
         "symbol_kind": "method"
       },
@@ -11167,7 +11337,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.mapi_message.MapiRecipient.set_property",
+        "member_kind": "method",
         "signature": "def set_property(self, property_id: int | CommonMessagePropertyId | PropertyId, property_type_or_value: int | PropertyTypeCode | Any, value: Any=_MISSING, *, flags: int=DEFAULT_PROPERTY_FLAGS) -> MapiProperty",
         "symbol_kind": "method"
       },
@@ -11258,7 +11430,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgDocument.from_file",
+        "member_kind": "method",
         "signature": "def from_file(cls, path: Path | str, *, strict: bool=False) -> 'MsgDocument'",
         "symbol_kind": "method"
       },
@@ -11276,7 +11450,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgDocument.from_reader",
+        "member_kind": "method",
         "signature": "def from_reader(cls, reader: MsgReader) -> 'MsgDocument'",
         "symbol_kind": "method"
       },
@@ -11294,7 +11470,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgDocument.to_cfb_document",
+        "member_kind": "method",
         "signature": "def to_cfb_document(self) -> CFBDocument",
         "symbol_kind": "method"
       },
@@ -11361,6 +11539,8 @@
     {
       "attributes": {
         "defined_at": "email_foss.msg.reader.MsgReader.cfb_reader",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def cfb_reader(self) -> CFBReader",
         "symbol_kind": "method"
       },
@@ -11378,7 +11558,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.close",
+        "member_kind": "method",
         "signature": "def close(self) -> None",
         "symbol_kind": "method"
       },
@@ -11396,7 +11578,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.from_file",
+        "member_kind": "method",
         "signature": "def from_file(cls, path: Path | str, *, strict: bool=False) -> 'MsgReader'",
         "symbol_kind": "method"
       },
@@ -11414,7 +11598,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.iter_attachment_storages",
+        "member_kind": "method",
         "signature": "def iter_attachment_storages(self) -> Iterator[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -11432,7 +11618,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.iter_recipient_storages",
+        "member_kind": "method",
         "signature": "def iter_recipient_storages(self) -> Iterator[DirectoryEntry]",
         "symbol_kind": "method"
       },
@@ -11450,7 +11638,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.iter_top_level_fixed_length_properties",
+        "member_kind": "method",
         "signature": "def iter_top_level_fixed_length_properties(self) -> Iterator[PropertyEntryFixedLength]",
         "symbol_kind": "method"
       },
@@ -11468,8 +11658,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.parse_message_property_stream",
         "docstring": "Read the property stream in the top level or an embedded-message storage.",
+        "member_kind": "method",
         "signature": "def parse_message_property_stream(self, storage_stream_id: int=ROOT_STREAM_ID) -> Tuple[PropertyStreamHeaderTopLevel, List[PropertyEntryFixedLength]]",
         "symbol_kind": "method"
       },
@@ -11487,8 +11679,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.parse_subobject_property_stream",
         "docstring": "Read the property stream in recipient/attachment storage and decode fixed-length entries.",
+        "member_kind": "method",
         "signature": "def parse_subobject_property_stream(self, storage_stream_id: int) -> Tuple[PropertyStreamHeaderSubobject, List[PropertyEntryFixedLength]]",
         "symbol_kind": "method"
       },
@@ -11508,6 +11702,7 @@
       "attributes": {
         "defined_at": "email_foss.msg.reader.MsgReader.parse_subobject_property_stream_data",
         "docstring": "Decode recipient/attachment property stream header and fixed-length entries.",
+        "member_kind": "method",
         "signature": "def parse_subobject_property_stream_data(cls, data: bytes) -> Tuple[PropertyStreamHeaderSubobject, List[PropertyEntryFixedLength]]",
         "symbol_kind": "method"
       },
@@ -11527,6 +11722,7 @@
       "attributes": {
         "defined_at": "email_foss.msg.reader.MsgReader.parse_top_level_property_stream",
         "docstring": "Decode top-level property stream header and fixed-length entries.",
+        "member_kind": "method",
         "signature": "def parse_top_level_property_stream(cls, data: bytes) -> Tuple[PropertyStreamHeaderTopLevel, List[PropertyEntryFixedLength]]",
         "symbol_kind": "method"
       },
@@ -11544,7 +11740,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.storage_layout",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def storage_layout(self) -> StorageLayout",
         "symbol_kind": "method"
       },
@@ -11562,7 +11761,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.strict",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def strict(self) -> bool",
         "symbol_kind": "method"
       },
@@ -11580,7 +11782,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.reader.MsgReader.validation_issues",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def validation_issues(self) -> Tuple[str, ...]",
         "symbol_kind": "method"
       },
@@ -11623,7 +11828,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgStorage.add_storage",
+        "member_kind": "method",
         "signature": "def add_storage(self, storage: 'MsgStorage') -> 'MsgStorage'",
         "symbol_kind": "method"
       },
@@ -11641,7 +11848,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgStorage.add_stream",
+        "member_kind": "method",
         "signature": "def add_stream(self, stream: MsgStream) -> MsgStream",
         "symbol_kind": "method"
       },
@@ -11659,7 +11868,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgStorage.find_storage",
+        "member_kind": "method",
         "signature": "def find_storage(self, name: str) -> 'MsgStorage' | None",
         "symbol_kind": "method"
       },
@@ -11677,7 +11888,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgStorage.find_stream",
+        "member_kind": "method",
         "signature": "def find_stream(self, name: str) -> MsgStream | None",
         "symbol_kind": "method"
       },
@@ -11695,7 +11908,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgStorage.iter_storages",
+        "member_kind": "method",
         "signature": "def iter_storages(self) -> Iterator['MsgStorage']",
         "symbol_kind": "method"
       },
@@ -11713,7 +11928,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgStorage.iter_streams",
+        "member_kind": "method",
         "signature": "def iter_streams(self) -> Iterator[MsgStream]",
         "symbol_kind": "method"
       },
@@ -11780,7 +11997,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgWriter.to_bytes",
+        "member_kind": "method",
         "signature": "def to_bytes(cls, document: MsgDocument) -> bytes",
         "symbol_kind": "method"
       },
@@ -11798,7 +12017,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.writer.MsgWriter.write_file",
+        "member_kind": "method",
         "signature": "def write_file(cls, document: MsgDocument, path: Path | str) -> None",
         "symbol_kind": "method"
       },
@@ -12001,7 +12222,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.types.PropertyEntryFixedLength.is_mandatory",
+        "member_kind": "method",
         "signature": "def is_mandatory(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12019,7 +12242,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.types.PropertyEntryFixedLength.is_readable",
+        "member_kind": "method",
         "signature": "def is_readable(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12037,7 +12262,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "email_foss.msg.types.PropertyEntryFixedLength.is_writable",
+        "member_kind": "method",
         "signature": "def is_writable(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12358,6 +12585,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "signature": "def hash_payload(data: bytes) -> str",
         "symbol_kind": "function"
       },

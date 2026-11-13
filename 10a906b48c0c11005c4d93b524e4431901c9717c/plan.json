@@ -8,43 +8,55 @@
     {
       "fact_ids": [
         "public_symbol:email_foss.msg.mapi_message",
-        "public_symbol:email_foss.msg.msgreader",
-        "public_symbol:email_foss.msg.msgwriter",
-        "format:input.msg",
-        "format:output.msg"
+        "example:001",
+        "example:002"
       ],
       "symbol_fact_id": "public_symbol:email_foss.msg.mapimessage"
     },
     {
       "fact_ids": [
-        "public_symbol:email_foss.cfb",
         "public_symbol:email_foss.cfb.cfbreader",
-        "public_symbol:email_foss.cfb.cfbwriter",
+        "example:001",
         "example:006"
       ],
       "symbol_fact_id": "public_symbol:email_foss.cfb.cfbreader"
     },
     {
       "fact_ids": [
+        "public_symbol:email_foss.cfb.cfbwriter",
+        "example:002",
+        "example:006"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.cfb.cfbwriter"
+    },
+    {
+      "fact_ids": [
         "public_symbol:email_foss.msg.msgreader",
-        "public_symbol:email_foss.msg.msgwriter",
-        "public_symbol:email_foss.msg.msgdocument"
+        "example:006"
       ],
       "symbol_fact_id": "public_symbol:email_foss.msg.msgreader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.msg.msgwriter",
+        "example:002"
+      ],
+      "symbol_fact_id": "public_symbol:email_foss.msg.msgwriter"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Read and write MSG files",
+      "Read MSG and CFB files",
+      "Write MSG and CFB files",
       "Convert between MSG and EML",
-      "Low-level CFB processing",
-      "Message composition and editing",
-      "Property and named property access",
-      "Pure Python implementation"
+      "Create and edit messages",
+      "Low-level CFB access",
+      "Low-level MSG access"
     ],
     "input_format_ids": [
+      "format:input.msg",
       "format:input.eml",
-      "format:input.msg"
+      "format:input.txt"
     ],
     "output_format_ids": [
       "format:output.msg"
@@ -53,149 +65,197 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "public_symbol:email_foss.msg.mapi_message",
-        "public_symbol:email_foss.msg.msgreader",
-        "public_symbol:email_foss.msg.msgwriter",
         "format:input.msg",
-        "format:output.msg"
+        "format:input.eml",
+        "format:input.txt",
+        "example:001",
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.cfb.cfbreader"
       ],
       "shared_fact_ids": [
-        "format:input.msg",
+        "format:input.eml",
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "title": "Read MSG and CFB files"
+    },
+    {
+      "fact_ids": [
+        "format:output.msg",
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message",
+        "public_symbol:email_foss.cfb.cfbwriter"
+      ],
+      "shared_fact_ids": [
+        "example:002",
         "format:output.msg",
         "public_symbol:email_foss.msg.mapi_message"
       ],
-      "title": "Read and write MSG files"
+      "title": "Write MSG and CFB files"
     },
     {
       "fact_ids": [
+        "format:input.eml",
+        "format:output.msg",
         "example:003",
         "example:004",
-        "format:input.eml",
-        "format:input.msg",
-        "format:output.msg"
+        "public_symbol:email_foss.msg.mapi_message"
       ],
       "shared_fact_ids": [
-        "format:input.msg",
-        "format:output.msg"
+        "format:input.eml",
+        "format:output.msg",
+        "public_symbol:email_foss.msg.mapi_message"
       ],
       "title": "Convert between MSG and EML"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:email_foss.cfb",
-        "public_symbol:email_foss.cfb.cfbreader",
-        "public_symbol:email_foss.cfb.cfbwriter",
-        "example:006"
-      ],
-      "shared_fact_ids": [],
-      "title": "Low-level CFB processing"
     },
     {
       "fact_ids": [
         "example:002",
         "public_symbol:email_foss.msg.mapi_message",
         "public_symbol:email_foss.msg.mapiattachment",
-        "public_symbol:email_foss.msg.mapirecipient"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:email_foss.msg.mapi_message"
-      ],
-      "title": "Message composition and editing"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:email_foss.msg.property_id",
-        "public_symbol:email_foss.msg.property_types",
         "public_symbol:email_foss.msg.mapinamedproperty"
       ],
-      "shared_fact_ids": [],
-      "title": "Property and named property access"
+      "shared_fact_ids": [
+        "example:002",
+        "public_symbol:email_foss.msg.mapi_message"
+      ],
+      "title": "Create and edit messages"
     },
     {
       "fact_ids": [
-        "dependency:none",
-        "package:python_requires",
-        "package:name"
+        "public_symbol:email_foss.cfb",
+        "example:006",
+        "public_symbol:email_foss.cfb.cfbdocument",
+        "public_symbol:email_foss.cfb.cfbstorage"
       ],
       "shared_fact_ids": [],
-      "title": "Pure Python implementation"
+      "title": "Low-level CFB access"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:email_foss.msg.msgreader",
+        "public_symbol:email_foss.msg.msgdocument",
+        "public_symbol:email_foss.msg.msgwriter"
+      ],
+      "shared_fact_ids": [],
+      "title": "Low-level MSG access"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "inherited_unit:002.badge_row"
+        "link_target:035",
+        "link_target:product.enterprise"
       ],
-      "section_id": "badges",
-      "text": "Badge row omitted per disposition: the inherited badge row text is not printed in the README despite being preserved."
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition link and description are placed here to align with the Enterprise Edition relationship."
     },
     {
       "fact_ids": [
-        "link_target:product.banner",
-        "link_target:product.homepage"
+        "license:file",
+        "license:spdx"
       ],
-      "section_id": "banner",
-      "text": "Banner image rendered deterministically from product banner and homepage facts per disposition."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "navigation",
-      "text": "Navigation heading and list rendered deterministically from link_target facts per disposition."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "at_a_glance",
-      "text": "Mermaid diagram superseded by deterministic rendering of the at_a_glance section per disposition."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "key_capabilities",
-      "text": "Capabilities list superseded by action-led items in key_capabilities section per disposition."
-    },
-    {
-      "fact_ids": [
-        "install_command:pip"
-      ],
-      "section_id": "installation",
-      "text": "Installation heading and pip install command rendered deterministically per disposition."
-    },
-    {
-      "fact_ids": [
-        "dependency:none"
-      ],
-      "section_id": "dependencies",
-      "text": "Dependencies heading and subsections rendered deterministically per disposition."
-    },
-    {
-      "fact_ids": [
-        "example:001"
-      ],
-      "section_id": "quick_start",
-      "text": "Quick Start heading and code block rendered deterministically per disposition."
-    },
-    {
-      "fact_ids": [
-        "example:002"
-      ],
-      "section_id": "additional_examples",
-      "text": "Additional Examples heading and content rendered deterministically per disposition."
-    },
-    {
-      "fact_ids": [
-        "import_path:aspose.email_foss"
-      ],
-      "section_id": "api_reference",
-      "text": "API Reference heading and content rendered deterministically per disposition."
+      "section_id": "license",
+      "text": "The license paragraph is preserved as it adds context about the MIT license."
     }
   ],
   "flagship_example_id": "example:003",
   "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "at_a_glance"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:021",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:022",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:023",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:024",
+      "section_id": "additional_examples"
+    },
+    {
+      "link_fact_id": "link_target:025",
+      "section_id": "additional_examples"
+    },
     {
       "link_fact_id": "link_target:026",
       "section_id": "documentation_resources"
@@ -231,14 +291,6 @@
     {
       "link_fact_id": "link_target:034",
       "section_id": "documentation_resources"
-    },
-    {
-      "link_fact_id": "link_target:035",
-      "section_id": "enterprise_relationship"
-    },
-    {
-      "link_fact_id": "link_target:007",
-      "section_id": "license"
     }
   ],
   "material_limitations": [
