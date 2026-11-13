@@ -1051,15 +1051,44 @@ items:
     next_action: "supervisor merges; the hosted re-run of the four cells and the R41 re-verification (recertify.yml) are the closing evidence. ASSUMPTION: the hosted Lane L facts (with implementation:never_thrown) also make the four exception cells fact-true, as the unit test shows; the LLM review of 3D .NET Lane L is not decided here"
     updated: "2026-11-13"
   - id: BL-081
-    title: "3D .NET Lane R plans a Quick Start example the register confirms throws; a 3D Python .dae repair refused by the changes-ledger truthfulness check"
+    title: "Plans selected example facts whose code prints a register-confirmed false line; the renderer printed it verbatim and no repair could reach it"
     type: defect
-    source: "hosted present runs 43513031042 (3D .NET Lane R: BC-18 on scene.Save(..., FileFormat.FBX7400Binary/WavefrontOBJ)) and 43513034263 (3D Python Lane R: claim_contradiction .dae output via a stub, repair refused 'the causal stage's own input and this revision hold the identical value there'); BL-080 classification"
+    source: "hosted present runs 43513031042 (3D .NET Lane R: BC-18 on scene.Save(..., FileFormat.FBX7400Binary/WavefrontOBJ)) and 43516330798 (Cells Python Lane R: BC-18 on style.font.color from example:003); BL-080/BL-081 classification"
+    priority: P0
+    status: active
+    depends_on: [BL-080]
+    implementation_path: "existing planning only (R27): readme/composition/planning.py register_refuted_example_ids / selectable_example_ids, used by section_conditions, planning_schema, the packet's verified ids and plan_checks"
+    acceptance: "hosted re-runs of 3D .NET Lane R and Cells Python Lane R print no register-quoted line from an example fact (S5 re-plans with another example); R10 gate OK; R41 re-verification"
+    evidence:
+      - "2026-11-13: sealed 3D .NET facts: example:001/002 refuted, example:004-007 selectable; sealed Cells Python facts: example:003 refuted (zero calls)"
+      - "2026-11-13: tests/readme/composition/test_register_refuted_examples_bl081.py (3) pass with a negative control"
+    next_action: "supervisor merges; a hosted re-run of the two cells (one S5 call each) is the closing evidence"
+    updated: "2026-11-13"
+  - id: BL-082
+    title: "A section_authoring reply outgrew max_output_tokens (Cells Rust); live_readme_loss called a register-withheld kept block lost (Cells Java)"
+    type: defect
+    source: "hosted present runs 43516334907 (Cells Rust Lane R JobError: output truncated at 8000) and 43516326802 (Cells Java Lane R REJECT: live_readme_loss code block 'mvn compile')"
+    priority: P0
+    status: active
+    depends_on: [BL-080]
+    implementation_path: "existing components only (R27): readme/composition/output_bounds.py omitted_cap (bound_authoring_citations takes the job's max_output_tokens at its four call sites: cascade, repair loop x2, authoring_retry); readme/review/independent_reviewer.py _withheld_kept_fences in live_readme_loss_rule. No manifest change, no owner budget cap touched"
+    acceptance: "hosted re-runs of Cells Rust and Cells Java Lane R show no truncation JobError and no live_readme_loss on a withheld kept block; R10 gate OK; R41 re-verification"
+    evidence:
+      - "2026-11-13: measured over 18 sealed Lane R bundles: 743 section_authoring calls (median 1158, p99 4832, largest success 5833 of 8000 tokens); unit p95 923 chars, omitted entry p95 218; Rust api_reference 13 slots / 88 omittable -> ~8,200 tokens uncapped; 13 tasks in 10 products change request hash under the cap"
+      - "2026-11-13: tests/readme/composition/test_omitted_cap_bl082.py (5) and tests/readme/review/test_live_loss_withheld_block_bl082.py (3) pass with negative controls"
+      - "2026-11-13: with BL-080..BL-082 applied: recertify --gate --remote origin --base-baseline <origin/main baseline> OK (45 seals checked, certified lane R 1, lane L 27); full suite 6345 passed, 29 skipped; ops/gatecli.py validate OK, no STALE receipt"
+    next_action: "supervisor merges; hosted re-run of Cells Rust and Cells Java. ASSUMPTION: 3 chars/token is conservative for qwen3-next JSON; confirm from the re-run ledger's completion_tokens for the capped tasks"
+    updated: "2026-11-13"
+  - id: BL-083
+    title: "Repairs refused by the changes-ledger check when the model blanks a unit or names an unmoved path; Cells Python kept-text section fit and formatting"
+    type: defect
+    source: "hosted present runs 43516323114 (Cells C++ F01-F03 repair refused, units[2].text changed to empty), 43513034263 (3D Python .dae repair refused, units[0].text identical value), 43516330798 (Cells Python BC-18 repair refused, units[1].text changed to empty; BC-05 x2 license in Scope and Limitations; BC-07 x2 inherited_unit:023.heading title case and inherited_unit:008.paragraph trailing colon)"
     priority: P0
     status: open
-    depends_on: [BL-080]
-    implementation_path: "planning.py (planning_schema enum, plan_checks, examples summary): an example fact whose code prints a regression_rows quote is not selectable, so S5 re-plans with another verified example (needs one S5 call); repair/loop.py routes such a BC-18 quote as renderer-printed from the example fact instead of to S6; the .dae case: read the re-run's repairs.json/call store to see why the claimed units[0] path held the same value, then fix the ledger check or the packet"
-    acceptance: "a hosted 3D .NET Lane R re-run prints no register-quoted line from an example fact; the 3D Python .dae finding is repaired or its refusal is explained from the call store; R10 gate OK"
+    depends_on: [BL-081, BL-082]
+    implementation_path: "repair/loop.py + repair/targeted.py: a targeted S6 change whose after is empty is a request to drop a slot, which the plan owns -> route to _escalate_to_plan instead of refusing; the claimed-path refusal needs the re-run's call store to explain; Cells Python BC-05/BC-07 through the existing S4 dispositions once the re-run shows which unit prints them"
+    acceptance: "hosted re-runs of the three cells record no 'identical value there' refusal for a blank-text change, and Cells Python passes BC-05/BC-07; R10 gate OK"
     evidence:
-      - "2026-11-13: logs of 43513031042 and 43513034263 (gh run view --log); the sealed 3D .NET bundle's dispositions show inherited_unit:024.code_block SUPERSEDE_REDUNDANT 'printed by the example section from the verified example fact' example:001"
-    next_action: "after BL-080 merges and the cells re-run; the .dae case cannot be decided from logs alone (artifacts unreadable through the proxy)"
+      - "2026-11-13: the five refusals and four Cells Python findings quoted from the logs in the DECISION_LOG entry for BL-081/BL-082"
+    next_action: "after the BL-081/BL-082 re-runs; artifacts were unreadable through the proxy, so the call store is needed for the claimed-path case"
     updated: "2026-11-13"
