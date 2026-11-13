@@ -921,3 +921,15 @@ items:
     evidence: []
     next_action: "start with K02/K03/K05 (Pareto: 43 of 68 registered rows)"
     depends_on: [BL-062, BL-063, BL-064, BL-065, BL-066]
+
+  - id: BL-075
+    title: "M9 seeder: give control slots only to seals that re-certify under current code"
+    type: defect
+    source: "BL-013 diagnosis of hosted round 43445578226 (7 of 8 Lane R controls did not re-certify)"
+    priority: P1
+    status: open
+    implementation_path: "audit-seed.yml seed step: filter control candidates through recertify --all (RECERTIFIED only) before sampling; keep the writer's controls_not_recertified exclusion as defence in depth"
+    acceptance: "a seeded round's controls_not_recertified is empty; evidence = seed run id"
+    evidence: []
+    next_action: "after PR #64 merges"
+    updated: "2026-11-13"
