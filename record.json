@@ -5,7 +5,7 @@
   "provider_repository_id": 1178837115,
   "registry_revision": null,
   "active_transaction_id": "64cc75a889f64e78a7e228fb480d2c49",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set a6b436407f14: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-13T21:49:32.179017+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-13T23:50:34.950131+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 5
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 69,
+  "state_version": 70,
   "recent_trigger_dedup_keys": {
     "run:40460371379:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "75063506c30143c58ee317e5750b8f6f",
     "run:40461345611:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "2669b9698e32449a9507a5029f98def5",
@@ -59,5 +59,5 @@
     "run:43413899267:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "d1f793e4f92f47f9a290c63cc190e56a",
     "run:43430714667:aspose-3d-foss/Aspose.3D-FOSS-for-.NET": "64cc75a889f64e78a7e228fb480d2c49"
   },
-  "recovery_count": 4
+  "recovery_count": 5
 }
