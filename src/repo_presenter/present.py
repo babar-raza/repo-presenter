@@ -180,7 +180,8 @@ def recertify_instead(
     readme = clone_path / "README.md"
     source = SourceSnapshot(
         tree_paths=tuple(tree_paths_of(clone_path)),
-        readme=readme.read_bytes() if readme.is_file() else None,
+        # R36: no README.md at the pinned revision is an empty inherited document, not SOURCE.
+        readme=readme.read_bytes() if readme.is_file() else b"",
     )
     try:
         rec = recertify_local(
