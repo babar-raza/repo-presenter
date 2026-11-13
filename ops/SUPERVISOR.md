@@ -120,6 +120,12 @@ treated as lost, the count fell to 0, and everything had to be resealed. Never a
     decision (`data/drop_decisions.json`: item, repository, decision, evidence, the rule or case it calibrates);
     each decision is turned into a deterministic rule or labelled case so the pipeline decides alike from then on.
 
+### R27 architecture freeze (owner, 2026-11-09 — binding)
+
+11. Only tweaks and fixes to the existing system. Every PR names the failing behaviour it fixes and shows the
+    candidate count it moves (or the blocker it removes). No new mechanism, stage, workflow, check or record type
+    unless no existing component can hold the fix, and then the smallest change, said so in the PR.
+
 ## Channel
 
 Two append-only JSONL files, one writer each, both git-tracked:

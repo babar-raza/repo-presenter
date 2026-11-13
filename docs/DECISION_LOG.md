@@ -4656,3 +4656,13 @@ Real hosted `present.yml` runs from this branch (the workflow exists on `main`, 
   "pipeline_good" records are blocked only by the frozen `reviewer_calibration: NOT_PASSED` record
   (`needs_review_only_pass`, no regeneration needed) -- a review-only pass under a PASSED reviewer
   mechanism is the largest single lever on the count from here, larger than new generation.
+
+---
+
+## 2026-11-09: owner ruling R27 — architecture freeze; get the existing system working
+
+Owner: "freeze any further architecture expansion and make the tweaks and fixes to get the system working as
+expected." Recorded as R27 (top authority Part B, AGENTS.md, `ops/SUPERVISOR.md` item 11). Consequence decided by
+the supervisor: PR #44 (the 2026-11-07 delivery programme, 136 commits, CI red on all three checks) is not merged
+wholesale; any part of it lands only as a small fix a named failure needs. Work is judged by candidates produced,
+sealed and passing.

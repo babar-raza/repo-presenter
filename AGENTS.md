@@ -57,6 +57,9 @@ Full text: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B; operating detail: `op
 
 - **R15 — no upstream push until every candidate of both lanes is sealed, validated and passed.**
 
+- **R27 — ARCHITECTURE FREEZE (2026-11-09): only tweaks and fixes that make the existing system work; no new
+  mechanisms, stages, programmes, workflows or record types. Judge work only by candidates produced, sealed, passing.**
+
 ## BINDING OWNER RULINGS R16–R26 (2026-11-07) — reconciling the independent delivery review
 
 Full text, provenance and the exact question asked: `docs/CONSOLIDATED_GOALS_2026-11-06.md` Part E. Program
