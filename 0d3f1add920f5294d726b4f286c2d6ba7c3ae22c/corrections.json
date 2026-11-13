@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 7,
+    "edits": 8,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "6ed5674eadd9d5177cd8823e4d8258d3012438bf49c784a6cfc106b73031e442",
+  "corrected_sha256": "28d0d4eb6a67a5bc781a1c1d1f26b94bff8d6137d7cca976dee2908f94dac929",
   "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 1267,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:9"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 10,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing DOCX, DOCM, DOTX, or DOTM document\"]\n    i2[\"A Flat OPC package\"]\n    i3[\"A Markdown or plain text file\"]\n  end\n  PRODUCT[\"Aspose.Words FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Document creation from scratch and editing\"]\n      c2[\"Text, styles, tables, lists, and sections\"]\n      c3[\"Tracked-changes engine\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"Field evaluation engine\"]\n      c5[\"Document protection and signature verification\"]\n      c6[\"DOCX, Markdown, and plain-text conversion\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"DOCX, DOCM, DOTX, or DOTM documents\"]\n    o2[\"Flat OPC packages\"]\n    o3[\"Markdown (.md)\"]\n    o4[\"Plain text (.txt)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1096 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 722 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing DOCX,<br/>DOCM, DOTX, or DOTM<br/>document\"]\n    i2[\"A Flat OPC package\"]\n    i3[\"A Markdown or plain<br/>text file\"]\n  end\n  PRODUCT[\"Aspose.Words FOSS for .NET\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Document creation from<br/>scratch and editing\"]\n    c2[\"Text, styles, tables,<br/>lists, and sections\"]\n    c3[\"Tracked-changes engine\"]\n    c4[\"Field evaluation<br/>engine\"]\n    c5[\"Document protection<br/>and signature<br/>verification\"]\n    c6[\"DOCX, Markdown, and<br/>plain-text conversion\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"DOCX, DOCM, DOTX, or<br/>DOTM documents\"]\n    o2[\"Flat OPC packages\"]\n    o3[\"Markdown (.md)\"]\n    o4[\"Plain text (.txt)\"]\n    o1 ~~~ o3\n    o2 ~~~ o4\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 321
+    },
     {
       "detector": "enterprise_edition_naming",
       "end": 4355,
@@ -17,7 +36,7 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "FALSE_CLAIM_FIX",
       "line": 85,
       "original": "the commercial [Aspose.Words for .NET](https://products.aspose.com/words/net/)",
@@ -36,7 +55,7 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "FALSE_CLAIM_FIX",
       "line": 95,
       "original": "the commercial product",
@@ -55,7 +74,7 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 2,
+      "index": 3,
       "kind": "FALSE_CLAIM_FIX",
       "line": 150,
       "original": "the commercial Aspose.Words for .NET",
@@ -116,7 +135,7 @@
           "value": "Aspose.Words.AbsolutePositionTab.Font"
         }
       ],
-      "index": 3,
+      "index": 4,
       "kind": "FALSE_CLAIM_FIX",
       "line": 901,
       "original": "615",
@@ -135,7 +154,7 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 4,
+      "index": 5,
       "kind": "FALSE_CLAIM_FIX",
       "line": 915,
       "original": "the commercial [Aspose.Words for .NET](https://products.aspose.com/words/net/)",
@@ -196,7 +215,7 @@
           "value": "Aspose.Words.AbsolutePositionTab.Font"
         }
       ],
-      "index": 5,
+      "index": 6,
       "kind": "FALSE_CLAIM_FIX",
       "line": 942,
       "original": "617",
@@ -215,7 +234,7 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 6,
+      "index": 7,
       "kind": "FALSE_CLAIM_FIX",
       "line": 944,
       "original": "the commercial [Aspose.Words for .NET](https://docs.aspose.com/words/net/)",
@@ -237,6 +256,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 7
   },
   "unapplied": [

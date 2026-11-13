@@ -7,37 +7,38 @@ Open-source .NET library for Word documents, built from the genuine Aspose.Words
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing DOCX, DOCM, DOTX, or DOTM document"]
+    i1["An existing DOCX,<br/>DOCM, DOTX, or DOTM<br/>document"]
     i2["A Flat OPC package"]
-    i3["A Markdown or plain text file"]
+    i3["A Markdown or plain<br/>text file"]
   end
   PRODUCT["Aspose.Words FOSS for .NET"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Document creation from scratch and editing"]
-      c2["Text, styles, tables, lists, and sections"]
-      c3["Tracked-changes engine"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c4["Field evaluation engine"]
-      c5["Document protection and signature verification"]
-      c6["DOCX, Markdown, and plain-text conversion"]
-    end
+    direction TB
+    c1["Document creation from<br/>scratch and editing"]
+    c2["Text, styles, tables,<br/>lists, and sections"]
+    c3["Tracked-changes engine"]
+    c4["Field evaluation<br/>engine"]
+    c5["Document protection<br/>and signature<br/>verification"]
+    c6["DOCX, Markdown, and<br/>plain-text conversion"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
   end
   subgraph Outputs["Outputs"]
     direction TB
-    o1["DOCX, DOCM, DOTX, or DOTM documents"]
+    o1["DOCX, DOCM, DOTX, or<br/>DOTM documents"]
     o2["Flat OPC packages"]
     o3["Markdown (.md)"]
     o4["Plain text (.txt)"]
+    o1 ~~~ o3
+    o2 ~~~ o4
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Navigation

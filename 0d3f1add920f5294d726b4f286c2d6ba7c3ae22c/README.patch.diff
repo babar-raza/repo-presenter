@@ -1,6 +1,62 @@
 --- a/README.md
 +++ b/README.md
-@@ -82,7 +82,7 @@
+@@ -7,37 +7,38 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+     direction TB
+-    i1["An existing DOCX, DOCM, DOTX, or DOTM document"]
++    i1["An existing DOCX,<br/>DOCM, DOTX, or DOTM<br/>document"]
+     i2["A Flat OPC package"]
+-    i3["A Markdown or plain text file"]
++    i3["A Markdown or plain<br/>text file"]
+   end
+   PRODUCT["Aspose.Words FOSS for .NET"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Document creation from scratch and editing"]
+-      c2["Text, styles, tables, lists, and sections"]
+-      c3["Tracked-changes engine"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c4["Field evaluation engine"]
+-      c5["Document protection and signature verification"]
+-      c6["DOCX, Markdown, and plain-text conversion"]
+-    end
++    direction TB
++    c1["Document creation from<br/>scratch and editing"]
++    c2["Text, styles, tables,<br/>lists, and sections"]
++    c3["Tracked-changes engine"]
++    c4["Field evaluation<br/>engine"]
++    c5["Document protection<br/>and signature<br/>verification"]
++    c6["DOCX, Markdown, and<br/>plain-text conversion"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+-    o1["DOCX, DOCM, DOTX, or DOTM documents"]
++    o1["DOCX, DOCM, DOTX, or<br/>DOTM documents"]
+     o2["Flat OPC packages"]
+     o3["Markdown (.md)"]
+     o4["Plain text (.txt)"]
++    o1 ~~~ o3
++    o2 ~~~ o4
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Navigation
+@@ -82,7 +83,7 @@
  | Markdown | ✅ | ✅ |
  | Plain text | ✅ | ✅ |
  
@@ -9,7 +65,7 @@
  
  ## Getting started
  
-@@ -92,7 +92,7 @@
+@@ -92,7 +93,7 @@
  dotnet add package Aspose.Words.FOSS
  ```
  
@@ -18,7 +74,7 @@
  
  Or build from source:
  
-@@ -147,7 +147,7 @@
+@@ -147,7 +148,7 @@
  report.Save("Report.md");
  ```
  
@@ -27,7 +83,7 @@
  
  ## Additional Examples
  
-@@ -898,7 +898,7 @@
+@@ -898,7 +899,7 @@
  - `ChartLegend` — `LegendEntries -> ChartLegendEntryCollection`, `Position: LegendPosition`, `Font -> Font`
  - `ChartDataLabel` — `ShowValue`, `ShowCategoryName`, `ShowPercentage`, `Position`, `ClearFormat()`
  
@@ -36,7 +92,7 @@
  
  </details>
  
-@@ -912,7 +912,7 @@
+@@ -912,7 +913,7 @@
  
  One important thing to know: what's included today is the *minimum*, the commercial codebase reduced as far as it would go. It is not the final shape of the project, and the boundary is not set in stone. If a feature you need sits on the wrong side of it, [open an issue](../../issues) and tell us about your use case. Where there is real demand, we will consider opening up more of the code.
  
@@ -45,7 +101,7 @@
  
  ## Development and Testing
  
-@@ -939,9 +939,9 @@
+@@ -939,9 +940,9 @@
  
  - **[Getting started guide](https://docs.aspose.org/words/net/)** — installation, walkthroughs, and feature guides for this library.
  - **[How-to guides & FAQ](https://kb.aspose.org/words/net/)** — task-focused answers for common Word-document-processing questions.
