@@ -1,0 +1,204 @@
+# Persistent backlog (owner ruling R40, docs/R40_BACKLOG.md). Checked by ops/checks/backlog_check.py.
+# Every item cites its source (never invented), has an implementation path, acceptance criteria and evidence; an item is
+# `done` only with reproducible evidence (commands, runs, commits). Status: open | active | blocked | deferred | done.
+# Priority: P0 (trust/correctness of public output) > P1 (delivery throughput) > P2 (quality) > P3 (deferred improvement).
+# Seeded 2026-11-13 by the supervisor; reconciliation of all earlier requirements is item BL-001.
+schema_version: 1
+items:
+  - id: BL-001
+    title: "Reconstruct and reconcile every requirement into this backlog (goals, rulings R1-R40, plans, decision log, taskcards, owner feedback)"
+    type: task
+    source: "R40 req 1 (owner, 2026-11-13)"
+    priority: P0
+    status: active
+    implementation_path: "reconciliation worker; link items to project/mission_matrix.yaml rows; refresh stale matrix rows"
+    acceptance: "every requirement has an item with status, path, acceptance and evidence; ops/checks/backlog_check.py passes in CI"
+    evidence: []
+    next_action: "reconciliation worker dispatched 2026-11-13"
+
+  - id: BL-002
+    title: "FALSE CLAIM — 3D Python Lane R says aspose-3d-foss is \"not confirmed on PyPI\" and prints raw internal evidence wording"
+    type: defect
+    source: "owner feedback 8640135b4c (review page, 2026-11-13T15:52Z)"
+    priority: P0
+    status: active
+    implementation_path: "(a) registry ownership rule accepts a package Aspose publishes whose project URL is an Aspose-owned repository (renamed/legacy org) and which the maintainers' README installs; (b) a blocking check that no internal analysis wording (registry/evidence/fact vocabulary) is ever printed in a README; (c) re-run affected Lane R cells through the pipeline"
+    acceptance: "PyPI aspose-3d-foss (homepage github.com/aspose-3d/Aspose.3D-for-Python, author Aspose) judged confirmed; no README in the portfolio contains internal evidence wording (check passes on every seal); 3D Python Lane R re-sealed without the claim"
+    evidence: ["verified 2026-11-13: pypi.org/pypi/aspose-3d-foss/json -> version 26.1.0, author Aspose, project_urls Homepage github.com/aspose-3d/Aspose.3D-for-Python"]
+    next_action: "fix worker dispatched"
+
+  - id: BL-003
+    title: "Independent false-claim review of every Lane R candidate (distinct agents), findings into the register so the pipeline repairs them"
+    type: task
+    source: "owner feedback 8640135b4c (\"Review all candidates yourself manually or ask distinct agents ... False claim is the biggest problem\")"
+    priority: P0
+    status: active
+    implementation_path: "one independent reviewer agent per Lane R candidate verifies every claim against the pinned source and registries; confirmed false claims appended to data/readme_findings.json (BC-18) so the governed repair loop corrects them; the class causes become backlog defects"
+    acceptance: "every certified Lane R candidate reviewed claim-by-claim with evidence; every confirmed false claim registered; classes fixed at root"
+    evidence: []
+    next_action: "reviewer agents dispatched"
+
+  - id: BL-004
+    title: "3D .NET Lane R — Documentation & Resources content placed under Scope and Limitations; license sentence in Scope and Limitations"
+    type: defect
+    source: "owner feedback 01f8407ca9 (2026-11-13T15:47Z, \"this is major problem\")"
+    priority: P0
+    status: open
+    implementation_path: "diagnose section placement (reconciliation destination_section / renderer section mapping) portfolio-wide; fix the class at its root; re-run affected cells"
+    acceptance: "no candidate places resources/links or license text under Scope and Limitations; 3D .NET re-sealed with Documentation & Resources complete"
+    evidence: []
+    next_action: "fix worker"
+
+  - id: BL-005
+    title: "API reference descriptions — count-only/label/file-header rows (Pareto class fix)"
+    type: feedback
+    source: "owner feedback 536baa63f4 (3D Java Lane L, 2026-11-13T14:59Z)"
+    priority: P1
+    status: active
+    implementation_path: "branch fix/type-description-rule 252fe6c (doc-comment junk filter; Lane R facts-only purpose objective; new Lane L type_description detector); integration pending"
+    acceptance: "Pareto scan (scripts/measure_type_descriptions.py) shows no count/label/junk row a doc comment could replace; Lane R rows re-authored on next run"
+    evidence: ["worker measurement: 237 non-descriptive of 10,489 rows; 4 Lane L cells corrected; 232 reported (no doc comment); R10 gate OK 45 seals"]
+    next_action: "integrate 252fe6c; decide Lane L enum-cell extension (supervisor decision: yes, verifiable values) and Java enum_member extractor gap"
+
+  - id: BL-006
+    title: "Java extractor records no enum constants (ReferenceMode, PresetShaders)"
+    type: gap
+    source: "BL-005 worker finding"
+    priority: P2
+    status: open
+    implementation_path: "extractors/platforms/java* enum member facts"
+    acceptance: "Java enum constants appear as enum_member facts; test from 3D Java"
+    evidence: []
+    next_action: "after BL-005 integration"
+
+  - id: BL-007
+    title: "At a Glance mermaid must be glanceable — grouped capabilities, vertical layout, no horizontal scrolling (global)"
+    type: feedback
+    source: "owner feedback d820dad695 (Cells Java, 2026-11-13T15:29Z) + chat \"global requirement\""
+    priority: P1
+    status: active
+    implementation_path: "renderer At a Glance layout (TB, grouped, bounded rows); Lane L re-layout only if verified and recorded (R14)"
+    acceptance: "all diagrams render within ~800px width without horizontal scroll (measured with mermaid 10.9.1); R10 gate OK"
+    evidence: []
+    next_action: "layout worker running"
+
+  - id: BL-008
+    title: "Every printed example verified (owner question \"Are all examples verified globally?\")"
+    type: requirement
+    source: "owner chat 2026-11-13; goal \"every claim verified\""
+    priority: P0
+    status: active
+    implementation_path: "branch audit/example-verification a5b96e9 + 9c4b03d (5 verifier root causes fixed; scripts/printed_example_audit.py); then hosted facts re-runs; remaining classes: input files (26), fragments (16), nested-list examples (1)"
+    acceptance: "printed_example_audit over certified seals shows no CONTRADICTED printed and UNRESOLVED only with a recorded, honest reason; Lane R prints no unverified example (policy decision recorded)"
+    evidence: ["audit 2026-11-13: 273 printed = 174 SUPPORTED / 72 UNRESOLVED / 26 CONTRADICTED / 1 no fact; local verifier proof PDF Python 48->59 executed, 17->0 failed"]
+    next_action: "integrate; hosted re-runs of PDF .NET L, Words .NET L+R, Cells Rust L, 3D TS L, PDF Python L"
+
+  - id: BL-009
+    title: "README Candidate Review page — maintain it; Lane R must show the diff from live"
+    type: requirement
+    source: "owner chat 2026-11-13 (\"lets maintain it\"; \"Lane R candidates must also show difference from live\")"
+    priority: P1
+    status: active
+    implementation_path: "scripts/review_page/build.py + template.html (reproducible build from the state remote); docs/REVIEW_PAGE.md; hourly feedback watcher"
+    acceptance: "page rebuilt by the script; Lane R and L both show Changes vs live; feedback read back each hour"
+    evidence: ["build 2026-11-13: 31 candidates, Lane R diffs present for all 5"]
+    next_action: "publish rebuilt page"
+
+  - id: BL-010
+    title: "dead_link unlinks \"release notes\" — prefer a verified replacement target (repository Releases page) over unlinking"
+    type: feedback
+    source: "owner feedback a922e11316 (Cells Python, 2026-11-13T15:40Z)"
+    priority: P2
+    status: open
+    implementation_path: "facts stage records whether the repository has GitHub Releases; dead_link (new version-pinned sibling or v2) repairs to ../../releases when verified, unlinks only otherwise"
+    acceptance: "Cells .NET/Python release-notes link points to a live Releases page when releases exist; else unlinked with the decision recorded"
+    evidence: ["verified 2026-11-13: RELEASE_NOTES.md 404 at 952317cad8db and HEAD; never existed in history"]
+    next_action: "check GitHub Releases from a hosted facts run"
+
+  - id: BL-011
+    title: "Hosted engine must not depend on cron punctuality (cohort chain)"
+    type: defect
+    source: "supervisor finding 2026-11-13 (present.yml schedule never fired after merge); R37"
+    priority: P0
+    status: active
+    implementation_path: "branch claude/cohort-self-continuing 5183edd (cohort-chain.yml, one planner at a time, run-request cohort override)"
+    acceptance: "a finished cohort run starts the next planner on GitHub without cron; observed on a hosted run"
+    evidence: []
+    next_action: "integrate, then kick with {\"job\":\"cohort\"}"
+
+  - id: BL-012
+    title: "R39 issue pilot (3D TypeScript) — recording, monitoring, open/close maintenance"
+    type: requirement
+    source: "owner ruling R39"
+    priority: P1
+    status: active
+    implementation_path: "branch claude/issue-pilot-r39 d997012 + b123671 (issues.yml, monitor/reproduce/pilot)"
+    acceptance: "first hosted dry run reports 5 records; live after owner sets REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED=1, App has Issues R/W on the repo, mode live"
+    evidence: ["local: all 5 issues still reproduce at 66cb26df3b03"]
+    next_action: "integrate; owner actions listed in the PR"
+
+  - id: BL-013
+    title: "First hosted M9 audit round (run 43445578226) — complete and count"
+    type: task
+    source: "R33/R37"
+    priority: P0
+    status: active
+    implementation_path: "audit-seed.yml chain"
+    acceptance: "findings frozen, scored, records attested; counter shows accepted per lane"
+    evidence: ["seed job succeeded 2026-11-13 ~14:50; auditor running"]
+    next_action: "watch"
+
+  - id: BL-014
+    title: "Lane L no-op seals (8 of 26) — R16 terminal, never counted"
+    type: gap
+    source: "supervisor finding 2026-11-13 (review page build)"
+    priority: P1
+    status: open
+    implementation_path: "confirm each is a genuine NO_ACTION_JUSTIFIED (no verified defect) or find the missed defect; report separately"
+    acceptance: "each of the 8 has a recorded outcome"
+    evidence: []
+    next_action: "after BL-005/BL-008 fixes re-run Lane L on them"
+
+  - id: BL-015
+    title: "Cells Rust Lane R — true command cargo bench withheld with the false sentence"
+    type: debt
+    source: "BL worker report 2026-11-13 (BC-18 register evidence)"
+    priority: P2
+    status: open
+    implementation_path: "sentence-level cut keeps true clauses (must_correct.withheld_form)"
+    acceptance: "cargo bench printed; false CI clause not"
+    evidence: []
+    next_action: "queue"
+
+  - id: BL-016
+    title: "PSD Java Lane R terminal (R24) — re-check upstream every 7 days"
+    type: blocked
+    source: "decision log 2026-11-13"
+    priority: P2
+    status: blocked
+    implementation_path: "data/terminal_cells.json pinned revision; scheduler re-check"
+    acceptance: "unblocks automatically when upstream adds a build manifest/artifact"
+    evidence: ["evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/draft_upstream_issue.md"]
+    next_action: "scheduler re-check"
+
+  - id: BL-017
+    title: "Words Java — machine port of Words .NET needs port-aware handling (R28)"
+    type: requirement
+    source: "owner ruling R28"
+    priority: P2
+    status: open
+    implementation_path: "to be designed; extractor/authoring treat API naming per the port"
+    acceptance: "Words Java Lane R/L candidates certify without native-Java assumptions"
+    evidence: []
+    next_action: "after Lane R trust fixes"
+
+  - id: BL-018
+    title: "PHP extractor for Cells PHP (R29)"
+    type: requirement
+    source: "owner ruling R29"
+    priority: P2
+    status: open
+    implementation_path: "extractors/platforms PHP plugin in the existing pattern"
+    acceptance: "Cells PHP active and producing facts; candidates attempted"
+    evidence: []
+    next_action: "queue"

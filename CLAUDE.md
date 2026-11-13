@@ -1,6 +1,6 @@
 # CLAUDE.md — Repository Presenter
 
-**STOP — before anything else, read `docs/RULINGS.md` in full.** It holds every binding owner ruling (R1–R39) and the
+**STOP — before anything else, read `docs/RULINGS.md` in full.** It holds every binding owner ruling (R1–R40) and the
 pre-work checklist; a SessionStart hook prints it into every new session, and `tests/test_rulings_in_focus.py` fails
 CI if this pointer or any ruling disappears. Then read `AGENTS.md`.
 
@@ -11,6 +11,7 @@ Non-negotiable summary (details in `docs/RULINGS.md`):
 - **No attribution or provenance wording** in any public README (R9).
 - **No upstream push** before every candidate of both lanes passes; draft PRs only, allowlist (R15, R3, R22).
 - **Decide, don't ask** the owner; report results first; when stuck, change approach (R11, R12).
+- **Backlog** (R40, `project/backlog.yaml`): every requirement, defect and feedback is an item with source, acceptance and evidence; never closed without proof.
 - **Pipeline-first** (R38, `docs/R38_PIPELINE_FIRST.md`): execute only through the governed, reproducible pipeline; first principles + Pareto; done = reproducible + verified + evidenced. Re-check `docs/R38_CHECKPOINT.md` from time to time.
 - **The system runs itself on GitHub Actions** (R37): never do by hand what the hosted loop should do; the session oversees and fixes.
 - **Never park a blocker** (R36): verify it, list honest alternatives, decide one; classify failures portfolio-wide and fix each class once at the root, proven locally before hosted runs; question the checks and their data too.
