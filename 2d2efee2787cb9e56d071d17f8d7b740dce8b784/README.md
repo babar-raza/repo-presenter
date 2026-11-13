@@ -27,22 +27,27 @@ without Microsoft Word or any COM/Office automation. It follows a compatible API
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing DOCX document"]
-    i2["An existing DOC (Word 97-2003) document"]
-    i3["An existing RTF document"]
-    i4["An existing Markdown file"]
-    i5["An existing plain-text file"]
+    i1["An existing DOCX<br/>document"]
+    i2["An existing DOC (Word<br/>97-2003) document"]
+    i3["An existing RTF<br/>document"]
+    i4["An existing Markdown<br/>file"]
+    i5["An existing plain-text<br/>file"]
+    i1 ~~~ i4
+    i2 ~~~ i5
+    i3 ~~~ i5
   end
   PRODUCT["Aspose.Words FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["Load and parse DOC, DOCX, RTF, Markdown, and plain-text documents"]
-    c2["DOCX round-trip editing via the Light Document Model"]
-    c3["Markdown export with configurable headings, lists, and tables"]
-    c4["PDF export via a built-in paragraph, table, and shape renderer"]
+    c1["Load and parse DOC,<br/>DOCX, RTF, Markdown,<br/>and plain-text<br/>documents"]
+    c2["DOCX round-trip<br/>editing via the Light<br/>Document Model"]
+    c3["Markdown export with<br/>configurable headings,<br/>lists, and tables"]
+    c4["PDF export via a<br/>built-in paragraph,<br/>table, and shape<br/>renderer"]
+    c1 ~~~ c3
+    c2 ~~~ c4
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -50,8 +55,12 @@ flowchart TD
     o2["Markdown files"]
     o3["PDF documents"]
     o4["Plain text"]
+    o1 ~~~ o3
+    o2 ~~~ o4
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

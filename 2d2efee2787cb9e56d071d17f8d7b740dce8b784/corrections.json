@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 6,
+    "edits": 7,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "bb2bb531b8064d0995479c08f891153c71d2b68286aa0530eb5dae85311bdfa5",
+  "corrected_sha256": "5c28d938ffa2a10fbfdb726a92bf54e0a091aea519124a8eefb4b30b674c5ba3",
   "edits": [
     {
       "detector": "enterprise_edition_naming",
@@ -24,6 +24,25 @@
       "rationale": "line 11 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Words for Python'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
       "replacement": "Aspose.Words for Python — Enterprise Edition",
       "start": 1104
+    },
+    {
+      "detector": "glance_layout",
+      "end": 2491,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:29"
+        }
+      ],
+      "index": 1,
+      "kind": "DIAGRAM_FIX",
+      "line": 30,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing DOCX document\"]\n    i2[\"An existing DOC (Word 97-2003) document\"]\n    i3[\"An existing RTF document\"]\n    i4[\"An existing Markdown file\"]\n    i5[\"An existing plain-text file\"]\n  end\n  PRODUCT[\"Aspose.Words FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Load and parse DOC, DOCX, RTF, Markdown, and plain-text documents\"]\n    c2[\"DOCX round-trip editing via the Light Document Model\"]\n    c3[\"Markdown export with configurable headings, lists, and tables\"]\n    c4[\"PDF export via a built-in paragraph, table, and shape renderer\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"DOCX documents\"]\n    o2[\"Markdown files\"]\n    o3[\"PDF documents\"]\n    o4[\"Plain text\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 2134 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 623 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing DOCX<br/>document\"]\n    i2[\"An existing DOC (Word<br/>97-2003) document\"]\n    i3[\"An existing RTF<br/>document\"]\n    i4[\"An existing Markdown<br/>file\"]\n    i5[\"An existing plain-text<br/>file\"]\n    i1 ~~~ i4\n    i2 ~~~ i5\n    i3 ~~~ i5\n  end\n  PRODUCT[\"Aspose.Words FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Load and parse DOC,<br/>DOCX, RTF, Markdown,<br/>and plain-text<br/>documents\"]\n    c2[\"DOCX round-trip<br/>editing via the Light<br/>Document Model\"]\n    c3[\"Markdown export with<br/>configurable headings,<br/>lists, and tables\"]\n    c4[\"PDF export via a<br/>built-in paragraph,<br/>table, and shape<br/>renderer\"]\n    c1 ~~~ c3\n    c2 ~~~ c4\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"DOCX documents\"]\n    o2[\"Markdown files\"]\n    o3[\"PDF documents\"]\n    o4[\"Plain text\"]\n    o1 ~~~ o3\n    o2 ~~~ o4\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1615
     },
     {
       "detector": "stale_type_count",
@@ -78,7 +97,7 @@
           "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
         }
       ],
-      "index": 1,
+      "index": 2,
       "kind": "FALSE_CLAIM_FIX",
       "line": 328,
       "original": "146",
@@ -139,7 +158,7 @@
           "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
         }
       ],
-      "index": 2,
+      "index": 3,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 393,
       "original": "| `ShapeNode` | Class with 25 properties. |\n",
@@ -200,7 +219,7 @@
           "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
         }
       ],
-      "index": 3,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 463,
       "original": "| `ReaderContext` | Class extending Protocol. |\n",
@@ -261,7 +280,7 @@
           "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
         }
       ],
-      "index": 4,
+      "index": 5,
       "kind": "FALSE_CLAIM_FIX",
       "line": 607,
       "original": "146",
@@ -280,7 +299,7 @@
           "value": "https://products.aspose.com/words/python-net/"
         }
       ],
-      "index": 5,
+      "index": 6,
       "kind": "FALSE_CLAIM_FIX",
       "line": 625,
       "original": "the commercial Aspose.Words",
@@ -302,6 +321,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "DIAGRAM_FIX": 1,
     "FALSE_CLAIM_FIX": 4,
     "TABLE_ROW_REMOVAL": 2
   },
@@ -322,6 +342,303 @@
       "line": 0,
       "reason": "50 of 198 verified public types are named nowhere in the README; would fill API Reference: public_symbol:apiexamples.convert_document.convertdocument, public_symbol:apiexamples.docs_examples_base.docsexamplesbase, public_symbol:apiexamples.loading_document.loadingdocument, public_symbol:apiexamples.loading_markdown.loadingmarkdown, public_symbol:apiexamples.working_with_images.workingwithimages, public_symbol:apiexamples.working_with_markdown_save_options.workingwithmarkdownsaveoptions, public_symbol:apiexamples.working_with_ooxml_save_options.workingwithooxmlsaveoptions, public_symbol:apiexamples.working_with_pdf_save_options.workingwithpdfsaveoptions (+42 more)",
       "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.body"
+      ],
+      "line": 339,
+      "reason": "the count only cell does not describe Body, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.bookmarkend"
+      ],
+      "line": 340,
+      "reason": "the count only cell does not describe BookmarkEnd, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.border"
+      ],
+      "line": 342,
+      "reason": "the count only cell does not describe Border, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.cell"
+      ],
+      "line": 343,
+      "reason": "the count only cell does not describe Cell, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.cellformat"
+      ],
+      "line": 344,
+      "reason": "the count only cell does not describe CellFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 14 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.doclist"
+      ],
+      "line": 348,
+      "reason": "the count only cell does not describe DocList, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.fieldend"
+      ],
+      "line": 352,
+      "reason": "the count only cell does not describe FieldEnd, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.fieldseparator"
+      ],
+      "line": 353,
+      "reason": "the count only cell does not describe FieldSeparator, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.fieldstart"
+      ],
+      "line": 354,
+      "reason": "the count only cell does not describe FieldStart, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.font"
+      ],
+      "line": 355,
+      "reason": "the count only cell does not describe Font, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 23 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.headerfooter"
+      ],
+      "line": 357,
+      "reason": "the count only cell does not describe HeaderFooter, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.drawing.imagedata"
+      ],
+      "line": 358,
+      "reason": "the count only cell does not describe ImageData, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.listformat"
+      ],
+      "line": 360,
+      "reason": "the count only cell does not describe ListFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.listlevel"
+      ],
+      "line": 362,
+      "reason": "the count only cell does not describe ListLevel, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 9 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.pagesetup"
+      ],
+      "line": 374,
+      "reason": "the count only cell does not describe PageSetup, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 18 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.paragraphformat"
+      ],
+      "line": 376,
+      "reason": "the count only cell does not describe ParagraphFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 35 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.row"
+      ],
+      "line": 385,
+      "reason": "the count only cell does not describe Row, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.rowformat"
+      ],
+      "line": 386,
+      "reason": "the count only cell does not describe RowFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.run"
+      ],
+      "line": 388,
+      "reason": "the count only cell does not describe Run, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.section"
+      ],
+      "line": 391,
+      "reason": "the count only cell does not describe Section, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.shading"
+      ],
+      "line": 392,
+      "reason": "the count only cell does not describe Shading, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.style"
+      ],
+      "line": 394,
+      "reason": "the count only cell does not describe Style, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 11 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.tabstop"
+      ],
+      "line": 395,
+      "reason": "the count only cell does not describe TabStop, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.tabstopcollection"
+      ],
+      "line": 396,
+      "reason": "the count only cell does not describe TabStopCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.textcolumn"
+      ],
+      "line": 403,
+      "reason": "the count only cell does not describe TextColumn, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.textcolumns"
+      ],
+      "line": 404,
+      "reason": "the count only cell does not describe TextColumns, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.unknownnode"
+      ],
+      "line": 406,
+      "reason": "the count only cell does not describe UnknownNode, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
     }
   ]
 }

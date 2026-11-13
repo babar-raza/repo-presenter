@@ -9,7 +9,58 @@
  
  ## Navigation
  
-@@ -325,7 +325,7 @@
+@@ -27,22 +27,27 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+     direction TB
+-    i1["An existing DOCX document"]
+-    i2["An existing DOC (Word 97-2003) document"]
+-    i3["An existing RTF document"]
+-    i4["An existing Markdown file"]
+-    i5["An existing plain-text file"]
++    i1["An existing DOCX<br/>document"]
++    i2["An existing DOC (Word<br/>97-2003) document"]
++    i3["An existing RTF<br/>document"]
++    i4["An existing Markdown<br/>file"]
++    i5["An existing plain-text<br/>file"]
++    i1 ~~~ i4
++    i2 ~~~ i5
++    i3 ~~~ i5
+   end
+   PRODUCT["Aspose.Words FOSS for Python"]
+   subgraph Capabilities["Core Capabilities"]
+     direction TB
+-    c1["Load and parse DOC, DOCX, RTF, Markdown, and plain-text documents"]
+-    c2["DOCX round-trip editing via the Light Document Model"]
+-    c3["Markdown export with configurable headings, lists, and tables"]
+-    c4["PDF export via a built-in paragraph, table, and shape renderer"]
++    c1["Load and parse DOC,<br/>DOCX, RTF, Markdown,<br/>and plain-text<br/>documents"]
++    c2["DOCX round-trip<br/>editing via the Light<br/>Document Model"]
++    c3["Markdown export with<br/>configurable headings,<br/>lists, and tables"]
++    c4["PDF export via a<br/>built-in paragraph,<br/>table, and shape<br/>renderer"]
++    c1 ~~~ c3
++    c2 ~~~ c4
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+@@ -50,8 +55,12 @@
+     o2["Markdown files"]
+     o3["PDF documents"]
+     o4["Plain text"]
++    o1 ~~~ o3
++    o2 ~~~ o4
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities
+@@ -325,7 +334,7 @@
  
  `Document` is the primary entry point: construct it from a file path, then call `save()` with a
  `SaveFormat` constant or a `MarkdownSaveOptions` / `PdfSaveOptions` / `OoxmlSaveOptions` instance —
@@ -18,7 +69,7 @@
  public types across the DOC/DOCX/RTF/Markdown/Text readers, the DOCX/Markdown/PDF writers, and the
  shared Light Document Model, summarized in the module-grouped table below.
  
-@@ -390,7 +390,6 @@
+@@ -390,7 +399,6 @@
  | `SaveFormat` | Document save format constants. |
  | `Section` | Class with 4 properties. |
  | `Shading` | Class with 2 properties. |
@@ -26,7 +77,7 @@
  | `Style` | Class with 11 properties. |
  | `TabStop` | Class with 4 properties. |
  | `TabStopCollection` | Class with 5 methods and 1 property. |
-@@ -460,7 +459,6 @@
+@@ -460,7 +468,6 @@
  | `ParagraphData` | Paragraph with style and content. |
  | `ParagraphFormatBuilder` | Build a non-cascaded `ldm.ParagraphFormat` from one `<w:pPr>`. |
  | `ParagraphFormatResolver` | Compose a fully cascaded `ldm.ParagraphFormat`. |
@@ -34,7 +85,7 @@
  | `RowBuilder` | Build `ldm.Row` from a `<w:tr>` element. |
  | `RowData` | Table row. |
  | `RunBuilder` | Build a single `ldm.Run` with a resolved font cascade. |
-@@ -604,7 +602,7 @@
+@@ -604,7 +611,7 @@
  
  - **[Getting started guide](https://docs.aspose.org/words/python/)** — installation, walkthroughs, and feature guides for this library.
  - **[How-to guides & FAQ](https://kb.aspose.org/words/python/)** — task-focused answers for common Word-processing questions.
@@ -43,7 +94,7 @@
  - The `ApiExamples/` scripts are written against the API this library shares with the commercial
    [`aspose-words`](https://github.com/aspose-words/Aspose.Words-for-Python-via-.NET) package — the
    same sources run there too, by replacing `aspose.words_foss` with `aspose.words` in the imports.
-@@ -622,7 +620,7 @@
+@@ -622,7 +629,7 @@
    edition treats as producing the same, compliant output.
  - Of `PdfSaveOptions`'s 17 fields, 8 — `text_compression`, `embed_full_fonts`, `use_core_fonts`,
    `font_embedding_mode`, `page_mode`, `color_mode`, `preserve_form_fields`, and
