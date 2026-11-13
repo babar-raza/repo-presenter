@@ -799,10 +799,19 @@ class StubIndex:
 def _stub_findings(
     lines: list[_Line], facts: FactsDocument, origin: _Origin
 ) -> list[ClaimFinding]:
+    # K02/K06 (2026-11-13, BL-062/BL-066): claims beyond the real code path and the published
+    # package (``code_path_claims``, rules (j1)-(j7)); a stub the source itself states (its
+    # ``implementation`` fact) is a stub exactly as a limitation statement makes it one.
+    from repo_presenter.readme.validation import code_path_claims
+
+    findings: list[ClaimFinding] = code_path_claims.code_path_findings(
+        _sentences(lines),
+        facts,
+        lambda first, sentence, detail, last: _finding(origin, first, sentence, detail, last=last),
+    )
     stubs = StubIndex(facts)
     if not stubs:
-        return []
-    findings: list[ClaimFinding] = []
+        return findings
     for sentence, first, last in _sentences(lines):
         if _LIMITATION_CUE.search(sentence.replace("`", " ")):
             continue

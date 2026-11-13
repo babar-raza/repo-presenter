@@ -18,7 +18,9 @@ import ast
 from pathlib import Path
 
 from repo_presenter.core.examples import FormatDeclaration, FormatDirection
-from repo_presenter.extractors.platforms.python_format_dispatch import dispatch_declarations
+from repo_presenter.extractors.platforms.python_format_dispatch import (
+    dispatch_declarations,
+)
 
 _ENTRY_METHODS = frozenset(
     {"export", "save", "save_to_stream", "import_scene", "load", "load_from_stream", "read"}
@@ -156,26 +158,135 @@ def _declarations(index: _Index) -> list[FormatDeclaration]:
     return found
 
 
+def _probe_methods(index: _Index) -> set[str]:
+    """The methods a dispatcher asks each registered importer/exporter in turn (``for exporter in
+    self._exporters: if exporter.supports_format(fmt): return exporter``): read from the loops
+    themselves, so a product without such a dispatcher has none and nothing below changes."""
+    probes: set[str] = set()
+    for tree in index.modules.values():
+        for loop in ast.walk(tree):
+            if not isinstance(loop, ast.For) or not isinstance(loop.target, ast.Name):
+                continue
+            variable = loop.target.id
+            for branch in loop.body:
+                if not isinstance(branch, ast.If):
+                    continue
+                for call in ast.walk(branch.test):
+                    if (
+                        isinstance(call, ast.Call)
+                        and isinstance(call.func, ast.Attribute)
+                        and isinstance(call.func.value, ast.Name)
+                        and call.func.value.id == variable
+                    ):
+                        probes.add(call.func.attr)
+    return probes
+
+
+def _resolve(index: _Index, class_name: str, method: str, depth: int = 0) -> tuple[str, ast.FunctionDef] | None:
+    """The class that defines ``method`` for ``class_name`` (itself or the first base, through the
+    product's own classes), and the definition."""
+    located = index.classes.get(class_name)
+    if located is None or depth > 8:
+        return None
+    for node in located[1].body:
+        if isinstance(node, ast.FunctionDef) and node.name == method:
+            return class_name, node
+    for base in located[1].bases:
+        found = _resolve(index, ast.unparse(base).rsplit(".", 1)[-1], method, depth + 1)
+        if found is not None:
+            return found
+    return None
+
+
+def _only_raises(function: ast.FunctionDef) -> bool:
+    body = [
+        s
+        for s in function.body
+        if not (isinstance(s, ast.Expr) and isinstance(s.value, ast.Constant) and isinstance(s.value.value, str))
+    ]
+    return bool(body) and all(isinstance(s, ast.Raise) for s in body)
+
+
 def _registrations(index: _Index) -> list[FormatDeclaration]:
-    """Every (direction, extension) a registered plugin implements with a non-stub class."""
+    """Every (direction, extension) a registered plugin implements with a non-stub class.
+
+    Dispatch order is part of the code path (K02, 2026-11-13: 3D Python registers ``FbxExporter``
+    before Collada, and ``FbxExporter`` inherits ``Exporter.supports_format``, which raises; so
+    ``Scene.save('x.dae')`` raises NotImplementedError before the Collada exporter is asked). Once
+    a registered class's probe method only raises, every plugin registered after it in the same
+    sequence is unreachable for that direction: its formats are stated as a directional
+    declaration (evidence, never a corroboration), so the fact stays UNRESOLVED."""
     found: list[FormatDeclaration] = []
+    probes = _probe_methods(index)
     for relative, tree in index.modules.items():
-        for node in ast.walk(tree):
-            if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)):
-                continue
-            if node.func.attr != "register_plugin" or not node.args:
-                continue
+        calls = sorted(
+            (
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "register_plugin"
+                and node.args
+            ),
+            key=lambda node: (node.lineno, node.col_offset),
+        )
+        blocked: dict[FormatDirection, str] = {}
+        for node in calls:
             plugin_name = _called_class(node.args[0])
             located = index.classes.get(plugin_name or "")
             if located is None:
                 continue
             plugin_path, plugin = located
-            found.extend(
-                _plugin_formats(
-                    index, plugin_name or "", plugin_path, plugin, relative, node.lineno
+            for declaration in _plugin_formats(
+                index, plugin_name or "", plugin_path, plugin, relative, node.lineno
+            ):
+                blocker = blocked.get(declaration.direction)  # type: ignore[arg-type]
+                if blocker is None:
+                    found.append(declaration)
+                    continue
+                found.append(
+                    FormatDeclaration(
+                        declaration.extension,
+                        declaration.direction,
+                        "declaration",
+                        relative,
+                        node.lineno,
+                        f"{plugin_name} is registered after {blocker}, which always raises, so the "
+                        f"dispatcher never reaches it for {declaration.extension} "
+                        f"({declaration.direction} unreachable)",
+                    )
                 )
-            )
+            for direction, class_name in _roles(plugin).items():
+                if direction in blocked:
+                    continue
+                for probe in sorted(probes):
+                    resolved = _resolve(index, class_name, probe)
+                    if resolved is not None and _only_raises(resolved[1]):
+                        blocked[direction] = f"{class_name}.{probe} (defined by {resolved[0]})"
+                        break
     return found
+
+
+def _roles(plugin: ast.ClassDef) -> dict[FormatDirection, str]:
+    """The importer (input) and exporter (output) class a plugin binds in ``__init__``."""
+    roles: dict[FormatDirection, str] = {}
+    for node in plugin.body:
+        if not (isinstance(node, ast.FunctionDef) and node.name == "__init__"):
+            continue
+        for statement in ast.walk(node):
+            if not isinstance(statement, ast.Assign):
+                continue
+            target = statement.targets[0]
+            if not isinstance(target, ast.Attribute):
+                continue
+            bound = _called_class(statement.value)
+            if bound is None:
+                continue
+            if target.attr.lstrip("_").startswith("importer"):
+                roles["input"] = bound
+            elif target.attr.lstrip("_").startswith("exporter"):
+                roles["output"] = bound
+    return roles
 
 
 def _plugin_formats(
@@ -187,26 +298,10 @@ def _plugin_formats(
     registered_line: int,
 ) -> list[FormatDeclaration]:
     format_class: str | None = None
-    roles: dict[FormatDirection, str] = {}
     for node in plugin.body:
-        if not isinstance(node, ast.FunctionDef):
-            continue
-        if node.name == "get_file_format":
+        if isinstance(node, ast.FunctionDef) and node.name == "get_file_format":
             format_class = _returned_class(node)
-        if node.name == "__init__":
-            for statement in ast.walk(node):
-                if not isinstance(statement, ast.Assign):
-                    continue
-                target = statement.targets[0]
-                if not isinstance(target, ast.Attribute):
-                    continue
-                bound = _called_class(statement.value)
-                if bound is None:
-                    continue
-                if target.attr.lstrip("_").startswith("importer"):
-                    roles["input"] = bound
-                elif target.attr.lstrip("_").startswith("exporter"):
-                    roles["output"] = bound
+    roles = _roles(plugin)
     if format_class is None or format_class not in index.classes:
         return []
     extensions = _extensions_of(index.classes[format_class][1])
