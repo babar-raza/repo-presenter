@@ -23,6 +23,7 @@ from __future__ import annotations
 import math
 import re
 from collections.abc import Iterable, Mapping, Sequence
+from types import MappingProxyType
 
 from repo_presenter.core.facts import Fact, FactsDocument
 
@@ -45,7 +46,9 @@ FACTS_CHARS = 36_000
 VALUE_CHARS = 700
 #: Longest docstring or signature a symbol record carries.
 DOC_CHARS = 240
-SIGNATURE_CHARS = 120
+#: 240, not 120: Aspose.BarCode Python's ``generate`` signature is 131 characters and the cut fell
+#: before ``-> Barcode``, the return type its API reference sentence states (run 43430657331).
+SIGNATURE_CHARS = 240
 #: The attributes of a fact that say what it is or does, in the order a record shows them.
 DOC_ATTRIBUTES = ("symbol_kind", "docstring", "signature")
 MAX_SYMBOLS = 60
@@ -63,6 +66,7 @@ EVIDENCE_DETAILS = 3
 EVIDENCE_CHARS = 360
 #: Most facts the plan's citations for a unit's sections may add (``unit_facts``'s ``cited``).
 MAX_CITED = 60
+_REEXPORT_OF = re.compile(r"\bre-export of ([A-Za-z_][\w.]*)")
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::)[A-Za-z_][A-Za-z0-9_]*)*")
 _WORD = re.compile(r"[A-Za-z][A-Za-z0-9_]{3,}")
 _STOP = frozenset(
@@ -172,14 +176,34 @@ def _record(fact: Fact) -> dict[str, str]:
         "value": value,
         "polarity": fact.polarity,
     }
+    attributes = fact.attributes or {}
     for name, limit in (
         ("symbol_kind", 40),
         ("docstring", DOC_CHARS),
         ("signature", SIGNATURE_CHARS),
     ):
-        text = (fact.attributes or {}).get(name)
+        text = attributes.get(name)
         if text:
             record[name] = text if len(text) <= limit else text[:limit] + " ..."
+    if fact.kind == "public_symbol":
+        # A type re-exported from a private module keeps its doc comment only as
+        # ``docstring_full`` (``source_detail``): ``renderers.PngRenderer`` reads "Render a barcode
+        # into PNG output", which is what a sentence saying it renders PNG rests on, and an alias
+        # (``aspose_barcode_foss.PngRenderer``) is the class its evidence names. Aspose.BarCode
+        # Python, run 43430657331: both sentences were filed unsupported without either shown.
+        full = attributes.get("docstring_full")
+        if full and not attributes.get("docstring"):
+            record["docstring"] = full if len(full) <= DOC_CHARS else full[:DOC_CHARS] + " ..."
+        target = next(
+            (
+                match.group(1)
+                for evidence in fact.evidence
+                for match in _REEXPORT_OF.finditer(evidence.detail or "")
+            ),
+            None,
+        )
+        if target:
+            record["reexport_of"] = target
     if fact.kind in _EVIDENCED_KINDS:
         # What the extractor read is the claim's proof for these kinds: a format UNRESOLVED
         # because its only dispatch is "an unimplemented stub", a member that "throws
@@ -304,12 +328,22 @@ def unit_facts(
     *,
     sections: Iterable[str],
     cited: Iterable[str] = (),
+    given: Iterable[str] = (),
+    members: Mapping[str, Sequence[str]] = MappingProxyType({}),
 ) -> list[dict[str, str]]:
     """The fact records one unit carries, bounded to ``FACTS_CHARS``. ``text`` is the unit's
     reviewable text; ``sections`` names its sections (an example lead-in carries the examples).
     ``cited`` are the fact ids the plan carries into those sections (a limitation's or
     capability's ``fact_ids``): the facts the text was written from, carried right after the core
-    facts so no word-overlap ranking can leave them out."""
+    facts so no word-overlap ranking can leave them out.
+
+    ``given`` are the facts an authored API reference row was written from, exactly as its type
+    batch gave them (``authoring.type_unit_facts``: the type fact and its implementation facts),
+    and ``members`` the verified member names that batch listed with each type fact: the type's
+    record carries them as ``members``, the same field the author was shown. They come right after
+    the plan's citations, before every ranked or name-matched group, uncapped but for
+    ``FACTS_CHARS``: a row's sentence restates nothing else (Aspose.3D TypeScript run
+    43430680427)."""
     wanted = set(sections)
     facts = [fact for fact in document.facts if fact.id not in _EXCLUDED]
     unit_words = words(text)
@@ -328,6 +362,7 @@ def unit_facts(
     citations = [by_id[fact_id] for fact_id in dict.fromkeys(cited) if fact_id in by_id][
         :MAX_CITED
     ]
+    rows = [by_id[fact_id] for fact_id in dict.fromkeys(given) if fact_id in by_id]
     ranked = _ranked(
         unit_words,
         [
@@ -352,11 +387,13 @@ def unit_facts(
     size = 2
     # ``support`` is last: it only spends budget the groups above left over, so adding it can never
     # displace a fact the reviewer was already shown.
-    for group in (core, citations, ranked, symbols, examples, links, support):
+    for group in (core, citations, rows, ranked, symbols, examples, links, support):
         for fact in group:
             if fact.id in seen:
                 continue
             record = _record(fact)
+            if members.get(fact.id):
+                record["members"] = ", ".join(members[fact.id])
             cost = len(str(record)) + 2
             if size + cost > FACTS_CHARS:
                 continue

@@ -26,7 +26,7 @@ from collections.abc import Collection, Mapping, Sequence
 from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
-from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED
+from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED, RESTORED_RATIONALE
 from repo_presenter.readme.reconciliation.destinations import nearest_holdable
 from repo_presenter.readme.validation.links import unsafe_html_failures
 from repo_presenter.readme.validation.surface_claims import absent_type_rows, kept_table_form
@@ -349,10 +349,9 @@ def restore_lost_units(
             if _UNVERIFIED_EXAMPLE_RATIONALE.search(str(entry.get("rationale") or ""))
             else ""
         )
-        entry["rationale"] = marker + (
-            "Kept as the maintainers wrote it: the published README prints this content and the "
-            "candidate would otherwise lose it (BC-17 / BC-05)."
-        )
+        # RESTORED_RATIONALE is also what placement reads to print the unit in full, never as
+        # overlap (``placement.RESTORED_RATIONALE``).
+        entry["rationale"] = marker + RESTORED_RATIONALE
     _follow_lead_ins(output, changes, payloads)
     if changes:
         # Only PLACED units are judged, and none of these was placed before, so none was flagged before.

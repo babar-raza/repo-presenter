@@ -79,6 +79,10 @@ jobs:
     if: needs.validate.outputs.job == 'present'
     permissions:
       contents: write  # present.yml's durable-state refs in this repository only
+      # A called workflow's job permissions may not exceed the caller's, or GitHub refuses the whole
+      # file at startup (startup_failure, 2026-11-13). present.yml's schedule-only `cohort` job holds
+      # actions: write; it never runs here (event is workflow_run), but the ceiling must cover it.
+      actions: write
     uses: ./.github/workflows/present.yml
     with:
       repository: ${{ needs.validate.outputs.repository }}

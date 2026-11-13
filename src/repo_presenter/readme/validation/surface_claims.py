@@ -483,6 +483,40 @@ def canonical_name_form(text: str, facts: FactsDocument) -> str:
     return canonicalise_name_variants(text, canonical, protect=_NAME_PROTECTED)
 
 
+#: An inline markdown link ``[label](destination "optional title")`` that is not an image.
+_INLINE_LINK = re.compile(
+    r"(?<!!)\[(?P<label>(?:[^\[\]\n]|\[[^\[\]\n]*\])*)\]"
+    r"\((?P<href>[^()\s]+(?:\([^()\s]*\)[^()\s]*)?)(?:\s+\"[^\"\n]*\")?\)"
+)
+
+
+def without_contradicted_links(text: str, facts: FactsDocument) -> str:
+    """``text`` with every inline link whose destination a ``link_target`` fact records as
+    CONTRADICTED (the target answered 404/410: it is gone) printed as its label alone; every other
+    character exactly as written.
+
+    A dead target is the only defect such a kept unit has, and printing it fails BC-06 ("is
+    CONTRADICTED"): S4 used to fold the whole unit to ``VERIFIED_REWRITE`` for it, and the zero-call
+    restore rolled the unit back for the BC-06 it brought, so the maintainers' section it carries was
+    lost (R2/BC-17). Measured: Aspose.OMR-FOSS-for-Python, hosted run 43430687401 -- the README links
+    its own files through a ``github.com/omr-python-for-foss/omr-python-for-foss/blob/main/...`` repository
+    that does not exist, inside the units holding 'Developing in VS Code', 'Two ways to author a
+    form', 'How recognition works', 'Known limitations / deviations' and 'Examples and API'. The
+    label (here the file path in a code span) is the maintainers' own words and stays; only the
+    dead destination goes, on the cited fact (R14: the CONTRADICTED ``link_target`` is the evidence,
+    and BC-17 already exempts a contradicted link from its losses)."""
+    dead = {
+        str(fact.value)
+        for fact in facts.by_kind("link_target")
+        if fact.polarity == "CONTRADICTED" and fact.value
+    }
+    if not dead or "](" not in text:
+        return text
+    return _INLINE_LINK.sub(
+        lambda match: match.group("label") if match.group("href") in dead else match.group(0), text
+    )
+
+
 def kept_unit_form(
     unit_id: str, text: str, facts: FactsDocument, false_quotes: Collection[str] = ()
 ) -> str:
@@ -503,6 +537,10 @@ def kept_unit_form(
             return text
     if unit_id.endswith(".table"):
         text = kept_table_form(text, facts)
+    if not unit_id.endswith(".code_block"):
+        # A dead link target is printed as its label (``without_contradicted_links``); fenced code
+        # carries no rendered link and is never edited.
+        text = without_contradicted_links(text, facts)
     if unit_id.endswith(_NAME_CORRECTED_KINDS):
         text = canonical_name_form(text, facts)
     # The renderer corrects a stated "N public types" the facts contradict over the WHOLE README after

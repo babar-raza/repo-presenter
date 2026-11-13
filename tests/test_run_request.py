@@ -308,7 +308,10 @@ def test_the_privileged_workflow_runs_from_main_on_workflow_run_and_validates_fi
         assert job["needs"] == "validate"
         assert job["if"] == f"needs.validate.outputs.job == '{name}'"
         assert job["uses"] == path  # local path: resolves to the default-branch commit this run executes
-        assert job["permissions"] == {"contents": "write"}
+        # present.yml's schedule-only cohort job holds actions: write; a caller must grant at least
+        # its callee's permissions or GitHub refuses the file at startup (2026-11-13).
+        expected = {"contents": "write", "actions": "write"} if name == "present" else {"contents": "write"}
+        assert job["permissions"] == expected
     assert set(wf["jobs"]["present"]["with"]) == {"repository", "ecosystem", "lane"}
     assert "with" not in wf["jobs"]["mint"]
 

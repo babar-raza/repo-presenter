@@ -4871,3 +4871,27 @@ requests, record measured spend -- now happens on every hourly fire of `present.
   (`NOT_APPLICABLE`, R20: the repository has no README, so there is no live README for Lane L to maintain; Lane R
   stays eligible), each pinned to the upstream revision it was verified at so an upstream change lapses it
   automatically (R24), with the 7-day re-check date reported when overdue.
+## 2026-11-13: R14 drop rule — a kept unit prints a CONTRADICTED link as its label; a restored unit is never dropped whole as overlap
+
+Supervisor decision under R14/R36 (fixes only, R27). **Rule 1 (dead link).** A kept maintainers' unit (paragraph, list,
+blockquote, table) prints every inline link whose destination a `link_target` fact records CONTRADICTED (the target
+answered 404/410) as its label alone (`surface_claims.without_contradicted_links`, inside `kept_unit_form`, the one
+printed form the renderer, BC-05/BC-06/BC-17 and the reviewer read); every other character is printed as written, and
+fenced code is never edited. The dropped destination is dropped on that fact, which BC-17 already exempts ("its
+link_target fact is CONTRADICTED"); the reviewer's `live_readme_loss` now accounts for it the same way. A link only
+UNRESOLVED (never answered) is not evidence and is left as written. S4 (`dispositions.normalize`) therefore no longer
+folds such a unit to VERIFIED_REWRITE; it only stops citing the dead link. Evidence: Aspose.OMR-FOSS-for-Python, hosted
+Lane R run 43430687401 (main after the C2 per-unit restore): the README links its own files through
+`github.com/omr-python-for-foss/omr-python-for-foss/...`; the units holding 'Developing in VS Code', 'Two ways to author a
+form', 'How recognition works', 'Known limitations / deviations' and 'Examples and API' were folded to VERIFIED_REWRITE,
+the restore brought them back verbatim, BC-06 refused the dead targets, the per-unit rollback removed four of five
+("1 unit(s) restored but blocking still fails"), and BC-17 failed deterministically with no LLM review. Reproduced by a
+zero-call local replay of the deterministic stages over a local facts run (dead targets as CONTRADICTED).
+
+**Rule 2 (restored unit vs overlap).** A unit the zero-call restore keeps (rationale `placement.RESTORED_RATIONALE`) may
+still print only its uncovered remainder, but is never dropped whole as overlap with its section's facts: placement's
+sentence-share test and BC-17's carried-content test disagreed on a paraphrase, and the restore exists because BC-17
+already ruled the paraphrase does not carry the unit. Evidence: Aspose.Cells-FOSS-for-Go Lane R seal fbe7fa729705,
+`073.list` (h2 'Constraints') restored VERIFIED_PRESERVE with the rewrite's fact IDs and dropped as overlap (coverage
+0.79 < 0.80), BC-17 still failing after restore; with the rule it prints (coverage 1.0) and only BC-18 remains.
+Regressions: `tests/readme/repair/test_restore_carries_section.py`.

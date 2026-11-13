@@ -10,8 +10,9 @@ in full as part of this taskcard.
 **Ported here**: ``normalize()`` (folds a placement deterministic code cannot honour into the
 disposition it can -- a placement into a deterministic section becomes a supersession citing the
 facts that section renders; a placed code block whose example is UNRESOLVED is deferred; a
-contradicted embedded link or a forbidden edition label or an unverified example fence inside a
-kept unit is folded to VERIFIED_REWRITE so S6 re-authors it from facts), ``coverage_findings()``
+forbidden edition label or an unverified example fence inside a kept unit is folded to
+VERIFIED_REWRITE so S6 re-authors it from facts, while a contradicted embedded link only leaves the
+unit's citations -- the kept unit prints it as its label, ``surface_claims.without_contradicted_links``), ``coverage_findings()``
 and its own ``_omission_gap()`` (the TC-DSP-01 self-audit: every disposition that claims more than
 reconciliation can prove before a plan exists), together with their full, exactly-as-faithful
 supporting network (``coverage_context``/``_Coverage``, ``_judge``, ``_supersession_gap``,
@@ -1561,9 +1562,15 @@ def normalize(
                 else set()
             )
             if bad_links:
-                entry["disposition"] = "VERIFIED_REWRITE"
+                # The unit stays kept: its printed form gives each CONTRADICTED link as its label
+                # alone (``surface_claims.without_contradicted_links``, the one form the renderer,
+                # BC-05/BC-06/BC-17 and the reviewer read). Folding it to VERIFIED_REWRITE for a
+                # dead link lost the maintainers' whole section it carries, and the zero-call
+                # restore could not bring it back while the printed text still held the dead
+                # target (Aspose.OMR-FOSS-for-Python, hosted run 43430687401: five units, four h2
+                # sections). The dead link is not a fact the unit may cite; the unit's other folds
+                # (an edition label, an unverified fence) still apply below.
                 entry["fact_ids"] = sorted(cited - bad_links)
-                continue
             if unit_fact is not None and unit.rsplit(".", 1)[-1] in _PROSE_PRINTED_KINDS:
                 if edition_labels(unit_fact.value):
                     entry["disposition"] = "VERIFIED_REWRITE"
