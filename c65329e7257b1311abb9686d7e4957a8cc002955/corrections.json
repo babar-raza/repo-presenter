@@ -1,14 +1,34 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 1,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "5f2db3e78e54f3b88befeea5a66355ce6bf278f08edf6ff5518bd210cd0ec73c",
-  "edits": [],
+  "corrected_sha256": "27d13b6d04e522836a867f0942127f599e5d3ff916e7745a8f3b066a8771f47c",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 3006,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:32"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 33,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    i1[\"Existing .xlsx workbook (file path or stream)\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Workbook and worksheet creation, loading, and saving\"]\n      c2[\"Cell values and formulas\"]\n      c3[\"Cell and range styling (fonts, borders, fills, alignment, number formats)\"]\n      c4[\"Row and column sizing, hiding, and outline grouping\"]\n      c5[\"Merged cells, defined names, and hyperlinks\"]\n      c6[\"Data validation\"]\n      c7[\"Conditional formatting\"]\n      c8[\"Auto filters with color, dynamic, top-10, and custom filter types\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c9[\"Page setup, freeze panes, and worksheet/workbook protection\"]\n      c10[\"Cell comments\"]\n      c11[\"Embedded pictures\"]\n      c12[\"Embedded charts\"]\n      c13[\"Drawing shapes\"]\n      c14[\"Excel tables (ListObjects)\"]\n      c15[\"Load diagnostics and repair reporting\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    o1[\".xlsx workbook (file path or binary stream)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 3292 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 676 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"Existing .xlsx<br/>workbook (file path or<br/>stream)\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Workbook and worksheet<br/>creation, loading, and<br/>saving\"]\n    c2[\"Cell values and<br/>formulas\"]\n    c3[\"Cell and range styling<br/>(fonts, borders,<br/>fills, alignment,<br/>number formats)\"]\n    c4[\"Row and column sizing,<br/>hiding, and outline<br/>grouping\"]\n    c5[\"Merged cells, defined<br/>names, and hyperlinks\"]\n    c6[\"Data validation\"]\n    c7[\"Conditional formatting\"]\n    c8[\"Auto filters with<br/>color, dynamic,<br/>top-10, and custom<br/>filter types\"]\n    c9[\"Page setup, freeze<br/>panes, and<br/>worksheet/workbook<br/>protection\"]\n    c10[\"Cell comments\"]\n    c11[\"Embedded pictures\"]\n    c12[\"Embedded charts\"]\n    c13[\"Drawing shapes\"]\n    c14[\"Excel tables<br/>(ListObjects)\"]\n    c15[\"Load diagnostics and<br/>repair reporting\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n    c7 ~~~ c10\n    c8 ~~~ c11\n    c9 ~~~ c12\n    c10 ~~~ c13\n    c11 ~~~ c14\n    c12 ~~~ c15\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\".xlsx workbook (file<br/>path or binary stream)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1803
+    }
+  ],
   "lane": "L",
   "original_sha256": "5f2db3e78e54f3b88befeea5a66355ce6bf278f08edf6ff5518bd210cd0ec73c",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
   "schema_version": 1,
@@ -18,6 +38,8 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
   "unapplied": []
 }

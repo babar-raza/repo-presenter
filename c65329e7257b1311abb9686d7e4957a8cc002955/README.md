@@ -30,39 +30,49 @@ to `.xlsx`.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
-    i1["Existing .xlsx workbook (file path or stream)"]
+    direction TB
+    i1["Existing .xlsx<br/>workbook (file path or<br/>stream)"]
   end
   PRODUCT["Aspose.Cells FOSS for Java"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Workbook and worksheet creation, loading, and saving"]
-      c2["Cell values and formulas"]
-      c3["Cell and range styling (fonts, borders, fills, alignment, number formats)"]
-      c4["Row and column sizing, hiding, and outline grouping"]
-      c5["Merged cells, defined names, and hyperlinks"]
-      c6["Data validation"]
-      c7["Conditional formatting"]
-      c8["Auto filters with color, dynamic, top-10, and custom filter types"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c9["Page setup, freeze panes, and worksheet/workbook protection"]
-      c10["Cell comments"]
-      c11["Embedded pictures"]
-      c12["Embedded charts"]
-      c13["Drawing shapes"]
-      c14["Excel tables (ListObjects)"]
-      c15["Load diagnostics and repair reporting"]
-    end
+    direction TB
+    c1["Workbook and worksheet<br/>creation, loading, and<br/>saving"]
+    c2["Cell values and<br/>formulas"]
+    c3["Cell and range styling<br/>(fonts, borders,<br/>fills, alignment,<br/>number formats)"]
+    c4["Row and column sizing,<br/>hiding, and outline<br/>grouping"]
+    c5["Merged cells, defined<br/>names, and hyperlinks"]
+    c6["Data validation"]
+    c7["Conditional formatting"]
+    c8["Auto filters with<br/>color, dynamic,<br/>top-10, and custom<br/>filter types"]
+    c9["Page setup, freeze<br/>panes, and<br/>worksheet/workbook<br/>protection"]
+    c10["Cell comments"]
+    c11["Embedded pictures"]
+    c12["Embedded charts"]
+    c13["Drawing shapes"]
+    c14["Excel tables<br/>(ListObjects)"]
+    c15["Load diagnostics and<br/>repair reporting"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c9
+    c7 ~~~ c10
+    c8 ~~~ c11
+    c9 ~~~ c12
+    c10 ~~~ c13
+    c11 ~~~ c14
+    c12 ~~~ c15
   end
   subgraph Outputs["Outputs"]
-    o1[".xlsx workbook (file path or binary stream)"]
+    direction TB
+    o1[".xlsx workbook (file<br/>path or binary stream)"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
