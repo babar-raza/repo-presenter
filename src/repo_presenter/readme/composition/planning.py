@@ -497,11 +497,22 @@ def _apply_additional_examples(output: dict[str, Any], missing: list[Any]) -> No
     output["additional_example_ids"] = additional + missing
 
 
-def _required_link_sections(dispositions: dict[str, Any] | None) -> dict[str, str]:
-    """Every ``link_target`` fact a ``VERIFIED_REWRITE`` disposition names, mapped to its
-    destination section."""
+def _required_link_sections(
+    facts: FactsDocument, dispositions: dict[str, Any] | None
+) -> dict[str, str]:
+    """Every SUPPORTED ``link_target`` fact a ``VERIFIED_REWRITE`` disposition names, mapped to its
+    destination section.
+
+    Only SUPPORTED targets: a disposition may cite a CONTRADICTED or UNRESOLVED link as the
+    evidence for its rewrite, but such a link is never one to print. Words .NET (hosted run
+    43394971759): a VERIFIED_REWRITE cited the CONTRADICTED ``link_target:020``, this backstop
+    added it to plan.links after the plan's binding was checked, and section_authoring was then
+    rejected twice with "fact link_target:020 is CONTRADICTED, not SUPPORTED"."""
     if dispositions is None:
         return {}
+    supported = {
+        fact.id for fact in facts.by_kind("link_target") if fact.polarity == "SUPPORTED"
+    }
     rewritten_link_sections: dict[str, str] = {}
     for entry in dispositions.get("dispositions", []):
         if entry.get("disposition") != "VERIFIED_REWRITE":
@@ -511,7 +522,7 @@ def _required_link_sections(dispositions: dict[str, Any] | None) -> dict[str, st
             continue
         for fact_id in entry.get("fact_ids") or []:
             fact_id = str(fact_id)
-            if fact_id.startswith("link_target:") and fact_id not in _SHELL_OWNED_LINKS:
+            if fact_id in supported and fact_id not in _SHELL_OWNED_LINKS:
                 rewritten_link_sections[fact_id] = str(destination)
     return rewritten_link_sections
 
@@ -519,7 +530,7 @@ def _required_link_sections(dispositions: dict[str, Any] | None) -> dict[str, st
 def _missing_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> list[dict[str, str]]:
-    rewritten_link_sections = _required_link_sections(dispositions)
+    rewritten_link_sections = _required_link_sections(facts, dispositions)
     planned_link_ids = {str(link.get("link_fact_id")) for link in output.get("links", [])}
     return [
         {"link_fact_id": fact_id, "section_id": section}
@@ -911,7 +922,7 @@ def plan_checks(
         facts,
         included,
         protected={
-            *_required_link_sections(dispositions),
+            *_required_link_sections(facts, dispositions),
             *_kept_list_links(output, facts, dispositions),
         },
     ):
@@ -925,7 +936,7 @@ def plan_checks(
         included = {entry["section_id"] for entry in output["sections"] if entry["include"]}
     unrenderable_anchors = _unrenderable_anchor_ids(facts)
     required_link_sections = {
-        **_required_link_sections(dispositions),
+        **_required_link_sections(facts, dispositions),
         **_kept_list_links(output, facts, dispositions),
     }
     raw_links = output.get("links", [])

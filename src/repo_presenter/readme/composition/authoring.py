@@ -619,6 +619,7 @@ def section_selections(
     """The fact IDs a section may cite and the slots it must fill, from the plan."""
     ids: list[str] = [fact.id for fact in facts.facts if fact.kind in {"identity", "package"}]
     slots: list[str] = []
+    supported = {fact.id for fact in facts.facts if fact.polarity == "SUPPORTED"}
     if section == "opening":
         for key in ("product_summary", "audience", "problems_solved"):
             ids.extend(_cited(investigation.get(key)))
@@ -648,7 +649,9 @@ def section_selections(
             slots.append(f"hub:{hub.get('symbol_fact_id', '')}")
     elif section == "documentation_resources":
         for link in plan.get("links", []):
-            if link.get("section_id") == section:
+            # A link the plan carries that is not SUPPORTED gets no slot: its only citable fact
+            # would be the one the binding guard rejects (Words .NET, link_target:020).
+            if link.get("section_id") == section and link.get("link_fact_id", "") in supported:
                 ids.append(link.get("link_fact_id", ""))
                 slots.append(f"link:{link.get('link_fact_id', '')}")
     elif section == "scope_limitations":
@@ -670,7 +673,6 @@ def section_selections(
         slots = ["context"]
         ids.extend(carried_units(dispositions, section, facts))
     ids.extend(_placed_units(dispositions, section))
-    supported = {fact.id for fact in facts.facts if fact.polarity == "SUPPORTED"}
     ordered = [fact_id for fact_id in dict.fromkeys(ids) if fact_id in supported]
     return ordered, tuple(slots)
 
@@ -842,6 +844,7 @@ def authoring_tasks(
     included = {item["section_id"] for item in plan.get("sections", []) if item.get("include")}
     name = product_name(entry)
     by_id = {fact.id: fact for fact in facts.facts}
+    supported_ids = frozenset(fact.id for fact in facts.facts if fact.polarity == "SUPPORTED")
     do_not_claim = bounded_records(
         facts,
         ["format", "install_command", "link_target", "example"],
@@ -868,7 +871,14 @@ def authoring_tasks(
             for fact_id in ids
         ]
         spellings = section_spellings(ids, facts)
-        slot_facts = slot_fact_sets(section, plan)
+        # Only the slots this task fills, and in each only SUPPORTED facts: a slot's set becomes
+        # its fact_ids enum, so a non-SUPPORTED ID there is one the binding guard always rejects
+        # (Words .NET: slot link:link_target:020 offered only the CONTRADICTED link_target:020).
+        slot_facts = {
+            slot: bound & supported_ids
+            for slot, bound in slot_fact_sets(section, plan).items()
+            if slot in slots
+        }
         titles = capability_titles(plan) if section == "key_capabilities" else {}
         renders = slot_rendering(section, slots, facts, dispositions, slot_facts)
         records = slot_records(slots, slot_facts, titles, renders)
