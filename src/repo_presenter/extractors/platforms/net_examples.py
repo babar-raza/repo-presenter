@@ -427,7 +427,23 @@ def verify_net_examples(
             # character clip and the compiler's own warning order is not stable between builds -
             # a receipt that changes for a reason the repository did not cause voids the seal's
             # no-op proof exactly as the wall-clock line did.
-            [dotnet, "build", "--nologo", "-v", "quiet", "-p:WarningLevel=0"],
+            #
+            # NuGetAudit=false: the restore-time vulnerability audit reads a live advisory feed, so
+            # its NU190x warnings change with the date, not the revision, and a product that
+            # treats warnings as errors then fails the restore before any C# is compiled - every
+            # one of Aspose.PDF-FOSS-for-.NET's 12 examples was recorded NOT_VERIFIED on `NU1902`
+            # for System.Security.Cryptography.Pkcs 8.0.1 (sealed 2026-11). The question here is
+            # whether the snippet compiles against the product's API at this revision; the
+            # product's own `dotnet build` (build_product) still runs with the audit on.
+            [
+                dotnet,
+                "build",
+                "--nologo",
+                "-v",
+                "quiet",
+                "-p:WarningLevel=0",
+                "-p:NuGetAudit=false",
+            ],
             workspace=run_dir,
             timeout_seconds=NET.example_timeout_seconds,
             extra_environment=profile_environment(run_dir),

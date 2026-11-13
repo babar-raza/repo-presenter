@@ -36,6 +36,7 @@ from repo_presenter.core.examples import (
     ExampleCandidate,
     ExampleReceipt,
     FixtureBinding,
+    with_prelude,
 )
 from repo_presenter.core.execution import ExecutionResult, execute, profile_environment
 from repo_presenter.core.receipt_paths import scrub_machine_paths
@@ -603,7 +604,10 @@ def verify_python_examples(
         )
 
     def run(
-        candidate: ExampleCandidate, produced: ProducedFiles, opened: Sequence[str] = ()
+        candidate: ExampleCandidate,
+        produced: ProducedFiles,
+        opened: Sequence[str] = (),
+        prelude: str = "",
     ) -> tuple[ExampleReceipt, tuple[Path, ...], str | None]:
         """The receipt, the files the example wrote, and - when it needed an input - the path its
         own failure named, so the retry below can stage exactly that."""
@@ -612,7 +616,7 @@ def verify_python_examples(
             shutil.rmtree(run_dir)
         run_dir.mkdir()
         script = run_dir / "example.py"
-        script.write_bytes(candidate.code.encode("utf-8"))
+        script.write_bytes(with_prelude(candidate.code, prelude).encode("utf-8"))
         fixtures = stage_fixtures(candidate.code, root, tree_paths, run_dir, produced, opened)
         before = {path.name for path in run_dir.iterdir()}
         result = execute(
@@ -655,6 +659,7 @@ def verify_python_examples(
             # EXECUTED outcome here must not promote the registry install command as verified.
             build_verified=not source_note,
             source_roots=source_roots,
+            prelude=prelude if outcome == "EXECUTED" else "",
         )
         written = sorted(
             path for path in run_dir.iterdir() if path.is_file() and path.name not in before
@@ -732,7 +737,101 @@ def verify_python_examples(
         if retried.outcome == "EXECUTED":
             for path in written:
                 produced.setdefault(path.suffix.lower(), []).append((candidate.ordinal, path))
+    # A fence that uses a name the README imports in another fence (`Document`, imported once at
+    # the top of the page) is not false: it stops on a NameError before it calls the library at
+    # all. Measured on Aspose-PDF-FOSS-for-Python (sealed 2026-11): 17 of its 77 examples were
+    # recorded CONTRADICTED on `NameError` alone. Each is run once more with exactly the README's
+    # own import statements that bind the missing names in front of it - the prelude, printed
+    # with the example like a .NET using or a Java import - and a name nothing in the README
+    # binds leaves it what it was, a fragment the verifier will not complete by guessing.
+    bindings = readme_import_bindings(candidates)
+    for index, receipt in enumerate(receipts):
+        if receipt.outcome != "FAILED" or not receipt.detail.startswith("NameError"):
+            continue
+        candidate = by_ordinal[receipt.ordinal]
+        supplied: list[str] = []
+        current = receipt
+        for _attempt in range(_MAX_BINDING_ROUNDS):
+            name = unbound_name(current.stderr)
+            line = bindings.get(name or "")
+            if name is None or line is None or line in supplied:
+                break
+            supplied.append(line)
+            current, written, _ = run(candidate, produced, (), "\n".join(supplied))
+            if current.outcome != "FAILED" or not current.detail.startswith("NameError"):
+                break
+        if current is receipt:
+            receipts[index] = _fragment_or_failure(receipt)
+            continue
+        if current.outcome == "EXECUTED":
+            added = ", ".join(supplied)
+            receipts[index] = replace(current, detail=f"{current.detail}; imports supplied: {added}")
+            for path in written:
+                produced.setdefault(path.suffix.lower(), []).append((candidate.ordinal, path))
+        else:
+            receipts[index] = _fragment_or_failure(current)
     return receipts
+
+
+_MAX_BINDING_ROUNDS = 5
+_UNBOUND_NAME = re.compile(r"^NameError: name '([A-Za-z_]\w*)' is not defined", re.MULTILINE)
+
+
+def unbound_name(stderr: str) -> str | None:
+    """The name a NameError traceback says is not defined, or None when it names none."""
+    found = _UNBOUND_NAME.findall(stderr)
+    return found[-1] if found else None
+
+
+def readme_import_bindings(candidates: Sequence[ExampleCandidate]) -> dict[str, str]:
+    """Every name a top-level import statement of a README example binds, mapped to the one
+    import statement that binds it alone (`from aspose_pdf import Document`), first fence first.
+
+    Only `import` statements are read - never an assignment or a definition - so what can be
+    supplied is exactly what the README itself tells a reader to import, nothing invented. A
+    relative or star import binds nothing that can be named, so it is skipped; a fence that does
+    not parse contributes nothing.
+    """
+    bound: dict[str, str] = {}
+    for candidate in sorted(candidates, key=lambda c: c.ordinal):
+        try:
+            tree = ast.parse(candidate.code)
+        except SyntaxError:
+            continue
+        for node in tree.body:
+            if isinstance(node, ast.ImportFrom) and node.module and not node.level:
+                for alias in node.names:
+                    if alias.name == "*":
+                        continue
+                    spelled = alias.name + (f" as {alias.asname}" if alias.asname else "")
+                    bound.setdefault(
+                        alias.asname or alias.name, f"from {node.module} import {spelled}"
+                    )
+            elif isinstance(node, ast.Import):
+                for alias in node.names:
+                    name = alias.asname or alias.name.split(".", 1)[0]
+                    spelled = alias.name + (f" as {alias.asname}" if alias.asname else "")
+                    bound.setdefault(name, f"import {spelled}")
+    return bound
+
+
+def _fragment_or_failure(receipt: ExampleReceipt) -> ExampleReceipt:
+    """A NameError on a lower-case name nothing in the README binds is the fence omitting the
+    line that makes `doc` or `pdf_bytes` (or the reader's own helper): incomplete, never false.
+    The same rule the Java, C++, Rust and TypeScript verifiers apply to an unbound local. A
+    capitalised name may be an export the package does not have, so it stays FAILED."""
+    name = unbound_name(receipt.stderr)
+    if name is None or not name[0].islower():
+        return receipt
+    return replace(
+        receipt,
+        outcome="NOT_VERIFIED",
+        detail=(
+            f"fragment, not a contradiction: the fence uses `{name}` without binding it "
+            f"({receipt.detail})"
+        ),
+        prelude="",
+    )
 
 
 def _serviceable(code: str, root: Path, tree_paths: Sequence[str], produced: ProducedFiles) -> bool:

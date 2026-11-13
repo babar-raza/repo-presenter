@@ -4991,3 +4991,43 @@ L 26 re-certified. Known limit: the Java extractor records no enum constants (`R
 `enum_member` facts), so a Java enum has no values to state until that gap is fixed. Regressions:
 `tests/readme/correction/detectors/test_type_description.py`, `tests/extractors/surface/test_doc_text.py`,
 `tests/readme/composition/test_type_purpose_facts.py`.
+
+---
+
+## 2026-11-13: are the printed examples verified? Exact audit, and five verifier root causes fixed once
+
+Supervisor decision under R36(b)/R27 (fixes to the existing example verifier only; no check weakened).
+**Exact audit** (`scripts/printed_example_audit.py`, zero calls, regression `tests/test_printed_example_audit.py`): every
+fence of a certified README whose language is one of the ecosystem's example aliases (the fences BC-03 judges) is mapped
+to its `example` fact by the pipeline's own identity (normalized code of the value or of `printed_example`, the
+prelude-carrying program). Over the 31 seals RECERTIFIED on 2026-11-13: 273 printed examples, 174 SUPPORTED, 72
+UNRESOLVED, 26 CONTRADICTED, 1 never extracted (an indented fence inside a list item, PDF Python). Causes of the 99:
+needs an input file nothing provides 26; Python NameError on an import the README makes in another fence 18;
+NuGet vulnerability audit as error 12; fragment (unbound local) 10; product build failed on LFS pointer DLLs 10;
+genuinely failing code 8; rustup proxy started as rustup 7; machine tsc refuses the package's options 4; other 4.
+
+**Policy findings.** (a) Lane R may print an UNRESOLVED example: BC-03 (`validation/provenance.py`) admits a retained
+inherited example (`composition/retained_examples.py`) printed exactly as the maintainers wrote it, with its unverified
+status internal (R9 removed the public note). This is the mission's "NOT_VERIFIED is not FALSE" plus R14, not "every
+claim verified"; tightening BC-03 now would fail the Words .NET and 3D Python Lane R seals (9 printed), and both have a
+fixable execution cause, so the decision is to make them run, not to drop them. (b) Lane L keeps CONTRADICTED examples:
+`failing_example` is a report-only detector (the honest repair is code), its findings are the bundle's `unapplied`
+residuals, and R21 accepts a Lane L candidate on net improvement with residuals recorded internally, so nothing blocks
+it. 18 of the 26 printed CONTRADICTED examples were the verifier's defect (below), not the README's.
+
+**Rules (fixes).** 1. `core/execution.execute` makes argv[0] absolute without following symlinks: rustup's proxies
+dispatch on their own name, and resolving `~/.cargo/bin/cargo -> rustup` ran rustup (Cells Rust 7/7 "did not report a
+version"; locally now cargo 1.97.0, 1 COMPILED, 6 honest fragments); `rust_examples.rustup_home` also finds rustup's
+default `~/.rustup`. 2. The .NET example build passes `-p:NuGetAudit=false`: the restore audit reads a live advisory feed,
+so NU1902 under TreatWarningsAsErrors depends on the date, not the revision (PDF .NET 12/12); the product's own `dotnet
+build` claim keeps the audit on. 3. The TypeScript verifier, when the machine tsc refuses the package's declared options,
+checks with the compiler the package's own `npm install` installed (3D TS pins typescript ^5.8.3; hosted tsc 7 refuses
+`moduleResolution: node`; locally 3 of 4 now type-check, 1 is a real TS2339). 4. A Python example failing on
+`NameError` is re-run with exactly the README's own import statements that bind the missing name as its prelude (printed
+with it, like a .NET using); a lower-case name nothing binds is a fragment (NOT_VERIFIED), a capitalised one stays
+FAILED (PDF Python: 48 -> 59 EXECUTED, 17 CONTRADICTED -> 0, 3 fragments). 5. The pinned clone pulls LFS objects for
+compiled build inputs only (`*.dll`, `*.jar`, `*.nupkg`): Words .NET references LFS-tracked DLLs by path, so its build
+failed with CS0234 on pointer files (10 printed, both lanes); best effort, no git-lfs leaves the pointers as before.
+Not yet fixed (next classes): inputs no repository file or example provides (26), fragments that need an earlier
+fence's statements (16 incl. Rust), the extractor missing list-indented fences (1). Proof needing a hosted facts run:
+Words .NET (LFS + dotnet), PDF .NET (dotnet), Cells Rust and 3D TS on the runner's own toolchains.

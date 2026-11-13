@@ -325,3 +325,50 @@ class TestForceRmtree:
         with pytest.raises(OSError) as info:
             force_rmtree(victim)
         assert info.value.errno == errno.ENOTEMPTY
+
+
+class TestLfsBuildInputs:
+    """Aspose.Words-FOSS-for-.NET tracks `*.dll` in LFS and its build references vendored
+    assemblies by path; with every LFS file left a pointer (GIT_LFS_SKIP_SMUDGE) all ten of its
+    README examples across both lanes were "the product's own build failed" (CS0234)."""
+
+    def test_no_lfs_declared_means_no_lfs_command(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        calls: list[list[str]] = []
+        monkeypatch.setattr(
+            clone_module, "run_git", lambda args, **kw: calls.append(args)  # type: ignore[func-returns-value]
+        )
+        (tmp_path / ".gitattributes").write_text("# *.dll filter=lfs\n*.txt -text\n", "utf-8")
+        assert clone_module.pull_lfs_build_inputs(tmp_path) is False
+        assert calls == []
+
+    def test_only_compiled_build_inputs_are_pulled(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        calls: list[list[str]] = []
+
+        def fake(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 0, "", "")
+
+        monkeypatch.setattr(clone_module, "run_git", fake)
+        (tmp_path / ".gitattributes").write_text(
+            "*.dll filter=lfs diff=lfs merge=lfs -text\n*.docx filter=lfs -text\n", "utf-8"
+        )
+        assert clone_module.pull_lfs_build_inputs(tmp_path) is True
+        assert calls == [["lfs", "version"], ["lfs", "pull", "--include", "*.dll,*.jar,*.nupkg"]]
+
+    def test_a_machine_without_git_lfs_leaves_the_pointers(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        calls: list[list[str]] = []
+
+        def fake(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 1, "", "git: 'lfs' is not a git command")
+
+        monkeypatch.setattr(clone_module, "run_git", fake)
+        (tmp_path / ".gitattributes").write_text("*.dll filter=lfs\n", "utf-8")
+        assert clone_module.pull_lfs_build_inputs(tmp_path) is False
+        assert calls == [["lfs", "version"]]

@@ -98,7 +98,17 @@ def rustup_home(cargo: str) -> str | None:
     if recorded:
         return recorded
     sibling = Path(cargo).parent.parent.parent / "rustup-home"
-    return str(sibling) if sibling.is_dir() else None
+    if sibling.is_dir():
+        return str(sibling)
+    # rustup's own default layout: `~/.cargo/bin/cargo` beside `~/.rustup`, the shape
+    # dtolnay/rust-toolchain and the hosted runner image install with no RUSTUP_HOME exported.
+    # Without it the redirected profile hides the toolchain and the proxy answers `cargo
+    # --version` with rustup's own banner, so every example was recorded "the Cargo toolchain
+    # did not report a version" (Aspose.Cells-FOSS-for-Rust, sealed 2026-11-10, 7 of 7).
+    for default in (Path(cargo).parent.parent.parent / ".rustup", Path.home() / ".rustup"):
+        if (default / "toolchains").is_dir():
+            return str(default)
+    return None
 
 
 def _clip(text: str) -> str:

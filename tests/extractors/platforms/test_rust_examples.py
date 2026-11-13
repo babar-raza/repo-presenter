@@ -271,3 +271,17 @@ def test_two_runs_of_the_same_example_produce_the_same_receipt(
     assert "0.55s" not in first[0].stderr and "target(s)" in first[0].stderr
     # The toolchain version stays: a check is only as reproducible as the toolchain that ran it.
     assert "cargo 1.98.1" in (first[0].detail or "")
+
+
+def test_rustups_default_home_beside_cargo_is_found_with_no_rustup_home_exported(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """dtolnay/rust-toolchain and the hosted image install `~/.cargo/bin/cargo` beside
+    `~/.rustup` and export no RUSTUP_HOME; the redirected profile then hides the toolchain."""
+    monkeypatch.delenv(rust_examples._RUSTUP_HOME, raising=False)
+    monkeypatch.setattr(rust_examples, "recorded_path", lambda key: None)
+    monkeypatch.setattr(rust_examples.Path, "home", classmethod(lambda cls: tmp_path / "nohome"))
+    cargo = tmp_path / ".cargo" / "bin" / "cargo"
+    assert rust_examples.rustup_home(str(cargo)) is None
+    (tmp_path / ".rustup" / "toolchains").mkdir(parents=True)
+    assert rust_examples.rustup_home(str(cargo)) == str(tmp_path / ".rustup")

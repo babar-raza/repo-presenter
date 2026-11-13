@@ -847,3 +847,66 @@ def test_two_fresh_runs_of_a_logging_example_seal_the_same_examples_json(tmp_pat
         time.sleep(1.2)  # the next run's log line carries a different second
     assert b"<timestamp> [INFO] widget: Document resources released." in written[0]
     assert written[0] == written[1]
+
+
+# --- Fences that use a name the README imports in another fence (Aspose-PDF-FOSS-for-Python) ---
+
+
+def test_the_readme_import_bindings_are_read_from_import_statements_only() -> None:
+    bindings = python_examples.readme_import_bindings(
+        [
+            _candidate(2, "from widget import greet as hello, load\nimport os.path\nx = 1\n"),
+            _candidate(1, "from widget import greet\nfrom . import nothing\nfrom m import *\n"),
+            _candidate(3, "def broken(:\n"),
+        ]
+    )
+    assert bindings == {
+        "greet": "from widget import greet",
+        "hello": "from widget import greet as hello",
+        "load": "from widget import load",
+        "os": "import os.path",
+    }
+    assert (
+        python_examples.unbound_name("Traceback...\nNameError: name 'Document' is not defined\n")
+        == "Document"
+    )
+    assert python_examples.unbound_name("ImportError: nope\n") is None
+
+
+def test_a_fence_missing_only_the_readmes_own_import_executes_with_it_as_prelude(
+    tmp_path: Path,
+) -> None:
+    """Measured: 14 of Aspose-PDF-FOSS-for-Python's 17 CONTRADICTED examples were `NameError:
+    name 'Document' is not defined`, the import sitting in the README's first fence; with that
+    import supplied they exit 0. The prelude is recorded so the README prints the program that
+    ran, and the example fact keeps it."""
+    root = tmp_path / "repo"
+    root.mkdir()
+    tree = _package(root)
+    candidates = [
+        _candidate(1, "from widget import greet\nprint(greet('one'))\n"),
+        _candidate(2, "print(greet('two'))\n"),
+        _candidate(3, "print(pdf_bytes)\n"),
+        _candidate(4, "print(Missing())\n"),
+    ]
+    receipts = {
+        r.ordinal: r for r in verify_python_examples(root, tree, candidates, tmp_path / "v")
+    }
+    assert receipts[2].outcome == "EXECUTED"
+    assert receipts[2].stdout.strip() == "hello two"
+    assert receipts[2].prelude == "from widget import greet"
+    assert "; imports supplied: from widget import greet" in receipts[2].detail
+    # A lower-case local nothing in the README binds is a fragment, never a contradiction.
+    assert receipts[3].outcome == "NOT_VERIFIED"
+    assert receipts[3].detail.startswith(
+        "fragment, not a contradiction: the fence uses `pdf_bytes`"
+    )
+    assert receipts[3].prelude == ""
+    # A capitalised name may be an export the package lacks: it stays a failure.
+    assert receipts[4].outcome == "FAILED"
+    assert receipts[4].detail.startswith("NameError")
+    facts = {f.id: f for f in example_facts(candidates, list(receipts.values()), "examples.json")}
+    assert facts["example:002"].polarity == "SUPPORTED"
+    assert facts["example:002"].attributes == {"prelude": "from widget import greet"}
+    assert facts["example:003"].polarity == "UNRESOLVED"
+    assert facts["example:004"].polarity == "CONTRADICTED"
