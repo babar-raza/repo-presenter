@@ -62,6 +62,20 @@ UPSTREAM_WRITE_ALLOWLIST = (
     Path(__file__).resolve().parents[3] / "data" / "upstream_write_allowlist.json"
 )
 
+#: The owner-controlled issue-management pilot (ruling R39): a repository listed there may have
+#: its existing issues closed/reopened (``issue``) and commented on (``issue_comment``), never a
+#: new issue created. Read on every authorization, never cached; missing or malformed grants
+#: nothing.
+ISSUE_PILOT_ALLOWLIST = Path(__file__).resolve().parents[3] / "data" / "issue_pilot.json"
+_PILOT_ISSUE_EFFECTS = frozenset({"issue", "issue_comment"})
+
+
+def _pilot_effects(slug: str) -> frozenset[str]:
+    from repo_presenter.issues.pilot import pilot_effects  # stdlib-only module; no import cycle
+
+    return pilot_effects(slug, ISSUE_PILOT_ALLOWLIST)
+
+
 WriteEffect = Literal["pull_request", "issue", "issue_comment", "internal"]
 #: Effects an allowlist entry may grant on an upstream repository. Independent of each other: a
 #: repository allowed ``pull_request`` is refused ``issue`` and ``issue_comment``.
@@ -90,6 +104,10 @@ class WriteGrant:
     #: The allowlist entry's ``first_pr_as_draft``. Every pull request this system opens on such a
     #: repository is a draft (see :func:`create_pull_request`).
     draft_required: bool = False
+    #: Granted by the R39 issue-management pilot (``data/issue_pilot.json``) rather than the R3
+    #: allowlist: maintenance of existing issues only -- never a create, and a PATCH may change
+    #: only ``state``/``state_reason`` (enforced in :func:`authorize_request`).
+    issue_pilot: bool = False
 
 
 @dataclass(frozen=True)
@@ -161,6 +179,11 @@ def authorize_write(repository: str, effect: str) -> WriteGrant:
             f"write refused: {slug} is read-only for effect {effect!r} (only "
             f"{CONTROL_REPOSITORY} may be written for it)"
         )
+    if effect in _PILOT_ISSUE_EFFECTS and effect in _pilot_effects(slug):
+        # Owner ruling R39: the issue-management pilot maintains the presenter's own existing
+        # issues on its listed repositories. A separate owner-controlled file, so the R3/R22
+        # allowlist (draft pull requests only) is unchanged.
+        return WriteGrant(repository=slug, effect=effect, upstream=True, issue_pilot=True)
     entry = _load_upstream_allowlist(UPSTREAM_WRITE_ALLOWLIST).get(slug)
     if entry is None:
         raise UpstreamWriteForbiddenError(
@@ -232,6 +255,14 @@ def authorize_request(
     def refuse(why: str) -> NoReturn:
         raise UpstreamWriteForbiddenError(f"write refused: {method.upper()} {url}: {why}")
 
+    if grant.issue_pilot:
+        if rest == "issues":
+            refuse("the issue-management pilot (R39) maintains existing issues; it never creates one")
+        if rest.startswith("issues/") and method.upper() == "PATCH" and (
+            not body or not set(body) <= {"state", "state_reason"}
+        ):
+            refuse("a pilot issue update may change only state and state_reason")
+        return grant
     if rest == "git/refs":
         ref = body.get("ref")
         if not isinstance(ref, str) or not ref.startswith("refs/heads/" + UPSTREAM_BRANCH_PREFIX):
@@ -517,6 +548,59 @@ def issue_has_comment_with_marker(
         f"{owner}/{name}#{number}: more than {ISSUE_LIST_MAX_PAGES} pages of comments - "
         "cannot prove absence"
     )
+
+
+def _read_all_pages(owner: str, name: str, base_url: str, token: str | None, fetch: FetchFn) -> list[Any]:
+    """Every item of a paginated list endpoint, or :class:`RepositoryMetadataError` -- a partial
+    read is never returned as if it were complete."""
+    items: list[Any] = []
+    separator = "&" if "?" in base_url else "?"
+    for page in range(1, ISSUE_LIST_MAX_PAGES + 1):
+        url = f"{base_url}{separator}per_page={ISSUE_LIST_PAGE_SIZE}&page={page}"
+        status_code, body = fetch(url, token)
+        if status_code == -1:
+            raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({body})")
+        if status_code != 200 or not isinstance(body, list):
+            raise RepositoryMetadataError(f"{owner}/{name}: GET {url} returned HTTP {status_code}")
+        items.extend(body)
+        if len(body) < ISSUE_LIST_PAGE_SIZE:
+            return items
+    raise RepositoryMetadataError(
+        f"{owner}/{name}: more than {ISSUE_LIST_MAX_PAGES} pages at {base_url} - cannot read it all"
+    )
+
+
+def list_issues(
+    owner: str, name: str, *, token: str | None, fetch: FetchFn = default_fetch
+) -> list[dict[str, Any]]:
+    """Every issue of ``owner/name``, open and closed, pull requests left out (a read only)."""
+    items = _read_all_pages(
+        owner, name, f"{API_ROOT}/repos/{owner}/{name}/issues?state=all", token, fetch
+    )
+    return [i for i in items if isinstance(i, dict) and "pull_request" not in i]
+
+
+def get_issue(
+    owner: str, name: str, number: int, *, token: str | None, fetch: FetchFn = default_fetch
+) -> dict[str, Any]:
+    """One issue, with ``closed_by`` (which the list endpoint omits). A read only."""
+    url = f"{API_ROOT}/repos/{owner}/{name}/issues/{number}"
+    status_code, body = fetch(url, token)
+    if status_code == -1:
+        raise RepositoryMetadataError(f"{owner}/{name}: unreachable ({body})")
+    if status_code != 200 or not isinstance(body, dict):
+        raise RepositoryMetadataError(f"{owner}/{name}: GET {url} returned HTTP {status_code}")
+    return body
+
+
+def list_issue_comments(
+    owner: str, name: str, number: int, *, token: str | None, fetch: FetchFn = default_fetch
+) -> list[dict[str, Any]]:
+    """Every comment on issue ``number``, oldest first (a read only)."""
+    items = _read_all_pages(
+        owner, name, f"{API_ROOT}/repos/{owner}/{name}/issues/{number}/comments", token, fetch
+    )
+    return [i for i in items if isinstance(i, dict)]
 
 
 IssueCloseReason = Literal["completed", "not planned"]

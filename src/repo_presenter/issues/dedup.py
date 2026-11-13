@@ -12,10 +12,31 @@ other's.
 
 from __future__ import annotations
 
+import re
+
 from repo_presenter.github.client import CreatedIssue, FetchFn, default_fetch, find_issue_with_marker
 
 MARKER_PREFIX = "<!-- repo-presenter-defect:"
 MARKER_SUFFIX = "-->"
+
+
+#: The marker the old repository-presenter project wrote (same ``repository-presenter[bot]`` App).
+#: Owner ruling R39 (2026-11-13) hands that project's open issues on the pilot repositories to
+#: this system's monitor, so :func:`parse_fingerprint` reads both; this module still never WRITES
+#: the legacy prefix, and :func:`check_dedup` (filing) still searches only for its own.
+LEGACY_MARKER_PREFIX = "<!-- repository-presenter-defect:"
+_MARKER = re.compile(
+    r"<!-- (?:repo-presenter-defect|repository-presenter-defect): (sha256:[0-9a-f]{64}) -->"
+)
+
+
+def parse_fingerprint(body: str | None) -> str | None:
+    """The defect fingerprint an issue body's marker records (either project's prefix), or
+    ``None``. A body carrying two DIFFERENT fingerprints is ambiguous and returns ``None``."""
+    if not isinstance(body, str):
+        return None
+    found = set(_MARKER.findall(body))
+    return found.pop() if len(found) == 1 else None
 
 
 def fingerprint_marker(defect_fingerprint: str) -> str:

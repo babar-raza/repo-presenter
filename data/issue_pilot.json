@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "ruling": "R39, docs/RULINGS.md (owner, 2026-11-13): issue management through the repository-presenter GitHub App; pilot = issue recording, monitoring and periodic open/close maintenance on aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript only",
+  "meaning": "Repositories whose presenter-filed issues (author bot_login, carrying a defect fingerprint marker) the scheduled issues workflow may record, re-verify and maintain. effects are github/client.py write effects: issue = close/reopen (PATCH state only; creating an issue is never granted by this file), issue_comment = the dated re-check, closing-evidence and recurrence comments. mode dry_run reports in the job summary what would be done and writes nothing upstream; live writes only after at least one recorded dry-run cycle, with the REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED kill switch set and an App installation token scoped to exactly this repository. Widening the pilot is the owner's call.",
+  "bot_login": "repository-presenter[bot]",
+  "repositories": [
+    {
+      "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+      "effects": [
+        "issue",
+        "issue_comment"
+      ],
+      "mode": "dry_run",
+      "recheck_comment_interval_days": 7,
+      "unchanged_revision_comment_interval_days": 30,
+      "added": "2026-11-13",
+      "added_by": "supervisor, executing owner ruling R39 (the owner named this repository as the pilot)"
+    }
+  ]
+}
