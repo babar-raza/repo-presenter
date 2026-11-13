@@ -3,19 +3,21 @@
   "card": "TC-008a",
   "gate": "GATE1_QUALITY",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-11T15:24:05Z",
-  "base_rev": "aff8aab8a069fe239a6ce9e455f83a21738e1a5f",
-  "head_rev": "332f0194435aa7c15789fe5d37e42060ec9e7312",
+  "generated_at": "2026-11-13T20:16:46Z",
+  "base_rev": "b067b7360d4225586e716e5276200e5a28b3bd2c",
+  "head_rev": "6ac7cd9a201e213b70c82303ee7fe7b11fb9b333",
   "card_sha256": "9bfb1881bd8187ee6b4b3cdbe28a6779537633c2165db08c8706dd9b9b98909b",
-  "checker_fileset_sha256": "febd5e3d56ef22892803d39d3d8d5302f081546ac060b411d91c461a3114198e",
+  "checker_fileset_sha256": "cb6df7b9ef799d38de71f4718c3369face3902379b53b43c5636cf9e1c770144",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v445-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/test_lane_l_hosted.py"
+    ],
     "violations": [],
     "evaluated": true
   },
@@ -26,14 +28,14 @@
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True",
           "exit_code": 0,
-          "duration_s": 0.092,
-          "stdout_sha256": "217583f806c90e4d552a90bc557a421fe8040e3907b04751fdd9e1ae5bd27c29"
+          "duration_s": 0.029,
+          "stdout_sha256": "b94330a95b17c26ad4fb59c7feddeccb10a01ddfd5765b17adef80b53768cf1c"
         },
         {
           "command": "python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q",
           "exit_code": 0,
-          "duration_s": 329.815,
-          "stdout_sha256": "70c19f6efa49839e9ef4fe0b3a59d59e93e9fb320adb75ca5796de752bb33406"
+          "duration_s": 36.006,
+          "stdout_sha256": "3e40890a446c11a8e2df503d79e60d2448c8b131211132ce74095c842b4295bf"
         }
       ],
       "all_passed": true
@@ -44,14 +46,14 @@
         {
           "command": "python ops/checks/execution_proof.py evidence/build/GATE1_QUALITY/TC-008a/call_count_proof.json warm_unchanged_rerun_calls=0 cold_runner_calls=0 evicted_cache_calls=0 corrupt_evidence_fail_closed=True",
           "exit_code": 0,
-          "duration_s": 0.107,
-          "stdout_sha256": "217583f806c90e4d552a90bc557a421fe8040e3907b04751fdd9e1ae5bd27c29"
+          "duration_s": 0.027,
+          "stdout_sha256": "b94330a95b17c26ad4fb59c7feddeccb10a01ddfd5765b17adef80b53768cf1c"
         },
         {
           "command": "python -m pytest tests/core/test_preflight.py tests/test_present.py tests/test_lane_l_hosted.py -q",
           "exit_code": 0,
-          "duration_s": 287.202,
-          "stdout_sha256": "3ac8fcd238ace670571ff4bce43743b2c281a0f225ceef2acb5330778251d14d"
+          "duration_s": 36.104,
+          "stdout_sha256": "0d30bacaaa0f3c91144a8e0c5d9c3857782c721958c0afc9a08aa400046e3877"
         }
       ],
       "all_passed": true
