@@ -1,118 +1,131 @@
 {
   "batch_size_repositories": 6,
-  "batches": [
-    {
-      "calls_cap": 30,
-      "calls_spent": 4.0,
-      "id": "001-m8-live-proof",
-      "repositories": [],
-      "tokens_cap": 50000,
-      "tokens_spent": 1352.0
-    },
-    {
-      "calls_cap": 80,
-      "calls_spent": 80.0,
-      "id": "002-m8-classification-proof",
-      "repositories": [],
-      "tokens_cap": 40000,
-      "tokens_spent": 25616.0
-    },
-    {
-      "calls_cap": 160,
-      "calls_spent": 120.0,
-      "id": "003-m8-classification-n30",
-      "repositories": [],
-      "tokens_cap": 60000,
-      "tokens_spent": 38716.0
-    },
-    {
-      "calls_cap": 200,
-      "calls_spent": 120.0,
-      "id": "004-m8-pairwise-paraphrase",
-      "repositories": [],
-      "tokens_cap": 150000,
-      "tokens_spent": 37346.0
-    },
-    {
-      "calls_cap": 180,
-      "calls_spent": 180.0,
-      "id": "005-m8-pairwise-paraphrase-v2",
-      "repositories": [],
-      "tokens_cap": 150000,
-      "tokens_spent": 44049.0
-    },
-    {
-      "calls_cap": 180,
-      "calls_spent": 180.0,
-      "id": "006-m8-pairwise-prompt-fix-validation",
-      "repositories": [],
-      "tokens_cap": 150000,
-      "tokens_spent": 68545.0
-    },
-    {
-      "calls_cap": 180,
-      "calls_spent": 156.0,
-      "id": "007-m8-paraphrase-prompt-fix-revalidation",
-      "repositories": [],
-      "tokens_cap": 150000,
-      "tokens_spent": 49161.0
-    },
-    {
-      "calls_cap": 800,
-      "calls_spent": 494.0,
-      "id": "008-lane-r-batch1-python",
-      "repositories": [
-        "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
-        "aspose-email-foss/Aspose.Email-FOSS-for-Python",
-        "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-        "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-        "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
-        "aspose-psd-foss/Aspose.PSD-FOSS-for-Python"
-      ],
-      "tokens_cap": 12000000,
-      "tokens_spent": 15207072.0
-    },
-    {
-      "calls_cap": 900,
-      "calls_spent": 900.0,
-      "id": "009-lane-r-wave2",
-      "repositories": [
-        "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
-        "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
-        "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-        "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-        "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
-        "aspose-words-foss/Aspose.Words-FOSS-for-Python"
-      ],
-      "tokens_cap": 24000000,
-      "tokens_spent": 25312378.0
-    },
-    {
-      "calls_cap": 1350,
-      "calls_spent": 116.0,
-      "id": "010-lane-r-cpp-java-wave3",
-      "repositories": [
-        "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
-        "aspose-cells-foss/Aspose.Cells-FOSS-for-Go",
-        "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
-        "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
-        "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
-        "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp"
-      ],
-      "tokens_cap": 37968567,
-      "tokens_spent": 4309050.0
-    }
-  ],
+  "batches": [],
   "meaning": "The total provider-call envelope for the whole 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md), read by the budget gate (TC-015, src/repo_presenter/core/llm/budget.py) before any non-replay provider call. Zero-call activity classes (recertification, obligations/rule checks, probes, the example verifier, ledgers, funnel, census, item-level restore where proved zero-call) are never charged against this envelope and need no entry here to proceed. A call outside an open batch, or past either cap, raises instead of calling the provider -- see docs/DELIVERY_PLAN_2026-11-07.md section 7 for the inference-class table this derives from. Only the owner raises total_calls_cap or total_tokens_cap, or changes batch_size, per_batch_cap_multiplier or stop_rule_multiplier; the supervisor opens and records batches within them.",
   "note": "Batch 001 opened 2026-11-09 by the supervisor, per R25/R11 (\"the supervisor opens and records batches within them\"), to make M8's FIRST real, live provider calls through TC-023b's prose_judge_live.py wiring -- a small, deliberately conservative cap (30 calls / 50k tokens, well under the per_batch_cap_multiplier bound since there is no prior measured median yet) to prove the pipeline end-to-end and get a first real cost reading before sizing any larger calibration batch. Credentials (GPT_OSS_ENDPOINT/GPT_OSS_API_KEY) were confirmed present by name only (never read) before opening this batch.",
   "per_batch_cap_multiplier": 1.5,
-  "ruling": "R25, docs/CONSOLIDATED_GOALS_2026-11-06.md Part E (owner, 2026-11-07, re-asked after R23)",
+  "ruling": "R31 (owner, 2026-11-13): budget reset; spend on anything that improves the certified numbers, never on building machinery",
   "schema_version": 1,
   "spent": {
-    "calls": 2351.0,
-    "tokens": 45119317.0
+    "calls": 0.0,
+    "tokens": 0.0
   },
   "stop_rule_cost_per_sealed_candidate_multiplier": 2.0,
   "total_calls_cap": 9000,
-  "total_tokens_cap": 100000000
+  "total_tokens_cap": 100000000,
+  "history": [
+    {
+      "epoch": 1,
+      "ruling": "R25, docs/CONSOLIDATED_GOALS_2026-11-06.md Part E (owner, 2026-11-07, re-asked after R23)",
+      "spent": {
+        "calls": 2351.0,
+        "tokens": 45119317.0
+      },
+      "batches": [
+        {
+          "calls_cap": 30,
+          "calls_spent": 4.0,
+          "id": "001-m8-live-proof",
+          "repositories": [],
+          "tokens_cap": 50000,
+          "tokens_spent": 1352.0
+        },
+        {
+          "calls_cap": 80,
+          "calls_spent": 80.0,
+          "id": "002-m8-classification-proof",
+          "repositories": [],
+          "tokens_cap": 40000,
+          "tokens_spent": 25616.0
+        },
+        {
+          "calls_cap": 160,
+          "calls_spent": 120.0,
+          "id": "003-m8-classification-n30",
+          "repositories": [],
+          "tokens_cap": 60000,
+          "tokens_spent": 38716.0
+        },
+        {
+          "calls_cap": 200,
+          "calls_spent": 120.0,
+          "id": "004-m8-pairwise-paraphrase",
+          "repositories": [],
+          "tokens_cap": 150000,
+          "tokens_spent": 37346.0
+        },
+        {
+          "calls_cap": 180,
+          "calls_spent": 180.0,
+          "id": "005-m8-pairwise-paraphrase-v2",
+          "repositories": [],
+          "tokens_cap": 150000,
+          "tokens_spent": 44049.0
+        },
+        {
+          "calls_cap": 180,
+          "calls_spent": 180.0,
+          "id": "006-m8-pairwise-prompt-fix-validation",
+          "repositories": [],
+          "tokens_cap": 150000,
+          "tokens_spent": 68545.0
+        },
+        {
+          "calls_cap": 180,
+          "calls_spent": 156.0,
+          "id": "007-m8-paraphrase-prompt-fix-revalidation",
+          "repositories": [],
+          "tokens_cap": 150000,
+          "tokens_spent": 49161.0
+        },
+        {
+          "calls_cap": 800,
+          "calls_spent": 494.0,
+          "id": "008-lane-r-batch1-python",
+          "repositories": [
+            "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+            "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+            "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+            "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+            "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+            "aspose-psd-foss/Aspose.PSD-FOSS-for-Python"
+          ],
+          "tokens_cap": 12000000,
+          "tokens_spent": 15207072.0
+        },
+        {
+          "calls_cap": 900,
+          "calls_spent": 900.0,
+          "id": "009-lane-r-wave2",
+          "repositories": [
+            "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+            "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+            "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+            "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
+            "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+            "aspose-words-foss/Aspose.Words-FOSS-for-Python"
+          ],
+          "tokens_cap": 24000000,
+          "tokens_spent": 25312378.0
+        },
+        {
+          "calls_cap": 1350,
+          "calls_spent": 116.0,
+          "id": "010-lane-r-cpp-java-wave3",
+          "repositories": [
+            "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+            "aspose-cells-foss/Aspose.Cells-FOSS-for-Go",
+            "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
+            "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
+            "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+            "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp"
+          ],
+          "tokens_cap": 37968567,
+          "tokens_spent": 4309050.0
+        }
+      ],
+      "closed": "2026-11-13 (owner ruling R31: budget reset)"
+    }
+  ],
+  "epoch": 2
 }
