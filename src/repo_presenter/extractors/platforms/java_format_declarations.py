@@ -26,12 +26,20 @@ constant the way the .NET switch does, so there is no identifier to join on:
    ``extension.equals("...")`` dispatch arm -- direction from the method name.
 
 Deliberately text/regex-based, not a full Java parse, for the same reason as the .NET reader: a
-regex failure here fails closed (finds nothing) rather than silently wrong. Known limitation,
-stated plainly: a method that dispatches an extension but whose handler is itself an unimplemented
-stub (e.g. this repository's own ``GltfReader.load()``, a ``// TODO`` returning an empty ``Scene``)
-is still read as "registered" -- telling dispatched-but-stubbed apart from genuinely working needs
-reading the handler body's own implementation, not just whether a dispatch arm exists, and is not
-attempted here.
+regex failure here fails closed (finds nothing) rather than silently wrong.
+
+A dispatch arm whose handler is an unimplemented stub is not a registration (the Python reader's
+own rule, ``python_format_declarations._is_stub``). Measured (hosted Lane R run 43394954743): the
+arm ``ext.equals("gltf") || ext.equals("glb")`` constructs ``GltfReader`` and calls its ``load``,
+whose whole body is ``// TODO: implement GLTF loading`` and ``return new Scene();``; read as
+registered, ``format:input.gltf`` was SUPPORTED and the README claimed the product reads glTF.
+The handler is resolved by name inside the arm (``X v = new X(...)`` then ``v.m(...)``, or
+``new X(...).m(...)``) and its method ``m`` read from the class's own body. A method whose body,
+comments removed, is empty, a lone ``return`` of nothing / ``null`` / a literal / a no-argument
+``new T()``, or a lone not-implemented throw, is a stub; a direction whose every resolved handler
+is a stub is reported as a directional *declaration* (so ``format_facts`` keeps an UNRESOLVED fact
+with the evidence) and not as a registration. An arm whose handler cannot be resolved keeps the
+earlier reading (registered), so nothing that worked before is demoted on a guess.
 """
 
 from __future__ import annotations
@@ -68,6 +76,130 @@ _METHOD_HEADER = re.compile(
 
 # `ext.equals("stl")` or `extension.equals(".pdf")` -- the dispatch arm itself.
 _EQUALS_DISPATCH = re.compile(r"\b\w+\.equals\(\s*\"(\.?[A-Za-z0-9]{1,6})\"\s*\)")
+
+
+# A handler constructed inside a dispatch arm and the method called on it.
+_HANDLER_VARIABLE = re.compile(r"\b(\w+)\s*=\s*new\s+(\w+)\s*\(")
+_HANDLER_CHAINED = re.compile(r"\bnew\s+(\w+)\s*\([^()]*\)\s*\.\s*(\w+)\s*\(")
+_CLASS_HEADER = re.compile(r"\bclass\s+(\w+)\b[^{;]*\{")
+_STUB_RETURN = re.compile(
+    r"return(?:\s+(?:null|true|false|-?\d+(?:\.\d+)?[fFdDlL]?|\"[^\"]*\""
+    r"|new\s+[\w.<>]+\s*\(\s*\)))?\s*;"
+)
+_STUB_THROW = re.compile(
+    r"throw\s+new\s+\w*(?:UnsupportedOperation|NotImplemented|NotSupported)\w*\s*\([^;]*\)\s*;"
+    r"|throw\s+new\s+\w+\s*\(\s*\"[^\"]*not\s+(?:yet\s+)?(?:implemented|supported)[^\"]*\"\s*\)\s*;",
+    re.IGNORECASE,
+)
+_NOT_A_METHOD = frozenset({"if", "for", "while", "switch", "catch", "synchronized"})
+
+
+def _skip_literal_or_comment(text: str, index: int) -> int:
+    """The index just past a string/char literal or comment starting at ``index``, else ``index``."""
+    if text.startswith("//", index):
+        end = text.find("\n", index)
+        return len(text) if end < 0 else end
+    if text.startswith("/*", index):
+        end = text.find("*/", index + 2)
+        return len(text) if end < 0 else end + 2
+    if text[index] in "\"'":
+        quote = text[index]
+        position = index + 1
+        while position < len(text) and text[position] != quote and text[position] != "\n":
+            position += 2 if text[position] == "\\" else 1
+        return position + 1
+    return index
+
+
+def _strip_comments(text: str) -> str:
+    """``text`` with comments blanked (newlines and length kept, literals kept)."""
+    out = list(text)
+    index = 0
+    while index < len(text):
+        skipped = _skip_literal_or_comment(text, index)
+        if skipped == index:
+            index += 1
+            continue
+        if text.startswith(("//", "/*"), index):
+            for position in range(index, min(skipped, len(text))):
+                if out[position] != "\n":
+                    out[position] = " "
+        index = skipped
+    return "".join(out)
+
+
+def _block_end(text: str, opening: int) -> int:
+    """The index of the ``}`` closing the ``{`` at ``opening``, or ``-1``."""
+    depth = 0
+    index = opening
+    while index < len(text):
+        skipped = _skip_literal_or_comment(text, index)
+        if skipped != index:
+            index = skipped
+            continue
+        if text[index] == "{":
+            depth += 1
+        elif text[index] == "}":
+            depth -= 1
+            if depth == 0:
+                return index
+        index += 1
+    return -1
+
+
+def _is_stub_body(inner: str) -> bool:
+    """Whether a method body (between its braces, comments removed) does nothing real."""
+    body = inner.strip()
+    return not body or bool(_STUB_RETURN.fullmatch(body) or _STUB_THROW.fullmatch(body))
+
+
+def _class_methods(text: str) -> dict[str, dict[str, list[bool]]]:
+    """For each class declared in ``text``: each method name to whether each body is a stub."""
+    stripped = _strip_comments(text)
+    classes: dict[str, dict[str, list[bool]]] = {}
+    for header in _CLASS_HEADER.finditer(stripped):
+        opening = header.end() - 1
+        end = _block_end(stripped, opening)
+        if end < 0:
+            continue
+        body = stripped[opening + 1 : end]
+        methods = classes.setdefault(header.group(1), {})
+        for method in _METHOD_HEADER.finditer(body):
+            if method.group(1) in _NOT_A_METHOD:
+                continue
+            start = method.end() - 1
+            close = _block_end(body, start)
+            if close < 0:
+                continue
+            methods.setdefault(method.group(1), []).append(_is_stub_body(body[start + 1 : close]))
+    return classes
+
+
+def _arm_handlers(body: str) -> list[tuple[list[str], list[tuple[str, str]]]]:
+    """``(extensions, [(handler_class, method)])`` for each dispatch arm of a method window: the
+    extensions its condition tests and the handlers its block constructs and calls."""
+    stripped = _strip_comments(body)
+    arms: list[tuple[list[str], list[tuple[str, str]]]] = []
+    position = 0
+    for match in _EQUALS_DISPATCH.finditer(stripped):
+        if match.start() < position:
+            continue
+        opening = stripped.find("{", match.end())
+        end = _block_end(stripped, opening) if opening >= 0 else -1
+        if end < 0:
+            break
+        condition = stripped[match.start() : opening]
+        extensions = [_normalize(ext) for ext in _EQUALS_DISPATCH.findall(condition)]
+        block = stripped[opening + 1 : end]
+        handlers = [
+            (cls, method)
+            for variable, cls in _HANDLER_VARIABLE.findall(block)
+            for method in re.findall(rf"\b{re.escape(variable)}\s*\.\s*(\w+)\s*\(", block)
+        ]
+        handlers += _HANDLER_CHAINED.findall(block)
+        arms.append((extensions, handlers))
+        position = opening
+    return arms
 
 
 def _read(path: Path) -> str | None:
@@ -119,6 +251,10 @@ def format_declarations(root: Path, tree_paths: list[str]) -> list[FormatDeclara
     all_declared: dict[str, tuple[int, str]] = {}
     input_registered: set[str] = set()
     output_registered: set[str] = set()
+    # (direction, extension) -> the handlers its dispatch arms call, resolved once every file is
+    # read (a handler class may be declared in another file).
+    handled: dict[tuple[str, str], set[tuple[str, str]]] = {}
+    methods: dict[str, dict[str, list[bool]]] = {}
 
     java_paths = [p for p in tree_paths if p.endswith(_SOURCE_SUFFIX)]
     for rel_path in java_paths:
@@ -127,6 +263,9 @@ def format_declarations(root: Path, tree_paths: list[str]) -> list[FormatDeclara
             continue
         for extension, line in _declared_extensions(text):
             all_declared.setdefault(extension, (line, rel_path))
+        for cls, found in _class_methods(text).items():
+            for method, stubs in found.items():
+                methods.setdefault(cls, {}).setdefault(method, []).extend(stubs)
         for name, body in _method_windows(text):
             lowered = name.lower()
             is_load = "load" in lowered
@@ -138,6 +277,30 @@ def format_declarations(root: Path, tree_paths: list[str]) -> list[FormatDeclara
                 input_registered.update(matched)
             if is_save:
                 output_registered.update(matched)
+            directions = ("input",) * is_load + ("output",) * is_save
+            for extensions, handlers in _arm_handlers(body):
+                for extension in extensions:
+                    for direction in directions:
+                        handled.setdefault((direction, extension), set()).update(handlers)
+
+    def stubs_of(direction: str, extension: str) -> list[str]:
+        """The handlers of a direction when every one resolved is a stub, else ``[]``."""
+        resolved = [
+            (f"{cls}.{method}", all(methods[cls][method]))
+            for cls, method in sorted(handled.get((direction, extension), ()))
+            if method in methods.get(cls, {})
+        ]
+        if not resolved or not all(stub for _, stub in resolved):
+            return []
+        return [name for name, _ in resolved]
+
+    stubbed = {
+        (direction, extension): stubs_of(direction, extension)
+        for direction, registered in (("input", input_registered), ("output", output_registered))
+        for extension in registered
+    }
+    input_registered = {ext for ext in input_registered if not stubbed[("input", ext)]}
+    output_registered = {ext for ext in output_registered if not stubbed[("output", ext)]}
 
     for extension, (line, rel_path) in sorted(all_declared.items()):
         declarations.append(
@@ -172,4 +335,20 @@ def format_declarations(root: Path, tree_paths: list[str]) -> list[FormatDeclara
                     detail=f"{extension!r} matched by a save/createSaveOptions dispatch arm",
                 )
             )
+        for direction in ("input", "output"):
+            stubs = stubbed.get((direction, extension))
+            if stubs:
+                declarations.append(
+                    FormatDeclaration(
+                        extension=extension,
+                        direction=direction,  # type: ignore[arg-type]
+                        kind="declaration",
+                        source_path=rel_path,
+                        line=line,
+                        detail=(
+                            f"{extension!r} is dispatched for {direction} only to "
+                            f"{', '.join(stubs)}, an unimplemented stub; not a registration"
+                        ),
+                    )
+                )
     return declarations

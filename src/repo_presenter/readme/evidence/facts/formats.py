@@ -150,6 +150,14 @@ def format_facts(
             )
         if extension in declared:
             corroborated.add(key)
+    # A declaration that names a direction states the format is reachable that way only through
+    # an unimplemented stub (``java_format_declarations``): evidence for the direction's fact,
+    # never a corroboration, so the fact is UNRESOLVED unless an executed example proves it.
+    for declaration in declarations:
+        if declaration.kind == "declaration" and declaration.direction is not None:
+            evidence.setdefault((declaration.direction, declaration.extension), []).append(
+                Evidence(declaration.source_path, f"line {declaration.line}; {declaration.detail}")
+            )
     supported = executed | corroborated
     facts: list[Fact] = []
     for key in sorted(evidence):
