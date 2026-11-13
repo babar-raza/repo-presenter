@@ -57,6 +57,29 @@ _TOPICS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ),
 )
 _SPACE = re.compile(r"[^a-z0-9]+")
+#: A sentence that states the project's license terms ("This project is licensed under the MIT
+#: License", "... provided without warranty under the MIT License"). The License section prints
+#: that statement from the ``license`` facts; anywhere else it is misplaced (BL-004: Aspose.3D FOSS
+#: for .NET and Cells Go printed it as a "limitation" under Scope and Limitations). Deliberately
+#: not the bare word "License": ``License``/``Metered`` are also API class names a limitation may
+#: name.
+LICENSE_STATEMENT = re.compile(
+    r"\blicen[cs]ed\s+under\b|\bunder\s+(?:the\s+)?(?:terms\s+of\s+the\s+)?\[?[\w.\- ]{1,30}"
+    r"\blicen[cs]e\b(?!\s*(?:key|file|management|class|api)\b)",
+    re.IGNORECASE,
+)
+_LICENSE_HEADING = re.compile(r"\blicen[cs]\w*\b")
+
+
+def is_license_statement(text: str) -> bool:
+    """Whether ``text`` states the project's license terms (:data:`LICENSE_STATEMENT`)."""
+    return LICENSE_STATEMENT.search(text.replace("`", "")) is not None
+
+
+def under_license_heading(heading_path: str | None) -> bool:
+    """Whether a unit's own (deepest) source heading is the License heading."""
+    parts = heading_parts(heading_path) if heading_path else []
+    return bool(parts) and _LICENSE_HEADING.search(parts[-1]) is not None
 
 
 def source_heading(unit: Fact | None) -> str | None:

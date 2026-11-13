@@ -85,6 +85,26 @@ def item_links(item: str) -> list[str]:
     return [dest for dest in _LINK_DESTINATION.findall(item) if not dest.startswith("#")]
 
 
+#: A bullet that LEADS with a document link (optionally bold): ``**[Getting started](url)** --
+#: ...``. Such an item is a pointer to a resource, the shape Documentation and Resources prints one
+#: line per link; it is never a statement of what the product cannot do (BL-004).
+_RESOURCE_ITEM = re.compile(r"^\s*(?:\*\*|__)?\[[^\]]+\]\(\s*<?(?!#)[^)\s>]+")
+
+
+def resource_link_items(text: str) -> list[str]:
+    """The top-level items of ``text`` that lead with a document link (not an in-page anchor)."""
+    return [item for item in list_items(text) if _RESOURCE_ITEM.match(item)]
+
+
+def is_link_list(text: str) -> bool:
+    """Whether ``text`` is a list of resource links: at least two items, every one carrying a
+    document link (not an in-page anchor). The maintainers' "Documentation & Resources" list is
+    the real case (Aspose.3D FOSS for .NET 059.list, Cells C++ 053.list, Email .NET 055.list,
+    Words .NET 080.list)."""
+    items = list_items(text)
+    return len(items) >= _MIN_ITEMS and all(item_links(item) for item in items)
+
+
 def missing_items(
     unit_text: str,
     destination_text: str,

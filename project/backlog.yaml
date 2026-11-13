@@ -82,11 +82,15 @@ items:
     type: defect
     source: "owner feedback 01f8407ca9 (2026-11-13T15:47Z, \"this is major problem\")"
     priority: P0
-    status: open
-    implementation_path: "diagnose section placement (reconciliation destination_section / renderer section mapping) portfolio-wide; fix the class at its root; re-run affected cells"
+    status: active
+    implementation_path: "section-fit rule (docs/DECISION_LOG.md 2026-11-13 BL-004): reconciliation keeps/moves resource-link lists to documentation_resources and supersedes license statements by License (readme/reconciliation/dispositions.py); planning owes every link of a kept links list to documentation_resources and drops license-only limitation slots (readme/composition/planning.py); BC-05 section_fit_failures blocks a misplaced unit before sealing (readme/validation/units.py); then re-run the 5 affected Lane R cells through the hosted pipeline"
     acceptance: "no candidate places resources/links or license text under Scope and Limitations; 3D .NET re-sealed with Documentation & Resources complete"
-    evidence: []
-    next_action: "fix worker"
+    evidence:
+      - "root cause: _rehome_unprintable_kind_units re-homed the kept links list (059.list) from documentation_resources to scope_limitations, so _kept_list_links never owed link_target:020-022; the model kept the License paragraph (070.paragraph) in scope_limitations and the plan made a license-only limitation slot"
+      - "Pareto over 18 latest Lane R seals: 5 affected (links list in Scope: 3D .NET, Cells C++, Email .NET, Words .NET; license in Scope: 3D .NET, Cells Go)"
+      - "zero-call proof: tests/readme/reconciliation/test_section_fit.py (real 3D .NET units) + updated test_unprintable_destination_rehoming.py; recertify --gate --base-baseline <origin/main> OK (45 seals); BC-05 section fit now fails exactly the 5 seals"
+      - "R10: 3 seals demoted on this genuine defect (3D .NET R 03b940a46f7b, Email .NET R e8cc8cca4d3a, Words .NET R 56668e8abf63), justified in data/recertification_baseline.json; lane_r_accepted 5 -> 2"
+    next_action: "integrate branch bl-004-section-fit; hosted Lane R re-run of 3D .NET, Cells C++, Cells Go, Email .NET, Words .NET (new Documentation & Resources link lines need authoring); close when 3D .NET re-seals with BC-05 section fit passing"
 
   - id: BL-005
     title: "API reference descriptions — count-only/label/file-header rows (Pareto class fix)"
