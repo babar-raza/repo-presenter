@@ -383,8 +383,9 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     # n>=50 minimum from existing data alone. 27: the sealed baseline now holds 35 seals (re-certified
     # under current code); load_sealed_baseline() counts every RECERTIFIED seal with no failing
     # checks as a clean twin, so the count follows the baseline honestly (60 -> 73 -> 78): a derived
-    # number, not a target.
-    assert registration.shortfall.clean_twin_achieved == 78
+    # number, not a target. 78 -> 77 (2026-11-13): the 3D .NET Lane L seal is NEEDS_REPAIR on genuine
+    # defects L-03/L-05 (justified in the baseline, R10), so it is no longer a clean twin.
+    assert registration.shortfall.clean_twin_achieved == 77
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113
