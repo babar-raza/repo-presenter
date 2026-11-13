@@ -132,3 +132,50 @@ def test_an_unpublished_package_is_stated_plainly() -> None:
     )
     assert rendered[0] == "`aspose-3d-foss` is not yet published on PyPI."
     assert analysis_markers("\n".join(rendered)) == []
+
+
+# --- BL-003 class K11, owned by BL-002: the pipeline's perspective printed as prose -------------
+
+K11_SEALED = (
+    # aspose-3d-foss/Aspose.3D-FOSS-for-.NET Lane R (one of 53 Core API rows).
+    (
+        "| `AnimationChannel` | Aspose.ThreeD.Animation.AnimationChannel is a public symbol with "
+        "members Add, BindPoint, ComponentType. |"
+    ),
+    # aspose-psd-foss/Aspose.PSD-FOSS-for-.NET Lane R.
+    "The verified public surface includes `Aspose.PSD.Image` for loading, manipulating, and saving.",
+    # Every sealed Lane R README with an API Reference (renderer text before this change).
+    "The verified public surface has 293 types.",
+    (
+        "It covers all 293 verified public types; the [API Reference](#api-reference) section "
+        "above covers the essentials."
+    ),
+)
+
+
+@pytest.mark.parametrize("line", K11_SEALED)
+def test_k11_pipeline_perspective_fails(line: str) -> None:
+    assert analysis_markers(line) != []
+
+
+def test_maintainer_this_checkout_is_not_refused() -> None:
+    """Cells .NET's maintainers wrote it in their own README (Lane L README.original.md:154)."""
+    line = (
+        "This checkout does not contain a `tests/` directory. These builds check compilation; they "
+        "do not provide automated behavioral test coverage."
+    )
+    assert analysis_markers(line) == []
+
+
+def test_the_renderer_and_the_review_scope_use_the_reader_facing_count() -> None:
+    from repo_presenter.readme.composition.components.terminology import canonical_forms
+    from repo_presenter.readme.review import scope
+
+    assert scope._SURFACE_SUMMARY.match("The public API has 293 types.")
+    assert scope._SURFACE_SUMMARY.match("The verified public surface has 293 types.")  # sealed
+    assert any(p.search("It covers all 5 public types; the [API Reference](#api-reference) section "
+                        "above covers the essentials.") for p in scope._RENDERER_SENTENCES)
+    # `text`, `excel` and `markdown` are format facts and ordinary words: never upper-cased.
+    forms = canonical_forms([".text", ".excel", ".markdown", ".docx"])
+    assert "text" not in forms and "excel" not in forms and "markdown" not in forms
+    assert forms["docx"] == "DOCX"

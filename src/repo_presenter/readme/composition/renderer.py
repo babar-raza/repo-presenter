@@ -813,7 +813,7 @@ def _documentation_resources(context: RenderContext) -> list[str]:
         if host.startswith("reference.") and api_included:
             count = _public_type_count(context)
             sentence += (
-                f" It covers all {count} verified public types; the "
+                f" It covers all {count} public types; the "
                 "[API Reference](#api-reference) section above covers the essentials."
             )
         lines.append(f"- **[{link_text(target)}]({target.value})** — {sentence}")
@@ -958,10 +958,11 @@ def renderer_sentences(
             for fact in context.supported("public_symbol")
         ]
         types = sum(1 for kind in kinds if kind in ("class", "enum"))
-        sentences.append(f"The verified public surface has {types} types.")
+        # Reader-facing wording, never the pipeline's "verified public surface" (BL-002 K11).
+        sentences.append(f"The public API has {types} types.")
         count = _public_type_count(context)
         sentences.append(
-            f"It covers all {count} verified public types; the "
+            f"It covers all {count} public types; the "
             "[API Reference](#api-reference) section above covers the essentials."
         )
     closing = _enterprise_paragraph(context)
@@ -1095,7 +1096,7 @@ def _api_reference(context: RenderContext) -> list[str]:
     enums = sorted(by_kind.get("enum", []), key=lambda f: f.value)
     count = len(classes) + len(enums)
     names = api_reference_names(context.facts)
-    lines = [context.unit(sid, "intro"), "", f"The verified public surface has {count} types."]
+    lines = [context.unit(sid, "intro"), "", f"The public API has {count} types."]
     lines += ["", "<details>", f"<summary>{API_SURFACE_SUMMARY}</summary>", ""]
     lines += ["### Core API", "", "| Class | Description |", "| --- | --- |"]
     lines += [f"| `{names[f.value]}` | {_symbol_description(context, f)} |" for f in classes]

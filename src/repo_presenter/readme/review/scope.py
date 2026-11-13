@@ -33,7 +33,10 @@ OPENING = "opening"
 STRUCTURE = "structure"
 _FENCE = re.compile(r"^\s*(```|~~~)")
 _NOT_VERIFIED = "> **Not verified:**"
-_SURFACE_SUMMARY = re.compile(r"^The verified public surface has \d+ types?\.\s*$")
+# Both spellings: the renderer's current one and the one sealed bundles carry (BL-002 K11).
+_SURFACE_SUMMARY = re.compile(
+    r"^The (?:verified public surface|public API) has \d+ types?\.\s*$"
+)
 _TABLE_DELIMITER = re.compile(r"^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?$")
 #: A Core API table row as the renderer prints it: ``| `Name` | description |``.
 _TYPE_ROW = re.compile(r"^\|\s*`([^`]+)`\s*\|(.*)\|$")
@@ -55,9 +58,9 @@ _RENDERER_SENTENCES = tuple(
         r"The suite covers \d+ test files under `[^`]*`\.",
         r"The \[[^\]]*\]\([^)]*\) runs .*?\.(?=\s|$)",
         r"Releases run through the \[[^\]]*\]\([^)]*\)\.",
-        r"The verified public surface has \d+ types?\.",
+        r"The (?:verified public surface|public API) has \d+ types?\.",
         (
-            r"It covers all \d+ verified public types; the \[API Reference\]\(#api-reference\) "
+            r"It covers all \d+ (?:verified )?public types; the \[API Reference\]\(#api-reference\) "
             r"section above covers the essentials\."
         ),
         r"These limitations don't apply to \[[^\]]*\]\([^)]*\)\.",

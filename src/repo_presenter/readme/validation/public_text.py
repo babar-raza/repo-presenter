@@ -46,7 +46,12 @@ _ANALYSIS = re.compile(
     r"\bfacts\.json\b|"
     r"\b(?:install_command|identity|import_path|package|public_symbol):"
     r"(?:name|version|published_version|python_versions|python_requires|distribution|"
-    r"repository|pip|cmake|npm|maven|nuget|cargo|go)\b",
+    r"repository|pip|cmake|npm|maven|nuget|cargo|go)\b|"
+    # BL-003 class K11 (docs/investigations/2026-11-13-lane-r-false-claim-review.md): the
+    # pipeline's own perspective printed as prose - its "verified public surface", a type that "is
+    # a public symbol with members ...". ("This checkout" is NOT refused: Cells .NET's maintainers
+    # wrote "This checkout does not contain a `tests/` directory" in their own README.)
+    r"\bverified\s+public\s+(?:surface|types?)\b|\bis\s+a\s+public\s+symbol\b",
     re.IGNORECASE,
 )
 # Fact polarities and verification verdicts, as the pipeline spells them (upper case, whole word).
