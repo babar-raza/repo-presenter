@@ -173,8 +173,9 @@ def test_the_closed_table_of_what_is_a_defect(
     assert is_defect(make(detector, reason)) is defect
 
 
-def test_only_report_gaps_is_informational_today() -> None:
-    assert INFORMATIONAL_DETECTORS == {"report_gaps"}
+def test_only_report_gaps_and_glance_layout_are_informational_today() -> None:
+    # glance_layout reports a diagram it would not redraw: a presentation matter, never a defect.
+    assert INFORMATIONAL_DETECTORS == {"report_gaps", "glance_layout"}
 
 
 # --- the report ---------------------------------------------------------------------------------------

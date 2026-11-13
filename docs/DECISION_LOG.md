@@ -5043,3 +5043,65 @@ commit is refused; staleness by status age is reported every hosted tick (`super
 delivery numbers) and fails under `--strict`; RULINGS checklist item 11. Details in `docs/R40_BACKLOG.md`.
 
 Backlog: BL-001
+## 2026-11-13: At a Glance reads at a glance — top-to-bottom layout (Lane R renderer) and a layout-only Lane L redraw
+
+Owner feedback, verbatim, on the certified Lane L candidate aspose-cells-foss/Aspose.Cells-FOSS-for-Java @ c65329e7257b:
+"Mermaid layout should be improved. Organize the items Core capabilities in further groups, and align groups veristically
+[vertically]. Right now At a Glance is too much to absorb and needs a lot of horizontal scrolling in browser. may be
+organize in some different way. Think on it. provide professional approach for At a Glance mermaid"; and in chat: "the
+feedback is also global requirement. At a Glance should practically be At a Glance".
+
+**Measured (Pareto), real Mermaid 10.9.1 in Chromium at an 800 px container, the 26 certified diagrams.** Natural width
+509–3054 px (median ~1640); 19 of 26 over 800 px, so the browser either scrolls or scales the labels down to 4.2–11.7 px
+(Cells Java: 3054 px, 4.2 px). Two shapes cause all of it: (1) the 21 live Lane L diagrams (the earlier
+repository-presenter's `flowchart TD` with `capl`/`capr` columns) list each group's nodes with **no links between them**;
+Mermaid ranks unlinked siblings together, so a group draws as ONE ROW whatever its `direction TB` says (Cells Java: 15
+capabilities across two 8- and 7-wide rows of unwrapped labels up to 73 characters); (2) the 5 Lane R diagrams were a
+`flowchart LR` chain of four ranks whose long input/output sentences add up across (3D .NET 1535 px). Node count is not
+the driver — label length times unlinked siblings per rank is.
+
+**Design (first principles, every node still one verified input, capability or output).** `flowchart TB`; Starting Points,
+the product, Core Capabilities and Outputs chained top to bottom (`StartingPoints --> PRODUCT --> Capabilities -->
+Outputs`, a group with nothing verified omitted with its hop); inside each group at most three nodes to a row (two for
+two or four), rows held by invisible `~~~` links where every node of a non-last row is linked (an unlinked node is free
+to sink to any rank — measured); labels wrapped at 22 characters with `<br/>` (never shortened, never reordered; a label
+holding `&`, `<` or `>` is left byte-for-byte); the product node emphasised by one `classDef` (white on #1f6feb, legible
+in GitHub's light and dark themes). Implemented once in `readme/composition/components/glance.py` (`layout_glance`,
+`parse_glance`, `estimated_width`, calibrated against the 26 real renders within ~8%); the Lane R renderer's
+`draw_at_a_glance` uses it (`RENDERER_VERSION` 37). **Further groups:** the owner asked for capabilities in further
+groups. No verified category exists to group them by — a capability carries only its title (Lane R: the plan's
+capability titles, at most six; Lane L: the live diagram's labels, whose `capl`/`capr` split is an untitled
+half-and-half cut). Untitled bands were tried and rejected: an arbitrary cut drawn as a box reads as a grouping nobody
+verified. The grid of rows of three is the grouping that is true; a titled grouping needs a verified per-capability
+category first (recorded here as the condition for it, not built — R27).
+
+**Lane L decision (R5, R14, R21, R35).** A new Lane L detector `glance_layout` (version 1, pinned) redraws a live diagram
+as a `DIAGRAM_FIX` only when (a) the body is entirely in the presenter's own diagram grammar (one product node, titled
+groups of labelled nodes, optionally in untitled bands, directions, invisible links, one chain, the product style —
+anything else, e.g. a `click` line or a titled inner group, is left alone), (b) its estimated natural width exceeds
+800 px, and (c) re-parsing the redraw yields exactly the same content: every node id and label text, every group title,
+the product label and the chain (labels gain `<br/>` breaks only) and the redraw fits. R14: nothing is dropped — the edit
+is confined to the fence body and its content equality is proved per edit. The "every node maps to a verified fact"
+condition the brief offered is replaced by this content-equality proof: a layout edit asserts nothing new, and the
+labels' truth is exactly what it was in the live README. R5/R21/R35: the owner named the sprawl a defect
+and a portfolio-wide requirement, and it is measured, so the redraw is an evidenced edit in its own right — including on
+a no-change candidate: Cells Java, the candidate the feedback was given on, is one, and a guard that applied the redraw
+only beside a content correction was built, measured (it left Cells Java and six other no-change candidates
+untouched — the opposite of the feedback) and withdrawn. But a redraw is not the content improvement R21 lets residual
+defects ride on: measured on the zero-call gate, a lone redraw re-certified Aspose.3D-FOSS-for-.NET Lane L (seal
+fa996859550e, NEEDS_REPAIR on L-03 claim contradiction / L-05 unrepaired defect) by carrying those as residuals — a
+README still stating what a verified fact contradicts, certified by a diagram. So `lane_l_review.net_improvement` needs a
+content edit (`LAYOUT_ONLY_DETECTORS`; `LANE_L_REVIEW_VERSION` 4): a layout-only run is CORRECTED when nothing else is
+wrong and blocks exactly as before when something is. `glance_layout` is informational in `report.py`: a diagram it
+declines is never a defect that refuses a run. On the 21 certified live diagrams: 19 over budget, 19 redrawn (Cells
+Rust's `Vec<u8>` label kept unwrapped), Imaging .NET (667 px) and PSD Python (522 px, a `direction LR` group, which draws
+stacked) left alone. Rule: **a live At a Glance diagram in the presenter's grammar wider than 800 px is redrawn top to
+bottom with identical content.**
+
+**Evidence.** Before/after natural widths of all 26 (Mermaid 10.9.1, 800 px container): every after-width 398–741 px
+(labels at the full 16 px), Cells Java 3054×651 → 704×996. Regressions: `tests/readme/composition/components/
+test_glance.py` (TB, chain order, ≤ 3 per row in document order, every non-last-row node linked, wrap keeps every word,
+the real Cells Java diagram re-laid out with equal content and fitting the budget, foreign grammar refused, LR group
+estimated as a column), `tests/readme/correction/detectors/test_glance_layout.py` (fence-confined redraw, CRLF kept,
+narrow and foreign diagrams untouched, nested fence ignored, the engine applying the redraw alone and beside a content
+fix, deterministic and idempotent). R10: zero-call `recertify --gate` against origin/main's baseline (see the commit).

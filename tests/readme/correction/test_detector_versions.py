@@ -47,6 +47,10 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         ("1",),
         "84730a9041b74da6f35270ce2aa9e814490eac8417a8847eccb44676f2b4861e",
     ),
+    "glance_layout.py": (
+        ("1",),
+        "ea2956b8beed9d4f9f1bb3af15ffd3cdb02f9ab83d62f6a1f7a1d68a51f80fe7",
+    ),
     "links.py": (
         ("2",),
         "59fa698291ad1610f892ba7d5a452dc17054d979d43eb29da50bc2dc2f90d881",

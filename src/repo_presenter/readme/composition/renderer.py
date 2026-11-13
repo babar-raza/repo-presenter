@@ -90,7 +90,10 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # RECONCILING -- the stage that check's repairs act on -- instead of letting preflight skip it.
 # 36 (2026-11-06): attributed maintainer content prints with no attribution line (owner ruling: the
 # attribution is internal only). Reopens every candidate sealed with the line.
-RENDERER_VERSION = "36"
+# 37 (2026-11-13): the At a Glance diagram is drawn top to bottom, at most three nodes to a row, labels
+# wrapped (owner feedback: "At a Glance should practically be At a Glance"); same nodes, new layout.
+# Sealed candidates take it by zero-call re-certification (R10), never by regeneration.
+RENDERER_VERSION = "37"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
