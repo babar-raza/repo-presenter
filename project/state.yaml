@@ -90,7 +90,13 @@ progress:
   # lane (the M9 audit/attestation pipeline is not live yet).
   # RESYNCED 2026-11-13 (lane_l_accepted 20 -> 26) after re-running `ops/checks/dashboard_matches_live.py --no-loss`:
   # live re-certification count under current code (unrecorded progress: today's Lane L wave sealed six).
-  lane_l_accepted: 26
+  # RESYNCED 2026-11-13 (lane_l_accepted 26 -> 24, BL-063/BL-064/BL-065) after re-running
+  # `ops/checks/dashboard_matches_live.py` and `python -m repo_presenter.recertify --gate` (OK): the K05 listed-count
+  # check (surface_claims rule (h)) fails Cells C++ (51d077c2ad1b: "197 public types -- is listed below" over 189
+  # rows, so its L-05 failing example is no longer an R21 residual) and HTML Python (c1526e9d7b92: "303 public types
+  # in total, listed below" over 238 rows) -- genuine defects, justified per seal in
+  # data/recertification_baseline.json (R10); no seal is deleted. Origin/main code on the same seals: R 1, L 26.
+  lane_l_accepted: 24
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
   # RESYNCED 2026-11-13 (lane_r_accepted 13 -> 0) after re-running `ops/checks/dashboard_matches_live.py`
@@ -113,7 +119,9 @@ progress:
   # docs/investigations/2026-11-13-lane-r-false-claim-review.md), so BC-18 fails all five -- genuine defects, a
   # recorded demotion, each justified per seal in data/recertification_baseline.json (R10). No seal is deleted; the
   # next Lane R run's targeted repair is handed each quote and truth. Lane L left as recorded.
-  lane_r_accepted: 0
+  # RESYNCED 2026-11-13 (lane_r_accepted 0 -> 1) after re-running `ops/checks/dashboard_matches_live.py`: unrecorded
+  # progress, not from BL-063..065 -- Cells Go's new Lane R seal 6a0507748899 re-certifies under origin/main code too.
+  lane_r_accepted: 1
   # Lane L 11 -> 9: BC-14 mechanical rules find genuine false claims in two live READMEs (HTML Python, Words Python:
   # non-exported or nonexistent types, wrong type counts) -- justified in data/recertification_baseline.json; Lane L corrects them.
   # 2026-11-06 BC-17 (benchmark parity) blocks Imaging .NET Lane R on a genuine loss (justified in the gate baseline); targeted repair restores it.

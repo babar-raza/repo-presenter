@@ -5288,3 +5288,47 @@ older pending one.
 trigger after a merge, with its run id and per-lane counts.
 
 Backlog: BL-060
+
+## 2026-11-13: BL-063/BL-064/BL-065 — member kinds, member attribution and type visibility fixed in the fact model (K03, K04, K05)
+
+Fix worker under R10/R36(b)/R38/R41; classes from `docs/investigations/2026-11-13-lane-r-false-claim-review.md`.
+Zero provider calls; no new stage or record type (R27): the existing extractor, BC-14 (`surface_claims`), renderer
+and authoring packet are corrected.
+
+**Facts (root).** `extractors/surface/extractor.py` (EXTRACTOR_VERSION 7) keeps `symbol_kind: method` for every member
+(nothing that counts, caps or places members changes) and adds `member_kind` (method / constructor / property / field /
+constant), `settable` (from the engine's own accessor reading: `{ get; private set; }` is not settable), `type_kind`
+and `bases`, attached in `with_enum_members` so every vendored-surface plugin gets them with no plugin edited
+(`extractors/platforms/net.py` untouched). `python_surface` records `@property` and its setter. The vendored C# reader
+(`tree_helpers.py`, `api_surface.py`) reads a modifier chosen by `#if CPLUSPLUS public #else internal #endif` from the
+Release branch, stops applying that condition to the whole declaration, and drops types in a definitely-false `#if`
+branch or nested in a non-public type. Re-extracted at the pinned revisions: Words .NET 618 -> 615 public types, 3D .NET
+293 -> 292 (`Chunk`); the reviewed member kinds all come out as the source states.
+
+**Text follows the facts.** Decision: a read-only property's "Gets or sets ..." doc comment is rewritten to "Gets ..."
+(the getter half is the maintainers' true description; dropping the line would lose it), in the renderer's member
+bullets and in the doc comments an author is shown; a member the facts do not classify is printed as written. Type
+batches carry `member_kinds` and a rule to call each member by its kind; reviewer records show the new attributes.
+
+**Checks (class generalisation, BL-074).** BC-14 rule (n): kind lists name members by a kind the facts allow (older
+facts decide only what they prove: no parameter list = no method; named after the type = constructor; `declaration`
+names a type's kind), "classes" names no .NET struct/enum/interface, "Gets or sets" only for settable members, read-only
+properties not offered for manipulation. Rule (o): kind lists attached to one type name its own or inherited members;
+API-row code spans the row says the type has belong to it (not a namesake); "`X`-derived `Y`" holds only when it does.
+Rule (h) also holds "N public types ... listed below" to the rows that follow. Decided not to add a type-relation rule
+("a table of `PropertyCollection` entries"): it false-flagged ordinary related-type mentions.
+
+**Prevented (replay of the sealed READMEs, zero calls).** Registered K03/K04/K05 rows flagged — sealed facts alone:
+K03 3/8, K04 5/8, K05 1/6; with facts re-extracted by extractor 7: K03 8/8, K04 5/8, K05 6/6. The three K04 rows left
+(PropertyTable relation, WeightedMode, BonePose) are semantic and stay with the reviewer.
+
+**R10.** `recertify --gate --base-baseline <origin/main baseline>`: OK after two justified genuine Lane L defects the
+listed-count check finds (Cells C++ 51d077c2ad1b L-03+L-05: "197 public types -- is listed below" over 189 rows;
+HTML Python c1526e9d7b92 L-03: 303 stated, 238 rows). Every false positive the gate surfaced on the way (PDF .NET tag
+names, TS "fieldOfViewX/Y", Email C++ "MAPI properties", Note Python attributes) was fixed at the rule and pinned by a
+test. Certified on the same seals: origin/main code R 1 / L 26; this branch R 1 / L 24. `project/state.yaml` resynced.
+
+**Does NOT decide.** Items stay `active`: done needs the hosted re-seal under extractor 7 and an R41 run id. The Lane L
+correction that would make a "listed below" count agree with its rows is a follow-up on BL-065.
+
+Backlog: BL-063, BL-064, BL-065

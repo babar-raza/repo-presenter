@@ -388,7 +388,10 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     # (2026-11-13, BL-004 baseline rewrite): the 3D Python and Cells .NET Lane R seals, RECERTIFIED and
     # previously absent from the baseline, are now recorded in it. 79 -> 77 (2026-11-13, BL-003): the
     # independent fact-check registered confirmed false claims in both, so they are NEEDS_REPAIR on BC-18.
-    assert registration.shortfall.clean_twin_achieved == 77
+    # 77 -> 76 (2026-11-13, BL-063..BL-065 baseline rewrite): Cells C++ and HTML Python Lane L are
+    # NEEDS_REPAIR on the justified K05 listed-count defect (-2); Cells Go Lane R's newer seal
+    # re-certifies (+1).
+    assert registration.shortfall.clean_twin_achieved == 76
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113
