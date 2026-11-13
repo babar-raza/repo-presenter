@@ -1239,19 +1239,27 @@ RECOVERED_FENCE_RATIONALE = "Restated: it embeds an unverified code example BC-0
 #: The wording carries "contradicted" on purpose: BC-17's accounting reads that word as the mark of
 #: an omission made on evidence (``parity_gate._NON_LOSS_RATIONALE``), and it is true -- the measured
 #: build of this checkout failed, so the block's build steps are contradicted by that measurement.
+#: It must fit the contract's rationale ``maxLength`` (``_RATIONALE_LIMIT``): the 228-character
+#: wording before it was written by this fold after the schema had already judged the reply, so the
+#: stored batch broke its own contract and every later targeted repair of that batch was rejected
+#: on this untouched unit (hosted Lane R run 43473807336, Cells C++: "dispositions[19].rationale:
+#: ... is too long", twice). ``tests/readme/reconciliation/test_rationale_bound.py`` holds it there.
 UNPROVEN_BUILD_RATIONALE = (
-    "The build steps in this block are contradicted by the measured build of this checkout, which "
-    "did not exit 0 (BC-02 forbids presenting an unproven source build); the Installation section "
-    "states only what the repository documents."
+    "Contradicted by the measured build of this checkout, which did not exit 0: BC-02 forbids an "
+    "unproven source build; Installation states only what is documented."
 )
 
 #: The R36(a) omission of a block that pip-installs a checkout holding no package manifest. It
 #: carries "contradicted" for the same reason ``UNPROVEN_BUILD_RATIONALE`` does, and it is true: the
 #: checkout itself contradicts the command - pip has no manifest there to build from.
 NO_MANIFEST_RATIONALE = (
-    "This command is contradicted by the checkout itself: the repository ships no package "
-    "manifest (pyproject.toml, setup.cfg or setup.py), so pip has nothing to build or install "
-    "from it; the Installation section gives only the verified source-checkout path."
+    "Contradicted by the checkout itself: it ships no package manifest (pyproject.toml, "
+    "setup.cfg or setup.py), so pip has nothing to install from it."
+)
+#: The omission of an install command for a package the registry does not list.
+UNPUBLISHED_RATIONALE = (
+    "The registry lists no such package, so this install command cannot be run; Installation "
+    "states the package is unpublished and gives the source checkout."
 )
 
 
@@ -1553,11 +1561,7 @@ def normalize(
             continue
         if unit in unpublished:
             if disposition != "OMIT_UNSUPPORTED":
-                entry["rationale"] = (
-                    "The registry lists no such package, so this install command cannot be run; "
-                    "the Installation section states that the package is unpublished and gives "
-                    "the source checkout."
-                )
+                entry["rationale"] = UNPUBLISHED_RATIONALE
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = sorted(cited | {unpublished[unit]})
@@ -3386,8 +3390,45 @@ def placement_errors(output: dict[str, Any], facts: FactsDocument) -> list[str]:
     return errors
 
 
+def bounded_rationale(text: str, limit: int = _RATIONALE_LIMIT) -> str:
+    """``text`` cut to the contract's rationale ``maxLength`` at a word boundary, marked "...".
+
+    A rationale is the internal record of why a unit was placed or omitted: the renderer never
+    prints it and the reviewer's packet withholds it (``review.packet.AUTHOR_NARRATIVE_KEYS``), so
+    bounding it changes no README text. Its leading words -- what ``parity_gate`` reads
+    ("contradicted", "BC-03", ...) and every fold writes first -- are always kept."""
+    text = str(text or "")
+    if len(text) <= limit:
+        return text  # byte-identical: a sentinel such as RECOVERED_COVERAGE_RATIONALE is matched exactly
+    cut = text.strip()[: max(limit - 3, 0)]
+    if " " in cut:
+        cut = cut.rsplit(" ", 1)[0]
+    return cut.rstrip(" ,;:") + "..."
+
+
+def bound_rationales(output: dict[str, Any], limit: int = _RATIONALE_LIMIT) -> list[str]:
+    """Bound every disposition's rationale to the contract, in place; the unit IDs it changed.
+
+    The folds in ``normalize`` run after the schema judged the reply, so a rationale a fold writes
+    is never checked against ``maxLength`` again until the stored batch is re-read: the cache then
+    reads it as stale (a fresh, paid call every run) and a targeted repair merging into it is
+    rejected on a unit it never touched (hosted run 43473807336)."""
+    changed: list[str] = []
+    for entry in output.get("dispositions", []) if isinstance(output, dict) else []:
+        if not isinstance(entry, dict) or not isinstance(entry.get("rationale"), str):
+            continue
+        bounded = bounded_rationale(entry["rationale"], limit)
+        if bounded != entry["rationale"]:
+            entry["rationale"] = bounded
+            changed.append(str(entry.get("unit_id", "?")))
+    return changed
+
+
 def reconcile_checks(
     output: dict[str, Any], facts: FactsDocument, policy: PlanningPolicy = DEFAULT_POLICY
 ) -> list[str]:
-    """The job's own checks for the runner: normalise, then judge what remains."""
-    return normalize(output, facts, policy) + placement_errors(output, facts)
+    """The job's own checks for the runner: normalise, then judge what remains. What is stored
+    satisfies the contract's rationale bound whichever fold wrote it."""
+    errors = normalize(output, facts, policy)
+    bound_rationales(output)
+    return errors + placement_errors(output, facts)

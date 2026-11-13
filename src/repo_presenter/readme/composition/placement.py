@@ -576,13 +576,17 @@ def placements(
         # requires wherever the maintainers' own wording used a short variant of it; a code block
         # whose disposition cites an OPEN findings-register row, without the lines it confirms
         # false (``must_correct.without_quoted_lines``).
-        from repo_presenter.readme.validation.must_correct import cited_finding_quotes
+        from repo_presenter.readme.validation.must_correct import (
+            cited_finding_quotes,
+            withheld_rows_form,
+        )
 
+        false_quotes = cited_finding_quotes(entry.get("fact_ids") or (), facts.repository)
+        # A table or list citing OPEN register rows prints without exactly the rows / items they
+        # confirm false (``must_correct.withheld_rows_form``; 3D .NET 050.table, 3D Python
+        # 060.table, hosted runs 43473790998 / 43473796319).
         text = kept_unit_form(
-            unit_id,
-            text,
-            facts,
-            cited_finding_quotes(entry.get("fact_ids") or (), facts.repository),
+            unit_id, withheld_rows_form(unit_id, text, false_quotes), facts, false_quotes
         )
         also: tuple[str, ...] = ()
         topical = False

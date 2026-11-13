@@ -416,7 +416,12 @@ def merge_equivalent(defects: Sequence[Defect]) -> list[Defect]:
 # defect is routed to the authoring task(s) whose units its merged findings name (loop.
 # _route_section_defect), not the section's first task (Aspose.BarCode-FOSS-for-Python, hosted
 # run 43394959529, whose api_reference finding "1" spent on the hubs task).
-REPAIR_LOGIC_VERSION = "2"
+# "3": a quote is matched to the unit that prints it with the renderer's code spans ignored, every
+# failure quote of a merged validation record is routed (not only the first), a renderer-printed
+# (fact docstring) line is recorded as a facts defect with no call, and a stored S4 batch's
+# rationales are bounded to its contract before a patch merges into it (hosted Lane R runs
+# 43473807336 and 43473803090, BL-076).
+REPAIR_LOGIC_VERSION = "3"
 
 
 @dataclass

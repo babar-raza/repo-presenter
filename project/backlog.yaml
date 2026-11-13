@@ -936,3 +936,17 @@ items:
     evidence: []
     next_action: "after PR #64 merges"
     updated: "2026-11-13"
+
+  - id: BL-076
+    title: "Targeted repair could not reach BC-18 / BC-05 / BC-17 defects: contract-breaking stored rationales, code-span quote mapping, renderer-printed lines, register-false table rows"
+    type: defect
+    source: "hosted Lane R runs 43473807336 (Cells C++) and 43473803090 (Cells .NET) failed BC-18 after targeted repair; supervisor added 43473790998 (3D .NET) and 43473796319 (3D Python), BC-05/BC-17 on a superseded maintainers' table"
+    priority: P0
+    status: active
+    implementation_path: "existing repair stage only (R27): reconciliation/dispositions.py (omission rationales within the contract's 160, bound_rationales in reconcile_checks); repair/loop.py (stored S4 batch bounded before a patch merges; backtick-insensitive quote mapping; every failure quote routed; renderer-printed docstring lines recorded as facts defects with no call; printed_by_slots in the packet); validation/must_correct.py + placement.py + independent_reviewer.py + repair/restore_units.py (a kept table/list citing OPEN register rows prints without exactly those rows/items; the zero-call restore cites them)"
+    acceptance: "a re-run of the four cells under the fixed code shows no repair attempt rejected for a rationale length, no 'no stored disposition' for a quote an authored unit prints, no model call for a renderer-printed line (recorded facts_defects instead), and 3D .NET 050.table / 3D Python 060.table and 010.list restored zero-call with no BC-05/BC-17/BC-18 failure from them; R10 gate OK"
+    evidence:
+      - "2026-11-13: classification of every repair attempt in the four logs (gh run view <id> --log) recorded in the DECISION_LOG entry for BL-076"
+      - "2026-11-13: tests/readme/repair/test_repair_robustness_bl076.py (12 regression tests from the logged shapes) pass; replay on the real sealed bundles of 3D .NET and 3D Python: restore keeps 050.table / 060.table / 010.list PRESERVE_ATTRIBUTED citing 7 / 5 / 1 register rows, no register quote printed, every withheld span register-backed (parity_gate.withheld_by_finding)"
+    next_action: "supervisor merges; the hosted re-run of the four cells (R41 re-verification of every candidate via recertify.yml) is the closing evidence; renderer-printed facts defects (Cells .NET Style.Borders/Style.Font/Workbook.Save docstrings) are owned by the extractor/facts workers"
+    updated: "2026-11-13"
