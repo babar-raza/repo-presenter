@@ -187,23 +187,26 @@ def _tree_paths(root: Path) -> list[str]:
     return sorted(paths)
 
 
+def _original_readme_bytes(clone_path: Path) -> bytes:
+    """The pinned revision's README.md, or empty bytes when the revision has none.
+
+    Owner ruling R36: a repository with no README.md is a valid Lane R input -- Lane R writes
+    one. Measured live (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, run 41130121031) this used to
+    crash, and then to raise "nothing to reconcile". An absent README is an empty inherited
+    document: zero inherited units, original text "", so the candidate is authored from facts
+    alone, BC-17 has no published text to fall below (validation/parity.py returns no failures
+    for an empty benchmark), and no live-README loss can be invented."""
+    readme_path = clone_path / "README.md"
+    return readme_path.read_bytes() if readme_path.is_file() else b""
+
+
 def _document_with_inherited_units(
     repository: str, base: FactsDocument, source_revision: str, clone_path: Path
 ) -> FactsDocument:
     """The one real inherited-unit merge this process needs -- computed once, not re-derived by
     every stage the way six separate processes each had to."""
     tree_paths = _tree_paths(clone_path)
-    readme_path = clone_path / "README.md"
-    if not readme_path.is_file():
-        # Measured live (aspose-gis-foss/Aspose.GIS.FOSS-for-.Net, run 41130121031): a registry
-        # entry whose repository genuinely has no README.md at its pinned revision crashed with
-        # a raw, uncaught FileNotFoundError and a Python traceback instead of a legible,
-        # classified failure -- present.py's own run() wrapper only ever catches a PresenterError.
-        raise PresenterError(
-            f"{repository}: no README.md at the pinned revision ({clone_path}); this cascade "
-            "has nothing to reconcile without one"
-        )
-    readme_bytes = readme_path.read_bytes()
+    readme_bytes = _original_readme_bytes(clone_path)
     public_symbol_facts = [f for f in base.facts if f.kind == "public_symbol"]
     inherited = inherited_unit_facts("README.md", readme_bytes, public_symbol_facts, tree_paths)
     kept = tuple(f for f in base.facts if f.kind != "inherited_unit")
@@ -1004,7 +1007,7 @@ def run_cascade(
     out_dir.mkdir(parents=True, exist_ok=True)
     write_investigation(investigation, out_dir / "investigation.json")
 
-    original_bytes = (clone_path / "README.md").read_bytes()
+    original_bytes = _original_readme_bytes(clone_path)
     original = original_bytes.decode("utf-8", errors="replace")
     tree_paths = _tree_paths(clone_path)
     repairs = RepairLedger(

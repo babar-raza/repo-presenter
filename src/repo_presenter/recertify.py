@@ -209,7 +209,10 @@ def fetch_source(
     if listed.returncode != 0:
         raise RecertifyError(f"ls-tree of {repository}@{revision[:12]} failed: {listed.stderr.strip()}")
     paths = tuple(sorted(p for p in listed.stdout.split("\0") if p))
-    readme = None
+    # R36: a revision with no README.md is a valid Lane R input (an empty inherited document, as
+    # in cascade._original_readme_bytes); ``None`` is kept for a README.md the tree lists but
+    # that cannot be read, which still fails closed (SOURCE).
+    readme: bytes | None = b"" if "README.md" not in paths else None
     if "README.md" in paths:
         import subprocess
 
@@ -377,7 +380,7 @@ def _evaluate_lane_r(
     details: list[str] = []
     if source.readme is None:
         failing.append("SOURCE")
-        details.append("SOURCE: the pinned revision has no README.md to judge preservation against")
+        details.append("SOURCE: the pinned revision's README.md could not be read")
         original = ""
     else:
         original = source.readme.decode("utf-8", errors="replace")
