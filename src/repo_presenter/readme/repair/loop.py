@@ -27,6 +27,7 @@ regenerate unrelated units.
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from functools import partial
@@ -165,7 +166,10 @@ def reject_uncarried_units(checks: Checks, task: SectionTask) -> Checks:
 
 
 def keep_unflagged_units(
-    checks: Checks, original: Mapping[str, Any], quote: str
+    checks: Checks,
+    original: Mapping[str, Any],
+    quote: str | Sequence[str],
+    named_slots: Collection[str] = (),
 ) -> Checks:
     """Refuse a targeted S6 revision that rewrites a unit the finding does not name.
 
@@ -173,12 +177,21 @@ def keep_unflagged_units(
     other unit of the same section that the revision changes is regeneration of unrelated
     content, which a targeted repair may not do. A quote that matches no unit names none, so the
     guard does not narrow that repair.
+
+    A merged defect carries several equivalent findings, so ``quote`` may be every one of their
+    quotes and ``named_slots`` the slots a finding names by its type (``_route_section_defect``):
+    each names its own unit, and every named unit may change (Aspose.BarCode-FOSS-for-Python,
+    hosted run 43394959529: seventeen merged findings, only the first quote's unit was allowed to
+    change, and the reply was refused as a no-op).
     """
+    quotes = [quote] if isinstance(quote, str) else list(quote)
+    quotes = [q for q in quotes if q]
     flagged = {
         unit.get("slot")
         for unit in original.get("units", [])
-        if isinstance(unit, dict) and quote and quote in str(unit.get("text", ""))
+        if isinstance(unit, dict) and any(q in str(unit.get("text", "")) for q in quotes)
     }
+    flagged.update(named_slots)
     if not flagged:
         return checks
     stored = {
@@ -693,17 +706,148 @@ def _regenerate_section(
     return result.output
 
 
-def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
-    task = next((t for t in rc.tasks if t.section_id == defect.section_id), None)
-    if task is None:
-        return _unrepairable(defect, repairs, "no authoring task holds this section")
-    loaded = rc.prompts["section_authoring"]
-    key = request_hash(
+def _task_key(rc: RepairContext, loaded: LoadedManifest, task: SectionTask) -> str:
+    return request_hash(
         loaded,
         task.packet,
         bound_authoring_citations(authoring_schema(loaded, task), task),
         model=effective_model(loaded, rc.context),
     )
+
+
+_OUTCOME_RANK = {"repaired": 0, "escalated": 1, "unrepairable": 2}
+
+
+@dataclass(frozen=True)
+class _Route:
+    """One authoring task a (possibly merged) S6 defect is routed to: the task, the defect
+    narrowed to the findings that task holds, and the slots those findings name by type."""
+
+    task: SectionTask
+    defect: Defect
+    named_slots: frozenset[str] = frozenset()
+
+
+def _named_type_slots(task: SectionTask, quote: str, facts: FactsDocument) -> set[str]:
+    """The ``type:`` slots whose type a quote names: the rendered API Reference row prints the
+    type's name beside the authored sentence, so a finding's quote usually carries the name and
+    not the unit's exact text."""
+    if not quote:
+        return set()
+    by_id = {fact.id: fact for fact in facts.facts}
+    named: set[str] = set()
+    for slot in task.slots:
+        if not slot.startswith("type:"):
+            continue
+        fact = by_id.get(slot.removeprefix("type:"))
+        if fact is None:
+            continue
+        short = fact.value.rsplit(".", 1)[-1]
+        if re.search(rf"(?<!\w){re.escape(short)}(?!\w)", quote):
+            named.add(slot)
+    return named
+
+
+def _route_section_defect(
+    rc: RepairContext, defect: Defect, loaded: LoadedManifest
+) -> list[_Route]:
+    """The authoring task(s) an S6 defect's findings are about.
+
+    ``api_reference`` has one task for its intro and hubs and one per batch of undocumented types
+    (``authoring._type_batches``), all under the same section id, and a merged defect can hold
+    findings about several of them. Each finding goes to the task whose stored units contain its
+    quote, else to the type batch whose ``type:`` slot its quote names; a defect none of whose
+    findings is located keeps the first task, as before. Measured on
+    Aspose.BarCode-FOSS-for-Python (hosted run 43394959529): seventeen findings about type rows
+    merged into one defect, the first (hubs) task was revised, the model returned it unchanged
+    and the no-op refusal made the whole finding unrepairable.
+    """
+    candidates = [t for t in rc.tasks if t.section_id == defect.section_id]
+    if len(candidates) <= 1:
+        return [_Route(task, defect) for task in candidates]
+    texts: list[list[str]] = []
+    for task in candidates:
+        stored = rc.store.get(_task_key(rc, loaded, task)) or {}
+        texts.append(
+            [
+                str(unit.get("text", ""))
+                for unit in stored.get("units", [])
+                if isinstance(unit, dict)
+            ]
+        )
+    primary = {k: v for k, v in defect.record.items() if k != "equivalent_findings"}
+    findings = [primary, *defect.record.get("equivalent_findings", [])]
+    owned: dict[int, list[dict[str, Any]]] = {}
+    named: dict[int, set[str]] = {}
+    for finding in findings:
+        quote = str(finding.get("quote") or "")
+        holders = [i for i, held in enumerate(texts) if quote and any(quote in t for t in held)]
+        if not holders:
+            for i, task in enumerate(candidates):
+                slots = _named_type_slots(task, quote, rc.facts)
+                if slots:
+                    holders.append(i)
+                    named.setdefault(i, set()).update(slots)
+        for i in holders:
+            owned.setdefault(i, []).append(finding)
+    if not owned:
+        return [_Route(candidates[0], defect)]
+    routes: list[_Route] = []
+    for i in sorted(owned):
+        mine = owned[i]
+        record = dict(mine[0])
+        if len(mine) > 1:
+            record["equivalent_findings"] = mine[1:]
+        routes.append(
+            _Route(candidates[i], replace(defect, record=record), frozenset(named.get(i, ())))
+        )
+    return routes
+
+
+def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
+    if not any(t.section_id == defect.section_id for t in rc.tasks):
+        return _unrepairable(defect, repairs, "no authoring task holds this section")
+    loaded = rc.prompts["section_authoring"]
+    routes = _route_section_defect(rc, defect, loaded)
+    if len(routes) == 1:
+        route = routes[0]
+        return _repair_task(rc, route.defect, route.task, repairs, route.named_slots)
+    # One fingerprint, several tasks: each is repaired against its own findings, and the one
+    # ledger entry the fingerprint has says what happened to each.
+    changed = False
+    entries: list[tuple[SectionTask, dict[str, Any]]] = []
+    for route in routes:
+        changed = _repair_task(rc, route.defect, route.task, repairs, route.named_slots) or changed
+        entries.append((route.task, dict(repairs.attempts.get(defect.fingerprint, {}))))
+    best = min(
+        (entry for _, entry in entries),
+        key=lambda entry: _OUTCOME_RANK.get(str(entry.get("outcome")), len(_OUTCOME_RANK)),
+    )
+    merged = {
+        **best,
+        "label": defect.label,
+        "changes": [change for _, entry in entries for change in entry.get("changes", [])],
+        "reason": "; ".join(
+            f"{task.label}: {entry.get('outcome')}"
+            + (f" ({entry['reason']})" if entry.get("reason") else "")
+            for task, entry in entries
+        ),
+        "tasks": [task.label for task, _ in entries],
+    }
+    repairs.attempts[defect.fingerprint] = merged
+    repairs.write()
+    return changed
+
+
+def _repair_task(
+    rc: RepairContext,
+    defect: Defect,
+    task: SectionTask,
+    repairs: RepairLedger,
+    named_slots: Collection[str] = (),
+) -> bool:
+    loaded = rc.prompts["section_authoring"]
+    key = _task_key(rc, loaded, task)
     original = rc.store.get(key)
     if original is None:
         # Same gap and fix as _repair_plan's: --restore-sealed-bundle restores a previous seal's
@@ -739,7 +883,15 @@ def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) ->
     )
     checks = reject_title_verbatim_opening(checks, task)
     checks = reject_uncarried_units(checks, task)
-    checks = keep_unflagged_units(checks, original, str(defect.record.get("quote", "")))
+    checks = keep_unflagged_units(
+        checks,
+        original,
+        [
+            str(finding.get("quote") or "")
+            for finding in [defect.record, *defect.record.get("equivalent_findings", [])]
+        ],
+        named_slots,
+    )
     facts = rc.facts.facts
     probe = SlotSetProbe(
         frozenset(task.slots),
