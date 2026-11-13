@@ -20,8 +20,9 @@ Routing: S6 (one authored section), S5 (the plan, reached by an S6 slot-set esca
 (``reconciliation/patch.py``): the units at fault are the inherited units whose placed text holds
 the finding's quote, the reply contract is cut down to those units, the reply is merged into the
 stored batch and judged by the batch's own checks, and its ledger is derived from the difference.
-A defect that names no placed unit is recorded unrepairable: a whole-batch S4 revision would
-regenerate unrelated units.
+A defect that names no placed unit but whose quote an authoring task's stored units print is
+repaired in that task (the S6 path, ``_authored_routes``); one that names neither is recorded
+unrepairable: a whole-batch S4 revision would regenerate unrelated units.
 """
 
 from __future__ import annotations
@@ -685,6 +686,12 @@ def _repair_reconciliation(
         rc.prompts["targeted_repair"].manifest.sampling.max_output_tokens,
     )
     if scope is None:
+        # The quote is not in any inherited unit, so no disposition prints it -- but an authored
+        # section may (a BC-18 check's earliest stage is RECONCILING when any of its register rows
+        # is printed by a unit, and its unit-less failures ride along in one S4 defect).
+        routes = _authored_routes(rc, defect, rc.prompts["section_authoring"])
+        if routes:
+            return _repair_routes(rc, defect, routes, repairs)
         return _unrepairable(
             defect,
             repairs,
@@ -881,11 +888,68 @@ def _route_section_defect(
     return routes
 
 
+def _squash(text: str) -> str:
+    return " ".join(text.split())
+
+
+def _authored_routes(
+    rc: RepairContext, defect: Defect, loaded: LoadedManifest
+) -> list[_Route]:
+    """The authoring tasks, in any section, whose stored units print one of the defect's quotes.
+
+    For a defect routed to S4 that names no inherited unit: its quote is generated text, and the
+    task whose stored units hold it is the one a repair may revise. Measured on
+    Aspose.Email-FOSS-for-.Net (hosted Lane R run 43405254498): BC-18's earliest causal stage was
+    RECONCILING because two of its register quotes were printed by inherited units, so its
+    unit-less failures became one S4 defect naming no unit, recorded "no stored disposition of an
+    inherited unit is named by this defect" -- a quote in authored prose had no path to the S6
+    repair that owns it. Whitespace is squashed on both sides, as BC-18 matches the README. A quote
+    no task's stored units hold (renderer-owned text) routes nowhere.
+    """
+    primary = {k: v for k, v in defect.record.items() if k != "equivalent_findings"}
+    findings = [
+        f for f in [primary, *defect.record.get("equivalent_findings", [])] if f.get("quote")
+    ]
+    if not findings:
+        return []
+    routes: list[_Route] = []
+    for task in rc.tasks:
+        stored = rc.store.get(_task_key(rc, loaded, task)) or {}
+        held = [
+            _squash(str(unit.get("text", "")))
+            for unit in stored.get("units", [])
+            if isinstance(unit, dict)
+        ]
+        mine = [
+            f
+            for f in findings
+            if _squash(str(f["quote"])) and any(_squash(str(f["quote"])) in t for t in held)
+        ]
+        if not mine:
+            continue
+        record = dict(mine[0])
+        if len(mine) > 1:
+            record["equivalent_findings"] = mine[1:]
+        routes.append(
+            _Route(
+                task,
+                replace(defect, stage="S6", section_id=task.section_id, record=record),
+            )
+        )
+    return routes
+
+
 def _repair_section(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
     if not any(t.section_id == defect.section_id for t in rc.tasks):
         return _unrepairable(defect, repairs, "no authoring task holds this section")
     loaded = rc.prompts["section_authoring"]
-    routes = _route_section_defect(rc, defect, loaded)
+    return _repair_routes(rc, defect, _route_section_defect(rc, defect, loaded), repairs)
+
+
+def _repair_routes(
+    rc: RepairContext, defect: Defect, routes: Sequence[_Route], repairs: RepairLedger
+) -> bool:
+    """Repair each routed task against its own findings; one ledger entry per fingerprint."""
     if len(routes) == 1:
         route = routes[0]
         return _repair_task(rc, route.defect, route.task, repairs, route.named_slots)

@@ -251,12 +251,20 @@ def _source_checkout_fact(
 _SOURCE_INSTALL_KINDS = frozenset({"source", "source_checkout"})
 
 
+#: Manifest names an ecosystem reads as build configuration but its build tool cannot start from:
+#: ``dotnet build`` in a directory holding only ``Directory.Build.props`` fails (MSB1003), so the
+#: clone-and-build template must not be printed for it (Aspose.Email-FOSS-for-.Net, 2026-11-13:
+#: the root holds no .sln/.csproj, only Directory.Build.props; register row "dotnet build").
+NOT_A_BUILD_ENTRY = frozenset({"Directory.Build.props"})
+
+
 def _has_root_manifest(spec: EcosystemSpec, tree_paths: Sequence[str]) -> bool:
     """Whether the checkout root holds a file the ecosystem's build tool starts from."""
     return any(
         "/" not in path and fnmatchcase(path, glob)
         for path in tree_paths
         for glob in spec.manifest_globs
+        if glob not in NOT_A_BUILD_ENTRY
     )
 
 

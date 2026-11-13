@@ -140,3 +140,85 @@ def test_the_repair_packet_carries_the_sections_own_implementation_facts_only() 
     ids = {record["id"] for record in packet["facts"]}
     assert {STUB, GUARD} <= ids
     assert NESTED not in ids
+
+
+COLLADA = "public_symbol:aspose_widget_foss.colladaformat"
+CONTENT_TYPE = "implementation:returns.aspose_widget_foss.colladaformat.content_type.getter"
+
+
+def _collada_facts() -> FactsDocument:
+    """The real fact shape: Aspose.3D-FOSS-for-Python's ColladaFormat.content_type property
+    returns 'model/vnd.collada+xml' (source_detail._python_function, constant_return)."""
+    base = _facts()
+    member = "aspose_widget_foss.ColladaFormat.content_type"
+    extra = (
+        _symbol(COLLADA, "aspose_widget_foss.ColladaFormat"),
+        Fact(
+            CONTENT_TYPE,
+            "implementation",
+            f"{member} getter always returns 'model/vnd.collada+xml'",
+            (Evidence("aspose_widget_foss/collada.py", "line 23; the member's only statement"),),
+            attributes={
+                "aspect": "constant_return",
+                "member": member,
+                "accessor": "getter",
+                "returns": "'model/vnd.collada+xml'",
+            },
+        ),
+    )
+    return FactsDocument(base.repository, base.source_revision, (*base.facts, *extra))
+
+
+def _type_units(text_for: dict[str, str], cites: dict[str, list[str]]) -> dict:
+    return {
+        "units": [
+            {
+                "section": "api_reference",
+                "slot": f"type:{fact_id}",
+                "text": text,
+                "fact_ids": cites.get(fact_id, [fact_id]),
+            }
+            for fact_id, text in text_for.items()
+        ],
+        "omitted": [],
+    }
+
+
+def _stray_errors(errors: list[str]) -> list[str]:
+    return [error for error in errors if "identifiers that are not accepted" in error]
+
+
+def test_a_unit_may_spell_the_constant_its_own_implementation_fact_verifies() -> None:
+    # Hosted run 43405242028: "unit type:...colladaformat: identifiers that are not accepted fact
+    # values: vnd.collada", three times, after the batch began carrying this fact.
+    facts = _collada_facts()
+    (task,) = _type_batches(make_entry(), facts, [])
+    assert CONTENT_TYPE in task.slot_facts[f"type:{COLLADA}"]
+    output = _type_units(
+        {
+            COLLADA: "ColladaFormat is the COLLADA file format, whose content type is "
+            "model/vnd.collada+xml.",
+            OPTIONS: "Code128Options holds the settings for Code 128 symbols.",
+            RENDERER: "PdfRenderer is a placeholder: its render method raises "
+            "NotImplementedError.",
+        },
+        {COLLADA: [COLLADA, CONTENT_TYPE], RENDERER: [RENDERER, STUB]},
+    )
+    errors = unit_checks(output, task, facts, "Aspose.Widget FOSS for Python")
+    assert _stray_errors(errors) == [], errors
+
+
+def test_another_types_unit_may_not_spell_that_constant() -> None:
+    facts = _collada_facts()
+    (task,) = _type_batches(make_entry(), facts, [])
+    output = _type_units(
+        {
+            COLLADA: "ColladaFormat is the COLLADA file format.",
+            OPTIONS: "Code128Options writes model/vnd.collada+xml output.",
+            RENDERER: "PdfRenderer is a placeholder: its render method raises "
+            "NotImplementedError.",
+        },
+        {RENDERER: [RENDERER, STUB]},
+    )
+    errors = _stray_errors(unit_checks(output, task, facts, "Aspose.Widget FOSS for Python"))
+    assert len(errors) == 1 and f"type:{OPTIONS}" in errors[0] and "vnd.collada" in errors[0]

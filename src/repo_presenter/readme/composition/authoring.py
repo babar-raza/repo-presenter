@@ -800,9 +800,16 @@ def _type_batches(
 def authoring_schema(manifest: LoadedManifest, task: SectionTask) -> dict[str, Any]:
     """The authoring schema specialised for one task: its section and exactly its slots."""
     schema = copy.deepcopy(manifest.manifest.output.schema_)
-    if not task.slots:
-        return schema
     units = schema["properties"]["units"]
+    if not task.slots:
+        # No slot to fill (documentation_resources included only for a unit reconciliation
+        # placed there, its links all non-SUPPORTED): unit_checks discards every unit such a task
+        # returns, but binding judges them first, and the manifest's own unpinned fact_ids let
+        # the model cite anything. Words .NET (hosted run 43405227517): a unit citing the
+        # CONTRADICTED link_target:020 was rejected twice. Ask for exactly what is kept: none.
+        units["minItems"] = 0
+        units["maxItems"] = 0
+        return schema
     units["minItems"] = len(task.slots)
     units["maxItems"] = len(task.slots)
     item = units["items"]
@@ -1289,6 +1296,29 @@ def _inherited_unit_tokens(value: str) -> set[str]:
     return found
 
 
+def implementation_identifiers(
+    facts: FactsDocument, fact_ids: Iterable[str]
+) -> frozenset[str]:
+    """Identifiers spelled inside a SUPPORTED ``implementation`` fact named in ``fact_ids``: the
+    member, a constant it returns, the exception it raises. Only a unit whose own slot was handed
+    the fact (``_type_batches``) may spell them; ``implementation`` is never a general identifier
+    source (``NON_IDENTIFIER_KINDS``). Measured on Aspose.3D-FOSS-for-Python (hosted run
+    43405242028): ColladaFormat's batch carried its content_type constant return
+    ('model/vnd.collada+xml'), the model stated it, and ``vnd.collada`` was refused three times."""
+    ids = set(fact_ids)
+    if not ids:
+        return frozenset()
+    found: set[str] = set()
+    for fact in facts.by_kind("implementation"):
+        if fact.polarity != "SUPPORTED" or fact.id not in ids:
+            continue
+        found.update(identifier_tokens(fact.value))
+        exception = (fact.attributes or {}).get("exception", "")
+        if exception:
+            found.add(exception)
+    return frozenset(found)
+
+
 def cited_inherited_identifiers(facts: FactsDocument, fact_ids: Iterable[str]) -> frozenset[str]:
     """Identifiers spelled verbatim inside a SUPPORTED ``inherited_unit`` fact named in
     ``fact_ids``."""
@@ -1698,12 +1728,21 @@ def unit_checks(
             if task.section_id == "scope_limitations"
             else [fact_id for fact_id in unit_fact_ids if fact_id in task.must_carry],
         )
+        bound_here = task.slot_facts.get(str(slot))
+        verified_here = implementation_identifiers(
+            facts, task.accepted_ids if bound_here is None else bound_here
+        )
 
-        def unaccepted(token: str, cited: frozenset[str] = cited_inherited) -> bool:
+        def unaccepted(
+            token: str,
+            cited: frozenset[str] = cited_inherited,
+            verified: frozenset[str] = verified_here,
+        ) -> bool:
             return (
                 not identifier_allowed(token, allowed, members, methods)
                 and token not in nouns
                 and token not in cited
+                and token not in verified
                 and not (token.endswith(_EXCEPTION_SUFFIXES) and token in recorded)
             )
 
