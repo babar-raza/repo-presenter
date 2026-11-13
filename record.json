@@ -5,7 +5,7 @@
   "provider_repository_id": 1037981320,
   "registry_revision": null,
   "active_transaction_id": "c82ecf48cafb4073952d8ffddd009ea7",
-  "state": "RETRYABLE",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,14 +17,7 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": {
-    "classification": "transient",
-    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
-    "resume_state": "INVALIDATED",
-    "occurred_at": "2026-11-13T22:06:54.911252+00:00",
-    "resume_predicate": null,
-    "recovery_count": 2
-  },
+  "failure": null,
   "lease": {
     "holder_id": "present:43516330798",
     "acquired_at": "2026-11-13T22:06:56.633801+00:00",
@@ -46,7 +39,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 27,
+  "state_version": 28,
   "recent_trigger_dedup_keys": {
     "run:41079931367:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "4f81f55eb8ca49b5bf2bfeb31fa1b818",
     "run:41085542283:aspose-cells-foss/Aspose.Cells-FOSS-for-Python": "7c41933a4a6f4c519ebf93054960eb99",
