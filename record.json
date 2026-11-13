@@ -5,7 +5,7 @@
   "provider_repository_id": 1246258574,
   "registry_revision": null,
   "active_transaction_id": "743ec0d97311433195edb2047c11145c",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-13T17:33:43.064111+00:00",
+    "resume_predicate": null,
+    "recovery_count": 11
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "d736f61ac8d249dd98bf4ec467173c28",
@@ -33,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 131,
+  "state_version": 132,
   "recent_trigger_dedup_keys": {
     "run:40555595204:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "a355a427933a4c5e8d543429f22050e0",
     "run:40571540396:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "886cefd3f4934c8b90359a383ef158f6",
@@ -55,5 +62,5 @@
     "run:41109510803:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "4c25b8b12f604c6e938adde96424da2b",
     "run:41304454389:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "743ec0d97311433195edb2047c11145c"
   },
-  "recovery_count": 10
+  "recovery_count": 11
 }
