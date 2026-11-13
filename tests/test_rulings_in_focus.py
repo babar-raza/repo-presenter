@@ -22,7 +22,7 @@ def test_the_rulings_file_exists_and_states_the_goal_and_checklist() -> None:
 def test_every_ruling_in_the_top_authority_is_in_the_rulings_file() -> None:
     goals = (ROOT / "docs" / "CONSOLIDATED_GOALS_2026-11-06.md").read_text(encoding="utf-8")
     ids = sorted({int(m) for m in re.findall(r"^\| R(\d+) \|", goals, re.M)})
-    assert ids and ids[-1] >= 37
+    assert ids and ids[-1] >= 38
     text = RULINGS.read_text(encoding="utf-8")
     missing = [f"R{i}" for i in ids if not re.search(rf"\bR{i}\b", text)]
     assert not missing, f"rulings missing from docs/RULINGS.md: {missing}"
@@ -42,3 +42,23 @@ def test_every_session_starts_by_printing_the_rulings() -> None:
         for hook in group.get("hooks", [])
     ]
     assert any("docs/RULINGS.md" in command for command in commands)
+
+
+def test_r38_full_text_checkpoint_and_per_prompt_hook_are_in_place() -> None:
+    """R38 (owner, 2026-11-13): the full verbatim principle exists, the short checkpoint exists, and the
+    checkpoint is re-injected into the working agent's context on every owner prompt."""
+    full = " ".join((ROOT / "docs" / "R38_PIPELINE_FIRST.md").read_text(encoding="utf-8").split())
+    for phrase in (
+        "Pipeline-First Execution, First Principles, and Pareto Optimization",
+        "Manual, one-off execution must not substitute for a reusable process.",
+        "Never use Pareto prioritization to skip mandatory requirements",
+        "manual production execution is not a substitute for the governed pipeline",
+        "Its execution must be reproducible through the governed pipeline",
+    ):
+        assert phrase in full, phrase
+    checkpoint = (ROOT / "docs" / "R38_CHECKPOINT.md").read_text(encoding="utf-8")
+    assert "R38 CHECKPOINT" in checkpoint
+    settings = json.loads((ROOT / ".claude" / "settings.json").read_text(encoding="utf-8"))
+    commands = [h["command"] for entry in settings["hooks"]["UserPromptSubmit"] for h in entry["hooks"]]
+    assert any("docs/R38_CHECKPOINT.md" in c for c in commands)
+    assert "R38_PIPELINE_FIRST.md" in (ROOT / "docs" / "RULINGS.md").read_text(encoding="utf-8")
