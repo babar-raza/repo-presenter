@@ -22,6 +22,7 @@ import repo_presenter.cascade as cascade_module
 from repo_presenter.readme.repair.targeted import Defect
 
 _GOOD, _BAD = "inherited_unit:01.paragraph", "inherited_unit:02.table"
+_REFUSED: set[str] = set()
 
 
 @dataclasses.dataclass(frozen=True)
@@ -114,9 +115,10 @@ def _drive(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, validate: Any = _val
     )
     before = validate(SimpleNamespace(dispositions=original))
     settled = cascade_module._Settled(composed, before, SimpleNamespace(blocking_findings=()), 1)
+    _REFUSED.clear()
     result = cascade_module._restore_lost_content(
         settled, entry=None, document=None, investigation={}, tree_paths=[], original="OLD\n",
-        out_dir=tmp_path,
+        out_dir=tmp_path, unrestorable=_REFUSED,
     )
     return settled, result
 
@@ -129,7 +131,7 @@ def test_a_unit_whose_restore_adds_a_new_check_is_rolled_back_and_the_rest_is_ke
     rows = {row["unit_id"]: row["disposition"] for row in result.composed.dispositions["dispositions"]}
     assert rows == {_GOOD: "VERIFIED_PRESERVE", _BAD: "SUPERSEDE_REDUNDANT"}
     assert [c["id"] for c in result.validation["checks"]] == ["BC-05"]  # only _BAD's loss is left
-    assert result.unrestorable == frozenset({_BAD})
+    assert _REFUSED == {_BAD}
     record = json.loads((tmp_path / "restored_units.json").read_text(encoding="utf-8"))
     assert [change["unit_id"] for change in record["restored"]] == [_GOOD]
 
@@ -184,4 +186,4 @@ def test_a_unit_whose_restore_adds_an_unattributed_failure_is_found_and_rolled_b
     rows = {row["unit_id"]: row["disposition"] for row in result.composed.dispositions["dispositions"]}
     assert rows == {_GOOD: "VERIFIED_PRESERVE", _BAD: "SUPERSEDE_REDUNDANT"}
     assert [c["id"] for c in result.validation["checks"]] == ["BC-05"]
-    assert result.unrestorable == frozenset({_BAD})
+    assert _REFUSED == {_BAD}

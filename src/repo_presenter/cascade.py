@@ -649,9 +649,6 @@ class _Settled:
     validation: dict[str, Any]
     verdict: ReviewVerdict
     rounds: int
-    #: Inherited units the zero-call restore tried and could not keep (``_restore_lost_content``):
-    #: their BC-05/BC-17 losses are the model repair's, never withheld by ``_without_restorable``.
-    unrestorable: frozenset[str] = frozenset()
 
 
 def _settle_s9(
@@ -691,10 +688,13 @@ def _settle_s9(
             break
         # Zero-call restore BEFORE any model repair: when the only blocking failures are content
         # the restore keeps verbatim, the candidate is settled without asking the model anything.
+        # Units the restore tried and could not keep: their losses are the model repair's, never
+        # withheld by ``_without_restorable`` as "a restore's to answer".
+        unrestorable: set[str] = set()
         restored = _restore_lost_content(
             _Settled(composed, validation, verdict, rounds), entry=entry, document=document,
             investigation=investigation, tree_paths=tree_paths, original=original, out_dir=out_dir,
-            require_clean_review=True,
+            require_clean_review=True, unrestorable=unrestorable,
         )
         if restored.composed is not composed:
             if not blocking_failures(restored.validation):
@@ -704,7 +704,7 @@ def _settle_s9(
             composed, validation, verdict = restored.composed, restored.validation, restored.verdict
         defects = _settle_defects(
             composed=composed, validation=validation, verdict=verdict, entry=entry,
-            document=document, prompts=prompts, unrestorable=restored.unrestorable,
+            document=document, prompts=prompts, unrestorable=frozenset(unrestorable),
         )
         if not defects or not _repair_defects(
             defects=defects, composed=composed, investigation=investigation, entry=entry,
@@ -883,6 +883,7 @@ def _rolled_back(
 def _restore_lost_content(
     settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
     tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+    unrestorable: set[str] | None = None,
 ) -> _Settled:
     """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
     they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -989,12 +990,18 @@ def _restore_lost_content(
         )
     # Units this restore could not keep (rolled back, or refused by ``restore_lost_units``): their
     # losses go on to the model repair instead of being withheld as "a restore's to answer".
-    refused = frozenset(str(s["unit_id"]) for s in skipped)
+    # ``unrestorable`` (when the caller passes a set) receives them; the return value is unchanged.
+    refused = {str(s["unit_id"]) for s in skipped}
+    if unrestorable is not None:
+        unrestorable.update(refused)
     if not restored:
-        return replace(settled, unrestorable=refused)
-    discarded = replace(
-        settled, unrestorable=refused | {str(change["unit_id"]) for change in restored}
-    )
+        return settled
+
+    def discarded() -> _Settled:
+        if unrestorable is not None:
+            unrestorable.update(str(change["unit_id"]) for change in restored)
+        return settled
+
     if failing:
         # Partial restore: kept only when the blocking failures strictly shrink and nothing outside
         # the old set appears (BC-07 must not newly fail), and the deterministic review gains no
@@ -1002,7 +1009,7 @@ def _restore_lost_content(
         if not _strictly_fewer_failures(blocking_failures(settled.validation), failing) or len(
             verdict.blocking_findings
         ) > len(settled.verdict.blocking_findings):
-            return discarded
+            return discarded()
     elif require_clean_review and verdict.blocking_findings:
         return settled  # the S9 loop still has review defects to repair; write nothing yet
     write_dispositions(dispositions, out_dir / "dispositions.json")
@@ -1034,7 +1041,7 @@ def _restore_lost_content(
             planned_dispositions=dispositions,
             readme=readme, tasks=tasks, accounted=accounted,
         ),
-        validation, verdict, settled.rounds, refused,
+        validation, verdict, settled.rounds,
     )
 
 
