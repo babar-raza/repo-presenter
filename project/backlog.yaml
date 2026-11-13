@@ -807,33 +807,48 @@ items:
     type: defect
     source: "BL-003 review (2026-11-13), class K03: 8 findings (Cells Style.Font/Borders private set; Email AttachMethod* const, CfbStorage.Children property, DirectoryEntry.Is* methods, CfbDocument.FromFile factory; 3D Python GlobalTransform read-only)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "extractors/surface/extractor.py — properties and fields are emitted with symbol_kind='method' and the setter accessibility is dropped; carry member kind (method/property/field/const) and settable into the public_symbol fact; readme/composition/authoring.py::type_members groups by kind; surface_claims rule fails 'Gets or sets' on a get-only property and 'method' on a non-method"
     acceptance: "facts for Email MapiMessage.AttachMethodByValue say const field, Cells Style.Font says get-only property; the five seals' K03 rows flagged by the new rule; R10 gate OK"
-    evidence: ["sealed facts.json: Aspose.Email.Foss.Msg.MapiMessage.AttachMethodByValue 'line 52; method'; Aspose.Cells_FOSS.Style.Font symbol_kind method, docstring 'Gets or sets'"]
-    next_action: "fix worker"
+    evidence:
+      - "sealed facts.json: Aspose.Email.Foss.Msg.MapiMessage.AttachMethodByValue 'line 52; method'; Aspose.Cells_FOSS.Style.Font symbol_kind method, docstring 'Gets or sets'"
+      - "2026-11-13 branch k03-k05-surface: extractor 7 records member_kind (method/constructor/property/field/constant), settable, type_kind and bases for every vendored-surface language (attached in with_enum_members, no plugin edited) and python_surface records @property + setter. Re-extracted at the pinned revisions: Email MapiMessage.AttachMethodByValue constant settable=false, CfbDocument.FromFile method, DirectoryEntry.IsRoot method, CfbStorage.Children property settable=false; Cells Style.Font/Borders property settable=false, Color type_kind struct, FillPattern enum; 3D Python GlobalTransform.* property settable=false"
+      - "renderer: a member bullet's 'Gets or sets ...' doc comment prints 'Gets ...' when settable=false (decision: rewrite, keep the getter half); authoring type batches carry member_kinds and a rule to call each member by its kind; reviewer records show member_kind/settable/type_kind"
+      - "BC-14 rule (n) (surface_claims._member_findings): replay over the sealed READMEs, zero calls: sealed facts alone flag 3 of the 8 K03 rows (Cells 'classes', Email AttachMethod*, Email Children); with facts re-extracted by extractor 7 all 8 K03 rows are flagged (Cells Font, Borders, classes; Email AttachMethod*, Children, IsRoot/IsStorage/IsStream, constructors; 3D Python GlobalTransform)"
+      - "tests: tests/extractors/surface/test_member_kinds.py, tests/readme/validation/test_surface_members.py (real register shapes + controls); recertify --gate OK (R 1, L 24; see BL-065 for the two justified Lane L seals)"
+    next_action: "hosted re-seal of the five Lane R cells under extractor 7 (re-extraction gives the new attributes), then R41 portfolio re-verification run id; done only then"
+    updated: "2026-11-13"
 
   - id: BL-064
     title: "K04 — prose and tables name members a type lacks, cross-bind same-named types, state wrong base types"
     type: defect
     source: "BL-003 review (2026-11-13), class K04: 7 findings + 1 found on re-verification (Cells Style Color/FillPattern/Border; 3D .NET GLTF Property/PropertyTable/Tangents; 3D Python WeightedMode, BonePose, Mesh-derived entities)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "readme/validation/surface_claims.py::_table_findings — extend rule (i) from type names to Type.Member pairs and 'properties such as A, B' lists checked against that type's members; authoring packets key types by qualified name (no simple-name collision)"
     acceptance: "regression tests from Cells 'Style ... Color, FillPattern, and Border' and 3D .NET 'Property-GLTF'; R10 gate OK"
-    evidence: []
-    next_action: "fix worker"
+    evidence:
+      - "2026-11-13 branch k03-k05-surface: BC-14 rule (o) (surface_claims): a kind list attached to one type ('properties such as A, B') names that type's own or inherited members (bases from type facts' bases/declaration/Python signature); an API-table row's code spans the row says the type HAS ('Exposes `X`', 'exposed via `Y`') are members of that type, not of a same-named namesake (type tokens resolved by qualified suffix and '-Qualifier', e.g. Property-GLTF), and names the surface states; '`X`-derived `Y`' holds only when Y derives from X"
+      - "replay over the sealed READMEs, zero calls: 5 of the 8 K04 rows flagged (Cells Style Color/FillPattern/Border; 3D .NET Property-GLTF GetExtra/SetExtra; VertexElementTangent Tangents; 3D Python 'Mesh-derived Entity' x2), same with re-extracted facts. Not decidable from facts (left to the reviewer, recorded): 3D .NET 'PropertyTable ... PropertyCollection entries' (a relation claim; a type-relation rule was rejected for false positives), 3D Python WeightedMode 'vertex weights' and BonePose 'world and local matrices' (semantic)"
+      - "R10 gate false positives found and fixed before landing (tests from each): Aspose.PDF .NET Lane L tag names (`TR`, `TD`) and `NotImplementedException` mentions, nested type `Measure.NumberFormatList`, a type with no recorded declaration; Aspose.3D TypeScript 'fieldOfViewX/Y'; Aspose.Email C++ 'MAPI properties'/'property ID'; Aspose.Note Python unrecorded instance attributes"
+    next_action: "hosted re-seal of the affected Lane R cells; R41 portfolio re-verification run id; done only then. Authoring packets keyed by qualified name (the other half of this item) not changed: the row-type resolution and the new rule cover the cross-binding at check time"
+    updated: "2026-11-13"
 
   - id: BL-065
     title: "K05 — public-type counts and tables include #if-conditional and internal-nested types"
     type: defect
     source: "BL-003 review (2026-11-13), class K05: 6 findings (Words 618 vs 615: DocumentPositionMovement/INodeCollection/NodeEnumerator public only under #if CPLUSPLUS; 3D .NET Chunk nested in internal ChunkHelper)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "extractors/surface/_vendor/aspose_extraction/tree_helpers.py::_in_excluded_preproc_branch + C# type collection in api_surface.py — resolve the effective access modifier through '#if X public #else internal #endif' before the declaration; a type is public only when every enclosing type is public"
     acceptance: "Words facts count 615 public types at 0d3f1add920f; 3D .NET Chunk absent; rule (h) and renderer counts agree; R10 gate OK"
-    evidence: ["Words DocumentPositionMovement.cs:9-14@0d3f1add920f; 3D .NET Formats/3DSHelper.cs:52,108@52b0f00ebf28"]
-    next_action: "fix worker"
+    evidence:
+      - "Words DocumentPositionMovement.cs:9-14@0d3f1add920f; 3D .NET Formats/3DSHelper.cs:52,108@52b0f00ebf28"
+      - "2026-11-13 branch k03-k05-surface: tree_helpers.csharp_active_modifiers reads a split '#if X public #else internal #endif' modifier from the Release branch (both tree-sitter shapes: preproc_if parent, and the ERROR-node recovery when a file holds several); _in_excluded_preproc_branch no longer applies the modifier's condition to the whole declaration; api_surface skips types inside a definitely-false #if branch and types nested in a non-public type (C#, Java). Re-extracted at the pinned revisions: Words 618 -> 615 public types (DocumentPositionMovement, INodeCollection, NodeEnumerator dropped, exactly the review's three), 3D .NET 293 -> 292 (Chunk dropped); Cells .NET and Email .NET unchanged"
+      - "rule (h) also holds a count the sentence says 'is listed below' to the table rows that follow (fewer rows = finding), worded without the stated number so a Lane L count edit leaves it a residual. Replay, zero calls: the Cells C++ '195 public types -- is listed below' row is flagged; with re-extracted facts all 4 Words K05 rows and the 3D .NET Chunk row are flagged (6 of 6 registered K05 rows)"
+      - "R10: recertify --gate --base-baseline <origin/main baseline> OK after justifying two genuine Lane L defects the listed-count check finds (Cells C++ 51d077c2ad1b L-03+L-05: 197 stated, 189 listed; HTML Python c1526e9d7b92 L-03: 303 stated, 238 listed). Certified on the same seals: origin/main code R 1 / L 26, this branch R 1 / L 24"
+    next_action: "Lane L correction: when a correction removes absent-type rows or changes a stated count, also make a 'listed below' count agree with the rows (deterministic edit) so Cells C++ and HTML Python re-certify; hosted re-seal of Words .NET and 3D .NET Lane R under extractor 7; R41 run id; done only then"
+    updated: "2026-11-13"
 
   - id: BL-066
     title: "K06 — dependency claims read from the product project file instead of the published package"

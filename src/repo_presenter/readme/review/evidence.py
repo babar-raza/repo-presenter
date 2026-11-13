@@ -179,6 +179,11 @@ def _record(fact: Fact) -> dict[str, str]:
     attributes = fact.attributes or {}
     for name, limit in (
         ("symbol_kind", 40),
+        # BL-063 (K03): what a member really is and whether a caller may set it, so the reviewer
+        # can tell a property from a method and a read-only property from a settable one.
+        ("member_kind", 40),
+        ("settable", 10),
+        ("type_kind", 40),
         ("docstring", DOC_CHARS),
         ("signature", SIGNATURE_CHARS),
     ):

@@ -350,12 +350,17 @@ def is_public(node, language: str) -> bool:
         # sequence instead of the whole stack) â€” same fix, generalized.
         found_modifier_node = False
         modifier_texts: list[str] = []
-        for ch in node.children:
-            if ch.type == "modifiers" or ch.type == "modifier":
-                found_modifier_node = True
-                modifier_texts.append(node_text(ch))
-            elif ch.type == "public":
-                return True
+        if language == "csharp":
+            # BL-065 (K05): a C# access modifier chosen by `#if X public #else internal #endif`
+            # is read from the branch a .NET Release build compiles, not from every branch.
+            found_modifier_node, modifier_texts = csharp_active_modifiers(node)
+        else:
+            for ch in node.children:
+                if ch.type == "modifiers" or ch.type == "modifier":
+                    found_modifier_node = True
+                    modifier_texts.append(node_text(ch))
+                elif ch.type == "public":
+                    return True
         if found_modifier_node:
             return "public" in " ".join(modifier_texts)
         # C# / Java: interface members are implicitly public
@@ -811,18 +816,164 @@ def _in_excluded_preproc_branch(node, language: str) -> bool:
     """
     if language != "csharp":
         return False
+    child = node
     ancestor = node.parent
     while ancestor is not None:
         if ancestor.type == "preproc_else":
             return False
-        if ancestor.type in _PREPROC_BRANCH_TYPES:
+        if ancestor.type in _PREPROC_BRANCH_TYPES and not _splits_modifiers(child):
             cond_node = ancestor.children[1] if len(ancestor.children) > 1 else None
             if cond_node is not None:
                 condition_text = node_text(cond_node)
                 if _condition_definitely_false(condition_text):
                     return True
+        child = ancestor
         ancestor = ancestor.parent
     return False
+
+
+# BL-065 (K05, 2026-11-13). Aspose.Words for .NET chooses a type's access modifier per port:
+#
+#     #if CPLUSPLUS
+#         public
+#     #else
+#         internal
+#     #endif
+#         enum DocumentPositionMovement { ... }
+#
+# tree-sitter-c-sharp parses this as a `preproc_if` (condition CPLUSPLUS) whose only child is the
+# whole declaration; the `#else` and `#endif` land as ERROR nodes *inside* the declaration, between
+# its `modifier` children. Two readings were wrong: ``is_public`` saw a `public` modifier sibling and
+# published three internal types (618 public types instead of the 615 the source and the upstream
+# README state), and ``_in_excluded_preproc_branch`` read the CPLUSPLUS condition as governing the
+# whole declaration (it governs only the modifier between `#if` and `#else`). A declaration whose
+# own children carry such a directive is a "split modifier" declaration; its modifiers are read
+# branch by branch (``csharp_active_modifiers``) and the enclosing condition no longer excludes it.
+_DIRECTIVE = re.compile(r"^\s*#\s*(?P<word>if|elif|else|endif)\b(?P<rest>.*)$", re.S)
+
+
+def _directive(child) -> tuple[str, str] | None:
+    """(directive word, condition text) of a preprocessor line parsed as an ERROR node."""
+    if child.type != "ERROR":
+        return None
+    match = _DIRECTIVE.match(node_text(child))
+    if match is None:
+        return None
+    return match.group("word"), match.group("rest").strip()
+
+
+def _splits_modifiers(node) -> bool:
+    """Whether a `#else`/`#elif`/`#endif` sits among ``node``'s own children."""
+    return any(
+        (found := _directive(ch)) is not None and found[0] in ("elif", "else", "endif")
+        for ch in getattr(node, "children", ())
+    )
+
+
+_CONDITION_PART_TYPES = frozenset(
+    {
+        "identifier",
+        "boolean_literal",
+        "binary_expression",
+        "prefix_unary_expression",
+        "parenthesized_expression",
+        "!",
+        "&&",
+        "||",
+        "(",
+        ")",
+    }
+)
+
+
+def _governing_condition(node) -> str | None:
+    """The `#if`/`#elif` condition that opens just before ``node``'s first modifier.
+
+    With one such declaration in a file the grammar wraps it in a ``preproc_if`` (the condition is
+    that node's second child); with several (Aspose.Words' Navigation files) it recovers into an
+    ERROR node whose children run ``#if``, the condition, the declaration, ``#if``, ... -- the
+    condition is then the run of expression tokens between the last ``#if``/``#elif`` token and
+    ``node``. ``None`` when no condition opens there."""
+    parent = node.parent
+    if parent is None:
+        return None
+    if parent.type in _PREPROC_BRANCH_TYPES:
+        cond_node = parent.children[1] if len(parent.children) > 1 else None
+        return node_text(cond_node) if cond_node is not None else None
+    parts: list[str] | None = None
+    for ch in parent.children:
+        if ch == node:
+            break
+        if ch.type in ("#if", "#elif"):
+            parts = []
+        elif parts is not None and ch.type in _CONDITION_PART_TYPES:
+            parts.append(node_text(ch))
+        else:
+            parts = None
+    return " ".join(parts) if parts else None
+
+
+def csharp_active_modifiers(node) -> tuple[bool, list[str]]:
+    """(any modifier present, the modifier texts a .NET Release build compiles) of a C#
+    declaration.
+
+    Without a directive among the declaration's children this is every modifier, as before. With
+    one (a split-modifier declaration, see above), the modifiers before the first in-declaration
+    directive belong to the enclosing `#if`/`#elif` branch, those after `#else` to the other
+    branch, and those after `#endif` to both. A branch whose condition is definitely false for a
+    Release build (``_condition_definitely_false``) contributes nothing; a condition that cannot be
+    decided keeps both branches' modifiers, which is the old, conservative union.
+    """
+    found = False
+    texts: list[str] = []
+    active = True
+    branch_false = False
+    if _splits_modifiers(node):
+        condition = _governing_condition(node)
+        if condition is not None:
+            branch_false = _condition_definitely_false(condition)
+            active = not branch_false
+    for ch in node.children:
+        directive = _directive(ch)
+        if directive is not None:
+            word, condition = directive
+            if word == "if":
+                branch_false = _condition_definitely_false(condition)
+                active = not branch_false
+            elif word == "elif":
+                branch_false = _condition_definitely_false(condition)
+                active = not branch_false
+            elif word == "else":
+                active = True
+            else:  # endif
+                active = True
+                branch_false = False
+            continue
+        if ch.type in ("modifiers", "modifier"):
+            found = True
+            if active:
+                texts.append(node_text(ch))
+        elif ch.type == "public" and active:
+            found = True
+            texts.append("public")
+    return found, texts
+
+
+def enclosing_types_public(node, language: str, type_node_types) -> bool:
+    """Whether every type declaration enclosing ``node`` is itself public (C# and Java).
+
+    A public type nested in an internal or private type is not reachable from outside the
+    assembly (BL-065: Aspose.3D for .NET's `public struct Chunk` inside `internal static class
+    ChunkHelper`, Formats/3DSHelper.cs:52,108, was listed as a public type). Other languages are
+    unchanged."""
+    if language not in ("csharp", "java"):
+        return True
+    parent = node.parent
+    while parent is not None:
+        if parent.type in type_node_types and not is_public(parent, language):
+            return False
+        parent = parent.parent
+    return True
 
 
 # ---------------------------------------------------------------------------

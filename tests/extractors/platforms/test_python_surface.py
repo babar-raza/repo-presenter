@@ -76,8 +76,12 @@ def test_definitions_all_and_reexports_are_inventoried_without_importing(tmp_pat
         2,
         "name",
         signature="def render(self)",
+        member_kind="method",
     )
     assert by_name["pkg.widget.Widget.size"].kind == "method"
+    # BL-063 (K03): an @property is recorded as a property, settable only with a setter.
+    assert by_name["pkg.widget.Widget.size"].member_kind == "property"
+    assert by_name["pkg.widget.Widget.size"].settable == "false"
     assert "pkg.widget.Widget._hide" not in by_name
     assert "pkg.widget._Hidden.visible" not in by_name
     assert by_name["pkg.Widget"] == PublicSymbol(
