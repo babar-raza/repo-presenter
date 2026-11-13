@@ -5,7 +5,7 @@
   "provider_repository_id": 1193864496,
   "registry_revision": null,
   "active_transaction_id": "95fbae1fe6094527b16b3ff976136658",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set a6b436407f14: PresentFailure: independent review returned REJECT with 9 blocking finding(s) of 9; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiAttachment.ContentId` a method ('MapiAttachment class represents a MAPI attachment and provides properties for ContentId, Data, EmbeddedMessage, Filename, and methods to load from bytes or stream, as well as read-only properties IsEmbeddedMessage and IsStorageAttachment.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiAttachment.Data` a method ('MapiAttachment class represents a MAPI attachment and provides properties for ContentId, Data, EmbeddedMessage, Filename, and methods to load from bytes or stream, as well as read-only properties IsEmbeddedMessage and IsStorageAttachment.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiAttachment.EmbeddedMessage` a method ('MapiAttachment class represents a MAPI attachment and provides properties for ContentId, Data, EmbeddedMessage, Filename, and methods to load from bytes or stream, as well as read-only properties IsEmbeddedMessage and IsStorageAttachment.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiAttachment.Filename` a method ('MapiAttachment class represents a MAPI attachment and provides properties for ContentId, Data, EmbeddedMessage, Filename, and methods to load from bytes or stream, as well as read-only properties IsEmbeddedMessage and IsStorageAttachment.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiProperty.Flags` a constructor ('MapiProperty class represents a MAPI property and provides properties for Flags, PropertyId, PropertyTag, PropertyType, and Value, and a constructor for initialization.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiProperty.PropertyId` a constructor ('MapiProperty class represents a MAPI property and provides properties for Flags, PropertyId, PropertyTag, PropertyType, and Value, and a constructor for initialization.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiProperty.PropertyTag` a constructor ('MapiProperty class represents a MAPI property and provides properties for Flags, PropertyId, PropertyTag, PropertyType, and Value, and a constructor for initialization.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiProperty.PropertyType` a constructor ('MapiProperty class represents a MAPI property and provides properties for Flags, PropertyId, PropertyTag, PropertyType, and Value, and a constructor for initialization.'), but the facts record it as a property; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `MapiProperty.Value` a constructor ('MapiProperty class represents a MAPI property and provides properties for Flags, PropertyId, PropertyTag, PropertyType, and Value, and a constructor for initialization.'), but the facts record it as a property; call it by its kind)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-13T22:54:37.530444+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43520977467",
     "acquired_at": "2026-11-13T22:40:20.519161+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "49d00031bd384fc59b119d32ff207c7e",
+    "transition_id": "fe9c8841bf734e55bf658fbacf268043",
     "transaction_id": "95fbae1fe6094527b16b3ff976136658",
     "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-13T11:11:32.986760+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-13T22:54:37.314824+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-email-foss/Aspose.Email-FOSS-for-.Net",
     "output_manifest": "candidates/aspose-email-foss__Aspose.Email-FOSS-for-.Net/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 76,
+  "state_version": 77,
   "recent_trigger_dedup_keys": {
     "run:41298086175:aspose-email-foss/Aspose.Email-FOSS-for-.Net": "95fbae1fe6094527b16b3ff976136658"
   },
