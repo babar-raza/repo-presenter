@@ -48,7 +48,7 @@ rule with no fact to hold a statement to is silent.
     same-named namesake, and no name the surface does not state; "`X`-derived `Y`" holds only when
     ``Y`` derives from ``X``.
 (h) also holds a count the sentence says "is listed below" to the table rows that follow it
-    (BL-065, K05).
+    (BL-065, K05), unless the sentence itself states the listed number ("238 of them listed").
 
 TC-017b (2026-11-07) also adds: a line-provenance classifier shared with every check here
 (``readme/validation/line_provenance.py``, replacing this module's own former ``_Origin`` copy of
@@ -212,6 +212,21 @@ _LISTED_HERE = re.compile(
 _SECTION_HEADING = re.compile(r"^\s*#{1,2}\s")
 
 
+def states_listed_count(sentence: str, listed: int) -> bool:
+    """Whether ``sentence`` itself states how many of its types are listed, as exactly ``listed``
+    ("303 public types in total, 238 of them listed below"; "of which 238 are listed"): the
+    remedy this check names ("state the count of what is listed"), so a total above the rows is
+    then true, not a finding. Any other number there is still held to the rows."""
+    number = rf"{listed:,}|{listed}"
+    return bool(
+        re.search(
+            rf"(?i)(?<![\w.,])(?:{number})\s+of\s+(?:them|these|those|which)\b"
+            rf"|\bof\s+which\s+(?:{number})(?![\w,])",
+            sentence,
+        )
+    )
+
+
 def _rows_listed_after(lines: list[_Line], last: int) -> int:
     """The type-table rows (`` | `Name` | ``) after line ``last`` up to the next level-1/2
     heading; header and separator rows are not counted."""
@@ -270,7 +285,7 @@ def _count_findings(
             probe_value = probe_classes if noun == "classes" else probe_types
             if _LISTED_HERE.search(plain):
                 listed = _rows_listed_after(lines, last)
-                if listed and listed < stated:
+                if listed and listed < stated and not states_listed_count(plain, listed):
                     # Worded without the stated number, on purpose: a Lane L count correction
                     # (243 -> 303) leaves this pre-existing defect the same finding, a residual
                     # (R21), rather than one the edit introduced.

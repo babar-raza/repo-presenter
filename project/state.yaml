@@ -96,7 +96,12 @@ progress:
   # rows, so its L-05 failing example is no longer an R21 residual) and HTML Python (c1526e9d7b92: "303 public types
   # in total, listed below" over 238 rows) -- genuine defects, justified per seal in
   # data/recertification_baseline.json (R10); no seal is deleted. Origin/main code on the same seals: R 1, L 26.
-  lane_l_accepted: 24
+  # RESYNCED 2026-11-13 (lane_l_accepted 24 -> 26, BL-065) after re-running `ops/checks/dashboard_matches_live.py
+  # --no-loss` (live L=26) and `python -m repo_presenter.recertify --gate` (OK): the new Lane L detector
+  # listed_type_count makes the "listed below" sentence true (Cells C++ "— 195 public types — has 189 of them listed
+  # below"; HTML Python "303 public types in total, 238 of them listed below"), so both seals re-certify again, Cells
+  # C++ with its failing example carried as an R21 residual. Zero calls; no seal written (the hosted recertify does).
+  lane_l_accepted: 26
   lane_l_corrected_non_empty_patch: 15
   lane_l_blocked: 0
   # RESYNCED 2026-11-13 (lane_r_accepted 13 -> 0) after re-running `ops/checks/dashboard_matches_live.py`
