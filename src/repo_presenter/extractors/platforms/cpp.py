@@ -63,10 +63,10 @@ CPP = EcosystemSpec(
     fence="cpp",
     # C++ has no portfolio-wide package registry, which `surface/registry.py` states and
     # `REGISTRY_TYPES` encodes by having no `cpp` entry. The name is a phrase rather than a
-    # registry because the only sentence the renderer builds from it is the unresolved one -
-    # "could not be confirmed on any package registry at this revision". It never says "not yet
-    # published": nothing observed that (`manifest_names_distribution` below), and NuGet lists
-    # the library for three of the four Aspose C++ repositories.
+    # registry because no reader-facing sentence states an unresolved install (BL-002: the renderer
+    # omits the claim rather than print "could not be confirmed on any package registry"). It never
+    # says "not yet published": nothing observed that (`manifest_names_distribution` below), and
+    # NuGet lists the library for three of the four Aspose C++ repositories.
     registry="any package registry",
     install_fact_id="install_command:cmake",
     version_badge="",

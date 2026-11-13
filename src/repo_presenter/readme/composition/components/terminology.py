@@ -32,7 +32,10 @@ UPPERCASE_TERMS: frozenset[str] = frozenset(
 )
 MIXED_CASE_TERMS: frozenset[str] = frozenset({"glTF", "npm"})
 WORD_EXTENSIONS: frozenset[str] = frozenset(
-    {"max", "ply", "dat", "raw", "bin", "log", "map", "mat", "tag", "ini", "one"}
+    # `text`, `excel`, `markdown` are format facts of Words/Cells/PDF and ordinary words: as
+    # extensions they turned "region of text" into "region of TEXT" (BL-002 K11, 57 lines).
+    {"max", "ply", "dat", "raw", "bin", "log", "map", "mat", "tag", "ini", "one", "text",
+     "excel", "markdown"}
 )
 ORDINARY_TWO_LETTER_WORDS: frozenset[str] = frozenset(
     {
