@@ -1,11 +1,30 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 3,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "662876a3559ba0c0190f297ba684ebb2405804ccb6838ad293d368a8cbae4243",
+  "corrected_sha256": "77d19d026c3ac7c74f6a1023044538eb0f5db4250e28709af81aade387da3ecc",
   "edits": [
+    {
+      "detector": "broken_link",
+      "end": 351,
+      "evidence": [
+        {
+          "fact_id": "link_target:005",
+          "kind": "link_target",
+          "status": "CONTRADICTED",
+          "value": "License/LICENSE.txt"
+        }
+      ],
+      "index": 0,
+      "kind": "BROKEN_LINK",
+      "line": 5,
+      "original": "License/LICENSE.txt",
+      "rationale": "the tree does not contain 'License/LICENSE.txt'; it contains 'LICENSE.txt'",
+      "replacement": "LICENSE.txt",
+      "start": 332
+    },
     {
       "detector": "stray_fence",
       "end": 9222,
@@ -17,13 +36,32 @@
           "value": "README.md:219"
         }
       ],
-      "index": 0,
+      "index": 1,
       "kind": "STRUCTURE_FIX",
       "line": 219,
       "original": "```  ",
       "rationale": "line 219 is a closing code fence that closes nothing; it turns the lines after it into a code block until the next fence, so their headings and tags are not rendered as such",
       "replacement": "",
       "start": 9217
+    },
+    {
+      "detector": "broken_link",
+      "end": 11060,
+      "evidence": [
+        {
+          "fact_id": "link_target:005",
+          "kind": "link_target",
+          "status": "CONTRADICTED",
+          "value": "License/LICENSE.txt"
+        }
+      ],
+      "index": 2,
+      "kind": "BROKEN_LINK",
+      "line": 252,
+      "original": "License/LICENSE.txt",
+      "rationale": "the tree does not contain 'License/LICENSE.txt'; it contains 'LICENSE.txt'",
+      "replacement": "LICENSE.txt",
+      "start": 11041
     }
   ],
   "lane": "L",
@@ -39,6 +77,7 @@
     "provider_calls": 0
   },
   "summary": {
+    "BROKEN_LINK": 2,
     "STRUCTURE_FIX": 1
   },
   "unapplied": [
@@ -68,16 +107,6 @@
       "line": 0,
       "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/psd/python-net/) and the anchor rule of the Scope and Limitations closing paragraph",
       "text": ""
-    },
-    {
-      "defect": true,
-      "detector": "broken_link",
-      "fact_ids": [
-        "link_target:005"
-      ],
-      "line": 3,
-      "reason": "link to 'License/LICENSE.txt' not found on its line",
-      "text": "[![PyPI version](https://img.shields.io/pypi/v/aspose-psd-foss.svg)](https://pypi.org/project/aspose-psd-foss/)  "
     },
     {
       "defect": true,
