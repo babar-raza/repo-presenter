@@ -263,7 +263,7 @@ priceRange.SetComment("Cell range used by the SUM formula in B4.");
 
 The library's public types live in the `Aspose::Cells_FOSS` namespace, with `Workbook` as the
 root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph beneath it. The
-full public surface — 197 public types — is listed below, grouped exactly as
+full public surface — 195 public types — has 189 of them listed below, grouped exactly as
 `reference.aspose.org` organizes them.
 
 <details>

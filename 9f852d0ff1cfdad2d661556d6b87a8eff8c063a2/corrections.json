@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 10,
+    "edits": 12,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "43b5aaf8ab146e14fff3f2eee21f7da384d10bc30e738019388fbba65052e731",
+  "corrected_sha256": "51ed99cc8ec13d506a07af144b2b90d0773aa1639b979444aa23c1ed39543ad4",
   "edits": [
     {
       "detector": "glance_layout",
@@ -24,6 +24,128 @@
       "rationale": "the At a Glance diagram draws about 1967 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
       "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx<br/>workbook (file path or<br/>in-memory stream)\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Create or load .xlsx<br/>workbooks\"]\n    c2[\"Read and write cell<br/>values and formulas\"]\n    c3[\"Apply cell styling:<br/>fonts, fills, borders,<br/>alignment\"]\n    c4[\"Merge cell ranges and<br/>format numbers\"]\n    c5[\"Control worksheet view<br/>and protection<br/>settings\"]\n    c6[\"Apply conditional<br/>formatting and data<br/>validation\"]\n    c7[\"Manage hyperlinks and<br/>defined names\"]\n    c8[\"Configure page setup<br/>and print settings\"]\n    c9[\"Read and write<br/>document properties\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\".xlsx workbook (file<br/>path or binary stream)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
       "start": 1725
+    },
+    {
+      "detector": "listed_type_count",
+      "end": 10612,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.Clear"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.getfiltercolumns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.GetFilterColumns"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.getrange",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.GetRange"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.getsortstate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.GetSortState"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.setrange",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 264,
+      "original": "197",
+      "rationale": "line 264 states '197 public types' as the count of the 197 table rows that follow, but 8 of them name a type no public_symbol fact records; the facts record 195 public types (168 classes), so the total is 195",
+      "replacement": "195",
+      "start": 10609
+    },
+    {
+      "detector": "listed_type_count",
+      "end": 10643,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.Clear"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.getfiltercolumns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.GetFilterColumns"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.getrange",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.GetRange"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.getsortstate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.GetSortState"
+        },
+        {
+          "fact_id": "public_symbol:aspose.cells_foss.autofilter.setrange",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 264,
+      "original": "is listed below",
+      "rationale": "line 265 says its 195 public types are 'is listed below', but the table rows that follow list 189; the total is the facts' and stays, and the sentence now states how many are listed (no row dropped)",
+      "replacement": "has 189 of them listed below",
+      "start": 10628
     },
     {
       "detector": "absent_type_row",
@@ -78,7 +200,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 1,
+      "index": 3,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 280,
       "original": "| `AutoFilterCustomFilterCollection_Iterator` | Class in the Cells CPP API. |\n",
@@ -139,7 +261,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 2,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 287,
       "original": "| `AutoFilterSortConditionCollection_Iterator` | Class in the Cells CPP API. |\n",
@@ -200,7 +322,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 3,
+      "index": 5,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 294,
       "original": "| `BitReader` | Internal bit-level reader used while inflating DEFLATE-compressed ZIP entry data. |\n",
@@ -261,7 +383,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 4,
+      "index": 6,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 336,
       "original": "| `FilterColumnCollection_Iterator` | Class in the Cells CPP API. |\n",
@@ -322,7 +444,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 5,
+      "index": 7,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 432,
       "original": "| `XmlParser` | Internal recursive-descent XML parser used to build an `XmlDocument`'s node tree. |\n",
@@ -383,7 +505,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 6,
+      "index": 8,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 445,
       "original": "| `HuffmanTable` | Struct with 2 methods and 4 properties. |\n",
@@ -444,7 +566,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 7,
+      "index": 9,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 446,
       "original": "| `ParsedNumericFormat` | Struct with 10 properties. |\n",
@@ -505,7 +627,7 @@
           "value": "Aspose.Cells_FOSS.AutoFilter.SetRange"
         }
       ],
-      "index": 8,
+      "index": 10,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 447,
       "original": "| `Workbook_Impl` | Struct with 1 method and 7 properties. |\n",
@@ -524,7 +646,7 @@
           "value": "https://products.aspose.com/cells/cpp/"
         }
       ],
-      "index": 9,
+      "index": 11,
       "kind": "FALSE_CLAIM_FIX",
       "line": 567,
       "original": "commercial product",
@@ -547,7 +669,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 1,
+    "FALSE_CLAIM_FIX": 3,
     "TABLE_ROW_REMOVAL": 8
   },
   "unapplied": [
