@@ -1,0 +1,1762 @@
+{
+ "python": {
+  "facts": [
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:ecosystem",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "python"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:family",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "barcode"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:platform",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "python"
+   },
+   {
+    "attributes": {
+     "changed": "false",
+     "enterprise_target_status": "unchecked",
+     "product_homepage_status": "200",
+     "stage": "product_knowledge_refresh"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "product_homepage; status 200",
+      "path": "https://products.aspose.org/barcode/python/"
+     },
+     {
+      "detail": "enterprise_target; status None",
+      "path": "https://products.aspose.com/barcode/"
+     }
+    ],
+    "id": "identity:product-knowledge-refresh",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "checked 2 page(s) at revision 06eca5c01e13; changed=False"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:repository",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "license declared by the manifest",
+      "path": "pyproject.toml"
+     }
+    ],
+    "id": "package:license",
+    "kind": "package",
+    "polarity": "SUPPORTED",
+    "value": "MIT"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "distribution name declared by the manifest",
+      "path": "pyproject.toml"
+     }
+    ],
+    "id": "package:name",
+    "kind": "package",
+    "polarity": "SUPPORTED",
+    "value": "aspose-barcode-foss"
+   },
+   {
+    "attributes": {
+     "floor_declaration": "requires-python"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "requires-python declared",
+      "path": "pyproject.toml"
+     }
+    ],
+    "id": "package:python_requires",
+    "kind": "package",
+    "polarity": "SUPPORTED",
+    "value": ">=3.12"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "version declared by the manifest",
+      "path": "pyproject.toml"
+     }
+    ],
+    "id": "package:version",
+    "kind": "package",
+    "polarity": "SUPPORTED",
+    "value": "0.1.0"
+   },
+   {
+    "attributes": {
+     "defined_at": "aspose_barcode_foss.api.generate",
+     "docstring": "Create a barcode for the requested symbology.",
+     "public_paths": "aspose_barcode_foss.api.generate",
+     "signature": "def generate(symbology: str, data: str | bytes, *, encode: EncodeOptions | None=None, render: RenderOptions | None=None) -> Barcode",
+     "symbol_kind": "function"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 29; function; public by name",
+      "path": "src/aspose_barcode_foss/api.py"
+     },
+     {
+      "detail": "line 3; re-exported as aspose_barcode_foss.generate",
+      "path": "src/aspose_barcode_foss/__init__.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.generate",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.generate"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.PngRenderer",
+      "path": "src/aspose_barcode_foss/__init__.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.pngrenderer",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.PngRenderer"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.SvgRenderer",
+      "path": "src/aspose_barcode_foss/__init__.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.svgrenderer",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.SvgRenderer"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 29; class; public by reexport; re-export of aspose_barcode_foss.renderers.Renderer",
+      "path": "src/aspose_barcode_foss/__init__.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.renderer",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.Renderer"
+   },
+   {
+    "attributes": {
+     "docstring_full": "Render a barcode into PNG output. Canvas geometry mirrors SvgRenderer: scale all dimensions, add quiet-zone padding, optionally expand height for text. The dpi field is embedded as PNG metadata only and does not affect pixel dimensions. Text rendering uses Pillow's built-in default TrueType font. The font_family field of ResolvedRenderOptions is not used in this implementation.",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 4; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.png.PngRenderer",
+      "path": "src/aspose_barcode_foss/renderers.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.renderers.pngrenderer",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.renderers.PngRenderer"
+   },
+   {
+    "attributes": {
+     "docstring_full": "Render a barcode into SVG output.",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 6; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.svg.SvgRenderer",
+      "path": "src/aspose_barcode_foss/renderers.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.renderers.svgrenderer",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.renderers.SvgRenderer"
+   },
+   {
+    "attributes": {
+     "docstring_full": "Abstract renderer interface.",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 5; class; public by reexport; re-export of aspose_barcode_foss._internal.renderers.base.Renderer",
+      "path": "src/aspose_barcode_foss/renderers.py"
+     }
+    ],
+    "id": "public_symbol:aspose_barcode_foss.renderers.renderer",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.renderers.Renderer"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "always",
+     "exception": "NotImplementedError",
+     "member": "aspose_barcode_foss.renderers.Renderer.render"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 25; raise statement in the member's own body",
+      "path": "src/aspose_barcode_foss/_internal/renderers/base.py"
+     }
+    ],
+    "id": "implementation:throws.aspose_barcode_foss.renderers.renderer.render.body.notimplementederror",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.renderers.Renderer.render raises NotImplementedError"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "RenderingError",
+     "member": "aspose_barcode_foss.renderers.PngRenderer.render"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 106; raise statement in the member's own body",
+      "path": "src/aspose_barcode_foss/_internal/renderers/png.py"
+     }
+    ],
+    "id": "implementation:throws.aspose_barcode_foss.renderers.pngrenderer.render.body.renderingerror",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "aspose_barcode_foss.renderers.PngRenderer.render raises RenderingError (conditionally)"
+   }
+  ],
+  "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
+  "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
+ },
+ "typescript": {
+  "facts": [
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:ecosystem",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "typescript"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:family",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "3d"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:platform",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "typescript"
+   },
+   {
+    "attributes": {
+     "changed": "false",
+     "enterprise_target_status": "unchecked",
+     "product_homepage_status": "200",
+     "stage": "product_knowledge_refresh"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "product_homepage; status 200",
+      "path": "https://products.aspose.org/3d/typescript/"
+     },
+     {
+      "detail": "enterprise_target; status None",
+      "path": "https://products.aspose.com/3d/"
+     }
+    ],
+    "id": "identity:product-knowledge-refresh",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "checked 2 page(s) at revision 66cb26df3b03; changed=False"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "admitted registry entry",
+      "path": "data/registry.json"
+     }
+    ],
+    "id": "identity:repository",
+    "kind": "identity",
+    "polarity": "SUPPORTED",
+    "value": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "package name declared by the manifest",
+      "path": "package.json"
+     }
+    ],
+    "id": "package:name",
+    "kind": "package",
+    "polarity": "SUPPORTED",
+    "value": "@aspose/3d"
+   },
+   {
+    "attributes": null,
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "version declared by the manifest",
+      "path": "package.json"
+     }
+    ],
+    "id": "package:version",
+    "kind": "package",
+    "polarity": "SUPPORTED",
+    "value": "24.12.0"
+   },
+   {
+    "attributes": {
+     "declaration": "export class ReferenceMode",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 1; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/ReferenceMode.ts"
+     }
+    ],
+    "id": "public_symbol:referencemode",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "ReferenceMode"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 2; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/ReferenceMode.ts"
+     }
+    ],
+    "id": "public_symbol:referencemode.direct",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "ReferenceMode.DIRECT"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 3; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/ReferenceMode.ts"
+     }
+    ],
+    "id": "public_symbol:referencemode.index",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "ReferenceMode.INDEX"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 4; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/ReferenceMode.ts"
+     }
+    ],
+    "id": "public_symbol:referencemode.index_to_direct",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "ReferenceMode.INDEX_TO_DIRECT"
+   },
+   {
+    "attributes": {
+     "declaration": "export class RelativeRectangle",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 3; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle"
+   },
+   {
+    "attributes": {
+     "signature": "constructor()",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 13; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.constructor",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.constructor"
+   },
+   {
+    "attributes": {
+     "signature": "RelativeRectangle fromScale(number scaleX, number scaleY, number scaleWidth, number scaleHeight)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 47; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.fromscale",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.fromScale"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 112; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.offsetheight",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.offsetHeight"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 104; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.offsetwidth",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.offsetWidth"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 88; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.offsetx",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.offsetX"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 96; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.offsety",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.offsetY"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 80; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.scaleheight",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.scaleHeight"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 72; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/RelativeRectangle.ts"
+     }
+    ],
+    "id": "public_symbol:relativerectangle.scalewidth",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RelativeRectangle.scaleWidth"
+   },
+   {
+    "attributes": {
+     "declaration": "export class RotationMode",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 1; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/RotationMode.ts"
+     }
+    ],
+    "id": "public_symbol:rotationmode",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RotationMode"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 2; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/RotationMode.ts"
+     }
+    ],
+    "id": "public_symbol:rotationmode.fixed",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RotationMode.FIXED"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 3; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/RotationMode.ts"
+     }
+    ],
+    "id": "public_symbol:rotationmode.orbit",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "RotationMode.ORBIT"
+   },
+   {
+    "attributes": {
+     "declaration": "export class Scene extends SceneObject",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 8; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene"
+   },
+   {
+    "attributes": {
+     "signature": "AnimationClip[]",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 76; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.animationclips",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.animationClips"
+   },
+   {
+    "attributes": {
+     "signature": "AssetInfo",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 68; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.assetinfo",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.assetInfo"
+   },
+   {
+    "attributes": {
+     "signature": "void clear()",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 92; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.clear",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.clear"
+   },
+   {
+    "attributes": {
+     "signature": "constructor()",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 19; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.constructor",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.constructor"
+   },
+   {
+    "attributes": {
+     "signature": "AnimationClip createAnimationClip(string name)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 102; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.createanimationclip",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.createAnimationClip"
+   },
+   {
+    "attributes": {
+     "signature": "AnimationClip | null",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 80; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.currentanimationclip",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.currentAnimationClip"
+   },
+   {
+    "attributes": {
+     "signature": "Property | null findProperty(string propertyName)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 26; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/A3DObject.ts"
+     }
+    ],
+    "id": "public_symbol:scene.findproperty",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.findProperty"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 9; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "public_symbol:scene.version",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Scene.VERSION"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "always",
+     "exception": "Error",
+     "member": "Scene.render",
+     "message": "render is not implemented"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 383; throw in the member's own body",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "implementation:throws.scene.render.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Scene.render throws Error"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "TypeError",
+     "member": "Scene.open",
+     "message": "fileOrStream must be a file path or a readable stream"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 141; throw in the member's own body",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "implementation:throws.scene.open.body.typeerror",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Scene.open throws TypeError (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Scene.save",
+     "message": "Unsupported format: ${format.constructor.name}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 360; throw in the member's own body",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "implementation:throws.scene.save.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Scene.save throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "TypeError",
+     "member": "Scene.save",
+     "message": "fileOrStream must be a file path or a stream with write() method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 339; throw in the member's own body",
+      "path": "src/aspose/threed/Scene.ts"
+     }
+    ],
+    "id": "implementation:throws.scene.save.body.typeerror",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Scene.save throws TypeError (conditionally)"
+   },
+   {
+    "attributes": {
+     "declaration": "export class Vector2",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 1; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2"
+   },
+   {
+    "attributes": {
+     "signature": "constructor(number x, number y)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 5; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.constructor",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.constructor"
+   },
+   {
+    "attributes": {
+     "signature": "boolean equals(Vector2 other)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 73; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.equals",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.equals"
+   },
+   {
+    "attributes": {
+     "signature": "number getItem(number key)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 47; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.getitem",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.getItem"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 31; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.length",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.length"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 35; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.length2",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.length2"
+   },
+   {
+    "attributes": {
+     "signature": "Vector2 parse(string input)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 39; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.parse",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.parse"
+   },
+   {
+    "attributes": {
+     "signature": "void set(number newX, number newY)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 26; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.set",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.set"
+   },
+   {
+    "attributes": {
+     "signature": "void setItem(number key, number value)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 57; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "public_symbol:vector2.setitem",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.setItem"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vector2.getItem",
+     "message": "Vector2 index out of range"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 53; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "implementation:throws.vector2.getitem.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.getItem throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vector2.parse",
+     "message": "Invalid Vector2 format: ${input}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 42; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "implementation:throws.vector2.parse.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.parse throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vector2.setItem",
+     "message": "Vector2 index out of range"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 63; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vector2.ts"
+     }
+    ],
+    "id": "implementation:throws.vector2.setitem.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vector2.setItem throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "declaration": "export class Vertex",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 9; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex"
+   },
+   {
+    "attributes": {
+     "signature": "number compare(Vertex other)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 22; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.compare",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.compare"
+   },
+   {
+    "attributes": {
+     "signature": "number compareTo(Vertex other)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 26; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.compareto",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.compareTo"
+   },
+   {
+    "attributes": {
+     "signature": "constructor(ArrayBuffer data, number offset, VertexField[] declaration, number vertexSize)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 15; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.constructor",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.constructor"
+   },
+   {
+    "attributes": {
+     "signature": "number readDouble(VertexField field)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 94; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.readdouble",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readDouble"
+   },
+   {
+    "attributes": {
+     "signature": "number readFloat(VertexField field)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 103; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.readfloat",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFloat"
+   },
+   {
+    "attributes": {
+     "signature": "FVector2 readFVector2(VertexField field)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 85; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.readfvector2",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFVector2"
+   },
+   {
+    "attributes": {
+     "signature": "FVector3 readFVector3(VertexField field)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 67; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.readfvector3",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFVector3"
+   },
+   {
+    "attributes": {
+     "signature": "FVector4 readFVector4(VertexField field)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 49; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "public_symbol:vertex.readfvector4",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFVector4"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vertex.readDouble",
+     "message": "Field not found: ${field.alias}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 97; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "implementation:throws.vertex.readdouble.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readDouble throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vertex.readFloat",
+     "message": "Field not found: ${field.alias}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 106; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "implementation:throws.vertex.readfloat.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFloat throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vertex.readFVector2",
+     "message": "Field not found: ${field.alias}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 88; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "implementation:throws.vertex.readfvector2.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFVector2 throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vertex.readFVector3",
+     "message": "Field not found: ${field.alias}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 70; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "implementation:throws.vertex.readfvector3.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFVector3 throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vertex.readFVector4",
+     "message": "Field not found: ${field.alias}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 52; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "implementation:throws.vertex.readfvector4.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readFVector4 throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "Vertex.readVector2",
+     "message": "Field not found: ${field.alias}"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 79; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/Vertex.ts"
+     }
+    ],
+    "id": "implementation:throws.vertex.readvector2.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "Vertex.readVector2 throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "declaration": "export class VertexDeclaration",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 5; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration"
+   },
+   {
+    "attributes": {
+     "signature": "VertexField addField(VertexFieldDataType dataType, VertexFieldSemantic semantic, number index, string alias)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 21; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.addfield",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.addField"
+   },
+   {
+    "attributes": {
+     "signature": "void clear()",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 13; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.clear",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.clear"
+   },
+   {
+    "attributes": {
+     "signature": "number compareTo(VertexDeclaration other)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 37; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.compareto",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.compareTo"
+   },
+   {
+    "attributes": {
+     "signature": "constructor()",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 10; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.constructor",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.constructor"
+   },
+   {
+    "attributes": {
+     "signature": "number",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 56; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.count",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.count"
+   },
+   {
+    "attributes": {
+     "signature": "VertexDeclaration fromGeometry(any _geometry, boolean _useFloat)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 33; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.fromgeometry",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.fromGeometry"
+   },
+   {
+    "attributes": {
+     "signature": "VertexField getField(number index)",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 66; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.getfield",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.getField"
+   },
+   {
+    "attributes": {
+     "signature": "boolean",
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 52; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "public_symbol:vertexdeclaration.sealed",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.sealed"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "always",
+     "exception": "Error",
+     "member": "VertexDeclaration.fromGeometry",
+     "message": "fromGeometry is not implemented"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 34; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "implementation:throws.vertexdeclaration.fromgeometry.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.fromGeometry throws Error"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "VertexDeclaration.addField",
+     "message": "VertexDeclaration is sealed"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 23; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "implementation:throws.vertexdeclaration.addfield.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.addField throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "aspect": "throws",
+     "condition": "conditional",
+     "exception": "Error",
+     "member": "VertexDeclaration.clear",
+     "message": "VertexDeclaration is sealed"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 15; throw in the member's own body",
+      "path": "src/aspose/threed/utilities/VertexDeclaration.ts"
+     }
+    ],
+    "id": "implementation:throws.vertexdeclaration.clear.body.error",
+    "kind": "implementation",
+    "polarity": "SUPPORTED",
+    "value": "VertexDeclaration.clear throws Error (conditionally)"
+   },
+   {
+    "attributes": {
+     "declaration": "export class TextureMapping",
+     "symbol_kind": "class"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 1; class; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 2; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.ambient",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.AMBIENT"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 6; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.bump",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.BUMP"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 4; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.diffuse",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.DIFFUSE"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 13; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.displacement",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.DISPLACEMENT"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 3; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.emissive",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.EMISSIVE"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 9; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.glow",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.GLOW"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 7; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.normal",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.NORMAL"
+   },
+   {
+    "attributes": {
+     "symbol_kind": "method"
+    },
+    "confidence": 1.0,
+    "evidence": [
+     {
+      "detail": "line 5; method; re-exported by the package entry point `src/aspose/threed/index.ts`",
+      "path": "src/aspose/threed/entities/TextureMapping.ts"
+     }
+    ],
+    "id": "public_symbol:texturemapping.opacity",
+    "kind": "public_symbol",
+    "polarity": "SUPPORTED",
+    "value": "TextureMapping.OPACITY"
+   }
+  ],
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+  "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
+ }
+}

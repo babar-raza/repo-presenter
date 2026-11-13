@@ -792,6 +792,19 @@ def type_implementation_facts(
     return sorted(found, key=rank)[:limit]
 
 
+def type_unit_facts(type_fact: Fact, facts: FactsDocument) -> tuple[list[str], list[Fact]]:
+    """Everything one ``type:<fact id>`` unit is given to state, besides the type fact itself (its
+    kind, value and signature): the verified member names listed with it (``type_members``) and its
+    own implementation facts (``type_implementation_facts``). The type batch's packet is built from
+    exactly this, and so is the review packet for the row the unit fills
+    (``review.sectionwise.unit_packet``), so the reviewer is shown the facts the sentence was
+    written from -- no more, no fewer. Measured on Aspose.3D-FOSS-for-TypeScript (hosted run
+    43430680427): sixteen true rows such as "ReferenceMode is a public symbol with members DIRECT,
+    INDEX, and INDEX_TO_DIRECT." were filed unsupported because the review packet carried neither
+    the member list nor the ``Scene.render`` throw the row restated."""
+    return type_members(type_fact, facts), type_implementation_facts(type_fact, facts)
+
+
 def _type_batches(
     entry: RegistryEntry, facts: FactsDocument, do_not_claim: list[dict[str, str]]
 ) -> list[SectionTask]:
@@ -802,9 +815,10 @@ def _type_batches(
     tasks: list[SectionTask] = []
     for index in range(0, len(types), _TYPE_BATCH):
         batch = types[index : index + _TYPE_BATCH]
-        implementation = {fact.id: type_implementation_facts(fact, facts) for fact in batch}
+        given = {fact.id: type_unit_facts(fact, facts) for fact in batch}
+        implementation = {fact_id: found for fact_id, (_, found) in given.items()}
         detail = [found for fact in batch for found in implementation[fact.id]]
-        members = {fact.id: type_members(fact, facts) for fact in batch}
+        members = {fact_id: names for fact_id, (names, _) in given.items()}
         ids = [fact.id for fact in batch]
         slots = tuple(f"type:{fact.id}" for fact in batch)
         slot_facts = {

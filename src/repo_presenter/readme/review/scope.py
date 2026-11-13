@@ -19,7 +19,7 @@ import re
 from collections.abc import Collection, Mapping
 from typing import Any
 
-from repo_presenter.core.facts import FactsDocument
+from repo_presenter.core.facts import Fact, FactsDocument
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
 from repo_presenter.readme.composition.placement import ATTRIBUTED, ATTRIBUTION_LINE
 from repo_presenter.readme.review.matching import present
@@ -120,10 +120,16 @@ def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
     Python), which the reviewer was never shown. Structural, like ``reviewable_lines``: a row is
     authored when its type is a SUPPORTED class or enum with neither a docstring nor a signature and
     its description is not the renderer's ``Public <kind>.`` fallback."""
+    return frozenset(authored_type_rows(readme, facts))
+
+
+def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
+    """``authored_table_lines`` with the type fact each row describes: the fact whose
+    ``type:<fact id>`` unit the row's description is (``renderer._symbol_description``)."""
     from repo_presenter.readme.composition.renderer import api_reference_names
 
     names = api_reference_names(facts)
-    authored_types: set[str] = set()
+    authored_types: dict[str, Fact] = {}
     fallbacks: dict[str, str] = {}
     for fact in facts.by_kind("public_symbol"):
         attributes = fact.attributes or {}
@@ -133,12 +139,12 @@ def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
         if attributes.get("docstring") or attributes.get("signature"):
             continue
         name = names.get(fact.value, fact.value.rsplit(".", 1)[-1])
-        authored_types.add(name)
+        authored_types.setdefault(name, fact)
         fallbacks[name] = f"Public {kind}."
     if not authored_types:
-        return frozenset()
+        return {}
     owners = section_lines(readme)
-    found: set[int] = set()
+    found: dict[int, Fact] = {}
     for number, row in enumerate(readme.splitlines(), 1):
         if owners[number - 1] != "api_reference":
             continue
@@ -147,8 +153,8 @@ def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
             continue
         description = match.group(2).strip()
         if description and description != fallbacks[match.group(1)]:
-            found.add(number)
-    return frozenset(found)
+            found[number] = authored_types[match.group(1)]
+    return found
 
 
 def line_sections(

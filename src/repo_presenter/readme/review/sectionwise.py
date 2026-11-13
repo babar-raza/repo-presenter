@@ -32,7 +32,7 @@ from repo_presenter.readme.review.packet import (
     review_schema,
     without_narrative,
 )
-from repo_presenter.readme.review.scope import line_sections, shown_text
+from repo_presenter.readme.review.scope import authored_type_rows, line_sections, shown_text
 
 #: Most characters of author-written text one unit shows (about 1,100 tokens); the facts and the
 #: original excerpt are bounded separately (``evidence``).
@@ -157,8 +157,14 @@ def unit_packet(
     ``maintainer_lines`` (``scope.maintainer_lines``) are sent only as the shown line numbers that
     are attributed maintainer text -- a structural label, not a disposition or a rationale."""
     text = unit_text(unit, candidate_readme)
+    given, members = type_row_facts(unit, candidate_readme, facts)
     records = unit_facts(
-        facts, text, sections=unit.sections, cited=plan_cited_fact_ids(plan, unit.sections, facts)
+        facts,
+        text,
+        sections=unit.sections,
+        cited=plan_cited_fact_ids(plan, unit.sections, facts),
+        given=given,
+        members=members,
     )
     rows = candidate_readme.splitlines()
     entries = [
@@ -190,6 +196,31 @@ def unit_packet(
             {n: _shown(unit, rows[n - 1]) for n in unit.lines}, records
         ),
     }
+
+
+def type_row_facts(
+    unit: ReviewUnit, readme: str, facts: FactsDocument
+) -> tuple[list[str], dict[str, list[str]]]:
+    """For the authored API reference rows the unit shows (``scope.authored_type_rows``), the fact
+    ids each row's ``type:<fact id>`` unit was given and the member names listed with each type,
+    read through the same function the type batch is built from (``authoring.type_unit_facts``):
+    what the reviewer is shown for a row is exactly what its author was told it may state."""
+    if not unit.rendered or "api_reference" not in unit.sections:
+        return [], {}
+    from repo_presenter.readme.composition.authoring import type_unit_facts
+
+    rows = authored_type_rows(readme, facts)
+    given: list[str] = []
+    members: dict[str, list[str]] = {}
+    for number in unit.lines:
+        type_fact = rows.get(number)
+        if type_fact is None:
+            continue
+        names, implementation = type_unit_facts(type_fact, facts)
+        given.extend([type_fact.id, *(fact.id for fact in implementation)])
+        if names:
+            members[type_fact.id] = names
+    return list(dict.fromkeys(given)), members
 
 
 def plan_cited_fact_ids(
