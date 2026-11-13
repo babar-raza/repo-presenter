@@ -80,6 +80,21 @@
       "calls_spent": 0.0,
       "tokens_spent": 0.0,
       "basis": "R31 epoch 2, wave 5 (Lane R): R36 class C1 -- seals failing only BC-18 with register rows evidenced from pinned source; the repair cleared this class twice today (Cells .NET, Email .NET). Four, not six: Cells TS / Imaging .NET wait for their README-cited rows to be re-verified (R36 b4)."
+    },
+    {
+      "id": "e2-006-lane-r-wave6",
+      "repositories": [
+        "aspose-font-foss/Aspose.Font-FOSS-for-Python",
+        "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+        "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
+        "aspose-omr-foss/Aspose.OMR-FOSS-for-Python",
+        "aspose-psd-foss/Aspose.PSD-FOSS-for-Java"
+      ],
+      "calls_cap": 1350,
+      "tokens_cap": 37968567,
+      "calls_spent": 0.0,
+      "tokens_spent": 0.0,
+      "basis": "R31 epoch 2, wave 6 (Lane R): Font Python (C6 fix, PR #55) and GIS .NET (C7 missing-README fix, PR #55), plus three never-attempted R34 products (OCR .NET, OMR Python, PSD Java)"
     }
   ],
   "meaning": "The total provider-call envelope for the whole 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md), read by the budget gate (TC-015, src/repo_presenter/core/llm/budget.py) before any non-replay provider call. Zero-call activity classes (recertification, obligations/rule checks, probes, the example verifier, ledgers, funnel, census, item-level restore where proved zero-call) are never charged against this envelope and need no entry here to proceed. A call outside an open batch, or past either cap, raises instead of calling the provider -- see docs/DELIVERY_PLAN_2026-11-07.md section 7 for the inference-class table this derives from. Only the owner raises total_calls_cap or total_tokens_cap, or changes batch_size, per_batch_cap_multiplier or stop_rule_multiplier; the supervisor opens and records batches within them.",
