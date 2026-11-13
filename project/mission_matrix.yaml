@@ -5,79 +5,90 @@
 # external_effect_prohibited rows say so. IMPLEMENTED_AND_VERIFIED_EXTERNAL_EFFECT_PROHIBITED is the
 # status for a capability fully built and verified except for an effect barred by owner authority.
 # Written 2026-11-04 by the supervisor session; a requirement is never promoted from a summary.
+# Refreshed 2026-11-13 by backlog item BL-001 (R40) against: `python -m repo_presenter.recertify --all --json
+# --remote origin` (R 5/18 sealed RECERTIFIED, L 26/27), `python ops/gatecli.py validate`, the acceptance-record
+# branches on origin, `gh run list`, and the files named in each row. Every row links its backlog items
+# (project/backlog.yaml, field `backlog`); gaps there are the authoritative work list.
 schema_version: 1
 rows:
   - {id: G1, title: "Lane L live-README maintenance, 25 independently accepted candidates", status: PARTIAL,
-     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/READINESS_PACKAGE_2026-11-04.md, src/repo_presenter/lane_l.py],
-     gaps: "12 Lane L pipeline-good (hosted, earlier sweeps), 0 committed bundles, 0 owner-reviewed, 0/25 independently accepted; reviewer uncalibrated. Local Lane L on Font (2026-11-04) correctly refused to seal: the live README lists unsupported formats and 4 of its own examples FAIL when executed (upstream README defects; Lane L may not repair them and recommends Lane R)",
-     next_action: "TC-007 calibration, then hosted pilot on the 3 mandatory products", external_effect_prohibited: "upstream PRs"}
+     implementation: YES, test: YES, real_execution: YES, independent_verification: PARTIAL,
+     evidence: [src/repo_presenter/lane_l.py, src/repo_presenter/lane_l_trigger.py, data/terminal_cells.json, project/backlog.yaml],
+     gaps: "2026-11-13: 27 Lane L seals of 40 active repositories, 26 re-certify (3D .NET NEEDS_REPAIR L-03/L-05); 7 Lane L records audit_passed in writer run 43252306864 (supervisor counter: 5 after the R16 rule), 8 of the 26 are R16 no-ops (supervisor figure); latest M9 round 43445578226 failed its gates (recall 0.238, false-flag 0.625); 12 active repositories have no Lane L seal and no terminal outcome (R20)",
+     next_action: "BL-013 root cause of the failed M9 round; BL-014/BL-025 terminal outcomes; BL-023", external_effect_prohibited: "upstream PRs", backlog: [BL-022, BL-013, BL-014, BL-023, BL-025]}
   - {id: G2, title: "Lane R regeneration, 25 independently accepted candidates", status: PARTIAL,
-     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/READINESS_PACKAGE_2026-11-04.md, src/repo_presenter/cascade.py, docs/DECISION_LOG.md],
-     gaps: "10 Lane R pipeline-good (earlier hosted sweeps), 1 committed bundle, 0/25 accepted. Local pilots 2026-11-04 (Font, 3D-Python, Cells .NET) found and fixed 4 pipeline defects (merged PR #4, #10); Font now clears every deterministic check and reaches independent LLM review but is REJECTed (fabricated PDF export: authoring-accuracy limit of qwen3-next); 3D-Python BLOCKED_ON_SOURCE_FACT; Cells .NET needs a hosted run. 0 sealed. See docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md",
-     next_action: "hosted pilots when an Actions dispatch path exists (integration needs actions:write; token must be re-issued)", external_effect_prohibited: "upstream PRs"}
+     implementation: YES, test: YES, real_execution: YES, independent_verification: PARTIAL,
+     evidence: [src/repo_presenter/cascade.py, data/readme_findings.json, data/recertification_baseline.json, project/backlog.yaml],
+     gaps: "2026-11-13: 18 Lane R seals of 40 active; 5 re-certify (3D .NET, 3D Python, Cells .NET, Email .NET, Words .NET); 13 NEEDS_REPAIR, all on BC-18 (Cells Go and PDF Java also BC-05/BC-17); 22 active repositories never sealed; 0/25 independently accepted; owner feedback found a false PyPI claim and internal wording (BL-002) and a placement defect (BL-004)",
+     next_action: "BL-002, BL-003, BL-004 trust fixes; BL-020 repairs through the cohort; BL-021 first generation", external_effect_prohibited: "upstream PRs", backlog: [BL-019, BL-002, BL-003, BL-004, BL-020, BL-021]}
   - {id: G3, title: "Issue lifecycle discovery->closure, external writes disabled", status: PARTIAL,
-     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
-     evidence: [src/repo_presenter/issues/discovery.py, src/repo_presenter/issues/close.py],
-     gaps: "all 11 lifecycle stages now have code + fake-transport tests (stage audit in tests/issues/test_lifecycle_end_to_end.py; tracking, labels, reopen-on-recurrence and remote comment/close/reopen added 2026-11-04, every write behind assert_write_allowed + kill switch + permit + approvals; 12 negative controls; closing comment is idempotent across a partial failure via a hidden fingerprint+reason marker and a fail-closed paginated comment read, 2026-11-04). NOT done: no real exercise even against babar-raza/repo-presenter, no production CloseApprovalStore (close-approval record format is untested against GitApprovalStore), assignees unsupported (no registry field), local-only not-planned close still skips re-verification (pinned by an existing test); TC-010a open",
-     next_action: "TC-010a isolated exercise inside babar-raza/repo-presenter", external_effect_prohibited: "filing/closing issues on upstream repos"}
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [src/repo_presenter/issues/discovery.py, src/repo_presenter/issues/close.py, project/taskcards/TC-010a.yaml],
+     gaps: "R39 (2026-11-13) widens scope to the 3D TypeScript pilot: its five repository-presenter[bot] issues reproduce at 66cb26df3b03 (local); the pilot branch (d997012) is not on origin; TC-010a still AWAITING_OWNER_DECISION on a stale target (no genuine defect found on Cells Java, 2026-11-05); 7 unfiled issue drafts not re-verified",
+     next_action: "BL-012 integrate the R39 pilot; BL-030 re-author TC-010a; BL-036", external_effect_prohibited: "issues outside the R39 pilot repositories", backlog: [BL-012, BL-030, BL-036]}
   - {id: G4, title: "Candidate publication end-to-end (Cells .NET, 3D Python mandatory)", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
-     evidence: [src/repo_presenter/propose/effect.py, src/repo_presenter/candidates_publish],
-     gaps: "registry dry_run blocks 3d/python and 3d/net; REVIEW_UNCALIBRATED gate refuses; no non-mutating end-to-end proof; 3D-Python Lane R completes the cascade locally but cannot seal: PyPI aspose-3d-foss project URL points at aspose-3d/Aspose.3D-for-Python, so the install fact is UNRESOLVED and the live install block is unaccounted (BLOCKED_ON_SOURCE_FACT, docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md); Cells .NET not yet run (needs a .NET SDK for example verification)",
-     next_action: "TC-009b non-mutating publication proof after TC-007", external_effect_prohibited: "any upstream branch/PR"}
+     evidence: [src/repo_presenter/propose/effect.py, project/taskcards/TC-009b.yaml, docs/wip/r15-portfolio-gate.patch],
+     gaps: "R15 enforcement was reverted (6b7bc6e) and never re-landed: no PORTFOLIO_INCOMPLETE refusal exists in code; TC-009b still asks for live PRs, contradicting R15/R17, and was never re-authored as the plan required; Cells .NET and 3D Python Lane R both re-certify (2026-11-13) but neither is independently accepted; no sandbox (R17)",
+     next_action: "BL-026 restore the R15 gate; BL-029 non-mutating proof; BL-028 sandbox", external_effect_prohibited: "any upstream branch/PR", backlog: [BL-026, BL-028, BL-029]}
   - {id: G5, title: "Proven GitHub App integration", status: PARTIAL,
-     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
      evidence: [.github/workflows/mint-app-token.yml, src/repo_presenter/github/token_provenance.py, evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json],
-     gaps: "corrected 2026-11-07: TC-009a is ACCEPTED and 1 real scoped mint is proven (run 42200695015, minted true, 0 upstream writes); real PR/issue publication through that token is not yet proven, see TC-009b", next_action: "TC-009b non-mutating publication proof", external_effect_prohibited: "writes with the App token to non-allowed repos"}
+     gaps: "TC-009a ACCEPTED: 1 real scoped mint (run 42200695015, 0 upstream writes); repository-presenter[bot] filed the 5 3D TypeScript issues (R39 decision-log entry, not re-run here); PR publication through the App token is not proven (TC-009b); secrets still repository-level per the 2026-11-06 residual-risk entry (owner action, not verifiable here)",
+     next_action: "BL-029; BL-038 owner action", external_effect_prohibited: "writes with the App token to non-allowed repos", backlog: [BL-029, BL-038, BL-037]}
   - {id: G6, title: "Autonomous Docker + Actions production", status: PARTIAL,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [.github/workflows/present.yml, Dockerfile],
-     gaps: "hosted present runs exist from earlier sweeps (~14% success noted by audit); schedule fails closed by design; Dockerfile fixed and built locally 2026-11-04 (README.md copy; runs --help as uid 10001, --network=none) hosted `docker` CI job (PR #4, run 41882862381, job 126760103728) built the image including the apt git install and verified: git present, uid 10001, entrypoint starts with --network=none, no secret-shaped env; no facts stage has yet executed inside the container; this sandbox cannot dispatch Actions (403)",
-     next_action: "build and run image; hosted pilot via an authorized path", external_effect_prohibited: "none beyond upstream writes"}
+     evidence: [.github/workflows/present.yml, .github/workflows/supervisor-tick.yml, Dockerfile, data/scheduled_execution_policy.json],
+     gaps: "R37 engine wired (2026-11-13: scheduled cohort, budget ledger, terminal cells) but the hourly cron fired ~twice a day (11-11..11-13, 39-49 s each) and the cohort chain (5183edd) is not on origin; supervisor-tick only reports (worker-tick --dry-run), no execution bridge (TC-032 never authored); TC-012b never satisfied; startup_failure seen (run 43439078738); replay rests on actions/cache (F10); facts-in-container on a real product not shown",
+     next_action: "BL-011, BL-032, BL-027, BL-046, BL-040, BL-048", external_effect_prohibited: "none beyond upstream writes", backlog: [BL-011, BL-027, BL-032, BL-040, BL-046, BL-048]}
   - {id: G7, title: "Equal or better than aspose.org", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
-     evidence: [docs/PARITY_BENCHMARK_PILOT.md, src/repo_presenter/core/aspose_parity.py],
-     gaps: "one pilot parity measurement (TC-006 accepted); three-product parity not shown", next_action: "TC-011-prep benchmark of 3 products", external_effect_prohibited: "none"}
+     evidence: [docs/PARITY_BENCHMARK_PILOT.md, src/repo_presenter/core/aspose_parity.py, data/benchmarks.json],
+     gaps: "R2 parity never established: data/benchmarks.json has 0 of 41 benchmarks confirmed as aspose.org readme-refresh output (31 no_benchmark_claimed, 10 unknown), so BC-17 compares against the live README without knowing whether it is the aspose.org benchmark; one pilot structural measurement only (TC-006)",
+     next_action: "BL-035 resolve the 10 unknown with provenance, then measure", external_effect_prohibited: "none", backlog: [BL-035]}
   - {id: G8, title: "Actual delivery, no endless development", status: PARTIAL,
-     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md, project/state.yaml],
-     gaps: "delivery count still 0 accepted candidates", next_action: "convert pilots into accepted candidates", external_effect_prohibited: "none"}
+     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: PARTIAL,
+     evidence: [docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md, project/state.yaml, project/backlog.yaml],
+     gaps: "Lane R 0/25, Lane L 5-7/25 independently accepted; 0 upstream PRs; four integration branches (BL-005/008/011/012) exist only locally, unmerged; plan cards TC-027/030-035 never authored and not dispositioned",
+     next_action: "integrate the pending branches; BL-041 dispositions; work the backlog's next-eligible list", external_effect_prohibited: "none", backlog: [BL-019, BL-022, BL-041]}
   # Amended 2026-11-06 (owner ruling R4, docs/CONSOLIDATED_GOALS_2026-11-06.md; audit P1): the title
   # previously read "25 common repos, both lanes independently accepted" -- that 25-common rule is
   # retired. P1 is ~25 independently accepted candidates PER LANE, counted independently (product
   # sets may differ); upstream delivery is a separately gated outcome. Counter:
   # ops/checks/portfolio_delivery_count.py (TC-011).
-  - {id: P1, title: "~25 independently accepted candidates per lane (Lane R and Lane L counted independently)", status: NOT_STARTED_FOR_ACCEPTANCE,
-     implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/RELEASE_CONTRACT_P1-P5.md, ops/checks/portfolio_delivery_count.py], gaps: "Lane R 0/25, Lane L 0/25 independently accepted (2026-11-06: 7 R + 11 L pipeline_good_uncalibrated under the NOT_PASSED reviewer); 0 publication-ready, 0 effects, 0 live-verified; blocked by TC-007", next_action: "TC-007 then TC-011", external_effect_prohibited: "upstream PRs"}
+  - {id: P1, title: "~25 independently accepted candidates per lane (Lane R and Lane L counted independently)", status: PARTIAL,
+     implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
+     evidence: [docs/RELEASE_CONTRACT_P1-P5.md, ops/checks/portfolio_delivery_count.py, data/acceptance_calibration.json],
+     gaps: "2026-11-13: acceptance contract live (R33; attested writer, revision-bound); Lane R 0/25, Lane L 7 audit_passed records (counter 5, supervisor figure; local attestation verify blocked by the proxy); latest round 43445578226 failed; 0 publication-ready by R15; evidence validity structural only, canaries empty; TC-011 READY but its check needs >= 25 per lane",
+     next_action: "BL-013, BL-024, BL-031", external_effect_prohibited: "upstream PRs", backlog: [BL-019, BL-022, BL-024, BL-031]}
   - {id: P2, title: "Issue lifecycle operates and is verifiable", status: PARTIAL,
-     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
-     evidence: [src/repo_presenter/issues/model.py], gaps: "see G3", next_action: "TC-010a", external_effect_prohibited: "upstream issue writes"}
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
+     evidence: [src/repo_presenter/issues/model.py], gaps: "see G3", next_action: "BL-012, BL-030", external_effect_prohibited: "upstream issue writes outside the R39 pilot", backlog: [BL-012, BL-030]}
   - {id: P3, title: "Proven App path integrated and tested", status: PARTIAL,
-     implementation: PARTIAL, test: YES, real_execution: NONE, independent_verification: NONE,
-     evidence: [tests/test_mint_app_token_workflow.py], gaps: "see G5", next_action: "TC-009a", external_effect_prohibited: "non-allowed repo writes"}
+     implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
+     evidence: [tests/test_mint_app_token_workflow.py, evidence/build/GATE2_INTEGRATIONS/TC-009a/mint_proof.json], gaps: "see G5 (mint proven, TC-009a ACCEPTED; publication not proven)", next_action: "BL-029", external_effect_prohibited: "non-allowed repo writes", backlog: [BL-029]}
   - {id: P4, title: "Runs reliably and autonomously on hosted infra and Docker", status: PARTIAL,
      implementation: PARTIAL, test: PARTIAL, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [.github/workflows/ci.yml], gaps: "see G6", next_action: "Docker run + hosted pilot", external_effect_prohibited: "none"}
+     evidence: [.github/workflows/ci.yml, .github/workflows/present.yml], gaps: "see G6", next_action: "BL-011, BL-032, BL-046", external_effect_prohibited: "none", backlog: [BL-011, BL-032, BL-046]}
   - {id: P5, title: "Unchanged inputs -> zero provider calls, incl. cold runner", status: PARTIAL,
      implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: PARTIAL,
      evidence: [scripts/p5_call_count_proof.py, tests/test_preflight_wiring.py],
-     gaps: "Lane L real-CLI proven; Lane R now also proven through the real run_cascade with a counting fake provider (tests/test_lane_r_real_cascade_p5.py, merged in PR #3, independently re-run: 391 passed); provider is a fake, so no live-provider or hosted cold-runner proof",
-     next_action: "hosted cold-runner run when an Actions dispatch path exists", external_effect_prohibited: "none"}
-  - {id: N1, title: "Non-negotiable: two equal lanes", status: PARTIAL, implementation: YES, test: YES, real_execution: PARTIAL,
-     independent_verification: NONE, evidence: [AGENTS.md, src/repo_presenter/present.py], gaps: "parity of delivered outputs not shown", next_action: "pilot", external_effect_prohibited: "none"}
-  - {id: N2, title: "Non-negotiable: reviewer calibration and no false acceptance", status: BLOCKED,
-     implementation: YES, test: YES, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [data/reviewer_calibration.json, project/taskcards/TC-007.yaml],
-     gaps: "NOT_PASSED (failed gates: false_reject_rate, stability, two tier-2 real-defect classes); iteration 4 needs fresh sealed clean twins; local sandbox sealing was blocked by github.com 403 -> BC-06 UNCHECKED (docs/investigations/2026-11-04-local-lane-r-and-gateway-streaming.md); a raw.githubusercontent.com alternate-source rule (RESOLVED-via-alternate, distinct from RESOLVED/UNCHECKED/BROKEN) now exists; .NET example verification needs a .NET SDK (builds.dotnet.microsoft.com blocked locally); Actions dispatch is 403 from this integration",
-     next_action: "obtain network access or hosted runs; rerun harness", external_effect_prohibited: "none"}
+     gaps: "Lane L real-CLI proven; Lane R proven through the real run_cascade with a counting fake provider (tests/test_lane_r_real_cascade_p5.py); no hosted cold-runner proof, and the hosted call store still restores from actions/cache (F10)",
+     next_action: "BL-040 then BL-047", external_effect_prohibited: "none", backlog: [BL-040, BL-047]}
+  - {id: N1, title: "Non-negotiable: two equal lanes", status: PARTIAL, implementation: YES, test: YES, real_execution: YES,
+     independent_verification: PARTIAL, evidence: [AGENTS.md, src/repo_presenter/present.py], gaps: "both lanes run hosted and seal; delivered outcomes are unequal (R 0 vs L 5-7 accepted)", next_action: "BL-019", external_effect_prohibited: "none", backlog: [BL-019, BL-022]}
+  - {id: N2, title: "Non-negotiable: reviewer calibration and no false acceptance", status: PARTIAL,
+     implementation: YES, test: YES, real_execution: YES, independent_verification: PARTIAL,
+     evidence: [data/acceptance_calibration.json, data/reviewer_calibration.json, project/taskcards/TC-007.yaml],
+     gaps: "superseded gate: R33 replaced the frozen reviewer_calibration.json (NOT_PASSED, iteration 5) with the acceptance contract; TC-007 ACCEPTED via M8 rung (c) (TC-026, R26); M9 blind audit is the false-acceptance control and its latest round failed its own gates (no false acceptance resulted: 0 records accepted); owner feedback found a false claim in a re-certified Lane R seal (BL-002), so deterministic re-certification alone is not sufficient",
+     next_action: "BL-003, BL-013, BL-024", external_effect_prohibited: "none", backlog: [BL-002, BL-003, BL-013, BL-024, BL-057]}
   - {id: N3, title: "Non-negotiable: no writes outside babar-raza/repo-presenter", status: PARTIAL,
      implementation: PARTIAL, test: YES, real_execution: PARTIAL, independent_verification: NONE,
-     evidence: [docs/DECISION_LOG.md], gaps: "write guard (assert_write_allowed on every real HTTP write primitive) merged in PR #3 with green CI and an independent local re-run; legacy writers inventoried only, not retired; no audit of workflows that could write with the App token beyond the caller-pin test",
-     next_action: "audit remaining write-capable paths (legacy writer inventory) under TC-002 when the owner decides", external_effect_prohibited: "ALL upstream/aspose.org/legacy repo writes"}
+     evidence: [docs/DECISION_LOG.md, tests/test_write_authority_r22.py, data/upstream_write_allowlist.json],
+     gaps: "amended by R22 (9 repositories allowlisted for draft PRs, CI-consistent: 4 tests pass) and R39 (issues on the 3D TypeScript pilot); R15 gate exists only as policy (BL-026); legacy writers inventoried, not retired; secrets not environment-scoped (owner action)",
+     next_action: "BL-026; BL-038", external_effect_prohibited: "upstream writes beyond R22 draft PRs (after R15) and R39 pilot issues", backlog: [BL-026, BL-056, BL-038]}
   - {id: M1, title: "Final successor cutover to single repository-presenter on GitHub/GitLab", status: NOT_STARTED,
-     implementation: NONE, test: NONE, real_execution: NONE, independent_verification: NONE,
-     evidence: [migration/reuse-manifest.yaml, docs/MISSION_AUTHORITY.md], gaps: "no cutover/rollback procedure document yet; predecessor snapshot not recorded",
-     next_action: "write migration/CUTOVER_PROCEDURE.md (prepared, awaiting owner authorization)", external_effect_prohibited: "any change to legacy GitHub/GitLab repositories"}
+     implementation: PARTIAL, test: NONE, real_execution: NONE, independent_verification: NONE,
+     evidence: [migration/reuse-manifest.yaml, docs/MISSION_AUTHORITY.md, migration/CUTOVER_PROCEDURE.md],
+     gaps: "migration/CUTOVER_PROCEDURE.md now exists (PREPARED, awaiting owner authorization) but its precondition 3 requires reviewer_calibration PASSED, unsatisfiable under R10/R33; predecessor snapshot not recorded; TC-012a AWAITING_PREREQUISITE",
+     next_action: "BL-033 fix the precondition; cutover last, owner-approved", external_effect_prohibited: "any change to legacy GitHub/GitLab repositories", backlog: [BL-033]}

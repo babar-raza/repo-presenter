@@ -2,7 +2,42 @@
 # Every item cites its source (never invented), has an implementation path, acceptance criteria and evidence; an item is
 # `done` only with reproducible evidence (commands, runs, commits). Status: open | active | blocked | deferred | done.
 # Priority: P0 (trust/correctness of public output) > P1 (delivery throughput) > P2 (quality) > P3 (deferred improvement).
-# Seeded 2026-11-13 by the supervisor; reconciliation of all earlier requirements is item BL-001.
+# Seeded 2026-11-13 by the supervisor (BL-001..BL-018); reconciled 2026-11-13 by BL-001 (BL-019..BL-058).
+# Evidence lists hold VERIFIED facts only (command + date). Assumptions and interpretations are marked
+# "ASSUMPTION:" / "INTERPRETATION:" in next_action. Mission-matrix rows link back here through their `backlog` field.
+#
+# ---------------------------------------------------------------------------------------------------------------
+# Honest numbers, verified 2026-11-13 (BL-001 reconciliation):
+#   `python -m repo_presenter.recertify --all --json --remote origin` (after fetching refs/repository-presenter-state/*):
+#     Lane R: 18 sealed of 40 active -> 5 RECERTIFIED (3D .NET, 3D Python, Cells .NET, Email .NET, Words .NET),
+#             13 NEEDS_REPAIR (all 13 fail BC-18; Cells Go also BC-05/BC-17; PDF Java also BC-04/BC-05/BC-17).
+#     Lane L: 27 sealed of 40 active -> 26 RECERTIFIED, 1 NEEDS_REPAIR (3D .NET: L-03, L-05).
+#   Independently accepted: Lane R 0/25. Lane L: 7 records with audit_passed=true in writer run 43252306864
+#     (acceptance-records-43217648963.json, batch_passed=true); the supervisor's counter figure is 5 after the R16
+#     no-op rule (supervisor-reported; not reproducible in this sandbox: sigstore TUF hosts are refused by the proxy,
+#     so `gh attestation verify` cannot run here). Lane L R16 no-ops among the 26: 8 (supervisor figure, BL-014).
+#   Latest M9 round (seed run 43445578226): batch_passed=false, seeded recall 0.238 < 0.90, false-flag 0.625 > 0.10
+#     -> 0 new acceptances (acceptance-records-43445578226.json on origin/acceptance-record/run-43445578226-43445578226).
+#   Upstream PRs by this system 0; upstream issues by this system: #4 on Aspose.3D-FOSS-for-Python (2026-10-21) and
+#     five repository-presenter[bot] issues on Aspose.3D-FOSS-for-TypeScript (R39 decision-log entry).
+#
+# Next eligible work (P0 first, dependencies respected; supervisor schedules, Actions runs the pipeline parts):
+#   1. BL-002  false 3D-Python PyPI claim + internal wording check            (P0, active, no deps)
+#   2. BL-003  independent claim-by-claim review of every Lane R candidate    (P0, active, no deps)
+#   3. BL-004  3D .NET section placement class fix                            (P0, open, no deps)
+#   4. BL-008  integrate example-verification fixes (branch not on origin)    (P0, active, no deps)
+#   5. BL-011  integrate cohort chain (branch not on origin) -> engine runs   (P0, active, no deps)
+#   6. BL-026  restore R15 portfolio gate in propose/effect.py (R24-aware)    (P0, open, no deps)
+#   7. BL-013  root-cause failed M9 round 43445578226 before the next seed    (P0, active, no deps)
+#   8. BL-020  repair the 13 NEEDS_REPAIR Lane R seals through the cohort     (P0, after BL-011, BL-003)
+#   9. BL-019 / BL-022  per-lane 25 targets (tracking items; move with BL-020/021/023/024)
+#  10. P1 in order: BL-005, BL-007, BL-009, BL-012, BL-014, BL-023, BL-024, BL-046, BL-035, BL-027, BL-021, BL-025,
+#      BL-028 (owner-blocked; alternative proposed), BL-037..BL-039 (owner-only), BL-031/BL-032 (gated on counts/engine)
+#  11. P2/P3 afterwards: BL-006, BL-010, BL-015, BL-017, BL-018, BL-029, BL-030, BL-034, BL-036, BL-040, BL-041,
+#      BL-047, BL-048, BL-033 (cutover, last), BL-042..BL-045
+# Conduct rulings (R1, R11, R12, R36, R38, the Final Directive) are process constraints applied to every item, not
+# separate work items; standing output invariants (R9, R10, R14/R6, R18, R25/R31) are BL-049..BL-053.
+# ---------------------------------------------------------------------------------------------------------------
 schema_version: 1
 items:
   - id: BL-001
@@ -13,8 +48,12 @@ items:
     status: active
     implementation_path: "reconciliation worker; link items to project/mission_matrix.yaml rows; refresh stale matrix rows"
     acceptance: "every requirement has an item with status, path, acceptance and evidence; ops/checks/backlog_check.py passes in CI"
-    evidence: []
-    next_action: "reconciliation worker dispatched 2026-11-13"
+    evidence:
+      - "2026-11-13: sources read: docs/CONSOLIDATED_GOALS_2026-11-06.md (Parts A-E), docs/RULINGS.md, docs/R38_PIPELINE_FIRST.md, docs/R40_BACKLOG.md, docs/DELIVERY_PLAN_2026-11-07.md, docs/DECISION_LOG.md (open/not-done/follow-up entries), project/mission_matrix.yaml, project/state.yaml, project/taskcards/*.yaml, docs/wip/r15-portfolio-gate.patch, evidence/build/*/*/draft_upstream_issue.md"
+      - "2026-11-13: `python ops/gatecli.py validate` -> OK; not-ACCEPTED cards TC-005 VERIFICATION_FAILED, TC-009b/TC-010a AWAITING_OWNER_DECISION, TC-011/TC-012b READY, TC-012a AWAITING_PREREQUISITE"
+      - "2026-11-13: `python -m repo_presenter.recertify --all --json --remote origin` rc=0 (numbers in the header)"
+      - "2026-11-13: `python ops/checks/portfolio_delivery_count.py --json` could not complete a verified count here: sigstore TUF hosts (tuf-repo-cdn.sigstore.dev, tuf-repo.github.com) refused by the session proxy"
+    next_action: "supervisor verifies this reconciliation and merges it; the PR's CI run of backlog_check/mission_matrix is the closing evidence"
 
   - id: BL-002
     title: "FALSE CLAIM — 3D Python Lane R says aspose-3d-foss is \"not confirmed on PyPI\" and prints raw internal evidence wording"
@@ -35,7 +74,7 @@ items:
     status: active
     implementation_path: "one independent reviewer agent per Lane R candidate verifies every claim against the pinned source and registries; confirmed false claims appended to data/readme_findings.json (BC-18) so the governed repair loop corrects them; the class causes become backlog defects"
     acceptance: "every certified Lane R candidate reviewed claim-by-claim with evidence; every confirmed false claim registered; classes fixed at root"
-    evidence: []
+    evidence: ["verified 2026-11-13: data/readme_findings.json holds 72 rows (70 OPEN, 2 RESOLVED)"]
     next_action: "reviewer agents dispatched"
 
   - id: BL-004
@@ -57,7 +96,9 @@ items:
     status: active
     implementation_path: "branch fix/type-description-rule 252fe6c (doc-comment junk filter; Lane R facts-only purpose objective; new Lane L type_description detector); integration pending"
     acceptance: "Pareto scan (scripts/measure_type_descriptions.py) shows no count/label/junk row a doc comment could replace; Lane R rows re-authored on next run"
-    evidence: ["worker measurement: 237 non-descriptive of 10,489 rows; 4 Lane L cells corrected; 232 reported (no doc comment); R10 gate OK 45 seals"]
+    evidence:
+      - "worker measurement: 237 non-descriptive of 10,489 rows; 4 Lane L cells corrected; 232 reported (no doc comment); R10 gate OK 45 seals"
+      - "verified 2026-11-13: 252fe6c exists only on local branch fix/type-description-rule; no origin branch contains it; not in origin/main (0adf334)"
     next_action: "integrate 252fe6c; decide Lane L enum-cell extension (supervisor decision: yes, verifiable values) and Java enum_member extractor gap"
 
   - id: BL-006
@@ -69,6 +110,7 @@ items:
     implementation_path: "extractors/platforms/java* enum member facts"
     acceptance: "Java enum constants appear as enum_member facts; test from 3D Java"
     evidence: []
+    depends_on: [BL-005]
     next_action: "after BL-005 integration"
 
   - id: BL-007
@@ -85,12 +127,14 @@ items:
   - id: BL-008
     title: "Every printed example verified (owner question \"Are all examples verified globally?\")"
     type: requirement
-    source: "owner chat 2026-11-13; goal \"every claim verified\""
+    source: "owner chat 2026-11-13; goal \"every claim verified\" (Part A §4 \"Validate technical claims ... examples\")"
     priority: P0
     status: active
     implementation_path: "branch audit/example-verification a5b96e9 + 9c4b03d (5 verifier root causes fixed; scripts/printed_example_audit.py); then hosted facts re-runs; remaining classes: input files (26), fragments (16), nested-list examples (1)"
     acceptance: "printed_example_audit over certified seals shows no CONTRADICTED printed and UNRESOLVED only with a recorded, honest reason; Lane R prints no unverified example (policy decision recorded)"
-    evidence: ["audit 2026-11-13: 273 printed = 174 SUPPORTED / 72 UNRESOLVED / 26 CONTRADICTED / 1 no fact; local verifier proof PDF Python 48->59 executed, 17->0 failed"]
+    evidence:
+      - "audit 2026-11-13: 273 printed = 174 SUPPORTED / 72 UNRESOLVED / 26 CONTRADICTED / 1 no fact; local verifier proof PDF Python 48->59 executed, 17->0 failed"
+      - "verified 2026-11-13: a5b96e9 exists only on local branch audit/example-verification; not on origin; not in origin/main (0adf334)"
     next_action: "integrate; hosted re-runs of PDF .NET L, Words .NET L+R, Cells Rust L, 3D TS L, PDF Python L"
 
   - id: BL-009
@@ -123,7 +167,9 @@ items:
     status: active
     implementation_path: "branch claude/cohort-self-continuing 5183edd (cohort-chain.yml, one planner at a time, run-request cohort override)"
     acceptance: "a finished cohort run starts the next planner on GitHub without cron; observed on a hosted run"
-    evidence: []
+    evidence:
+      - "verified 2026-11-13 (`gh run list --workflow present.yml --event schedule`): cron is `17 * * * *` but the last scheduled fires were 2026-11-11T06:27Z, 11-11T19:38Z, 11-12T07:14Z, 11-12T19:56Z, 11-13T06:49Z (~2 per day), each 39-49 s"
+      - "verified 2026-11-13: 5183edd exists only on local branch claude/cohort-self-continuing; not on origin; not in origin/main (0adf334)"
     next_action: "integrate, then kick with {\"job\":\"cohort\"}"
 
   - id: BL-012
@@ -134,7 +180,9 @@ items:
     status: active
     implementation_path: "branch claude/issue-pilot-r39 d997012 + b123671 (issues.yml, monitor/reproduce/pilot)"
     acceptance: "first hosted dry run reports 5 records; live after owner sets REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED=1, App has Issues R/W on the repo, mode live"
-    evidence: ["local: all 5 issues still reproduce at 66cb26df3b03"]
+    evidence:
+      - "local: all 5 issues still reproduce at 66cb26df3b03"
+      - "verified 2026-11-13: d997012 exists only on local branch claude/issue-pilot-r39; not on origin; not in origin/main (0adf334)"
     next_action: "integrate; owner actions listed in the PR"
 
   - id: BL-013
@@ -143,15 +191,17 @@ items:
     source: "R33/R37"
     priority: P0
     status: active
-    implementation_path: "audit-seed.yml chain"
-    acceptance: "findings frozen, scored, records attested; counter shows accepted per lane"
-    evidence: ["seed job succeeded 2026-11-13 ~14:50; auditor running"]
-    next_action: "watch"
+    implementation_path: "audit-seed.yml chain; on a failed batch, R36(b): classify the misses and false flags, fix the class (seed operator, auditor brief, adjudication) proven on the frozen findings before a new seed batch"
+    acceptance: "findings frozen, scored, records attested; counter shows accepted per lane; a batch that fails its gates has its root cause recorded and fixed before the next seed batch"
+    evidence:
+      - "seed job succeeded 2026-11-13 ~14:50"
+      - "verified 2026-11-13: run 43445578226 (run-request-execute) completed success; frozen findings origin/audit-findings/run-43445578226 (3be2564); writer output origin/acceptance-record/run-43445578226-43445578226 (0a5d520): batch_passed=false, failed_reasons ['seeded recall 0.238 < 0.9', 'false-flag rate 0.625 > 0.1'], 16 seeded missed, 45 records all audit_passed=false"
+    next_action: "R36(b) diagnosis of round 43445578226 (5/21 seeds caught, 15/24 control flags) from the frozen findings, zero-call, before the next seed batch; nothing new counts from this round"
 
   - id: BL-014
     title: "Lane L no-op seals (8 of 26) — R16 terminal, never counted"
     type: gap
-    source: "supervisor finding 2026-11-13 (review page build)"
+    source: "supervisor finding 2026-11-13 (review page build); R16"
     priority: P1
     status: open
     implementation_path: "confirm each is a genuine NO_ACTION_JUSTIFIED (no verified defect) or find the missed defect; report separately"
@@ -178,7 +228,7 @@ items:
     status: blocked
     implementation_path: "data/terminal_cells.json pinned revision; scheduler re-check"
     acceptance: "unblocks automatically when upstream adds a build manifest/artifact"
-    evidence: ["evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/draft_upstream_issue.md"]
+    evidence: ["evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/draft_upstream_issue.md", "data/terminal_cells.json: revision a7b05fdd, recheck_by 2026-11-20"]
     next_action: "scheduler re-check"
 
   - id: BL-017
@@ -200,5 +250,473 @@ items:
     status: open
     implementation_path: "extractors/platforms PHP plugin in the existing pattern"
     acceptance: "Cells PHP active and producing facts; candidates attempted"
+    evidence: ["verified 2026-11-13: data/registry.json has 41 entries, 40 active, 1 inactive (Cells PHP)"]
+    next_action: "queue"
+
+  # ---------------- BL-001 reconciliation, 2026-11-13: delivery targets ----------------
+  - id: BL-019
+    title: "Lane R: at least 25 independently accepted (certified) candidates"
+    type: requirement
+    source: "Part A §3 (\"approximately 25 independently accepted\"); R4, R13, R33; docs/RULINGS.md goal paragraph"
+    priority: P0
+    status: active
+    implementation_path: "scheduled cohort (present.yml) -> seal -> recertify -> M9 audit -> attested acceptance writer -> ops/checks/portfolio_delivery_count.py; moved by BL-020, BL-021, BL-013"
+    acceptance: "`python ops/checks/portfolio_delivery_count.py --per-lane 25` reports Lane R independently_accepted >= 25 (attested, revision-bound)"
+    evidence:
+      - "2026-11-13 recertify --all: Lane R 5 RECERTIFIED / 18 sealed / 40 active; 22 active repositories have no Lane R seal"
+      - "2026-11-13: no Lane R record has audit_passed=true in any acceptance-record branch on origin (0/25)"
+    depends_on: [BL-020, BL-021, BL-013]
+    next_action: "tracking item; the count moves only through BL-020 (repairs) and BL-021 (first generation) plus passing M9 rounds"
+
+  - id: BL-020
+    title: "Repair the 13 NEEDS_REPAIR Lane R seals (13 on BC-18; Cells Go and PDF Java also BC-05/BC-17, PDF Java BC-04)"
+    type: task
+    source: "decision log 2026-11-12 'Open, real gaps' (Cells Go, PDF Java) and 2026-11-13 BC-18 resync (state.yaml lane_r_accepted 13 -> 0 -> 5); R10 targeted repair"
+    priority: P0
+    status: open
+    implementation_path: "scheduled cohort selects NEEDS_REPAIR cells (scripts/select_scheduled_cohort.py); repair loop consumes data/readme_findings.json quotes (BC-18 must-correct); never regenerate, never demote (R10)"
+    acceptance: "each of the 13 RECERTIFIED under current code, or a recorded R36 decision; `recertify --gate` loses no seal"
+    evidence: ["2026-11-13 recertify --all: NEEDS_REPAIR Lane R = Cells Cpp, Cells Go, Cells Java, Cells Python, Cells Rust, Cells TypeScript, Email Cpp, Email Python, HTML Python, Imaging .NET, Note Python, PDF Java, PSD .NET"]
+    depends_on: [BL-011, BL-003]
+    next_action: "after BL-011 integration the cohort picks them up hourly; diagnose any cell failing 3x unchanged under R36(b)"
+
+  - id: BL-021
+    title: "Lane R first generation for the 22 active repositories with no Lane R seal"
+    type: task
+    source: "R13 (complete portfolio, never a handful of pilots); R34 (41 products); plan §6.1 (36 of 36 accounted for, now 40 active)"
+    priority: P1
+    status: open
+    implementation_path: "scheduled cohort, batches of six (R25), measured spend (R31)"
+    acceptance: "every active repository has a Lane R seal or a recorded terminal outcome (R24/R20) in data/terminal_cells.json"
+    evidence: ["2026-11-13 recertify --all: 18 Lane R seals for 40 active repositories; PSD Java Lane R is terminal (R24)"]
+    depends_on: [BL-011, BL-002, BL-004]
+    next_action: "ASSUMPTION: trust fixes BL-002/BL-004 should land first so new seals do not repeat the false-claim/placement classes"
+
+  - id: BL-022
+    title: "Lane L: 25 independently accepted candidates that each remove a real, verified defect"
+    type: requirement
+    source: "R35, R21, R16, R4; Part A §2 Lane L"
+    priority: P0
+    status: active
+    implementation_path: "Lane L cohort -> seal -> M9 audit -> attested writer -> counter (R16 no-op rule fails closed)"
+    acceptance: "`portfolio_delivery_count.py --per-lane 25` reports Lane L independently_accepted >= 25, none an R16 no-op"
+    evidence:
+      - "2026-11-13 recertify --all: Lane L 26 RECERTIFIED / 27 sealed / 40 active"
+      - "2026-11-13: writer run 43252306864 (acceptance-records-43217648963.json, batch_passed=true) has 7 Lane L records with audit_passed=true: Cells Java, Email Cpp, Font Python, Imaging .NET, Note Python, PSD Python, Slides .NET; supervisor counter figure is 5 (not re-verifiable here, see BL-001)"
+    depends_on: [BL-013, BL-014, BL-023]
+    next_action: "tracking item; remaining 18+ need real-defect Lane L seals that pass M9"
+
+  - id: BL-023
+    title: "3D .NET Lane L seal NEEDS_REPAIR (L-03 Watermark stub described as working; L-05 U3D format_overclaim unrepairable)"
+    type: defect
+    source: "BL-001 reconciliation: `recertify --all --json --remote origin` 2026-11-13"
+    priority: P1
+    status: open
+    implementation_path: "Lane L repair through the cohort; L-05 residual recorded per R21 if no deterministic edit exists"
+    acceptance: "3D .NET Lane L RECERTIFIED, or residuals recorded internally per R21"
+    evidence: ["2026-11-13 recertify: aspose-3d-foss/Aspose.3D-FOSS-for-.NET L at 52b0f00e NEEDS_REPAIR ['L-03','L-05']"]
+    next_action: "queue for the cohort"
+
+  - id: BL-024
+    title: "M9 audit evidence validity is structural only; per-candidate canaries are empty"
+    type: debt
+    source: "decision log 2026-11-12 'Audit chain completed' (\"citations_checked: structural ... a later strengthening, and canaries are empty\"); plan §5.2 item 4, §5.3 'Re-checkable evidence'"
+    priority: P1
+    status: open
+    implementation_path: "acceptance writer checks each cited path:line@revision against the pinned clone; canaries run per plan §5.2 item 4 (existing writer, R27 fix-scope)"
+    acceptance: "writer gates report citations_checked: pinned (not structural); canary map non-empty for every accepted record"
+    evidence: ["verified 2026-11-13: acceptance-records-43445578226.json gates.citations_checked = 'structural'; src/repo_presenter/acceptance/record.py:263 canaries vacuously all-caught when empty"]
+    depends_on: [BL-013]
+    next_action: "after the M9 round passes again"
+
+  - id: BL-025
+    title: "R20: every active repository has a Lane L terminal outcome (accepted, NO_ACTION_JUSTIFIED, NOT_APPLICABLE, valid BLOCKED_EXTERNAL)"
+    type: requirement
+    source: "R20, R16, R15; plan §6.1 ('R15 requires every active repository terminal in both lanes')"
+    priority: P1
+    status: open
+    implementation_path: "record NO_ACTION_JUSTIFIED outcomes machine-readably (data/terminal_cells.json or the counter) and seal Lane L on the repositories that have none"
+    acceptance: "40 of 40 active repositories show a Lane L terminal outcome, reported beside n/25 (never instead of it)"
+    evidence:
+      - "2026-11-13: 27 Lane L seals; data/terminal_cells.json records only GIS .NET L (NOT_APPLICABLE) and PSD Java R (BLOCKED_EXTERNAL); 12 active repositories have neither a Lane L seal nor a terminal record"
+      - "previously not tracked anywhere: no machine-readable NO_ACTION_JUSTIFIED record exists (grep data/terminal_cells.json)"
+    depends_on: [BL-014]
+    next_action: "INTERPRETATION: R16 outcomes belong in data/terminal_cells.json (existing record), not a new store"
+
+  # ---------------- previously dropped, reverted or misunderstood ----------------
+  - id: BL-026
+    title: "R15 portfolio gate enforcement was reverted and never re-landed (propose/effect.py has no PORTFOLIO_INCOMPLETE refusal)"
+    type: gap
+    source: "R15 (Part B: 'Enforcement in propose/effect.py is designed (docs/wip/r15-portfolio-gate.patch) and lands only once verified'); R24 (patch as drafted lacked the terminal-external case); commit 6b7bc6e 'enforcement patch saved, unverified code reverted'"
+    priority: P0
+    status: open
+    implementation_path: "apply docs/wip/r15-portfolio-gate.patch to propose/effect.py + authorization/refusals.py, amended to treat R16/R20/R24 terminal states as complete; tests from the patch"
+    acceptance: "propose_candidate refuses PORTFOLIO_INCOMPLETE while any active repository in either lane lacks a terminal outcome; a test proves refusal and the R24 terminal case"
+    evidence:
+      - "verified 2026-11-13: `grep -rn 'R15|PORTFOLIO_INCOMPLETE|portfolio_gate' src scripts ops .github` -> no match; src/repo_presenter/propose/ holds only effect.py, pull_request.py"
+      - "verified 2026-11-13: 9 repositories are allowlisted for PRs and mode full (data/upstream_write_allowlist.json; tests/test_write_authority_r22.py 4 passed), so R15 is today enforced by policy only"
+    next_action: "ASSUMPTION: no workflow currently calls propose_candidate for a live PR (not verified); restore the gate before any publication path is exercised"
+
+  - id: BL-027
+    title: "R8 / Final Directive: dispatch-next autonomy is report-only; the TC-032 execution bridge was never built"
+    type: gap
+    source: "R8; Final Directive (Part E, plan §8.4: 'the scheduled supervisor-tick observer is explicitly named as insufficient'); R37; R40 feasibility note"
+    priority: P1
+    status: open
+    implementation_path: "existing ops/gatecli.py dispatch-next/worker-tick + scheduled agent sessions (R40 feasibility limit) taking leases from durable state; supervisor-tick reports the next item"
+    acceptance: "plan §8.4 proof: from durable state only, a READY item/card is leased, worked, verified and the next leased automatically; injected worker kill and lease expiry recover; run ids committed"
+    evidence:
+      - "verified 2026-11-13: .github/workflows/supervisor-tick.yml runs `worker-tick --dry-run` and states 'Real dispatch to cloud sessions is done by the supervisor session'"
+      - "verified 2026-11-13: no project/taskcards/TC-032.yaml exists; supervisor-tick scheduled fires observed 2026-11-12T20:51Z, 11-13T01:52Z, 11-13T09:36Z (hourly cron, irregular)"
+    depends_on: [BL-011]
+    next_action: "decide under R27 the smallest bridge (scheduled agent session reading backlog next-eligible + gatecli leases)"
+
+  - id: BL-028
+    title: "R17 sandbox proof of upstream-write mechanics (draft PR, duplicate refusal) before R15 holds"
+    type: requirement
+    source: "R17; plan §3 owner action 5 (sandbox repository with the App installed); plan M6"
+    priority: P1
+    status: blocked
+    implementation_path: "propose.effect against an owner sandbox bound to provider_identity.repository_id (plan §6.4)"
+    acceptance: "sandbox draft PR created, duplicate refused, App scope verified via API; run ids recorded"
+    evidence: ["verified 2026-11-13: no sandbox entry in data/upstream_write_allowlist.json or data/registry.json; no sandbox binding in src/repo_presenter/propose/"]
+    next_action: "owner action 5 outstanding. R36(b)(5) alternative for owner approval: use babar-raza/repo-presenter itself (R7 already permits own-repo effects) as the sandbox target"
+
+  - id: BL-029
+    title: "TC-009b re-author: mandatory targets (Cells .NET, 3D Python) through every gate up to the write, with no write"
+    type: task
+    source: "project/taskcards/TC-009b.yaml (AWAITING_OWNER_DECISION); plan §8.2 'TC-009b, TC-010a re-authored per §6.4 and R17'; R17, R15"
+    priority: P2
+    status: blocked
+    implementation_path: "re-author the card (supervisor-direct) to a non-mutating publication proof; then gatecli review"
+    acceptance: "TC-009b ACCEPTED on a proof that both targets pass every gate up to the write and no upstream write happened"
+    evidence: ["2026-11-13 gatecli validate: TC-009b AWAITING_OWNER_DECISION: PUBLISHING_PILOT_AUTHORIZED record absent, pilot_proof.json absent, negative-control patch did not apply"]
+    depends_on: [BL-026, BL-028]
+    next_action: "real blocker: the card still demands live PRs, which R15/R17 forbid; the re-author promised by the plan was silently dropped"
+
+  - id: BL-030
+    title: "TC-010a re-author: issue lifecycle proof via the R39 pilot (or sandbox), not an owner-named Cells Java defect"
+    type: task
+    source: "project/taskcards/TC-010a.yaml (AWAITING_OWNER_DECISION); decision log 2026-11-05 'TC-010a target verification — no genuine single-owner defect found'; R39; plan §8.2"
+    priority: P2
+    status: blocked
+    implementation_path: "re-author against the R39 pilot evidence (BL-012): file/track/re-detect/close confirmed via gh api"
+    acceptance: "TC-010a ACCEPTED with lifecycle_proof.json written by the lifecycle code and confirmed via gh api"
+    evidence: ["2026-11-13 gatecli validate: TC-010a AWAITING_OWNER_DECISION (lifecycle_proof.json absent; negative-control patch did not apply)"]
+    depends_on: [BL-012]
+    next_action: "after the R39 pilot has a live open->close cycle"
+
+  - id: BL-031
+    title: "TC-011 portfolio delivery count reaches the R4 target (card READY, check exits 0 only at >= 25 per lane)"
+    type: task
+    source: "project/taskcards/TC-011.yaml; R4"
+    priority: P1
+    status: blocked
+    implementation_path: "gatecli review TC-011 once the counter shows >= 25 per lane"
+    acceptance: "TC-011 ACCEPTED by gatecli review"
+    evidence: ["2026-11-13 gatecli validate: TC-011 READY; its first check is `portfolio_delivery_count.py --per-lane 25` (expect exit 0)"]
+    depends_on: [BL-019, BL-022]
+    next_action: "real blocker is the counts (Lane R 0, Lane L 5-7), not the card"
+
+  - id: BL-032
+    title: "TC-012b: one authorized, unattended (event=schedule) hosted present run that seals a lane outcome"
+    type: task
+    source: "project/taskcards/TC-012b.yaml; Part A §7 ('must not require continuous human prompting'); R37"
+    priority: P1
+    status: open
+    implementation_path: "present.yml schedule -> cohort -> sealed bundle; verified by ops/checks/hosted_cycle_proof.py --event schedule"
+    acceptance: "`python ops/checks/hosted_cycle_proof.py --event schedule` exits 0; TC-012b ACCEPTED"
+    evidence: ["2026-11-13: TC-012b READY; the five latest scheduled present runs each took 39-49 s (ASSUMPTION: planning-only fires, no sealing job)"]
+    depends_on: [BL-011]
+    next_action: "card text still names 'TC-007 calibration PASSED and owner names a repository' as preconditions; both are now met (TC-007 ACCEPTED; scheduled_execution_policy authorized for every active repo, decision log 2026-11-13)"
+
+  - id: BL-033
+    title: "TC-012a cutover; migration/CUTOVER_PROCEDURE.md precondition 3 is unsatisfiable (requires reviewer_calibration PASSED, frozen NOT_PASSED by R10/R33)"
+    type: defect
+    source: "project/taskcards/TC-012a.yaml (AWAITING_PREREQUISITE); migration/CUTOVER_PROCEDURE.md §0.3; R33; plan §3 owner action 8"
+    priority: P3
+    status: blocked
+    implementation_path: "amend CUTOVER_PROCEDURE.md precondition 3 to acceptance_calibration PASSED (R33); cutover only after owner approval"
+    acceptance: "procedure preconditions all satisfiable; TC-012a ACCEPTED after the owner-approved cutover"
+    evidence: ["verified 2026-11-13: CUTOVER_PROCEDURE.md §0 item 3 reads 'data/reviewer_calibration.json status PASSED (TC-007)'; TC-012a depends on TC-009b, TC-010a, TC-011, TC-012b"]
+    depends_on: [BL-029, BL-030, BL-031, BL-032]
+    next_action: "fix the precondition text now (docs-only); cutover last"
+
+  - id: BL-034
+    title: "TC-005 VERIFICATION_FAILED: negative control fixed 2026-11-12 but the card was never re-reviewed; its 'accepted' counters are mechanism-passing counts"
+    type: debt
+    source: "project/taskcards/TC-005.yaml negative_control rationale (2026-11-12); gatecli validate; R33 definition of accepted"
+    priority: P2
+    status: open
+    implementation_path: "`python ops/gatecli.py review TC-005` (needs network, ~12 min per check); clarify in state.yaml that lane_*_accepted = re-certified, not R33-accepted"
+    acceptance: "TC-005 ACCEPTED; dashboard field meaning stated beside the R33 count"
+    evidence: ["2026-11-13 gatecli validate: TC-005 VERIFICATION_FAILED (negative-control patch did not apply); state.yaml lane_r_accepted 5 / lane_l_accepted 26 equal the 2026-11-13 recertify counts"]
+    next_action: "run the review from a networked session"
+
+  - id: BL-035
+    title: "G7 / R2: parity with the published aspose.org readme-refresh README never established (0 of 41 benchmarks identified)"
+    type: gap
+    source: "R2; Part A §1 and §6; plan F23 and TC-020; mission matrix G7 ('three-product parity not shown')"
+    priority: P1
+    status: open
+    implementation_path: "data/benchmarks.json per-repository provenance (TC-020's existing check_coverage): identify which live upstream READMEs are aspose.org readme-refresh output; BC-17/M7 measured against those"
+    acceptance: "every entry is benchmark_confirmed with provenance or no_benchmark with evidence (no 'unknown'); each confirmed product's candidate measured equal-or-better"
+    evidence: ["verified 2026-11-13: data/benchmarks.json 41 entries = 31 no_benchmark_claimed, 10 unknown, 0 confirmed"]
+    next_action: "ASSUMPTION: the aspose.org repository's readme-refresh run records name the upstream repositories it pushed to; read them to resolve the 10 unknown"
+
+  - id: BL-036
+    title: "Unfiled upstream issue drafts (7) are unverified at current revisions and unrouted"
+    type: task
+    source: "evidence/build/*/*/draft_upstream_issue.md; R24 (7-day re-check), R36(a), R7 (product/source defects only), R39"
+    priority: P2
+    status: open
+    implementation_path: "re-verify each at the current upstream revision through the issues lifecycle (src/repo_presenter/issues/); route: fixed -> close draft; still reproduces -> BLOCKED_EXTERNAL evidence or R39 pilot record; non-product (test fixture) -> drop per R7 with reason"
+    acceptance: "each draft has a recorded, dated disposition"
+    evidence: ["verified 2026-11-13: NOT FILED drafts for 3D .NET, 3D Java, Email .NET (test-fixture CRLF note), PSD Java, PSD Python, Words .NET, Font Python; 3D Python issue #4 was filed 2026-10-21 (project/state.yaml; ASSUMPTION: it is the P1_VERTICAL_SLICE draft)"]
+    depends_on: [BL-012]
+    next_action: "re-verify the 6 dated 2026-10-21 first (stale > 7 days)"
+
+  - id: BL-037
+    title: "Owner action: delete the older repository-level AUDIT_SEED_KEY copy (readable from any branch)"
+    type: blocked
+    source: "decision log 2026-11-12 'Audit chain completed' ('is to be deleted by the owner')"
+    priority: P1
+    status: blocked
+    implementation_path: "owner Settings action"
+    acceptance: "repository secrets list no AUDIT_SEED_KEY; the acceptance-audit environment still holds it"
+    evidence: ["2026-11-13: not verifiable from this session (`gh secret list` HTTP 403 through the proxy)"]
+    next_action: "R36(b)(5): bring the ask with an alternative (rotate the key into the environment only; old seeds burned)"
+
+  - id: BL-038
+    title: "Owner action 1: provider/App/state secrets into a GitHub Environment restricted to main"
+    type: blocked
+    source: "decision log 2026-11-06 'Residual risk — NOT solved; recommended owner action'; plan §3 owner action 1"
+    priority: P1
+    status: blocked
+    implementation_path: "owner Settings action; privileged jobs declare `environment:`"
+    acceptance: "privileged workflows reference the environment; repository-level copies removed"
+    evidence: ["2026-11-13: not verifiable here (`gh api .../environments` HTTP 403)"]
+    next_action: "ASSUMPTION: only the acceptance-audit environment exists (decision log 2026-11-12); verify from a session with admin read"
+
+  - id: BL-039
+    title: "Owner action 2: recertification-gate as a required status check"
+    type: blocked
+    source: "plan §3 owner action 2; plan F6; M3 exit"
+    priority: P2
+    status: blocked
+    implementation_path: "owner branch-protection setting"
+    acceptance: "main's required checks include the recertification gate"
+    evidence: ["decision log 2026-11-13: 'main is protected (required status check `test`)'; branch-protection API HTTP 403 here"]
+    next_action: "raise once with the owner actions list"
+
+  - id: BL-040
+    title: "Replay store and sealed bundles still restored from best-effort actions/cache (plan F10; TC-030 never built)"
+    type: debt
+    source: "plan F10, §6.3 'Replay keys', TC-030; risk register row 21 (cache loss)"
+    priority: P2
+    status: open
+    implementation_path: "smallest R27 fix: restore from the durable state refs (refs/repository-presenter-state/) instead of actions/cache"
+    acceptance: "an evicted-cache rerun replays at 0 provider calls from refs"
+    evidence: ["verified 2026-11-13: .github/workflows/present.yml:353 actions/cache/restore@v4 and :492 actions/cache/save@v4 for the bundle and call store"]
+    next_action: "queue"
+
+  - id: BL-041
+    title: "Delivery-plan cards never authored (TC-027, TC-030, TC-031, TC-032, TC-033, TC-034, TC-035) — record dispositions"
+    type: gap
+    source: "docs/DELIVERY_PLAN_2026-11-07.md §8.2; R27 (no new programmes); R37"
+    priority: P2
+    status: open
+    implementation_path: "per card: superseded with citation, or its remaining requirement tracked as a backlog item (TC-030 -> BL-040, TC-032 -> BL-027, TC-035 -> BL-012/BL-030, TC-033 -> R37 scheduled cohort, TC-031 -> select_scheduled_cohort, TC-027 -> R7 own-repo issues + stall diagnosis, TC-034 -> BL-033)"
+    acceptance: "decision-log entry lists each card's disposition; no plan requirement silently dropped"
+    evidence: ["verified 2026-11-13: project/taskcards has no TC-027/028/030-035 files (TC-028a, TC-029a, TC-019a/b/c exist)"]
+    next_action: "INTERPRETATION: TC-033 is superseded by the 2026-11-13 'scheduled present path is the autonomous engine' decision; TC-027's stall-diagnosis requirement is still open"
+
+  - id: BL-042
+    title: "docs/GOAL_TRACEABILITY.md (check-generated goal->card map) never produced"
+    type: gap
+    source: "plan §10.2 and §11 deliverable 4"
+    priority: P3
+    status: deferred
+    implementation_path: "none new: project/backlog.yaml + project/mission_matrix.yaml (R40) carry the traceability"
+    acceptance: "decision-log note recording that R40's backlog/matrix replaces the deliverable"
+    evidence: ["verified 2026-11-13: docs/GOAL_TRACEABILITY.md does not exist"]
+    next_action: "INTERPRETATION: superseded by R40; record it in the next decision-log entry"
+
+  - id: BL-043
+    title: "Stale docstring: portfolio_delivery_count.summarize says the attested path is 'NOT YET used'"
+    type: debt
+    source: "decision log 2026-11-12 'Stale text'"
+    priority: P3
+    status: open
+    implementation_path: "docstring fix in ops/checks/portfolio_delivery_count.py"
+    acceptance: "docstring matches behaviour"
+    evidence: ["verified 2026-11-13: ops/checks/portfolio_delivery_count.py:371 still reads 'NOT YET used'"]
+    next_action: "fold into the next counter change"
+
+  - id: BL-044
+    title: "Vendored Java package_root.py knows no main/java layout (falls back to repository root)"
+    type: gap
+    source: "decision log 2026-11-13 'PSD Java Lane R terminal' side finding"
+    priority: P3
+    status: open
+    implementation_path: "extractors Java package_root"
+    acceptance: "PSD Java package root resolves to main/java; regression test"
+    evidence: []
+    next_action: "only if it unblocks a count (R27)"
+
+  - id: BL-045
+    title: "README 'maintainability' dimension not named in any check; no recorded procedure for changing AGENTS.md"
+    type: gap
+    source: "CONSOLIDATED_GOALS Part C 'Partial, still open' item 6"
+    priority: P3
+    status: open
+    implementation_path: "name the dimension in the existing reviewer/M9 rubric; one paragraph in AGENTS.md on its own amendment"
+    acceptance: "both recorded"
     evidence: []
     next_action: "queue"
+
+  - id: BL-046
+    title: "Hosted run reliability: classify hosted failures portfolio-wide (Part C item 3; startup_failure observed)"
+    type: task
+    source: "CONSOLIDATED_GOALS Part C item 3 (~14% Actions success); R36(b)(1); mission matrix G6"
+    priority: P1
+    status: open
+    implementation_path: "classify every failed hosted present/run-request run by shape; fix each class once"
+    acceptance: "class table recorded; each class fixed or explained; success rate measured over the next 20 runs"
+    evidence: ["verified 2026-11-13: run-request-execute 43439078738 concluded startup_failure (gh run list)"]
+    next_action: "pull the last 50 runs' conclusions and failing steps"
+
+  - id: BL-047
+    title: "P5 hosted cold-runner zero-call proof (unchanged inputs -> 0 provider calls on a fresh runner)"
+    type: requirement
+    source: "P5 (docs/RELEASE_CONTRACT_P1-P5.md); mission matrix P5"
+    priority: P2
+    status: open
+    implementation_path: "hosted rerun of an unchanged sealed cell; ledger shows 0 calls"
+    acceptance: "hosted run id with 0 provider calls on unchanged inputs"
+    evidence: ["Lane R proven locally with a counting fake provider (tests/test_lane_r_real_cascade_p5.py, mission matrix P5)"]
+    depends_on: [BL-040]
+    next_action: "after BL-040"
+
+  - id: BL-048
+    title: "G6 Docker: networked facts stage inside the container not proven on a real product run"
+    type: gap
+    source: "mission matrix G6 ('no facts stage has yet executed inside the container'); plan TC-021"
+    priority: P2
+    status: open
+    implementation_path: "existing present.yml docker steps (network none canary proofs at :559-:591)"
+    acceptance: "a hosted run's facts for a real product produced inside the container, run id recorded"
+    evidence: ["verified 2026-11-13: present.yml runs docker canary proofs with --network none (lines 559-591); TC-021 ACCEPTED"]
+    next_action: "ASSUMPTION: canaries prove isolation, not the facts stage; confirm from a hosted run log"
+
+  # ---------------- standing invariants (continuous; never closed) ----------------
+  - id: BL-049
+    title: "R9: no attribution/provenance or internal evidence wording in any public README"
+    type: requirement
+    source: "R9; owner feedback 8640135b4c (internal wording printed)"
+    priority: P0
+    status: active
+    implementation_path: "BC-07 (validation/public_text.py) on every seal and recertification; extended by BL-002(b)"
+    acceptance: "recertify --all shows no BC-07 failure on any seal"
+    evidence: ["2026-11-13 recertify --all: no BC-07 in any failing_checks"]
+    next_action: "continuous; BL-002(b) widens the vocabulary"
+
+  - id: BL-050
+    title: "R10: a version bump never loses a seal; no-regression gate on every mechanism change"
+    type: requirement
+    source: "R10"
+    priority: P0
+    status: active
+    implementation_path: "`python -m repo_presenter.recertify --gate` against data/recertification_baseline.json"
+    acceptance: "every merged mechanism change passes the gate; newly failing seals justified per seal"
+    evidence: ["2026-11-13 recertify --all: 45 seals, 31 RECERTIFIED, 14 NEEDS_REPAIR (none deleted)"]
+    next_action: "continuous"
+
+  - id: BL-051
+    title: "R14 / R6: every live-README drop examined, decided, recorded and calibrated; specific new headings only"
+    type: requirement
+    source: "R14, R6, Part A §5"
+    priority: P0
+    status: active
+    implementation_path: "data/drop_decisions.json rules + BC-17; R14 decision-log entries"
+    acceptance: "BC-17 passes or each loss has a recorded decision"
+    evidence: ["2026-11-13 recertify: BC-17 fails only Cells Go and PDF Java Lane R (BL-020)"]
+    next_action: "continuous"
+
+  - id: BL-052
+    title: "R18: qwen3-next for every product route"
+    type: requirement
+    source: "R18"
+    priority: P2
+    status: active
+    implementation_path: "provider routes in core/llm"
+    acceptance: "every product-route ledger entry names qwen3-next"
+    evidence: []
+    next_action: "ASSUMPTION: not re-verified in this reconciliation; check the call ledgers of the next hosted batch"
+
+  - id: BL-053
+    title: "R25/R31: provider spend in batches of six within the reset envelope, measured, only on count-moving work"
+    type: requirement
+    source: "R25, R31"
+    priority: P1
+    status: active
+    implementation_path: "core/llm/budget.py + refs/repository-presenter-state/ledger/provider-spend (decision log 2026-11-13 'scheduled present path')"
+    acceptance: "each hosted batch settles measured calls/tokens in the ledger; stop rule enforced"
+    evidence: []
+    next_action: "confirm settlement on the first cohort fan-out after BL-011"
+
+  # ---------------- done (reproducible evidence) ----------------
+  - id: BL-054
+    title: "R30: PDF Go MCP excluded from the portfolio"
+    type: requirement
+    source: "R30"
+    priority: P3
+    status: done
+    implementation_path: "data/registry_exclusions.json"
+    acceptance: "exclusion rule present"
+    evidence: ["verified 2026-11-13: data/registry_exclusions.json rule id out-of-scope-pdf-go-mcp (name Aspose-PDF-FOSS-for-Go-MCP)"]
+    next_action: "none"
+
+  - id: BL-055
+    title: "R34: portfolio of 41 products (40 active, Cells PHP inactive)"
+    type: requirement
+    source: "R34"
+    priority: P2
+    status: done
+    implementation_path: "data/registry.json"
+    acceptance: "41 entries, Cells PHP inactive"
+    evidence: ["verified 2026-11-13: data/registry.json 41 entries: 9 full/active, 31 dry_run/active, 1 dry_run/inactive"]
+    next_action: "none"
+
+  - id: BL-056
+    title: "R22: one write authority, draft PRs only, allowlist and registry full modes consistent (CI)"
+    type: requirement
+    source: "R22"
+    priority: P1
+    status: done
+    implementation_path: "data/upstream_write_allowlist.json + tests/test_write_authority_r22.py"
+    acceptance: "CI fails when allowlist and full-mode sets disagree"
+    evidence: ["verified 2026-11-13: allowlist 9 repositories, registry 9 full; `python -m pytest -q tests/test_write_authority_r22.py` -> 4 passed; TC-029a ACCEPTED (commit 7d7a276)"]
+    next_action: "none"
+
+  - id: BL-057
+    title: "R26: M8 measured first; rung (c) only after a recorded failure; TC-007 accepted"
+    type: requirement
+    source: "R26; decision log 2026-11-09 'TC-007 ACCEPTED for real ... via the M8 rung-(c) fallback (TC-026)'"
+    priority: P1
+    status: done
+    implementation_path: "TC-023/TC-023b measurement, TC-026 fallback"
+    acceptance: "TC-007 and TC-026 ACCEPTED with receipts"
+    evidence: ["2026-11-13 gatecli validate: TC-007 ACCEPTED (e55f8be), TC-026 ACCEPTED (98d9234), TC-023 ACCEPTED (e6aad6e)"]
+    next_action: "none"
+
+  - id: BL-058
+    title: "R5 strict Lane L trigger (verified upstream change and verified defect) implemented"
+    type: requirement
+    source: "R5, R20; plan F2 (drift unused) corrected"
+    priority: P1
+    status: done
+    implementation_path: "src/repo_presenter/lane_l_trigger.py"
+    acceptance: "trigger tests pass"
+    evidence: ["verified 2026-11-13: `python -m pytest -q tests/test_lane_l_trigger.py tests/test_rulings_in_focus.py` -> 24 passed"]
+    next_action: "none"
