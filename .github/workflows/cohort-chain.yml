@@ -31,6 +31,9 @@ name: cohort-chain
 # no-target call). tests/test_cohort_chain.py parses this file.
 
 on:
+  # Requested by present.yml's `chain` job when a planner-dispatched run finishes (BL-077): those
+  # runs are created with GITHUB_TOKEN, so their completion never fires workflow_run below.
+  workflow_dispatch:
   workflow_run:
     workflows: ["present", "audit-seed", "acceptance-write", "recertify"]
     types: [completed]
@@ -44,6 +47,7 @@ jobs:
     # A present run counts only when it was a dispatched worker run; a schedule fire of present.yml
     # is itself a planner run and must not re-trigger the planner.
     if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref_name == 'main') ||
       github.event.workflow_run.head_branch == 'main' &&
       (github.event.workflow_run.name != 'present' || github.event.workflow_run.event == 'workflow_dispatch')
     permissions:
