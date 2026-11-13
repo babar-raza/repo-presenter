@@ -27,7 +27,7 @@
 #   3. BL-004  3D .NET section placement class fix                            (P0, open, no deps)
 #   4. BL-008  integrate example-verification fixes (branch not on origin)    (P0, active, no deps)
 #   5. BL-011  integrate cohort chain (branch not on origin) -> engine runs   (P0, active, no deps)
-#   6. BL-026  restore R15 portfolio gate in propose/effect.py (R24-aware)    (P0, open, no deps)
+#   6. BL-026  restore R15 portfolio gate at the write authority (R24-aware) (P0, done)
 #   7. BL-013  root-cause failed M9 round 43445578226 before the next seed    (P0, active, no deps)
 #   8. BL-020  repair the 13 NEEDS_REPAIR Lane R seals through the cohort     (P0, after BL-011, BL-003)
 #   9. BL-019 / BL-022  per-lane 25 targets (tracking items; move with BL-020/021/023/024)
@@ -345,17 +345,20 @@ items:
 
   # ---------------- previously dropped, reverted or misunderstood ----------------
   - id: BL-026
-    title: "R15 portfolio gate enforcement was reverted and never re-landed (propose/effect.py has no PORTFOLIO_INCOMPLETE refusal)"
+    title: "R15 portfolio gate enforcement was reverted and never re-landed (no PORTFOLIO_INCOMPLETE refusal at the write authority)"
     type: gap
     source: "R15 (Part B: 'Enforcement in propose/effect.py is designed (docs/wip/r15-portfolio-gate.patch) and lands only once verified'); R24 (patch as drafted lacked the terminal-external case); commit 6b7bc6e 'enforcement patch saved, unverified code reverted'"
     priority: P0
-    status: open
-    implementation_path: "apply docs/wip/r15-portfolio-gate.patch to propose/effect.py + authorization/refusals.py, amended to treat R16/R20/R24 terminal states as complete; tests from the patch"
-    acceptance: "propose_candidate refuses PORTFOLIO_INCOMPLETE while any active repository in either lane lacks a terminal outcome; a test proves refusal and the R24 terminal case"
+    status: done
+    implementation_path: "src/repo_presenter/github/client.py authorize_write (the single R22 write authority every upstream ref/contents/pull-request request reaches through authorize_request) calls src/repo_presenter/propose/portfolio_gate.py; the predicate reuses ops/checks/portfolio_delivery_count.collect (re-certification + attested M9 records + R16) and data/terminal_cells.json (R24 fresh re-check, R20)"
+    acceptance: "every upstream pull_request effect is refused PORTFOLIO_INCOMPLETE while any active repository in either lane lacks a terminal outcome; tests prove refusal today, a fully-terminal synthetic portfolio passing, a stale R24 re-check blocking, and R39 issues unaffected"
     evidence:
-      - "verified 2026-11-13: `grep -rn 'R15|PORTFOLIO_INCOMPLETE|portfolio_gate' src scripts ops .github` -> no match; src/repo_presenter/propose/ holds only effect.py, pull_request.py"
-      - "verified 2026-11-13: 9 repositories are allowlisted for PRs and mode full (data/upstream_write_allowlist.json; tests/test_write_authority_r22.py 4 passed), so R15 is today enforced by policy only"
-    next_action: "ASSUMPTION: no workflow currently calls propose_candidate for a live PR (not verified); restore the gate before any publication path is exercised"
+      - "verified 2026-11-13 (before): `grep -rn 'R15|PORTFOLIO_INCOMPLETE|portfolio_gate' src scripts ops .github` -> no match; 9 repositories allowlisted for PRs (data/upstream_write_allowlist.json), so R15 held by policy only"
+      - "2026-11-13: choke point = github.client.authorize_write for effect pull_request on an upstream repository (last check, after the allowlist); default_post/put/patch reach it via authorize_request before any HTTP request; every other git push in src/scripts/.github targets origin (the control repository) only; candidates_publish writes the control repository, which is never gated; issues (R39 pilot) are effects issue/issue_comment and never reach it"
+      - "2026-11-13: commit dca5d59 on claude/r15-portfolio-gate: portfolio_gate.py, client.py PortfolioIncompleteError, tests/propose/test_portfolio_gate.py (19 passed), tests/conftest.py injects a READY reader for the allowlist/transport tests (the decision is never stubbed)"
+      - "2026-11-13: `PYTHONPATH=src python -m repo_presenter.propose.portfolio_gate --json` (live, origin, 13 min, zero provider calls) rc=1 BLOCKED: 40 active, 80 cells, 2 terminal (PSD Java R BLOCKED_EXTERNAL, GIS .NET L NOT_APPLICABLE), 78 missing -- Lane R: 21 no certified seal, 13 NEEDS_REPAIR, 5 re-certified but no attested M9 record; Lane L: 12 no certified seal, 1 NEEDS_REPAIR, 26 re-certified but no attested M9 record (locally the sigstore attestation hosts are refused by the proxy, BL-001; the 52 unsealed/NEEDS_REPAIR cells block regardless). Output: evidence/build/GATE5_DELIVERY_PROGRAM/BL-026/r15_portfolio_readiness_2026-11-13.json"
+      - "2026-11-13: `python -m pytest -q --deselect tests/extractors/platforms/test_python_examples.py::test_every_candidate_gets_an_honest_receipt` -> 6095 passed, 29 skipped, 1 deselected; `python ops/gatecli.py validate` -> OK"
+    next_action: "none for the gate. Known cost: the predicate is recomputed (never cached) on each upstream pull_request request (~13 min locally, about 3 requests per proposal); acceptable while no proposal is possible, revisit only if it delays a real publication"
 
   - id: BL-027
     title: "R8 / Final Directive: dispatch-next autonomy is report-only; the TC-032 execution bridge was never built"
