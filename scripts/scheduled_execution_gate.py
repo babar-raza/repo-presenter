@@ -19,7 +19,8 @@ it never trusts a single hand-set flag as a complete authorization:
      candidate repository is explicitly named in authorized_repositories.
   2. docs/DECISION_LOG.md: the most recent OWNER_RULING_SWEEP_PAUSE: entry reads LIFTED (TC-004 --
      the 2026-10-31 portfolio-sweep pause has never otherwise been lifted on the record).
-  3. data/reviewer_calibration.json: status == PASSED (TC-007).
+  3. data/acceptance_calibration.json: a PASSED certificate for every required mechanism class
+     (owner ruling R33, 2026-11-13; replaces the frozen data/reviewer_calibration.json).
 
 All three together are necessary; any one of them failing makes the whole gate fail closed.
 Absent that, the run selects nothing, spends nothing, and writes nothing -- a clean, evidenced
@@ -109,12 +110,22 @@ def evaluate_predicates(
             "TC-004: the 2026-10-31 portfolio-sweep pause has not been explicitly lifted "
             "(docs/DECISION_LOG.md has no OWNER_RULING_SWEEP_PAUSE: LIFTED entry)"
         )
-    if not calibration_passed(calibration):
+    # Owner ruling R33 (2026-11-13): "accepted" is defined by the acceptance contract, so the third
+    # predicate is the acceptance calibration's PASSED certificates (data/acceptance_calibration.json
+    # against data/acceptance_responsibility.json), not the frozen data/reviewer_calibration.json.
+    if not acceptance_calibration_complete():
         reasons.append(
-            "TC-007: reviewer calibration has not reached data/reviewer_calibration.json "
-            "status PASSED"
+            "R33: data/acceptance_calibration.json does not hold a PASSED certificate for every "
+            "required mechanism class (data/acceptance_responsibility.json)"
         )
     return reasons
+
+
+def acceptance_calibration_complete() -> bool:
+    """Fail-closed: every required mechanism class has a PASSED certificate."""
+    from repo_presenter.acceptance.record import load_certificates
+
+    return load_certificates().complete
 
 
 def _print_blocked(reasons: list[str]) -> None:

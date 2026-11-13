@@ -111,7 +111,9 @@ def test_load_policy_fails_closed_on_missing_or_corrupt_file(tmp_path: Path) -> 
     assert gate.load_policy(not_an_object)["scheduled_execution_authorized"] is False
 
 
-def test_evaluate_predicates_names_every_unmet_one() -> None:
+def test_evaluate_predicates_names_every_unmet_one(monkeypatch: pytest.MonkeyPatch) -> None:
+    # R33 (2026-11-13): the third predicate is the acceptance calibration's certificates.
+    monkeypatch.setattr(gate, "acceptance_calibration_complete", lambda: False)
     reasons = gate.evaluate_predicates(
         decision_log_text="",
         calibration=Path("/does/not/exist.json"),
@@ -120,7 +122,7 @@ def test_evaluate_predicates_names_every_unmet_one() -> None:
     assert len(reasons) == 3
     assert any("scheduled_execution_authorized" in r for r in reasons)
     assert any("TC-004" in r for r in reasons)
-    assert any("TC-007" in r for r in reasons)
+    assert any("R33" in r for r in reasons)
 
 
 def test_evaluate_predicates_is_empty_only_when_all_three_hold(tmp_path: Path) -> None:
@@ -145,6 +147,7 @@ def unauthorized_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(gate, "DECISION_LOG", Path("/does/not/exist/DECISION_LOG.md"))
     monkeypatch.setattr(gate, "CALIBRATION", Path("/does/not/exist/reviewer_calibration.json"))
     monkeypatch.setattr(gate, "POLICY", Path("/does/not/exist/scheduled_execution_policy.json"))
+    monkeypatch.setattr(gate, "acceptance_calibration_complete", lambda: False)
 
 
 def test_a_scheduled_run_with_no_authorization_is_a_clean_evidenced_no_op(
@@ -158,7 +161,7 @@ def test_a_scheduled_run_with_no_authorization_is_a_clean_evidenced_no_op(
         "no repository/ecosystem may be emitted when unauthorized -- nothing downstream can "
         "accidentally pick up a stale or partial target"
     )
-    assert "TC-004" in out and "TC-007" in out and "scheduled_execution_authorized" in out
+    assert "TC-004" in out and "R33" in out and "scheduled_execution_authorized" in out
 
 
 @pytest.fixture

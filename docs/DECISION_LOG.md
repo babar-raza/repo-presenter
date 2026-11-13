@@ -4666,3 +4666,28 @@ expected." Recorded as R27 (top authority Part B, AGENTS.md, `ops/SUPERVISOR.md`
 the supervisor: PR #44 (the 2026-11-07 delivery programme, 136 commits, CI red on all three checks) is not merged
 wholesale; any part of it lands only as a small fix a named failure needs. Work is judged by candidates produced,
 sealed and passing.
+
+---
+
+## 2026-11-13: owner rulings R28–R35; state machine amended; rulings kept in focus
+
+Owner, verbatim decisions of 2026-11-13: Words Java "is not standard native Java, instead it is a machine port of Words
+.NET. So it needs changes" (R28); "PHP extractor is needed" (R29); "PDF Go MCP is not included at this stage. May be in
+future" (R30); "LLM budget can be reset given you aim to improve the numbers, not built machinery. reset budget can be
+used for any thing" (R31); "Lift the sweep pause: No issue from my side. Do it as long as you guarantee results" (R32);
+"Define 'accepted': No issue from my side. Do it as long as you guarantee results" (R33); "Add the five new supported
+products to the portfolio: OK" (R34); "Set the Lane L finish line. OK" (R35: 25 Lane L candidates that each remove a real
+verified defect; NO_ACTION_JUSTIFIED reported separately).
+
+OWNER_RULING_SWEEP_PAUSE: LIFTED (R32, 2026-11-13; conditional on producing results, judged by certified counts after every wave)
+
+State machine amended in the same change: `data/registry.json` +5 products (OCR .NET, OMR Python, PSD Java, Words Java
+active; Cells PHP inactive until its extractor exists) → 41 entries, 40 active; `data/registry_exclusions.json` excludes
+PDF Go MCP; `data/provider_budget.json` epoch 2 (spent reset to 0; epoch 1 kept under `history`);
+`data/scheduled_execution_policy.json` authorized for every active repository; `scripts/scheduled_execution_gate.py`
+predicate 3 reads the acceptance calibration's PASSED certificates (R33), not the frozen reviewer file. The counter's
+`classify_review` change (R33) and the attestation reader land next as Phase 1 fixes.
+
+Rulings kept in focus: `docs/RULINGS.md` (every ruling R1–R35 and a pre-work checklist), referenced on the first lines of
+`AGENTS.md` and a new `CLAUDE.md`, printed into every new Claude Code session by a SessionStart hook in
+`.claude/settings.json`, and guarded by `tests/test_rulings_in_focus.py`.

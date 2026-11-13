@@ -1,5 +1,8 @@
 # AGENTS.md — Repository Presenter (new repository)
 
+> **STOP — read `docs/RULINGS.md` first, in full, before any work.** It holds every binding owner ruling (R1–R35)
+> and the pre-work checklist. It is printed into every new session by the SessionStart hook; skipping it is a defect.
+
 Binding authority table and roles for anyone or anything working in this
 repository. Keep this short; the owner's goals and conflict rulings live in
 `docs/CONSOLIDATED_GOALS_2026-11-06.md` (top authority), detailed requirements in

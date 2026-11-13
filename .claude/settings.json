@@ -72,5 +72,17 @@
       "Bash(gh secret*)",
       "Bash(gh auth*)"
     ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"$CLAUDE_PROJECT_DIR/docs/RULINGS.md\""
+          }
+        ]
+      }
+    ]
   }
 }
