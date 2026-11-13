@@ -1,0 +1,1000 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "enterprise_relationship/context"
+    ]
+  },
+  "omitted": [
+    {
+      "fact_id": "example:003",
+      "reason": "The example is marked as CONTRADICTED and must not be cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The list is already covered by the six capability units; its items are fully represented in the descriptions of Scene graph construction, Material assignment and conversion, Format conversion, Per-format load/save options, Mesh and vertex data control, and Animation support.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:024.code_block",
+      "reason": "The renderer handles the code block rendering; this provenance fact is not prose content for the unit.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:026.paragraph",
+      "reason": "Paragraph is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:028.code_block",
+      "reason": "Code block is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:030.heading",
+      "reason": "Heading is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:033.heading",
+      "reason": "Heading is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:035.code_block",
+      "reason": "Code block is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:036.heading",
+      "reason": "Heading is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:038.code_block",
+      "reason": "Code block is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:039.heading",
+      "reason": "Heading is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:041.code_block",
+      "reason": "Code block is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:042.heading",
+      "reason": "Heading is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:044.code_block",
+      "reason": "Code block is already rendered in the document and not required for this section's units.",
+      "section": "additional_examples"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:output.fbx",
+        "format:input.gltf",
+        "format:output.gltf",
+        "format:input.obj",
+        "format:output.obj",
+        "format:input.stl",
+        "format:output.stl",
+        "format:input.dae",
+        "format:output.dae",
+        "format:input.3mf",
+        "format:output.3mf",
+        "format:input.3ds",
+        "format:output.3ds",
+        "format:input.ply",
+        "format:output.ply",
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.shading",
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.3D FOSS for .NET reads and writes 3D formats including .fbx, .gltf, .obj, .stl, .dae, .3mf, .3ds, and .ply. It converts scenes between these formats and supports scene graph construction with Scene, Node hierarchy, primitive geometry, and material assignment. The product handles skeletal animation with bones, keyframes, and morph targets, and provides NURBS curve and surface definition capabilities."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.profiles",
+        "public_symbol:aspose.threed.scene"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Scene graph construction with Aspose.ThreeD.Scene and Aspose.ThreeD.Node supports creating a root node, attaching child nodes via CreateChildNode or AddChildNode, and managing entities, transforms, and materials on each node."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose.threed.shading"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Material assignment and conversion supports assigning LambertMaterial, PhongMaterial, PbrMaterial, PbrSpecularMaterial, and ShaderMaterial to nodes, and converting standard materials to physically based rendering materials via PbrMaterial.FromMaterial."
+    },
+    {
+      "fact_ids": [
+        "format:input.fbx",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.stl",
+        "format:input.dae",
+        "format:input.3mf",
+        "format:output.fbx",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.stl",
+        "format:output.dae",
+        "format:output.3mf"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Format conversion supports reading and writing .fbx, .gltf, .obj, .stl, .dae, and .3mf files through Scene.Open, Scene.FromFile, Scene.Save, and Scene.FromStream with full round-trip fidelity."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "example:006",
+        "public_symbol:aspose.threed.formats"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Per-format load/save options supports configuring behavior for each format through dedicated types such as ObjLoadOptions, ColladaSaveOptions, and their equivalents for FBX, glTF, STL, and 3MF."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Mesh and vertex data control supports defining primitives like Box, Cylinder, Sphere, and IFC-compatible 2D profiles, as well as custom meshes with normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data via VertexDeclaration and VertexElement."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Animation support supports creating and managing animation clips with AnimationClip and AnimationChannel, skinning meshes with Bone, Skeleton, and SkinDeformer, and morph-target animation via MorphTargetDeformer and MorphTargetChannel."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "The first example creates a new scene, adds a box primitive with a Lambert material, and saves it as an FBX file."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "The second example loads a GLTF file and converts it to OBJ format."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following examples demonstrate converting materials, loading files with custom options, saving scenes to streams, and handling unrecognized formats in Aspose.3D FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "example:004"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Convert a Lambert material to PBR using Aspose.3D FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Load OBJ with custom options and export to STL."
+    },
+    {
+      "fact_ids": [
+        "example:006"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:006",
+      "text": "Save a scene to COLLADA through a stream."
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:007",
+      "text": "Handle an unrecognized 3D file format."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.deformers",
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.formats",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.profiles",
+        "public_symbol:aspose.threed.scene",
+        "public_symbol:aspose.threed.shading"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.3D FOSS for .NET provides core 3D scene management through the Scene class, which owns a hierarchy of Node objects and supports loading and saving via static and instance methods. The library organizes functionality into modules including Entities for geometric primitives, Shading for materials, Formats for file I/O, Animation for keyframe data, and Deformers for mesh modification."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities",
+        "public_symbol:aspose.threed.node",
+        "public_symbol:aspose.threed.profiles",
+        "public_symbol:aspose.threed.scene"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.scene",
+      "text": "The Scene class serves as the primary entry point, owning a RootNode hierarchy and providing static FromFile and FromStream methods as well as instance Save methods for format-aware loading and saving through the FileFormat registry."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose.threed.shading"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.shading",
+      "text": "The Shading module provides material classes such as LambertMaterial and PbrMaterial, supporting creation of physical materials from standard ones and integration with scene rendering."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "example:006",
+        "public_symbol:aspose.threed.formats"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.formats",
+      "text": "The Formats module supports loading and saving 3D scenes in various file formats including OBJ, STL, and Collada, with options such as FlipCoordinateSystem, NormalizeNormal, and save-specific configurations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation",
+        "public_symbol:aspose.threed.deformers"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.animation",
+      "text": "The Animation module provides support for animation clips and pose management, while the Deformers module enables mesh modification through deformation operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.threed.entities",
+      "text": "The Entities module includes geometric primitives such as Box and provides the Node class for building the scene hierarchy, supporting child nodes, entities, and transformation properties."
+    },
+    {
+      "fact_ids": [
+        "link_target:023"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:023",
+      "text": "Implementation progress notes describe the current state of the Aspose.3D FOSS for .NET library's feature coverage and remaining work."
+    },
+    {
+      "fact_ids": [
+        "link_target:024"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:024",
+      "text": "Release 26.2.0 notes summarize changes, improvements, and fixes introduced in that version of Aspose.3D FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "link_target:025"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:025",
+      "text": "AGENTS.md outlines the project's contribution guidelines and expectations for community participants."
+    },
+    {
+      "fact_ids": [
+        "link_target:026"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:026",
+      "text": "The issues and feature requests page tracks reported bugs, enhancement suggestions, and their status for Aspose.3D FOSS for .NET."
+    },
+    {
+      "fact_ids": [
+        "format:input.3mf",
+        "format:input.ply",
+        "format:output.3mf",
+        "format:output.ply",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:059.list",
+        "inherited_unit:060.heading",
+        "inherited_unit:061.list",
+        "inherited_unit:070.paragraph",
+        "install_command:dotnet",
+        "license:file",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version",
+        "public_symbol:aspose",
+        "public_symbol:aspose.threed"
+      ],
+      "section": "scope_limitations",
+      "slot": "scope",
+      "text": "Aspose.3D FOSS for .NET reads and writes .ply and .3mf files through the Scene.Open and Scene.Save methods, supporting the netcoreapp3.1, net6.0, net8.0, and net10.0 target frameworks."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "install_command:dotnet"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:1",
+      "text": "Rendering is not implemented in this FOSS build — Scene.Render, RenderFactory, and the IRenderTarget/IRenderWindow rendering pipeline all throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "format:input.ply",
+        "format:output.ply",
+        "inherited_unit:061.list"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:2",
+      "text": "PLY import and export work through Scene.Open and Scene.Save, but the public FileFormat.PLY field and its Encode/Decode methods throw NotImplementedException and should not be called directly."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "public_symbol:aspose.threed"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:3",
+      "text": "PolygonModifier, TriMesh helpers, NurbsCurve.Evaluate/EvaluateAt, and NurbsSurface.ToMesh throw NotImplementedException, and Microsoft3MFFormat metadata and RvmFormat.LoadAttributes are not implemented."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "public_symbol:aspose"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "Text watermarking is not currently functional, and License and Metered APIs are present for API-surface compatibility but are not applicable to this open-source edition."
+    },
+    {
+      "fact_ids": [
+        "format:input.3mf",
+        "format:output.3mf",
+        "inherited_unit:061.list"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:5",
+      "text": "Core 3MF geometry import/export works, but Microsoft3MFFormat build-instruction metadata including IsBuildable, GetTransformForBuild, and SetBuildable is not implemented."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:061.list",
+        "license:file",
+        "license:spdx"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:6",
+      "text": "This project is licensed under the MIT License, as stated in the LICENSE file."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version",
+        "build_test_asset:docs",
+        "build_test_asset:tests",
+        "inherited_unit:014.paragraph",
+        "inherited_unit:017.paragraph",
+        "inherited_unit:019.list",
+        "inherited_unit:064.paragraph",
+        "inherited_unit:065.code_block",
+        "inherited_unit:066.paragraph",
+        "inherited_unit:067.code_block",
+        "inherited_unit:068.paragraph"
+      ],
+      "section": "development_testing",
+      "slot": "summary",
+      "text": "Aspose.3D FOSS for .NET targets netcoreapp3.1, net6.0, net8.0, and net10.0 in Release builds and requires no third-party package dependencies. The test suite resides in src/test/ and is executed using the dotnet test command against the test project file. The console converter tool, located at src/converter/Converter.csproj, builds separately as a project reference to the library and is not published to NuGet. Development guidelines and current implementation status are documented in AGENTS.md."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:062.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds the full commercial rendering pipeline, additional proprietary format support, and license management on top of this FOSS API surface."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.animation.animationchannel.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.animation.animationchannel.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.animation.animationchannel.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.animation.animationchannel.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.animation.animationchannel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.animationchannel",
+      "text": "Aspose.ThreeD.Animation.AnimationChannel is a public symbol with members Add, BindPoint, ComponentType, DefaultValue, FindProperty, GetEnumerator, GetProperty, and KeyFrames; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation.extrapolation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.extrapolation",
+      "text": "Aspose.ThreeD.Animation.Extrapolation is a public symbol with members RepeatCount and Type."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.animation.keyframe"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.keyframe",
+      "text": "Aspose.ThreeD.Animation.KeyFrame is a public symbol with members Bias, Continuity, Flat, IndependentTangent, Interpolation, KeyFrame, NextInTangent, and NextInWeight."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.animation.keyframesequence.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.animation.keyframesequence.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.animation.keyframesequence.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.animation.keyframesequence.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.animation.keyframesequence"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.animation.keyframesequence",
+      "text": "Aspose.ThreeD.Animation.KeyframeSequence is a public symbol with members Add, BindPoint, FindProperty, GetEnumerator, GetProperty, KeyFrames, KeyframeSequence, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.bonepose.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.bonepose.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.bonepose.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.bonepose.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.bonepose"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.bonepose",
+      "text": "Aspose.ThreeD.BonePose is a public symbol with members BonePose, FindProperty, GetProperty, IsLocal, Matrix, Name, Node, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.deformers.deformer.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.deformers.deformer.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.deformers.deformer.owner.body.invalidoperationexception",
+        "implementation:throws.aspose.threed.deformers.deformer.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.deformers.deformer.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.deformers.deformer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.deformers.deformer",
+      "text": "Aspose.ThreeD.Deformers.Deformer is a public symbol with members Deformer, FindProperty, GetProperty, Name, Owner, Properties, RemoveProperty, and SetProperty; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally) and Owner throws InvalidOperationException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.deformers.morphtargetchannel.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.deformers.morphtargetchannel.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.deformers.morphtargetchannel.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.deformers.morphtargetchannel.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.deformers.morphtargetchannel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.deformers.morphtargetchannel",
+      "text": "Aspose.ThreeD.Deformers.MorphTargetChannel is a public symbol with members ChannelWeight, DefaultWeight, FindProperty, GetProperty, GetWeight, MorphTargetChannel, Name, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.booleanoperator.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.booleanoperator.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.booleanoperator.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.booleanoperator.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.booleanoperator"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.booleanoperator",
+      "text": "Aspose.ThreeD.Entities.BooleanOperator is a public symbol with members BooleanOperator, Excluded, FindProperty, First, GetBoundingBox, GetEntityRendererKey, GetProperty, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.circle.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.circle.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.circle.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.circle.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.circle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.circle",
+      "text": "Aspose.ThreeD.Entities.Circle is a public symbol with members Circle, Color, Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.compositecurve.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.compositecurve.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.compositecurve.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.compositecurve.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.compositecurve"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.compositecurve",
+      "text": "Aspose.ThreeD.Entities.CompositeCurve is a public symbol with members AddSegment, Color, CompositeCurve, Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, and GetProperty; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.halfspace.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.halfspace.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.halfspace.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.halfspace.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.halfspace"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.halfspace",
+      "text": "Aspose.ThreeD.Entities.HalfSpace is a public symbol with members Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, HalfSpace, Name, and Normal; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.nurbssurface.addelement.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.nurbssurface.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.nurbssurface.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.nurbssurface.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.nurbssurface.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.nurbssurface"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.nurbssurface",
+      "text": "Aspose.ThreeD.Entities.NurbsSurface is a public symbol with members AddElement, CastShadows, ControlPoints, CreateElement, CreateElementUV, Deformers, Excluded, and FindProperty; AddElement, FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.patch.addelement.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.patch.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.patch.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.patch.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.entities.patch.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.patch"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.patch",
+      "text": "Aspose.ThreeD.Entities.Patch is a public symbol with members AddElement, CastShadows, ControlPoints, CreateElement, CreateElementUV, Deformers, Excluded, and FindProperty; AddElement, FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.polygonbuilder.addvertex.body.invalidoperationexception",
+        "implementation:throws.aspose.threed.entities.polygonbuilder.end.body.invalidoperationexception",
+        "public_symbol:aspose.threed.entities.polygonbuilder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.polygonbuilder",
+      "text": "Aspose.ThreeD.Entities.PolygonBuilder is a public symbol with members AddVertex, Begin, End, and PolygonBuilder; AddVertex throws InvalidOperationException (conditionally) and End throws InvalidOperationException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.polygonmodifier.applytransform.body.notimplementedexception",
+        "implementation:throws.aspose.threed.entities.polygonmodifier.buildtangentbinormal.body.notimplementedexception",
+        "implementation:throws.aspose.threed.entities.polygonmodifier.generatenormal.body.notimplementedexception",
+        "implementation:throws.aspose.threed.entities.polygonmodifier.generateuv.body.notimplementedexception",
+        "implementation:throws.aspose.threed.entities.polygonmodifier.mergemesh.body.notimplementedexception",
+        "implementation:throws.aspose.threed.entities.polygonmodifier.scale.body.notimplementedexception",
+        "public_symbol:aspose.threed.entities.polygonmodifier"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.polygonmodifier",
+      "text": "Aspose.ThreeD.Entities.PolygonModifier is a public symbol with members ApplyTransform, BuildTangentBinormal, GenerateNormal, GenerateUV, MergeMesh, Scale, SplitMesh, and Triangulate; ApplyTransform, BuildTangentBinormal, GenerateNormal, GenerateUV, MergeMesh, and Scale throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.entities.skeletontype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.skeletontype",
+      "text": "Aspose.ThreeD.Entities.SkeletonType is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.vertexelementbinormal.copyto.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.vertexelementbinormal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.vertexelementbinormal",
+      "text": "Aspose.ThreeD.Entities.VertexElementBinormal is a public symbol with members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.vertexelementnormal.copyto.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.vertexelementnormal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.vertexelementnormal",
+      "text": "Aspose.ThreeD.Entities.VertexElementNormal is a public symbol with members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.entities.vertexelementtangent.copyto.body.argumentnullexception",
+        "public_symbol:aspose.threed.entities.vertexelementtangent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.entities.vertexelementtangent",
+      "text": "Aspose.ThreeD.Entities.VertexElementTangent is a public symbol with members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.formats.gltf.classtype.addproperty.body.notimplementedexception",
+        "implementation:throws.aspose.threed.formats.gltf.classtype.tostring.body.notimplementedexception",
+        "public_symbol:aspose.threed.formats.gltf.classtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.classtype",
+      "text": "Aspose.ThreeD.Formats.GLTF.ClassType is a public symbol with members AddProperty, ClassType, Description, DisplayName, Name, Properties, and ToString; AddProperty and ToString throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.formats.gltf.enumtype.addvalue.body.notimplementedexception",
+        "implementation:throws.aspose.threed.formats.gltf.enumtype.tostring.body.notimplementedexception",
+        "public_symbol:aspose.threed.formats.gltf.enumtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.enumtype",
+      "text": "Aspose.ThreeD.Formats.GLTF.EnumType is a public symbol with members AddValue, EnumType, Name, ToString, and Values; AddValue and ToString throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.formats.gltf.enumvalue.tostring.body.notimplementedexception",
+        "public_symbol:aspose.threed.formats.gltf.enumvalue"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.enumvalue",
+      "text": "Aspose.ThreeD.Formats.GLTF.EnumValue is a public symbol with members EnumValue, Name, ToString, and Value; ToString throws NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.formats.gltf.property.tostring.body.notimplementedexception",
+        "public_symbol:aspose.threed.formats.gltf.property"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.property",
+      "text": "Aspose.ThreeD.Formats.GLTF.Property is a public symbol with members Count, Description, DisplayName, EnumType, Name, Normalized, Property, and ToString; ToString throws NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.formats.gltf.propertytable.addvalue.body.notimplementedexception",
+        "implementation:throws.aspose.threed.formats.gltf.propertytable.attach.body.notimplementedexception",
+        "implementation:throws.aspose.threed.formats.gltf.propertytable.from.body.notimplementedexception",
+        "implementation:throws.aspose.threed.formats.gltf.propertytable.getvalue.body.notimplementedexception",
+        "public_symbol:aspose.threed.formats.gltf.propertytable"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.gltf.propertytable",
+      "text": "Aspose.ThreeD.Formats.GLTF.PropertyTable is a public symbol with members AddValue, Attach, From, GetValue, MetaClass, Name, PropertyTable, and Values; AddValue, Attach, From, and GetValue throw NotImplementedException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.microsoft3mfsaveoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.microsoft3mfsaveoptions",
+      "text": "Aspose.ThreeD.Formats.Microsoft3MFSaveOptions is a public symbol with members BuildAll, EnableCompression, Encoding, ExportTextures, FileFormat, FileName, FileSystem, and FileSystemFactory."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.plyloadoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.plyloadoptions",
+      "text": "Aspose.ThreeD.Formats.PlyLoadOptions is a public symbol with members Encoding, FileFormat, FileName, FileSystem, FileSystemFactory, FlipCoordinateSystem, LookupPaths, and PlyLoadOptions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.formats.plysaveoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.formats.plysaveoptions",
+      "text": "Aspose.ThreeD.Formats.PlySaveOptions is a public symbol with members AxisSystem, ColorComponents, Encoding, ExportTextures, FaceElement, FaceProperty, FileFormat, and FileName."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.globaltransform"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.globaltransform",
+      "text": "Aspose.ThreeD.GlobalTransform is a public symbol with members EulerAngles, Rotation, Scale, TransformMatrix, and Translation."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.group.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.group.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.group.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.group.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.group"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.group",
+      "text": "Aspose.ThreeD.Group is a public symbol with members Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, Group, Groups, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.imagerenderoptions.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.imagerenderoptions.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.imagerenderoptions.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.imagerenderoptions.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.imagerenderoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.imagerenderoptions",
+      "text": "Aspose.ThreeD.ImageRenderOptions is a public symbol with members AssetDirectories, BackgroundColor, EnableShadows, FindProperty, GetProperty, ImageRenderOptions, Name, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.profiles.hshape.findproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.profiles.hshape.getproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.profiles.hshape.removeproperty.body.argumentnullexception",
+        "implementation:throws.aspose.threed.profiles.hshape.setproperty.body.argumentnullexception",
+        "public_symbol:aspose.threed.profiles.hshape"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.profiles.hshape",
+      "text": "Aspose.ThreeD.Profiles.HShape is a public symbol with members BottomFlangeEdgeRadius, BottomFlangeFilletRadius, BottomFlangeThickness, BottomFlangeWidth, Excluded, FindProperty, GetBoundingBox, and GetEntityRendererKey; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.descriptorsetupdater"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.descriptorsetupdater",
+      "text": "Aspose.ThreeD.Render.DescriptorSetUpdater is a public symbol with members Bind and Dispose."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.itextureunit"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.itextureunit",
+      "text": "Aspose.ThreeD.Render.ITextureUnit is a public symbol with members Depth, Dispose, Height, Magnification, Minification, Mipmap, Scale, and Scroll."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.pixelmapmode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.pixelmapmode",
+      "text": "Aspose.ThreeD.Render.PixelMapMode is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.pixelmapping"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.pixelmapping",
+      "text": "Aspose.ThreeD.Render.PixelMapping is a public symbol with members Data, Dispose, Height, Stride, and Width."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.texturetype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.texturetype",
+      "text": "Aspose.ThreeD.Render.TextureType is a public symbol."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.render.viewport"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.render.viewport",
+      "text": "Aspose.ThreeD.Render.Viewport is a public symbol with members Area, BackgroundColor, DepthClear, Enabled, Frustum, RenderTarget, and ZOrder."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.boundingbox2d"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.boundingbox2d",
+      "text": "Aspose.ThreeD.Utilities.BoundingBox2D is a public symbol with members BoundingBox2D, Extent, Infinite, Maximum, Merge, Minimum, Null, and ToString."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.fmatrix4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.fmatrix4",
+      "text": "Aspose.ThreeD.Utilities.FMatrix4 is a public symbol with members Concatenate, FMatrix4, Identity, Inverse, and Transpose."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.fvector2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.fvector2",
+      "text": "Aspose.ThreeD.Utilities.FVector2 is a public symbol with members CompareTo, Equals, FVector2, GetHashCode, and ToString."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.fvector4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.fvector4",
+      "text": "Aspose.ThreeD.Utilities.FVector4 is a public symbol with members CompareTo, FVector4, and ToString."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.ioextension"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.ioextension",
+      "text": "Aspose.ThreeD.Utilities.IOExtension is a public symbol with member Write."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.utilities.mathutils.calcnormal.body.argumentexception",
+        "public_symbol:aspose.threed.utilities.mathutils"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.mathutils",
+      "text": "Aspose.ThreeD.Utilities.MathUtils is a public symbol with members CalcNormal, Clamp, FindIntersection, PointInsideTriangle, RayIntersect, ToDegree, and ToRadian; Aspose.ThreeD.Utilities.MathUtils.CalcNormal throws ArgumentException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:returns.aspose.threed.utilities.matrix4.determinant.body",
+        "public_symbol:aspose.threed.utilities.matrix4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.matrix4",
+      "text": "Aspose.ThreeD.Utilities.Matrix4 is a public symbol with members Concatenate, Decompose, Determinant, Identity, Inverse, Matrix4, Normalize, and Rotate; Aspose.ThreeD.Utilities.Matrix4.Determinant always returns 1.0."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.parseexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.parseexception",
+      "text": "Aspose.ThreeD.Utilities.ParseException is a public symbol with member ParseException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.rect"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.rect",
+      "text": "Aspose.ThreeD.Utilities.Rect is a public symbol with members Bottom, Contains, Height, Left, Rect, Right, Top, and Width."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.relativerectangle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.relativerectangle",
+      "text": "Aspose.ThreeD.Utilities.RelativeRectangle is a public symbol with members FromScale, OffsetHeight, OffsetWidth, OffsetX, OffsetY, RelativeRectangle, ScaleHeight, and ScaleWidth."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.semanticattribute"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.semanticattribute",
+      "text": "Aspose.ThreeD.Utilities.SemanticAttribute is a public symbol with members Alias, Semantic, and SemanticAttribute."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.transformbuilder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.transformbuilder",
+      "text": "Aspose.ThreeD.Utilities.TransformBuilder is a public symbol with members Append, Compose, ComposeOrder, Matrix, Prepend, Rearrange, Reset, and Rotate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vector2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vector2",
+      "text": "Aspose.ThreeD.Utilities.Vector2 is a public symbol with members CompareTo, Cross, Dot, Equals, GetHashCode, Length, Normalize, and ToString."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.utilities.vector3.parse.body.parseexception",
+        "public_symbol:aspose.threed.utilities.vector3"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vector3",
+      "text": "Aspose.ThreeD.Utilities.Vector3 is a public symbol with members AngleBetween, CompareTo, Cos, Cross, Dot, Equals, GetHashCode, and Item; Aspose.ThreeD.Utilities.Vector3.Parse throws ParseException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vector4"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vector4",
+      "text": "Aspose.ThreeD.Utilities.Vector4 is a public symbol with members CompareTo, Equals, GetHashCode, Length, Set, ToString, and Vector4."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vertex"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vertex",
+      "text": "Aspose.ThreeD.Utilities.Vertex is a public symbol with members CompareTo, ReadDouble, ReadFVector2, ReadFVector3, ReadFVector4, ReadFloat, ReadVector2, and ReadVector3."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.utilities.vertexdeclaration.addfield.body.invalidoperationexception",
+        "implementation:throws.aspose.threed.utilities.vertexdeclaration.clear.body.invalidoperationexception",
+        "public_symbol:aspose.threed.utilities.vertexdeclaration"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vertexdeclaration",
+      "text": "Aspose.ThreeD.Utilities.VertexDeclaration is a public symbol with members AddField, Clear, CompareTo, Count, Equals, FromGeometry, FromType, and GetEnumerator; Aspose.ThreeD.Utilities.VertexDeclaration.AddField throws InvalidOperationException (conditionally) and Aspose.ThreeD.Utilities.VertexDeclaration.Clear throws InvalidOperationException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.threed.utilities.vertexfield"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.vertexfield",
+      "text": "Aspose.ThreeD.Utilities.VertexField is a public symbol with members Alias, CompareTo, DataType, Equals, GetHashCode, Index, Offset, and Semantic."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.aspose.threed.utilities.watermark.decodewatermark.body.notimplementedexception",
+        "implementation:throws.aspose.threed.utilities.watermark.encodewatermark.body.notimplementedexception",
+        "public_symbol:aspose.threed.utilities.watermark"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.threed.utilities.watermark",
+      "text": "Aspose.ThreeD.Utilities.Watermark is a public symbol with members DecodeWatermark and EncodeWatermark; Aspose.ThreeD.Utilities.Watermark.DecodeWatermark throws NotImplementedException and Aspose.ThreeD.Utilities.Watermark.EncodeWatermark throws NotImplementedException."
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "canaries": {
+    "duplicate_paragraph": true
+  },
+  "files": {
+    "README.md": {
+      "bytes": 59101,
+      "sha256": "dd0ac647c2a4880fb5062c841607033842ac4a192c8b4da3a411da15ecb267de"
+    },
+    "README.patch.diff": {
+      "bytes": 57683,
+      "sha256": "54c3802cb5ae9504c6449e460df9f78b453a491c458affa567c87ab5797fa4f1"
+    },
+    "content_units.coherent.json": {
+      "bytes": 51186,
+      "sha256": "de38fa1601b457d470b34812005d1d03b85a9908b1f5daffcec661776df10538"
+    },
+    "content_units.json": {
+      "bytes": 54240,
+      "sha256": "ea93a7b4e42a3f39d35c2da0c8812255aabd520ea65ed3494a721fffe8469d42"
+    },
+    "dependencies.json": {
+      "bytes": 668384,
+      "sha256": "d04ba8cd37fb574083b53c924213dc825a7dbfc026285d27d864e7016d972d40"
+    },
+    "dispositions.json": {
+      "bytes": 26676,
+      "sha256": "39ec40286fdf6f42a4cdaa930077b153f1bdde76fc23f36d6950334d447eef08"
+    },
+    "facts.json": {
+      "bytes": 2984694,
+      "sha256": "60e23797c8cd0b0351b5e7a8286525413b75e4715d478ee7ea8028ad00310f36"
+    },
+    "investigation.json": {
+      "bytes": 8089,
+      "sha256": "cef708fba0b1c3ef79f8322342737eacd37b59c2efb49b1136c02e69d3f29dbb"
+    },
+    "ledger.jsonl": {
+      "bytes": 65969,
+      "sha256": "6c4eca5a59ce718fb1f2aeb21a1bd5b5fa26cc405e17194433c264456a4f8a3b"
+    },
+    "plan.json": {
+      "bytes": 8502,
+      "sha256": "f7079b6ffd590d7ef72c03cb039ce3a96120f9da268d1b7de64c53b6e2bd1a83"
+    },
+    "review_verdict.json": {
+      "bytes": 3830,
+      "sha256": "82e7b7aa847056972cfc5a9de72fa9ce37b5ddea1ff4027ba54c04cdd7bc46b3"
+    }
+  },
+  "ledger_totals": {
+    "audit_only": 0,
+    "cache_reuses": 20,
+    "provider_calls": 35,
+    "records": 55,
+    "total_tokens": null
+  },
+  "no_op_proof": null,
+  "provider_calls": 6,
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+  "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+  "schema_version": 1,
+  "sealed_at": "2026-11-13T13:09:14Z",
+  "sealed_by": {
+    "identity": {
+      "boot_id": "boot:1656116e-483a-415c-b7d8-c78e557b457d",
+      "nonce": "4a9be774ecb644ad922c3087aec033f1",
+      "pid": 2555,
+      "started": "proc:5558"
+    },
+    "invocation_id": "42ecea69d67e4267acd246470b014780",
+    "started_at": "2026-11-13T13:08:06Z"
+  },
+  "state": "ACCEPTED",
+  "superseded": {
+    "changed": [
+      "README.md",
+      "README.patch.diff",
+      "content_units.coherent.json",
+      "content_units.json",
+      "dependencies.json",
+      "dispositions.json",
+      "facts.json",
+      "investigation.json",
+      "plan.json",
+      "review_verdict.json"
+    ],
+    "earliest_affected_stage": "EXTRACTING",
+    "previous_proof": {
+      "byte_identical": true,
+      "first_run": {
+        "identity": {
+          "boot_id": "win:134374614075000000",
+          "nonce": "b27c48c16cbe4f20abb71c94529fc6b1",
+          "pid": 35796,
+          "started": "win:134374678423683072"
+        },
+        "invocation_id": "05bfc7f928294f589522125fa62e7c31",
+        "started_at": "2026-10-26T05:57:23Z"
+      },
+      "fresh_process": true,
+      "proven_at": "2026-10-26T05:57:47Z",
+      "provider_calls": 0,
+      "rerun": {
+        "cache_reuses": 12,
+        "identity": {
+          "boot_id": "win:134374614075000000",
+          "nonce": "0b80c6c5ed274b1681ef67ed7cdff9a3",
+          "pid": 53188,
+          "started": "win:134374678564456676"
+        },
+        "invocation_id": "b39a43211a0149f09c68b56065d8a067",
+        "provider_calls": 0,
+        "records": 12,
+        "started_at": "2026-10-26T05:57:37Z"
+      }
+    },
+    "previous_sealed_at": "2026-10-26T05:57:47Z",
+    "previous_sealed_by": {
+      "identity": {
+        "boot_id": "win:134374614075000000",
+        "nonce": "0b80c6c5ed274b1681ef67ed7cdff9a3",
+        "pid": 53188,
+        "started": "win:134374678564456676"
+      },
+      "invocation_id": "b39a43211a0149f09c68b56065d8a067",
+      "started_at": "2026-10-26T05:57:37Z"
+    },
+    "previous_state": "READY_FOR_PROPOSAL",
+    "scope_basis": "artifacts",
+    "scopes": [
+      "facts",
+      "evidence",
+      "reconciliation",
+      "planning",
+      "authoring",
+      "reviewer"
+    ],
+    "superseded_at": "2026-11-13T13:09:14Z",
+    "triggering_scope": "facts"
+  }
+}
