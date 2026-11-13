@@ -1,0 +1,42 @@
+--- a/README.md
++++ b/README.md
+@@ -1962,7 +1962,7 @@
+ `tagged_content` for structural editing alongside `encrypt`, `decrypt`, `merge`, `optimize`, and
+ `flatten` operations. `PdfExtractor` handles text, image, and attachment extraction, and
+ `PdfFileEditor` provides a boolean-returning facade for file-based concatenate, extract, insert,
+-and delete workflows. 277 public types are organized by module below.
++and delete workflows. 385 public types are organized by module below.
+ 
+ <details>
+ <summary>View the Core API Surface</summary>
+@@ -2191,7 +2191,6 @@
+ | `ChainResult` | Result of building and validating a certificate path. |
+ | `CharacterCollection` | A CIDSystemInfo registry, ordering, and supplement triple. |
+ | `CidTextCodec` | Code codec for a composite (Type0) font's show strings. |
+-| `Codestream` | Class with 2 methods and 8 properties. |
+ | `Color` | Represents a color in PDF documents. |
+ | `CompositeFontMetric` | Advance metrics for a composite (Type0) font. |
+ | `ContentStreamParser` | Parse a PDF content stream and extract plain text. |
+@@ -2213,14 +2212,12 @@
+ | `ImagePlacementAbsorber-simple_pdf` | Absorber that finds image placements in a PDF. |
+ | `IncrementalUpdate` | Generate an incremental update section for an existing PDF. |
+ | `IncrementalWriter` | Utility that appends incremental updates to an existing PDF. |
+-| `Jpeg2000Error` | A JPEG 2000 codestream that cannot be decoded. |
+ | `LayoutElement` | A positioned piece of page content (a text object or an image paint). |
+ | `LayoutLine` | One visual line with logical replacement text and shaped glyphs. |
+ | `LayoutResult` | Complete line layout; glyph coordinates and widths are in em units. |
+ | `LazyImageDict` | Dictionary that decodes image streams on demand to save memory. |
+ | `LazyPdfObjectStore` | Object-number → COS object map that parses from a :class:`PdfCosParser` on demand. |
+ | `Matrix` | Matrix supports 2‑D transformations with translate(x, y) and multiply(other) methods, exposing the a‑f components of the affine matrix. |
+-| `MQDecoder` | The MQ arithmetic decoder of Annex C. |
+ | `OptionalContent` | The document's optional content groups and their default visibility. |
+ | `OptionalContentGroup` | One optional content group (`/OCG`) of the document. |
+ | `ParseWarnings` | Collects warnings during parsing. |
+@@ -2266,7 +2263,6 @@
+ | `StandardFonts` | Utility class for the PDF Standard 14 fonts. |
+ | `StreamDecoder` | Decode PDF stream data using supported filters. |
+ | `StreamEncoder` | Encode raw bytes into PDF stream data, the inverse of :class:`StreamDecoder`. |
+-| `TagTree` | The tag tree of ISO 32000-2 clause 14.8, used for structure inclusion. |
+ | `TextFragmentAbsorber-simple_pdf` | Absorber that extracts text fragments from a SimplePdf instance. |
+ | `TextObject` | A ``BT`` ... ``ET`` text object located in a content stream. |
+ | `TiffPage` | One image in a TIFF file. |

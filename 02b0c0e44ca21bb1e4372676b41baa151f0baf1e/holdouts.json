@@ -1,0 +1,169 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 493-507: example 4: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 493,
+      "quote": "# From bytes in memory",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 511-526: example 5: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 511,
+      "quote": "# Get PDF content as bytes",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 569-575: example 8: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 569,
+      "quote": "with Document(\"input.pdf\") as source:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 603-607: example 10: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 603,
+      "quote": "with Document(\"scan.pdf\") as source:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 707-732: example 14: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 707,
+      "quote": "from aspose_pdf import Document",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 751-755: example 16: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 751,
+      "quote": "with Document(\"input.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 764-772: example 17: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 764,
+      "quote": "with Document(\"input.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 869-888: example 22: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 869,
+      "quote": "from pathlib import Path",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1077-1087: example 34: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1077,
+      "quote": "with Document() as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1148-1151: example 38: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1148,
+      "quote": "with Document(\"input.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1161-1167: example 39: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1161,
+      "quote": "with Document(\"report.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1239-1246: example 43: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1239,
+      "quote": "with Document(\"manual.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1413-1418: example 50: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1413,
+      "quote": "with Document(\"clean-copy.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1587-1592: example 59: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1587,
+      "quote": "with Document(\"input.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1603-1608: example 60: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1603,
+      "quote": "with Document(\"input.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1731-1735: example 66: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1731,
+      "quote": "with Document(\"batch.pdf\") as document:",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 1878-1883: example 74: FAILED; NameError",
+      "kind": "unrepaired_defect",
+      "line": 1878,
+      "quote": "with Document(\"before.pdf\") as before, Document(\"after.pdf\") as after:",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "3",
+  "schema_version": 1,
+  "source_revision": "02b0c0e44ca21bb1e4372676b41baa151f0baf1e",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}
