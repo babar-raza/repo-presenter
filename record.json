@@ -5,7 +5,7 @@
   "provider_repository_id": 1193857039,
   "registry_revision": null,
   "active_transaction_id": "288d94ab3b0446949dcc21c10e246b1e",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 68277adca33b: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:030.paragraph is kept (PRESERVE_ATTRIBUTED) but its text is not printed in the README)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-13T12:34:30.401745+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43419173061",
     "acquired_at": "2026-11-13T11:43:39.805088+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "8dd984c3bbde4634acb62fdc867a8641",
+    "transition_id": "d7eccba625fb4ba29947a44028534e75",
     "transaction_id": "288d94ab3b0446949dcc21c10e246b1e",
     "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-09T22:17:34.426811+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-13T12:34:30.039103+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
     "output_manifest": "candidates/aspose-email-foss__Aspose.Email-FOSS-for-Cpp/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 38,
+  "state_version": 39,
   "recent_trigger_dedup_keys": {
     "run:41142584634:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "514b58ce797e43c6a9b869fd29c1f89d",
     "run:41162828042:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "226c60d984d249daa139b9eb59dcd7b9",
