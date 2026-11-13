@@ -1,33 +1,86 @@
 name: audit-seed
 
-# M9 hosted seeder (TC-014's seed.py logic, wired 2026-11-09 -- docs/design/2026-11-06-
-# acceptance-redesign.md section 4.3). Selects >=10 real sealed candidates per lane from this
-# repository's own bundle-ref history, seeds a defect (or keeps a clean control) into each, and
-# encrypts the ground-truth manifest with AUDIT_SEED_KEY (environment: acceptance-audit) so
-# neither the supervisor nor the auditor can see which candidates were seeded before the audit
-# is committed. Candidate IDENTITY (repository/lane/revision) is never blinded -- the auditor
-# needs it to check claims against the real, pinned source; only WHICH candidates carry a
-# seeded defect, and what it was, is encrypted.
+# The M9 audit round, end to end on GitHub Actions (owner, 2026-11-13, R37: "this should be wired to the
+# system so everything is autonomous"; docs/CONSOLIDATED_GOALS_2026-11-06.md section 7). No session step
+# and no owner dispatch: the schedule starts it, and one run does the whole round.
 #
-# Manual dispatch only: this spends a fresh real seed batch, which should never happen
-# accidentally on every push. Runs on `main` so the Environment's restriction (owner action 1)
-# actually applies.
+#   gate    no secret, read-only. scripts/run_m9_seeder.py --gate decides: `resume` the open seed batch
+#           (one open batch at a time, scripts/run_request.py open_seed_batches), `seed` a new one (only
+#           when no batch is open and, on the schedule, at least MIN_PER_LANE sealed candidates are not yet
+#           judged as a clean control), `noop` (evidenced: the reason is printed), or `blocked` (the open
+#           batch's audit failed MAX_AUDIT_ATTEMPTS times; fails visibly, the run-request override ends it).
+#   seed    environment acceptance-audit (AUDIT_SEED_KEY). The TC-014 seeder (salt = this run id, so a seed
+#           is burned per run): >=10 sealed candidates per lane, seeded or kept as clean controls; the
+#           manifest is encrypted, its commitment hash and the public case index are pushed to
+#           audit-seed/run-<id> BEFORE any audit. Candidate identity is never blinded; only which cases
+#           carry a seeded defect is.
+#   audit   NO environment, so AUDIT_SEED_KEY cannot resolve here; downloads only the candidates artifact,
+#           never the manifest. scripts/run_m9_auditor.py runs the existing independent reviewer
+#           (qwen3-next via GPT_OSS_*, the R25/R31 budget gate) over every case and pushes the findings
+#           FROZEN to audit-findings/run-<id> (a bot branch, never main) before anything is decrypted.
+#   score / write  the reusable audit-score.yml and acceptance-write.yml, on main, in acceptance-audit: the
+#           scorecard, then the attested acceptance records (whose branch also closes the batch).
+#
+# Called as a reusable workflow by run-request-execute.yml (the run-request override path), it runs the
+# same chain; github.run_id is then the caller's run id, which is the seed id everywhere.
 
 on:
+  schedule:
+    - cron: "41 2,20 * * *"
   workflow_dispatch:
+  workflow_call:
 
 permissions:
-  contents: write  # only to commit this run's commitment hash to its own branch
+  contents: read
 
 concurrency:
   group: audit-seed
   cancel-in-progress: false
 
 jobs:
-  seed:
+  gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    outputs:
+      action: ${{ steps.gate.outputs.action }}
+      seed_run_id: ${{ steps.gate.outputs.seed_run_id }}
+      has_findings: ${{ steps.gate.outputs.has_findings }}
+      has_score: ${{ steps.gate.outputs.has_score }}
+    steps:
+      - name: Refuse to run anywhere but main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "audit-seed must run on refs/heads/main, got $GITHUB_REF" >&2
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Decide (resume the open batch, seed, or an evidenced no-op)
+        id: gate
+        env:
+          REQUIRE_FRESH: ${{ github.event_name == 'schedule' && '--require-fresh' || '' }}
+        run: |
+          python scripts/run_m9_seeder.py --gate $REQUIRE_FRESH --run-id "$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT" >> "$GITHUB_STEP_SUMMARY"
+
+  seed:
+    needs: gate
+    if: needs.gate.outputs.action == 'seed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     environment: acceptance-audit
+    permissions:
+      contents: write  # only to push this run's commitment hash to its own branch
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,7 +98,7 @@ jobs:
           AUDIT_SEED_KEY: ${{ secrets.AUDIT_SEED_KEY }}
         run: |
           mkdir -p "$RUNNER_TEMP/m9-seed"
-          python scripts/run_m9_seeder.py --out-dir "$RUNNER_TEMP/m9-seed" --salt "$GITHUB_RUN_ID"
+          python scripts/run_m9_seeder.py --refuse-if-open --out-dir "$RUNNER_TEMP/m9-seed" --salt "$GITHUB_RUN_ID"
 
       - name: Upload candidates + case index (ephemeral artifact, not committed)
         uses: actions/upload-artifact@v4
@@ -77,3 +130,117 @@ jobs:
           git add -f evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/
           git commit -m "M9 audit seed run ${GITHUB_RUN_ID}: commitment hash + case index (GATE5_DELIVERY_PROGRAM/M9_AUDIT)"
           git push origin "audit-seed/run-${GITHUB_RUN_ID}"
+
+  audit:
+    needs: [gate, seed]
+    if: >-
+      ${{ !cancelled() && (
+        (needs.gate.outputs.action == 'seed' && needs.seed.result == 'success') ||
+        (needs.gate.outputs.action == 'resume' && needs.gate.outputs.has_findings == 'false')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    # No environment: the seed key does not exist in this job, and nothing here downloads the manifest.
+    permissions:
+      contents: write  # only to push the frozen findings and the attempt marker to their bot branches
+      actions: read    # to download a resumed batch's candidates artifact from its own seed run
+    env:
+      SEED: ${{ needs.gate.outputs.seed_run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Record this attempt (bounded retries, run_m9_seeder.MAX_AUDIT_ATTEMPTS)
+        run: git push origin "HEAD:refs/heads/audit-attempt/run-${SEED}-${GITHUB_RUN_ID}"
+
+      - name: Download this run's candidates + case index (never the manifest)
+        if: ${{ needs.gate.outputs.seed_run_id == github.run_id }}
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-seed-candidates-${{ needs.gate.outputs.seed_run_id }}
+          path: ${{ runner.temp }}/m9-audit/in
+
+      - name: Download the open batch's candidates + case index (never the manifest)
+        if: ${{ needs.gate.outputs.seed_run_id != github.run_id }}
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-seed-candidates-${{ needs.gate.outputs.seed_run_id }}
+          path: ${{ runner.temp }}/m9-audit/in
+          run-id: ${{ needs.gate.outputs.seed_run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Blind audit with the existing independent reviewer
+        env:
+          GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
+          GPT_OSS_API_KEY: ${{ secrets.GPT_OSS_API_KEY }}
+          # Stream replies: the gateway drops a non-streamed request at ~30 s (HTTP 502).
+          GPT_OSS_STREAMING: "1"
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/run_m9_auditor.py audit \
+            --case-index "$RUNNER_TEMP/m9-audit/in/case_index.json" \
+            --candidates "$RUNNER_TEMP/m9-audit/in/candidates" \
+            --work "$RUNNER_TEMP/m9-audit/work" \
+            --out "$RUNNER_TEMP/m9-audit/findings.json"
+
+      - name: Upload the audit ledger (measured provider spend)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: m9-audit-ledger-${{ needs.gate.outputs.seed_run_id }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/m9-audit/work/ledger.jsonl
+          if-no-files-found: ignore
+          retention-days: 90
+
+      - name: Freeze the findings on their bot branch (no force, so a second audit fails closed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "audit-findings/run-${SEED}"
+          mkdir -p evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT
+          cp "$RUNNER_TEMP/m9-audit/findings.json" "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-${SEED}.json"
+          git add -f "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-${SEED}.json"
+          git commit -m "M9 audit: frozen hosted blind-auditor findings for seed run ${SEED} (GATE5_DELIVERY_PROGRAM/M9_AUDIT)"
+          git push origin "audit-findings/run-${SEED}"
+
+  score:
+    needs: [gate, audit]
+    if: >-
+      ${{ !cancelled() && needs.gate.outputs.has_score != 'true' && (
+        needs.audit.result == 'success' ||
+        (needs.gate.outputs.action == 'resume' && needs.gate.outputs.has_findings == 'true')) }}
+    permissions:
+      contents: write  # the scorecard's own bot branch
+      actions: read    # the seed run's manifest artifact
+    uses: ./.github/workflows/audit-score.yml
+    with:
+      seed_run_id: ${{ needs.gate.outputs.seed_run_id }}
+      findings_path: evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-${{ needs.gate.outputs.seed_run_id }}.json
+      findings_ref: audit-findings/run-${{ needs.gate.outputs.seed_run_id }}
+    secrets: inherit
+
+  write:
+    needs: [gate, audit]
+    if: >-
+      ${{ !cancelled() && (
+        needs.audit.result == 'success' ||
+        (needs.gate.outputs.action == 'resume' && needs.gate.outputs.has_findings == 'true')) }}
+    permissions:
+      contents: write       # the record's own bot branch
+      id-token: write       # Sigstore signing for the attestation
+      attestations: write
+      actions: read         # the seed run's artifacts
+    uses: ./.github/workflows/acceptance-write.yml
+    with:
+      seed_run_id: ${{ needs.gate.outputs.seed_run_id }}
+      findings_path: evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-${{ needs.gate.outputs.seed_run_id }}.json
+      findings_ref: audit-findings/run-${{ needs.gate.outputs.seed_run_id }}
+      adjudications_path: ""
+    secrets: inherit

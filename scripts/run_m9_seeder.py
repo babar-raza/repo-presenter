@@ -47,6 +47,13 @@ from repo_presenter.acceptance.audit.seed import (  # noqa: E402
 )
 from repo_presenter.core.state.bundle_store import seal_history  # noqa: E402
 
+import importlib.util  # noqa: E402
+
+# The run-request validator is stdlib-only and owns the M9 branch conventions; load it by path.
+_rr_spec = importlib.util.spec_from_file_location("run_request", REPO_ROOT / "scripts" / "run_request.py")
+run_request = importlib.util.module_from_spec(_rr_spec)
+_rr_spec.loader.exec_module(run_request)
+
 MIN_PER_LANE = 10
 #: Roughly 1 in 4 candidates stays a clean control -- only a clean control can become an accepted
 #: record, so a larger share means more candidates can be accepted per batch (>= 20 seeded still
@@ -79,9 +86,16 @@ def is_noop(lane: str, seal: Any) -> bool:
 def already_accepted(remote: str = "origin") -> set[tuple[str, str, str]]:
     """(repository, lane, revision) of every clean control any acceptance-record branch marks
     audit-passed. Public data; only used to avoid spending a control slot on them again."""
+    return {key for key, passed in judged_controls(remote).items() if passed}
+
+
+def judged_controls(remote: str = "origin") -> dict[tuple[str, str, str], bool]:
+    """{(repository, lane, revision): audit_passed} for every candidate any non-dry-run acceptance
+    record already judged AS A CLEAN CONTROL (passed if any record passed it). A seeded copy is
+    audit material, not a judgement of the candidate, so it is not listed."""
     import subprocess
 
-    found: set[tuple[str, str, str]] = set()
+    found: dict[tuple[str, str, str], bool] = {}
     listed = subprocess.run(["git", "ls-remote", "--heads", remote, "refs/heads/acceptance-record/*"],
                             capture_output=True, text=True, check=False).stdout
     branches = [ln.split("refs/heads/", 1)[1] for ln in listed.splitlines() if "refs/heads/" in ln]
@@ -99,11 +113,76 @@ def already_accepted(remote: str = "origin") -> set[tuple[str, str, str]]:
                 if doc.get("dry_run") is not False:
                     continue
                 for r in doc["records"]:
-                    if r.get("role") == "clean_control" and r.get("audit_passed") is True:
-                        found.add((str(r["repository"]), str(r["lane"]), str(r["revision"])))
-            except (ValueError, KeyError, TypeError):
+                    if r.get("role") == "clean_control":
+                        key = (str(r["repository"]), str(r["lane"]), str(r["revision"]))
+                        found[key] = found.get(key, False) or r.get("audit_passed") is True
+            except (ValueError, KeyError, TypeError, AttributeError):
                 continue
     return found
+
+
+# --- the scheduled round's gate (owner R37: the system runs itself on GitHub Actions) -------------------
+
+#: Bounded retries: a batch whose hosted audit has started this many times without freezing findings is
+#: ``blocked`` -- the gate fails visibly and the run-request override path (scripts/run_request.py) ends it.
+MAX_AUDIT_ATTEMPTS = 3
+
+
+def fresh_candidates(by_lane: dict[str, list], judged: dict[tuple[str, str, str], bool]) -> list[tuple[str, str, str]]:
+    """(repository, lane, revision) of every latest seal that could become an accepted record and has
+    not been judged as a clean control yet: a counted seal (pipeline-good, model-reviewed ACCEPT -- the
+    seal standard; current-code re-certification is checked again by the acceptance writer), not a
+    Lane L no-op (R16), and at a revision no acceptance record judged before. A candidate that failed
+    as a control is not fresh again until it is re-sealed at a new revision, so an unchanged portfolio
+    never re-spends a round on itself."""
+    fresh = []
+    for lane, entries in sorted(by_lane.items()):
+        for repository, seal in entries:
+            key = (repository, lane, seal.revision)
+            if getattr(seal, "counted", False) and not is_noop(lane, seal) and key not in judged:
+                fresh.append(key)
+    return fresh
+
+
+def gate(
+    heads: list[str],
+    *,
+    run_id: str,
+    require_fresh: bool,
+    count_fresh: Any = None,
+    minimum: int = MIN_PER_LANE,
+) -> dict[str, str]:
+    """What this run of the round does, as ``$GITHUB_OUTPUT`` lines: ``action`` is
+
+    * ``resume`` -- a seed batch is open (``run_request.open_seed_batches``): finish it (audit if its
+      frozen findings do not exist yet, score if its scorecard does not, then write) instead of seeding;
+    * ``blocked`` -- the open batch's audit has been attempted ``MAX_AUDIT_ATTEMPTS`` times;
+    * ``seed`` -- no batch is open and (only on the schedule) at least ``minimum`` fresh candidates exist;
+    * ``noop`` -- nothing to do; the reason says why (an evidenced no-op).
+
+    One open batch at a time: a new seed is never spent while an earlier round is unwritten."""
+    still_open = run_request.open_seed_batches(heads)
+    if still_open:
+        seed = still_open[0]
+        attempts = sum(1 for h in heads if h.startswith(f"{run_request.ATTEMPT_BRANCH_PREFIX}{seed}-"))
+        has_findings = run_request.findings_ref_for(seed) in heads
+        has_score = f"{run_request.SCORE_BRANCH_PREFIX}{seed}" in heads
+        action, reason = "resume", f"seed batch {seed} is open; finishing it before any new seed"
+        if not has_findings and attempts >= MAX_AUDIT_ATTEMPTS:
+            action = "blocked"
+            reason = (f"seed batch {seed}: {attempts} hosted audit attempts froze no findings; end it with "
+                      "the run-request override (scripts/run_request.py runbook)")
+        return {"action": action, "seed_run_id": seed, "has_findings": str(has_findings).lower(),
+                "has_score": str(has_score).lower(), "reason": reason}
+    out = {"action": "seed", "seed_run_id": str(run_id), "has_findings": "false", "has_score": "false",
+           "reason": "no open seed batch"}
+    if require_fresh:
+        fresh = count_fresh() if count_fresh is not None else 0
+        if fresh < minimum:
+            return {**out, "action": "noop", "seed_run_id": "",
+                    "reason": f"{fresh} fresh sealed candidates (not yet judged as a clean control) < {minimum}"}
+        out["reason"] = f"no open seed batch; {fresh} fresh sealed candidates >= {minimum}"
+    return out
 
 
 def build_seed_plan(
@@ -157,11 +236,37 @@ def main() -> int:
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--out-dir", type=Path)
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--dry-run", action="store_true", help="select and plan, write nothing")
     parser.add_argument("--salt", type=int, default=0, help="rotate which candidates are controls and which shapes they get (use the workflow run id)")
+    parser.add_argument("--gate", action="store_true",
+                        help="print the round's next action as $GITHUB_OUTPUT lines (no key, nothing written)")
+    parser.add_argument("--require-fresh", action="store_true",
+                        help="with --gate: seed only when enough fresh candidates exist (the scheduled run)")
+    parser.add_argument("--run-id", default=os.environ.get("GITHUB_RUN_ID", ""))
+    parser.add_argument("--refuse-if-open", action="store_true",
+                        help="refuse to seed while an earlier seed batch is open (the hosted seed step)")
     args = parser.parse_args()
+
+    if args.gate:
+        heads = run_request.remote_heads(args.remote)
+
+        def count() -> int:
+            return len(fresh_candidates(select_candidates(remote=args.remote), judged_controls(args.remote)))
+
+        outputs = gate(heads, run_id=args.run_id, require_fresh=args.require_fresh, count_fresh=count)
+        for key, value in outputs.items():
+            print(f"{key}={value}")
+        print(f"gate: {outputs['action']}: {outputs['reason']}", file=sys.stderr)
+        return 1 if outputs["action"] == "blocked" else 0
+    if args.out_dir is None:
+        parser.error("--out-dir is required unless --gate")
+    if args.refuse_if_open:
+        still_open = run_request.open_seed_batches(run_request.remote_heads(args.remote))
+        if still_open:
+            print(f"FAIL: seed batch {still_open[0]} is still open; one open seed batch at a time", file=sys.stderr)
+            return 1
 
     by_lane = select_candidates(remote=args.remote)
     for lane, entries in by_lane.items():
