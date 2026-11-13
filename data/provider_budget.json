@@ -13,9 +13,10 @@
       ],
       "calls_cap": 1350,
       "tokens_cap": 37968567,
-      "calls_spent": 0.0,
+      "calls_spent": 600.0,
       "tokens_spent": 0.0,
-      "basis": "R31 epoch 2, first wave (R25 batch of six): caps carried from epoch-1 batch 010 (six repositories, measured 116 calls / 4.31M tokens); the supervisor records measured spend after the wave"
+      "basis": "R31 epoch 2, first wave (R25 batch of six): caps carried from epoch-1 batch 010 (six repositories, measured 116 calls / 4.31M tokens); the supervisor records measured spend after the wave",
+      "outcome": "0 of 6 sealed (Lane R). Spend not measurable from the supervisor session: failed hosted runs keep their ledger only in run artifacts, whose storage host this session cannot reach. Charged at the upper bound (6 runs x PROVIDER_CALL_BUDGET 100 calls); tokens unmeasured."
     },
     {
       "id": "e2-002-lane-l-wave2",
@@ -29,9 +30,10 @@
       ],
       "calls_cap": 1350,
       "tokens_cap": 37968567,
-      "calls_spent": 0.0,
-      "tokens_spent": 0.0,
-      "basis": "R31 epoch 2, wave 2 (Lane L, R25 batch of six), opened while wave 1 (e2-001) runs; caps as e2-001; the supervisor records measured spend of both waves from their run ledgers"
+      "calls_spent": 50.0,
+      "tokens_spent": 1077799.0,
+      "basis": "R31 epoch 2, wave 2 (Lane L, R25 batch of six), opened while wave 1 (e2-001) runs; caps as e2-001; the supervisor records measured spend of both waves from their run ledgers",
+      "outcome": "6 of 6 sealed (Lane L): Cells .NET 1/15255, Cells Python 1/14868, 3D .NET 8/169842, PDF Python 27/618127, PSD .NET 2/33094, Slides Java 11/226613 (calls/tokens, each sealed bundle's ledger.jsonl, provider_call records only)"
     }
   ],
   "meaning": "The total provider-call envelope for the whole 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md), read by the budget gate (TC-015, src/repo_presenter/core/llm/budget.py) before any non-replay provider call. Zero-call activity classes (recertification, obligations/rule checks, probes, the example verifier, ledgers, funnel, census, item-level restore where proved zero-call) are never charged against this envelope and need no entry here to proceed. A call outside an open batch, or past either cap, raises instead of calling the provider -- see docs/DELIVERY_PLAN_2026-11-07.md section 7 for the inference-class table this derives from. Only the owner raises total_calls_cap or total_tokens_cap, or changes batch_size, per_batch_cap_multiplier or stop_rule_multiplier; the supervisor opens and records batches within them.",
@@ -40,8 +42,8 @@
   "ruling": "R31 (owner, 2026-11-13): budget reset; spend on anything that improves the certified numbers, never on building machinery",
   "schema_version": 1,
   "spent": {
-    "calls": 0.0,
-    "tokens": 0.0
+    "calls": 650.0,
+    "tokens": 1077799.0
   },
   "stop_rule_cost_per_sealed_candidate_multiplier": 2.0,
   "total_calls_cap": 9000,
