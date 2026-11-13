@@ -5,7 +5,7 @@
   "provider_repository_id": 1213521112,
   "registry_revision": null,
   "active_transaction_id": "ca307fd869fb49c7b0fc4a92fed331bd",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-13T11:43:28.398956+00:00",
+    "resume_predicate": null,
+    "recovery_count": 3
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "34399a03bf18440d8ca0b793811401c2",
@@ -33,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 50,
+  "state_version": 51,
   "recent_trigger_dedup_keys": {
     "run:40723588078:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "1ad135f9d5d6476abb2eda7682ee94e2",
     "run:40730382891:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "4d06896d4a1a43f59ae1659ef6354078",
@@ -44,5 +51,5 @@
     "run:41074988720:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "be64ad26960943aca84876b6734cf7a1",
     "run:42693837775:aspose-cells-foss/Aspose.Cells-FOSS-for-Java": "ca307fd869fb49c7b0fc4a92fed331bd"
   },
-  "recovery_count": 2
+  "recovery_count": 3
 }
