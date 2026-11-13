@@ -54,6 +54,18 @@ PLACING = frozenset(
     {"VERIFIED_PRESERVE", "VERIFIED_REWRITE", "VERIFIED_MOVE", "CORRECT_WITH_EVIDENCE", ATTRIBUTED}
 )
 _RENDERED_ELSEWHERE = frozenset({"heading", "badge_row", "html_block"})
+#: The rationale the zero-call restore (``readme.repair.restore_units.restore_lost_units``) writes on
+#: a unit it keeps because BC-17/BC-05 found the candidate loses it. Such a unit is never dropped
+#: whole as overlap (it may still print only its uncovered remainder): the overlap test (``coverage.uncovered``, sentence share) and BC-17's
+#: own carried-content test (``parity_gate.Accounting.section_account``) disagree on a paraphrase,
+#: and the restore exists because BC-17 already ruled the paraphrase does not carry the unit.
+#: Measured: Aspose.Cells-FOSS-for-Go Lane R seal fbe7fa729705 -- ``073.list`` (h2 'Constraints')
+#: restored ``VERIFIED_PRESERVE`` and then dropped whole as overlap with the rewrite's facts, so
+#: BC-17 still reported the section lost after the restore.
+RESTORED_RATIONALE = (
+    "Kept as the maintainers wrote it: the published README prints this content and the "
+    "candidate would otherwise lose it (BC-17 / BC-05)."
+)
 Outcome = Literal["placed", "overlap", "owned_elsewhere", "excluded"]
 _STATED_BY: Mapping[str, tuple[str, ...]] = {
     "install": ("installation", "dependencies"),
@@ -538,10 +550,13 @@ def placements(
         # print is a disposition_coverage loss (Cells-Rust Lane R, 2026-11-06: superseded, BC-05
         # failed; kept visible, BC-07's budget failed; kept here and dropped as overlap, the
         # reviewer's disposition_coverage failed). Collapsed content costs no visible line.
-        owes = _table_owes_its_rows(unit_id, destination, text_known=destinations is not None) or (
-            destination == "api_reference"
-            and unit_id.endswith((".list", ".table"))
-            and unit_id in api_listings
+        owes = (
+            _table_owes_its_rows(unit_id, destination, text_known=destinations is not None)
+            or (
+                destination == "api_reference"
+                and unit_id.endswith((".list", ".table"))
+                and unit_id in api_listings
+            )
         )
         overlap = (
             ()
@@ -612,6 +627,10 @@ def placements(
                 example_ordinals=example_ordinals,
             ):
                 text, overlap = remainder, ()
+        if overlap and RESTORED_RATIONALE in str(entry.get("rationale") or ""):
+            # A restored unit may still print only its uncovered remainder (above), but it is never
+            # dropped whole: BC-17 already ruled the section does not carry it (RESTORED_RATIONALE).
+            overlap = ()
         outcome: Outcome = "overlap" if overlap else "placed"
         if outcome == "placed" and not unit_id.endswith(".code_block"):
             text = resolve_intra_document_anchors(text, planned_slugs)

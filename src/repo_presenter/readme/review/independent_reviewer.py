@@ -89,6 +89,7 @@ from repo_presenter.readme.composition.coverage import (
     states_all,
 )
 from repo_presenter.readme.composition.list_coverage import list_items, missing_items
+from repo_presenter.readme.composition.placement import PLACED
 from repo_presenter.readme.evidence.facts.links import extract_links
 from repo_presenter.readme.parity_gate import (
     badge_row_replaced,
@@ -625,6 +626,14 @@ def live_readme_loss_rule(
             )
     new_targets = {link.href.rstrip("/") for link in extract_links(readme_text)}
     contradicted = _contradicted_links(facts)
+    inherited = _inherited_units(facts)
+    kept_dead_links = {
+        held.href
+        for row in _dispositions_list(dispositions)
+        if row.get("disposition") in PLACED and str(row.get("unit_id")) in inherited
+        for held in extract_links(inherited[str(row.get("unit_id"))])
+        if held.href in contradicted
+    }
     for link in extract_links(original_readme):
         target = link.href.rstrip("/")
         if target.startswith("#"):
@@ -633,6 +642,15 @@ def live_readme_loss_rule(
             # for the same reason -- the two rules must agree. Printing it would also be wrong when
             # the renderer re-titled the section, as the link would dangle (Slides .NET:
             # ``#what-it-can-do`` of the maintainers' own navigation, replaced by the renderer's).
+            continue
+        if link.href in kept_dead_links:
+            # A target its link_target fact records as gone (404/410), inside a unit kept as
+            # written: the kept unit prints it as its label alone
+            # (``surface_claims.without_contradicted_links``) and the parity gate (BC-17
+            # ``technical_content``: "its link_target fact is CONTRADICTED") accounts for it on that
+            # fact. The two rules must agree, or a restored maintainers' unit trades BC-17 for this
+            # finding (Aspose.OMR-FOSS-for-Python, hosted run 43430687401). A dead link no kept
+            # unit holds (a Lane L repair, a dropped unit) is still judged below.
             continue
         if (
             target not in new_targets
