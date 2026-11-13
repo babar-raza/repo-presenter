@@ -106,13 +106,9 @@
     },
     {
       "commit": "51d077c2ad1bf15b12f15fdac4ebbf369ac3b88d",
-      "failing_checks": [
-        "L-03",
-        "L-05"
-      ],
-      "justification": "L-03, L-05: genuine defects, not a regression of the mechanism (R10). BL-065 (K05, the 2026-11-12 Cells C++ register row's class generalised to every lane): the sealed README says 'The full public surface -- 197 public types -- is listed below' but, after this seal's own correction removed the eight absent-type rows, only 189 rows follow (surface_claims rule (h), listed count). The seal no longer makes a net improvement free of new contradictions, so L-05 (example 2 does not compile: no operator[] on WorksheetCollection for a string key, example_002.cpp:10:48) is no longer carried as an R21 residual. Not deleted or demoted by hand; the next Lane L run repairs it.",
+      "failing_checks": [],
       "lane": "L",
-      "outcome": "NEEDS_REPAIR",
+      "outcome": "RECERTIFIED",
       "regenerations": 0,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
       "revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
@@ -294,12 +290,9 @@
     },
     {
       "commit": "c1526e9d7b92f9ce2e565bde1c0cb089e05ed77a",
-      "failing_checks": [
-        "L-03"
-      ],
-      "justification": "L-03: genuine defect, not a regression of the mechanism (R10). BL-065 (K05): the sealed README says 'The library exposes 303 public types in total, listed below by module' but only 238 table rows follow (this seal's correction raised the count 243 -> 303 and removed five absent-type rows), so the sentence claims a listing the README does not give (surface_claims rule (h), listed count). Not deleted or demoted by hand; the next Lane L run repairs it.",
+      "failing_checks": [],
       "lane": "L",
-      "outcome": "NEEDS_REPAIR",
+      "outcome": "RECERTIFIED",
       "regenerations": 0,
       "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
       "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"

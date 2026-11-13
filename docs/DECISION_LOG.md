@@ -5483,3 +5483,44 @@ test. Certified on the same seals: origin/main code R 1 / L 26; this branch R 1 
 correction that would make a "listed below" count agree with its rows is a follow-up on BL-065.
 
 Backlog: BL-063, BL-064, BL-065
+
+## 2026-11-13: BL-065 — Lane L states a "listed below" count truthfully (Cells C++, HTML Python re-certify)
+
+Fix worker under R10/R14/R21/R35/R36(b)/R41. Zero provider calls; no new stage or record type (R27): one detector in
+the existing Lane L correction registry, and the matching BC-14 rule (h) reading.
+
+**Defect (verified on the seals).** Both Lane L corrections were themselves the cause: Cells C++ (51d077c2ad1b) said "The
+full public surface — 197 public types — is listed below" over 197 rows; `absent_type_row` removed 8 rows naming no
+public type (`BitReader`, `XmlParser`, `Workbook_Impl`, three `*_Iterator`s, `HuffmanTable`, `ParsedNumericFormat`),
+leaving 189; the facts record 195 public types. HTML Python (c1526e9d7b92) said "243 public types in total, listed below
+by module" over 243 rows; `stale_type_count` made it 303 (the facts' count) and `absent_type_row` removed 5 rows, leaving
+238. So each corrected README introduced a false "listed below" claim, which made the run no net improvement (R21) —
+for Cells C++ that is also why its failing example stopped being an R21 residual (L-05).
+
+**Decision: which statement is true.** N = rows is false (189/238 are not the public-type counts); N = facts keeps the
+listing claim false; adding rows would invent descriptions; dropping rows is forbidden (R14). The true and smallest
+statement keeps the facts' total and states how many the table lists: "… 303 public types in total, 238 of them listed
+below by module"; "— 195 public types — has 189 of them listed below". A total above the facts is otherwise kept
+(`stale_type_count`'s rule, maintainers may count unrecorded kinds) except when it was the sentence's own table row
+count and rows of that table were removed as absent: then it demonstrably counted non-public types and becomes the facts'
+count (Cells C++ 197 -> 195). "are listed" and "as follows" fail closed (no short true rewording; the finding stays).
+
+**Built.** `readme/correction/detectors/listed_type_count.py` (DETECTOR_VERSIONS `listed_type_count: 1`, pinned): judges
+the count the corrected README will state (`stale_type_count`'s replacement) against the rows `absent_type_row` leaves;
+`FALSE_CLAIM_FIX` edits, one line fragment each, citing public_symbol facts; not a layout-only detector, so it counts as
+a content defect fix in `lane_l_review.net_improvement`. BC-14 rule (h): `surface_claims.states_listed_count` — a sentence
+that states exactly the listed number ("M of them" / "of which M") is no longer a finding; any other number still is.
+
+**Evidence (zero calls).** `recertify --all --remote origin` (read-only): before (this branch's base) Lane L 24, Lane R 1;
+after Lane L 26, Lane R 1 — Cells C++ and HTML Python Lane L NEEDS_REPAIR -> RECERTIFIED, nothing else changed. Cells C++
+L-05: with the run a net improvement again, the example 2 compile failure (example_002.cpp:10:48, no `operator[]` for a
+string key) is an R21 residual (holdouts.json and PR description only, never README text), so the seal certifies. Tests:
+`tests/readme/correction/detectors/test_listed_type_count.py` over the verbatim API Reference sections of both sealed
+live READMEs (`tests/fixtures/listed_count/`), controls (already true, "are listed", above-facts total kept), and the
+rule (h) reading; `test_r21_residuals.py` updated (its "listed below" residual is now repaired); `test_registration.py` clean twins 76 -> 78 (derived from the baseline). R10 gate: OK, 45 seals, certified R 1 / L 26; `dashboard_matches_live.py --no-loss` OK after resyncing `project/state.yaml` lane_l_accepted 24 -> 26.
+`data/recertification_baseline.json`: both rows RECERTIFIED (their NEEDS_REPAIR justifications removed).
+
+**Does NOT decide.** No seal was written or published (`--write` not run): the hosted recertify on merge (R41) writes the
+re-certified seals and records the run id. Words .NET / 3D .NET Lane R re-seal under extractor 7 is still open on BL-065.
+
+Backlog: BL-065
