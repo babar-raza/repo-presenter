@@ -1,0 +1,149 @@
+{
+  "confinement": {
+    "edits": 5,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "f5579c4e0afae02780b4b2a6feaaaa2a56056c6f977fd391bd3a50b2daedb95e",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 397,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/psd/net/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 5,
+      "original": "commercial Aspose.PSD product",
+      "rationale": "line 5 names the aspose.com product with a substitute for its proper name ('commercial Aspose.PSD product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.PSD — Enterprise Edition",
+      "start": 368
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 882,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/psd/net/"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 21,
+      "original": "the commercial Aspose.PSD",
+      "rationale": "line 21 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.PSD'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.PSD — Enterprise Edition",
+      "start": 857
+    },
+    {
+      "detector": "stale_package_version",
+      "end": 2702,
+      "evidence": [
+        {
+          "fact_id": "package:published_version",
+          "kind": "package",
+          "status": "SUPPORTED",
+          "value": "26.10.0"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 56,
+      "original": "The package metadata is defined in this repository, but `Aspose.PSD.FOSS` is not published to NuGet yet.",
+      "rationale": "line 56 says `Aspose.PSD.FOSS` is not published to NuGet; the package registry already lists it at '26.10.0'",
+      "replacement": "`Aspose.PSD.FOSS` is published to NuGet.",
+      "start": 2598
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 4120,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/psd/net/"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 112,
+      "original": "Commercial Aspose.PSD",
+      "rationale": "line 112 names the aspose.com product with a substitute for its proper name ('Commercial Aspose.PSD'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.PSD — Enterprise Edition",
+      "start": 4099
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 4285,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/psd/net/"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 116,
+      "original": "the commercial Aspose.PSD product",
+      "rationale": "line 116 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.PSD product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.PSD — Enterprise Edition",
+      "start": 4252
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "f31cf10bf90dfab2fa4726c3525471928924bb1e5d4394f84d02c7ea01002a98",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "b6f778e926aa6249a26d3fba7480a663beb3cdfc",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 5
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.psd.buildversioninfo",
+        "public_symbol:aspose.psd.fileformats.psd.colormodes",
+        "public_symbol:aspose.psd.fileformats.psd.compressionmethod",
+        "public_symbol:aspose.psd.fileformats.psd.layers.blendrange",
+        "public_symbol:aspose.psd.fileformats.psd.layers.channelinformation",
+        "public_symbol:aspose.psd.fileformats.psd.layers.globallayermaskinfo",
+        "public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata",
+        "public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata"
+      ],
+      "line": 0,
+      "reason": "20 of 26 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.psd.buildversioninfo, public_symbol:aspose.psd.fileformats.psd.colormodes, public_symbol:aspose.psd.fileformats.psd.compressionmethod, public_symbol:aspose.psd.fileformats.psd.layers.blendrange, public_symbol:aspose.psd.fileformats.psd.layers.channelinformation, public_symbol:aspose.psd.fileformats.psd.layers.globallayermaskinfo, public_symbol:aspose.psd.fileformats.psd.layers.layerblendingrangesdata, public_symbol:aspose.psd.fileformats.psd.layers.layermaskdata (+12 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/psd/net/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    }
+  ]
+}
