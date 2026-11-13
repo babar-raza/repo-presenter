@@ -1303,15 +1303,22 @@ def _installation(context: RenderContext) -> list[str]:
         lines.extend(_code_block("bash", context.spec.verify_command.format(module=module)))
     versions = context.fact("package:python_versions")
     requires = context.fact("package:python_requires")
+    # The field the manifest actually declares the floor with (`requires-python` in a
+    # pyproject.toml, `python_requires` in setup.cfg/setup.py), never one fixed name.
+    field = (
+        ((requires.attributes or {}).get("floor_declaration") or context.spec.floor_declaration)
+        if requires is not None
+        else ""
+    )
     sentence = ""
     if versions is not None and versions.polarity == "SUPPORTED":
         listed = _oxford([v.strip() for v in versions.value.split(",") if v.strip()])
         sentence = f"The package supports Python {listed}"
         if requires is not None and requires.polarity == "SUPPORTED":
-            sentence += f" and declares `python_requires` as `{requires.value}`"
+            sentence += f" and declares `{field}` as `{requires.value}`"
         sentence += "."
     elif requires is not None and requires.polarity == "SUPPORTED":
-        sentence = f"The package declares `python_requires` as `{requires.value}`."
+        sentence = f"The package declares `{field}` as `{requires.value}`."
     if sentence:
         lines.append("")
         lines.append(sentence)
