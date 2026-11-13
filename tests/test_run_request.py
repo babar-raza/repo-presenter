@@ -331,6 +331,13 @@ def test_a_recertify_request_validates_and_takes_no_other_field():
         rr.validate({"job": "recertify", "repository": "x/y"}, REGISTRY, OK, True)
 
 
+def test_an_issues_request_validates_and_takes_no_other_field():
+    """R39: one pilot issue-maintenance cycle; its targets are data/issue_pilot.json on main."""
+    assert rr.validate({"job": "issues"}, REGISTRY, OK, True)["job"] == "issues"
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "issues", "repository": "x/y"}, REGISTRY, OK, True)
+
+
 def test_the_recertify_workflow_carries_no_llm_secret():
     """R10 re-certification makes zero provider calls; the workflow must not even hold the key."""
     text = (Path(__file__).resolve().parent.parent / ".github/workflows/recertify.yml").read_text()

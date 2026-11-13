@@ -8,6 +8,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "mint"}
     {"job": "recertify"}
     {"job": "cohort"}
+    {"job": "issues"}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -84,7 +85,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write")
-JOBS = {"present", "mint", "recertify", "cohort", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -298,6 +299,12 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("a cohort request takes no other field (the planner picks the cells)")
         return {"job": "cohort", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "issues":
+        # Owner ruling R39: one pilot issue-maintenance cycle (.github/workflows/issues.yml). No target
+        # field: the pilot repositories are fixed in data/issue_pilot.json on main.
+        if set(request) != {"job"}:
+            raise RequestError("an issues request takes no other field (its targets are data/issue_pilot.json)")
+        return {"job": "issues", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
     allowed_keys = {"job", "repository", "ecosystem", "lane"}

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+  "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+  "ran_at": "2026-11-13T15:34:12Z",
+  "toolchain": {
+    "node": "v22.23.4",
+    "npm": "10.9.9"
+  },
+  "prepared": true,
+  "prepare": [
+    {
+      "argv": [
+        "npm",
+        "install",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "exit_code": 0,
+      "output": "\nup to date in 428ms\n",
+      "truncated": false
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "output": "\n> @aspose/3d@24.12.0 build\n> tsc\n\n",
+      "truncated": false
+    }
+  ],
+  "results": [
+    {
+      "issue_number": 4,
+      "defect_fingerprint": "sha256:3c9023d5959c35c813a9198b17707c1d6e601f14ff27249d22ab1d2f60aae0b2",
+      "check_id": "example:issue-4.obj-format-detection",
+      "ran": true,
+      "exit_code": 0,
+      "output": "STL_Node control points: 0 polygons: 0\n",
+      "truncated": false,
+      "setup": []
+    },
+    {
+      "issue_number": 5,
+      "defect_fingerprint": "sha256:427379f5f600296c11f24ab09dacdf9e304ea9c0f1197afb22d336d4fe19bb0e",
+      "check_id": "example:issue-5.transform-matrix-setter",
+      "ran": true,
+      "exit_code": 0,
+      "output": "TypeError: rotation[0].eulerAngles is not a function\nTypeError: rotation[0].eulerAngles is not a function\n",
+      "truncated": false,
+      "setup": []
+    },
+    {
+      "issue_number": 6,
+      "defect_fingerprint": "sha256:4e04e9b66dcad4d525025932fafb260830c532fa6fff7522fcac6b22e7a6bd3d",
+      "check_id": "example:issue-6.fbx-save-open",
+      "ran": true,
+      "exit_code": 0,
+      "output": "[ '', 'o Node_0', 'v 10.000000 20.000000 30.000000' ]\nUnsupported format: FbxFormat\nMesh control points: 0\n",
+      "truncated": false,
+      "setup": []
+    },
+    {
+      "issue_number": 7,
+      "defect_fingerprint": "sha256:81822f594b066a095069a208a0033c869ff8bde011db6a6aae3135f1e698bfd4",
+      "check_id": "example:issue-7.adm-zip-production-dependency",
+      "ran": true,
+      "exit_code": 0,
+      "output": "Error: Cannot find module 'adm-zip'\n",
+      "truncated": false,
+      "setup": [
+        {
+          "argv": [
+            "npm",
+            "install",
+            "--omit=dev",
+            "--no-audit",
+            "--no-fund"
+          ],
+          "exit_code": 0,
+          "output": "\nadded 1 package in 10s\n",
+          "truncated": false
+        }
+      ]
+    },
+    {
+      "issue_number": 8,
+      "defect_fingerprint": "sha256:8f4d25e9df312ed7a2855bdce4e4f1117c1b6e4d98599eadc53ebf879cd9b3f9",
+      "check_id": "example:issue-8.stl-export-vertices",
+      "ran": true,
+      "exit_code": 0,
+      "output": "solid Scene\n  facet normal 0 0 0\n    outer loop\n      vertex 0 1 2\n    endloop\n  endfacet\nendsolid Scene\n\nbinary STL size: 50 bytes\n",
+      "truncated": false,
+      "setup": []
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+name: issues
+
+# Owner ruling R39 (2026-11-13): the autonomous issue manager's pilot -- issue recording, monitoring
+# and periodic open/close maintenance -- on the repositories in data/issue_pilot.json (only
+# aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript; widening it is the owner's call). Scheduled daily
+# (R37), dispatchable by hand, and callable by run-request-execute.yml ({"job": "issues"}).
+#
+# Two jobs with a trust boundary between them, modelled on present.yml's facts/present split:
+#
+#   reproduce  executes the upstream repository's own code (npm install, its build, each issue's
+#              recorded reproduction script from data/issue_reproductions/). It references no
+#              secret and no variable, has a read-only token, and can only hand raw observations
+#              (exit codes, bounded output) to the next job. It decides nothing.
+#   maintain   holds the GitHub App installation token (minted here, scoped to the pilot
+#              repository alone, issues: write) and the state-ref token. It installs no toolchain
+#              and runs no upstream code: it validates the observations as hostile input against
+#              the head it resolves itself (git ls-remote), classifies them with the committed
+#              predicates, records/imports the App's issues (dedup by fingerprint marker), decides
+#              close / dated re-check / reopen, acts through the guarded client (dry run unless the
+#              pilot is mode: live, a dry-run cycle is already recorded, the kill switch
+#              REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is 1 and the token verifies), and records the
+#              cycle on refs/repository-presenter-state/issues/<owner>__<name>.
+#
+# tests/issues/test_issues_workflow.py fails if the reproduce job gains a secret, a variable, a
+# write scope or the App token, or the maintain job gains a toolchain, an upstream clone or a node
+# command.
+
+on:
+  schedule:
+    - cron: "41 6 * * *"
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: issues
+  cancel-in-progress: false
+
+env:
+  PILOT_OWNER: aspose-3d-foss
+  PILOT_NAME: Aspose.3D-FOSS-for-TypeScript
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      # The issues were reproduced on Node.js 22 (their own Environment sections); pinned like
+      # present.yml's toolchains so a re-check is as reproducible as the toolchain that ran.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.23.4"
+
+      - name: Clone the pilot repository at its latest default-branch revision
+        run: git clone --depth 1 "https://github.com/$PILOT_OWNER/$PILOT_NAME.git" .issue-upstream
+
+      - name: Re-run every recorded reproduction (upstream code runs here; no secret)
+        run: |
+          python -m repo_presenter.issues.reproduce \
+            --repository "$PILOT_OWNER/$PILOT_NAME" \
+            --checkout .issue-upstream \
+            --out .issue-checks/checks.json
+
+      - name: Hand the observations to the maintain job
+        uses: actions/upload-artifact@v4
+        with:
+          name: issue-checks-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .issue-checks
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  maintain:
+    needs: reproduce
+    # Runs after a failed reproduce job too: the issues are still recorded, every re-check is then
+    # NOT_VERIFIABLE (nothing is closed or reopened), and the cycle is recorded.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # contents: write only for this repository's refs/repository-presenter-state/issues/* ref;
+    # every upstream write uses the App installation token below, never this job's token.
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Fetch the observations (hostile input; validated before use)
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: issue-checks-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .issue-checks
+
+      # The repository-presenter App's own identity (R39), minted inside this job and revoked at job
+      # end, scoped to the pilot repository alone. A failed mint (e.g. the installation lacks the
+      # issues permission) leaves the cycle a dry run that says so; it never falls back to another
+      # token for writes.
+      - name: Mint the App installation token (pilot repository only, issues write)
+        id: app-token
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ env.PILOT_OWNER }}
+          repositories: ${{ env.PILOT_NAME }}
+          permission-issues: write
+          permission-metadata: read
+
+      - name: Record, re-verify and maintain the pilot issues
+        env:
+          GH_APP_INSTALLATION_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+          REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m repo_presenter.issues.monitor \
+            --repository "$PILOT_OWNER/$PILOT_NAME" \
+            --checks .issue-checks/checks.json \
+            --run-id "${{ github.run_id }}-${{ github.run_attempt }}" \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --summary "$GITHUB_STEP_SUMMARY"
