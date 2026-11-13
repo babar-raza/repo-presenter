@@ -4751,6 +4751,8 @@ R24 terminal only when none exists. System issues: classify portfolio-wide and f
 prove fixes zero-call/locally before hosted runs; re-trace, never retry; question checks and their data, not only
 candidates; bring every owner-only ask with an alternative path.
 
+---
+
 ## 2026-11-13: R14 drop rule — a kept maintainers' table row that sells a maintainer-stated stub as working is not printed; the zero-call restore is kept per unit
 
 Supervisor decision under R14/R36 (fixes only, R27). **Rule.** A kept maintainers' table prints in its one printable form
