@@ -1,0 +1,113 @@
+{
+  "confinement": {
+    "edits": 2,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "23a673e7c7f3161da41a3776c267d258bde4e5bd36b885a01a8d387892b33cfe",
+  "edits": [
+    {
+      "detector": "dead_link",
+      "end": 4639,
+      "evidence": [
+        {
+          "fact_id": "link_target:021",
+          "kind": "link_target",
+          "status": "CONTRADICTED",
+          "value": "RELEASE_NOTES_V26.10.0.md"
+        }
+      ],
+      "index": 0,
+      "kind": "BROKEN_LINK",
+      "line": 127,
+      "original": "[V26.10.0 release notes](RELEASE_NOTES_V26.10.0.md)",
+      "rationale": "the tree does not contain 'RELEASE_NOTES_V26.10.0.md' and holds no file that stands in for it; the dead link is removed and its text kept word for word",
+      "replacement": "V26.10.0 release notes",
+      "start": 4588
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 5141,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/cells/net/"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 136,
+      "original": "the commercial Aspose.Cells product",
+      "rationale": "line 136 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Cells product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Cells — Enterprise Edition",
+      "start": 5106
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "ecc7de043e0c3bf24a51e5f3e5aa2da82ebc03a12a84884235bf2459e1c32f5d",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "BROKEN_LINK": 1,
+    "FALSE_CLAIM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.cells_foss.autofilter",
+        "public_symbol:aspose.cells_foss.autofiltercolorfilter",
+        "public_symbol:aspose.cells_foss.autofiltercustomfilter",
+        "public_symbol:aspose.cells_foss.autofiltercustomfiltercollection",
+        "public_symbol:aspose.cells_foss.autofilterdynamicfilter",
+        "public_symbol:aspose.cells_foss.autofiltersortcondition",
+        "public_symbol:aspose.cells_foss.autofiltersortconditioncollection",
+        "public_symbol:aspose.cells_foss.autofiltersortstate"
+      ],
+      "line": 0,
+      "reason": "87 of 98 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.cells_foss.autofilter, public_symbol:aspose.cells_foss.autofiltercolorfilter, public_symbol:aspose.cells_foss.autofiltercustomfilter, public_symbol:aspose.cells_foss.autofiltercustomfiltercollection, public_symbol:aspose.cells_foss.autofilterdynamicfilter, public_symbol:aspose.cells_foss.autofiltersortcondition, public_symbol:aspose.cells_foss.autofiltersortconditioncollection, public_symbol:aspose.cells_foss.autofiltersortstate (+79 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/cells/net/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "third_party_notices:file"
+      ],
+      "line": 0,
+      "reason": "the tree holds License/ThirdPartyNotices.txt and the README never mentions it (third_party_notices:file); not one of the ten sections, so never added",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "broken_link",
+      "fact_ids": [
+        "link_target:021"
+      ],
+      "line": 127,
+      "reason": "'RELEASE_NOTES_V26.10.0.md' is not in the tree and no unique file stands in for it",
+      "text": "- [V26.10.0 release notes](RELEASE_NOTES_V26.10.0.md)"
+    }
+  ]
+}
