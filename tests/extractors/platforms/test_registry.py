@@ -48,7 +48,10 @@ def test_every_admitted_registry_entry_has_a_platform_plugin() -> None:
     data alone."""
     registry = load_registry(REPO_ROOT / REGISTRY_RELATIVE_PATH)
     unserved = sorted(
-        entry.repository for entry in registry.entries if entry.ecosystem not in known_ecosystems()
+        entry.repository
+        for entry in registry.entries
+        # an inactive entry (Cells PHP until R29's extractor exists) is not run, so needs no plugin yet
+        if entry.active and entry.ecosystem not in known_ecosystems()
     )
     assert unserved == []
 

@@ -3,18 +3,31 @@
   "rules": [
     {
       "id": "org-profile-repository",
-      "match": { "name": ".github" },
+      "match": {
+        "name": ".github"
+      },
       "reason": "The organization profile repository (.github) holds the organization's profile README and default community-health files; it is not a product repository, so its README is not a presentation target."
     },
     {
       "id": "archived",
-      "match": { "archived": true },
+      "match": {
+        "archived": true
+      },
       "reason": "An archived repository is read-only upstream; a README pull request cannot be opened against it."
     },
     {
       "id": "fork",
-      "match": { "fork": true },
+      "match": {
+        "fork": true
+      },
       "reason": "A fork carries another project's code and README; presenting it would present that project, not an authorized Aspose product."
+    },
+    {
+      "id": "out-of-scope-pdf-go-mcp",
+      "match": {
+        "name": "Aspose-PDF-FOSS-for-Go-MCP"
+      },
+      "reason": "Owner ruling R30 (2026-11-13): PDF Go MCP is an MCP server, out of scope at this stage (maybe in future)."
     }
   ],
   "repositories": []

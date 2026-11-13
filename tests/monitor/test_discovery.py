@@ -78,7 +78,20 @@ def _registry(*pairs: tuple[str, int]) -> Registry:
 
 
 def _exclusions() -> Exclusions:
-    return load_exclusions(EXCLUSIONS_PATH)
+    """The live exclusion rules minus R30's PDF Go MCP rule: these tests use the Go MCP server as their
+    sample unregistered repository to exercise discovery itself; that the real file excludes it is
+    asserted separately (test_the_real_exclusions_put_the_go_mcp_server_out_of_scope)."""
+    live = load_exclusions(EXCLUSIONS_PATH)
+    return live.model_copy(
+        update={"rules": tuple(r for r in live.rules if r.id != "out-of-scope-pdf-go-mcp")}
+    )
+
+
+def test_the_real_exclusions_put_the_go_mcp_server_out_of_scope() -> None:
+    """Owner ruling R30 (2026-11-13): PDF Go MCP is out of scope at this stage."""
+    rules = {rule.id: rule for rule in load_exclusions(EXCLUSIONS_PATH).rules}
+    assert "out-of-scope-pdf-go-mcp" in rules
+    assert "R30" in rules["out-of-scope-pdf-go-mcp"].reason
 
 
 def _report(
