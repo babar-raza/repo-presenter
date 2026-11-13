@@ -121,6 +121,52 @@ _VERSION_NUMBER = re.compile(r"\d+(?:\.\d+)*")
 _FILE_COUNT = re.compile(r"(\d+) files")
 
 
+#: Shortest prose paragraph whose repeat is a defect: the independent reviewer's
+#: ``duplicate_paragraph`` rule (``review.independent_reviewer.MIN_DUPLICATE_CHARS``) uses the same cut.
+_MIN_REPEATED_PARAGRAPH_CHARS = 120
+#: The authored slots the renderer prints as a paragraph of their own (not a list item, a table cell
+#: or a sentence fragment), i.e. the slots the reviewer's ``duplicate_paragraph`` rule reads.
+_PARAGRAPH_SLOTS = re.compile(r"(?:opening|lead_in(?::\d+)?|preview|intro|hub:.+|scope|summary)")
+_PARAGRAPH_BREAK = re.compile(r"\n\s*\n")
+
+
+def without_repeated_paragraphs(
+    units: dict[tuple[str, str], str], section_order: list[str]
+) -> dict[tuple[str, str], str]:
+    """``units`` with every authored paragraph that an earlier authored paragraph already states
+    (as a reader sees it: Markdown, case and spacing aside; 120 characters or more) left out of the
+    later unit. Zero provider calls; only model-authored unit text is read or changed -- inherited
+    and placed maintainer content never passes through here, so none of it can be dropped, and the
+    first copy of the repeated paragraph is always printed.
+
+    Measured live (Aspose.BarCode-FOSS-for-Python, Lane R run 43413875680): two sections' authored
+    units carried the same product summary verbatim ("Aspose.BarCode FOSS for Python generates
+    barcodes in Code128, QR, ..."); the reviewer's ``duplicate_paragraph`` rule blocked the
+    candidate, and because the rendered quote (identifiers in code spans) matched no stored unit
+    text the finding routed to no section, so no repair could run and the run failed."""
+    from repo_presenter.readme.review.matching import plain
+
+    rank = {section: index for index, section in enumerate(section_order)}
+    ordered = sorted(
+        (key for key in units if key[0] in rank and _PARAGRAPH_SLOTS.fullmatch(key[1])),
+        key=lambda key: (rank[key[0]], list(units).index(key)),
+    )
+    seen: set[str] = set()
+    result = dict(units)
+    for key in ordered:
+        kept: list[str] = []
+        for paragraph in _PARAGRAPH_BREAK.split(units[key]):
+            normal = " ".join(plain(paragraph).casefold().split())
+            if len(normal) >= _MIN_REPEATED_PARAGRAPH_CHARS:
+                if normal in seen:
+                    continue
+                seen.add(normal)
+            kept.append(paragraph)
+        if len(kept) != len(_PARAGRAPH_BREAK.split(units[key])):
+            result[key] = "\n\n".join(kept)
+    return result
+
+
 class RenderContext:
     """Everything the renderer reads, indexed once."""
 
@@ -152,9 +198,10 @@ class RenderContext:
             if section.id in self.planned or section.id in self.retained
         ]
         self.rendered_ids: frozenset[str] | None = None
-        self.units: dict[tuple[str, str], str] = {
-            (unit["section"], unit["slot"]): unit["text"] for unit in units.get("units", [])
-        }
+        self.units: dict[tuple[str, str], str] = without_repeated_paragraphs(
+            {(unit["section"], unit["slot"]): unit["text"] for unit in units.get("units", [])},
+            [section.id for section in self.included],
+        )
         self.unit_fact_ids: dict[tuple[str, str], list[str]] = {
             (unit["section"], unit["slot"]): unit.get("fact_ids", [])
             for unit in units.get("units", [])
