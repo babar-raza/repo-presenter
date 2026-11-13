@@ -800,9 +800,16 @@ def _type_batches(
 def authoring_schema(manifest: LoadedManifest, task: SectionTask) -> dict[str, Any]:
     """The authoring schema specialised for one task: its section and exactly its slots."""
     schema = copy.deepcopy(manifest.manifest.output.schema_)
-    if not task.slots:
-        return schema
     units = schema["properties"]["units"]
+    if not task.slots:
+        # No slot to fill (documentation_resources included only for a unit reconciliation
+        # placed there, its links all non-SUPPORTED): unit_checks discards every unit such a task
+        # returns, but binding judges them first, and the manifest's own unpinned fact_ids let
+        # the model cite anything. Words .NET (hosted run 43405227517): a unit citing the
+        # CONTRADICTED link_target:020 was rejected twice. Ask for exactly what is kept: none.
+        units["minItems"] = 0
+        units["maxItems"] = 0
+        return schema
     units["minItems"] = len(task.slots)
     units["maxItems"] = len(task.slots)
     item = units["items"]
