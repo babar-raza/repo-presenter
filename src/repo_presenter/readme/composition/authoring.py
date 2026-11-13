@@ -1460,6 +1460,13 @@ def allowed_identifiers(facts: FactsDocument, name: str) -> frozenset[str]:
         if fact.polarity != "SUPPORTED" or fact.kind in NON_IDENTIFIER_KINDS:
             continue
         allowed.add(fact.value)
+        if fact.kind == "dependency":
+            # A .NET package reference is recorded as "<name> <version>" (``net._dependency_facts``:
+            # "Newtonsoft.Json 13.0.4"), so the whole value admitted only that exact pair and the
+            # verified dependency's own name was refused (Aspose.GIS.FOSS-for-.Net run 43423553446:
+            # "unit opening: identifiers that are not accepted fact values: Newtonsoft.Json,
+            # System.Drawing.Common", three times). Each word of the value is the fact's own text.
+            allowed.update(word for word in fact.value.split() if word != "none")
         if fact.kind == "example":
             allowed.update(identifier_tokens(fact.value))
         allowed.update(command_block_tokens(fact.value))

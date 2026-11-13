@@ -24,7 +24,10 @@ from markdown_it import MarkdownIt
 
 from repo_presenter.core.examples import collapse_blank_runs
 from repo_presenter.readme.composition.authoring import canonical_abbreviations
-from repo_presenter.readme.composition.components.identity import product_name
+from repo_presenter.readme.composition.components.identity import (
+    product_name,
+    product_name_of_repository,
+)
 from repo_presenter.readme.composition.components.shell import (
     SEMANTIC_SHELL,
     SUBSECTION_HEADINGS,
@@ -636,6 +639,35 @@ def _is_technical_identifier(
     return segment is None or segment.group(1).lower() not in tail
 
 
+# A Markdown link to a GitHub repository: its text and the repository's name.
+_REPOSITORY_LINK = re.compile(
+    r"\[(?P<text>[^\]\n]+)\]\(\s*<?https?://github\.com/[^/\s)]+/(?P<repo>[^/\s)#?>]+)[^)]*\)"
+)
+
+
+def _name_key(name: str) -> str:
+    """A product name as compared: case, separators and the "C++" spelling of "Cpp" aside."""
+    return re.sub(r"[\s._-]+", " ", name.casefold().replace("c++", "cpp")).strip()
+
+
+def _links_its_own_repository(row: str, column: int, length: int, canonical: str) -> bool:
+    """Whether the variant at ``row[column:column + length]`` lies in the text of a link to ANOTHER
+    product's repository whose whole text is that product's own name: "[Aspose.Slides FOSS for
+    Java](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java)" in the .NET README's
+    list of sibling editions names the Java edition, at the address that is the Java edition, and
+    is not a misspelling of this product. Prose naming another edition ("Aspose.3D FOSS for Java
+    provides ...") is not exempt: only a link whose own target proves which product it names is."""
+    for link in _REPOSITORY_LINK.finditer(row):
+        start, end = link.span("text")
+        if not (start <= column and column + length <= end):
+            continue
+        named = product_name_of_repository(link.group("repo").removesuffix(".git"))
+        if _name_key(named) == _name_key(canonical):
+            return False
+        return _name_key(link.group("text")) == _name_key(named)
+    return False
+
+
 def canonical_name_failures(candidate: Candidate) -> list[Failure]:
     """BC-12: every product-identity position in the prose spells the registry's canonical product
     name exactly; no separator, case, or suffix variant of it. Code spans and fences are not judged:
@@ -690,6 +722,8 @@ def canonical_name_failures(candidate: Candidate) -> list[Failure]:
             around=around,
             tail=tail,
         ):
+            continue
+        if _links_its_own_repository(row, column, len(found), canonical):
             continue
         section = located(candidate.readme, text, match.start())
         if (found, section) in seen:

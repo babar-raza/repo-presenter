@@ -497,3 +497,71 @@ def test_recover_preserved_duplicates_ignores_a_unit_from_a_different_section() 
     assert result is None
 
 
+
+
+def _gis_dependency_facts() -> FactsDocument:
+    """Aspose.GIS.FOSS-for-.Net at 1d387580: the product project's two package references, as the
+    .NET plugin records them (name and version in one value)."""
+    base = make_facts()
+    evidence = (
+        Evidence(
+            "Aspose.GIS.FOSS/Aspose.GIS.FOSS.csproj",
+            "package reference declared by the project file",
+        ),
+    )
+    return FactsDocument(
+        base.repository,
+        base.source_revision,
+        (
+            *base.facts,
+            Fact("dependency:newtonsoft.json", "dependency", "Newtonsoft.Json 13.0.4", evidence),
+            Fact(
+                "dependency:system.drawing.common",
+                "dependency",
+                "System.Drawing.Common 10.0.14",
+                evidence,
+            ),
+        ),
+    )
+
+
+def test_an_opening_may_name_a_verified_dependency_by_its_package_name() -> None:
+    """Run 43423553446 (GIS .NET): the opening named the two runtime dependencies the .csproj
+    declares and section_authoring refused them three times as not accepted fact values."""
+    facts = _gis_dependency_facts()
+    assert {"Newtonsoft.Json", "System.Drawing.Common"} <= allowed_identifiers(
+        facts, "Aspose Widget FOSS for Python"
+    )
+    task = _opening_task(
+        frozenset({"dependency:newtonsoft.json", "dependency:system.drawing.common"})
+    )
+    output = {
+        "units": [
+            {
+                "section": "opening",
+                "slot": "opening",
+                "text": "It depends only on Newtonsoft.Json and System.Drawing.Common at runtime.",
+                "fact_ids": ["dependency:newtonsoft.json", "dependency:system.drawing.common"],
+            }
+        ]
+    }
+    errors = unit_checks(output, task, facts, "Aspose Widget FOSS for Python")
+    assert not any("not accepted fact values" in error for error in errors), errors
+
+
+def test_a_dependency_the_facts_do_not_record_is_still_refused() -> None:
+    facts = _gis_dependency_facts()
+    task = _opening_task(frozenset({"dependency:newtonsoft.json"}))
+    output = {
+        "units": [
+            {
+                "section": "opening",
+                "slot": "opening",
+                "text": "It depends on Newtonsoft.Json and SixLabors.ImageSharp.",
+                "fact_ids": ["dependency:newtonsoft.json"],
+            }
+        ]
+    }
+    errors = unit_checks(output, task, facts, "Aspose Widget FOSS for Python")
+    assert any("SixLabors.ImageSharp" in error for error in errors), errors
+    assert not any("Newtonsoft.Json" in error for error in errors), errors

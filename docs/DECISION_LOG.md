@@ -4779,3 +4779,19 @@ detector already does) as a missing tree path (Words .NET); a restored colon lea
 linked to the rendered License section (`#license`), so the maintainers' own `[![License: MIT](...)](#license)` badge is
 carried, not lost (Aspose.3D-FOSS-for-TypeScript run 43413892363, its only BC-17 blocker). Regression:
 `tests/readme/composition/test_declared_license_badge.py`.
+
+---
+
+## 2026-11-13: PSD Java Lane R terminal under R24 after the R36(a) alternatives were exhausted
+
+Supervisor decision under R36(a)(4). Verified against the pinned source (a7b05fdd): no `pom.xml`/`build.gradle`;
+`org.aspose.psd:aspose-psd-foss-java` returns 404 on Maven Central (the README's Maven snippet is unverified); the
+shipped sources do not compile (`main/java/samples/streams/Program.java:34`, unreported `PsdLoadException`), so no
+example or source checkout can be verified. Alternatives evaluated: an honest "no install command is verified"
+Installation section still fails BC-02 (moves no count); relaxing BC-02 weakens a check and contradicts the PSD Python
+decision; attributed maintainer text would print an unresolvable install; report-only yields no candidate. No honest
+alternative yields a certified candidate, so `aspose-psd-foss/Aspose.PSD-FOSS-for-Java` Lane R is terminal under R24;
+the product issue is drafted (not filed) at
+`evidence/build/P1_PORTFOLIO_SCALE/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/draft_upstream_issue.md`.
+Side finding recorded, not fixed (unblocks nothing here): the vendored Java `package_root.py` knows no `main/java`
+layout and falls back to the repository root.
