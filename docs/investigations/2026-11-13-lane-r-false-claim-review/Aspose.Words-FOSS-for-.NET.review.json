@@ -1,0 +1,253 @@
+{
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
+  "revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+  "seal": "56668e8abf63",
+  "readme": "git show 56668e8abf63:0d3f1add920f5294d726b4f286c2d6ba7c3ae22c/README.md",
+  "items": [
+    {
+      "quote": "No required third-party package dependencies; in `Aspose.Words/Aspose.Words.csproj`, no `PackageReference` a consumer would install is declared.",
+      "verdict": "FALSE",
+      "truth": "The published package declares SkiaSharp 3.119.0 and BitMiracle.LibTiff.NET 2.4.649 (netstandard2.0 and net8.0) plus Microsoft.Win32.Registry 5.0.0 (netstandard2.0); the library's Aspose.Foundation project references them.",
+      "evidence": "Package/Aspose.Words.FOSS.nuspec:21-28@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Aspose.Foundation/Aspose.Foundation/Aspose.Foundation.csproj:79-87@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; https://api.nuget.org/v3/registration5-semver1/aspose.words.foss/index.json catalogEntry[26.3.0].dependencyGroups",
+      "section": "Dependencies",
+      "index": 0,
+      "root_cause": "K06_DEPENDENCY_FROM_PROJECT_FILE",
+      "reverified": true
+    },
+    {
+      "quote": "Chart chart = doc.FirstSection.Body.Shapes[0].Chart;",
+      "verdict": "FALSE",
+      "truth": "Story.Shapes (inherited by Body) and ShapeCollection are declared internal in the .NET build, so consumer code cannot compile this line. Only the test assemblies can see them, through InternalsVisibleTo. The snippet also uses `doc` without declaring it.",
+      "evidence": "Aspose.Words/Model/Sections/Story.cs:68@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Aspose.Words/Model/Drawing/ShapeCollection.cs:14@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Aspose.Words/AssemblyInfo.cs:52-53@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Additional Examples",
+      "index": 1,
+      "root_cause": "K01_EXAMPLE_NOT_EXECUTED",
+      "reverified": true
+    },
+    {
+      "quote": "The verified public surface has 618 types.",
+      "verdict": "FALSE",
+      "truth": "At this revision Aspose.Words declares 615 public types (379 classes, 210 enums, 26 interfaces). The README's list adds DocumentPositionMovement, INodeCollection and NodeEnumerator, which are public only under `#if CPLUSPLUS` and internal in .NET. The upstream README itself says 615.",
+      "evidence": "Aspose.Words/Model/Nodes/Navigation/DocumentPositionMovement.cs:9-14@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Aspose.Words/Model/Nodes/INodeCollection.cs:13-17@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Aspose.Words/Model/Nodes/Navigation/NodeEnumerator.cs:15-20@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; README.md:901@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "API Reference",
+      "index": 2,
+      "root_cause": "K05_SURFACE_COUNT_VISIBILITY",
+      "reverified": true
+    },
+    {
+      "quote": "| `DocumentPositionMovement` | Aspose.Words.DocumentPositionMovement is a public symbol. |",
+      "verdict": "FALSE",
+      "truth": "DocumentPositionMovement is `internal` unless CPLUSPLUS is defined, so it is not part of the .NET public API. The same applies to INodeCollection and NodeEnumerator, which are also listed.",
+      "evidence": "Aspose.Words/Model/Nodes/Navigation/DocumentPositionMovement.cs:9-14@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "API Reference / Enumerations",
+      "index": 3,
+      "root_cause": "K05_SURFACE_COUNT_VISIBILITY",
+      "reverified": true
+    },
+    {
+      "quote": "The full surface totals 618 public types",
+      "verdict": "FALSE",
+      "truth": "The source has 615 public types for the .NET build, and the upstream README states 615.",
+      "evidence": "README.md:901@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "API Reference",
+      "index": 4,
+      "root_cause": "K05_SURFACE_COUNT_VISIBILITY",
+      "reverified": true
+    },
+    {
+      "quote": "the complete, browsable reference for all 618 public types",
+      "verdict": "FALSE",
+      "truth": "The source has 615 public types for .NET. The upstream README gives 617 here and 615 elsewhere; neither is 618.",
+      "evidence": "README.md:942@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Scope and Limitations",
+      "index": 5,
+      "root_cause": "K05_SURFACE_COUNT_VISIBILITY",
+      "reverified": true
+    },
+    {
+      "quote": "and .NET Framework 4.62.",
+      "verdict": "FALSE",
+      "truth": "The target is .NET Framework 4.6.2 (net462), not 4.62.",
+      "evidence": "Aspose.Words/Aspose.Words.csproj:5@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Scope and Limitations",
+      "index": 6,
+      "root_cause": "K09_AUTHORED_VALUE_TRANSCRIPTION",
+      "reverified": true
+    },
+    {
+      "quote": "The NuGet package and new formats are landing soon.",
+      "verdict": "FALSE",
+      "truth": "Aspose.Words.FOSS is already on NuGet (26.2.0 published 2026-07-29, 26.3.0 published 2026-09-01), and the README's own Installation section installs it.",
+      "evidence": "https://api.nuget.org/v3-flatcontainer/aspose.words.foss/index.json versions; registration5-semver1 catalogEntry.published",
+      "section": "Development and Testing",
+      "index": 7,
+      "root_cause": "K08_MAINTAINER_PROSE_UNVERIFIED",
+      "reverified": true
+    },
+    {
+      "quote": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |",
+      "verdict": "MISLEADING",
+      "truth": "DigitalSignatureUtil.Sign exists, but for DOCX/DOTX/DOCM/DOTM, DOC and ODT it throws NotSupportedException(\"FOSS\"). The README's own Scope section says signing is not included.",
+      "evidence": "Aspose.Words/Model/DigitalSignatures/DigitalSignatureUtil.cs:70-92@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "API Reference / Core API",
+      "index": 8,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "- `System.Text.Encoding.CodePages` 7.0.0 - legacy code-page encodings, used by the .NET Standard 2.0 and .NET 8 targets.",
+      "verdict": "MISLEADING",
+      "truth": "The source project references System.Text.Encoding.CodePages, but the published NuGet package does not declare it as a dependency.",
+      "evidence": "Aspose.Foundation/Aspose.Foundation/Aspose.Foundation.csproj:81@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Package/Aspose.Words.FOSS.nuspec:19-29@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Development and Testing",
+      "index": 9,
+      "root_cause": "K06_DEPENDENCY_FROM_PROJECT_FILE",
+      "reverified": true,
+      "register": false,
+      "skip_reason": "DROPPED: not confirmed false: Aspose.Foundation.csproj:81 references System.Text.Encoding.CodePages 7.0.0 for every target but net462, so the line is true for the source build it documents (maintainer text, upstream README.md:113); the nuspec omission is a packaging matter, not a false README claim"
+    },
+    {
+      "quote": "- Requires .NET `netstandard2.0;net8.0;net462` (`TargetFrameworks` in `Aspose.Words/Aspose.Words.csproj`).",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is a raw MSBuild property dump, reordered from the source. The csproj value is `net462;netstandard2.0;net8.0`, and the user-facing requirement is .NET Framework 4.6.2+, a .NET Standard 2.0-compatible runtime, or .NET 8. It also omits the SkiaSharp.NativeAssets.Linux requirement on Linux.",
+      "evidence": "Aspose.Words/Aspose.Words.csproj:5@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; README.md:116-119@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Dependencies",
+      "index": 10,
+      "root_cause": "K06_DEPENDENCY_FROM_PROJECT_FILE",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "- `ILRepack 2.0.46`",
+      "verdict": "MISLEADING",
+      "truth": "ILRepack 2.0.46 is a build-only reference, but the list leaves out the test project's development dependencies: Microsoft.NET.Test.Sdk 17.13.0, Newtonsoft.Json 13.0.3, NUnit 4.2.2 and NUnit3TestAdapter 5.0.0.",
+      "evidence": "Aspose.Words/Aspose.Words.csproj:99@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Aspose.Words.Tests/Aspose.Words.Tests.csproj:72-75@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Dependencies",
+      "index": 11,
+      "root_cause": "K06_DEPENDENCY_FROM_PROJECT_FILE",
+      "reverified": true,
+      "register": false,
+      "skip_reason": "DROPPED: the quoted line is true (ILRepack 2.0.46 is a build-only reference); the defect is an omission (test-project dev dependencies), so registering the quote would force a true line out -- tracked as root-cause class K06 instead"
+    },
+    {
+      "quote": "The suite covers 307 test files under `Aspose.Words.Tests/`.",
+      "verdict": "UNSUPPORTED",
+      "truth": "No count of test files gives 307. Aspose.Words.Tests has 340 .cs files, 310 with NUnit [Test]/[TestFixture]/[TestCase] attributes, and 318 named Test*.cs.",
+      "evidence": "Aspose.Words.Tests/ (find -name '*.cs' = 340; grep -l '[Test' = 310)@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Development and Testing",
+      "index": 12,
+      "root_cause": "K00_REFUTED_ON_REVERIFICATION",
+      "reverified": true,
+      "register": false,
+      "skip_reason": "DROPPED: refuted on re-verification: 307 is exactly the number of .cs files under Aspose.Words.Tests/ that declare a test method ([Test]/[TestCase]/...; core/ecosystems.py NET suite rule), reproduced with grep at 0d3f1add920f; the reviewer's 310 also counted [TestFixture]-only files"
+    },
+    {
+      "quote": "come out as placeholders (see what's not included)",
+      "verdict": "MISLEADING",
+      "truth": "This points to a section that does not exist in this README; the content is now under 'Scope and Limitations'. The link the upstream README had was also dropped.",
+      "evidence": "README.md:69@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Key Capabilities",
+      "index": 13,
+      "root_cause": "K08_MAINTAINER_PROSE_UNVERIFIED",
+      "reverified": false,
+      "review_quote": "(see what's not included)"
+    },
+    {
+      "quote": "The engine underneath already knows how to handle far more (see the story below)",
+      "verdict": "MISLEADING",
+      "truth": "No story section follows. The story text is in the introduction at the top of this README, with no heading.",
+      "evidence": "README.md:928@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Scope and Limitations",
+      "index": 14,
+      "root_cause": "K08_MAINTAINER_PROSE_UNVERIFIED",
+      "reverified": false,
+      "review_quote": "(see the story below)"
+    },
+    {
+      "quote": "These limitations don't apply to [full-featured Aspose.Words for .NET — Enterprise Edition]",
+      "verdict": "UNSUPPORTED",
+      "truth": "Neither the repository nor the nuspec mentions an 'Enterprise Edition'; the upstream README just calls it the commercial Aspose.Words for .NET.",
+      "evidence": "README.md:913@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c; Package/Aspose.Words.FOSS.nuspec:13-15@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Scope and Limitations",
+      "index": 15,
+      "root_cause": "K10_PIPELINE_TEMPLATE_TEXT",
+      "reverified": false
+    },
+    {
+      "quote": "or removing signatures using `DigitalSignatures`.",
+      "verdict": "MISLEADING",
+      "truth": "Document.DigitalSignatures is a read-only collection. Signatures are removed with DigitalSignatureUtil.RemoveAllSignatures.",
+      "evidence": "Aspose.Words/Model/DigitalSignatures/DigitalSignatureUtil.cs:197@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Key Capabilities",
+      "index": 16,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "| `BuildingBlock` | Aspose.Words.BuildingBlocks.BuildingBlock is a public symbol with members Accept",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is a machine-generated extractor description. There are 12 'is a public symbol' rows like it, and Document's row reads the same way. The source doc comment gives a real summary.",
+      "evidence": "Aspose.Words/Model/BuildingBlocks/BuildingBlock.cs@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "API Reference / Core API",
+      "index": 17,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "and edit existing DOCX files including TEXT, formatting",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "'text' has been replaced throughout with the format token 'TEXT' (57 times in total), which makes ordinary prose and source doc comments look like a file format.",
+      "evidence": "README.md:64@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c ('text, formatting, styles')",
+      "section": "Key Capabilities",
+      "index": 18,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "- **[Documentation & resources](#documentation--resources)** — Documentation & resources provides guidance and supporting materials for Aspose.Words FOSS for .NET.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "These are generated filler entries: the link points to its own section, and the Additional Examples entry is the same kind of filler. The real resource links (docs, kb, reference, AGENTS.md) were moved into Scope and Limitations.",
+      "evidence": "README.md:938-945@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Documentation & Resources",
+      "index": 19,
+      "root_cause": "K10_PIPELINE_TEMPLATE_TEXT",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "- **[Getting started guide](https://docs.aspose.org/words/net/)** — installation, walkthroughs, and feature guides for this library.",
+      "verdict": "MISPLACED",
+      "truth": "The documentation and resource links are under Scope and Limitations instead of Documentation & Resources.",
+      "evidence": "README.md:938-945@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Scope and Limitations",
+      "index": 20,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "Or build from source:",
+      "verdict": "MISPLACED",
+      "truth": "Build-from-source steps, the package-dependency list, the contributing text and the 'star it' appeal are all under Development and Testing. They belong under Installation, Dependencies, Contributing and their own section.",
+      "evidence": "README.md:87-126,947-957@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "Development and Testing",
+      "index": 21,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "`Aspose.Words.Drawing` provides support for working with shapes and charts in documents",
+      "verdict": "MISPLACED",
+      "truth": "Under the '### Drawing' heading the README repeats the entire type list (589 rows covering all namespaces, e.g. Bibliography, Body, Bookmark) and the Document/DocumentBuilder member reference, so it is not Drawing content.",
+      "evidence": "README.md:851-899@0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+      "section": "API Reference / Drawing",
+      "index": 22,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    }
+  ]
+}

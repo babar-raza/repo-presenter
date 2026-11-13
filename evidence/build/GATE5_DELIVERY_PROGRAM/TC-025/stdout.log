@@ -3,52 +3,28 @@
 $ python -m pytest tests/test_lane_l_trigger.py -q
 --- stdout ---
 ...................                                                      [100%]
-19 passed in 0.22s
+19 passed in 5.45s
 
 --- stderr ---
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 60%]
-................................................                         [100%]
-120 passed in 9.90s
+........................................................................ [ 44%]
+........................................................................ [ 89%]
+.................                                                        [100%]
+161 passed in 1.05s
 
 --- stderr ---
 
 $ python -m pytest tests/test_readme_findings.py -q
 --- stdout ---
-...............                                                          [100%]
-15 passed in 0.52s
+.................                                                        [100%]
+17 passed in 0.24s
 
 --- stderr ---
 
 
 ===== CLEAN RUN 2 =====
-$ python -m pytest tests/test_lane_l_trigger.py -q
---- stdout ---
-...................                                                      [100%]
-19 passed in 0.20s
-
---- stderr ---
-
-$ python -m pytest tests/readme/correction -q
---- stdout ---
-........................................................................ [ 60%]
-................................................                         [100%]
-120 passed in 1.27s
-
---- stderr ---
-
-$ python -m pytest tests/test_readme_findings.py -q
---- stdout ---
-...............                                                          [100%]
-15 passed in 0.27s
-
---- stderr ---
-
-
-===== NEGATIVE CONTROL (checks MUST now fail) =====
-mutated: M src/repo_presenter/readme_findings.py
 $ python -m pytest tests/test_lane_l_trigger.py -q
 --- stdout ---
 ...................                                                      [100%]
@@ -58,42 +34,69 @@ $ python -m pytest tests/test_lane_l_trigger.py -q
 
 $ python -m pytest tests/readme/correction -q
 --- stdout ---
-........................................................................ [ 60%]
-...............................................F                         [100%]
-================================== FAILURES ===================================
-_______________ test_finding_rows_feed_append_finding_directly ________________
+........................................................................ [ 44%]
+........................................................................ [ 89%]
+.................                                                        [100%]
+161 passed in 1.13s
 
-tmp_path = WindowsPath('C:/Users/babar/AppData/Local/Temp/pytest-of-babar/pytest-875/test_finding_rows_feed_append_0')
+--- stderr ---
+
+$ python -m pytest tests/test_readme_findings.py -q
+--- stdout ---
+.................                                                        [100%]
+17 passed in 0.20s
+
+--- stderr ---
+
+
+===== NEGATIVE CONTROL (checks MUST now fail) =====
+mutated: M src/repo_presenter/readme_findings.py
+$ python -m pytest tests/test_lane_l_trigger.py -q
+--- stdout ---
+...................                                                      [100%]
+19 passed in 0.19s
+
+--- stderr ---
+
+$ python -m pytest tests/readme/correction -q
+--- stdout ---
+........................................................................ [ 44%]
+........................................................................ [ 89%]
+.........F.......                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_finding_rows_feed_append_finding_directly ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-568/test_finding_rows_feed_append_0')
 
     def test_finding_rows_feed_append_finding_directly(tmp_path: Any) -> None:
 >       from repo_presenter.readme_findings import append_finding, read_findings
-E       ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-n1977e7_\src\repo_presenter\readme_findings.py)
+E       ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.claude/worktrees/agent-a95d43a7fc5584c74/.gatectl-worktrees/wt-lc26tcxk/src/repo_presenter/readme_findings.py)
 
-tests\readme\correction\test_net_improvement.py:137: ImportError
-=========================== short test summary info ===========================
+tests/readme/correction/test_net_improvement.py:137: ImportError
+=========================== short test summary info ============================
 FAILED tests/readme/correction/test_net_improvement.py::test_finding_rows_feed_append_finding_directly
-1 failed, 119 passed in 1.51s
+1 failed, 160 passed in 0.92s
 
 --- stderr ---
 
 $ python -m pytest tests/test_readme_findings.py -q
 --- stdout ---
 
-=================================== ERRORS ====================================
-_______________ ERROR collecting tests/test_readme_findings.py ________________
-ImportError while importing test module 'C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-n1977e7_\tests\test_readme_findings.py'.
+==================================== ERRORS ====================================
+________________ ERROR collecting tests/test_readme_findings.py ________________
+ImportError while importing test module '/home/user/repo-presenter/.claude/worktrees/agent-a95d43a7fc5584c74/.gatectl-worktrees/wt-lc26tcxk/tests/test_readme_findings.py'.
 Hint: make sure your test modules/packages have valid Python names.
 Traceback:
-C:\Users\babar\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py:88: in import_module
+/usr/local/lib/python3.13/importlib/__init__.py:88: in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests\test_readme_findings.py:15: in <module>
+tests/test_readme_findings.py:15: in <module>
     from repo_presenter.readme_findings import (
-E   ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (C:\Users\babar\Documents\GitHub\repo-presenter\.gatectl-worktrees\wt-n1977e7_\src\repo_presenter\readme_findings.py)
-=========================== short test summary info ===========================
+E   ImportError: cannot import name 'append_finding' from 'repo_presenter.readme_findings' (/home/user/repo-presenter/.claude/worktrees/agent-a95d43a7fc5584c74/.gatectl-worktrees/wt-lc26tcxk/src/repo_presenter/readme_findings.py)
+=========================== short test summary info ============================
 ERROR tests/test_readme_findings.py
-!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
-1 error in 0.29s
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.10s
 
 --- stderr ---
 

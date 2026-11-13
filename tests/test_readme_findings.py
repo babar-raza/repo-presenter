@@ -20,8 +20,10 @@ from repo_presenter.readme_findings import (
     FindingRecord,
     FindingsRegisterError,
     append_finding,
+    import_review,
     read_findings,
     resolve_finding,
+    review_description,
 )
 
 
@@ -226,3 +228,51 @@ def test_the_register_file_is_deterministic_json(register: Path) -> None:
         first_seen_at="2026-11-01",
     )
     assert second_register.read_text(encoding="utf-8") == first  # sorted by (repository, description)
+
+
+# --- importing an independent fact-check review ----------------------------------------------
+
+_README = "Intro.\n\nRun `dotnet build` from the checkout.\n\nThen dotnet build src/A.csproj -c Release.\n"
+
+
+def _item(quote: str, verdict: str = "FALSE", **extra) -> dict:
+    return {"quote": quote, "verdict": verdict, "truth": "t", "evidence": "a.cs:1@abc", **extra}
+
+
+def test_import_registers_factual_verdicts_and_skips_deterministic_classes(register: Path) -> None:
+    registered, skipped = import_review(
+        register, repository="o/r", readme=_README, first_seen_at="2026-11-13",
+        items=[
+            _item("Run `dotnet build` from the checkout."),
+            _item("Intro.", "INTERNAL_WORDING"),
+            _item("Then dotnet build src/A.csproj", "MISLEADING"),
+        ],
+    )
+    assert [row.quote for row in registered] == [
+        "Run `dotnet build` from the checkout.", "Then dotnet build src/A.csproj",
+    ]
+    assert [item["verdict"] for item, _ in skipped] == ["INTERNAL_WORDING"]
+    rows = read_findings(register)
+    assert {row.description for row in rows} == {
+        review_description("FALSE", "Run `dotnet build` from the checkout."),
+        review_description("MISLEADING", "Then dotnet build src/A.csproj"),
+    }
+    assert all(row.status == STATUS_OPEN and row.route == LANE_R for row in rows)
+    # Re-importing the same review updates in place: no duplicate rows.
+    import_review(register, repository="o/r", readme=_README, first_seen_at="2026-11-14",
+                  items=[_item("Run `dotnet build` from the checkout.")])
+    assert len(read_findings(register)) == 2
+
+
+def test_import_refuses_an_over_broad_or_absent_quote_and_writes_nothing(register: Path) -> None:
+    # The 2026-11-13 lesson: the bare "dotnet build" also matches the correct build line.
+    for quote in ("dotnet build", "a sentence the README never prints"):
+        with pytest.raises(FindingsRegisterError, match="printed"):
+            import_review(register, repository="o/r", readme=_README, first_seen_at="2026-11-13",
+                          items=[_item("Intro."), _item(quote)])
+    assert read_findings(register) == []
+    # ...unless the item states the repeat is deliberate (one false claim printed twice).
+    registered, _ = import_review(register, repository="o/r", readme=_README,
+                                  first_seen_at="2026-11-13",
+                                  items=[_item("dotnet build", occurrences=2)])
+    assert len(registered) == 1

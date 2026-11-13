@@ -74,8 +74,14 @@ items:
     status: active
     implementation_path: "one independent reviewer agent per Lane R candidate verifies every claim against the pinned source and registries; confirmed false claims appended to data/readme_findings.json (BC-18) so the governed repair loop corrects them; the class causes become backlog defects"
     acceptance: "every certified Lane R candidate reviewed claim-by-claim with evidence; every confirmed false claim registered; classes fixed at root"
-    evidence: ["verified 2026-11-13: data/readme_findings.json holds 72 rows (70 OPEN, 2 RESOLVED)"]
-    next_action: "reviewer agents dispatched"
+    evidence:
+      - "verified 2026-11-13: data/readme_findings.json holds 72 rows (70 OPEN, 2 RESOLVED)"
+      - "2026-11-13: 5 certified Lane R candidates reviewed (3D .NET, 3D Python, Cells .NET, Email .NET, Words .NET) by 5 independent agents -> 105 findings (FALSE 36, MISLEADING 30, UNSUPPORTED 4, INTERNAL_WORDING 19, MISPLACED 16); inputs + decisions docs/investigations/2026-11-13-lane-r-false-claim-review/*.review.json"
+      - "36 items re-verified by the supervisor against pinned clones + nuget/PyPI; 3 dropped (Words 307 test files refuted: exactly 307 .cs files declare a test method; Words CodePages true for the source build; Words ILRepack true line, omission only), 1 added (3D Python second 'Mesh-derived Entity' printing)"
+      - "68 OPEN lane_r rows appended to data/readme_findings.json (72 -> 140) via the new reproducible importer `python -m repo_presenter.readme_findings import` (refuses any quote not printed exactly N times)"
+      - "root-cause classes K00-K12 with counts and code locations: docs/investigations/2026-11-13-lane-r-false-claim-review.md; each class is a backlog item BL-061..BL-071"
+      - "R10: the five seals now fail BC-18 (genuine defects), justified per seal in data/recertification_baseline.json; Lane R live certified 5 -> 0"
+    next_action: "classes BL-061..BL-071 fixed at root; then re-run the five Lane R cells through the pipeline; BL-073 makes this review a hosted stage"
 
   - id: BL-004
     title: "3D .NET Lane R — Documentation & Resources content placed under Scope and Limitations; license sentence in Scope and Limitations"
@@ -749,3 +755,163 @@ items:
     next_action: "worker after PR #64 merges"
     updated: "2026-11-13"
 
+  - id: BL-061
+    title: "K01 — .NET examples are compiled, never executed; undeclared-local fragments are never compiled at all"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K01: 3 findings (3D .NET Quick Start FBX7400Binary/WavefrontOBJ throw NotImplementedException; Words Body.Shapes is internal)"
+    priority: P0
+    status: open
+    implementation_path: "extractors/platforms/net_examples.py::verify_net_examples — after a clean build, run the program (dotnet run, same isolated workspace, timeout); an unhandled API exception is CONTRADICTED, a missing input file stays UNRESOLVED (Python rule); ::_is_fragment NOT_VERIFIED fragments are not printed in Lane R (BL-008 policy). Same for java_examples."
+    acceptance: "unit test from the real 3D .NET Quick Start shape (Save(path, FileFormat.FBX7400Binary)) yields CONTRADICTED; Words chart fragment is not printed; R10 gate OK"
+    evidence: ["3D .NET FileFormat.cs:66,83,347-350@52b0f00ebf28; Words Story.cs:68 internal Shapes@0d3f1add920f"]
+    next_action: "fix worker"
+    depends_on: [BL-008]
+
+  - id: BL-062
+    title: "K02 — behaviour/capability claimed beyond the real code path (stubs via virtual dispatch or dispatcher order, metadata-only types sold as features, wrong 'throws' claims)"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K02: 29 findings, 29 registered (largest class)"
+    priority: P0
+    status: open
+    implementation_path: "readme/evidence/facts/source_detail.py — propagate implementation:always-throws one hop (static field built as the base type whose virtual throws; dispatcher list whose earlier entry raises in supports_format); readme/evidence/facts/formats.py — direction facts honour dispatch order; readme/validation/surface_claims.py::_stub_findings — rule (j) also fires on SUPPORTED implementation facts, plus an inverse rule failing 'X throws' when X's body has no throw"
+    acceptance: "regression tests from the real shapes (3D .NET FileFormat statics, 3D Python IOService exporter order, NurbsSurface.ToMesh no-throw); re-running BC-14 on the five seals flags the K02 rows deterministically; R10 gate OK"
+    evidence: ["docs/investigations/2026-11-13-lane-r-false-claim-review.md (K02 row, 11 of 29 on lines the reviewer is never shown)"]
+    next_action: "fix worker"
+
+  - id: BL-063
+    title: "K03 — API tables call properties/fields/consts methods, static factories constructors, get-only properties 'Gets or sets'"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K03: 8 findings (Cells Style.Font/Borders private set; Email AttachMethod* const, CfbStorage.Children property, DirectoryEntry.Is* methods, CfbDocument.FromFile factory; 3D Python GlobalTransform read-only)"
+    priority: P0
+    status: open
+    implementation_path: "extractors/surface/extractor.py — properties and fields are emitted with symbol_kind='method' and the setter accessibility is dropped; carry member kind (method/property/field/const) and settable into the public_symbol fact; readme/composition/authoring.py::type_members groups by kind; surface_claims rule fails 'Gets or sets' on a get-only property and 'method' on a non-method"
+    acceptance: "facts for Email MapiMessage.AttachMethodByValue say const field, Cells Style.Font says get-only property; the five seals' K03 rows flagged by the new rule; R10 gate OK"
+    evidence: ["sealed facts.json: Aspose.Email.Foss.Msg.MapiMessage.AttachMethodByValue 'line 52; method'; Aspose.Cells_FOSS.Style.Font symbol_kind method, docstring 'Gets or sets'"]
+    next_action: "fix worker"
+
+  - id: BL-064
+    title: "K04 — prose and tables name members a type lacks, cross-bind same-named types, state wrong base types"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K04: 7 findings + 1 found on re-verification (Cells Style Color/FillPattern/Border; 3D .NET GLTF Property/PropertyTable/Tangents; 3D Python WeightedMode, BonePose, Mesh-derived entities)"
+    priority: P0
+    status: open
+    implementation_path: "readme/validation/surface_claims.py::_table_findings — extend rule (i) from type names to Type.Member pairs and 'properties such as A, B' lists checked against that type's members; authoring packets key types by qualified name (no simple-name collision)"
+    acceptance: "regression tests from Cells 'Style ... Color, FillPattern, and Border' and 3D .NET 'Property-GLTF'; R10 gate OK"
+    evidence: []
+    next_action: "fix worker"
+
+  - id: BL-065
+    title: "K05 — public-type counts and tables include #if-conditional and internal-nested types"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K05: 6 findings (Words 618 vs 615: DocumentPositionMovement/INodeCollection/NodeEnumerator public only under #if CPLUSPLUS; 3D .NET Chunk nested in internal ChunkHelper)"
+    priority: P0
+    status: open
+    implementation_path: "extractors/surface/_vendor/aspose_extraction/tree_helpers.py::_in_excluded_preproc_branch + C# type collection in api_surface.py — resolve the effective access modifier through '#if X public #else internal #endif' before the declaration; a type is public only when every enclosing type is public"
+    acceptance: "Words facts count 615 public types at 0d3f1add920f; 3D .NET Chunk absent; rule (h) and renderer counts agree; R10 gate OK"
+    evidence: ["Words DocumentPositionMovement.cs:9-14@0d3f1add920f; 3D .NET Formats/3DSHelper.cs:52,108@52b0f00ebf28"]
+    next_action: "fix worker"
+
+  - id: BL-066
+    title: "K06 — dependency claims read from the product project file instead of the published package"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K06: 6 findings (Words 'No required third-party package dependencies' while the nuspec declares SkiaSharp/LibTiff/Win32.Registry; Cells Linux PDF needs SkiaSharp.NativeAssets.Linux; Words dev-dependency list incomplete)"
+    priority: P0
+    status: open
+    implementation_path: "extractors/platforms/net.py::_dependency_facts — prefer the published package's dependencyGroups (registry, already fetched for package:published_version) or the nuspec; include ProjectReference'd projects' PackageReferences; dependency:none only when the registry agrees; record transitive native-asset gaps"
+    acceptance: "Words facts list SkiaSharp 3.119.0, BitMiracle.LibTiff.NET 2.4.649, Microsoft.Win32.Registry 5.0.0 (netstandard2.0); unit test from the real Words layout; R10 gate OK"
+    evidence: ["Package/Aspose.Words.FOSS.nuspec:19-29@0d3f1add920f; Aspose.Foundation.csproj:79-87"]
+    next_action: "fix worker"
+
+  - id: BL-067
+    title: "K07 — linked repository documents described from their file name, never read"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K07: 6 findings (AGENTS.md/agents.md as 'contribution guidelines'; Cells samples 'use version 26.10.0' though all use ProjectReference; stale docs/PYPI_READINESS.md 'confirms'; release notes of an unreleased version; unittest-only test suite)"
+    priority: P0
+    status: open
+    implementation_path: "readme/composition/authoring.py documentation_resources slot binding (today the URL fact only) + readme/evidence/facts/source_detail.py — a document_summary fact (title, first heading/paragraph) bound to each link slot; a claim check against it"
+    acceptance: "3D .NET AGENTS.md link described from its own heading ('AI Agent Guide'); R10 gate OK"
+    evidence: []
+    next_action: "fix worker"
+
+  - id: BL-068
+    title: "K08 — unverified or stale maintainer prose carried verbatim (must-carry): platform/host claims, 'NuGet package landing soon', 'see ... below' broken by reordering"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K08: 5 findings (Email 'Docker containers, and serverless functions', 'see Dependencies below'; Words 'landing soon', '(see what's not included)', '(see the story below)')"
+    priority: P0
+    status: open
+    implementation_path: "readme/reconciliation/dispositions.py::_settle_unresolved keeps every unresolved maintainer unit PRESERVE_ATTRIBUTED unless a fact contradicts it: (a) deterministic cross-reference check (direction words vs rendered section order; anchor exists) in readme/validation/structure.py; (b) Lane L stale_package_version 'not yet published' detector reused as a Lane R contradiction against package:published_version; (c) host/platform claims with no supporting fact take R36's 'state as unverified' alternative (R14 decision recorded)"
+    acceptance: "the five K08 rows are flagged deterministically on the sealed READMEs; R14 drop decisions recorded; R10 gate OK"
+    evidence: []
+    next_action: "fix worker"
+
+  - id: BL-069
+    title: "K09 — authored prose mistranscribes values (.NET Framework '4.62' from net462)"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K09: 1 finding (Words Scope and Limitations)"
+    priority: P0
+    status: open
+    implementation_path: "readme/validation/claims.py — a .NET Framework version stated in prose must equal the one derived from the TargetFrameworks fact (net462 -> 4.6.2)"
+    acceptance: "unit test from the Words sentence; R10 gate OK"
+    evidence: []
+    next_action: "queue"
+
+  - id: BL-070
+    title: "K10 — pipeline-mandated template text asserts unsourced facts ('Enterprise Edition' naming; self-linking resource bullets)"
+    type: defect
+    source: "BL-003 review (2026-11-13), class K10: 3 findings (Words 'Enterprise Edition' — repository and nuspec say the commercial Aspose.Words for .NET; Email/Words Documentation & Resources link to their own section)"
+    priority: P0
+    status: open
+    implementation_path: "readme/composition/components/shell.py enterprise_relationship + BC-06 edition-name rule (reconciliation/dispositions.py) — name the commercial product as the repository/nuspec does (fact-backed); renderer forbids a link slot targeting its own section"
+    acceptance: "Words enterprise sentence uses the repository's product name; no self-link bullet portfolio-wide; R10 gate OK"
+    evidence: []
+    next_action: "queue"
+
+  - id: BL-071
+    title: "Reviewer blind spot — the independent reviewer and M8 passed all 105 findings"
+    type: gap
+    source: "BL-003 review (2026-11-13), cross-cutting class"
+    priority: P0
+    status: open
+    implementation_path: "readme/review/scope.py::reviewable_lines excludes renderer-printed lines by construction (47 of 106 findings sit there) and readme/review/sectionwise.py::unit_packet carries facts, never source (common mode with the extractor); M8 judges prose only. Close via BL-073 (hosted fact-check stage with source access) and BL-074 (each class deterministic), not by widening the LLM reviewer"
+    acceptance: "a hosted fact-check of every new Lane R seal, with renderer-printed lines in scope, runs before a seal counts; measured on the five seals it reproduces the registered rows"
+    evidence: ["five sealed review_verdict.json: verdict ACCEPT, 0 findings, 3/3/3/5/5 unit reviews, calibration NOT_PASSED, identical reply_sha256 a8982e5a... across different requests"]
+    next_action: "design within BL-073"
+    depends_on: [BL-073]
+
+  # --- owner message 2026-11-13: "These registers must be auto filled, and an already caught problem should not reappear." ---
+
+  - id: BL-072
+    title: "No recurrence — every register row (OPEN or RESOLVED, never a refuted one) is a permanent BC-18 regression check"
+    type: requirement
+    source: "owner message 2026-11-13 (\"an already caught problem should not reappear\")"
+    priority: P0
+    status: active
+    implementation_path: "readme_findings.regression_rows + is_refuted (evidence beginning REFUTED); readme/validation/must_correct.py::must_correct_failures holds a candidate to its lane's rows, OPEN keeping the citation instruction, RESOLVED re-printed handed the stored truth"
+    acceptance: "tests: a resolved row's quote reappearing fails, a refuted row does not, Lane L only on lane_l rows; R10 gate OK; integrated on main"
+    evidence:
+      - "tests/readme/validation/test_must_correct.py (resolved/refuted/lane tests) pass on branch lane-r-false-claims"
+      - "register holds 0 RESOLVED non-refuted rows (2 RESOLVED, both REFUTED Email .NET 26.7.0), so no certified seal newly fails from this change; R10 gate run recorded in the BL-003 investigation"
+    next_action: "integrate"
+
+  - id: BL-073
+    title: "Register auto-fill — confirmed fact-check findings written to the register by the hosted pipeline (bot, with evidence), never curated by hand"
+    type: requirement
+    source: "owner message 2026-11-13 (\"These registers must be auto filled\")"
+    priority: P0
+    status: open
+    implementation_path: "the independent fact-check that found the BL-003 105 becomes a hosted pipeline stage after sealing: reuse the hosted M9 auditor / independent reviewer (scripts/run_m9_auditor.py, R37 exception) with source access and renderer-printed lines in scope; deterministic re-verification of each finding where possible (symbol/member/accessor/visibility/registry probes); confirmed rows written through readme_findings.import_review (exact-quote, occurrence-checked) to a bot-writable store — main is protected, so a state ref (refs/repository-presenter-state/findings) or a register mirrored from it — which BC-18 reads"
+    acceptance: "a hosted run on a new Lane R seal writes confirmed rows with evidence to the bot store without a human step; BC-18 on the next run reads them; no row without an exact, uniquely-printed quote; refuted findings recorded REFUTED"
+    evidence: ["manual precedent: docs/investigations/2026-11-13-lane-r-false-claim-review.md (5 agents, 105 findings, 68 registered by the importer)"]
+    next_action: "design: store location (state ref) + reader in readme_findings.read_findings"
+
+  - id: BL-074
+    title: "Class generalisation — each confirmed finding class becomes a deterministic check so it cannot recur in other repositories"
+    type: requirement
+    source: "owner message 2026-11-13 (\"an already caught problem should not reappear\")"
+    priority: P0
+    status: open
+    implementation_path: "for every class in docs/investigations/2026-11-13-lane-r-false-claim-review.md (K01-K10; K11 via BL-002, K12 via BL-004) a deterministic rule in readme/validation (surface_claims/claims/structure) or a fact-model fix (BL-061..BL-070), each proven by a test from the real failing shape, then run portfolio-wide (all seals) through recertify"
+    acceptance: "each class has a named check id and a regression test; a portfolio scan reports every other repository's instances; R10 gate OK with justifications"
+    evidence: []
+    next_action: "start with K02/K03/K05 (Pareto: 43 of 68 registered rows)"
+    depends_on: [BL-062, BL-063, BL-064, BL-065, BL-066]

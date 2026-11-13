@@ -1,0 +1,176 @@
+{
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
+  "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+  "seal": "e8cc8cca4d3a6c9a4643800f267d8ed6837ad22b",
+  "readme": "git show e8cc8cca4d3a:59125b4732df0eedbc4d4c2ab978698ed4348eb7/README.md",
+  "items": [
+    {
+      "quote": "exposes a read-only `ValidationIssues` list on loaded messages and MSG documents to report structural anomalies encountered during strict parsing",
+      "verdict": "FALSE",
+      "truth": "ValidationIssues exists on MsgReader and MapiMessage (not MsgDocument), and issues are only collected in non-strict mode; with strict=true the reader throws MsgException instead of recording an issue.",
+      "evidence": "src/Aspose.Email.Foss/Msg/MsgReader.cs:43,226-231,237-242@59125b4732df0eedbc4d4c2ab978698ed4348eb7; src/Aspose.Email.Foss/Msg/MsgDocument.cs:6-25@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "Key Capabilities",
+      "index": 0,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "the methods AddAttachment, AddEmbeddedMessageAttachment, AddRecipient, AttachMethodByValue, AttachMethodEmbedded, and AttachMethodStorage",
+      "verdict": "FALSE",
+      "truth": "AttachMethodByValue, AttachMethodEmbedded and AttachMethodStorage are public const int fields (values 1, 5, 6), not methods.",
+      "evidence": "src/Aspose.Email.Foss/Msg/MapiMessage.cs:52-54@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference (Core API table)",
+      "index": 1,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": true
+    },
+    {
+      "quote": "Aspose.Email.Foss.Cfb.DirectoryEntry is a public symbol that exposes the properties IsRoot, IsStorage, and IsStream.",
+      "verdict": "FALSE",
+      "truth": "On DirectoryEntry, IsStorage(), IsStream() and IsRoot() are methods; the record's actual properties are StreamId, Name, ObjectType, ChildId, StreamSize, etc. (the README's own later table correctly calls them methods).",
+      "evidence": "src/Aspose.Email.Foss/Cfb/DirectoryEntry.cs:3-23@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference (Core API table)",
+      "index": 2,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": true
+    },
+    {
+      "quote": "the methods AddStorage, AddStream, and Children.",
+      "verdict": "FALSE",
+      "truth": "CfbStorage.Children is a get-only IList<CfbNode> property, not a method.",
+      "evidence": "src/Aspose.Email.Foss/Cfb/CfbStorage.cs:10@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference (Core API table)",
+      "index": 3,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": true
+    },
+    {
+      "quote": "exposes the constructors CfbDocument, FromFile, FromReader, FromStream",
+      "verdict": "MISLEADING",
+      "truth": "FromFile, FromReader and FromStream are static factory methods; CfbDocument's only constructors are CfbDocument() and CfbDocument(CfbStorage root, ...). CfbReader's row repeats the same mislabeling of FromFile/FromStream.",
+      "evidence": "src/Aspose.Email.Foss/Cfb/CfbDocument.cs:5,10,26,37,43@59125b4732df0eedbc4d4c2ab978698ed4348eb7; src/Aspose.Email.Foss/Cfb/CfbReader.cs:51,91,93@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference (Core API table)",
+      "index": 4,
+      "root_cause": "K03_MEMBER_KIND_ACCESSOR",
+      "reverified": false
+    },
+    {
+      "quote": "`CfbReader` enables direct inspection and manipulation of the underlying structured storage format",
+      "verdict": "MISLEADING",
+      "truth": "CfbReader is read-only (getters, Iter*/Find/Get methods); building or modifying CFB containers happens through CfbDocument/CfbStorage/CfbStream and CfbWriter.",
+      "evidence": "src/Aspose.Email.Foss/Cfb/CfbReader.cs:65-195@59125b4732df0eedbc4d4c2ab978698ed4348eb7; src/Aspose.Email.Foss/Cfb/CfbWriter.cs:7,13@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference",
+      "index": 5,
+      "root_cause": "K02_BEHAVIOR_BEYOND_CODE_PATH",
+      "reverified": false
+    },
+    {
+      "quote": "see [Dependencies](#dependencies) below for the full required, native, and",
+      "verdict": "FALSE",
+      "truth": "The Dependencies section comes earlier in the README (before Quick Start), not below Development and Testing.",
+      "evidence": "README section order: ## Dependencies precedes ## Development and Testing",
+      "section": "Development and Testing",
+      "index": 6,
+      "root_cause": "K08_MAINTAINER_PROSE_UNVERIFIED",
+      "reverified": true
+    },
+    {
+      "quote": "runs on Windows, Linux, macOS, Docker containers, and\nserverless functions",
+      "verdict": "UNSUPPORTED",
+      "truth": "The repository only declares TargetFramework net8.0; it has no CI, tests or documentation for any specific OS, Docker or serverless host.",
+      "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:3@59125b4732df0eedbc4d4c2ab978698ed4348eb7 (no CI/workflow files exist at the revision)",
+      "section": "Development and Testing",
+      "index": 7,
+      "root_cause": "K08_MAINTAINER_PROSE_UNVERIFIED",
+      "reverified": true
+    },
+    {
+      "quote": "(confirmed against the library's own\n`.csproj`, which is what NuGet actually built and published from):",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is verification and analysis commentary that does not belong in a public README; it also ends in a colon with no content after it. The package was published as 26.7.0 while the csproj says 0.1.0, so the 'built and published from' assertion cannot be confirmed either.",
+      "evidence": "src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:5@59125b4732df0eedbc4d4c2ab978698ed4348eb7; https://api.nuget.org/v3-flatcontainer/aspose.email.foss/index.json versions=[26.7.0]",
+      "section": "Development and Testing",
+      "index": 8,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "Or add it directly to a project file:",
+      "verdict": "MISPLACED",
+      "truth": "This orphaned installation fragment sits in Development and Testing with no PackageReference snippet after it.",
+      "evidence": "README Development and Testing section (no code block follows the line)",
+      "section": "Development and Testing",
+      "index": 9,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "A few more real, runnable patterns beyond the Quick Start example above.",
+      "verdict": "MISPLACED",
+      "truth": "This is an introductory sentence placed at the end of the collapsed examples block, after the only example it introduces; 'real, runnable' reads as generator wording.",
+      "evidence": "README Additional Examples <details> block",
+      "section": "Additional Examples",
+      "index": 10,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "The verified public surface has 29 types.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "The count of 29 public top-level types is correct, but 'verified' is internal analysis wording.",
+      "evidence": "grep of public class/enum/record across src/Aspose.Email.Foss/**/*.cs@59125b4732df0eedbc4d4c2ab978698ed4348eb7 = 29 distinct types",
+      "section": "API Reference",
+      "index": 11,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "Aspose.Email.Foss.Msg.MsgStorageRole is a public symbol.",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is a placeholder description with no content; MsgStorageRole is an enum classifying storages (Generic, Message, Recipient, Attachment, ...). The whole Core API table repeats the generator template 'is a public symbol that exposes'.",
+      "evidence": "src/Aspose.Email.Foss/Msg/MsgStorageRole.cs:3-8@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference (Enumerations)",
+      "index": 12,
+      "root_cause": "K11_INTERNAL_WORDING",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "Documentation & Resources provides links to the public API summary, changelog, and issue tracker",
+      "verdict": "INTERNAL_WORDING",
+      "truth": "This is a self-referential bullet that links the section to itself and describes it in generator wording.",
+      "evidence": "README Documentation & Resources section, first bullet links #documentation--resources",
+      "section": "Documentation & Resources",
+      "index": 13,
+      "root_cause": "K10_PIPELINE_TEMPLATE_TEXT",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-002 internal wording)"
+    },
+    {
+      "quote": "- **[Getting started guide](https://docs.aspose.org/email/net/)** — installation, walkthroughs, and feature guides for this library.",
+      "verdict": "MISPLACED",
+      "truth": "This resource-link list (docs, KB, reference, PUBLIC_API, Changelog, issues) sits inside Scope and Limitations between the limitations and the Enterprise paragraph, and duplicates the Documentation & Resources section.",
+      "evidence": "README Scope and Limitations section",
+      "section": "Scope and Limitations",
+      "index": 14,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    },
+    {
+      "quote": "### Foss",
+      "verdict": "MISPLACED",
+      "truth": "A stray H3 heading 'Foss' (a namespace fragment) sits under 'Detailed Member Reference' and makes the heading hierarchy inconsistent; no namespace named just 'Foss' contains the types (they are in Aspose.Email.Foss.Cfb and Aspose.Email.Foss.Msg).",
+      "evidence": "src/Aspose.Email.Foss/Cfb/CfbReader.cs:5@59125b4732df0eedbc4d4c2ab978698ed4348eb7; src/Aspose.Email.Foss/Msg/MapiMessage.cs (namespace Aspose.Email.Foss.Msg)@59125b4732df0eedbc4d4c2ab978698ed4348eb7",
+      "section": "API Reference",
+      "index": 15,
+      "root_cause": "K12_PLACEMENT_DUPLICATION",
+      "reverified": false,
+      "skip_reason": "deterministic class (BL-004 placement)"
+    }
+  ]
+}
