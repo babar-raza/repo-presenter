@@ -3,7 +3,16 @@
   "schema_version": 1,
   "seals": [
     {
-      "commit": "1ca74225616a599276844f518b8ddb2921dea20e",
+      "commit": "fa996859550e0fa0e673dd20e247ce5e6823c114",
+      "failing_checks": [],
+      "lane": "L",
+      "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
+      "revision": "52b0f00ebf28a0b4173921725ff170685ec2c502"
+    },
+    {
+      "commit": "3400c694185b4e1205aeb1a8fedf7914c3c4fa49",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -12,7 +21,7 @@
       "revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3"
     },
     {
-      "commit": "ace3de13f6d35c3f28325e35f01ce35964184207",
+      "commit": "62a32156886a5680eb53c57700b28089da7993c7",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -21,7 +30,7 @@
       "revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02"
     },
     {
-      "commit": "7c4bfca28916fae7afdd942873bb199de6c571b4",
+      "commit": "5b22a2676f080dac312f4a4f67e1fa1404e98e72",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -30,7 +39,7 @@
       "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
     },
     {
-      "commit": "7e431a56a850ca690c4966d5ed6e35b87f9c513a",
+      "commit": "0fb1b76c73c1bb6dc2fef14a2caa53c92e06ec71",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -39,16 +48,28 @@
       "revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151"
     },
     {
-      "commit": "36cd4ab654d88e67b2943e861ec1668945db9734",
+      "commit": "378b258d71b8ab9e5f0a1234a896efbcb494f2b0",
       "failing_checks": [],
-      "lane": "R",
+      "lane": "L",
       "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+      "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
+    },
+    {
+      "commit": "d36d92f9ab68fb2789f273fbcdcbb96486240873",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-.NET, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Aspose.Cells FOSS for .NET provides core workbook and worksheet functionality through the `Aspose.Cells_FOSS.Workbook` c\" -- Workbook exposes only Worksheets, DefinedNames, Settings, Properties, DocumentProperties and LoadDiagnostics; charts live on Worksheet.Charts and workbook prote (evidence: src/Aspose.Cells_FOSS/Workbook.cs:26-142@f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
       "revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2"
     },
     {
-      "commit": "9d97c13db3fc8b1f11622411b8c1f4c5f069fb6b",
+      "commit": "0945eb8af6adb92ecbe77d439f729a092b8e4063",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -57,15 +78,14 @@
       "revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
     },
     {
-      "commit": "d0baa3b814077b68659984bcdce8e1d48e72ca44",
+      "commit": "e6583bda4b1cda69bd181aded96cea9f13b1e4a9",
       "failing_checks": [
-        "BC-02",
-        "BC-05",
-        "BC-17"
+        "BC-18"
       ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 8 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- **Read and write cell values and formulas.** It writes values of multiple types—including strings, integers, doubles, \" -- Cell::SetFormula (Aspose.Cells.Foss.Cpp/src/aspose/cells_foss/Cell.cpp:153) only normalizes and stores the text, and FormulaException is never thrown anywhere i (evidence: 6595098b7a1c7448.md). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
+      "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
       "revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2"
     },
@@ -74,8 +94,9 @@
       "failing_checks": [
         "BC-05",
         "BC-17",
-        "REVIEW:disposition_coverage"
+        "BC-18"
       ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Go, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Runnable programs for every capability live under `examples/`\" -- No example covers password encryption (SetPassword is not used anywhere under examples/), nor charts, pivot tables or conditional formatting. (evidence: examples/@99c789e9175f2b12ad82bafeeba148ddcc1367fb). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction. BC-05, BC-17 already failed before this change and are unchanged by it.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
@@ -83,7 +104,7 @@
       "revision": "99c789e9175f2b12ad82bafeeba148ddcc1367fb"
     },
     {
-      "commit": "8faa30ec22afb5d262f7de3745fb29802a738991",
+      "commit": "a2587ceba6be6b447a7aac24adfaabaf37c15e7e",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -92,50 +113,61 @@
       "revision": "c65329e7257b1311abb9686d7e4957a8cc002955"
     },
     {
-      "commit": "251d7dc3d70a1a0afc41d6da1f23ed9d3b25c066",
+      "commit": "39d74c6bc9f6ffffd0b567d837fb209d6c4a3a23",
       "failing_checks": [
-        "BC-05",
-        "BC-14",
-        "BC-17",
-        "REVIEW:claim_contradiction"
+        "BC-18"
       ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Java, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"controls workbook and worksheet protection with separate passwords for structure, windows, and revisions\" -- WorkbookProtection has boolean lock flags for structure/windows/revision but only two passwords (setWorkbookPassword and setRevisionsPassword); there is no wind (evidence: src/main/java/org/aspose/cells_foss/WorkbookProtection.java:15-29@c65329e7257b1311abb9686d7e4957a8cc002955). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
+      "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Java",
       "revision": "c65329e7257b1311abb9686d7e4957a8cc002955"
     },
     {
-      "commit": "781decb87147220e4790c25ab449be78e57d84d6",
+      "commit": "1b21d90660f20c3c6c9726460f2b7607ee4425a5",
       "failing_checks": [],
-      "lane": "R",
+      "lane": "L",
       "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+      "revision": "952317cad8db1880ed85be9814c24e9303930d49"
+    },
+    {
+      "commit": "3b23a122bb520b51fa60b88d7857d7b79e6a633b",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Python, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- **Format cells and ranges.** It applies styles to cells and ranges using the `Style`, `Font`, `RichTextRun`, `FillType\" -- FillType and TextAlignmentType are drawing-shape enums (ECMA a:spPr / a:pPr); cell fill and alignment use Style.set_fill_color/set_horizontal_alignment (string  (evidence: aspose/cells_foss/shape.py:55@952317cad8db1880ed85be9814c24e9303930d49). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
       "revision": "952317cad8db1880ed85be9814c24e9303930d49"
     },
     {
-      "commit": "430835d06267a67d20d296474cbda708bfe4a853",
-      "failing_checks": [
-        "SEAL"
-      ],
-      "lane": "L",
-      "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
-      "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
-      "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e"
-    },
-    {
-      "commit": "a5948abf8a1667b4c2880095a280926f2e4bbcf2",
+      "commit": "2b12ae2049542f588ab63114c075d55d242721cd",
       "failing_checks": [],
-      "lane": "R",
+      "lane": "L",
       "outcome": "RECERTIFIED",
       "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
       "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e"
     },
     {
-      "commit": "8aab4a6f6af104e9b2b118cce3c1a3f05240312c",
+      "commit": "9064a744b73f425f28c35430c09373ea3c134006",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-Rust, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- `count() -> usize`, `add(name) -> usize`\" -- src/Aspose.Cells_FOSS/WorksheetCollection.rs:107 add(&mut self, name) -> Result<usize, CellsError>, not bare usize as the README signature states. (evidence: e48a8478d7fd8690.md). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
+      "regenerations": 1,
+      "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Rust",
+      "revision": "1a6004af47b1ef15385f9d36d381a8172428cc7e"
+    },
+    {
+      "commit": "9d2d522547e0f7cc7f7b262f419fbff3bfdcefdb",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -144,19 +176,19 @@
       "revision": "fc186507e5b7124f4664aa6035f25cfd3112367d"
     },
     {
-      "commit": "f10b84af4eeb3c6fe01d719d1ea8f4984eeb0119",
+      "commit": "098d5af8fa90e9378952ab6601eb252c54318387",
       "failing_checks": [
-        "BC-05",
-        "BC-17"
+        "BC-18"
       ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 4 OPEN lane_r row(s) for aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Runnable examples for every major feature area are collected in\" -- examples/ has only cell_values, worksheet_management, styles, data_validation, auto_filter, export, hyperlinks, protection and html_export; no comments, conditi (evidence: examples/index.ts:1-9@fc186507e5b7124f4664aa6035f25cfd3112367d). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
+      "regenerations": 1,
       "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
       "revision": "fc186507e5b7124f4664aa6035f25cfd3112367d"
     },
     {
-      "commit": "b3513f7aa57f68dc345ab07bf2c59af12ab2599d",
+      "commit": "4dab36e46eaf07216a57047047970f88c5c5095c",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -165,16 +197,19 @@
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
     {
-      "commit": "2ccb4ecd8becc21a6ca1ad56e94f545f7318908a",
-      "failing_checks": [],
+      "commit": "550e60d915a54ec7cbddd2ea410bc9bf87c2f151",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 4 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-.Net, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"<PackageReference Include=\"Aspose.Email.Foss\" Version=\"26.7.0\" />\" -- Source package version is 0.1.0, contradicting README line 184. (evidence: src/Aspose.Email.Foss/Aspose.Email.Foss.csproj:5@59125b4732df0eedbc4d4c2ab978698ed4348eb7). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 3,
       "repository": "aspose-email-foss/Aspose.Email-FOSS-for-.Net",
       "revision": "59125b4732df0eedbc4d4c2ab978698ed4348eb7"
     },
     {
-      "commit": "7bc46258f96a1d5283084ce4921716955e483146",
+      "commit": "5449e7012c6c8d40de8efe0a488620231a2760bd",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -183,27 +218,40 @@
       "revision": "c844a467cf7f2503819b655f4d6ceaef91056c40"
     },
     {
-      "commit": "a294efedfbe397e5dc14e36761f979b19624b48e",
-      "failing_checks": [],
+      "commit": "82be36d40441399bd8b6b63a4c6928f0646364fe",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-Cpp, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"get(property_id, property_type) -> mapi_property\" -- mapi_property_collection::get returns a (const) mapi_property pointer (nullptr when missing), with property_type an optional parameter. (evidence: include/aspose/email/foss/msg/mapi_property_collection.hpp:~16@c844a467cf7f2503819b655f4d6ceaef91056c40). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
+      "regenerations": 0,
+      "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
+      "revision": "c844a467cf7f2503819b655f4d6ceaef91056c40"
+    },
+    {
+      "commit": "dc3fead2202597a96591d1904de1064dcd029ece",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 6 OPEN lane_r row(s) for aspose-email-foss/Aspose.Email-FOSS-for-Python, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- Requires Python 3.10 or later (`python_requires=\">=3.10\"` in `pyproject.toml`).\" -- pyproject.toml:10 uses `requires-python = \">=3.10\"`, not `python_requires`, so the README's named key is wrong. (evidence: 1cdfd286b08a92fb.md). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 0,
       "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
       "revision": "10a906b48c0c11005c4d93b524e4431901c9717c"
     },
     {
-      "commit": "08f1e7a31cacb8c3c93cc3140b4458771f004b53",
-      "failing_checks": [
-        "SOURCE"
-      ],
+      "commit": "daee51ca8f564da370dcad58798ee8f5428791f5",
+      "failing_checks": [],
       "lane": "L",
-      "outcome": "NEEDS_REPAIR",
+      "outcome": "RECERTIFIED",
       "regenerations": 0,
       "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
       "revision": "50f6f98037b78042c984689eed5b1ec6da500248"
     },
     {
-      "commit": "be2657db8703818e8159924869abacfbc8b9591a",
+      "commit": "2d7957eb9a35847c85c8b5c0fdcf3b1a472a21ae",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -212,16 +260,19 @@
       "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
     },
     {
-      "commit": "f1178bc649f5b7674bc81a1e1a569ac53de6efdb",
-      "failing_checks": [],
+      "commit": "39abc99f8442256bf02ccf45617941e76dc4e228",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-html-foss/Aspose.HTML-FOSS-for-Python, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- Form constraint validation (validity-state computation) and `HTMLImageElement.decode()` are present on the API surface\" -- HTMLInputElement._compute_validity_state computes valueMissing, typeMismatch, patternMismatch, tooLong/Short and range under/overflow, and HTMLFormElement.check (evidence: src/aspose_html/dom/html/_form_elements.py:939-985@bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 1,
       "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
       "revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11"
     },
     {
-      "commit": "1fa02f80336928a93a8b7abbdf48af11e811e35d",
+      "commit": "59edb6bf9b83899a8a16717e525d81d1fa38cd05",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -230,16 +281,19 @@
       "revision": "d947d11cc6b282443231c2025ee43bf974a335dd"
     },
     {
-      "commit": "0ff9bfba3a0fc8c2b4db0cca05340b5df560e50c",
-      "failing_checks": [],
+      "commit": "8ec0e80cff0d9756c6dd060dad0f105aaf463440",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 5 OPEN lane_r row(s) for aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- Frame count reflects only what the container itself records: it is a real, computed count for GIF, ICO, TIFF, and bund\" -- AVIF, HEIC and DICOM handlers construct ImageInfo without a frameCount, so FrameCount is null, not 1. (evidence: src/Aspose.Imaging.Foss/Formats/AvifFormatHandler.cs:28@d947d11cc6b282443231c2025ee43bf974a335dd (also HeicFormatHandler.cs:27, DicomFormatHandler.cs:89)). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
-      "outcome": "RECERTIFIED",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 4,
       "repository": "aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET",
       "revision": "d947d11cc6b282443231c2025ee43bf974a335dd"
     },
     {
-      "commit": "dbdc1985224ae051a2834436f69e44fd75eecbd1",
+      "commit": "9a2030ee4960788c8e90985d10cdee4e2d3be46e",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -248,19 +302,19 @@
       "revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
     },
     {
-      "commit": "42dbb54971d879cef53d29d3ef0d2385a5093113",
+      "commit": "f65f87084334624e40a6cea69a6d114f7aa8f6d6",
       "failing_checks": [
-        "BC-05",
-        "BC-17"
+        "BC-18"
       ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 7 OPEN lane_r row(s) for aspose-note-foss/Aspose.Note-FOSS-for-Python, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"### Export to PDF with Custom JPEG Quality by Creating `PdfSaveOptions` with `JpegQuality` and Passing It To `Document.S\" -- JpegQuality=90 has no effect; the value is never used by the PDF writer. (evidence: src/aspose/note/saving/pdf_writer.py:1743-1760@0fd1cf7bcadb279a6dd73ddcba3d5241376badd3). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
-      "regenerations": 0,
+      "regenerations": 1,
       "repository": "aspose-note-foss/Aspose.Note-FOSS-for-Python",
       "revision": "0fd1cf7bcadb279a6dd73ddcba3d5241376badd3"
     },
     {
-      "commit": "fcd99aa0df7bd59b4756d3c53fdea408d840e162",
+      "commit": "33b3901cfc5c1a17105b5db9d9e069c2b6843f68",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -269,7 +323,16 @@
       "revision": "5bc58466e703024671f0f6d843f2d37c397c8a0e"
     },
     {
-      "commit": "092a3ea8f794c4fec9e3562b3b7afa9dde6ce0dc",
+      "commit": "9f6cf50a5ceb7661c1b7268c709d44f0b3ecefe8",
+      "failing_checks": [],
+      "lane": "L",
+      "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
+      "revision": "02b0c0e44ca21bb1e4372676b41baa151f0baf1e"
+    },
+    {
+      "commit": "4b5dcaa204d7758a7fbf4c9214a7715bf8ccd88d",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -278,7 +341,7 @@
       "revision": "10a363830fea952c29df20fdb37d35ad3a881433"
     },
     {
-      "commit": "01b296d05b90b958797a4cc8a69a997f212bd588",
+      "commit": "45d0c6c9021cdbbf6e3224019f2e21d5ca873a13",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -291,8 +354,10 @@
       "failing_checks": [
         "BC-04",
         "BC-05",
-        "BC-17"
+        "BC-17",
+        "BC-18"
       ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 10 OPEN lane_r row(s) for aspose-pdf-foss/Aspose.PDF-FOSS-for-Java, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"- **Extract text and images.** It extracts text from PDF pages using `TextAbsorber` and saves images from a specific pag\" -- XImage.save writes the raw JPEG bytes for DCTDecode images without an SMask; only other images are converted to PNG. (evidence: src/main/java/org/aspose/pdf/XImage.java:167-185@736cedaa2922e4952f429364bdb9a4bbb1d97863). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction. BC-04, BC-05, BC-17 already failed before this change and are unchanged by it.",
       "lane": "R",
       "outcome": "NEEDS_REPAIR",
       "regenerations": 1,
@@ -300,16 +365,28 @@
       "revision": "736cedaa2922e4952f429364bdb9a4bbb1d97863"
     },
     {
-      "commit": "b4a1c6e154474c1fc9d6c48a3b63c40733d7d00e",
+      "commit": "a43ec25168a0e5c56b75dcaf9bffcee4fd315ff1",
       "failing_checks": [],
-      "lane": "R",
+      "lane": "L",
       "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
+      "revision": "b6f778e926aa6249a26d3fba7480a663beb3cdfc"
+    },
+    {
+      "commit": "36cfab57bfc6d32dc086954f0d70794449a0eccc",
+      "failing_checks": [
+        "BC-18"
+      ],
+      "justification": "BC-18: genuine defect, not a regression of the mechanism. data/readme_findings.json (a963daa, re-landed) holds 2 OPEN lane_r row(s) for aspose-psd-foss/Aspose.PSD-FOSS-for-.NET, each an independently confirmed false claim (exact quote, truth and evidence path); BC-18 finds this seal still printing them. First row: \"Each FOSS sample has a corresponding NuGet sample with identical `Program.cs`\" -- Basic sample Program.cs files differ in code (block namespace vs file-scoped, using block vs using var, nullable string?, extra using Aspose.PSD); only Layers,  (evidence: samples/Aspose.PSD.FOSS.Samples.Basic/Program.cs:9@b6f778e926aa6249a26d3fba7480a663beb3cdfc). R10: the seal is kept, not demoted or deleted; the next Lane R run's targeted repair (readme/repair/targeted.py, S4/S6) is handed each quote and truth as its instruction.",
+      "lane": "R",
+      "outcome": "NEEDS_REPAIR",
       "regenerations": 1,
       "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-.NET",
       "revision": "b6f778e926aa6249a26d3fba7480a663beb3cdfc"
     },
     {
-      "commit": "d03557eeef48e76391de54bfbdea398781a0e47a",
+      "commit": "e8891dcd1733ea5107698c5a5d0308355b430c2c",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -318,7 +395,7 @@
       "revision": "2271c228d991bcd79048bb61773bcbcb415399c6"
     },
     {
-      "commit": "7bae303ddcfcee9a61d2f5214c89359f33a99499",
+      "commit": "52e6262d4380605bec4f20656a479707f2a5ad39",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -327,7 +404,16 @@
       "revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b"
     },
     {
-      "commit": "4b8150fbef437805dab1772640fc28445859403a",
+      "commit": "3891dab12d4094953bf5d54b8a6b55a93695fd36",
+      "failing_checks": [],
+      "lane": "L",
+      "outcome": "RECERTIFIED",
+      "regenerations": 0,
+      "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+      "revision": "620a2614418854b4a18966a361e6907ddc88c7cb"
+    },
+    {
+      "commit": "800aecba48d83fecef9dc52511c3c5c8931f854a",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",
@@ -336,7 +422,7 @@
       "revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c"
     },
     {
-      "commit": "bf6d15e262ee45b6e70fdfaac5887627f72ab505",
+      "commit": "8f72d1cc23c99b819e0da7910fd8f0f3abad1282",
       "failing_checks": [],
       "lane": "L",
       "outcome": "RECERTIFIED",

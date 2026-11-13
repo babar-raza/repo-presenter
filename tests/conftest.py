@@ -90,6 +90,23 @@ def no_production_provider_budget_gate(monkeypatch: pytest.MonkeyPatch, tmp_path
 
 
 @pytest.fixture(autouse=True)
+def no_production_findings_register(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """2026-11-13: BC-18 (``readme/validation/must_correct.py``) reads, when a candidate names no
+    ``findings_path``, the real committed ``data/readme_findings.json`` -- which holds the
+    independently confirmed false claims in real Lane R seals (a963daa). Tests that use a real
+    seal as a fixture for unrelated behaviour (``tests/fixtures/recertify/email_net.json.gz`` is
+    the real Email .NET seal, which the register owes four corrections) would otherwise have their
+    outcome decided by today's register contents rather than by the behaviour under test. Every
+    test therefore gets, by default, an isolated register path nothing has written (an empty
+    register). BC-18 itself is unchanged: its own tests pass their register explicitly through
+    ``Candidate.findings_path``, which always wins over this default, and the live checks that run
+    as subprocesses (``ops/checks/*``) still read the real register."""
+    from repo_presenter.readme.validation import must_correct
+
+    monkeypatch.setattr(must_correct, "DEFAULT_FINDINGS_PATH", tmp_path / "isolated_readme_findings.json")
+
+
+@pytest.fixture(autouse=True)
 def no_ambient_github_run_id(monkeypatch: pytest.MonkeyPatch) -> None:
     """2026-11-04 (P0 follow-up directive section 3, second real hosted-CI-only failure, found
     AFTER the GITHUB_ACTIONS fix above did not actually resolve it): the real hosted runner also
