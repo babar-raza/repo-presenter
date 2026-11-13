@@ -40,6 +40,27 @@
   "lane": "L",
   "residuals": [
     {
+      "detail": "the README says `Entity` derives from `Mesh` ('Scene is the primary entry point: Scene.open()/Scene.save() load and write a scene graph built from Node objects, each of which holds a Transform, an optional Mesh-derived Entity, and zero or more Material instances.'), but its declared bases are SceneObject",
+      "kind": "claim_contradiction",
+      "line": 384,
+      "quote": "`Scene` is the primary entry point: `Scene.open()`/`Scene.save()` load and write a scene graph\nbuilt from `Node` objects, each of which holds a `Transform`, an ",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README describes `Material` as offering what `Material.get_texture` would do, but implementation:throws.aspose.threed.shading.material.get_texture.body.notimplementederror states that member only raises a not-implemented exception (a stub): describe it as not implemented or omit it",
+      "kind": "claim_contradiction",
+      "line": 523,
+      "quote": "| `Material` | Material class lets you manage texture maps and custom properties, supporting specular, diffuse, emissive, ambient, and normal maps. |",
+      "rule": "claim_contradiction"
+    },
+    {
+      "detail": "the README describes `Scene` as offering what `Scene.render` would do, but implementation:throws.aspose.threed.scene.render.body.notimplementederror states that member only raises a not-implemented exception (a stub): describe it as not implemented or omit it",
+      "kind": "claim_contradiction",
+      "line": 602,
+      "quote": "| `Scene` | The Scene class provides a high‑level API for loading, saving, rendering, and animating 3D content. |",
+      "rule": "claim_contradiction"
+    },
+    {
       "detail": "the README describes `FbxExporter` as working ('| FbxExporter | FbxExporter.save saves the given Scene to a file path using specified FbxSaveOptions.'), but inherited_unit:067.list states `FbxExporter.save` only throws (a stub): describe it as not implemented or omit it",
       "kind": "claim_contradiction",
       "line": 471,
