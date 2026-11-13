@@ -406,6 +406,16 @@ def _drive_restore(
     return settled, result
 
 
+def _unchanged(result: Any, settled: Any) -> bool:
+    """A discarded restore leaves the candidate exactly as it was (only the record of which units it
+    could not keep is added, for ``_without_restorable``)."""
+    return (
+        result.composed is settled.composed
+        and result.validation is settled.validation
+        and result.verdict is settled.verdict
+    )
+
+
 def test_a_partial_restore_that_clears_two_of_three_items_and_adds_none_is_kept(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
@@ -423,7 +433,7 @@ def test_a_restore_that_introduces_a_new_failing_check_is_discarded(
 ) -> None:
     after = [_bc17("3"), _check("BC-07", "refers to a 'X below' section this README does not have")]
     settled, result = _drive_restore(monkeypatch, tmp_path, [_bc17("1", "2", "3")], after)
-    assert result is settled
+    assert _unchanged(result, settled)
     assert not (tmp_path / "restored_units.json").exists()
 
 
@@ -431,7 +441,7 @@ def test_a_restore_that_changes_an_item_without_clearing_any_is_discarded(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     settled, result = _drive_restore(monkeypatch, tmp_path, [_bc17("1", "2")], [_bc17("1", "9")])
-    assert result is settled
+    assert _unchanged(result, settled)
 
 
 def test_a_partial_restore_with_a_new_blocking_review_finding_is_discarded(
@@ -440,7 +450,7 @@ def test_a_partial_restore_with_a_new_blocking_review_finding_is_discarded(
     settled, result = _drive_restore(
         monkeypatch, tmp_path, [_bc17("1", "2")], [_bc17("2")], review_blocking=1
     )
-    assert result is settled
+    assert _unchanged(result, settled)
 
 
 def test_a_restore_that_does_not_shrink_the_failures_is_discarded(
@@ -448,7 +458,7 @@ def test_a_restore_that_does_not_shrink_the_failures_is_discarded(
 ) -> None:
     same = [_bc17("1", "2")]
     settled, result = _drive_restore(monkeypatch, tmp_path, same, same)
-    assert result is settled
+    assert _unchanged(result, settled)
 
 
 # --- a restorable loss is recovered even while a non-restorable check keeps failing ------------------
@@ -478,7 +488,7 @@ def test_a_restore_beside_bc02_is_discarded_when_it_adds_a_check(
     settled, result = _drive_restore(
         monkeypatch, tmp_path, [_check(*_BC02), _bc17("1", "2")], after
     )
-    assert result is settled
+    assert _unchanged(result, settled)
     assert not (tmp_path / "restored_units.json").exists()
 
 
@@ -487,7 +497,7 @@ def test_a_restore_beside_bc02_is_discarded_when_bc02_itself_grows(
 ) -> None:
     grown = _check(*_BC02, "install_command:cmake: a second unproven command")
     settled, result = _drive_restore(monkeypatch, tmp_path, [_check(*_BC02), _bc17("1")], [grown])
-    assert result is settled
+    assert _unchanged(result, settled)
 
 
 def test_a_restore_beside_bc02_that_clears_nothing_is_discarded(
@@ -495,4 +505,4 @@ def test_a_restore_beside_bc02_that_clears_nothing_is_discarded(
 ) -> None:
     same = [_check(*_BC02), _bc17("1", "2")]
     settled, result = _drive_restore(monkeypatch, tmp_path, same, same)
-    assert result is settled
+    assert _unchanged(result, settled)

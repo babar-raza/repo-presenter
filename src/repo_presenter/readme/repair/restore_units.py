@@ -247,6 +247,8 @@ def restore_lost_units(
     )
 
     output = copy.deepcopy(dict(dispositions))
+    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    unit_ids, payloads = _with_lead_in_payloads(unit_ids, units)
     before = {
         entry.get("unit_id"): (
             entry.get("disposition"), entry.get("destination_section"), entry.get("rationale"),
@@ -254,7 +256,6 @@ def restore_lost_units(
         )
         for entry in output.get("dispositions", [])
     }
-    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
     by_id = {fact.id: fact for fact in facts.facts}
     # A block that prints a source-build command no build proved is never restored: BC-02 refuses
     # the README that prints it, so restoring it would trade BC-05/BC-17 for BC-02 (S4 omits it on
@@ -352,6 +353,7 @@ def restore_lost_units(
             "Kept as the maintainers wrote it: the published README prints this content and the "
             "candidate would otherwise lose it (BC-17 / BC-05)."
         )
+    _follow_lead_ins(output, changes, payloads)
     if changes:
         # Only PLACED units are judged, and none of these was placed before, so none was flagged before.
         flagged = {unit for unit, _, _ in dangling_pointers(output, facts)}
@@ -378,6 +380,57 @@ def restore_lost_units(
                 )
             changes = [change for change in changes if change["unit_id"] not in pointed]
     return output, changes
+
+
+_LEAD_IN_KINDS = frozenset({"paragraph", "list"})
+
+
+def _with_lead_in_payloads(
+    unit_ids: Sequence[str], units: Mapping[str, Any]
+) -> tuple[list[str], dict[str, str]]:
+    """``unit_ids`` plus the block each colon-ending lead-in among them introduces, and
+    ``{payload: lead-in}`` for every such pair. A lead-in kept without its block is BC-07's dangling
+    colon ("ends with a colon but nothing follows it before the next heading"), which the restore
+    guard reads as a new failing check and discards the whole restore: measured on
+    Aspose.Words-FOSS-for-.NET run 43411924300, ``082.paragraph`` ("If Aspose.Words FOSS looks useful
+    to you:") restored without the ``083.list`` it introduces. ``reconciliation.dispositions``'
+    ``coordinate_neighbor_promises`` keeps the same pair together at S4."""
+    from repo_presenter.readme.reconciliation.dispositions import _payload_of
+
+    wanted = list(unit_ids)
+    payloads: dict[str, str] = {}
+    for unit_id in list(wanted):
+        fact = units.get(unit_id)
+        if fact is None or unit_id.rsplit(".", 1)[-1] not in _LEAD_IN_KINDS:
+            continue
+        if not str(fact.value).rstrip().endswith(":"):
+            continue
+        payload = _payload_of(unit_id, units)
+        if payload is None:
+            continue
+        payloads[payload] = unit_id
+        if payload not in wanted:
+            wanted.append(payload)
+    return wanted, payloads
+
+
+def _follow_lead_ins(
+    output: Mapping[str, Any], changes: list[dict[str, str]], payloads: Mapping[str, str]
+) -> None:
+    """A payload this pass kept lands in its lead-in's section, so the two print together."""
+    entries = {str(entry.get("unit_id")): entry for entry in output.get("dispositions", [])}
+    changed = {change["unit_id"]: change for change in changes}
+    for payload, lead in payloads.items():
+        block, lead_entry = entries.get(payload), entries.get(lead)
+        if block is None or lead_entry is None or payload not in changed:
+            continue
+        if lead_entry.get("disposition") not in PLACED:
+            continue
+        target = lead_entry.get("destination_section")
+        if not target or block.get("destination_section") == target:
+            continue
+        block["destination_section"] = target
+        changed[payload]["now"] = f"{block.get('disposition')} -> {target}"
 
 
 def vacated_sections(changes: Sequence[Mapping[str, str]]) -> dict[str, set[str]]:
