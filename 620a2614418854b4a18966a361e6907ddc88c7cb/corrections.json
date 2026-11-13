@@ -1,0 +1,87 @@
+{
+  "confinement": {
+    "edits": 2,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "8b4dce19d259fbb1b51c94071ac6be95c46df6b134dcafaa7a2c38a58a8c5149",
+  "edits": [
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 39592,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/slides/java/"
+        }
+      ],
+      "index": 0,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 710,
+      "original": "the commercial Aspose.Slides for Java product",
+      "rationale": "line 710 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Slides for Java product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Slides for Java — Enterprise Edition",
+      "start": 39547
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 42635,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/slides/java/"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 754,
+      "original": "the commercial product",
+      "rationale": "line 754 names the aspose.com product with a substitute for its proper name ('the commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Slides for Java — Enterprise Edition",
+      "start": 42613
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "3214273b7d93fba58606e85e8a43238508e0c593d509dc161080a43a3fc9da81",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+  "schema_version": 1,
+  "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "FALSE_CLAIM_FIX": 2
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:output.ppt"
+      ],
+      "line": 39,
+      "reason": "the README marks 'PPTX' supported; format:output.ppt is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"An existing PPTX presentation\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [
+        "format:output.ppt"
+      ],
+      "line": 61,
+      "reason": "the README marks 'PPTX' supported; format:output.ppt is on record as UNRESOLVED, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"A PPTX presentation\"]"
+    }
+  ]
+}
