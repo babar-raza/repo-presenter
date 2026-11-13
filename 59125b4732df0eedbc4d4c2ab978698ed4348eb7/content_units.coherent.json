@@ -1,167 +1,334 @@
 {
   "coherence": {
     "applied": true,
-    "revised": []
+    "revised": [
+      "documentation_resources/link:link_target:025"
+    ]
   },
   "omitted": [
     {
+      "fact_id": "identity:ecosystem",
+      "reason": "Ecosystem identity is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Family identity is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "Platform identity is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Knowledge refresh metadata is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
       "fact_id": "identity:repository",
-      "reason": "Repository name is not part of the opening description of what the product does.",
+      "reason": "Repository identity is not used in the opening unit's description of product actions.",
       "section": "opening"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "Revision hash is not part of the opening description of what the product does.",
+      "reason": "Revision identity is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Package name is not used in the opening unit's description of product actions.",
       "section": "opening"
     },
     {
       "fact_id": "package:published_version",
-      "reason": "Published version is not stated in the opening; only runtime target framework is relevant to capabilities.",
+      "reason": "Published version is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:target_framework",
+      "reason": "Target framework is not used in the opening unit's description of product actions.",
       "section": "opening"
     },
     {
       "fact_id": "package:version",
-      "reason": "Package version is not stated in the opening; only runtime target framework is relevant to capabilities.",
+      "reason": "Package version is not used in the opening unit's description of product actions.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "license:spdx",
+      "reason": "License identifier is not used in the opening unit's description of product actions.",
       "section": "opening"
     },
     {
       "fact_id": "dependency:none",
-      "reason": "Dependency absence is not stated in the opening; it is covered in a separate dependencies section.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "install_command:dotnet",
-      "reason": "Install command is not part of the opening description of what the product does.",
+      "reason": "Dependency information is not used in the opening unit's description of product actions.",
       "section": "opening"
     },
     {
       "fact_id": "public_symbol:aspose.email.foss",
-      "reason": "Public symbol name is not stated in the opening; the product name is used instead.",
+      "reason": "Public symbol identity is not used in the opening unit's description of product actions.",
       "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:016.paragraph",
-      "reason": "Inherited unit describes platform support and dependencies, not the core actions of reading, writing, and converting formats.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:004.paragraph",
-      "reason": "This inherited unit provides general product description and is not a core capability; it is covered by the opening summary and omitted from capability units.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:008.code_block",
-      "reason": "This inherited unit is a Mermaid diagram and is handled by the renderer; it is not a prose capability unit.",
-      "section": "key_capabilities"
     },
     {
       "fact_id": "inherited_unit:010.list",
-      "reason": "This inherited unit is a bulleted list of capabilities and is handled by the renderer; its items are covered individually in the capability units.",
+      "reason": "The list is a source of facts for multiple capability units; its items are cited individually in the appropriate units and not repeated as a standalone unit.",
       "section": "key_capabilities"
     },
     {
-      "fact_id": "inherited_unit:029.paragraph",
-      "reason": "Redundant with the preview unit's purpose; the preview states the examples without quoting the source.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:030.heading",
-      "reason": "A heading label, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:031.code_block",
-      "reason": "A code block, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:033.heading",
-      "reason": "A heading label, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:034.code_block",
-      "reason": "A code block, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:035.heading",
-      "reason": "A heading label, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:036.paragraph",
-      "reason": "Describes CfbReader usage but is redundant with the example:004 unit; omitted to avoid repetition.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:037.code_block",
-      "reason": "A code block, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:043.table",
-      "reason": "A table of API members, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
-    },
-    {
       "fact_id": "identity:ecosystem",
-      "reason": "Platform identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Not needed in quick start lead-in sentences; ecosystem identity is implied by target framework and package.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:family",
-      "reason": "Family identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Not needed in quick start lead-in sentences; family identity is implied by package name and example actions.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:platform",
-      "reason": "Platform identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Not needed in quick start lead-in sentences; platform identity is implied by target framework and package.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Provenance metadata only; not relevant to user-facing quick start descriptions.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "Repository identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Provenance metadata only; not relevant to user-facing quick start descriptions.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "Revision identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Provenance metadata only; not relevant to user-facing quick start descriptions.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:name",
-      "reason": "Package identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Package name appears in rendered code block; prose need not repeat it.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:published_version",
-      "reason": "Version identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Version appears in rendered code block; prose need not repeat it.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:target_framework",
-      "reason": "Target framework identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Target framework appears in rendered code block; prose need not repeat it.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:version",
-      "reason": "Version identity, not a capability or fact value; omitted per prose rules.",
-      "section": "additional_examples"
+      "reason": "Version appears in rendered code block; prose need not repeat it.",
+      "section": "quick_start"
     },
     {
-      "fact_id": "inherited_unit:021.list",
-      "reason": "Its content is incorporated directly into limitation:4.",
-      "section": "scope_limitations"
+      "fact_id": "inherited_unit:027.code_block",
+      "reason": "Provenance for renderer; not used in prose.",
+      "section": "quick_start"
     },
     {
-      "fact_id": "inherited_unit:057.list",
-      "reason": "Its content is incorporated directly into limitation:1, limitation:2, and limitation:3.",
-      "section": "scope_limitations"
+      "fact_id": "inherited_unit:040.paragraph",
+      "reason": "Cited in rendered document but not used to write any unit; contains summary text about the public surface that is not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:044.heading",
+      "reason": "Cited in rendered document but not used to write any unit; a heading label that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:047.heading",
+      "reason": "Cited in rendered document but not used to write any unit; a heading label that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:048.001.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of CfbReader members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:048.002.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of CfbWriter members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:048.003.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of CfbDocument members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:049.heading",
+      "reason": "Cited in rendered document but not used to write any unit; a heading label that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:050.001.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MsgReader members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:050.002.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MsgWriter members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:050.003.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MsgDocument members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:050.004.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MsgStorage members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:051.heading",
+      "reason": "Cited in rendered document but not used to write any unit; a heading label that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:052.001.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MapiMessage members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:052.002.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MapiAttachment members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:052.003.list",
+      "reason": "Cited in rendered document but not used to write any unit; a list of MapiPropertyCollection members that the renderer handles.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "Cited in rendered document but not used to write any unit; ecosystem identity not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Cited in rendered document but not used to write any unit; family identity not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "Cited in rendered document but not used to write any unit; platform identity not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Cited in rendered document but not used to write any unit; product knowledge refresh metadata not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Cited in rendered document but not used to write any unit; repository identity not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Cited in rendered document but not used to write any unit; revision identity not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Cited in rendered document but not used to write any unit; package name not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Cited in rendered document but not used to write any unit; published version not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:target_framework",
+      "reason": "Cited in rendered document but not used to write any unit; target framework not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Cited in rendered document but not used to write any unit; package version not required for the intro or hub unit.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "Ecosystem identity is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Family identity is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Knowledge refresh metadata is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Revision metadata is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Package name is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Published version is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Package version is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:012.paragraph",
+      "reason": "Inherited paragraph about NuGet package ID is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:014.paragraph",
+      "reason": "Inherited paragraph about direct package addition is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:016.paragraph",
+      "reason": "Inherited paragraph about runtime targets and platforms is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:019.paragraph",
+      "reason": "Inherited paragraph about zero dependencies is not relevant to toolchain or requirements description.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:061.code_block",
+      "reason": "Code block is rendered verbatim by the renderer and must not be repeated in prose.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:063.code_block",
+      "reason": "Code block is rendered verbatim by the renderer and must not be repeated in prose.",
+      "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:065.paragraph",
-      "reason": "The license information is unrelated to the commercial product's additional capabilities and does not belong in the enterprise relationship context sentence.",
+      "reason": "The license statement is unrelated to the commercial product's additional capabilities and does not belong in this context sentence.",
       "section": "enterprise_relationship"
     }
   ],
@@ -173,25 +340,20 @@
         "example:002",
         "example:003",
         "example:004",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "package:name",
-        "package:target_framework"
+        "inherited_unit:008.code_block"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Email FOSS for .Net reads and writes MSG and EML email formats, and inspects CFB container structures. It converts EML messages to MSG format and back, and loads MSG files from streams or saves them to streams. It reads sector size and directory entry information from CFB files such as MSG containers."
+      "text": "Aspose.Email FOSS for .Net reads and writes CFB containers and MSG documents. It converts between EML and MSG formats through a built-in MIME implementation. It supports high-level message creation, editing, and property access, and provides low-level access to CFB structure."
     },
     {
       "fact_ids": [
         "example:001",
-        "example:002",
         "public_symbol:aspose.email.foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It reads Outlook MSG files from streams or files using MapiMessage.FromStream and writes them back with Save, preserving MAPI property streams, recipient storages, and attachment sub-storages."
+      "text": "It reads MSG files from streams or files using MapiMessage.FromStream and writes them back with Save, preserving MAPI structure and metadata."
     },
     {
       "fact_ids": [
@@ -200,7 +362,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It creates new messages in memory with MapiMessage.Create, sets SenderName and SenderEmailAddress, adds recipients with AddRecipient, and attaches files with AddAttachment before saving to disk."
+      "text": "It creates new messages with MapiMessage.Create, sets sender and recipient details, attaches files via streams, and saves the result as a complete MSG file."
     },
     {
       "fact_ids": [
@@ -209,7 +371,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It converts EML files to MSG using MapiMessage.LoadFromEml and back to EML using SaveToEml, implementing native MIME parsing and serialization without external dependencies."
+      "text": "It converts EML files to MSG using MapiMessage.LoadFromEml and writes them back to EML format with SaveToEml, using native parsing without external dependencies."
     },
     {
       "fact_ids": [
@@ -218,7 +380,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It opens Compound File Binary containers with CfbReader.FromFile, exposes sector size and directory entry count, and iterates the internal tree structure with IterTree to inspect nested storages and streams."
+      "text": "It opens CFB containers from files with CfbReader.FromFile, reports sector size and directory entry count, and iterates the internal tree structure depth-first."
     },
     {
       "fact_ids": [
@@ -226,7 +388,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It reads and writes arbitrary MAPI properties on messages using SetProperty and GetPropertyValue, beyond the strongly-typed properties MapiMessage exposes directly."
+      "text": "It reads and writes arbitrary MAPI properties on messages using SetProperty and GetPropertyValue, beyond the strongly-typed properties exposed directly by MapiMessage."
     },
     {
       "fact_ids": [
@@ -235,76 +397,48 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It adds recipients with AddRecipient and attaches files or nested embedded messages with AddAttachment and AddEmbeddedMessageAttachment, supporting both external files and in-memory content."
+      "text": "It adds recipients with AddRecipient and attaches files or embedded messages using AddAttachment and AddEmbeddedMessageAttachment, supporting in-memory streams."
     },
     {
       "fact_ids": [
-        "example:001",
-        "package:published_version",
-        "package:target_framework"
+        "public_symbol:aspose.email.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It exposes a read-only ValidationIssues list on loaded messages and MSG documents to report structural anomalies encountered during strict parsing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "It builds CFB containers programmatically using CfbDocument, CfbStorage, and CfbStream, then serializes them to files or byte arrays with CfbWriter.WriteFile or CfbWriter.ToBytes."
+    },
+    {
+      "fact_ids": [
+        "example:001"
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "This example reads a MSG file and prints its subject line using Aspose.Email.Foss version 26.7.0 targeting net8.0."
-    },
-    {
-      "fact_ids": [
-        "example:002",
-        "example:003",
-        "example:004"
-      ],
-      "section": "additional_examples",
-      "slot": "preview",
-      "text": "Create and save an MSG message, convert EML to MSG, and inspect a CFB container's structure."
+      "text": "The first example reads a MSG file and prints its subject line using Aspose.Email.Foss version 26.7.0 for net8.0."
     },
     {
       "fact_ids": [
         "example:002"
       ],
-      "section": "additional_examples",
-      "slot": "workflow:example:002",
-      "text": "Create and save an MSG message with sender, recipient, and attachment."
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "The second example creates a new MSG file with a sender, recipient, attachment, and body, then saves it to disk using Aspose.Email.Foss version 26.7.0 for net8.0."
     },
     {
       "fact_ids": [
-        "example:003"
-      ],
-      "section": "additional_examples",
-      "slot": "workflow:example:003",
-      "text": "Convert an EML file to MSG and back to EML."
-    },
-    {
-      "fact_ids": [
-        "example:004"
-      ],
-      "section": "additional_examples",
-      "slot": "workflow:example:004",
-      "text": "Inspect the CFB structure of a MSG file."
-    },
-    {
-      "fact_ids": [
+        "example:003",
+        "example:004",
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:040.paragraph",
-        "package:name",
-        "package:published_version",
-        "package:target_framework",
-        "package:version",
-        "public_symbol:aspose.email.foss"
-      ],
-      "section": "api_reference",
-      "slot": "intro",
-      "text": "Aspose.Email FOSS for .Net provides high-level message handling through MapiMessage and lower-level access via CfbReader/CfbWriter and MsgReader/MsgWriter/MsgDocument, supporting the net8.0 target framework in version 0.1.0 of the package."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.email.foss",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
         "package:name",
@@ -312,33 +446,73 @@
         "package:target_framework",
         "package:version"
       ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "Additional workflows demonstrate converting EML to MSG and inspecting the CFB structure of MSG files."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Convert an EML file to MSG and back to EML using Aspose.Email FOSS for .Net."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
+        "package:version"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Inspect the CFB container structure of an MSG file using Aspose.Email FOSS for .Net."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email.foss.cfb.cfbreader",
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Email FOSS for .Net provides high-level message handling through MapiMessage and low-level CFB container access through CfbReader. MapiMessage serves as the primary entry point for creating, editing, and converting messages, while CfbReader enables direct inspection and manipulation of the underlying structured storage format."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss",
+        "public_symbol:aspose.email.foss.cfb.cfbreader",
+        "public_symbol:aspose.email.foss.msg.mapimessage"
+      ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.email.foss",
-      "text": "The Aspose.Email FOSS for .Net public symbol exposes MapiMessage as the primary entry point for creating, editing, and converting messages, while CfbReader/CfbWriter and MsgReader/MsgWriter/MsgDocument provide direct lower-level access to the Aspose.Email.Foss.Cfb and Aspose.Email.Foss.Msg namespaces."
+      "text": "The Aspose.Email.Foss package exposes MapiMessage for high-level message operations and CfbReader for low-level CFB container inspection, with MapiMessage built on top of the lower-level CfbReader and MsgReader APIs."
     },
     {
       "fact_ids": [
-        "link_target:020"
+        "link_target:016"
       ],
       "section": "documentation_resources",
-      "slot": "link:link_target:020",
-      "text": "The getting started guide covers installation, walkthroughs, and feature guides for this library."
-    },
-    {
-      "fact_ids": [
-        "link_target:021"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:021",
-      "text": "The how-to guides and FAQ provide task-focused answers for common MSG, CFB, and EML questions."
-    },
-    {
-      "fact_ids": [
-        "link_target:022"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:022",
-      "text": "The full API reference offers the complete, browsable reference for all 29 public types."
+      "slot": "link:link_target:016",
+      "text": "Documentation & Resources provides links to the public API summary, changelog, and issue tracker for Aspose.Email FOSS for .Net."
     },
     {
       "fact_ids": [
@@ -346,7 +520,7 @@
       ],
       "section": "documentation_resources",
       "slot": "link:link_target:023",
-      "text": "The public API summary lists the repository's own stable-namespace and primary-type list."
+      "text": "The public API summary in PUBLIC_API.md lists the namespaces and classes exposed by Aspose.Email FOSS for .Net."
     },
     {
       "fact_ids": [
@@ -354,7 +528,7 @@
       ],
       "section": "documentation_resources",
       "slot": "link:link_target:024",
-      "text": "The changelog documents the release history."
+      "text": "The changelog in CHANGELOG.md records version-specific changes and improvements for Aspose.Email FOSS for .Net."
     },
     {
       "fact_ids": [
@@ -362,15 +536,20 @@
       ],
       "section": "documentation_resources",
       "slot": "link:link_target:025",
-      "text": "Users can open an issue on GitHub to report bugs or request features."
+      "text": "Found a bug or have a feature request? Open an issue on GitHub."
     },
     {
       "fact_ids": [
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
+        "inherited_unit:021.list",
+        "inherited_unit:055.list",
+        "inherited_unit:057.list",
+        "install_command:dotnet",
         "package:name",
         "package:published_version",
         "package:target_framework",
@@ -378,54 +557,58 @@
       ],
       "section": "scope_limitations",
       "slot": "scope",
-      "text": "Aspose.Email FOSS for .Net reads and writes local email files in formats supported by the Aspose.Email.Foss package version 26.7.0 for the net8.0 target framework."
+      "text": "Aspose.Email FOSS for .Net reads and writes local email files in MSG, EML, and CFB formats; it does not connect to mail servers and provides no dedicated IMAP, SMTP, or POP3 functionality."
     },
     {
       "fact_ids": [
+        "inherited_unit:057.list",
         "install_command:dotnet"
       ],
       "section": "scope_limitations",
       "slot": "limitation:1",
-      "text": "The package does not support IMAP, SMTP, or POP3 protocols and works only with local files, not mail servers."
+      "text": "The library does not support IMAP, SMTP, or POP3 protocols and works only with local files, so it cannot connect to mail servers."
     },
     {
       "fact_ids": [
+        "inherited_unit:057.list",
         "install_command:dotnet"
       ],
       "section": "scope_limitations",
       "slot": "limitation:2",
-      "text": "Transport Neutral Encapsulation Format files are not parsed or generated."
+      "text": "Transport Neutral Encapsulation Format files (winmail.dat) are not parsed or generated."
     },
     {
       "fact_ids": [
+        "inherited_unit:057.list",
         "install_command:dotnet"
       ],
       "section": "scope_limitations",
       "slot": "limitation:3",
-      "text": "Calendar or appointment support is not provided; calendar-specific MAPI properties can be accessed generically via SetProperty() or GetPropertyValue() only."
+      "text": "Calendar or appointment support is not provided; calendar-specific MAPI properties can be accessed generically via SetProperty() or GetPropertyValue() but there is no dedicated calendar API."
     },
     {
       "fact_ids": [
+        "inherited_unit:057.list",
         "package:target_framework"
       ],
       "section": "scope_limitations",
       "slot": "limitation:4",
-      "text": "The package requires the .NET 8.0 SDK (or later) to build and the matching .NET 8.0 runtime (or later) to run; classic .NET Framework (4.x) is not supported."
+      "text": "The library requires .NET 8.0 or later and does not support classic .NET Framework (4.x)."
     },
     {
       "fact_ids": [
         "identity:platform",
         "package:target_framework",
-        "inherited_unit:019.paragraph",
+        "build_test_asset:tests",
+        "build_test_asset:examples",
         "inherited_unit:023.list",
         "inherited_unit:024.paragraph",
         "inherited_unit:060.paragraph",
-        "build_test_asset:tests",
-        "build_test_asset:examples"
+        "inherited_unit:062.paragraph"
       ],
       "section": "development_testing",
       "slot": "summary",
-      "text": "Aspose.Email FOSS for .Net targets net8.0 and builds using the .NET CLI. The main library project has no external package dependencies; CFB, MSG, and EML/MIME handling are implemented natively. Test dependencies — Microsoft.NET.Test.Sdk 17.8.0, xunit 2.5.3, xunit.runner.visualstudio 2.5.3, and coverlet.collector 6.0.0 — apply only to the test project under tests/ and are not shipped with the package. Clone the repository and run the xUnit test suite to verify CFB round-trips, MSG reading, and EML round-trip conversion, or run one of the example programs under examples/."
+      "text": "Aspose.Email FOSS for .Net targets net8.0 and uses the dotnet CLI to build and test from the repository's own assets. The test project at tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj uses Microsoft.NET.Test.Sdk 17.8.0, xunit 2.5.3, and xunit.runner.visualstudio 2.5.3 for the xUnit test host and adapter, and coverlet.collector 6.0.0 for code-coverage collection; none of these dependencies are referenced by the main library project and they are never shipped with the published package. The test suite covers CFB round-trips, MSG reading, and EML round-trip conversion, with runnable example programs under examples/ that each have their own project file and are documented in examples/README.md."
     },
     {
       "fact_ids": [
@@ -433,7 +616,7 @@
       ],
       "section": "enterprise_relationship",
       "slot": "context",
-      "text": "it adds broader format and protocol coverage: direct IMAP/SMTP/POP3 mail-server connectivity, TNEF (winmail.dat) support, calendar and appointment APIs, and classic .NET Framework support alongside this edition's MSG, CFB, and EML processing."
+      "text": "It adds broader format and protocol coverage: direct IMAP/SMTP/POP3 mail-server connectivity, TNEF (winmail.dat) support, calendar and appointment APIs, and classic .NET Framework support alongside this edition's MSG, CFB, and EML processing."
     },
     {
       "fact_ids": [
@@ -441,7 +624,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbconstants",
-      "text": "CfbConstants provides constant values used in Compound File Binary format processing."
+      "text": "Aspose.Email.Foss.Cfb.CfbConstants is a public symbol that exposes the constants ByteOrderLittleEndian, MAXREGSECT, MAXREGSID, MiniStreamCutoffSize, NOSTREAM, RootEntryName, and RootStreamId."
     },
     {
       "fact_ids": [
@@ -449,7 +632,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbdocument",
-      "text": "CfbDocument represents a Compound File Binary structure and provides methods to load it from files, streams, or readers."
+      "text": "Aspose.Email.Foss.Cfb.CfbDocument is a public symbol that exposes the constructors CfbDocument, FromFile, FromReader, FromStream, and the properties MajorVersion, MinorVersion, Root, and TransactionSignatureNumber."
     },
     {
       "fact_ids": [
@@ -457,7 +640,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbexception",
-      "text": "CfbException represents errors that occur during Compound File Binary format processing."
+      "text": "Aspose.Email.Foss.Cfb.CfbException is a public symbol that exposes the constructor CfbException."
     },
     {
       "fact_ids": [
@@ -465,15 +648,18 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbnode",
-      "text": "CfbNode represents a node in a Compound File Binary structure with properties such as name, class identifier, timestamps, and state bits."
+      "text": "Aspose.Email.Foss.Cfb.CfbNode is a public symbol that exposes the properties Clsid, CreationTime, ModifiedTime, Name, and StateBits."
     },
     {
       "fact_ids": [
+        "implementation:throws.aspose.email.foss.cfb.cfbreader.cfbreader.body.argumentnullexception",
+        "implementation:throws.aspose.email.foss.cfb.cfbreader.getentry.body.cfbexception",
+        "implementation:throws.aspose.email.foss.cfb.cfbreader.getstreamdata.body.cfbexception",
         "public_symbol:aspose.email.foss.cfb.cfbreader"
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbreader",
-      "text": "CfbReader provides functionality to read and navigate a Compound File Binary structure, including accessing directory entries, streams, and storage nodes."
+      "text": "Aspose.Email.Foss.Cfb.CfbReader is a public symbol that exposes the constructors CfbReader, FromFile, FromStream, and the properties Difat, DirectoryEntries, DirectoryEntryCount, Fat, FileSize, Header, MajorVersion, MaterializedStreamCount, MiniFat, MiniSectorSize, MiniStream, RootEntry, SectorSize, and the methods FindChildByName, Dispose, GetEntry, and GetStreamData; CfbReader.CfbReader throws ArgumentNullException (conditionally), CfbReader.GetEntry throws CfbException (conditionally), and CfbReader.GetStreamData throws CfbException (conditionally)."
     },
     {
       "fact_ids": [
@@ -481,7 +667,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbstorage",
-      "text": "CfbStorage represents a storage node in a Compound File Binary structure that can contain child storages and streams."
+      "text": "Aspose.Email.Foss.Cfb.CfbStorage is a public symbol that exposes the constructor CfbStorage, the properties Clsid, CreationTime, ModifiedTime, Name, and the methods AddStorage, AddStream, and Children."
     },
     {
       "fact_ids": [
@@ -489,7 +675,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbstream",
-      "text": "CfbStream represents a stream node in a Compound File Binary structure that holds binary data."
+      "text": "Aspose.Email.Foss.Cfb.CfbStream is a public symbol that exposes the constructor CfbStream and the properties Clsid, CreationTime, Data, ModifiedTime, Name, and StateBits."
     },
     {
       "fact_ids": [
@@ -497,7 +683,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfbwriter",
-      "text": "CfbWriter provides functionality to write a Compound File Binary structure."
+      "text": "Aspose.Email.Foss.Cfb.CfbWriter is a public symbol that exposes the methods ToBytes and WriteFile."
     },
     {
       "fact_ids": [
@@ -505,7 +691,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.directoryentry",
-      "text": "DirectoryEntry represents an entry in the directory of a Compound File Binary structure."
+      "text": "Aspose.Email.Foss.Cfb.DirectoryEntry is a public symbol that exposes the properties IsRoot, IsStorage, and IsStream."
     },
     {
       "fact_ids": [
@@ -513,7 +699,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.directoryentrynamecomparer",
-      "text": "DirectoryEntryNameComparer provides a comparer for directory entries based on their names."
+      "text": "Aspose.Email.Foss.Cfb.DirectoryEntryNameComparer is a public symbol that exposes the method Compare."
     },
     {
       "fact_ids": [
@@ -521,7 +707,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.header",
-      "text": "Header represents the header information of a Compound File Binary structure."
+      "text": "Aspose.Email.Foss.Cfb.Header is a public symbol that exposes the properties MiniSectorSize and SectorSize."
     },
     {
       "fact_ids": [
@@ -529,7 +715,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapiattachment",
-      "text": "MapiAttachment represents an attachment in a MAPI message."
+      "text": "Aspose.Email.Foss.Msg.MapiAttachment is a public symbol that exposes the properties ContentId, Data, EmbeddedMessage, Filename, IsEmbeddedMessage, and IsStorageAttachment, and the methods FromBytes and FromStream."
     },
     {
       "fact_ids": [
@@ -537,7 +723,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapimessage",
-      "text": "MapiMessage represents a MAPI message and provides access to its properties, recipients, and attachments."
+      "text": "Aspose.Email.Foss.Msg.MapiMessage is a public symbol that exposes the properties Attachments and Body, and the methods AddAttachment, AddEmbeddedMessageAttachment, AddRecipient, AttachMethodByValue, AttachMethodEmbedded, and AttachMethodStorage."
     },
     {
       "fact_ids": [
@@ -545,7 +731,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapiproperty",
-      "text": "MapiProperty represents a single property in a MAPI message."
+      "text": "Aspose.Email.Foss.Msg.MapiProperty is a public symbol that exposes the constructor MapiProperty and the properties Flags, PropertyId, PropertyTag, PropertyType, and Value."
     },
     {
       "fact_ids": [
@@ -553,7 +739,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapipropertycollection",
-      "text": "MapiPropertyCollection represents a collection of MAPI properties."
+      "text": "Aspose.Email.Foss.Msg.MapiPropertyCollection is a public symbol that exposes the methods Add, Get, IterProperties, Remove, and Set."
     },
     {
       "fact_ids": [
@@ -561,7 +747,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapirecipient",
-      "text": "MapiRecipient represents a recipient in a MAPI message."
+      "text": "Aspose.Email.Foss.Msg.MapiRecipient is a public symbol that exposes the properties AddressType, DisplayName, EmailAddress, Properties, and RecipientType."
     },
     {
       "fact_ids": [
@@ -569,15 +755,16 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgconstants",
-      "text": "MsgConstants provides constant values used in MSG format processing."
+      "text": "Aspose.Email.Foss.Msg.MsgConstants is a public symbol that exposes the constants AttachmentStoragePrefix, EmbeddedMessageStorageName, MaxAttachmentStorages, MaxRecipientStorages, NamedPropertyMappingStorageName, PROPATTR_MANDATORY, PROPATTR_READABLE, and PROPATTR_WRITABLE."
     },
     {
       "fact_ids": [
+        "implementation:throws.aspose.email.foss.msg.msgdocument.msgdocument.body.argumentnullexception",
         "public_symbol:aspose.email.foss.msg.msgdocument"
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgdocument",
-      "text": "MsgDocument represents an MSG format file and provides methods to load it from files, streams, or readers."
+      "text": "Aspose.Email.Foss.Msg.MsgDocument is a public symbol that exposes the constructor MsgDocument, the properties MajorVersion, MinorVersion, Root, Strict, and the methods FromFile, FromStream, and ToCfbDocument; MsgDocument.MsgDocument throws ArgumentNullException (conditionally)."
     },
     {
       "fact_ids": [
@@ -585,7 +772,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgexception",
-      "text": "MsgException represents errors that occur during MSG format processing."
+      "text": "Aspose.Email.Foss.Msg.MsgException is a public symbol that exposes the constructor MsgException."
     },
     {
       "fact_ids": [
@@ -593,15 +780,16 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgreader",
-      "text": "MsgReader provides functionality to read and navigate an MSG format file."
+      "text": "Aspose.Email.Foss.Msg.MsgReader is a public symbol that exposes the methods Dispose, FromFile, FromStream, and the property ValidationIssues."
     },
     {
       "fact_ids": [
+        "implementation:throws.aspose.email.foss.msg.msgstorage.msgstorage.body.argumentnullexception",
         "public_symbol:aspose.email.foss.msg.msgstorage"
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgstorage",
-      "text": "MsgStorage represents a storage node in an MSG format file."
+      "text": "Aspose.Email.Foss.Msg.MsgStorage is a public symbol that exposes the constructor MsgStorage, the properties Clsid, CreationTime, ModifiedTime, and the methods AddStorage, AddStream, FindStorage, and FindStream; MsgStorage.MsgStorage throws ArgumentNullException (conditionally)."
     },
     {
       "fact_ids": [
@@ -609,15 +797,16 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgstoragerole",
-      "text": "MsgStorageRole specifies the role of a storage node in an MSG format file."
+      "text": "Aspose.Email.Foss.Msg.MsgStorageRole is a public symbol."
     },
     {
       "fact_ids": [
+        "implementation:throws.aspose.email.foss.msg.msgstream.msgstream.body.argumentnullexception",
         "public_symbol:aspose.email.foss.msg.msgstream"
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgstream",
-      "text": "MsgStream represents a stream node in an MSG format file."
+      "text": "Aspose.Email.Foss.Msg.MsgStream is a public symbol that exposes the constructor MsgStream and the properties Clsid, CreationTime, Data, ModifiedTime, Name, and StateBits; MsgStream.MsgStream throws ArgumentNullException (conditionally)."
     },
     {
       "fact_ids": [
@@ -625,7 +814,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msgwriter",
-      "text": "MsgWriter provides functionality to write an MSG format file."
+      "text": "Aspose.Email.Foss.Msg.MsgWriter is a public symbol that exposes the methods ToBytes and WriteFile."
     }
   ]
 }
