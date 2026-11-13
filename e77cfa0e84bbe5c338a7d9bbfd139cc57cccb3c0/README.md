@@ -334,7 +334,7 @@ import cells_foss "github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/v26/asp
 
 Aspose.Cells FOSS for Go provides workbook and worksheet management through the `Workbook` and `Worksheet` types, with `Cells` offering A1-keyed cell access. The `Workbook` type supports loading from files or streams and saving to files or buffers, while `Worksheet` exposes cell collections and layout operations.
 
-The verified public surface has 37 types.
+The public API has 37 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -605,7 +605,7 @@ For the complete API reference and usage guide, see **[docs/usage.md](docs/usage
 
 - **[Getting started guide](https://docs.aspose.org/cells/go/)** — The getting started guide covers loading, editing, styling, and saving spreadsheets in Go.
 - **[How-to guides & FAQ](https://kb.aspose.org/cells/go/)** — The how-to guides and FAQ provide articles, answers, and troubleshooting for common tasks with Aspose.Cells FOSS for Go.
-- **[Full API reference](https://reference.aspose.org/cells/go/)** — The full API reference offers a complete, browsable reference for the public API. It covers all 37 verified public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[Full API reference](https://reference.aspose.org/cells/go/)** — The full API reference offers a complete, browsable reference for the public API. It covers all 37 public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[CHANGELOG.md](CHANGELOG.md)** — The `CHANGELOG.md` file documents the release history, with the current release being 26.11.
 - **[AGENTS.md](AGENTS.md)** — The `AGENTS.md` file outlines the repository's contribution guide for AI-assisted development, including source-of-truth conventions and areas to avoid changing without review.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/issues).
