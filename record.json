@@ -5,7 +5,7 @@
   "provider_repository_id": 1193857039,
   "registry_revision": null,
   "active_transaction_id": "288d94ab3b0446949dcc21c10e246b1e",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 2e1cacfdb7dc: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02, BC-05, BC-17; nothing sealed",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T21:13:08.521120+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-13T11:43:37.527707+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 35,
+  "state_version": 36,
   "recent_trigger_dedup_keys": {
     "run:41142584634:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "514b58ce797e43c6a9b869fd29c1f89d",
     "run:41162828042:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "226c60d984d249daa139b9eb59dcd7b9",
@@ -52,5 +52,5 @@
     "run:42698666619:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "303b7a678ec145b39784418a45f10843",
     "run:42710186616:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "288d94ab3b0446949dcc21c10e246b1e"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
