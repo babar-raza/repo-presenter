@@ -28,6 +28,7 @@ from repo_presenter.core.facts import (
     SOURCE_BASIS_ATTRIBUTE,
     Fact,
     FactsDocument,
+    has_no_package_manifest,
 )
 from repo_presenter.core.package_registry import DISTRIBUTION_FACT_PREFIX, PUBLISHED_VERSION_FACT_ID
 from repo_presenter.core.registry.models import RegistryEntry
@@ -1238,6 +1239,25 @@ def _installation(context: RenderContext) -> list[str]:
         )
         lines.append("")
         lines.extend(_code_block("bash", install.value))
+    elif has_no_package_manifest(context.facts.facts) and (install is None or checkout_kind):
+        # R36(a), PSD Python: no manifest, so no pip command can work from this tree. The
+        # source-checkout path is printed only when an example executed from the tree's own source
+        # directories proved it; otherwise the install is stated as unverified.
+        manifests = _or_list([f"`{name}`" for name in context.spec.manifest_globs])
+        if install is not None and install.polarity == "SUPPORTED" and checkout_kind:
+            lines.append(
+                f"The repository ships no package manifest ({manifests}), so nothing can be "
+                "built or installed from a checkout; use it from a source checkout by adding its "
+                "source directory to the interpreter's path:"
+            )
+            lines.append("")
+            lines.extend(_code_block("bash", install.value))
+        else:
+            lines.append(
+                f"The repository ships no package manifest ({manifests}), so nothing can be "
+                "built or installed from a checkout, and the source install is not verified at "
+                "this revision."
+            )
     elif (
         install is not None
         and install.polarity == "SUPPORTED"

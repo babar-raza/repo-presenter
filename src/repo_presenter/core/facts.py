@@ -80,6 +80,10 @@ REGISTRY_COMMAND_ATTRIBUTE = "registry_command"
 SOURCE_BASIS_ATTRIBUTE = "source_basis"
 DOCUMENTED_SOURCE_BASIS = "documented"
 DOCUMENTED_COMMAND_ATTRIBUTE = "documented_command"
+#: The fact ``project_detail`` records when a Python checkout root holds no package manifest
+#: (PSD Python: no pyproject.toml, setup.cfg or setup.py): nothing can be built or pip-installed
+#: from such a tree (R36(a), 2026-11-13).
+NO_PACKAGE_MANIFEST_FACT_ID = "project_file:python_package_manifest"
 
 _SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:[._-][a-z0-9]+)*$")
 _UNSAFE = re.compile(r"[^a-z0-9._-]+")
@@ -146,6 +150,16 @@ class Fact:
             for k, v in self.attributes.items()
         ):
             raise ValueError(f"fact {self.id} attributes must map non-empty strings to strings")
+
+
+def has_no_package_manifest(facts: Iterable[Fact]) -> bool:
+    """Whether the facts record the checkout root as holding no package manifest."""
+    return any(
+        fact.id == NO_PACKAGE_MANIFEST_FACT_ID
+        and fact.polarity == "SUPPORTED"
+        and (fact.attributes or {}).get("present") == "none"
+        for fact in facts
+    )
 
 
 @dataclass(frozen=True)

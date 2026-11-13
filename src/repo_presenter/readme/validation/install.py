@@ -15,12 +15,14 @@ from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.facts import (
     DOCUMENTED_COMMAND_ATTRIBUTE,
     DOCUMENTED_SOURCE_BASIS,
+    NO_PACKAGE_MANIFEST_FACT_ID,
     NOT_PUBLISHED,
     REGISTRY_COMMAND_ATTRIBUTE,
     REGISTRY_STATE_ATTRIBUTE,
     SOURCE_BASIS_ATTRIBUTE,
     SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE,
     Fact,
+    has_no_package_manifest,
 )
 from repo_presenter.core.package_registry import (
     RETRYABLE_READINGS,
@@ -32,7 +34,12 @@ from repo_presenter.readme.evidence.facts.unpublished import (
     documented_steps,
 )
 from repo_presenter.readme.validation.failures import Candidate, Failure
-from repo_presenter.readme.validation.text import COMMAND, section_lines
+from repo_presenter.readme.validation.text import (
+    COMMAND,
+    SPAN,
+    installs_the_checkout,
+    section_lines,
+)
 from repo_presenter.readme.validation.units import placements_of
 
 # The install kinds a verified build or checkout justifies (`extract.py`'s source tiers), never a
@@ -43,8 +50,6 @@ SOURCE_KINDS = frozenset({"source", "source_checkout"})
 REGISTRY_INSTALL_VERB = re.compile(
     r"(?i)\b(?:install|add|get|i)\b|dependency:get|-Dartifact="
 )
-
-
 def install_failures(candidate: Candidate) -> list[Failure]:
     """BC-02: every install fact is SUPPORTED on evidence that admits it, a registry-kind install
     is never SUPPORTED on a registry that found no distribution, a source build states only the
@@ -56,7 +61,8 @@ def install_failures(candidate: Candidate) -> list[Failure]:
             Failure(
                 "EXTRACTING",
                 "no install command fact; the source install is not verified at this revision",
-            )
+            ),
+            *_manifestless_tree_install_failures(candidate),
         ]
     failures: list[Failure] = []
     for fact in installs:
@@ -132,6 +138,50 @@ def install_failures(candidate: Candidate) -> list[Failure]:
             )
     failures.extend(_registry_command_failures(candidate))
     failures.extend(_check_source_checkout(candidate))
+    failures.extend(_manifestless_tree_install_failures(candidate))
+    return failures
+
+
+def _manifestless_tree_install_failures(candidate: Candidate) -> list[Failure]:
+    """A repository with no package manifest (R36(a), PSD Python) cannot be pip-installed from its
+    checkout: every README line that prints such an install is a false command. A line from a
+    placed inherited unit routes to that unit's disposition (RECONCILING), any other line to the
+    section that prints it (COMPOSING), exactly like :func:`_registry_command_failures`."""
+    if not has_no_package_manifest(candidate.facts.facts):
+        return []
+    spec = spec_for(candidate.entry.ecosystem)
+    manifests = ", ".join(spec.manifest_globs)
+    printed: list[tuple[int, str]] = []
+    inside = False
+    for index, line in enumerate(candidate.readme.splitlines()):
+        stripped = line.strip()
+        if stripped.startswith("```"):
+            inside = not inside
+            continue
+        spans = [stripped] if inside else SPAN.findall(line)
+        printed.extend((index, span.strip()) for span in spans if installs_the_checkout(span))
+    if not printed:
+        return []
+    carriers = {
+        line.strip(): placement.unit_id
+        for placement in placements_of(candidate)
+        if placement.outcome == "placed"
+        for line in placement.text.splitlines()
+    }
+    sections = section_lines(candidate.readme)
+    failures: list[Failure] = []
+    lines = candidate.readme.splitlines()
+    for index, line in printed:
+        detail = (
+            f"{NO_PACKAGE_MANIFEST_FACT_ID}: the README prints {line!r}, an install of the "
+            f"checkout itself, but the repository ships no package manifest ({manifests}), so it "
+            "cannot work; omit it citing the missing manifest"
+        )
+        unit = carriers.get(line) or carriers.get(lines[index].strip())
+        if unit is not None:
+            failures.append(Failure("RECONCILING", detail, unit=unit))
+        else:
+            failures.append(Failure("COMPOSING", detail, sections[index]))
     return failures
 
 

@@ -247,6 +247,46 @@ def _source_checkout_fact(
     )
 
 
+def manifestless_install_fact(
+    entry: RegistryEntry, receipts: Sequence[ExampleReceipt]
+) -> Fact | None:
+    """The verified source-checkout install of a repository whose root holds no package manifest.
+
+    R36(a), owner decision 2026-11-13 (aspose-psd-foss/Aspose.PSD-FOSS-for-Python at 2271c228:
+    no pyproject.toml, setup.cfg or setup.py). Without a manifest there was no install fact at all,
+    so BC-02 could only refuse the candidate ("no install command fact") even when an example had
+    run from the tree. Nothing can be built or installed from such a tree, and no distribution name
+    ties a registry install to it, so the only install that can be stated is the source checkout,
+    and only through ``_source_checkout_fact``: a receipt of an example that actually executed from
+    the tree's own source directories. Without one there is still no install fact (None), and
+    BC-02's own "the source install is not verified at this revision" stands. Only an ecosystem
+    with a ``source_reference`` template (Python) has such a path to offer.
+    """
+    spec = SPECS.get(entry.ecosystem)
+    if spec is None or not spec.install_fact_id or not spec.source_reference:
+        return None
+    name = entry.repository.split("/")[-1]
+    kind, _, _ = spec.install_fact_id.partition(":")
+    manifests = ", ".join(spec.manifest_globs)
+    fact = Fact(
+        spec.install_fact_id,
+        kind,  # type: ignore[arg-type]
+        f"git clone https://github.com/{entry.repository}.git\ncd {name}",
+        (
+            Evidence(
+                ".",
+                f"no package manifest ({manifests}) at the checkout root: nothing can be built "
+                "or installed from this checkout, and no manifest names a distribution to look "
+                "up",
+            ),
+        ),
+        polarity="UNRESOLVED",
+        confidence=0.5,
+    )
+    admitted = _source_checkout_fact(fact, entry, receipts)
+    return admitted if admitted.polarity == "SUPPORTED" else None
+
+
 # The install kinds a verified build or checkout already states as the install itself.
 _SOURCE_INSTALL_KINDS = frozenset({"source", "source_checkout"})
 
@@ -411,6 +451,10 @@ def extract_facts(
             facts[:] = [
                 pin_install_version(f, manifest_version, published) for f in facts
             ]
+    else:
+        manifestless = manifestless_install_fact(entry, receipts)
+        if manifestless is not None:
+            facts.append(manifestless)
     # A symbol whose own documentation has a hole ("Base class for  and") is an undocumented
     # symbol: the table row and the member bullet quote only a summary that reads whole.
     facts.extend(usable_symbol_docs(list(plugin.surface_facts(clone_path, tree_paths))))
