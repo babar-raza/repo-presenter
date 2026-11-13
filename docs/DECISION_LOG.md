@@ -5483,3 +5483,71 @@ test. Certified on the same seals: origin/main code R 1 / L 26; this branch R 1 
 correction that would make a "listed below" count agree with its rows is a follow-up on BL-065.
 
 Backlog: BL-063, BL-064, BL-065
+
+## 2026-11-13: BL-077 — a repair is accepted only when its revision no longer prints the false claim; repaired sections reach the README; never-thrown docstrings are not printed
+
+**Evidence.** `gh run view <id> --log` (job "present") of 43489976823 (3D .NET), 43489981024 (3D Python), 43489984973
+(Cells .NET), 43489988826 (Cells C++), code after BL-076 and before PR #67. The artifacts could not be downloaded (blob
+host refused by this session's proxy); facts were re-extracted locally at the four pinned revisions
+(`present --stage facts`) and the sealed bundle refs supplied plan, units and dispositions.
+
+**Classification of every repair attempt the logs record as `repaired` whose candidate still failed.**
+A = accepted while its revision still violated its own rule or a BC-02/BC-14/BC-18 sibling; B = the failing line is a
+renderer-printed docstring row no repair can reach; C = the repaired text never reached the README.
+
+| Run | Attempt (logged) | Class | Why |
+|---|---|---|---|
+| Cells .NET | S6 BC-18 samples link -> "... via a local project reference." | C | correct revision; the final README printed the pre-repair "demonstrating how to use `Aspose.Cells.FOSS` version 26.10.0" (the final claim_contradiction quote) |
+| Cells .NET | S6 BC-14 samples link -> "... demonstrating usage of Aspose.Cells FOSS for .NET version 26.10.0.0." | A | revised the BC-18 revision (same store key) back into the samples-use-the-package claim; rule (j7) read neither "usage of" nor the product's prose name, no check re-ran on the revision, and `project_file:samples.product_reference` (evidence-only) was never in the packet |
+| Cells C++ | S4 BC-02 development_testing block -> VERIFIED_PRESERVE | A | kept the block printing `cmake --build build`; BC-02 failed at the end (the only remaining failure); `install_command:cmake` (UNRESOLVED) was never in the packet |
+| Cells C++ | S6 BC-14 Style hub, "regenerated it fresh" | C (signature) | "the causing section was not in the call store": the repair was keyed against the partial restore's tasks |
+| 3D .NET | S6 claim_contradiction:1 scope_limitations -> RenderFactory dropped | C | final README printed the pre-repair line 768 (`RenderFactory`, `NurbsSurface.ToMesh` "all throw `NotImplementedException`") |
+| 3D .NET | S6 BC-14 -> "PLY import and export work through Scene.Open and Scene.Save." | A (latent) | rendered, its code spans make it a BC-14 finding (`implementation:throws...ply.createloadoptions`); masked by C |
+| 3D .NET | final claim_contradiction `DriverException` | B | Core API row from the type's docstring ("Exception raised by internal rendering drivers.") |
+| 3D Python | S6 claim_contradiction:7 / :9 (".dae" dropped), and :7+:9 "regenerated it fresh" | C | final README printed the pre-repair lines 716 and 809 with `.dae` |
+| 3D Python | S4 BC-14 OMIT_UNSUPPORTED "the table lists classes that are never thrown" | B | the seven failing rows (`ExportException`, `ImportException`, `ParseException`, `TrialException`, `DriverException`, `InitializationException`, `ShaderException`) are renderer Core API rows; no disposition prints them |
+
+(The other `repaired` attempts — Cells C++ 041/412e/050 omissions, the exceptions VERIFIED_REWRITE and the scope
+CORRECT_WITH_EVIDENCE, 3D Python's BC-18/BC-17/BC-07 entries — left no failing check of their own.)
+
+**Root causes and decisions (existing repair stage and renderer, R27; zero calls).**
+1. *Class A — acceptance judged only the causing stage's own checks.* `reject_printed_quote` (S4) matches the finding's
+   quote, so a reworded claim or a validation defect with no quote (BC-02) passed; S6/S5 had nothing. Decision: before a
+   revision is accepted (`repair/loop.reject_still_failing`, S4/S5/S6), it is rendered with the same plan/units/
+   dispositions as the stage's stored output and both are judged by the BC-02/BC-14/BC-18 judges; the revision is
+   rejected when a failure of the defect's own is not printed fewer times, or any failure is printed more times, with the
+   rule's own detail ("BC-14 still fails on this revision, which is the defect: ...", "this revision makes BC-02 fail:
+   ...") quoted back in the job's re-ask. BC-05/BC-08/BC-17 are not re-run: a VERIFIED_REWRITE prints only after
+   re-authoring, so they keep their own guards. The packet now names the facts the rule text cites
+   (`defect.contradicting_facts`: `implementation:never_thrown.*`, `project_file:samples.product_reference`,
+   `install_command:cmake` with its polarity and attributes); every other packet is byte-identical. Deterministic review
+   findings carry their `evidence` so the guard reads the rule's own text from a field. Rule (j7) also reads "usage of"
+   and a sentence that gives the package's own version (`package:version`/`package:published_version`) without its id.
+2. *Class C — repairs keyed against a partial restore.* `_settle_s9` handed `_repair_defects` the restored composition,
+   whose tasks are built from the restored dispositions, while the next round's `_compose` reconciled afresh: the repair
+   was stored under a request hash nothing looked up, the pre-repair section was served from the store, and a repair of a
+   restored task found "the causing section was not in the call store" and paid for a fresh call (INTERPRETATION: the
+   logs show the restore line and these two signatures, not the kept restore itself; the artifacts were not readable,
+   and no other path serves the pre-repair section from the store after an accepted S6 repair). Decision: the repair
+   is keyed against the composition the round's calls were made from; after plan/section-only repairs the next round
+   recomposes from those same dispositions (`dispositions_override`), after an S4 repair from a fresh reconciliation as
+   before; the final restore re-applies.
+3. *Class B — renderer-printed docstring the facts refute.* Decision: a Core API row of a type an
+   `implementation:never_thrown` fact covers, whose description says when it is thrown (rule (j2)'s own row test,
+   `code_path_claims.refuted_thrown_description`), prints "Declared; not thrown by library code." The row is kept (the
+   type is real public API); the docstring is replaced whole because its "thrown when" clause cannot be split reliably
+   from the rest ("This is raised in Scene.Open/Scene.Save when no licenses are applied."). The judgement is the rule's,
+   so renderer and validator cannot disagree. Gets-or-sets (K03) and stubs (`_stub_marked`) were already handled.
+   `REPAIR_LOGIC_VERSION` 4.
+
+**Proof.** `tests/readme/repair/test_repair_revalidation.py` (23 tests from the logged shapes: the seven real 3D Python
+docstrings, the Cells .NET texts, the Cells C++ cmake block and UNRESOLVED fact, the partial-restore round); reverting
+the guard, the keying or the renderer fix fails 6 of them. Re-rendering the sealed 3D .NET/Python bundles under the
+re-extracted facts prints the fact-true rows and claim_findings finds no never-thrown row. R10 gate
+(`recertify --gate --remote origin --base-baseline <origin/main baseline>`): OK, 45 seals checked, none regressed.
+
+**Does NOT decide.** A round that repairs S4 beside S6 after a reshaping restore still recomposes from a fresh
+reconciliation (rare; to be confirmed from the re-run). Done only after the hosted re-run of the four cells and the R41
+re-verification of every candidate.
+
+Backlog: BL-077
