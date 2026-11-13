@@ -49,6 +49,7 @@ from repo_presenter.extractors.surface._vendor.aspose_extraction.tree_helpers im
     child_by_field,
     collect_nodes,
     deprecated_marker,
+    enclosing_types_public,
     find_child_by_type,
     find_children_by_type,
     is_public,
@@ -2954,6 +2955,13 @@ def extract_api_surface(
 
         for cnode in class_nodes:
             if not is_public(cnode, language):
+                continue
+            # BL-065 (K05, local patch 2026-11-13): a type declared inside a definitely-false
+            # `#if CPLUSPLUS`/`#if DEBUG` branch, or nested in a non-public type, is not part of
+            # the published .NET (or Java) surface -- the same rules members already follow.
+            if _in_excluded_preproc_branch(cnode, language):
+                continue
+            if not enclosing_types_public(cnode, language, class_types):
                 continue
 
             cname = _node_name(cnode, language)

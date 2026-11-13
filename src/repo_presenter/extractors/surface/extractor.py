@@ -58,7 +58,12 @@ lang.LANGUAGES.setdefault("javascript", lang.typescript)
 # project_detail.py): full doc comments, declarations, enum members for TypeScript/Go/Python,
 # fields, module exports, internal symbols, throws/constants, specifications, project files and
 # package traits.
-EXTRACTOR_VERSION = "6"
+# 7 (BL-063/BL-065, K03/K05): member facts carry ``member_kind`` (method, constructor, property,
+# field, constant) and ``settable`` (whether a caller may assign the member), type facts carry
+# ``type_kind`` (class, struct, record, interface, enum, trait) and ``bases``; a C# access modifier
+# chosen by ``#if``/``#else`` is read from the Release branch, and a type nested in a non-public
+# type or inside a definitely-false ``#if`` branch is not public.
+EXTRACTOR_VERSION = "7"
 
 SymbolKind = Literal["module", "class", "enum", "function", "method", "unknown"]
 
@@ -142,6 +147,18 @@ class SurfaceSymbol:
     #: for every other kind. They become ``enum_member`` facts (``enum_member_facts``), never
     #: ``public_symbol`` facts, so nothing that counts, lists or caps public symbols sees them.
     enum_members: tuple[str, ...] = ()
+    #: What a member is (BL-063, K03): "method", "constructor", "property", "field" or "constant";
+    #: empty for a type. ``symbol_kind`` stays "method" for every member, so nothing that counts,
+    #: caps or places members changes; this is the precise kind the README must call it by.
+    member_kind: str = ""
+    #: "true" when a caller may assign the member (a public setter or init accessor, a writable
+    #: field), "false" when it may not (no setter, a private/protected/internal setter, a const or
+    #: readonly field), empty when the engine did not say.
+    settable: str = ""
+    #: What a type is: "class", "struct", "record", "interface", "enum", "trait"; empty otherwise.
+    type_kind: str = ""
+    #: The type's declared base types and interfaces, as the source names them.
+    bases: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.fact_slug:
@@ -189,6 +206,54 @@ def _inherited_constructor(
         return False
     declared = str(method.get("file") or "")
     return bool(declared) and declared in declared_in.get(name, set())
+
+
+# The declared kind of a type, by tree-sitter node type (BL-063: Cells .NET's ``Color`` is a struct
+# and ``FillPattern`` an enum, and a README called both "classes").
+_TYPE_KINDS: dict[str, str] = {
+    "class_declaration": "class",
+    "abstract_class_declaration": "class",
+    "class_specifier": "class",
+    "class_definition": "class",
+    "struct_declaration": "struct",
+    "struct_specifier": "struct",
+    "struct_item": "struct",
+    "record_declaration": "record",
+    "record_struct_declaration": "struct",
+    "interface_declaration": "interface",
+    "trait_item": "trait",
+    "enum_declaration": "enum",
+    "enum_specifier": "enum",
+    "enum_item": "enum",
+}
+# Languages whose engine records a data member under ``properties`` with no kind of its own: a
+# C++ public data member, a Go or Rust struct field. A C#/TypeScript entry there is a property.
+_FIELD_LANGUAGES = frozenset({"cpp", "go", "rust"})
+
+
+def _member_kind(prop: dict[str, Any], language: str) -> str:
+    kind = str(prop.get("kind") or "")
+    if kind == "constant":
+        return "constant"
+    if kind == "static_field":
+        return "field"
+    if language in _FIELD_LANGUAGES:
+        return "field"
+    return "property"
+
+
+def _settable(prop: dict[str, Any]) -> str:
+    """Whether a caller may assign the member, from the engine's own reading of its accessors.
+
+    C#: ``writable`` is true only for a ``set``/``init`` accessor with no access modifier of its
+    own (``{ get; private set; }`` is false: Cells .NET ``Style.Font``/``Borders``, Style.cs:68,73).
+    TypeScript accessors carry ``access_mode``. A synthesized Java bean property says nothing."""
+    if "writable" in prop:
+        return "true" if prop.get("writable") else "false"
+    mode = str(prop.get("access_mode") or "")
+    if mode:
+        return "false" if mode == "readonly" else "true"
+    return ""
 
 
 def symbol_kind(node_type: str) -> SymbolKind:
@@ -278,6 +343,8 @@ def surface_symbols(
                 line=_line(entry),
                 doc=str(entry.get("doc", "")),
                 enum_members=_enum_member_names(entry),
+                type_kind=_TYPE_KINDS.get(str(entry.get("kind", "")), ""),
+                bases=tuple(str(base) for base in entry.get("bases", []) or [] if str(base)),
             )
         )
         for method in entry.get("methods", []):
@@ -291,6 +358,7 @@ def surface_symbols(
                     line=_line(method),
                     doc=str(method.get("doc", "")),
                     signature=_signature(method),
+                    member_kind="constructor" if method.get("is_constructor") else "method",
                 )
             )
         for prop in entry.get("properties", []):
@@ -302,6 +370,8 @@ def surface_symbols(
                     line=_line(prop),
                     doc=str(prop.get("doc", "")),
                     signature=str(prop.get("type", "")),
+                    member_kind=_member_kind(prop, language),
+                    settable=_settable(prop),
                 )
             )
     seen: set[str] = set()
@@ -361,9 +431,60 @@ def enum_member_facts(symbols: list[SurfaceSymbol]) -> list[Fact]:
     return facts
 
 
+def symbol_attributes(symbol: SurfaceSymbol) -> dict[str, str]:
+    """The kind and accessor attributes a ``public_symbol`` fact carries for ``symbol`` (BL-063):
+    ``member_kind`` and ``settable`` for a member, ``type_kind`` and ``bases`` for a type; only
+    what the engine actually read, never a default."""
+    found: dict[str, str] = {}
+    if symbol.member_kind:
+        found["member_kind"] = symbol.member_kind
+    if symbol.settable:
+        found["settable"] = symbol.settable
+    if symbol.type_kind:
+        found["type_kind"] = symbol.type_kind
+    bases = ", ".join(base for base in symbol.bases if base.strip())
+    if bases:
+        found["bases"] = bases
+    return found
+
+
+def with_kind_attributes(facts: list[Fact], symbols: list[SurfaceSymbol]) -> list[Fact]:
+    """``facts`` with every ``public_symbol`` fact a symbol produced given that symbol's
+    ``symbol_attributes``. Matched by fact ID, then by value, so a plugin that re-paths a symbol
+    (an npm export) still gets its kinds; a fact no symbol produced is returned unchanged. Every
+    plugin of the shared surface already passes its facts through ``with_enum_members``, which
+    calls this, so the member kind reaches every language's facts with no plugin edited."""
+    by_id: dict[str, SurfaceSymbol] = {}
+    by_value: dict[str, SurfaceSymbol] = {}
+    for symbol in symbols:
+        try:
+            by_id.setdefault(fact_id("public_symbol", symbol.fact_slug), symbol)
+        except ValueError:
+            pass
+        by_value.setdefault(symbol.value, symbol)
+    enriched: list[Fact] = []
+    for fact in facts:
+        symbol = (
+            by_id.get(fact.id) or by_value.get(fact.value)
+            if fact.kind == "public_symbol"
+            else None
+        )
+        extra = symbol_attributes(symbol) if symbol is not None else {}
+        if not extra:
+            enriched.append(fact)
+            continue
+        attributes = dict(fact.attributes or {})
+        for key, value in extra.items():
+            attributes.setdefault(key, value)
+        enriched.append(replace(fact, attributes=attributes))
+    return enriched
+
+
 def with_enum_members(facts: list[Fact], symbols: list[SurfaceSymbol]) -> list[Fact]:
-    """``facts`` plus the members of every enum among them: an enum a plugin filtered out of its
-    public surface (not exported, internal) contributes no member either."""
+    """``facts``, each public symbol with its kind attributes (``with_kind_attributes``), plus the
+    members of every enum among them: an enum a plugin filtered out of its public surface (not
+    exported, internal) contributes no member either."""
+    facts = with_kind_attributes(facts, symbols)
     public = {fact.value for fact in facts if fact.kind == "public_symbol"}
     return [*facts, *(f for f in enum_member_facts(symbols) if f.attributes["enum"] in public)]
 

@@ -37,6 +37,19 @@ rule with no fact to hold a statement to is silent.
     TIMED_OUT receipt is UNRESOLVED and never counts). Quoted maintainer text is the
     reconciliation stage's, judged by (h)-(l) only.
 
+(n) Member kinds and accessors (BL-063, K03). A "the methods A, B" / "A and B properties" /
+    "the constructors ..." list names each member by a kind its ``public_symbol`` fact allows
+    (``member_kind``; for older facts only what they prove: a signature without a parameter list is
+    no method, a member named after its type is its constructor); a "classes" list names no struct
+    (.NET), enum or interface; a member bullet or row under a type's heading says "Gets or sets"
+    only for a settable member; read-only properties are not offered "for direct manipulation".
+(o) Member attribution (BL-064, K04). A kind list attached to one type names that type's own (or
+    inherited) members; an API-table row's code spans name members of its own type, not of a
+    same-named namesake, and no name the surface does not state; "`X`-derived `Y`" holds only when
+    ``Y`` derives from ``X``.
+(h) also holds a count the sentence says "is listed below" to the table rows that follow it
+    (BL-065, K05).
+
 TC-017b (2026-11-07) also adds: a line-provenance classifier shared with every check here
 (``readme/validation/line_provenance.py``, replacing this module's own former ``_Origin`` copy of
 the same logic), and TC-017a's independent export-surface probes (``acceptance/probes/``) wired
@@ -189,6 +202,30 @@ _PUBLIC_CONTEXT = re.compile(r"(?i)\bpublic\s+(?:API\s+)?(?:surface|API)\b")
 _PUBLIC_QUALIFIER = re.compile(r"(?i)\b(?:public|verified|exported)\b")
 
 
+# BL-065 (K05, 2026-11-12 register row, Aspose.Cells-FOSS-for-Cpp): "The full public surface -- 195
+# public types -- is listed below" over tables of 157 rows. A count the sentence says is listed is
+# also held to the rows that follow it, up to the next second-level heading.
+_LISTED_HERE = re.compile(
+    r"(?i)\b(?:(?:is|are)\s+)?listed\s+(?:below|here|in\s+the\s+(?:table|tables)\s+below)\b"
+    r"|\bas\s+follows\b"
+)
+_SECTION_HEADING = re.compile(r"^\s*#{1,2}\s")
+
+
+def _rows_listed_after(lines: list[_Line], last: int) -> int:
+    """The type-table rows (`` | `Name` | ``) after line ``last`` up to the next level-1/2
+    heading; header and separator rows are not counted."""
+    count = 0
+    for line in lines:
+        if line.index <= last or line.in_fence:
+            continue
+        if _SECTION_HEADING.match(line.text):
+            break
+        if _TABLE_ROW.match(line.text):
+            count += 1
+    return count
+
+
 def type_counts(facts: FactsDocument) -> tuple[int, int]:
     """(types, classes) as the facts count them: SUPPORTED class and enum ``public_symbol`` facts,
     and the classes among them. ``readme/validation/structure.py`` counts by ``symbol_kind``; the
@@ -231,6 +268,23 @@ def _count_findings(
             noun = match.group("noun").lower()
             allowed = allowed_types | ({classes} if noun == "classes" else set())
             probe_value = probe_classes if noun == "classes" else probe_types
+            if _LISTED_HERE.search(plain):
+                listed = _rows_listed_after(lines, last)
+                if listed and listed < stated:
+                    # Worded without the stated number, on purpose: a Lane L count correction
+                    # (243 -> 303) leaves this pre-existing defect the same finding, a residual
+                    # (R21), rather than one the edit introduced.
+                    findings.append(
+                        _finding(
+                            origin,
+                            first,
+                            sentence,
+                            "the README says its count of public types is listed in what follows, "
+                            f"but the table rows that follow list only {listed}; state the count "
+                            "of what is listed, or list every type",
+                            last=last,
+                        )
+                    )
             if stated in allowed:
                 # TC-017b work item 3: the facts call this stated count fine, but TC-017a's probe
                 # is a second, non-same-origin signal -- an extractor bug that wrote a wrong fact
@@ -624,6 +678,734 @@ def _table_findings(
                             "be wrong",
                         )
                     )
+    return findings
+
+
+# --- (n) member kinds and (o) member attribution (BL-063 K03, BL-064 K04) ---------------------
+#
+# 2026-11-13 Lane R false-claim review (docs/investigations/2026-11-13-lane-r-false-claim-review.md):
+# eight API rows called a property, field or constant a "method" (Email .NET's MapiMessage
+# ``AttachMethodByValue`` is a ``const int``), a static factory a "constructor" (``CfbDocument.
+# FromFile``), methods "properties" (``DirectoryEntry.IsRoot``), a struct and an enum "classes"
+# (Cells .NET ``Color``/``FillPattern``) and printed "Gets or sets" for a property whose setter is
+# private (Cells .NET ``Style.Font``/``Borders``, Style.cs:68,73), or sold read-only properties "for
+# direct manipulation" (3D Python ``GlobalTransform``). Eight more named members a type lacks
+# (``Style`` "properties such as Color, FillPattern and Border"), bound one type's members to its
+# same-named namesake (3D .NET GLTF ``Property`` "exposes GetExtra/SetExtra"), named a member no
+# type has (``Tangents``) or a base the type does not derive from ("`Mesh`-derived `Entity`").
+# Every one is decidable from the ``public_symbol`` facts: their ``member_kind``/``settable``/
+# ``type_kind``/``bases`` attributes (extractor 7, python_surface) and, for facts sealed before
+# those existed, only what the older facts already prove (a member whose signature has no
+# parameter list is no method; a member named after its type is its constructor; a type's
+# ``declaration`` names its kind). A member the facts cannot classify is never judged.
+
+#: The README's word for a kind of member -> the kinds it may truthfully name. "nonmethod" is the
+#: older facts' reading of a member with a signature but no parameter list (a property, field or
+#: constant: which one the facts did not record).
+_CLAIMED_MEMBER_KINDS: dict[str, frozenset[str]] = {
+    "method": frozenset({"method", "constructor"}),
+    "constructor": frozenset({"constructor"}),
+    "property": frozenset({"property", "field", "constant", "nonmethod"}),
+    "field": frozenset({"property", "field", "constant", "nonmethod"}),
+    "constant": frozenset({"field", "constant", "nonmethod", "enum_value"}),
+    "member": frozenset({"method", "constructor", "property", "field", "constant", "nonmethod"}),
+}
+#: The README's word for a kind of type -> the declared kinds it may truthfully name, per
+#: ecosystem family: a C++ ``struct`` is a class with public default access, a C# ``struct`` is a
+#: value type and not a class.
+_CLAIMED_TYPE_KINDS: dict[str, frozenset[str]] = {
+    "class": frozenset({"class", "record"}),
+    "struct": frozenset({"struct"}),
+    "enum": frozenset({"enum"}),
+    "interface": frozenset({"interface", "trait"}),
+}
+_KIND_WORDS = {
+    "methods": "method", "method": "method",
+    "constructors": "constructor", "constructor": "constructor",
+    "properties": "property", "property": "property",
+    "fields": "field", "field": "field",
+    "constants": "constant", "constant": "constant",
+    "members": "member",
+    "classes": "class", "class": "class",
+    "structs": "struct", "struct": "struct", "structures": "struct",
+    "enums": "enum", "enumerations": "enum",
+    "interfaces": "interface", "interface": "interface",
+}
+_KIND_ALTERNATION = "|".join(sorted(_KIND_WORDS, key=len, reverse=True))
+_LIST_ITEM = r"`?[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*(?:\(\))?`?"
+_LIST_SEP = r"(?:\s*,\s*(?:and\s+|or\s+)?|\s+(?:and|or)\s+)"
+_LIST = rf"{_LIST_ITEM}(?:{_LIST_SEP}{_LIST_ITEM})*"
+_KIND_BEFORE = re.compile(
+    rf"\b(?:the\s+)?(?P<kind>{_KIND_ALTERNATION})\s+"
+    rf"(?:such\s+as\s+|like\s+|including\s+|named\s+|called\s+)?(?P<list>{_LIST})"
+)
+_KIND_AFTER = re.compile(rf"(?P<list>{_LIST})\s+(?P<kind>{_KIND_ALTERNATION})\b")
+_LIST_SPLIT = re.compile(_LIST_SEP)
+_LIST_STOPWORDS = frozenset(
+    {
+        "a", "all", "also", "an", "and", "any", "are", "as", "be", "both", "by", "can", "each",
+        "for", "from", "in", "is", "it", "its", "may", "more", "of", "on", "or", "other", "such",
+        "that", "the", "their", "these", "this", "those", "through", "to", "which", "with",
+    }
+)
+#: An identifier that is shaped like an API name rather than an English word: it has an upper-case
+#: letter after the first, an underscore, or a call suffix.
+_API_SHAPED = re.compile(r"^(?:[A-Za-z_]\w*[A-Z_]\w*|[A-Z]\w*|\w+\(\))$")
+_WRITE_CUE = re.compile(
+    r"(?i)\b(?:for\s+(?:direct\s+)?manipulation|manipulat\w*|settable|writable|read[-/ ]write|"
+    r"can\s+be\s+(?:set|changed|modified|assigned|written)|to\s+(?:set|change|modify|assign)\b|"
+    r"gets?\s+(?:or|and)\s+sets?)"
+)
+_GETS_OR_SETS = re.compile(r"(?i)^\s*gets\s+or\s+sets\b")
+_MEMBER_LINE = re.compile(
+    r"^\s*(?:[-*+]\s+`(?P<bullet>[A-Za-z_]\w*)(?:\(\))?`\s*[:—-]\s*(?P<btext>.*)"
+    r"|\|\s*`(?P<cell>[A-Za-z_]\w*)(?:\(\))?`\s*\|\s*(?P<ctext>[^|]*)\|)"
+)
+_HEADING = re.compile(r"^\s*(?P<marks>#{1,6})\s+(?P<title>.+?)\s*#*\s*$")
+_DERIVED = re.compile(
+    r"`(?P<base>[A-Za-z_]\w*)`-derived\s+`?(?P<sub>[A-Za-z_]\w*)`?"
+    r"|`(?P<sub2>[A-Za-z_]\w*)`\s+(?:derives\s+from|inherits\s+from|is\s+a\s+subclass\s+of|"
+    r"extends)\s+`(?P<base2>[A-Za-z_]\w*)`"
+)
+_DECLARED_KIND = re.compile(r"\b(record\s+struct|class|struct|record|interface|enum|trait)\b")
+_GENERIC_ARGS = re.compile(r"<[^<>]*>")
+_DOTTED = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*")
+#: Words before a code span in an API-table row that say the row's type has it as a member.
+_OWNERSHIP_CUE = re.compile(
+    r"(?i)\b(?:exposes?|exposed\s+(?:via|through|as|by)|provides?|offers?|has|have|its)\s*$"
+)
+_SPAN_JOINER = re.compile(r"\s*(?:/|,|,?\s*(?:and|or))?\s*")
+#: "the properties A and B of `Workbook`": the owner named right after the list.
+_OWNER_AFTER = re.compile(r"\s+(?:of|on|in)\s+(?:the\s+|a\s+|an\s+)?`?(?P<owner>[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)`?")
+_NOT_A_NAME = frozenset({"null", "true", "false", "None", "True", "False", "self", "this", "void"})
+
+
+def member_kind(fact: Fact, owner_name: str = "") -> str | None:
+    """What a member ``public_symbol`` fact is: its recorded ``member_kind``, else what an older
+    fact proves ("constructor" for a member named after its type, "nonmethod" for a signature
+    without a parameter list), else ``None`` (not judged)."""
+    attributes = fact.attributes or {}
+    recorded = attributes.get("member_kind")
+    if recorded:
+        return recorded
+    name = fact.value.rsplit(".", 1)[-1]
+    if owner_name and name == owner_name:
+        return "constructor"
+    signature = attributes.get("signature", "")
+    if signature and "(" not in signature:
+        return "nonmethod"
+    return None
+
+
+def settable(fact: Fact) -> bool | None:
+    """Whether a caller may assign the member, when the facts record it."""
+    value = (fact.attributes or {}).get("settable")
+    return None if value is None else value == "true"
+
+
+_GETS_OR_SETS_LEAD = re.compile(r"(?i)^(\s*)(gets)\s+or\s+sets\b")
+
+
+def caller_true_summary(text: str, fact: Fact) -> str:
+    """``text`` (a member's doc comment) as true for a caller: a property the facts record as not
+    settable keeps the getter half of a "Gets or sets ..." summary ("Gets border settings.").
+
+    Decision (BL-063, 2026-11-13): rewrite, do not drop. The doc comment is the maintainers' own
+    description and its getter half is true; only the setter half is false for a caller when the
+    setter is private, protected, internal or absent (Cells .NET ``Style.Borders``,
+    ``{ get; private set; }``, Style.cs:73). A member whose settability the facts do not record
+    is left exactly as written."""
+    if settable(fact) is not False:
+        return text
+    return _GETS_OR_SETS_LEAD.sub(lambda m: f"{m.group(1)}{m.group(2)}", text, count=1)
+
+
+def type_kind(fact: Fact) -> str | None:
+    """A type fact's declared kind: ``type_kind``, else the kind its ``declaration`` names, else
+    "enum" for an enum and "class" for a Python ``class`` signature; ``None`` when unknown."""
+    attributes = fact.attributes or {}
+    if attributes.get("type_kind"):
+        return attributes["type_kind"]
+    declared = _DECLARED_KIND.search(attributes.get("declaration", ""))
+    if declared is not None:
+        word = declared.group(1)
+        return "struct" if word.startswith("record") and "struct" in word else word
+    if attributes.get("symbol_kind") == "enum":
+        return "enum"
+    if attributes.get("signature", "").startswith("class "):
+        return "class"
+    return None
+
+
+def _base_names(fact: Fact) -> list[str]:
+    """The simple names of a type's declared bases, from ``bases``, its ``declaration`` or a
+    Python ``class X(A, B)`` signature."""
+    attributes = fact.attributes or {}
+    raw = attributes.get("bases", "")
+    if not raw:
+        declaration = attributes.get("declaration", "")
+        if ":" in declaration:
+            raw = declaration.split(":", 1)[1]
+        elif " extends " in declaration or " implements " in declaration:
+            raw = re.sub(r"\b(?:extends|implements)\b", ",", declaration.split(None, 1)[-1])
+            raw = raw.split(",", 1)[1] if "," in raw else ""
+        else:
+            signature = attributes.get("signature", "")
+            if signature.startswith("class ") and "(" in signature:
+                raw = signature.split("(", 1)[1].rsplit(")", 1)[0]
+    plain = raw
+    while True:
+        stripped = _GENERIC_ARGS.sub("", plain)
+        if stripped == plain:
+            break
+        plain = stripped
+    names = []
+    for part in plain.split(","):
+        part = part.strip().split("=")[0].strip()
+        if part:
+            names.append(_SEGMENTS.split(part.replace("::", "."))[-1].split()[-1])
+    return names
+
+
+def _declaration_known(fact: Fact) -> bool:
+    """Whether the facts record how a type is declared (its kind and bases): without that, a
+    member it inherits from an unrecorded base cannot be told from one it lacks, so no member is
+    called missing (Aspose.PDF .NET's ``SectElement``, sealed with no declaration)."""
+    attributes = fact.attributes or {}
+    return bool(
+        attributes.get("type_kind")
+        or attributes.get("declaration")
+        or attributes.get("bases")
+        or attributes.get("signature", "").startswith("class ")
+    )
+
+
+class MemberIndex:
+    """The public types and their members, as the ``public_symbol``/``enum_member`` facts state
+    them, keyed for the checks below and for the renderer's and author's own use."""
+
+    def __init__(self, facts: FactsDocument) -> None:
+        symbols = _supported(facts, "public_symbol")
+        self.types: dict[str, list[Fact]] = {}
+        self.by_value: dict[str, Fact] = {}
+        for fact in symbols:
+            if (fact.attributes or {}).get("symbol_kind") in TYPE_KINDS:
+                self.types.setdefault(fact.value.rsplit(".", 1)[-1], []).append(fact)
+                self.by_value[fact.value] = fact
+        self.members: dict[str, dict[str, list[Fact]]] = {}
+        self.owners: dict[str, set[str]] = {}
+        for fact in symbols:
+            owner, _, name = fact.value.rpartition(".")
+            if not name or owner not in self.by_value or fact.value in self.by_value:
+                continue
+            self.members.setdefault(owner, {}).setdefault(name, []).append(fact)
+            self.owners.setdefault(name, set()).add(owner)
+        self.values: dict[str, set[str]] = {}
+        for fact in _supported(facts, "enum_member"):
+            owner = str((fact.attributes or {}).get("enum", ""))
+            self.values.setdefault(owner, set()).add(fact.value.rsplit(".", 1)[-1])
+            self.owners.setdefault(fact.value.rsplit(".", 1)[-1], set()).add(owner)
+
+    def __bool__(self) -> bool:
+        return bool(self.types)
+
+    def resolve(self, token: str) -> list[Fact]:
+        """The type facts a README token names: a full or dotted-suffix value, a simple name, or
+        a simple name with a ``-Qualifier`` naming one of its namespace segments."""
+        token = token.strip().strip("`").removesuffix("()")
+        token = _GENERIC_ARGS.sub("", token).replace("::", ".")
+        if not token:
+            return []
+        if token in self.by_value:
+            return [self.by_value[token]]
+        if "." in token:
+            simple = token.rsplit(".", 1)[-1]
+            return [f for f in self.types.get(simple, []) if f.value.endswith("." + token)]
+        if "-" in token:
+            simple, _, qualifier = token.partition("-")
+            found = [
+                f
+                for f in self.types.get(simple, [])
+                if any(qualifier.lower() in seg.lower() for seg in f.value.split(".")[:-1])
+            ]
+            return found
+        return list(self.types.get(token, []))
+
+    def ancestors(self, fact: Fact, limit: int = 12) -> list[Fact]:
+        """``fact`` and every type it derives from that the facts hold, nearest first."""
+        found = [fact]
+        pending = [fact]
+        while pending and len(found) < limit:
+            current = pending.pop(0)
+            for name in _base_names(current):
+                for base in self.types.get(name, []):
+                    if base not in found:
+                        found.append(base)
+                        pending.append(base)
+        return found
+
+    def members_of(self, fact: Fact) -> dict[str, list[Fact]]:
+        """Every member of ``fact`` and of the types it derives from, by name."""
+        merged: dict[str, list[Fact]] = {}
+        for owner in self.ancestors(fact):
+            for name, found in self.members.get(owner.value, {}).items():
+                merged.setdefault(name, []).extend(found)
+        return merged
+
+    def has_value(self, fact: Fact, name: str) -> bool:
+        return any(name in self.values.get(owner.value, set()) for owner in self.ancestors(fact))
+
+
+def _list_items(text: str) -> list[tuple[str, bool]]:
+    """(name, written as a code span) for each item of a matched list, stopping at the first
+    English stop word; the call suffix is removed."""
+    items: list[tuple[str, bool]] = []
+    for raw in _LIST_SPLIT.split(text):
+        raw = raw.strip()
+        if not raw:
+            continue
+        spanned = raw.startswith("`")
+        name = raw.strip("`").removesuffix("()")
+        if name.lower() in _LIST_STOPWORDS:
+            if items:
+                break
+            continue
+        items.append((name, spanned))
+    return items
+
+
+def _kind_lists(text: str) -> list[tuple[int, int, str, list[tuple[str, bool]], bool]]:
+    """(start, end, claimed kind, items, kind word first) for every "the methods A, B and C" /
+    "A and B properties" list in ``text``, non-overlapping, leftmost first."""
+    found: list[tuple[int, int, str, list[tuple[str, bool]], bool]] = []
+    for pattern in (_KIND_BEFORE, _KIND_AFTER):
+        for match in pattern.finditer(text):
+            items = _list_items(match.group("list"))
+            if pattern is _KIND_AFTER and len(items) < 2:
+                continue
+            if not items:
+                continue
+            start, end = match.span()
+            if any(start < other_end and other_start < end for other_start, other_end, *_ in found):
+                continue
+            found.append(
+                (start, end, _KIND_WORDS[match.group("kind").lower()], items, pattern is _KIND_BEFORE)
+            )
+    return sorted(found, key=lambda item: item[0])
+
+
+def _mentions(
+    index: MemberIndex, text: str, spans: list[tuple[int, int]]
+) -> list[tuple[int, list[Fact]]]:
+    """(offset, type facts) for each type the text names outside the given list spans."""
+    plain = text.replace("`", " ")
+    found: list[tuple[int, list[Fact]]] = []
+    for match in _DOTTED.finditer(plain):
+        if any(start <= match.start() < end for start, end in spans):
+            continue
+        token = match.group(0)
+        resolved = index.resolve(token)
+        if not resolved and "." in token:
+            # ``Scene.open`` names the type ``Scene``: the type is the part before the member.
+            resolved = index.resolve(token.rsplit(".", 1)[0])
+        if resolved:
+            found.append((match.start(), resolved))
+    return found
+
+
+def _owner_before(
+    index: MemberIndex,
+    mentions: list[tuple[int, list[Fact]]],
+    offset: int,
+    default: list[Fact],
+    items: list[tuple[str, bool]],
+) -> list[Fact]:
+    """The type a list's members belong to: the nearest type named before it that has one of
+    the listed names as a member (a type in an earlier, ordinary list -- "List class exposes
+    ListId, ListLevels, Style and methods like CompareTo" -- is not the owner), else the nearest
+    type named before it, else ``default`` (a table row's own type)."""
+    before = [facts for start, facts in mentions if start < offset]
+    if default:
+        before = [default, *before]
+    names = {name.rsplit(".", 1)[-1] for name, _ in items}
+    for candidates in reversed(before):
+        if len(candidates) == 1 and names & set(index.members_of(candidates[0])):
+            return candidates
+    return before[-1] if before else default
+
+
+def _ecosystem_family(facts: FactsDocument) -> str:
+    return (_ecosystem(facts) or "").lower()
+
+
+def _type_kind_ok(claimed: str, declared: str, ecosystem: str) -> bool:
+    if declared in _CLAIMED_TYPE_KINDS.get(claimed, frozenset({declared})):
+        return True
+    # A C++ struct is a class (public default access); a Go/Rust struct has no "class" to be.
+    return claimed == "class" and declared == "struct" and ecosystem not in ("net", "dotnet")
+
+
+def _list_findings(
+    index: MemberIndex,
+    facts: FactsDocument,
+    origin: _Origin,
+    text: str,
+    line: int,
+    last: int | None,
+    default_owner: list[Fact],
+    member_coverage: bool,
+) -> list[ClaimFinding]:
+    """Rules (n)/(o) over one sentence or table description."""
+    findings: list[ClaimFinding] = []
+    lists = _kind_lists(text)
+    if not lists:
+        return findings
+    mentions = _mentions(index, text, [(start, end) for start, end, *_ in lists])
+    ecosystem = _ecosystem_family(facts)
+    quoted = _plain(text)
+    for start, end, claimed, items, kind_first in lists:
+        if claimed in _CLAIMED_TYPE_KINDS:
+            for name, _ in items:
+                resolved = index.resolve(name)
+                kinds = {type_kind(fact) for fact in resolved}
+                if not resolved or None in kinds:
+                    continue
+                if not any(_type_kind_ok(claimed, kind, ecosystem) for kind in kinds if kind):
+                    findings.append(
+                        _finding(
+                            origin,
+                            line,
+                            text,
+                            f"the README calls `{name}` a {claimed} ({quoted!r}), but the facts "
+                            f"declare it a {'/'.join(sorted(k for k in kinds if k))}",
+                            last=last,
+                        )
+                    )
+            continue
+        after = _OWNER_AFTER.match(text, end)
+        owners = (
+            index.resolve(after.group("owner"))
+            if after is not None and index.resolve(after.group("owner"))
+            else _owner_before(index, mentions, start, default_owner, items)
+        )
+        if len(owners) != 1:
+            continue
+        owner = owners[0]
+        owner_name = owner.value.rsplit(".", 1)[-1]
+        members = index.members_of(owner)
+        settables: list[bool | None] = []
+        for name, spanned in items:
+            target, member = owner, name
+            if "." in name:
+                prefix, _, member = name.rpartition(".")
+                resolved = index.resolve(prefix)
+                if len(resolved) != 1:
+                    continue
+                target = resolved[0]
+            found = (
+                members.get(member)
+                if target is owner
+                else index.members_of(target).get(member)
+            )
+            if found:
+                kinds = {member_kind(fact, target.value.rsplit(".", 1)[-1]) for fact in found}
+                if None in kinds:
+                    settables.append(None)
+                    continue
+                allowed = _CLAIMED_MEMBER_KINDS[claimed]
+                if not kinds & allowed:
+                    shown = "/".join(sorted("property, field or constant" if k == "nonmethod"
+                                            else k for k in kinds))
+                    findings.append(
+                        _finding(
+                            origin,
+                            line,
+                            text,
+                            f"the README calls `{target.value.rsplit('.', 1)[-1]}.{member}` a "
+                            f"{claimed} ({quoted!r}), but the facts record it as a {shown}; "
+                            "call it by its kind",
+                            last=last,
+                        )
+                    )
+                    continue
+                values = {settable(fact) for fact in found}
+                settables.append(False if values == {False} else (True if True in values else None))
+                continue
+            if index.has_value(target, member) or member == owner_name:
+                continue
+            # "the FieldIf and FieldCompare fields" names types by a domain word; only a list the
+            # kind word introduces ("properties such as Color") claims a type name is a member.
+            if not kind_first and index.resolve(member):
+                continue
+            # Python's surface records functions only (no instance attributes), so a name it
+            # lacks proves nothing there (Aspose.Note Python ``Document.DisplayName``).
+            if not member_coverage:
+                continue
+            if not index.members_of(target) or not _declaration_known(target):
+                continue
+            # A name is held to the members only when the README writes it as an API name: in a
+            # code span, or as a call or mixed-case identifier after the kind word. A bare
+            # acronym or word ("MAPI properties", "property ID") is English, not a member name.
+            if not (spanned or (kind_first and _API_SHAPED.match(member) and not member.isupper())):
+                continue
+            elsewhere = sorted(
+                other.rsplit(".", 1)[-1]
+                for other in index.owners.get(member, set())
+                if other != target.value
+            )
+            where = (
+                f"; `{member}` is a member of {', '.join(f'`{o}`' for o in elsewhere[:3])}"
+                if elsewhere
+                else ""
+            )
+            findings.append(
+                _finding(
+                    origin,
+                    line,
+                    text,
+                    f"the README names `{member}` as a {claimed} of "
+                    f"`{target.value.rsplit('.', 1)[-1]}` ({quoted!r}), but `{target.value}` has "
+                    f"no such member{where}",
+                    last=last,
+                )
+            )
+        if (
+            claimed in ("property", "field", "member")
+            and settables
+            and all(value is False for value in settables)
+            and _WRITE_CUE.search(text[start:])
+        ):
+            findings.append(
+                _finding(
+                    origin,
+                    line,
+                    text,
+                    f"the README offers read-only members of `{owner_name}` for assignment "
+                    f"({quoted!r}), but the facts record no setter for any of them",
+                    last=last,
+                )
+            )
+    return findings
+
+
+def _derived_findings(
+    index: MemberIndex, origin: _Origin, text: str, line: int, last: int | None
+) -> list[ClaimFinding]:
+    findings: list[ClaimFinding] = []
+    for match in _DERIVED.finditer(text):
+        base_name = match.group("base") or match.group("base2")
+        sub_name = match.group("sub") or match.group("sub2")
+        bases = index.resolve(base_name)
+        subs = index.resolve(sub_name)
+        if not subs and sub_name.endswith("ies"):
+            subs = index.resolve(sub_name[:-3].capitalize() + "y")
+        if not subs and sub_name.endswith("s"):
+            subs = index.resolve(sub_name[:-1].capitalize())
+        if not bases or not subs or {f.value for f in bases} & {f.value for f in subs}:
+            continue
+        if any(
+            base.value in {ancestor.value for ancestor in index.ancestors(sub)}
+            for base in bases
+            for sub in subs
+        ):
+            continue
+        # Without a single recorded base for any reading of the subject, nothing is refuted.
+        if not any(_base_names(sub) for sub in subs):
+            continue
+        sub = subs[0]
+        findings.append(
+            _finding(
+                origin,
+                line,
+                text,
+                f"the README says `{sub.value.rsplit('.', 1)[-1]}` derives from `{base_name}` "
+                f"({_plain(text)!r}), but its declared bases are "
+                f"{', '.join(_base_names(sub)) or 'none'}",
+                last=last,
+            )
+        )
+    return findings
+
+
+def _row_cells(text: str) -> tuple[str, str]:
+    """(first cell, the rest of the row) of a Markdown table row."""
+    body = text.strip().strip("|")
+    first, _, rest = body.partition("|")
+    return first.strip(), rest.strip().rstrip("|").strip()
+
+
+def _row_span_findings(
+    index: MemberIndex,
+    origin: _Origin,
+    known: set[str],
+    row_type: Fact,
+    description: str,
+    line: int,
+    text: str,
+    member_coverage: bool = True,
+) -> list[ClaimFinding]:
+    """Rule (o) over one API-table row's description: every API-shaped code span names a member
+    of the row's type (or of a type the row also names), or a type, or at least a name the
+    surface states."""
+    findings: list[ClaimFinding] = []
+    named_types = [facts for _, facts in _mentions(index, description, [])]
+    related = [row_type, *(fact for found in named_types for fact in found)]
+    members = index.members_of(row_type)
+    if not members or not _declaration_known(row_type):
+        return findings
+    row_name = row_type.value.rsplit(".", 1)[-1]
+    owned = False
+    previous_end = 0
+    for span_match in _CODE_SPAN.finditer(description):
+        span = span_match.group(1)
+        between = description[previous_end : span_match.start()]
+        previous_end = span_match.end()
+        # Only a span the row says the type HAS is held to its members: "Exposes `GetExtra`",
+        # "exposed via `Tangents`", and the spans joined to one by "/", "," or "and". A span the
+        # row merely mentions ("a `TR` element", "added through `AddPagination`") is not.
+        if _OWNERSHIP_CUE.search(between):
+            owned = True
+        elif not _SPAN_JOINER.fullmatch(between):
+            owned = False
+        for part in span.split("/"):
+            token = part.strip().removesuffix("()")
+            token = token.split("(", 1)[0]
+            if not token or token in _NOT_A_NAME or not _IDENTIFIER.fullmatch(token.split(".")[-1]):
+                continue
+            if "." in token:
+                prefix, _, member = token.rpartition(".")
+                owners = index.resolve(prefix)
+                if len(owners) != 1 or not index.members_of(owners[0]):
+                    continue
+                target = owners[0]
+                if (
+                    member in index.members_of(target)
+                    or index.has_value(target, member)
+                    or index.resolve(token)  # a nested type, ``Measure.NumberFormatList``
+                ):
+                    continue
+                findings.append(
+                    _finding(
+                        origin,
+                        line,
+                        text,
+                        f"the API table row for `{row_name}` names `{token}`, but "
+                        f"`{target.value}` has no member `{member}`",
+                    )
+                )
+                continue
+            if not _API_SHAPED.match(token) or index.resolve(token) or token == row_name:
+                continue
+            if not owned or _EXCEPTION_NAME.search(token):
+                continue
+            # Python's surface holds functions only: a bare name may be an instance attribute it
+            # never records, so only a name written as a call is held to the members.
+            if not member_coverage and not part.strip().endswith(")"):
+                continue
+            if any(
+                token in index.members_of(fact) or index.has_value(fact, token)
+                for fact in related
+            ):
+                continue
+            elsewhere = sorted(index.owners.get(token, set()))
+            if elsewhere:
+                findings.append(
+                    _finding(
+                        origin,
+                        line,
+                        text,
+                        f"the API table row for `{row_name}` names `{token}`, a member of "
+                        f"{', '.join(f'`{o}`' for o in elsewhere[:3])}, not of `{row_type.value}`",
+                    )
+                )
+            elif token not in known:
+                findings.append(
+                    _finding(
+                        origin,
+                        line,
+                        text,
+                        f"the API table row for `{row_name}` names `{token}`, which no fact "
+                        "states (no member or type of the public surface has that name)",
+                    )
+                )
+    return findings
+
+
+def _gets_or_sets_findings(
+    lines: list[_Line], index: MemberIndex, origin: _Origin
+) -> list[ClaimFinding]:
+    """A member bullet or row under a type's heading that says "Gets or sets" for a member the
+    facts record as not settable by a caller."""
+    findings: list[ClaimFinding] = []
+    heading: list[Fact] = []
+    for line in lines:
+        if line.in_fence:
+            continue
+        match = _HEADING.match(line.text)
+        if match is not None:
+            title = match.group("title").strip().strip("`")
+            heading = index.resolve(title.split()[0]) if title else []
+            continue
+        member_line = _MEMBER_LINE.match(line.text)
+        if member_line is None or len(heading) != 1:
+            continue
+        name = member_line.group("bullet") or member_line.group("cell")
+        said = member_line.group("btext") or member_line.group("ctext") or ""
+        if not _GETS_OR_SETS.match(said):
+            continue
+        found = index.members_of(heading[0]).get(name, [])
+        if found and all(settable(fact) is False for fact in found):
+            findings.append(
+                _finding(
+                    origin,
+                    line.index,
+                    line.text,
+                    f"the README says `{heading[0].value.rsplit('.', 1)[-1]}.{name}` 'Gets or "
+                    "sets', but the facts record no caller-visible setter (get-only for callers)",
+                )
+            )
+    return findings
+
+
+def _member_findings(lines: list[_Line], facts: FactsDocument, origin: _Origin) -> list[ClaimFinding]:
+    """Rules (n) and (o): member kinds, accessors, member attribution and stated bases."""
+    index = MemberIndex(facts)
+    if not index:
+        return []
+    known, _, _ = _surface_names(facts)
+    # Python's surface records functions only (no attributes, no fields): a name it lacks may be
+    # an instance attribute, so only a claimed method or constructor is held to its members.
+    vendored = _ecosystem_family(facts) not in ("python",)
+    findings: list[ClaimFinding] = []
+    for line in lines:
+        if line.in_fence:
+            continue
+        row = _TABLE_ROW.match(line.text)
+        if row is None:
+            continue
+        first, description = _row_cells(line.text)
+        resolved = index.resolve(_row_name(first.strip("`")))
+        if len(resolved) != 1 or not description:
+            continue
+        findings.extend(
+            _list_findings(
+                index, facts, origin, description, line.index, None, resolved, vendored
+            )
+        )
+        findings.extend(_derived_findings(index, origin, description, line.index, None))
+        findings.extend(
+            _row_span_findings(
+                index, origin, known, resolved[0], description, line.index, line.text, vendored
+            )
+        )
+    for sentence, first_line, last_line in _sentences(lines):
+        if sentence.lstrip().startswith("|"):
+            continue
+        findings.extend(
+            _list_findings(index, facts, origin, sentence, first_line, last_line, [], vendored)
+        )
+        findings.extend(_derived_findings(index, origin, sentence, first_line, last_line))
+    findings.extend(_gets_or_sets_findings(lines, index, origin))
     return findings
 
 
@@ -1144,6 +1926,7 @@ def surface_findings(
     return [
         *_count_findings(lines, facts, origin, probes),
         *_table_findings(lines, facts, origin, probes),
+        *_member_findings(lines, facts, origin),
         *_stub_findings(lines, facts, origin),
         *_example_findings(lines, facts),
         *_name_findings(lines, facts, origin),

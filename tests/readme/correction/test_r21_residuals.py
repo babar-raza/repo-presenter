@@ -64,8 +64,12 @@ def test_the_absent_row_is_a_residual_when_the_count_edit_made_the_run_a_net_imp
     assert net_improvement(ctx, result)
     assert [f for f in findings if f.rule == RULE_CLAIMS] == []  # L-03 no longer blocks
     assert findings == []
-    (row,) = [r for r in findings.residuals if r["kind"] == "claim_contradiction"]
-    assert "CSSDeclarationBlock" in row["detail"] and row["rule"] == RULE_CLAIMS
+    rows = [r for r in findings.residuals if r["kind"] == "claim_contradiction"]
+    # BL-065 (K05): "listed below" over 5 rows is a second pre-existing contradiction, carried as
+    # a residual too -- the count edit did not introduce it.
+    assert len(rows) == 2 and any("list only 5" in r["detail"] for r in rows)
+    (row,) = [r for r in rows if "CSSDeclarationBlock" in r["detail"]]
+    assert row["rule"] == RULE_CLAIMS
     assert row["line"] is not None
 
 
@@ -86,7 +90,8 @@ def test_without_any_edit_the_same_contradiction_still_blocks(
     ctx, result, findings = _run(make_context, make_facts, make_fact, classes=243)
     assert result.edits == []  # the count is already right: nothing to improve
     assert not net_improvement(ctx, result)
-    assert [f.rule for f in findings] == [RULE_CLAIMS]  # unchanged behavior: blocks
+    # unchanged behavior: blocks (the absent row, and BL-065's "listed below" over 5 rows)
+    assert {f.rule for f in findings} == {RULE_CLAIMS}
     assert findings.residuals == []
     assert "residuals" not in holdouts_document(findings, idempotent=True, source_revision="0")
 

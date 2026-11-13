@@ -28,7 +28,7 @@ import json
 import os
 import re
 from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
@@ -114,6 +114,15 @@ _TYPE_OBJECTIVE = (
     "members' list, never a count, never a purpose, domain, format or behaviour inferred from the "
     "type's or a member's name alone that no listed fact states, never a claim no listed fact "
     "carries."
+)
+# BL-063 (K03, 2026-11-13): the batch gave member names only, and authors called a ``const int`` a
+# method (Email .NET ``MapiMessage.AttachMethodByValue``), static factories constructors
+# (``CfbDocument.FromFile``) and methods properties (``DirectoryEntry.IsRoot``). Each listed
+# member now carries its kind from the facts (``member_kinds``), and the rule says to use it.
+_MEMBER_KIND_RULE = (
+    "Each listed member's kind is given in member_kinds (method, constructor, property, read-only "
+    "property, field or constant): call a member only by that kind, never a property or constant "
+    "a method or a static method a constructor, and never say a read-only property can be set."
 )
 _TYPE_MEMBER_CAP = 8
 _TYPE_VALUE_CAP = 12
@@ -783,6 +792,33 @@ def type_members(
     return listed + [value for value in type_values(type_fact, facts) if value not in listed]
 
 
+def type_member_kinds(type_fact: Fact, facts: FactsDocument, names: list[str]) -> dict[str, str]:
+    """{member name: its kind as the README must call it} for the listed ``names`` the facts
+    classify (``surface_claims.member_kind``/``settable``): "method", "constructor", "property",
+    "read-only property", "field", "constant" or, for an enum's value, "value"; a name the facts
+    cannot classify is left out rather than guessed."""
+    from repo_presenter.readme.validation.surface_claims import member_kind, settable
+
+    paths = type_paths(type_fact, facts)
+    owner_name = type_fact.value.rsplit(".", 1)[-1]
+    kinds: dict[str, set[str]] = {}
+    for fact in facts.by_kind("public_symbol"):
+        owner, _, name = fact.value.rpartition(".")
+        if fact.polarity != "SUPPORTED" or owner not in paths or name not in names:
+            continue
+        kind = member_kind(fact, owner_name)
+        if kind is None or kind == "nonmethod":
+            continue
+        if kind == "property" and settable(fact) is False:
+            kind = "read-only property"
+        kinds.setdefault(name, set()).add(kind)
+    labelled = {name: found.pop() for name, found in kinds.items() if len(found) == 1}
+    for value in type_values(type_fact, facts, limit=len(names) or _TYPE_VALUE_CAP):
+        if value in names and value not in labelled:
+            labelled[value] = "value"
+    return {name: labelled[name] for name in names if name in labelled}
+
+
 def type_values(
     type_fact: Fact, facts: FactsDocument, limit: int = _TYPE_VALUE_CAP
 ) -> list[str]:
@@ -806,6 +842,7 @@ def type_documented_members(
     at most ``limit``: what the type's members say they do is what a purpose sentence for an
     undocumented type may rest on."""
     from repo_presenter.extractors.surface.doc_text import usable_doc
+    from repo_presenter.readme.validation.surface_claims import caller_true_summary
 
     paths = type_paths(type_fact, facts)
     found: list[Fact] = []
@@ -820,6 +857,10 @@ def type_documented_members(
             and docstring
             and usable_doc(docstring, fact.value)
         ):
+            truthful = caller_true_summary(docstring, fact)
+            if truthful != docstring:
+                # A read-only property's "Gets or sets ..." is shown as what it is for a caller.
+                fact = replace(fact, attributes={**(fact.attributes or {}), "docstring": truthful})
             found.append(fact)
     return found[:limit]
 
@@ -884,6 +925,9 @@ def _type_batches(
         implementation = {fact_id: found for fact_id, (_, found) in given.items()}
         detail = [found for fact in batch for found in implementation[fact.id]]
         members = {fact_id: names for fact_id, (names, _) in given.items()}
+        member_kinds = {
+            fact.id: type_member_kinds(fact, facts, members[fact.id]) for fact in batch
+        }
         ids = [fact.id for fact in batch]
         slots = tuple(f"type:{fact.id}" for fact in batch)
         slot_facts = {
@@ -901,6 +945,7 @@ def _type_batches(
                     else {}
                 ),
                 **({"members": members[fact.id]} if members[fact.id] else {}),
+                **({"member_kinds": member_kinds[fact.id]} if member_kinds[fact.id] else {}),
             }
             for fact in batch
         ]
@@ -923,6 +968,8 @@ def _type_batches(
             if any(found.kind == "implementation" for found in detail)
             else ""
         )
+        if any(member_kinds.values()):
+            implementation_rule += f"{_MEMBER_KIND_RULE} "
         packet = {
             "repository": entry.repository,
             "product_name": name,
