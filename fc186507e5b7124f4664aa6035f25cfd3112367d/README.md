@@ -27,28 +27,28 @@ exports to CSV, JSON, and Markdown for reporting and data-interchange scenarios.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   subgraph StartingPoints["Starting Points"]
     direction TB
-    i1["An existing .xlsx workbook"]
-    i2["An existing HTML document"]
+    i1["An existing .xlsx<br/>workbook"]
+    i2["An existing HTML<br/>document"]
   end
   PRODUCT["Aspose.Cells FOSS for TypeScript"]
   subgraph Capabilities["Core Capabilities"]
-    direction LR
-    subgraph capl[" "]
-      direction TB
-      c1["Cell values, formulas, and shared strings"]
-      c2["Style formatting (font, fill, border, alignment, number formats)"]
-      c3["Worksheet settings (column widths, row heights, merges, auto filter)"]
-      c4["Data validation and conditional formatting"]
-    end
-    subgraph capr[" "]
-      direction TB
-      c5["Hyperlinks and defined names"]
-      c6["Embedded pictures and shapes"]
-      c7["HTML round-trip import and export"]
-    end
+    direction TB
+    c1["Cell values, formulas,<br/>and shared strings"]
+    c2["Style formatting<br/>(font, fill, border,<br/>alignment, number<br/>formats)"]
+    c3["Worksheet settings<br/>(column widths, row<br/>heights, merges, auto<br/>filter)"]
+    c4["Data validation and<br/>conditional formatting"]
+    c5["Hyperlinks and defined<br/>names"]
+    c6["Embedded pictures and<br/>shapes"]
+    c7["HTML round-trip import<br/>and export"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c7
+    c6 ~~~ c7
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -57,6 +57,8 @@ flowchart TD
     o3["Plain text files"]
   end
   StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities

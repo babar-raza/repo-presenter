@@ -1,14 +1,34 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 1,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "6e92da3a04ae70dadbe600431c38b19f7b16b50af338417fb2e7f2baadd0826c",
-  "edits": [],
+  "corrected_sha256": "afcb0eb3b102564b6040c0721953539cef7788755cc7a8d8a6c9e7064b9e27c7",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2351,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:29"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 30,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx workbook\"]\n    i2[\"An existing HTML document\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Cell values, formulas, and shared strings\"]\n      c2[\"Style formatting (font, fill, border, alignment, number formats)\"]\n      c3[\"Worksheet settings (column widths, row heights, merges, auto filter)\"]\n      c4[\"Data validation and conditional formatting\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c5[\"Hyperlinks and defined names\"]\n      c6[\"Embedded pictures and shapes\"]\n      c7[\"HTML round-trip import and export\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A workbook document\"]\n    o2[\"An HTML document\"]\n    o3[\"Plain text files\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1976 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 722 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx<br/>workbook\"]\n    i2[\"An existing HTML<br/>document\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Cell values, formulas,<br/>and shared strings\"]\n    c2[\"Style formatting<br/>(font, fill, border,<br/>alignment, number<br/>formats)\"]\n    c3[\"Worksheet settings<br/>(column widths, row<br/>heights, merges, auto<br/>filter)\"]\n    c4[\"Data validation and<br/>conditional formatting\"]\n    c5[\"Hyperlinks and defined<br/>names\"]\n    c6[\"Embedded pictures and<br/>shapes\"]\n    c7[\"HTML round-trip import<br/>and export\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c7\n    c6 ~~~ c7\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A workbook document\"]\n    o2[\"An HTML document\"]\n    o3[\"Plain text files\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1393
+    }
+  ],
   "lane": "L",
   "original_sha256": "6e92da3a04ae70dadbe600431c38b19f7b16b50af338417fb2e7f2baadd0826c",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
   "schema_version": 1,
@@ -18,6 +38,284 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
-  "unapplied": []
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:autofilter"
+      ],
+      "line": 201,
+      "reason": "the count only cell does not describe AutoFilter, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 methods and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:cellvalue"
+      ],
+      "line": 207,
+      "reason": "the boilerplate label cell does not describe CellValue, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Cells TYPESCRIPT API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:comment"
+      ],
+      "line": 216,
+      "reason": "the count only cell does not describe Comment, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 methods and 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:commentcollection"
+      ],
+      "line": 217,
+      "reason": "the count only cell does not describe CommentCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 6 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:conditionalformat"
+      ],
+      "line": 218,
+      "reason": "the count only cell does not describe ConditionalFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 methods."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:conditionalformatcollection"
+      ],
+      "line": 219,
+      "reason": "the count only cell does not describe ConditionalFormatCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:datavalidationcollection"
+      ],
+      "line": 224,
+      "reason": "the count only cell does not describe DataValidationCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:hyperlink"
+      ],
+      "line": 232,
+      "reason": "the count only cell does not describe Hyperlink, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 methods and 8 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:hyperlinkcollection"
+      ],
+      "line": 233,
+      "reason": "the count only cell does not describe HyperlinkCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 6 methods and 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:alignment"
+      ],
+      "line": 251,
+      "reason": "the count only cell does not describe Alignment, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:border"
+      ],
+      "line": 255,
+      "reason": "the count only cell does not describe Border, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:borderline"
+      ],
+      "line": 256,
+      "reason": "the count only cell does not describe BorderLine, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:cellcoordinates"
+      ],
+      "line": 258,
+      "reason": "the count only cell does not describe CellCoordinates, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:cellrange"
+      ],
+      "line": 260,
+      "reason": "the count only cell does not describe CellRange, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:colorscalerule"
+      ],
+      "line": 267,
+      "reason": "the count only cell does not describe ColorScaleRule, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:conditionalformatrule"
+      ],
+      "line": 269,
+      "reason": "the count only cell does not describe ConditionalFormatRule, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 8 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:databarrule"
+      ],
+      "line": 271,
+      "reason": "the count only cell does not describe DataBarRule, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:datavalidation"
+      ],
+      "line": 272,
+      "reason": "the count only cell does not describe DataValidation, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 12 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:fill"
+      ],
+      "line": 274,
+      "reason": "the count only cell does not describe Fill, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:filtercolumn"
+      ],
+      "line": 275,
+      "reason": "the count only cell does not describe FilterColumn, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:font"
+      ],
+      "line": 276,
+      "reason": "the count only cell does not describe Font, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:iconsetrule"
+      ],
+      "line": 280,
+      "reason": "the count only cell does not describe IconSetRule, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:protection"
+      ],
+      "line": 289,
+      "reason": "the count only cell does not describe Protection, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Interface with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:encryptiontype"
+      ],
+      "line": 304,
+      "reason": "the count only cell does not describe EncryptionType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 1 member."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:saveformat"
+      ],
+      "line": 305,
+      "reason": "the count only cell does not describe SaveFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Enum with 5 members."
+    }
+  ]
 }
