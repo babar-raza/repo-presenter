@@ -27,6 +27,7 @@ DETECTORS: dict[str, Detector] = {}
 DETECTOR_VERSIONS: dict[str, str] = {
     "absent_type_row": "1",
     "broken_link": "1",
+    "dead_link": "1",
     "enterprise_edition_naming": "3",
     "failing_example": "1",
     "format_overclaim": "2",

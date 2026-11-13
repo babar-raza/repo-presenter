@@ -64,6 +64,7 @@ def test_every_registered_detector_is_loaded_by_name() -> None:
     assert sorted(load_detectors()) == [
         "absent_type_row",
         "broken_link",
+        "dead_link",
         "enterprise_edition_naming",
         "failing_example",
         "format_overclaim",

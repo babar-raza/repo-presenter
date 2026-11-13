@@ -144,6 +144,9 @@ class LaneOutcome:
     regenerations: int = 0
     needs_review_only_pass: bool = False
     no_action: bool = False  # Lane L only: the sealed README equals the live README at ``revision``
+    # Lane L only: the live README at ``revision`` could not be read, so R16 cannot be ruled out
+    # and the candidate is never counted (fail closed, never assume an edit was made).
+    live_unreadable: bool = False
     revision: str = ""  # the upstream revision the latest seal was made at; an audit binds to it
 
     @property
@@ -478,10 +481,13 @@ def certified_outcomes(
         head.notes.append(head.reason)
     elif head.bucket == UNCALIBRATED:
         head.needs_review_only_pass = True
-        head.reason += "; needs a review-only pass under a PASSED reviewer (no regeneration)"
+        head.reason += "; needs a review-only pass: an attested M9 audit (no regeneration)"
     if lane == "L" and certified and latest is not None and latest.readme is not None and head.revision:
         live = github([f"repos/{repository}/contents/README.md?ref={head.revision}", "-H", "Accept: application/vnd.github.raw"])
-        if live is not None and live.replace(b"\r\n", b"\n") == latest.readme.replace(b"\r\n", b"\n"):
+        if live is None:
+            head.live_unreadable = True
+            head.notes.append("live README unreadable at the sealed revision: R16 cannot be ruled out, not counted")
+        elif live.replace(b"\r\n", b"\n") == latest.readme.replace(b"\r\n", b"\n"):
             head.no_action = True
             head.notes.append("sealed README is byte-identical to the live README (R16: NO_ACTION_JUSTIFIED, never accepted)")
     if certification.regenerations > 1:
@@ -643,13 +649,24 @@ def apply_attested(
             o.reason = "R16: the sealed Lane L README equals the live README; terminal NO_ACTION_JUSTIFIED, never accepted"
             o.publication_ready = False
             continue
+        if o.lane == "L" and o.current and o.live_unreadable:
+            o.bucket = UNCALIBRATED
+            o.reason = "R16 fail-closed: the live README could not be read, so a no-op seal cannot be ruled out"
+            o.publication_ready = False
+            continue
         audited_revision = attested.get((o.repository, o.lane))
         if o.current and audited_revision and audited_revision == o.revision:
             o.bucket = ACCEPTED
             o.reason = "attested independently-accepted record from the hosted acceptance writer"
-        elif o.bucket == ACCEPTED:
+        else:
+            # R33: the attested M9 record is the only road in; the frozen reviewer calibration no
+            # longer explains why a candidate is not counted, so its reason is replaced too.
             o.bucket = UNCALIBRATED
-            o.reason = "no attested independently-accepted record (M9 audit not passed or not attested)"
+            o.reason = (
+                "R33: no attested M9 acceptance record at this revision"
+                if o.current else "older version set: only the current seal can be accepted"
+            )
+            o.needs_review_only_pass = o.current
         o.publication_ready = o.independently_accepted and allowlisted_for_pr(allowlist, o.repository)
 
 
