@@ -817,7 +817,8 @@ def test_a_deterministic_refusal_over_a_restored_call_store_reports_the_refusal_
     records for this invocation), but the cache restore had left the previous run's ledger.jsonl
     in place, and the call count was read with the no-op proof's measure, which fails
     LEDGER_NO_RECORDS. The real outcome -- a refusal naming Lane R -- was masked. A run that
-    dispatched no job owes the ledger no record: the refusal is what must be reported."""
+    dispatched no job owes the ledger no record: the refusal is what must be reported. (BL-078; the
+    TC-008a call-count proof is unchanged: a model-reviewed run is still measured strictly.)"""
     import shutil
 
     store = restored_call_store(tmp_path, monkeypatch)
