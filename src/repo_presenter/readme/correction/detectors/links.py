@@ -24,6 +24,7 @@ from repo_presenter.readme.correction.model import (
     DetectorResult,
     Edit,
     Finding,
+    ReadmeLine,
 )
 
 _WHERE = re.compile(r"^line (\d+); (\w+);")
@@ -49,6 +50,28 @@ def _repair(ctx: Context, target: str) -> str | None:
     return None
 
 
+def _line_holding(ctx: Context, number: int, forms: list[str]) -> ReadmeLine:
+    """The README line that holds the link a fact records at line ``number``.
+
+    The link facts record the line their block starts on (markdown-it's block map), so a link in
+    the second or later line of a soft-wrapped paragraph - a badge row written one badge per line,
+    Aspose.PSD-FOSS-for-Python's ``[![License: MIT](...)](License/LICENSE.txt)`` on line 5 of a
+    block starting on line 3 - is not on its recorded line. The block's own lines, up to its first
+    blank line, are searched; exactly one of them holding the link is that line. Anything else
+    keeps the recorded line, so the finding below still reports it as not found or ambiguous.
+    """
+    recorded = ctx.lines[number - 1]
+    if any(f"]({form}" in recorded.text for form in forms):
+        return recorded
+    block: list[ReadmeLine] = []
+    for line in ctx.lines[number - 1 :]:
+        if not line.text.strip():
+            break
+        block.append(line)
+    holding = [line for line in block if any(f"]({form}" in line.text for form in forms)]
+    return holding[0] if len(holding) == 1 else recorded
+
+
 @detector("broken_link")
 def broken_link(ctx: Context) -> DetectorResult:
     edits: list[Edit] = []
@@ -68,9 +91,9 @@ def broken_link(ctx: Context) -> DetectorResult:
         number = int(where.group(1))
         if not 1 <= number <= len(ctx.lines):
             continue
-        line = ctx.lines[number - 1]
         target = fact.value
         forms = [target, quote(target, safe="/#:@")]
+        line = _line_holding(ctx, number, forms)
         spelled = next((form for form in forms if f"]({form}" in line.text), None)
         if spelled is None:
             findings.append(
@@ -108,16 +131,35 @@ def broken_link(ctx: Context) -> DetectorResult:
                 )
             )
             continue
-        edits.append(
-            Edit(
-                kind=BROKEN_LINK,
-                detector="broken_link",
-                start=line.start + index,
-                end=line.start + end,
-                original=spelled,
-                replacement=quote(repaired, safe="/#:@") if spelled != target else repaired,
-                fact_ids=(fact.id,),
-                rationale=f"the tree does not contain {target!r}; it contains {repaired!r}",
+        replacement = quote(repaired, safe="/#:@") if spelled != target else repaired
+        rationale = f"the tree does not contain {target!r}; it contains {repaired!r}"
+        # A link fact is one distinct target; the README may link it from more than one line
+        # (PSD Python: the License badge and the License section's "[MIT License](...)"). Every
+        # prose line linking it exactly once, unambiguously, gets the same repair.
+        for holder in (
+            line,
+            *(
+                other
+                for other in ctx.lines
+                if other is not line
+                and not other.in_fence
+                and other.text.count(f"]({spelled}") == 1
+            ),
+        ):
+            at = holder.text.find(f"]({spelled}") + 2
+            stop = at + len(spelled)
+            if holder.text[stop : stop + 1] not in {")", " "}:
+                continue
+            edits.append(
+                Edit(
+                    kind=BROKEN_LINK,
+                    detector="broken_link",
+                    start=holder.start + at,
+                    end=holder.start + stop,
+                    original=spelled,
+                    replacement=replacement,
+                    fact_ids=(fact.id,),
+                    rationale=rationale,
+                )
             )
-        )
     return DetectorResult(edits=tuple(edits), findings=tuple(findings))

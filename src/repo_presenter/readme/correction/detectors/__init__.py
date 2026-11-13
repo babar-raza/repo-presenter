@@ -26,7 +26,7 @@ DETECTORS: dict[str, Detector] = {}
 #: change cannot pass quietly.
 DETECTOR_VERSIONS: dict[str, str] = {
     "absent_type_row": "1",
-    "broken_link": "1",
+    "broken_link": "2",
     "dead_link": "1",
     "enterprise_edition_naming": "3",
     "failing_example": "1",
