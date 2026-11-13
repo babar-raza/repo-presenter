@@ -3,11 +3,11 @@
   "card": "TC-012",
   "gate": "GATE4_PRODUCTION",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-13T07:59:20Z",
-  "base_rev": "bc3e0f351689931a0ecd0de1b2d007bbf95c0b62",
-  "head_rev": "9b09e8def8286c7c62724ed90e987476f43200d3",
+  "generated_at": "2026-11-13T13:49:02Z",
+  "base_rev": "dac27952a4949cdf449f6f033f0712b70f75bc6a",
+  "head_rev": "42485328f62d238d80d11a93d4c8c677921bc96b",
   "card_sha256": "b0eb5254cbaf9dda33c8f3a6d4d64285b890787ec35f1a52aed95892d0ae2a88",
-  "checker_fileset_sha256": "0ef1606f4790a37780b84ad13547eb53dc8797960694e570831049630729757e",
+  "checker_fileset_sha256": "24e8e532958b89b50d346e77cfeb2c2b2e90a25cd532f296e2effafdefa6ab8d",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.18",
@@ -17,7 +17,8 @@
     "ok": true,
     "changed_paths": [
       "scripts/scheduled_execution_gate.py",
-      "tests/test_scheduled_execution_gate.py"
+      "scripts/select_scheduled_cohort.py",
+      "tests/test_present_schedule.py"
     ],
     "violations": [],
     "evaluated": true
@@ -29,13 +30,13 @@
         {
           "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q",
           "exit_code": 0,
-          "duration_s": 12.877,
-          "stdout_sha256": "369836db26be21726861ecd5dbcc05727433a711a8b224ad1f233f4302cbeb77"
+          "duration_s": 12.654,
+          "stdout_sha256": "e31f5bce38aaf22c6fbf533e7c878bb5de99f5d8a8aa44c71029f01c6d5e8ef6"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 0,
-          "duration_s": 0.023,
+          "duration_s": 0.029,
           "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],
@@ -47,13 +48,13 @@
         {
           "command": "python -m pytest tests/test_present_schedule.py tests/test_present_lanes.py tests/test_present.py tests/test_scheduled_execution_gate.py -q",
           "exit_code": 0,
-          "duration_s": 11.049,
-          "stdout_sha256": "1cdb0e6df46ea9b6d6f86e2ec93dadae7a1d35e7ba3459fb8fc01143899043ab"
+          "duration_s": 12.516,
+          "stdout_sha256": "1a62dbc552f2ff83761c39fe4351b10a7257d2baad868e6d84a45bd1646628fd"
         },
         {
           "command": "python ops/checks/marker_check.py Dockerfile \"FROM\"",
           "exit_code": 0,
-          "duration_s": 0.021,
+          "duration_s": 0.022,
           "stdout_sha256": "3ba2b9104d4cc40ed0cb8406ec68e85cbeb33ce95b1346246302fd54826d347b"
         }
       ],
