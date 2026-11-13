@@ -3,19 +3,21 @@
   "card": "TC-020",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-11T16:30:50Z",
-  "base_rev": "b8873d0363c87234c02233745ee660c273832024",
-  "head_rev": "04f91578188d0b03f19c21ad4c0607804deb1222",
+  "generated_at": "2026-11-13T07:59:33Z",
+  "base_rev": "bc3e0f351689931a0ecd0de1b2d007bbf95c0b62",
+  "head_rev": "9b09e8def8286c7c62724ed90e987476f43200d3",
   "card_sha256": "ea49b5ef844a9390925e794b4813c466d9c91bf169cfd0462cc8a7a12968b793",
-  "checker_fileset_sha256": "97ab873b9e6c4303c11ae0510da2110d0fb91ff11e9cf270b079d838b57a1067",
+  "checker_fileset_sha256": "e60175b7cdac51dddb52bf5d87dece4888484f86b773628fa1a294aacdb07610",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v445-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
-    "changed_paths": [],
+    "changed_paths": [
+      "tests/core/registry/test_benchmarks.py"
+    ],
     "violations": [],
     "evaluated": true
   },
@@ -26,20 +28,20 @@
         {
           "command": "python -m pytest tests/readme/test_parity_gate.py -q -k \"maintainability or self_parity\"",
           "exit_code": 0,
-          "duration_s": 3.505,
-          "stdout_sha256": "452f49119fb845d1707a8c3c19ae188fa90ce25adb8ff37b75c6b5a54aa8d9a6"
+          "duration_s": 1.799,
+          "stdout_sha256": "3df66898638314f791c4f41c7633003b3b9828aad8ef1be898fa05ea11b0068a"
         },
         {
           "command": "python -m pytest tests/core/registry/test_benchmarks.py -q",
           "exit_code": 0,
-          "duration_s": 2.338,
-          "stdout_sha256": "686a7a242a272409d9a8b928dde0ff3b02fa85450d5bba0f9a171844de820f15"
+          "duration_s": 1.041,
+          "stdout_sha256": "e9e4f4fe473057cc278eab395f161cc910a738001ba3c578036441c68de023a1"
         },
         {
           "command": "python -m pytest tests/readme/evidence/facts/test_extract.py -q -k \"product_knowledge_refresh or knowledge_refresh\"",
           "exit_code": 0,
-          "duration_s": 3.751,
-          "stdout_sha256": "45e90fe96617dadec9d30b57882f025f0e67a36b640db58f0507a416f26f2442"
+          "duration_s": 1.323,
+          "stdout_sha256": "b9310966c1646ceef6746c89b6f438c8ffff00868c111fdb23a3231142ce9c7c"
         }
       ],
       "all_passed": true
@@ -50,20 +52,20 @@
         {
           "command": "python -m pytest tests/readme/test_parity_gate.py -q -k \"maintainability or self_parity\"",
           "exit_code": 0,
-          "duration_s": 2.316,
-          "stdout_sha256": "6522fee0e247cc8490a8ab9e2d59773c4640fda270956a3f7538fd90fa8fda80"
+          "duration_s": 1.71,
+          "stdout_sha256": "9ef85ddb49413f635d672b6e48e4c8a9f5f0b417a82dee48790266d5e69b7685"
         },
         {
           "command": "python -m pytest tests/core/registry/test_benchmarks.py -q",
           "exit_code": 0,
-          "duration_s": 1.842,
-          "stdout_sha256": "499a67bff3d5411b5c5391eb0ed53e818c7522e93ed0c36c92c79e1ae33f8786"
+          "duration_s": 1.116,
+          "stdout_sha256": "169cb5382724cae71d783949f50b5598d644b04e469bff86fa50631f3d6254b4"
         },
         {
           "command": "python -m pytest tests/readme/evidence/facts/test_extract.py -q -k \"product_knowledge_refresh or knowledge_refresh\"",
           "exit_code": 0,
-          "duration_s": 4.379,
-          "stdout_sha256": "25ceab0a61af9ae9ccd710bd8585b0a5fa1571ba6ce2e7d1348b48c0ec631adb"
+          "duration_s": 1.339,
+          "stdout_sha256": "e1953740f046909bcd8dc69ffce419a914caf4b263efedc0f663e9012a6bdc91"
         }
       ],
       "all_passed": true
