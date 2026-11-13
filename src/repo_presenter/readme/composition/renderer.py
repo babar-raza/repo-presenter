@@ -630,13 +630,23 @@ def _own_badge_slots(context: RenderContext) -> list[tuple[str, str]]:
         badges.append(("build", ci_badge(ci)))
     spdx = context.fact("license:spdx")
     license_file = context.fact("license:file")
-    if spdx is not None and license_file is not None and spdx.polarity == "SUPPORTED":
+    # With no license file, a manifest-declared SUPPORTED license still renders the License section
+    # (``_MIT_DECLARED_PROSE``), so the badge links to that section, as the maintainers' own badge
+    # does: Aspose.3D-FOSS-for-TypeScript (run 43413892363) declares MIT in package.json with no
+    # LICENSE file, its live ``[![License: MIT](...)](#license)`` badge had no slot to fill, and
+    # BC-17 failed on it as lost.
+    license_target = (
+        license_file.value
+        if license_file is not None
+        else "#license" if any(section.id == "license" for section in context.included) else None
+    )
+    if spdx is not None and license_target is not None and spdx.polarity == "SUPPORTED":
         badge = quote(spdx.value, safe="")
         badges.append(
             (
                 "license",
                 f"[![License: {spdx.value}](https://img.shields.io/badge/License-{badge}-blue.svg)]"
-                f"({license_file.value})",
+                f"({license_target})",
             )
         )
     target = contributors_target(repo).casefold()
