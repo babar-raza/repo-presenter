@@ -4691,3 +4691,21 @@ predicate 3 reads the acceptance calibration's PASSED certificates (R33), not th
 Rulings kept in focus: `docs/RULINGS.md` (every ruling R1–R35 and a pre-work checklist), referenced on the first lines of
 `AGENTS.md` and a new `CLAUDE.md`, printed into every new Claude Code session by a SessionStart hook in
 `.claude/settings.json`, and guarded by `tests/test_rulings_in_focus.py`.
+
+---
+
+## 2026-11-13: R14 drop rule — a dead text link is unlinked, its words kept; counter reads attestations in CI
+
+Supervisor decision under R14/R21 (Phase 1–2 fixes). **Rule:** in Lane L, a relative text link whose target the
+pinned tree does not contain, and for which no file stands in (`broken_link`'s unique repair) and no versioned sibling
+exists (`versioned_link_target`), is unlinked by the `dead_link` detector: the anchor text stays word for word and only
+the dead target is removed. Images, empty anchors, links repeated on their line, and anything another detector can
+repair are untouched and still reported. Evidence: Cells .NET (`RELEASE_NOTES_V26.10.0.md`) and Cells Python
+(`RELEASE_NOTES.md`) link release notes their trees hold under no name at all (checked 2026-11-13); each was an
+unrepaired defect blocking the Lane L candidate. A separate detector, so no sealed candidate's `broken_link` version
+reopens (R10).
+
+Counter: the hosted `supervisor-tick` ran `ops/checks/portfolio_delivery_count.py` without a token, so every
+`gh attestation verify` failed and all seven attested Lane L records read as unattested (count 0). The step now carries
+the automatic read-only token and `attestations: read`. The R16 no-op check now fails closed: a Lane L seal whose live
+README cannot be read is never counted.
