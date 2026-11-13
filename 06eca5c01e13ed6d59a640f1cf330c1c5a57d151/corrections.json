@@ -1,14 +1,34 @@
 {
   "confinement": {
-    "edits": 0,
+    "edits": 1,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "4e311891fdb4ba0324606b78c594c0d6dd4ea912aa0034ea9cfff6bb45105c17",
-  "edits": [],
+  "corrected_sha256": "1c87c23fef428349fd19755398d61e614dc36eb9c0f0625ab9b33479fb313ba1",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 1969,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  PRODUCT[\"Aspose.BarCode FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Encode Code 128 (linear, Code Sets A/B/C)\"]\n    c2[\"Encode Code 39 (base and Extended/Full-ASCII)\"]\n    c3[\"Encode EAN/UPC retail symbologies (EAN-13, EAN-8, UPC-A, UPC-E)\"]\n    c4[\"Encode QR Code (Model 2, versions 1-40)\"]\n    c5[\"Render an encoded barcode to SVG or PNG\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"SVG string\"]\n    o2[\"PNG image bytes\"]\n  end\n  PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 2117 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 676 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  PRODUCT[\"Aspose.BarCode FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Encode Code 128<br/>(linear, Code Sets<br/>A/B/C)\"]\n    c2[\"Encode Code 39 (base<br/>and<br/>Extended/Full-ASCII)\"]\n    c3[\"Encode EAN/UPC retail<br/>symbologies (EAN-13,<br/>EAN-8, UPC-A, UPC-E)\"]\n    c4[\"Encode QR Code (Model<br/>2, versions 1-40)\"]\n    c5[\"Render an encoded<br/>barcode to SVG or PNG\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c5\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"SVG string\"]\n    o2[\"PNG image bytes\"]\n  end\n  PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1423
+    }
+  ],
   "lane": "L",
   "original_sha256": "4e311891fdb4ba0324606b78c594c0d6dd4ea912aa0034ea9cfff6bb45105c17",
-  "outcome": "NO_CHANGE_WARRANTED",
+  "outcome": "CORRECTED",
   "readme_path": "README.md",
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
   "schema_version": 1,
@@ -18,7 +38,9 @@
     "idempotent": true,
     "provider_calls": 0
   },
-  "summary": {},
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
   "unapplied": [
     {
       "defect": false,

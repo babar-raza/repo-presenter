@@ -28,15 +28,18 @@ output.
 ## At a Glance
 
 ```mermaid
-flowchart TD
+flowchart TB
   PRODUCT["Aspose.BarCode FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["Encode Code 128 (linear, Code Sets A/B/C)"]
-    c2["Encode Code 39 (base and Extended/Full-ASCII)"]
-    c3["Encode EAN/UPC retail symbologies (EAN-13, EAN-8, UPC-A, UPC-E)"]
-    c4["Encode QR Code (Model 2, versions 1-40)"]
-    c5["Render an encoded barcode to SVG or PNG"]
+    c1["Encode Code 128<br/>(linear, Code Sets<br/>A/B/C)"]
+    c2["Encode Code 39 (base<br/>and<br/>Extended/Full-ASCII)"]
+    c3["Encode EAN/UPC retail<br/>symbologies (EAN-13,<br/>EAN-8, UPC-A, UPC-E)"]
+    c4["Encode QR Code (Model<br/>2, versions 1-40)"]
+    c5["Render an encoded<br/>barcode to SVG or PNG"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c5
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -44,6 +47,8 @@ flowchart TD
     o2["PNG image bytes"]
   end
   PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
