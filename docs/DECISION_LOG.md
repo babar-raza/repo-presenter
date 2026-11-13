@@ -5231,3 +5231,29 @@ ab8a, c086 counts) are on exactly the evidence the fix now adds to the packet (m
 the model now flags the 11 title-line seeds and ≥ 1 more D9 (recall ≥ 0.90 needs 19/21), and stops flagging evidenced
 rows and counts (false-flag ≤ 0.10 over the re-certifying controls). Follow-ups: the seeder should not spend control
 slots on non-re-certifying seals; 7 of 8 Lane R controls being stale is itself a re-certification backlog.
+
+## 2026-11-13: R15 portfolio gate restored at the one write authority (BL-026), with the R16/R20/R24 terminal cases
+
+**Decision**: owner ruling R15 is enforced in code again, at `github.client.authorize_write` (the single R22 write
+authority; every upstream branch ref, contents write and pull-request create/update reaches it through
+`authorize_request` before any HTTP request). An upstream `pull_request` effect is refused with
+`PortfolioIncompleteError` ("R15 PORTFOLIO_INCOMPLETE") unless every active `data/registry.json` repository has, in
+Lane R and in Lane L, a terminal outcome: ACCEPTED (latest seal re-certifies under current code and holds an attested
+M9 acceptance record at that revision, R33), NO_ACTION_JUSTIFIED (Lane L, R16), BLOCKED_EXTERNAL in
+`data/terminal_cells.json` with a fresh re-check (last `decided`/`rechecked` at most 7 days ago and `recheck_by` not
+passed) and the upstream still at the pinned revision (R24), or NOT_APPLICABLE there (R20). The predicate
+(`src/repo_presenter/propose/portfolio_gate.py`) reuses `ops/checks/portfolio_delivery_count.collect` rather than
+re-implementing acceptance; it is recomputed on every authorization, never cached, and any reading failure refuses.
+
+**Why**: commit 6b7bc6e (2026-11-06) saved `docs/wip/r15-portfolio-gate.patch` and reverted the code because it was
+unverified. That patch gated only `propose_candidate` (not the write authority), counted re-certification alone (no
+R33 acceptance) and had no terminal cases, so an R24-blocked repository would have blocked R15 forever. Meanwhile 9
+repositories are allowlisted for PRs, so R15 held by policy only.
+
+**State today**: BLOCKED -- 78 of 80 cells lack a terminal outcome (Lane R 21 unsealed, 13 NEEDS_REPAIR, 5 not
+accepted; Lane L 12 unsealed, 1 NEEDS_REPAIR, 26 not accepted; terminals: PSD Java R, GIS .NET L). Evidence:
+`evidence/build/GATE5_DELIVERY_PROGRAM/BL-026/r15_portfolio_readiness_2026-11-13.json`.
+
+**Does NOT decide**: issues (R39 pilot effects `issue`/`issue_comment`) and control-repository writes are outside R15
+and never consult the gate; R3/R22 allowlist, draft and token gates are unchanged and still apply on top.
+`docs/wip/r15-portfolio-gate.patch` is superseded by this entry and kept only as history.
