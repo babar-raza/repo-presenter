@@ -906,15 +906,19 @@ def portfolio_recertification(
     *, remote: str = "origin", token: str | None = None, registry: Path, prompts_dir: Path,
     lanes: Sequence[str] = LANES, repository: str | None = None,
     fetch: SourceFetcher | None = None,
+    scratch: Path | None = None,
 ) -> tuple[list[Recertification], dict[tuple[str, str], list[Any]]]:
-    """Dry re-certification of every bundle ref's latest seal on ``remote`` (read-only)."""
+    """Dry re-certification of every bundle ref's latest seal on ``remote`` (read-only). With
+    ``scratch`` the materialized seals are kept there, so the returned history's ``bundle`` paths stay
+    readable (the M9 acceptance writer's adjudication reads them); without it they are removed."""
     from repo_presenter.core.registry.loader import load_registry
     from repo_presenter.core.state.bundle_store import seal_history
     from repo_presenter.core.version_set import current_fingerprints
 
     entries = {entry.repository: entry for entry in load_registry(registry).entries}
     current = current_fingerprints(prompts_dir)
-    with tempfile.TemporaryDirectory(prefix="recertify-all-") as tmp:
+    kept = contextlib.nullcontext(str(scratch)) if scratch is not None else None
+    with kept or tempfile.TemporaryDirectory(prefix="recertify-all-") as tmp:
         scratch = Path(tmp)
         history = seal_history(remote=remote, token=token, scratch=scratch / "seals")
         history = {

@@ -158,7 +158,7 @@ def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
 
 
 def line_sections(
-    readme: str, rendered: bool = True, authored: Collection[int] = ()
+    readme: str, rendered: bool = True, authored: Collection[int] = (), *, headings: bool = False
 ) -> list[str | None]:
     """For each line (0-based), the section whose author-written prose it is, or ``None`` when the
     line is not reviewable text.
@@ -171,7 +171,14 @@ def line_sections(
     are the maintainers' text and are shown, and sections are still named.
 
     ``authored`` (1-based, ``authored_table_lines``) are rows of a renderer-printed table whose cell
-    an author wrote; they are reviewable in a rendered candidate too."""
+    an author wrote; they are reviewable in a rendered candidate too.
+
+    ``headings`` (the M9 blind auditor only, ``scripts/run_m9_auditor.py``) makes a heading line
+    reviewable too. The auditor's question is whether a defect sits anywhere in the document, and a
+    sentence written onto the title line is prose the reader sees: the 2026-11-13 hosted round
+    43445578226 missed all 11 of its D/D14 seeds because the seed operators append to the first
+    paragraph, which is the ``# Title`` line, and a heading was never shown. Every other caller keeps
+    the default, so its units and request hashes are unchanged byte for byte."""
     rows = readme.splitlines()
     owners = section_lines(readme)
     first = _first_heading(rows)
@@ -190,7 +197,11 @@ def line_sections(
         if rendered and index + 1 in extra:
             classified.append(owners[index] or STRUCTURE)
             continue
-        if _is_markup(stripped) and (rendered or not _table_data_row(rows, index)):
+        heading = headings and stripped.startswith("#")
+        if heading and not rendered:
+            classified.append(OPENING if first is None or index < first else owners[index] or STRUCTURE)
+            continue
+        if _is_markup(stripped) and not heading and (rendered or not _table_data_row(rows, index)):
             classified.append(None)
             continue
         if rendered and not shown_text(stripped):
