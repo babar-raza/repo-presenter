@@ -3,38 +3,92 @@ name: recertify
 # Owner ruling R10 (docs/CONSOLIDATED_GOALS_2026-11-06.md Part B): a version bump never loses a seal. This
 # re-certifies every bundle ref's latest seal under main's code from its stored outputs -- zero provider calls
 # (no LLM secret is passed) -- and writes each one that passes every current check as a new seal commit on the
-# same ref, keeping the original. Called by run-request-execute.yml (validated request, main's code only) or
-# dispatched manually. The state refs are written with the job's own token, as present.yml does.
+# same ref, keeping the original. The state refs are written with the job's own token, as present.yml does.
+#
+# Owner ruling R41 (2026-11-13: "feedbacks are for global, both lanes and all candidates so all must be
+# reverified after a global fix"; backlog BL-060): it also runs by itself on every push to main that changes
+# the code a run executes -- src/, prompts/, pyproject.toml and every data/ file except the operational
+# records (core.llm.budget.OPERATIONAL_DATA_FILES, the same set code_fingerprint leaves out;
+# tests/test_recertify_workflow.py keeps the two in step). Its summary gives per-lane certified counts
+# before/after and the evidence line `reverified: <run id>, lane R x/y, lane L x/y`. The cells that no longer
+# certify are queued by construction: cohort-chain.yml runs the cohort planner when a run of this workflow
+# completes, and the planner (scripts/select_scheduled_cohort.py) selects exactly the cells whose latest seal
+# does not certify under current code -- with the code fingerprint changed, its idempotence and diagnose
+# skips lapse for them too.
+#
+# Also called by run-request-execute.yml (validated request, main's code only) or dispatched manually.
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "prompts/**"
+      - "pyproject.toml"
+      - "data/**"
+      - "!data/provider_budget.json"
+      - "!data/scheduled_execution_policy.json"
+      - "!data/terminal_cells.json"
+      - "!data/recertification_baseline.json"
+      - "!data/registry_observations.json"
+      - "!data/issue_pilot.json"
   workflow_call:
   workflow_dispatch:
 
 permissions:
   contents: write  # this repository's refs/repository-presenter-state/* only
 
-concurrency:
-  group: recertify
-  cancel-in-progress: false
-
 jobs:
   recertify:
+    # One re-certification at a time, whoever started it (the push trigger, a dispatch or a run-request
+    # call): a job-level group, so it binds the same way when this workflow is called. A newer pending run
+    # replaces an older pending one, which is right: the newest main supersedes it.
+    concurrency:
+      group: recertify
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0  # the previous main's baseline (the summary's "before")
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
       - name: Install
         run: python -m pip install -e .
+      - name: The previous code's recorded standing (the summary's "before")
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          mkdir -p .recertify
+          if [ -n "$BEFORE_SHA" ] && git cat-file -e "$BEFORE_SHA:data/recertification_baseline.json" 2>/dev/null; then
+            git show "$BEFORE_SHA:data/recertification_baseline.json" > .recertify/before.json
+          else
+            cp data/recertification_baseline.json .recertify/before.json
+          fi
       - name: Re-certify every seal and write the passing ones (zero provider calls)
         env:
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
         run: |
+          set -o pipefail  # a failed publish must fail the job, not vanish into tee
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python -m repo_presenter.recertify --all --write \
-            --remote "https://github.com/${{ github.repository }}.git" | tee -a "$GITHUB_STEP_SUMMARY"
+            --base-baseline .recertify/before.json --summary .recertify/summary.md \
+            --run-id "${{ github.run_id }}" \
+            --remote "https://github.com/${{ github.repository }}.git" | tee .recertify/log.txt
+      - name: Report the re-verification (per-lane counts first)
+        if: always()
+        run: |
+          {
+            if [ -f .recertify/summary.md ]; then cat .recertify/summary.md; else echo "## R41 portfolio re-verification: no summary (the re-certification step did not complete)"; fi
+            echo
+            echo '<details><summary>Per-seal table</summary>'
+            echo
+            echo '```'
+            if [ -f .recertify/log.txt ]; then cat .recertify/log.txt; fi
+            echo '```'
+            echo '</details>'
+          } >> "$GITHUB_STEP_SUMMARY"
