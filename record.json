@@ -39,213 +39,83 @@
    "run_id": "43631635524",
    "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
    "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  },
+  {
+   "at": "2026-11-14T23:04:18+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43650797919",
+   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T19:31:50+00:00",
+  "at": "2026-11-14T23:04:18+00:00",
   "classes": {
-   "BC-05|inherited_unit|superseded_unstated": {
-    "example": "inherited_unit:078.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (span 'document.info()'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "findings": 3,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:078.table",
-     "inherited_unit:088.table",
-     "inherited_unit:092.table"
-    ],
-    "rule": "BC-05",
-    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   "BC-06|unresolved|id_is_unresolved_unchecked": {
-    "example": "https://en.cppreference.com/w/cpp/20 is UNRESOLVED: UNCHECKED",
+   "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'inherited_unit:010.list', 'reason': 'The list is a source for multiple capability units; its items are cited directly in the units above and not repeated as a separate entry.'",
     "findings": 1,
-    "origin_kind": "unresolved",
+    "origin_kind": "job_error",
     "origins": [
-     "-"
+     "OutputRejectedError"
     ],
-    "rule": "BC-06",
-    "scope": "09122d49e78072a35fbb304c6d48c9441a3c0b1752e67d43f5374d5788b054b5",
+    "rule": "job_error",
+    "scope": "3018f7d92cf765d9ca98eb725ba4c60fe71f1de2b28188c70d40905e42d48c59",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
      "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:078.table holds api_identifiers 'Document.Info()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:078.table"
-    ],
-    "rule": "BC-17",
-    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "technical_content",
+    "sub_rule": "OutputRejectedError:section_authoring_omitted_q_q_q",
     "upstream": ""
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 84c5d935a8db: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-06, BC-17; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'inherited_unit:010.list', 'reason': 'The list is a source for multiple capability units; its items are cited directly in the units above and not repeated as a separate entry.'}, {'fact_id': 'example:003', 'reason': 'example is CONTRADICTED and not used by any capability unit'}, {'fact_id': 'example:006', 'reason': 'example is CONTRADICTED and not used by any capability unit'}, {'fact_id': 'example:008', 'reason': 'example is UNRESOLVED and not used by any capability unit'}, {'fact_id': 'example:009', 'reason': 'example is UNRESOLVED and not used by any capability unit'}, {'fact_id': 'example:010', 'reason': 'example is UNRESOLVED and not used by any capability unit'}",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "BC-05",
-    "message": "inherited_unit:078.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (span 'document.info()'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'inherited_unit:010.list', 'reason': 'The list is a source for multiple capability units; its items are cited directly in the units above and not repeated as a separate entry.'",
     "origin": {
-     "id": "inherited_unit:078.table",
-     "kind": "inherited_unit"
+     "id": "OutputRejectedError",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-05",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "inherited_unit:088.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('| PdfContentEditor.ReplaceText(srcText, destText) searches the entire document and replaces matching strings, returning...'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:088.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "inherited_unit:092.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (span 'addbarcode(code)'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:092.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-06",
-    "message": "https://en.cppreference.com/w/cpp/20 is UNRESOLVED: UNCHECKED",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-06",
-    "section_id": "",
-    "signature": "BC-06|unresolved|id_is_unresolved_unchecked",
-    "source": "validation",
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:078.table holds api_identifiers 'Document.Info()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:078.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_omitted_q_q_q",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:078.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into key_capabilities, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, quick_start, additional_examples, api_reference, documentation_reso",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:092.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documentation_reso",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:078.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:088.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documentation_reso",
-    "section_id": null,
-    "stage": "S4"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
-  "run_id": "43631635524",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631635524",
+  "run_id": "43650797919",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43650797919",
   "schema_version": 1,
   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
-  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
  "schema_version": 1
