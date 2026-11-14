@@ -6643,3 +6643,50 @@ SUPERSEDED_UNCITED 1 -> 0, and no class new.
 (BL-152), and two pre-existing kept-text defects found in review (BL-153, BL-154).
 
 Backlog: BL-102, BL-103, BL-150, BL-151, BL-152, BL-153, BL-154
+
+## 2026-11-14 — The M9 audit spends through the durable provider-spend ledger (BL-160)
+
+**What happened.** Batch `e2-011-audit-and-production` (420 calls / 17.2M tokens) was approved as an audit
+allowance plus one production batch. Production spent about 408 calls (11 runs) through the ledger
+(`refs/repository-presenter-state/ledger/provider-spend`). The hosted audit (run 43641838293, seed batch 43620199171)
+then ran `run_job`'s `check_budget`/`record_spend` against `data/provider_budget.json` in its own checkout. That file
+never sees hosted spend, so it read e2-011 as unspent. The audit made about 420 more calls (46 cases) until it hit the
+file's cap. The real spend was about 828 calls against a 420 cap, and none of the audit's spend reached the ledger, the
+programme totals or the R43(1) window. Nothing held the batch's audit allowance back from production either.
+
+**Root cause (one class).** On a hosted runner the committed file worked as a second purse that could not see the
+ledger. present.yml avoided it by materialising a reservation, but nothing enforced that, and the audit job did not do
+it.
+
+**Decisions (fixes to existing components, R27).**
+1. The audit reserves from the ledger before its first call (`budget reserve --purpose audit --cases N`), through the
+   same `_cmd_reserve` → `local_budget_document` path present.yml uses. The reservation is sized as cases x the
+   measured per-case cost. That cost is the highest of the last 3 settled audit rounds. Until a round is measured the
+   default is 10 calls (about 420/46 = 9.1, rounded up) and 400,000 tokens per case. The token figure is an estimate:
+   the owner's 6M/150-call sizing ratio, because this round's token count is only in its artifact. The reservation is
+   granted whole or refused, because a part allowance would end the audit fail-closed halfway. A refusal fails the
+   step (exit 3) before the attempt marker is pushed, so it burns no attempt. It never opens a batch.
+2. The audit settles `if: always()` (`budget settle --purpose audit --call-ledger <work>/ledger.jsonl`). It measures
+   only its own call ledger, because the work directory also holds the audited seals' ledgers. The audit job already
+   held `contents: write` and the state token for its bot branches, so no new job or permission was needed. It still
+   has no environment, no seed key and no manifest.
+3. A committed batch may set `audit_reserve_calls` / `audit_reserve_tokens` (owner only). Production's remaining is
+   the batch remaining less the unspent reserve. The audit draws from the newest unspent reserve first. If the stop
+   rule fired, only the reserve funds it.
+4. Audit spend counts in the batch and programme totals. In the R43(1) window it is charged to the production run
+   settled at or after it. It is never a run of its own and never sizes a cell or the next batch.
+5. On a hosted runner (`GITHUB_ACTIONS=true`), `check_budget` refuses any PRODUCT call whose open batch is not a
+   materialised ledger reservation. This closes the class for every hosted path, present.yml's included. For
+   example, a lane that runs after its reserve step was skipped is now refused.
+6. Backfill: a new run-request job, `audit-settle`
+   (`{"job": "audit-settle", "seed_run_id": "43620199171", "audit_run_id": "43641838293", "batch": "e2-011-audit-and-production"}`),
+   downloads the round's `m9-audit-ledger-…` artifact and the seed's case index, and appends the idempotent settle
+   `audit-43620199171-43641838293`. It can only add spend.
+
+**Hosted PRODUCT paths (grep of .github/workflows for jobs holding `GPT_OSS_*`):** present.yml `present` (Lane R and
+Lane L steps), which already reserved and settled, and audit-seed.yml `audit`, fixed here. No other workflow holds the
+provider key. recertify, issues, audit-score, acceptance-write, the cohort job and the count make no provider call.
+
+**Does not decide.** The owner's audit reserve on the next batch (BL-162) and running the backfill (BL-161).
+
+Backlog: BL-160, BL-161, BL-162

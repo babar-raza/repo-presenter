@@ -126,6 +126,11 @@ def _open_batch(document: dict[str, Any]) -> tuple[int, dict[str, Any]] | None:
     return index, batch
 
 
+def _hosted() -> bool:
+    """True on a GitHub Actions runner (the hosted loop, R37)."""
+    return os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+
+
 def check_budget(
     budget_path: Path,
     estimated_tokens: int | None = None,
@@ -139,7 +144,9 @@ def check_budget(
     docstring); the open batch's ``calls_spent + 1`` would exceed its own ``calls_cap``; or, when
     ``estimated_tokens`` is given, ``spent.tokens + estimated_tokens`` would exceed
     ``total_tokens_cap`` or the open batch's ``tokens_spent + estimated_tokens`` would exceed its
-    own ``tokens_cap``.
+    own ``tokens_cap``. On a hosted runner (``GITHUB_ACTIONS=true``) it also raises unless the open
+    batch is a ledger reservation (``reservation`` set by :func:`local_budget_document`): the
+    committed file is never a second purse there (BL-160).
 
     Does nothing -- not even reading ``budget_path`` -- for every other :class:`InferenceClass`:
     ``NO_INFERENCE``, ``REPLAY`` and ``SUPERVISORY`` are never gated by this function.
@@ -154,6 +161,15 @@ def check_budget(
             "until the supervisor opens one"
         )
     _, batch = located
+    if _hosted() and not batch.get("reservation"):
+        # BL-160: on a hosted runner the committed file is never a purse. Its batches' spend lives in
+        # the durable ledger, so a checkout's copy reads the last committed batch as unspent; only a
+        # file materialised from a ledger reservation (local_budget_document) may fund a call there.
+        raise BudgetExceededError(
+            f"provider budget file {budget_path} holds no ledger reservation; a hosted PRODUCT call "
+            "is refused unless its job reserved from the durable provider-spend ledger first "
+            "(python -m repo_presenter.core.llm.budget reserve)"
+        )
     calls_cap = _number(batch.get("calls_cap"))
     calls_spent = _number(batch.get("calls_spent")) or 0.0
     if calls_cap is None or calls_spent + 1 > calls_cap:
@@ -283,6 +299,14 @@ def record_spend(budget_path: Path, calls: int, tokens: int) -> None:
 #   ``settle`` (that run's measured provider calls and tokens from its own call ledgers, its lane
 #   outcomes, seals, code fingerprint and upstream revision -- written on success or failure).
 #
+# The M9 audit (BL-160, 2026-11-14) spends through the same ledger: ``reserve``/``settle`` entries with
+# ``purpose: "audit"``, sized from the measured per-case cost (``reserve_audit``), settled from its own
+# call ledger. Its spend counts in the batch and programme totals and in the R43(1) window, never as a
+# production run. A committed batch may set ``audit_reserve_calls``/``audit_reserve_tokens`` (owner
+# only): production's remaining is the batch's less the unspent reserve, and the audit draws from the
+# reserve first. On a hosted runner ``check_budget`` funds a PRODUCT call only from a materialised
+# reservation, so the committed file can never again be a second, ledger-blind purse.
+#
 # ``effective_document`` folds the two into a document of the committed file's own shape, so
 # ``check_budget`` keeps its semantics exactly: a hosted job's local budget file is rewritten to
 # hold only its own reservation as the open batch, so concurrent jobs can never together spend
@@ -309,6 +333,19 @@ OPERATIONAL_DATA_FILES = frozenset(
 #: The local file a hosted job keeps its reservation and its call ledgers' baseline in.
 RESERVATION_FILENAME = "budget-reservation.json"
 STATE_TOKEN_VARIABLE = "REPOSITORY_PRESENTER_STATE_TOKEN"
+#: BL-160: the ``purpose`` of the M9 audit's own ledger entries (``reserve``/``settle``). The hosted audit
+#: draws from the same durable ledger as production, never from a checkout's committed file.
+AUDIT_PURPOSE = "audit"
+#: BL-160: one audited case's cost before any audit round is measured on the ledger. Calls: hosted round
+#: 43641838293 (seed batch 43620199171, 2026-11-14) made about 420 provider calls over its 46 cases
+#: (9.1 per case), rounded up. Tokens: that round's token count is only in its run artifact, which the
+#: supervisor session cannot read, so this is an estimate -- 40,000 tokens per review call, the ratio the
+#: owner sized e2-011's audit allowance with (6M tokens / 150 calls) -- until the backfilled settle
+#: (``audit-settle`` run request) or the next round measures it.
+AUDIT_CASE_CALLS_DEFAULT = 10.0
+AUDIT_CASE_TOKENS_DEFAULT = 400_000.0
+#: The per-case cost is the highest of this many latest settled audit rounds that recorded their cases.
+AUDIT_SAMPLE_ROUNDS = 3
 
 
 def _now_utc() -> datetime:
@@ -348,10 +385,17 @@ def _num(value: Any) -> float:
     return _number(value) or 0.0
 
 
+def is_audit(entry: Any) -> bool:
+    """A ledger entry of the M9 audit's own spend (``purpose: "audit"``), not of a production run."""
+    return isinstance(entry, dict) and entry.get("purpose") == AUDIT_PURPOSE
+
+
 def batch_usage(entries: list[dict[str, Any]], now: datetime | None = None) -> dict[str, dict[str, Any]]:
     """Per batch id: the calls/tokens charged by hosted runs (a settled run at its measured cost,
     an unsettled reservation at its full allowance), the settled runs, the seals they produced and
-    the reservations still in flight."""
+    the reservations still in flight. The M9 audit's spend (BL-160) is charged the same way and also
+    kept apart (``audit_calls``/``audit_tokens``/``audit``): it is never a production run, so it never
+    sizes the next batch or a cell's reservation."""
     now = now or _now_utc()
     settles = {e.get("id"): e for e in entries if e.get("kind") == "settle"}
     usage: dict[str, dict[str, Any]] = {}
@@ -359,12 +403,22 @@ def batch_usage(entries: list[dict[str, Any]], now: datetime | None = None) -> d
     def slot(batch_id: Any) -> dict[str, Any]:
         return usage.setdefault(
             str(batch_id),
-            {"calls": 0.0, "tokens": 0.0, "settled": [], "sealed": 0, "in_flight": []},
+            {"calls": 0.0, "tokens": 0.0, "settled": [], "sealed": 0, "in_flight": [],
+             "audit_calls": 0.0, "audit_tokens": 0.0, "audit": []},
         )
 
-    def charge_settled(bucket: dict[str, Any], settled: dict[str, Any]) -> None:
-        bucket["calls"] += _num(settled.get("calls"))
-        bucket["tokens"] += _num(settled.get("tokens"))
+    def charge(bucket: dict[str, Any], calls: float, tokens: float, audit: bool) -> None:
+        bucket["calls"] += calls
+        bucket["tokens"] += tokens
+        if audit:
+            bucket["audit_calls"] += calls
+            bucket["audit_tokens"] += tokens
+
+    def charge_settled(bucket: dict[str, Any], settled: dict[str, Any], audit: bool) -> None:
+        charge(bucket, _num(settled.get("calls")), _num(settled.get("tokens")), audit)
+        if audit:
+            bucket["audit"].append(settled)
+            return
         bucket["settled"].append(settled)
         bucket["sealed"] += len(settled.get("sealed") or [])
 
@@ -376,17 +430,16 @@ def batch_usage(entries: list[dict[str, Any]], now: datetime | None = None) -> d
         bucket = slot(entry.get("batch"))
         settled = settles.get(entry.get("id"))
         if settled is not None:
-            charge_settled(bucket, settled)
+            charge_settled(bucket, settled, is_audit(entry) or is_audit(settled))
             continue
-        bucket["calls"] += _num(entry.get("calls"))
-        bucket["tokens"] += _num(entry.get("tokens"))
+        charge(bucket, _num(entry.get("calls")), _num(entry.get("tokens")), is_audit(entry))
         at = _parse_iso(entry.get("at"))
         if at is not None and (now - at).total_seconds() < RESERVATION_TTL_SECONDS:
             bucket["in_flight"].append(entry)
     for settle_id, settled in settles.items():
         if settle_id in reserved_ids or not settled.get("batch"):
             continue
-        charge_settled(slot(settled.get("batch")), settled)
+        charge_settled(slot(settled.get("batch")), settled, is_audit(settled))
     return usage
 
 
@@ -430,6 +483,11 @@ def effective_document(
             "sealed": used["sealed"],
             "in_flight": len(used["in_flight"]),
         }
+        if used["audit_calls"] or used["audit_tokens"] or used["audit"]:
+            batch["hosted"].update(
+                {"audit_calls": used["audit_calls"], "audit_tokens": used["audit_tokens"],
+                 "audit_runs": len(used["audit"])}
+            )
     calls, tokens = _spent(document)
     document["spent"] = {
         "calls": calls + sum(u["calls"] for u in usage.values()),
@@ -439,7 +497,7 @@ def effective_document(
     measured = measured_cell_cost(entries)
     if measured is not None:
         document["measured_cell"] = measured
-    runs = settled_runs(entries)
+    runs = runs_with_audit_spend(entries)
     window = STOP_RULE_WINDOW_RUNS
     def _json_cost(value: float | None) -> float | str | None:
         return "no seal" if value == math.inf else value
@@ -473,10 +531,32 @@ def settled_runs(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     least one lane that ran (a released, never-started dispatch is not a run)."""
     runs = [
         e for e in entries
-        if e.get("kind") == "settle" and not e.get("budget_refused")
+        if e.get("kind") == "settle" and not e.get("budget_refused") and not is_audit(e)
         and any(outcome in _RAN for outcome in (e.get("outcomes") or {}).values())
     ]
     return sorted(runs, key=lambda e: str(e.get("at") or ""))
+
+
+def runs_with_audit_spend(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """BL-160: :func:`settled_runs` for the R43(1) stop rule, with the M9 audit's settled spend
+    charged to it. Each audit settle's calls/tokens are added to the first production run settled at
+    or after it (the last run when none is), so an audit round costs the window it happened in and the
+    rule's cost per seal is the real cost of a candidate. The audit is never a run of its own (it
+    would dilute the window's run count)."""
+    runs = [dict(run) for run in settled_runs(entries)]
+    if not runs:
+        return runs
+    audits = sorted(
+        (e for e in entries if e.get("kind") == "settle" and is_audit(e)),
+        key=lambda e: str(e.get("at") or ""),
+    )
+    for audit in audits:
+        at = str(audit.get("at") or "")
+        target = next((run for run in runs if str(run.get("at") or "") >= at), runs[-1])
+        target["calls"] = _num(target.get("calls")) + _num(audit.get("calls"))
+        target["tokens"] = _num(target.get("tokens")) + _num(audit.get("tokens"))
+        target["audit_calls"] = _num(target.get("audit_calls")) + _num(audit.get("calls"))
+    return runs
 
 
 def window_cost_per_sealed(runs: list[dict[str, Any]]) -> float | None:
@@ -496,8 +576,9 @@ def rolling_stop_reason(
     ``window`` settled hosted runs with that of the ``window`` before them and fires only when the
     newer exceeds ``multiplier`` x the older. Fewer than ``2 x window`` runs, a window that spent
     nothing, or an older window with no seal (no finite baseline) never fires it -- so one zero-seal
-    batch never stops the loop."""
-    runs = settled_runs(entries)
+    batch never stops the loop. The M9 audit's settled spend is charged to the window it happened in
+    (:func:`runs_with_audit_spend`, BL-160)."""
+    runs = runs_with_audit_spend(entries)
     if len(runs) < 2 * window:
         return None
     current = window_cost_per_sealed(runs[-window:])
@@ -587,6 +668,30 @@ def batch_remaining(document: dict[str, Any], batch: dict[str, Any]) -> tuple[fl
     )
 
 
+def audit_reserve(batch: dict[str, Any]) -> tuple[float, float]:
+    """BL-160: the part of a committed batch the owner set aside for the M9 audit
+    (``audit_reserve_calls``/``audit_reserve_tokens``, optional, zero when absent)."""
+    return (max(0.0, _num(batch.get("audit_reserve_calls"))),
+            max(0.0, _num(batch.get("audit_reserve_tokens"))))
+
+
+def audit_reserve_unspent(batch: dict[str, Any]) -> tuple[float, float]:
+    """The audit reserve of ``batch`` (an :func:`effective_document` batch) not yet charged to an audit
+    reservation or settle: the audit draws from its reserve first."""
+    reserve_calls, reserve_tokens = audit_reserve(batch)
+    hosted = batch.get("hosted") if isinstance(batch.get("hosted"), dict) else {}
+    return (max(0.0, reserve_calls - _num(hosted.get("audit_calls"))),
+            max(0.0, reserve_tokens - _num(hosted.get("audit_tokens"))))
+
+
+def production_remaining(document: dict[str, Any], batch: dict[str, Any]) -> tuple[float, float]:
+    """What production may still spend in ``batch``: :func:`batch_remaining` less the batch's unspent
+    audit reserve (BL-160), so a production reservation never takes the audit's allowance."""
+    calls, tokens = batch_remaining(document, batch)
+    held_calls, held_tokens = audit_reserve_unspent(batch)
+    return calls - held_calls, tokens - held_tokens
+
+
 def ensure_open_batch(
     committed: dict[str, Any], ledger: Any, now: datetime | None = None
 ) -> tuple[dict[str, Any], str | None]:
@@ -603,7 +708,7 @@ def ensure_open_batch(
         return ledger, "no batch has ever been opened in data/provider_budget.json"
     last = batches[-1]
     cell_calls, _ = per_cell_allowance(document, last)
-    remaining_calls, remaining_tokens = batch_remaining(document, last)
+    remaining_calls, remaining_tokens = production_remaining(document, last)
     if remaining_calls >= max(1.0, cell_calls) and remaining_tokens >= 1:
         return ledger, None
     if "stop" in document:
@@ -689,7 +794,7 @@ def reserve(
     document = effective_document(committed, ledger, now)
     batch = document["batches"][-1]
     cell_calls, cell_tokens = per_cell_allowance(document, batch)
-    remaining_calls, remaining_tokens = batch_remaining(document, batch)
+    remaining_calls, remaining_tokens = production_remaining(document, batch)
     calls = float(min(cell_calls * max(1, len(lanes)), remaining_calls))
     tokens = float(min(cell_tokens * max(1, len(lanes)), remaining_tokens))
     if calls < 1 or tokens < 1:
@@ -698,6 +803,73 @@ def reserve(
         "kind": "reserve", "epoch": committed.get("epoch"), "id": reservation_id,
         "batch": batch.get("id"), "repository": repository, "lanes": list(lanes),
         "calls": calls, "tokens": tokens, "at": _iso(now), **(meta or {}),
+    }
+    ledger["entries"].append(entry)
+    return ledger, entry, None
+
+
+def measured_audit_case_cost(entries: list[dict[str, Any]], sample: int = AUDIT_SAMPLE_ROUNDS) -> tuple[float, float]:
+    """BL-160: one audited case's ``(calls, tokens)``: the highest per-case cost of the latest ``sample``
+    settled audit rounds that recorded their ``cases`` and spent anything, each dimension falling back
+    to its default (``AUDIT_CASE_*_DEFAULT``) until one is measured."""
+    rounds = sorted(
+        (e for e in entries if e.get("kind") == "settle" and is_audit(e)
+         and _num(e.get("cases")) >= 1 and _num(e.get("calls")) > 0),
+        key=lambda e: str(e.get("at") or ""),
+    )[-sample:]
+    calls = [_num(e.get("calls")) / _num(e.get("cases")) for e in rounds]
+    tokens = [_num(e.get("tokens")) / _num(e.get("cases")) for e in rounds if _num(e.get("tokens")) > 0]
+    return (
+        float(math.ceil(max(calls))) if calls else AUDIT_CASE_CALLS_DEFAULT,
+        float(math.ceil(max(tokens))) if tokens else AUDIT_CASE_TOKENS_DEFAULT,
+    )
+
+
+def reserve_audit(
+    committed: dict[str, Any],
+    ledger: Any,
+    *,
+    reservation_id: str,
+    cases: int,
+    now: datetime | None = None,
+    meta: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any] | None, str | None]:
+    """BL-160: grant the M9 audit of ``cases`` cases its allowance from the durable ledger (pure), sized
+    by :func:`measured_audit_case_cost`. It draws from the newest batch whose audit reserve is not yet
+    spent, else from the last batch, and is granted whole or refused -- a part allowance would end the
+    audit fail-closed half way with its spend wasted. It never opens a batch (that is R25's production
+    sizing); a batch the stop rule halted funds only its audit reserve. Idempotent per id."""
+    now = now or _now_utc()
+    existing = find_entry(ledger, "reserve", reservation_id)
+    if existing is not None:
+        return copy.deepcopy(ledger), existing, None
+    ledger = copy.deepcopy(ledger) if isinstance(ledger, dict) else empty_ledger()
+    ledger.setdefault("entries", [])
+    if cases < 1:
+        return ledger, None, "the audit has no case to review"
+    document = effective_document(committed, ledger, now)
+    batches = document.get("batches") or []
+    if not batches:
+        return ledger, None, "no batch has ever been opened in data/provider_budget.json"
+    batch = next((b for b in reversed(batches) if audit_reserve_unspent(b)[0] >= 1), batches[-1])
+    per_calls, per_tokens = measured_audit_case_cost(ledger_entries(ledger, committed.get("epoch")))
+    calls, tokens = float(math.ceil(per_calls * cases)), float(math.ceil(per_tokens * cases))
+    remaining_calls, remaining_tokens = batch_remaining(document, batch)
+    held_calls, held_tokens = audit_reserve_unspent(batch)
+    if "stop" in document and batch is batches[-1]:
+        remaining_calls, remaining_tokens = min(remaining_calls, held_calls), min(remaining_tokens, held_tokens)
+    if calls > remaining_calls or tokens > remaining_tokens:
+        return ledger, None, (
+            f"batch {batch.get('id')} cannot fund the audit of {cases} case(s): it needs {calls:g} calls / "
+            f"{tokens:g} tokens ({per_calls:g} / {per_tokens:g} per case) and the durable ledger leaves "
+            f"{max(0.0, remaining_calls):g} calls / {max(0.0, remaining_tokens):g} tokens "
+            f"(audit reserve unspent: {held_calls:g} calls / {held_tokens:g} tokens)"
+        )
+    entry = {
+        "kind": "reserve", "epoch": committed.get("epoch"), "id": reservation_id, "purpose": AUDIT_PURPOSE,
+        "batch": batch.get("id"), "repository": "m9-audit", "lanes": [], "cases": int(cases),
+        "calls": calls, "tokens": tokens, "per_case": {"calls": per_calls, "tokens": per_tokens},
+        "at": _iso(now), **(meta or {}),
     }
     ledger["entries"].append(entry)
     return ledger, entry, None
@@ -783,18 +955,42 @@ def _call_ledger_records(workdir: Path) -> list[dict[str, Any]]:
     return records
 
 
+def _call_ledger_file_records(path: Path) -> list[dict[str, Any]]:
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+    records = []
+    for line in lines:
+        try:
+            record = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(record, dict) and "call_id" in record:
+            records.append(record)
+    return records
+
+
 def ledger_call_ids(workdir: Path) -> set[str]:
     """Every call id already in a call ledger under ``workdir`` (e.g. restored by the cache)."""
     return {str(record.get("call_id")) for record in _call_ledger_records(workdir)}
 
 
-def measure_new_calls(workdir: Path, baseline: set[str]) -> tuple[int, int]:
+def measure_new_calls(
+    workdir: Path, baseline: set[str], call_ledgers: list[Path] | None = None
+) -> tuple[int, int]:
     """The physical provider calls, and their tokens, appended to ``workdir``'s call ledgers since
     ``baseline`` was taken: the run's own measured cost (a ``response_invalid`` marker sends
-    nothing, ``core/llm/ledger.is_physical_attempt``)."""
+    nothing, ``core/llm/ledger.is_physical_attempt``). With ``call_ledgers`` only those files are
+    read (BL-160: the M9 audit's work directory also holds the sealed bundles it audits, whose own
+    ``ledger.jsonl`` files are earlier runs' calls, never this one's)."""
     seen: set[str] = set()
     calls = tokens = 0
-    for record in _call_ledger_records(workdir):
+    if call_ledgers is None:
+        records = _call_ledger_records(workdir)
+    else:
+        records = [record for path in call_ledgers for record in _call_ledger_file_records(Path(path))]
+    for record in records:
         call_id = str(record.get("call_id"))
         if call_id in baseline or call_id in seen:
             continue
@@ -886,11 +1082,18 @@ def _cmd_reserve(args: Any) -> int:
     meta = {"run_id": args.run_id, "main_sha": args.main_sha}
     outcome: dict[str, Any] = {}
 
+    audit = args.purpose == AUDIT_PURPOSE
+
     def mutate(current: Any) -> dict[str, Any]:
-        ledger, entry, refusal = reserve(
-            committed, current, reservation_id=args.id, repository=args.repository,
-            lanes=[lane for lane in args.lanes.split(",") if lane], meta=meta,
-        )
+        if audit:
+            ledger, entry, refusal = reserve_audit(
+                committed, current, reservation_id=args.id, cases=args.cases, meta=meta,
+            )
+        else:
+            ledger, entry, refusal = reserve(
+                committed, current, reservation_id=args.id, repository=args.repository,
+                lanes=[lane for lane in args.lanes.split(",") if lane], meta=meta,
+            )
         outcome.update({"entry": entry, "refusal": refusal})
         return ledger
 
@@ -914,6 +1117,11 @@ def _cmd_reserve(args: Any) -> int:
         ) + "\n",
         encoding="utf-8",
     )
+    if entry is None and audit:
+        # BL-160: the audit has no zero-call work to fall back to; refusing here, before its attempt
+        # is recorded, keeps a budget refusal from burning one of its bounded attempts.
+        print(f"::error::no provider budget for the M9 audit ({refusal})")
+        return 3
     if entry is None:
         print(f"::warning::no provider budget for this run ({refusal}); zero-call work only")
     else:
@@ -957,7 +1165,8 @@ def _cmd_settle(args: Any) -> int:
         state = {"id": args.id, "reservation": None, "refusal": "the reserve step did not run",
                  "baseline_call_ids": [], "baseline_spent": None}
     measured_calls, measured_tokens = measure_new_calls(
-        workdir, set(state.get("baseline_call_ids") or [])
+        workdir, set(state.get("baseline_call_ids") or []),
+        [Path(path) for path in args.call_ledger] or None,
     )
     # record_spend's own count in the local file is a second measure; the larger one is charged.
     try:
@@ -971,6 +1180,9 @@ def _cmd_settle(args: Any) -> int:
         base_calls, base_tokens = local_calls, local_tokens
     calls = max(float(measured_calls), local_calls - base_calls)
     tokens = max(float(measured_tokens), local_tokens - base_tokens)
+    audit = args.purpose == AUDIT_PURPOSE or is_audit(state.get("reservation"))
+    if audit:
+        return _settle_audit(args, committed, state, reserved, calls, tokens)
     outcomes = {
         lane: value
         for lane, value in (item.split("=", 1) for item in args.outcome if "=" in item)
@@ -1012,6 +1224,43 @@ def _cmd_settle(args: Any) -> int:
     return 0
 
 
+def _settle_audit(
+    args: Any, committed: dict[str, Any], state: dict[str, Any], reserved: bool, calls: float, tokens: float
+) -> int:
+    """BL-160: settle the M9 audit's measured spend (success or failure). Without a reservation (the
+    backfill of a round that ran before the audit reserved, or a reserve step that never ran) it is
+    charged to ``--batch``; a settle of the same id is a no-op, so the backfill is idempotent."""
+    reservation = state.get("reservation") if isinstance(state.get("reservation"), dict) else {}
+    cases = args.cases or int(_num(reservation.get("cases")))
+    entry = {
+        "id": state.get("id") or args.id,
+        "purpose": AUDIT_PURPOSE,
+        "repository": args.repository,
+        "lanes": [],
+        "outcomes": {},
+        "sealed": [],
+        "cases": cases,
+        "calls": calls,
+        "tokens": tokens,
+        "budget_refused": reserved and not reservation,
+        "refusal": state.get("refusal"),
+        "code": code_fingerprint(),
+        "main_sha": args.main_sha,
+        "run_id": args.run_id,
+        "run_url": args.run_url,
+    }
+    if args.batch:
+        entry["batch"] = args.batch
+    try:
+        with ledger_store(args.remote, state_token()) as store:
+            store.update(lambda current: settle(committed, current, entry))
+    except Exception as error:  # noqa: BLE001
+        print(f"::error::the audit's spend could not be recorded durably: {type(error).__name__}: {error}")
+        return 1
+    print(f"settled audit {entry['id']}: {calls:g} provider calls, {tokens:g} tokens over {cases} case(s)")
+    return 0
+
+
 def budget_summary_lines(document: dict[str, Any]) -> list[str]:
     calls, tokens = _spent(document)
     lines = [
@@ -1029,6 +1278,14 @@ def budget_summary_lines(document: dict[str, Any]) -> list[str]:
             f"{_num(last.get('calls_cap')):g} calls; hosted runs {hosted.get('runs', 0)}, sealed "
             f"{hosted.get('sealed', 0)}, in flight {hosted.get('in_flight', 0)}"
         )
+        reserve_calls, reserve_tokens = audit_reserve(last)
+        if reserve_calls or reserve_tokens or hosted.get("audit_calls"):
+            unspent_calls, _ = audit_reserve_unspent(last)
+            lines.append(
+                f"M9 audit (BL-160): {_num(hosted.get('audit_calls')):g} calls / "
+                f"{_num(hosted.get('audit_tokens')):g} tokens charged; audit reserve "
+                f"{reserve_calls:g} calls, {unspent_calls:g} unspent"
+            )
     measured = document.get("measured_cell")
     if isinstance(measured, dict):
         lines.append(
@@ -1145,9 +1402,16 @@ def main(argv: list[str] | None = None) -> int:
         command.add_argument("--workdir", default=".present-work")
         command.add_argument("--run-id", default="")
         command.add_argument("--main-sha", default="")
+        command.add_argument("--purpose", default="", choices=("", AUDIT_PURPOSE),
+                             help="audit: the M9 audit's allowance/spend (BL-160), not a production run")
+        command.add_argument("--cases", type=int, default=0, help="audit: the number of cases audited")
         if name == "reserve":
             command.add_argument("--lanes", default="R,L")
         else:
+            command.add_argument("--batch", default="",
+                                 help="audit without a reservation (backfill): the batch it spent")
+            command.add_argument("--call-ledger", action="append", default=[], type=Path,
+                                 help="measure only these call ledgers, not every one under --workdir")
             command.add_argument("--outcome", action="append", default=[])
             command.add_argument("--facts-result", default="")
             command.add_argument("--lanes", default="R,L")

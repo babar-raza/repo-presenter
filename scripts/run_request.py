@@ -15,6 +15,15 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
     {"job": "acceptance-write", "seed_run_id": "...", "findings_path": "...",
      "findings_ref": "audit-findings/run-...", "adjudications_path": ""}
+    {"job": "audit-settle", "seed_run_id": "43620199171", "audit_run_id": "43641838293",
+     "batch": "e2-011-audit-and-production"}
+
+``audit-settle`` (BL-160) records one past M9 audit round's measured provider spend on the durable
+provider-spend ledger, for a round that ran before the audit reserved from it: the executor downloads that
+round's ``m9-audit-ledger-<seed_run_id>-<audit_run_id>`` artifact (its call ledger, never the manifest) and
+the seed's public case index, and appends one ``settle`` entry ``audit-<seed_run_id>-<audit_run_id>``
+charged to ``batch`` (a batch committed in ``data/provider_budget.json`` on main). A second request for the
+same round is a no-op. It can only ever add spend, never free any.
 
 Trust boundary. A push-triggered workflow runs the workflow files of the PUSHED commit, so nothing that holds a
 secret may run on the push. ``.github/workflows/run-request.yml`` (push) holds no secret, has a read-only
@@ -85,7 +94,7 @@ from pathlib import Path
 from typing import Any
 
 REQUEST_FILE = "run-request.json"
-AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write")
+AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle")
 JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
@@ -112,6 +121,17 @@ SEED_WORKFLOWS = {
     ".github/workflows/run-request-execute.yml": frozenset({"workflow_run"}),
 }
 SEED_MANIFEST_ARTIFACT = "m9-seed-manifest-{}"
+_BATCH_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$")
+BUDGET_FILE = Path(__file__).resolve().parents[1] / "data" / "provider_budget.json"
+
+
+def committed_batch_ids(path: Path = BUDGET_FILE) -> set[str]:
+    """The batch ids committed in ``data/provider_budget.json`` (the checked-out main)."""
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return set()
+    return {str(b.get("id")) for b in (document.get("batches") or []) if isinstance(b, dict) and b.get("id")}
 
 
 class RequestError(ValueError):
@@ -158,10 +178,12 @@ class AuditContext:
         heads: Iterable[str] = (),
         exists: Callable[[str, str], bool] = lambda ref, path: False,
         verify_seed_run: Callable[[str], None] = lambda run_id: None,
+        batch_ids: Callable[[], set[str]] = committed_batch_ids,
     ) -> None:
         self.heads = list(heads)
         self.exists = exists
         self.verify_seed_run = verify_seed_run
+        self.batch_ids = batch_ids
 
 
 def _validate_audit(job: str, request: dict[str, Any], context: AuditContext | None) -> dict[str, str]:
@@ -176,6 +198,8 @@ def _validate_audit(job: str, request: dict[str, Any], context: AuditContext | N
         # audit had failed (no open provider batch, 2026-11-14 run 43620199171) waiting on a cron that
         # does not fire reliably (R37), so the request now reaches the gate, which finishes the open batch.
         return blank
+    if job == "audit-settle":
+        return _validate_audit_settle(request, context, blank)
     allowed = {"job", "seed_run_id", "findings_path", "findings_ref"}
     if job == "acceptance-write":
         allowed.add("adjudications_path")
@@ -206,6 +230,25 @@ def _validate_audit(job: str, request: dict[str, Any], context: AuditContext | N
     context.verify_seed_run(seed)
     return {**blank, "seed_run_id": seed, "findings_path": findings, "findings_ref": ref,
             "adjudications_path": adjudications}
+
+
+def _validate_audit_settle(request: dict[str, Any], context: AuditContext, blank: dict[str, str]) -> dict[str, str]:
+    """BL-160: the backfill of one past audit round's spend: exact fields, run ids, a real seed batch
+    and a batch committed on main."""
+    if set(request) != {"job", "seed_run_id", "audit_run_id", "batch"}:
+        raise RequestError("an audit-settle request takes exactly seed_run_id, audit_run_id and batch")
+    seed, audit, batch = request.get("seed_run_id"), request.get("audit_run_id"), request.get("batch")
+    if not is_run_id(seed):
+        raise RequestError(f"seed_run_id {seed!r} is not a run id (a string of digits)")
+    if not is_run_id(audit):
+        raise RequestError(f"audit_run_id {audit!r} is not a run id (a string of digits)")
+    if not isinstance(batch, str) or _BATCH_ID.match(batch) is None:
+        raise RequestError(f"batch {batch!r} is not a batch id")
+    if f"{SEED_BRANCH_PREFIX}{seed}" not in context.heads:
+        raise RequestError(f"there is no {SEED_BRANCH_PREFIX}{seed} branch: {seed} is not a seed batch")
+    if batch not in context.batch_ids():
+        raise RequestError(f"batch {batch!r} is not committed in data/provider_budget.json on main")
+    return {**blank, "seed_run_id": seed, "audit_run_id": audit, "batch": batch}
 
 
 def verify_seed_run(run_id: str, repository: str, get_json: Callable[[str], Any]) -> None:

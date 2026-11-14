@@ -30,6 +30,8 @@ name: run-request-execute
 #             path but the exact committed file of that seed run. GITHUB_REF here is the default branch, so
 #             the acceptance-audit environment's main-only rule and each workflow's main-only guard hold,
 #             and the attestation is still signed by acceptance-write.yml@refs/heads/main.
+#   audit-settle  (BL-160) records a past M9 audit round's measured provider spend, from its own
+#             m9-audit-ledger artifact, as one idempotent settle entry on the provider-spend ledger. No secret.
 #
 # Residual risk (not closed here, see docs/DECISION_LOG.md): any account with push access can add a NEW
 # workflow file on any branch and reach repository-level secrets; only moving the secrets to an Environment
@@ -67,6 +69,8 @@ jobs:
       findings_path: ${{ steps.check.outputs.findings_path }}
       findings_ref: ${{ steps.check.outputs.findings_ref }}
       adjudications_path: ${{ steps.check.outputs.adjudications_path }}
+      audit_run_id: ${{ steps.check.outputs.audit_run_id }}
+      batch: ${{ steps.check.outputs.batch }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -208,3 +212,58 @@ jobs:
       findings_ref: ${{ needs.validate.outputs.findings_ref }}
       adjudications_path: ${{ needs.validate.outputs.adjudications_path }}
     secrets: inherit
+
+  # BL-160: record one past M9 audit round's measured provider spend on the durable provider-spend ledger
+  # (a round that ran before the audit reserved from it; first: 2026-11-14, seed 43620199171, audit run
+  # 43641838293, which spent ~420 calls against a checkout's committed budget file). It downloads only that
+  # round's call ledger and the seed's public case index -- never the manifest, no secret, no environment.
+  # The settle id is keyed to the audit run, so a repeated request is a no-op.
+  audit-settle:
+    needs: validate
+    if: needs.validate.outputs.job == 'audit-settle'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write  # the provider-spend ledger ref only
+      actions: read    # the audit run's ledger artifact and the seed run's case index
+    env:
+      SEED: ${{ needs.validate.outputs.seed_run_id }}
+      AUDIT_RUN: ${{ needs.validate.outputs.audit_run_id }}
+      BATCH: ${{ needs.validate.outputs.batch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Download the audit round's call ledger
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-audit-ledger-${{ needs.validate.outputs.seed_run_id }}-${{ needs.validate.outputs.audit_run_id }}
+          path: ${{ runner.temp }}/m9-audit-spend
+          run-id: ${{ needs.validate.outputs.audit_run_id }}
+          github-token: ${{ github.token }}
+      - name: Download the seed's public case index (never the manifest)
+        uses: actions/download-artifact@v4
+        with:
+          name: m9-seed-candidates-${{ needs.validate.outputs.seed_run_id }}
+          path: ${{ runner.temp }}/m9-audit-in
+          run-id: ${{ needs.validate.outputs.seed_run_id }}
+          github-token: ${{ github.token }}
+      - name: Settle the round's measured spend on the durable ledger
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          cases=$(python -c "import json,sys; print(len(json.load(open(sys.argv[1]))))" "$RUNNER_TEMP/m9-audit-in/case_index.json")
+          python -m repo_presenter.core.llm.budget settle --purpose audit --cases "$cases" \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --id "audit-${SEED}-${AUDIT_RUN}" --repository m9-audit --batch "$BATCH" \
+            --workdir "$RUNNER_TEMP/m9-audit-spend" \
+            --call-ledger "$RUNNER_TEMP/m9-audit-spend/ledger.jsonl" \
+            --run-id "$AUDIT_RUN" --main-sha "${{ github.sha }}" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${AUDIT_RUN}"
+          python -m repo_presenter.core.llm.budget status \
+            --remote "https://github.com/${{ github.repository }}.git" >> "$GITHUB_STEP_SUMMARY"
