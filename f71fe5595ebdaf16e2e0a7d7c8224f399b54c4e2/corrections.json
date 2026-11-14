@@ -4,26 +4,32 @@
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "78dff7418162396d434c06041d8c326bb430d418202409a5682b57456520c70d",
+  "corrected_sha256": "e796009eb9c6ec734b2dead5fb6ceb957cab389f203c0633ae549d0862539c5d",
   "edits": [
     {
       "detector": "dead_link",
-      "end": 4639,
+      "end": 4638,
       "evidence": [
         {
           "fact_id": "link_target:021",
           "kind": "link_target",
           "status": "CONTRADICTED",
           "value": "RELEASE_NOTES_V26.10.0.md"
+        },
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "tag:V26.10.0"
         }
       ],
       "index": 0,
       "kind": "BROKEN_LINK",
       "line": 127,
-      "original": "[V26.10.0 release notes](RELEASE_NOTES_V26.10.0.md)",
-      "rationale": "the tree does not contain 'RELEASE_NOTES_V26.10.0.md' and holds no file that stands in for it; the dead link is removed and its text kept word for word",
-      "replacement": "V26.10.0 release notes",
-      "start": 4588
+      "original": "RELEASE_NOTES_V26.10.0.md",
+      "rationale": "the tree does not contain 'RELEASE_NOTES_V26.10.0.md'; the repository publishes its releases as tags (V26.10.0), so the release-notes link points at its Releases page, its text kept word for word",
+      "replacement": "https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET/releases/tag/V26.10.0",
+      "start": 4613
     },
     {
       "detector": "enterprise_edition_naming",

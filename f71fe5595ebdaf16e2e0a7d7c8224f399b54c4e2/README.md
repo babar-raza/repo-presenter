@@ -124,7 +124,7 @@ dotnet run --project samples\Aspose.Cells_FOSS.Samples.Basic\Aspose.Cells_FOSS.S
 
 - [Local documentation landing page](documentation/_site/index.html)
 - [Samples overview](samples/README.md)
-- V26.10.0 release notes
+- [V26.10.0 release notes](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-.NET/releases/tag/V26.10.0)
 - [Contributor and agent instructions](agents.md)
 
 ## Scope and Limitations
