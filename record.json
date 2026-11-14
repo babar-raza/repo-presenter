@@ -23,83 +23,167 @@
    "run_id": "43613420307",
    "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
    "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  },
+  {
+   "at": "2026-11-14T19:36:08+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|development_testing",
+    "llm:factuality|authored_unit|scope_limitations",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "43631629430",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T16:18:13+00:00",
+  "at": "2026-11-14T19:36:08+00:00",
   "classes": {
-   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
-    "example": "The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to `RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` / `RenderDocument` mod",
+   "llm:factuality|authored_unit|development_testing": {
+    "example": "The toolchain requires Python 3.10 or later. Contributors sync dependencies and run the full test suite, which executes unit tests from the tests directory.",
     "findings": 1,
     "origin_kind": "authored_unit",
     "origins": [
-     "api_reference.intro"
+     "development_testing.summary"
     ],
-    "rule": "duplicate_paragraph",
-    "scope": "2c5ae42208e2b5e05b0ba612817d95168e9a5f3f6f528b38fc73fc1d44fb80c2",
+    "rule": "llm:factuality",
+    "scope": "528854d7e629f90456fbd99955ecca5523e82eff9637b4a2ca8e529ce9cf983c",
+    "scope_paths": [
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "development_testing",
+    "upstream": ""
+   },
+   "llm:factuality|authored_unit|scope_limitations": {
+    "example": "- The library targets Python 3.10+ (`pyproject.toml`'s requires-python = '>=3.10').",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "scope_limitations.limitation:6"
+    ],
+    "rule": "llm:factuality",
+    "scope": "528854d7e629f90456fbd99955ecca5523e82eff9637b4a2ca8e529ce9cf983c",
+    "scope_paths": [
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "These limitations don't apply to [full-featured Aspose.Page for Python \u2014 Enterprise Edition](https://products.aspose.com/page/python-net/). It adds broader format coverage, including PDF reading, and commercial support.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "009d360af90c6900e8fd6e9adb36a5a22469a6cb73eb2b877b2576a49e0f81d1",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/extractors",
      "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "the_candidate_prints_the",
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   },
-  "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 81a1cb4204c1: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+   "detail": "attempt under version set 84c5d935a8db: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "duplicate_paragraph",
-    "message": "the candidate prints the same prose paragraph more than once",
+    "label": "F01",
+    "message": "The library targets Python 3.10+ (`pyproject.toml`'s requires-python = '>=3.10').",
     "origin": {
-     "id": "api_reference.intro",
+     "id": "scope_limitations.limitation:6",
      "kind": "authored_unit"
     },
-    "quote": "The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to `RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` / `RenderDocument` mod",
-    "rule": "duplicate_paragraph",
-    "section_id": "",
-    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
+    "quote": "- The library targets Python 3.10+ (`pyproject.toml`'s requires-python = '>=3.10').",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|authored_unit|scope_limitations",
     "source": "review",
-    "sub_rule": "the_candidate_prints_the",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "It adds broader format coverage, including PDF reading, and commercial support.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.Page for Python \u2014 Enterprise Edition](https://products.aspose.com/page/python-net/). It adds broader format coverage, including PDF reading, and commercial support.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "The toolchain requires Python 3.10 or later. Contributors sync dependencies and run the full test suite, which executes unit tests from the tests directory.",
+    "origin": {
+     "id": "development_testing.summary",
+     "kind": "authored_unit"
+    },
+    "quote": "The toolchain requires Python 3.10 or later. Contributors sync dependencies and run the full test suite, which executes unit tests from the tests directory.",
+    "rule": "llm:factuality",
+    "section_id": "development_testing",
+    "signature": "llm:factuality|authored_unit|development_testing",
+    "source": "review",
+    "sub_rule": "development_testing",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "0bae77b5104d52709ef9dfcdf9137eadbd557f96",
+  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
     "label": "F03",
-    "outcome": "repaired",
-    "reason": "",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output truncated at the manifest's max_output_tokens (8000); raise the budget or bound the output, never retry",
     "section_id": "development_testing",
     "stage": "S6"
    },
    {
     "facts_defects": [],
-    "label": "duplicate_paragraph:0",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01+F02",
+    "label": "F01",
     "outcome": "repaired",
     "reason": "",
     "section_id": "scope_limitations",
@@ -107,11 +191,11 @@
    }
   ],
   "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-  "run_id": "43613420307",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43613420307",
+  "run_id": "43631629430",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631629430",
   "schema_version": 1,
   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
-  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
  },
  "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
  "schema_version": 1
