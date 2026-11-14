@@ -185,16 +185,30 @@ def gate(
     return out
 
 
+def recertified_seals(remote: str = "origin") -> set[tuple[str, str, str]]:
+    """BL-075: (repository, lane, revision) of every latest seal whose zero-call re-certification under
+    current code (``repo_presenter.recertify``) is RECERTIFIED -- the only seals a clean control can be
+    accepted from (the acceptance writer excludes the rest as ``controls_not_recertified``)."""
+    from repo_presenter.recertify import portfolio_recertification
+
+    results, _history = portfolio_recertification(
+        remote=remote, registry=REPO_ROOT / "data" / "registry.json", prompts_dir=REPO_ROOT / "prompts"
+    )
+    return {(r.repository, r.lane, r.revision) for r in results if r.recertified}
+
+
 def build_seed_plan(
-    by_lane: dict[str, list], salt: int = 0, accepted: set[tuple[str, str, str]] = frozenset()
+    by_lane: dict[str, list], salt: int = 0, accepted: set[tuple[str, str, str]] = frozenset(),
+    recertified: set[tuple[str, str, str]] | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """(case_index_entries, manifest_records) -- deterministic, ordered, so a dry run and the
     real hosted run select identically given the same seal history.
 
     Only a clean control can be accepted, so control slots go to candidates that still can be: a
-    no-op Lane L seal (R16) or one already accepted is seeded first, and the remaining candidates
+    no-op Lane L seal (R16), one already accepted, or (BL-075, when ``recertified`` is given) one whose
+    latest seal does not re-certify under current code is seeded first, and the remaining candidates
     are controls, except that at least MIN_PER_LANE per lane stay seeded (rotated by ``salt`` so a
-    burned batch is not repeated)."""
+    burned batch is not repeated). A stale seal is still audit material: it may carry a seed."""
     case_index: list[dict] = []
     manifest: list[dict] = []
     shape_cycle = list(BLIND_SHAPES)
@@ -203,6 +217,7 @@ def build_seed_plan(
         unfit = {
             i for i, (repository, seal) in enumerate(entries)
             if is_noop(lane, seal) or (repository, lane, seal.revision) in accepted
+            or (recertified is not None and (repository, lane, seal.revision) not in recertified)
         }
         fit = [i for i in range(len(entries)) if i not in unfit]
         need_seed = max(0, MIN_PER_LANE - len(unfit))
@@ -218,11 +233,20 @@ def build_seed_plan(
             if i in controls:
                 result = clean_control(f"{repository}@{lane}@{seal.revision}", readme_text)
             else:
-                shape = shape_cycle[shape_i % len(shape_cycle)]
+                start = shape_i % len(shape_cycle)
                 shape_i += 1
-                try:
-                    result = seed_shape(f"{repository}@{lane}@{seal.revision}", readme_text, shape)
-                except SeedingError:
+                result = None
+                # BL-075: a shape with no injection site in this README falls through to the next shape
+                # of the cycle -- only when none fits does the seal become a control (formerly the first
+                # miss made it one, which handed control slots to seals that do not re-certify).
+                for offset in range(len(shape_cycle)):
+                    shape = shape_cycle[(start + offset) % len(shape_cycle)]
+                    try:
+                        result = seed_shape(f"{repository}@{lane}@{seal.revision}", readme_text, shape)
+                        break
+                    except SeedingError:
+                        continue
+                if result is None:
                     result = clean_control(f"{repository}@{lane}@{seal.revision}", readme_text)
             case_index.append({
                 "case_id": case_id, "repository": repository, "lane": lane,
@@ -274,11 +298,23 @@ def main() -> int:
             print(f"WARNING: lane {lane} has only {len(entries)} sealed candidates "
                   f"(design minimum {MIN_PER_LANE})", file=sys.stderr)
 
-    case_index, manifest = build_seed_plan(by_lane, args.salt, already_accepted(args.remote))
+    # BL-075: control slots only for seals that re-certify under current code (zero provider calls).
+    # Fail closed: a control drawn from a stale seal can never be accepted, so an unreadable
+    # re-certification is a visible failure, never a silent fall-back to the old population.
+    try:
+        recertified = recertified_seals(args.remote)
+    except Exception as error:  # noqa: BLE001
+        print(f"FAIL: zero-call re-certification of the latest seals failed: {type(error).__name__}: {error}",
+              file=sys.stderr)
+        return 1
+    case_index, manifest = build_seed_plan(by_lane, args.salt, already_accepted(args.remote), recertified)
     seeded_count = sum(1 for m in manifest if m["shape"] != CLEAN_SHAPE)
+    stale = sum(1 for lane, entries in by_lane.items() for repository, seal in entries
+                if (repository, lane, seal.revision) not in recertified)
     print(f"selected {sum(len(v) for v in by_lane.values())} candidates "
           f"({len(by_lane.get('L', []))} L, {len(by_lane.get('R', []))} R); "
-          f"{seeded_count} seeded, {len(manifest) - seeded_count} clean controls")
+          f"{seeded_count} seeded, {len(manifest) - seeded_count} clean controls; "
+          f"{stale} latest seals not RECERTIFIED under current code (never a control slot, BL-075)")
 
     if args.dry_run:
         return 0

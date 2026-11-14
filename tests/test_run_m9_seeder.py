@@ -9,6 +9,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 from repo_presenter.acceptance.audit.seed import CLEAN_SHAPE, decrypt_seed_manifest
 from repo_presenter.core.state.bundle_store import SealRecord
 
@@ -59,6 +61,13 @@ def _fake_history(n_per_lane: int = 12) -> dict:
             key = (f"own:repo-{lane}-{i}", lane)
             history[key] = [_seal(f"repo-{lane}-{i}", lane, i)]
     return history
+
+
+@pytest.fixture(autouse=True)
+def _every_fake_seal_recertifies(monkeypatch):
+    """main() re-certifies the latest seals (BL-075); here every fake seal re-certifies, never the network."""
+    keys = {(repo, lane, seals[-1].revision) for (repo, lane), seals in _fake_history(12).items()}
+    monkeypatch.setattr(run_m9_seeder, "recertified_seals", lambda remote="origin": keys)
 
 
 def test_select_candidates_groups_by_lane_from_seal_history(monkeypatch):

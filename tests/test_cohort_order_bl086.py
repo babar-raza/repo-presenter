@@ -28,7 +28,11 @@ sys.path.insert(0, str(ROOT / "src"))
 from repo_presenter import failures  # noqa: E402
 from scripts.select_scheduled_cohort import (  # noqa: E402
     MAX_CELLS,
+    PRIORITY_FIX_LANDED,
     PRIORITY_LABELS,
+    PRIORITY_NEEDS_REPAIR,
+    PRIORITY_NEVER_ATTEMPTED,
+    PRIORITY_RETRY,
     plan_cohort,
     render_summary,
 )
@@ -151,7 +155,12 @@ def test_the_real_records_have_the_shapes_the_planner_reads() -> None:
     assert status[(EMAIL_NET, "R")]["changed"] == ["claim_contradiction|unresolved|member_kind"]
 
 
-def test_the_batch_is_ordered_fix_landed_then_never_attempted_then_unrecorded_repair_then_retry() -> None:
+A, B, C, D = (PRIORITY_LABELS[p] for p in (PRIORITY_FIX_LANDED, PRIORITY_NEVER_ATTEMPTED,
+                                            PRIORITY_NEEDS_REPAIR, PRIORITY_RETRY))
+
+
+def test_the_batch_is_ordered_fix_landed_then_unrecorded_repair_then_never_attempted_then_retry() -> None:
+    """BL-110: re-runs before first attempts -- (a), then (c), then (b), then (d)."""
     plan = _plan(
         extra_ledger=[_imaging_attempt()],
         heads={CELLS_RUST: "rust-moved"},  # releases BL-084's hold: a plain retry, rank (d)
@@ -159,21 +168,21 @@ def test_the_batch_is_ordered_fix_landed_then_never_attempted_then_unrecorded_re
                (PSD_NET, "R"): Cert("NEEDS_REPAIR", False, ("BC-07",))},
     )
     assert _order(plan) == [
-        (1, D3_PY, PRIORITY_LABELS[0]),       # (a) 5 failures in a row, but the fix reached stub_format
-        (2, EMAIL_NET, PRIORITY_LABELS[0]),   # (a) member_kind is in claims.py's scope
-        (3, PSD_NET, PRIORITY_LABELS[1]),     # (b) never attempted, NEEDS_REPAIR seal first in the tie
-        (4, NOTE_PY, PRIORITY_LABELS[1]),     # (b) never attempted, no seal
-        (5, PDF_JAVA, PRIORITY_LABELS[1]),    # (b)
-        (6, IMAGING_NET, PRIORITY_LABELS[2]),  # (c) NEEDS_REPAIR, attempted before records existed
+        (1, D3_PY, A),        # (a) 5 failures in a row, but the fix reached stub_format
+        (2, EMAIL_NET, A),    # (a) member_kind is in claims.py's scope
+        (3, IMAGING_NET, C),  # (c) NEEDS_REPAIR, attempted before records existed: a re-run (BL-110)
+        (4, PSD_NET, B),      # (b) never attempted, NEEDS_REPAIR seal first in the tie
+        (5, NOTE_PY, B),      # (b) never attempted, no seal
+        (6, PDF_JAVA, B),     # (b)
     ]
     assert sum(len(run["lanes"]) for run in plan["runs"]) == MAX_CELLS
     assert [(q["order"], q["repository"], q["priority"]) for q in plan["queued"]] == [
-        (1, CELLS_RUST, PRIORITY_LABELS[3])  # (d) upstream moved, scope unchanged
+        (1, CELLS_RUST, D)  # (d) upstream moved, scope unchanged
     ]
     assert plan["runs"][0]["reasons"]["R"] == (
         "no seal; fix landed: code scope changed for claim_contradiction|unresolved|stub_format"
     )
-    assert "no failure record of the last attempt" in plan["runs"][5]["reasons"]["R"]
+    assert "no failure record of the last attempt" in plan["runs"][2]["reasons"]["R"]
     # BL-084's hold stays: Cells TypeScript (BC-05, unchanged) and 3D .NET (five failures, unchanged).
     assert _skip(plan, CELLS_TS)["category"] == "known_failure"
     assert _skip(plan, D3_NET)["category"] == "known_failure"
@@ -188,8 +197,7 @@ def test_the_batch_is_ordered_fix_landed_then_never_attempted_then_unrecorded_re
 def test_without_a_fix_the_retried_cells_are_held_or_capped_and_first_attempts_lead() -> None:
     plan = _plan(fixed=(), heads={D3_NET: "moved", D3_PY: "moved", CELLS_RUST: "moved"})
     ranks = {run["repository"]: run["priority"]["R"] for run in plan["runs"]}
-    assert ranks == {IMAGING_NET: PRIORITY_LABELS[1], NOTE_PY: PRIORITY_LABELS[1],
-                     PDF_JAVA: PRIORITY_LABELS[1], PSD_NET: PRIORITY_LABELS[1], CELLS_RUST: PRIORITY_LABELS[3]}
+    assert ranks == {IMAGING_NET: B, NOTE_PY: B, PDF_JAVA: B, PSD_NET: B, CELLS_RUST: D}
     # The four-cells-take-17-runs pattern: an upstream move releases BL-084's hold, the cap still applies.
     for repository in (D3_NET, D3_PY):
         skipped = _skip(plan, repository)
@@ -251,7 +259,7 @@ def test_the_cap_without_any_record_and_its_release_by_a_seal_or_a_transient_fai
 def test_a_fix_in_the_scope_of_a_held_cell_releases_it_at_rank_a(fixed: tuple[str, ...]) -> None:
     plan = _plan(fixed=fixed, registry=[D3_PY, EMAIL_NET])
     assert {run["repository"] for run in plan["runs"]} == {D3_PY, EMAIL_NET}
-    assert all(run["priority"]["R"] == PRIORITY_LABELS[0] for run in plan["runs"])
+    assert all(run["priority"]["R"] == A for run in plan["runs"])
     assert plan["known_failure"] == [] and plan["capped"] == []
 
 

@@ -53,7 +53,9 @@ concurrency:
 jobs:
   score:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # BL-075: the scorer now also re-certifies every latest seal (zero provider calls) to print the
+    # not-recertified split beside the raw false-flag figure; that takes minutes, not seconds.
+    timeout-minutes: 30
     environment: acceptance-audit
     steps:
       - name: Refuse to run anywhere but main

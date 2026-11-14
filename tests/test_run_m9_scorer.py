@@ -8,6 +8,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 from repo_presenter.acceptance.audit.seed import CLEAN_SHAPE, encrypt_seed_manifest
 
 REPO = Path(__file__).resolve().parents[1]
@@ -16,6 +18,12 @@ run_m9_scorer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(run_m9_scorer)
 
 KEY = b"\x09" * 32
+
+
+@pytest.fixture(autouse=True)
+def _no_network_recertification(monkeypatch):
+    """main() re-certifies each control's seal for the BL-075 split; never the network here."""
+    monkeypatch.setattr(run_m9_scorer, "recertified_seals", lambda remote="origin": set())
 
 MANIFEST = [
     {"candidate_id": "own:a@L@rev1", "shape": "A", "operator": "count_mismatch", "line": 5},

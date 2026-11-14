@@ -436,14 +436,120 @@ def effective_document(
         "tokens": tokens + sum(u["tokens"] for u in usage.values()),
     }
     document["batches"] = batches
+    measured = measured_cell_cost(entries)
+    if measured is not None:
+        document["measured_cell"] = measured
+    runs = settled_runs(entries)
+    window = STOP_RULE_WINDOW_RUNS
+    def _json_cost(value: float | None) -> float | str | None:
+        return "no seal" if value == math.inf else value
+
+    document["rolling"] = {
+        "window": window,
+        "runs": len(runs),
+        "current": _json_cost(window_cost_per_sealed(runs[-window:])) if len(runs) >= window else None,
+        "previous": _json_cost(window_cost_per_sealed(runs[-2 * window:-window])) if len(runs) >= 2 * window else None,
+    }
     stops = [e for e in entries if e.get("kind") == "stop" and e.get("batch") == last_id]
     if stops:
         document["stop"] = stops[-1]
     return document
 
 
+#: R43(1) (owner, 2026-11-14): the stop rule judges the last this-many settled hosted runs against the
+#: this-many before them, never one batch.
+STOP_RULE_WINDOW_RUNS = 12
+#: BL-100: a cell's reservation is the measured p90 of this many latest settled lane-cells, once at
+#: least ``RESERVATION_MIN_SAMPLES`` are measured (before that, the batch caps over six, as R25 sized them).
+RESERVATION_SAMPLE_RUNS = 24
+RESERVATION_MIN_SAMPLES = 5
+RESERVATION_PERCENTILE = 0.9
+#: The lane outcomes of a run that really ran the lane (a skipped lane spent nothing).
+_RAN = ("success", "failure", "cancelled")
+
+
+def settled_runs(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The hosted runs that really ran, oldest first: ``settle`` entries granted a budget with at
+    least one lane that ran (a released, never-started dispatch is not a run)."""
+    runs = [
+        e for e in entries
+        if e.get("kind") == "settle" and not e.get("budget_refused")
+        and any(outcome in _RAN for outcome in (e.get("outcomes") or {}).values())
+    ]
+    return sorted(runs, key=lambda e: str(e.get("at") or ""))
+
+
+def window_cost_per_sealed(runs: list[dict[str, Any]]) -> float | None:
+    """Calls per sealed candidate over ``runs``: ``inf`` when they spent and sealed nothing, ``None``
+    when they spent nothing."""
+    calls = sum(_num(r.get("calls")) for r in runs)
+    sealed = sum(len(r.get("sealed") or []) for r in runs)
+    if sealed:
+        return calls / sealed
+    return math.inf if calls > 0 else None
+
+
+def rolling_stop_reason(
+    entries: list[dict[str, Any]], multiplier: float, window: int = STOP_RULE_WINDOW_RUNS
+) -> str | None:
+    """R43(1): why the stop rule fires, or ``None``. It compares the cost per seal of the last
+    ``window`` settled hosted runs with that of the ``window`` before them and fires only when the
+    newer exceeds ``multiplier`` x the older. Fewer than ``2 x window`` runs, a window that spent
+    nothing, or an older window with no seal (no finite baseline) never fires it -- so one zero-seal
+    batch never stops the loop."""
+    runs = settled_runs(entries)
+    if len(runs) < 2 * window:
+        return None
+    current = window_cost_per_sealed(runs[-window:])
+    previous = window_cost_per_sealed(runs[-2 * window:-window])
+    if current is None or previous is None or previous == math.inf:
+        return None
+    if current > multiplier * previous:
+        shown = "no seal" if current == math.inf else f"{current:.1f} calls"
+        return (
+            f"cost per sealed candidate over the last {window} settled hosted runs ({shown}) exceeds "
+            f"{multiplier:g}x the previous {window} runs' {previous:.1f} calls (R43(1) rolling window)"
+        )
+    return None
+
+
+def _percentile(values: list[float], fraction: float) -> float:
+    ordered = sorted(values)
+    return ordered[max(0, math.ceil(fraction * len(ordered)) - 1)]
+
+
+def measured_cell_cost(
+    entries: list[dict[str, Any]], *, sample: int = RESERVATION_SAMPLE_RUNS,
+    minimum: int = RESERVATION_MIN_SAMPLES, fraction: float = RESERVATION_PERCENTILE,
+) -> dict[str, Any] | None:
+    """BL-100: the measured p90 of one lane-cell's calls and tokens over the latest ``sample``
+    settled hosted runs that spent anything (a run's spend split over the lanes it really ran), or
+    ``None`` with fewer than ``minimum`` such runs."""
+    cells: list[tuple[float, float]] = []
+    for run in settled_runs(entries):
+        if _num(run.get("calls")) <= 0:
+            continue
+        ran = max(1, sum(1 for outcome in (run.get("outcomes") or {}).values() if outcome in _RAN))
+        cells.append((_num(run.get("calls")) / ran, _num(run.get("tokens")) / ran))
+    cells = cells[-sample:]
+    if len(cells) < minimum:
+        return None
+    return {
+        "calls": float(math.ceil(_percentile([c for c, _ in cells], fraction))),
+        "tokens": float(math.ceil(_percentile([t for _, t in cells], fraction))),
+        "runs": len(cells),
+        "percentile": fraction,
+    }
+
+
 def per_cell_allowance(document: dict[str, Any], batch: dict[str, Any]) -> tuple[float, float]:
-    """One cell's share of a batch: its caps over ``batch_size_repositories`` (R25's six)."""
+    """One cell's allowance in a batch. BL-100: the measured p90 of settled lane-cells
+    (``document["measured_cell"]``, folded in by :func:`effective_document`) once enough are
+    measured -- ``reserve`` bounds it by what the batch has left; before that, the batch's caps over
+    ``batch_size_repositories`` (R25's six)."""
+    measured = document.get("measured_cell")
+    if isinstance(measured, dict) and _num(measured.get("calls")) >= 1 and _num(measured.get("tokens")) >= 1:
+        return _num(measured.get("calls")), _num(measured.get("tokens"))
     size = max(1, int(_num(document.get("batch_size_repositories")) or 6))
     return (
         float(math.ceil(_num(batch.get("calls_cap")) / size)),
@@ -511,25 +617,11 @@ def ensure_open_batch(
             f"batch {last.get('id')} is spent down; waiting for {hosted['in_flight']} in-flight "
             "run(s) to settle before measuring it and opening the next"
         )
-    current_cost = cost_per_sealed(last)
-    previous_cost = next(
-        (
-            cost
-            for cost in (cost_per_sealed(b) for b in reversed(batches[:-1]))
-            if cost is not None and cost != math.inf
-        ),
-        None,
-    )
     multiplier = _number(committed.get("stop_rule_cost_per_sealed_candidate_multiplier")) or 2.0
-    if (
-        current_cost is not None
-        and previous_cost is not None
-        and current_cost > multiplier * previous_cost
-    ):
-        reason = (
-            f"cost per sealed candidate {current_cost:.1f} calls exceeds {multiplier:g}x the "
-            f"previous measured batch's {previous_cost:.1f}"
-        )
+    # R43(1): a rolling window of settled hosted runs, never one batch (a single zero-seal batch of
+    # six used to stop the loop for hours, BL-100).
+    reason = rolling_stop_reason(ledger_entries(ledger, committed.get("epoch")), multiplier)
+    if reason is not None:
         ledger["entries"].append(
             {"kind": "stop", "epoch": committed.get("epoch"), "batch": last.get("id"),
              "reason": reason, "at": _iso(now)}
@@ -936,6 +1028,22 @@ def budget_summary_lines(document: dict[str, Any]) -> list[str]:
             f"last batch {last.get('id')}: {_num(last.get('calls_spent')):g} / "
             f"{_num(last.get('calls_cap')):g} calls; hosted runs {hosted.get('runs', 0)}, sealed "
             f"{hosted.get('sealed', 0)}, in flight {hosted.get('in_flight', 0)}"
+        )
+    measured = document.get("measured_cell")
+    if isinstance(measured, dict):
+        lines.append(
+            f"per-cell reservation: p{round(100 * _num(measured.get('percentile')))} of "
+            f"{measured.get('runs')} settled lane-cells, {_num(measured.get('calls')):g} calls, "
+            f"{_num(measured.get('tokens')):g} tokens (BL-100)"
+        )
+    rolling = document.get("rolling")
+    if isinstance(rolling, dict):
+        def _shown(value: Any) -> str:
+            return "-" if value is None else (str(value) if isinstance(value, str) else f"{value:.1f} calls/seal")
+
+        lines.append(
+            f"stop rule (R43(1)): last {rolling.get('window')} of {rolling.get('runs')} settled runs "
+            f"{_shown(rolling.get('current'))}; previous {rolling.get('window')} {_shown(rolling.get('previous'))}"
         )
     if "stop" in document:
         lines.append(f"STOPPED: {document['stop'].get('reason')}")
