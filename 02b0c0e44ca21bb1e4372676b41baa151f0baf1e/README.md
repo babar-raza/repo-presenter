@@ -1967,7 +1967,7 @@ The `Document` class is the central entry point — it exposes `pages`, `form`, 
 `tagged_content` for structural editing alongside `encrypt`, `decrypt`, `merge`, `optimize`, and
 `flatten` operations. `PdfExtractor` handles text, image, and attachment extraction, and
 `PdfFileEditor` provides a boolean-returning facade for file-based concatenate, extract, insert,
-and delete workflows. 385 public types are organized by module below.
+and delete workflows. 385 public types — 284 of them organized by module below.
 
 <details>
 <summary>View the Core API Surface</summary>
