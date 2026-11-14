@@ -1,0 +1,114 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T07:40:39+00:00",
+   "classes": [
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43569986884",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T07:40:39+00:00",
+  "classes": {
+   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
+    "example": "The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to `RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` / `RenderDocument` mod",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.intro"
+    ],
+    "rule": "duplicate_paragraph",
+    "scope": "ac497ef5e1e89d5fd1f7f75933384b2c366380c7d253094a9353af62be2e97f5",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   }
+  },
+  "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 81a1cb4204c1: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "duplicate_paragraph",
+    "message": "the candidate prints the same prose paragraph more than once",
+    "origin": {
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
+    },
+    "quote": "The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to `RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` / `RenderDocument` mod",
+    "rule": "duplicate_paragraph",
+    "section_id": "",
+    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
+    "source": "review",
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "ff570fa517d09ded373b2062090a2cbb1a634b2b",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F04",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "development_testing",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "duplicate_paragraph:0",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F02+F03",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "scope_limitations",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "opening",
+    "stage": "S6"
+   }
+  ],
+  "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+  "run_id": "43569986884",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43569986884",
+  "schema_version": 1,
+  "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+ },
+ "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+ "schema_version": 1
+}
