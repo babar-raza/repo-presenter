@@ -5819,3 +5819,25 @@ with its `measure.py`). Lane R seals went from 2 to 6 between the audit and thes
   side is fixed. Kept maintainer formatting is auto-corrected as a recorded formatting-only edit (BL-089).
 
 Backlog: BL-083, BL-084, BL-086, BL-087, BL-088, BL-089, BL-090
+
+
+## 2026-11-14 — R42: upstream-caused blockers are solved the way aspose.org's published candidates solved them
+
+**Ruling (owner).** "Most of the blockers would be due to the pipeline itself, where it is not functioning as desired,
+however in some cases the blockers would be due to upstream repo. In these specific cases consult aspose.org's
+readme-refresh's candidates posted on live URLs, learn how it solved the problem and do the same."
+
+**Recorded** as R42 in `docs/RULINGS.md`, with checklist item 14, in `CLAUDE.md`, and in
+`docs/CONSOLIDATED_GOALS_2026-11-06.md`; `tests/test_rulings_in_focus.py` now requires R42. It is a binding ruling
+rather than a process note, because it fixes where the answer to an upstream-caused blocker comes from.
+
+**Sources named in the ruling.**
+- The live README the aspose.org `readme-refresh` published: `github.com/<owner>/<name>`. Its 31 products are recorded
+  in aspose.org `data/readme_published_state.json`.
+- The handling logic: aspose.org `skills/readme-refresh.md` and `scripts/pipeline/commands/foss/readme_refresh_*.py`.
+
+**Integration (BL-091).** The BL-084 failure classification marks upstream-caused classes. Each one gets a recorded
+resolution that cites the aspose.org source consulted and the pipeline behaviour adopted. The adopted behaviour is
+applied globally (R41) and never as a one-off candidate edit.
+
+Backlog: BL-091
