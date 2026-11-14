@@ -38,6 +38,7 @@ from repo_presenter.readme.composition.authoring import (
     cited_inherited_identifiers,
     identifier_allowed,
     identifier_tokens,
+    placeholder_tokens,
     surface_members,
     verified_members,
 )
@@ -342,6 +343,11 @@ class RenderContext:
             and re.search(rf"(?<![\w/.-]){re.escape(value)}(?![\w/-]|\.\w)", text)
         ]
         wrapped.update(paths)
+        # A ``<word>`` placeholder (``_examples/<name>/main.go``) is printed in a code span, never
+        # as raw markup GitHub would swallow: the authoring check admits one only when the facts
+        # record it in code (``authoring.recorded_placeholders``, BL-096), and the unit's own
+        # backticks are stripped before it gets here.
+        wrapped.update(placeholder_tokens(re.sub(r"`[^`\n]*`", " ", text)))
         if not wrapped:
             return text
         pattern = "|".join(re.escape(token) for token in sorted(wrapped, key=len, reverse=True))
