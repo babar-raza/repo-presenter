@@ -37,165 +37,84 @@
    "run_id": "43631629430",
    "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
    "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  },
+  {
+   "at": "2026-11-14T22:52:53+00:00",
+   "classes": [
+    "BC-08|inherited_unit|id_verified_preserve_keeps_the"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43649219629",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T19:36:08+00:00",
+  "at": "2026-11-14T22:52:53+00:00",
   "classes": {
-   "llm:factuality|authored_unit|development_testing": {
-    "example": "The toolchain requires Python 3.10 or later. Contributors sync dependencies and run the full test suite, which executes unit tests from the tests directory.",
+   "BC-08|inherited_unit|id_verified_preserve_keeps_the": {
+    "example": "inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command 'make\\nbuild' but the candidate does not render it",
     "findings": 1,
-    "origin_kind": "authored_unit",
+    "origin_kind": "inherited_unit",
     "origins": [
-     "development_testing.summary"
+     "inherited_unit:092.paragraph"
     ],
-    "rule": "llm:factuality",
-    "scope": "528854d7e629f90456fbd99955ecca5523e82eff9637b4a2ca8e529ce9cf983c",
+    "rule": "BC-08",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
     "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "development_testing",
-    "upstream": ""
-   },
-   "llm:factuality|authored_unit|scope_limitations": {
-    "example": "- The library targets Python 3.10+ (`pyproject.toml`'s requires-python = '>=3.10').",
-    "findings": 1,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "scope_limitations.limitation:6"
-    ],
-    "rule": "llm:factuality",
-    "scope": "528854d7e629f90456fbd99955ecca5523e82eff9637b4a2ca8e529ce9cf983c",
-    "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   "llm:factuality|unresolved|scope_limitations": {
-    "example": "These limitations don't apply to [full-featured Aspose.Page for Python \u2014 Enterprise Edition](https://products.aspose.com/page/python-net/). It adds broader format coverage, including PDF reading, and commercial support.",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "llm:factuality",
-    "scope": "009d360af90c6900e8fd6e9adb36a5a22469a6cb73eb2b877b2576a49e0f81d1",
-    "scope_paths": [
+     "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
+     "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "scope_limitations",
+    "sub_rule": "id_verified_preserve_keeps_the",
     "upstream": ""
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 84c5d935a8db: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-08; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "F01",
-    "message": "The library targets Python 3.10+ (`pyproject.toml`'s requires-python = '>=3.10').",
+    "label": "BC-08",
+    "message": "inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command 'make\\nbuild' but the candidate does not render it",
     "origin": {
-     "id": "scope_limitations.limitation:6",
-     "kind": "authored_unit"
+     "id": "inherited_unit:092.paragraph",
+     "kind": "inherited_unit"
     },
-    "quote": "- The library targets Python 3.10+ (`pyproject.toml`'s requires-python = '>=3.10').",
-    "rule": "llm:factuality",
-    "section_id": "scope_limitations",
-    "signature": "llm:factuality|authored_unit|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "It adds broader format coverage, including PDF reading, and commercial support.",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "These limitations don't apply to [full-featured Aspose.Page for Python \u2014 Enterprise Edition](https://products.aspose.com/page/python-net/). It adds broader format coverage, including PDF reading, and commercial support.",
-    "rule": "llm:factuality",
-    "section_id": "scope_limitations",
-    "signature": "llm:factuality|unresolved|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "The toolchain requires Python 3.10 or later. Contributors sync dependencies and run the full test suite, which executes unit tests from the tests directory.",
-    "origin": {
-     "id": "development_testing.summary",
-     "kind": "authored_unit"
-    },
-    "quote": "The toolchain requires Python 3.10 or later. Contributors sync dependencies and run the full test suite, which executes unit tests from the tests directory.",
-    "rule": "llm:factuality",
+    "quote": "",
+    "rule": "BC-08",
     "section_id": "development_testing",
-    "signature": "llm:factuality|authored_unit|development_testing",
-    "source": "review",
-    "sub_rule": "development_testing",
+    "signature": "BC-08|inherited_unit|id_verified_preserve_keeps_the",
+    "source": "validation",
+    "sub_rule": "id_verified_preserve_keeps_the",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "F03",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output truncated at the manifest's max_output_tokens (8000); raise the budget or bound the output, never retry",
-    "section_id": "development_testing",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "scope_limitations",
-    "stage": "S6"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-  "run_id": "43631629430",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631629430",
+  "run_id": "43649219629",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43649219629",
   "schema_version": 1,
   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
-  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
  "schema_version": 1
