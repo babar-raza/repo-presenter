@@ -163,9 +163,9 @@ def _fakes(monkeypatch: pytest.MonkeyPatch) -> None:
 DEFECT = Defect("fp", "review", "F01+F02+F03", "scope_limitations", "S6", {})
 
 
-def test_the_blanked_slots_are_dropped_at_the_plan_with_no_call(_fakes: None) -> None:
+def test_the_blanked_slots_are_dropped_at_the_plan_with_no_call(_fakes: None, tmp_path: Path) -> None:
     rc = _context({"dispositions": []})
-    repairs = RepairLedger(Path("/nonexistent/repairs.json"))
+    repairs = RepairLedger(tmp_path / "repairs.json")
     assert loop_module._drop_slots_at_plan(
         rc, DEFECT, _task(), ["limitation:2", "limitation:3"], repairs, "refused"
     )
@@ -174,11 +174,11 @@ def test_the_blanked_slots_are_dropped_at_the_plan_with_no_call(_fakes: None) ->
     assert attempt["outcome"] == "repaired" and len(attempt["changes"]) == 2
 
 
-def test_negative_control_a_slot_carrying_an_inherited_unit_is_not_dropped(_fakes: None) -> None:
+def test_negative_control_a_slot_carrying_an_inherited_unit_is_not_dropped(_fakes: None, tmp_path: Path) -> None:
     rc = _context({"dispositions": [{"unit_id": "inherited_unit:050.list", "disposition":
                    "SUPERSEDE_REDUNDANT", "destination_section": "scope_limitations"}]})
     rc.store.stored["plan"]["material_limitations"][1]["unit_ids"] = ["inherited_unit:050.list"]
-    repairs = RepairLedger(Path("/nonexistent/repairs.json"))
+    repairs = RepairLedger(tmp_path / "repairs.json")
     assert not loop_module._drop_slots_at_plan(
         rc, DEFECT, _task(), ["limitation:2"], repairs, "refused"
     )
@@ -188,7 +188,7 @@ def test_negative_control_a_slot_carrying_an_inherited_unit_is_not_dropped(_fake
 
 
 def test_repair_task_routes_a_refused_blank_reply_to_the_drop(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
 ) -> None:
     seen: list[Any] = []
 
@@ -204,5 +204,5 @@ def test_repair_task_routes_a_refused_blank_reply_to_the_drop(
                         lambda rc, d, t, slots, r, why: seen.append(slots) or True)
     rc = _context({"dispositions": []})
     rc.store.stored["scope"] = copy.deepcopy(CPP_SCOPE)
-    assert loop_module._repair_task(rc, DEFECT, _task(), RepairLedger(Path("/nonexistent/repairs.json")))
+    assert loop_module._repair_task(rc, DEFECT, _task(), RepairLedger(tmp_path / "repairs.json"))
     assert seen == [["limitation:2"]]
