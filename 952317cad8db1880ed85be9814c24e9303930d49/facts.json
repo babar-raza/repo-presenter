@@ -21352,6 +21352,7 @@
         "docstring": "Parameters for Agile Encryption (ECMA-376 Part 2, Section 4).",
         "docstring_full": "Parameters for Agile Encryption (ECMA-376 Part 2, Section 4). This is the modern encryption method used by Office 2010+. Recommended settings: AES-256 + SHA-512 with 100,000 iterations.",
         "fields": "salt_size, block_size, key_bits",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=3,inherits=1",
         "public_paths": "aspose.cells_foss.encryption_params.AgileEncryptionParameters",
         "signature": "class AgileEncryptionParameters(EncryptionParameters)",
         "symbol_kind": "class"
@@ -21394,6 +21395,7 @@
       "attributes": {
         "docstring": "Represents auto filters in a worksheet.",
         "docstring_full": "Represents auto filters in a worksheet. The AutoFilter class provides methods and properties for applying and managing filters on data ranges in a worksheet. Examples: >>> from aspose_cells import Workbook >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> ws.cells['A1'].value = \"Name\" >>> ws.cells['B1'].value = \"Age\" >>> ws.auto_filter.range = \"A1:B10\" >>> ws.auto_filter.filter(0, [\"Alice\", \"Bob\"])",
+        "member_counts": "method=14,dunder=0,init=1,property=3,field=0,inherits=0",
         "signature": "class AutoFilter",
         "symbol_kind": "class"
       },
@@ -21736,6 +21738,7 @@
       "attributes": {
         "docstring": "Represents a filter column in an auto filter.",
         "docstring_full": "Represents a filter column in an auto filter. A FilterColumn represents filtering settings for a specific column in the filtered range.",
+        "member_counts": "method=3,dunder=0,init=1,property=7,field=0,inherits=0",
         "signature": "class FilterColumn",
         "symbol_kind": "class"
       },
@@ -21946,6 +21949,7 @@
         "defined_at": "aspose.cells_foss.cell.Cell",
         "docstring": "Represents a single cell in a worksheet.",
         "docstring_full": "Represents a single cell in a worksheet. The Cell class provides properties and methods for working with individual cells, including value access, formula handling, style application, and comment management. Examples: >>> from aspose_cells import Workbook >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> cell = ws.cells['A1'] >>> cell.value = \"Hello\" >>> cell.style.font.bold = True >>> cell.set_comment(\"This is a note\", \"Author\")",
+        "member_counts": "method=21,dunder=4,init=1,property=6,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.cell.Cell",
         "signature": "class Cell",
         "symbol_kind": "class"
@@ -22545,6 +22549,7 @@
         "docstring": "Handles cell value import and export operations according to ECMA-376 specification.",
         "docstring_full": "Handles cell value import and export operations according to ECMA-376 specification. This class provides methods to: - Import cell values from XML elements - Export cell values to XML elements - Determine cell type attributes - Format values for XML output",
         "member_count": "13",
+        "member_counts": "method=6,dunder=0,init=0,property=0,field=0,inherits=0",
         "members": "TYPE_SHARED_STRING, TYPE_INLINE_STRING, TYPE_NUMBER, TYPE_BOOLEAN, TYPE_ERROR, ERROR_NULL, ERROR_DIV_0, ERROR_VALUE, ERROR_REF, ERROR_NAME, ERROR_NUM, ERROR_NA, VALID_ERRORS",
         "signature": "class CellValueHandler",
         "symbol_kind": "class"
@@ -22680,6 +22685,7 @@
         "defined_at": "aspose.cells_foss.cells.Cells",
         "docstring": "Represents a collection of cells in a worksheet.",
         "docstring_full": "Represents a collection of cells in a worksheet. The Cells class provides methods and properties for working with collections of cells, including cell access by reference or coordinates, iteration, and coordinate conversion. Examples: >>> from aspose_cells import Workbook >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> cells = ws.cells >>> cells['A1'].value = \"Hello\" >>> cell = cells.cell(row=1, column=1)",
+        "member_counts": "method=61,dunder=6,init=1,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.cells.Cells",
         "signature": "class Cells",
         "symbol_kind": "class"
@@ -23920,6 +23926,7 @@
       "attributes": {
         "docstring": "Reads encrypted XLSX from CFB format.",
         "fields": "file_path",
+        "member_counts": "method=3,dunder=2,init=1,property=0,field=1,inherits=0",
         "signature": "class CFBReader",
         "symbol_kind": "class"
       },
@@ -23994,6 +24001,7 @@
     {
       "attributes": {
         "docstring": "Writes encrypted XLSX to CFB format.",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class CFBWriter",
         "symbol_kind": "class"
       },
@@ -24070,6 +24078,7 @@
         "docstring": "Writes CFB (Compound File Binary) files according to MS-CFB specification.",
         "fields": "sector_size, major_version, sector_shift, root",
         "member_count": "21",
+        "member_counts": "method=2,dunder=0,init=1,property=0,field=4,inherits=0",
         "members": "HEADER_SIGNATURE, HEADER_CLSID, MINOR_VERSION, MAJOR_VERSION_3, MAJOR_VERSION_4, BYTE_ORDER, MAXREGSECT, DIFSECT, FATSECT, ENDOFCHAIN, FREESECT, STGTY_INVALID, STGTY_STORAGE, STGTY_STREAM, STGTY_LOCKBYTES, STGTY_PROPERTY, STGTY_ROOT, COLOR_RED, COLOR_BLACK, MINI_STREAM_CUTOFF, MINI_SECTOR_SIZE",
         "signature": "class CFBWriter",
         "symbol_kind": "class"
@@ -24144,6 +24153,7 @@
         "docstring_full": "Minimal CFB file writer for encrypted Office documents. This implementation creates a simple CFB file with just two streams: - EncryptionInfo - EncryptedPackage",
         "fields": "sector_size, major_version, streams",
         "member_count": "12",
+        "member_counts": "method=2,dunder=0,init=1,property=0,field=3,inherits=0",
         "members": "HEADER_SIGNATURE, MINOR_VERSION, MAJOR_VERSION_3, MAJOR_VERSION_4, BYTE_ORDER, SECTOR_SIZE_V3, SECTOR_SIZE_V4, MINI_SECTOR_SIZE, DIFSECT, FATSECT, ENDOFCHAIN, FREESECT",
         "signature": "class MinimalCFBWriter",
         "symbol_kind": "class"
@@ -24202,6 +24212,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.chart.Chart",
         "docstring": "Represents a chart in a worksheet.",
+        "member_counts": "method=3,dunder=0,init=1,property=41,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.chart.Chart",
         "signature": "class Chart",
         "symbol_kind": "class"
@@ -25053,6 +25064,7 @@
         "docstring": "Represents a chart axis (category, value, or series).",
         "docstring_full": "Represents a chart axis (category, value, or series). Attributes: axis_id (int): Unique axis identifier used to link chart <axId> references. axis_type (str): 'cat', 'val', or 'ser'. orientation (str): 'minMax' (default) or 'maxMin' (reversed). position (str): Axis position - 'l', 'r', 't', or 'b'. deleted (bool): Whether the axis is hidden/deleted. crosses (str): 'autoZero', 'max', or 'min'. cross_ax (int): axis_id of the crossing axis. num_fmt (str): Number format code, e.g. 'General' or '#,##0.0,'. source_linked (bool): Whether num_fmt is linked to source data. tick_lbl_pos (str): 'nextTo', 'high', 'low', or 'none'. major_tick_mark (str): 'none', 'in', 'out', or 'cross'. minor_tick_mark (str): 'none', 'in', 'out', or 'cross'. min_val (float|None): Axis minimum scale value (None = auto). max_val (float|None): Axis maximum scale value (None = auto). auto (bool): Whether axis labels are auto (catAx only). lbl_algn (str): Label alignment 'ctr', 'l', or 'r' (catAx only). lbl_offset (int): Label offset percentage (catAx only). cross_between (str): 'between' or 'midCat' (valAx only).",
         "fields": "axis_id, axis_type, orientation, position, deleted, crosses, cross_ax, num_fmt, source_linked, tick_lbl_pos, major_tick_mark, minor_tick_mark, min_val, max_val, auto, lbl_algn, lbl_offset, cross_between",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=18,inherits=0",
         "public_paths": "aspose.cells_foss.chart.ChartAxis",
         "signature": "class ChartAxis",
         "symbol_kind": "class"
@@ -25095,6 +25107,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.chart.ChartCollection",
         "docstring": "Collection of charts in a worksheet.",
+        "member_counts": "method=32,dunder=3,init=1,property=1,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.chart.ChartCollection",
         "signature": "class ChartCollection",
         "symbol_kind": "class"
@@ -25747,6 +25760,7 @@
         "docstring": "Represents error bars attached to a chart series.",
         "docstring_full": "Represents error bars attached to a chart series. Attributes: direction (str): Axis direction - 'x' or 'y'. bar_type (str): 'both', 'minus', or 'plus'. val_type (str): 'fixedVal', 'percentage', 'stdDev', 'stdErr', or 'cust'. no_end_cap (bool): Whether end caps are suppressed. val (float): Fixed/percentage/stdDev value (used when val_type != 'cust'). plus_formula (str|None): Formula string for custom plus values. minus_formula (str|None): Formula string for custom minus values. line_width (int|None): Line width in EMU (None = default). line_color (str|None): Hex color string e.g. '7F7F7F' (None = default).",
         "fields": "direction, bar_type, val_type, no_end_cap, val, plus_formula, minus_formula, line_width, line_color",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=9,inherits=0",
         "public_paths": "aspose.cells_foss.chart.ChartErrorBars",
         "signature": "class ChartErrorBars",
         "symbol_kind": "class"
@@ -25789,6 +25803,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.chart.ChartSeries",
         "docstring": "Represents a single chart series.",
+        "member_counts": "method=2,dunder=0,init=1,property=12,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.chart.ChartSeries",
         "signature": "class ChartSeries",
         "symbol_kind": "class"
@@ -26100,6 +26115,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.chart.ChartView3D",
         "docstring": "Represents chart-level 3D view settings.",
+        "member_counts": "method=1,dunder=0,init=1,property=6,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.chart.ChartView3D",
         "signature": "class ChartView3D",
         "symbol_kind": "class"
@@ -26333,6 +26349,7 @@
       "attributes": {
         "docstring": "Handles reading comment data from XML format.",
         "docstring_full": "Handles reading comment data from XML format. Reads both comments XML and VML drawing files to restore comment text, authors, and sizing information.",
+        "member_counts": "method=2,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class CommentXMLReader",
         "symbol_kind": "class"
       },
@@ -26390,6 +26407,7 @@
       "attributes": {
         "docstring": "Handles writing comment data to XML format.",
         "docstring_full": "Handles writing comment data to XML format. Writes both comments XML and VML drawing files for proper Excel compatibility according to ECMA-376.",
+        "member_counts": "method=5,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class CommentXMLWriter",
         "symbol_kind": "class"
       },
@@ -26522,6 +26540,7 @@
       "attributes": {
         "docstring": "Represents a single conditional formatting rule applied to a cell range.",
         "docstring_full": "Represents a single conditional formatting rule applied to a cell range. The ConditionalFormat class provides properties for defining conditional formatting rules including cell value comparisons, text rules, date rules, duplicate/unique values, top/bottom rules, above/below average, color scales, data bars, icon sets, and formula rules. Examples: >>> from aspose_cells import Workbook, ConditionalFormat >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> cf = ws.conditional_formats.add() >>> cf.type = \"cellValue\" >>> cf.operator = \"greaterThan\" >>> cf.formula1 = 100 >>> cf.range = \"A1:A10\" >>> cf.font.bold = True >>> cf.font.color = \"FFFF0000\"",
+        "member_counts": "method=0,dunder=0,init=1,property=35,field=0,inherits=0",
         "signature": "class ConditionalFormat",
         "symbol_kind": "class"
       },
@@ -27206,6 +27225,7 @@
       "attributes": {
         "docstring": "Represents a collection of conditional formats for a worksheet.",
         "docstring_full": "Represents a collection of conditional formats for a worksheet. The ConditionalFormatCollection class provides methods for managing multiple conditional formatting rules applied to a worksheet. Examples: >>> from aspose_cells import Workbook >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> cf = ws.conditional_formats.add() >>> cf.type = \"cellValue\" >>> cf.range = \"A1:A10\" >>> print(len(ws.conditional_formats)) # 1",
+        "member_counts": "method=5,dunder=2,init=1,property=1,field=0,inherits=0",
         "signature": "class ConditionalFormatCollection",
         "symbol_kind": "class"
       },
@@ -27358,6 +27378,7 @@
         "defined_at": "aspose.cells_foss.csv_handler.CSVHandler",
         "docstring": "Handles CSV import and export operations for workbooks.",
         "docstring_full": "Handles CSV import and export operations for workbooks. This class provides static methods to load CSV files into workbooks and save workbook data to CSV format. Examples: # Export workbook to CSV >>> wb = Workbook('data.xlsx') >>> CSVHandler.save_csv(wb, 'output.csv') # Import CSV to workbook >>> wb = Workbook() >>> CSVHandler.load_csv(wb, 'input.csv') >>> print(wb.worksheets[0].cells['A1'].value)",
+        "member_counts": "method=4,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.csv_handler.CSVHandler",
         "signature": "class CSVHandler",
         "symbol_kind": "class"
@@ -27464,6 +27485,7 @@
         "docstring": "Options for loading CSV files.",
         "docstring_full": "Options for loading CSV files. Attributes: delimiter (str): Field delimiter character. Default is ','. encoding (str): File encoding. Default is the system's preferred encoding. has_header (bool): Whether the first row contains headers. Default is False. quote_char (str): Character used for quoting fields. Default is '\"'. escape_char (str): Character used for escaping. Default is None (uses doubling). skip_rows (int): Number of rows to skip at the beginning. Default is 0. auto_detect_types (bool): Automatically detect and convert value types. Default is True. date_formats (list): List of date format strings to try for parsing. Default formats included. true_values (list): Values to interpret as True. Default is ['true', 'yes', '1']. false_values (list): Values to interpret as False. Default is ['false', 'no', '0']. Examples: >>> options = CSVLoadOptions() >>> options.delimiter = ';' >>> options.encoding = 'utf-16' >>> wb = Workbook() >>> CSVHandler.load_csv(wb, 'data.csv', options)",
         "fields": "delimiter, encoding, has_header, quote_char, escape_char, skip_rows, auto_detect_types, date_formats, true_values, false_values",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=10,inherits=0",
         "public_paths": "aspose.cells_foss.csv_handler.CSVLoadOptions",
         "signature": "class CSVLoadOptions",
         "symbol_kind": "class"
@@ -27490,6 +27512,7 @@
         "docstring": "Options for saving CSV files.",
         "docstring_full": "Options for saving CSV files. Attributes: delimiter (str): Field delimiter character. Default is ','. encoding (str): File encoding. Default is the system's preferred encoding. quote_char (str): Character used for quoting fields. Default is '\"'. quoting (int): Quoting behavior (csv.QUOTE_MINIMAL, csv.QUOTE_ALL, etc.). Default is QUOTE_MINIMAL. line_terminator (str): Line ending character(s). Default is '\\r\\n'. include_header (bool): Whether to include column headers (if available). Default is False. worksheet_index (int): Index of the worksheet to export. Default is 0 (first worksheet). date_format (str): Format string for date values. Default is '%Y-%m-%d'. datetime_format (str): Format string for datetime values. Default is '%Y-%m-%d %H:%M:%S'. time_format (str): Format string for time values. Default is '%H:%M:%S'. write_bom (bool): Whether to write UTF-8 BOM at file start. Default is False. Examples: >>> options = CSVSaveOptions() >>> options.delimiter = '\\t' >>> options.encoding = 'utf-8' >>> CSVHandler.save_csv(workbook, 'output.csv', options)",
         "fields": "delimiter, encoding, quote_char, quoting, line_terminator, include_header, worksheet_index, date_format, datetime_format, time_format, write_bom",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=11,inherits=0",
         "public_paths": "aspose.cells_foss.csv_handler.CSVSaveOptions",
         "signature": "class CSVSaveOptions",
         "symbol_kind": "class"
@@ -27533,6 +27556,7 @@
         "defined_at": "aspose.cells_foss.data_validation.DataValidation",
         "docstring": "Represents data validation settings for a range of cells.",
         "docstring_full": "Represents data validation settings for a range of cells. This class provides properties and methods for defining validation rules that control what data can be entered into cells, similar to Excel's Validation object. Examples: >>> from aspose_cells import Workbook >>> from aspose_cells.data_validation import DataValidation, DataValidationType >>> >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> >>> # Add a whole number validation >>> validation = ws.data_validations.add(\"A1:A10\") >>> validation.type = DataValidationType.WHOLE_NUMBER >>> validation.operator = DataValidationOperator.BETWEEN >>> validation.formula1 = \"1\" >>> validation.formula2 = \"100\" >>> validation.error_message = \"Please enter a number between 1 and 100\"",
+        "member_counts": "method=4,dunder=1,init=1,property=23,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.data_validation.DataValidation",
         "signature": "class DataValidation",
         "symbol_kind": "class"
@@ -28118,6 +28142,7 @@
         "defined_at": "aspose.cells_foss.data_validation.DataValidationCollection",
         "docstring": "Represents a collection of DataValidation objects for a worksheet.",
         "docstring_full": "Represents a collection of DataValidation objects for a worksheet. This class manages all data validation rules applied to a worksheet and provides methods to add, remove, and access validations. Examples: >>> from aspose_cells import Workbook >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> >>> # Add validations >>> dv1 = ws.data_validations.add(\"A1:A10\") >>> dv2 = ws.data_validations.add(\"B1:B10\") >>> >>> # Iterate over validations >>> for validation in ws.data_validations: ... print(validation.sqref) >>> >>> # Access by index >>> first = ws.data_validations[0] >>> >>> # Get count >>> count = len(ws.data_validations)",
+        "member_counts": "method=7,dunder=4,init=1,property=4,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.data_validation.DataValidationCollection",
         "signature": "class DataValidationCollection",
         "symbol_kind": "class"
@@ -28468,6 +28493,7 @@
         "defined_at": "aspose.cells_foss.value_formatter.DisplayValueOptions",
         "docstring": "Options controlling display-text formatting.",
         "fields": "empty_text, boolean_true_text, boolean_false_text, date_format, datetime_format, time_format, evaluate_formulas",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=7,inherits=0",
         "public_paths": "aspose.cells_foss.value_formatter.DisplayValueOptions",
         "signature": "class DisplayValueOptions",
         "symbol_kind": "class"
@@ -28528,6 +28554,7 @@
       "attributes": {
         "docstring": "Represents core document properties stored in docProps/core.xml.",
         "docstring_full": "Represents core document properties stored in docProps/core.xml. Uses Dublin Core metadata elements and OPC core properties. ECMA-376 Part 2, Section 11 - Core Properties Examples: >>> wb.document_properties.core.title = \"Sales Report\" >>> wb.document_properties.core.creator = \"John Doe\" >>> wb.document_properties.core.subject = \"Q4 2024 Sales\"",
+        "member_counts": "method=0,dunder=0,init=1,property=11,field=0,inherits=0",
         "signature": "class CoreProperties",
         "symbol_kind": "class"
       },
@@ -28745,6 +28772,7 @@
       "attributes": {
         "docstring": "Container for all document-level properties.",
         "docstring_full": "Container for all document-level properties. This includes both core properties (docProps/core.xml) and extended properties (docProps/app.xml). Examples: >>> wb.document_properties.core.title = \"Sales Report\" >>> wb.document_properties.core.creator = \"John Doe\" >>> wb.document_properties.extended.company = \"Acme Corp\"",
+        "member_counts": "method=0,dunder=0,init=1,property=11,field=0,inherits=0",
         "signature": "class DocumentProperties",
         "symbol_kind": "class"
       },
@@ -28962,6 +28990,7 @@
       "attributes": {
         "docstring": "Represents extended/application properties stored in docProps/app.xml.",
         "docstring_full": "Represents extended/application properties stored in docProps/app.xml. ECMA-376 Part 1, Section 22.2 - Extended Properties Examples: >>> wb.document_properties.extended.application = \"Microsoft Excel\" >>> wb.document_properties.extended.company = \"Acme Corp\"",
+        "member_counts": "method=0,dunder=0,init=1,property=9,field=0,inherits=0",
         "signature": "class ExtendedProperties",
         "symbol_kind": "class"
       },
@@ -29186,6 +29215,7 @@
       "attributes": {
         "docstring": "Encryption verifier generation and validation.",
         "member_count": "5",
+        "member_counts": "method=4,dunder=0,init=0,property=0,field=0,inherits=0",
         "members": "BLOCK_KEY_VERIFIER, BLOCK_KEY_VERIFIER_HASH, BLOCK_KEY_KEYVALUE, BLOCK_KEY_DATA_INTEGRITY_KEY, BLOCK_KEY_DATA_INTEGRITY_VALUE",
         "signature": "class EncryptionVerifier",
         "symbol_kind": "class"
@@ -29278,6 +29308,7 @@
     {
       "attributes": {
         "docstring": "Package data encryption and decryption.",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PackageEncryption",
         "symbol_kind": "class"
       },
@@ -29332,6 +29363,7 @@
     {
       "attributes": {
         "docstring": "Password derivation helpers for Agile encryption.",
+        "member_counts": "method=3,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PasswordDerivation",
         "symbol_kind": "class"
       },
@@ -29425,6 +29457,7 @@
       "attributes": {
         "docstring": "Base class for encryption parameters.",
         "fields": "encryption_type, cipher_algorithm, hash_algorithm, spin_count",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=4,inherits=0",
         "signature": "class EncryptionParameters",
         "symbol_kind": "class"
       },
@@ -29492,6 +29525,7 @@
         "docstring": "Represents font settings for a cell or range of cells.",
         "docstring_full": "Represents font settings for a cell or range of cells. The Font class provides properties for controlling the appearance of text, including font name, size, color, and various text effects. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.font.name = \"Arial\" >>> style.font.size = 12 >>> style.font.bold = True >>> style.font.color = \"FFFF0000\" # Red color",
         "fields": "name, size, color, bold, italic, underline, strikethrough, underline_type, vertical_alignment",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=9,inherits=0",
         "public_paths": "aspose.cells_foss.style.Font",
         "signature": "class Font",
         "symbol_kind": "class"
@@ -29533,6 +29567,7 @@
         "defined_at": "aspose.cells_foss.text_measure.FontStrategy",
         "docstring": "Resolves effective font families and fallback chains for text measurement.",
         "member_count": "3",
+        "member_counts": "method=2,dunder=0,init=1,property=1,field=0,inherits=0",
         "members": "DEFAULT_LATIN_FALLBACKS, DEFAULT_CJK_FALLBACKS, DEFAULT_SYMBOL_FALLBACKS",
         "public_paths": "aspose.cells_foss.text_measure.FontStrategy",
         "signature": "class FontStrategy",
@@ -29630,6 +29665,7 @@
       "attributes": {
         "docstring": "Basic formula evaluator for xlsx cells without cached values.",
         "docstring_full": "Basic formula evaluator for xlsx cells without cached values. Examples: >>> evaluator = FormulaEvaluator(workbook) >>> result = evaluator.evaluate('=CONCATENATE(\"Hello \", A1)', worksheet)",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class FormulaEvaluator",
         "symbol_kind": "class"
       },
@@ -29720,6 +29756,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.page_break.HorizontalPageBreakCollection",
         "docstring": "Collection of manual horizontal page breaks (row breaks).",
+        "member_counts": "method=9,dunder=3,init=1,property=2,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.page_break.HorizontalPageBreakCollection",
         "signature": "class HorizontalPageBreakCollection",
         "symbol_kind": "class"
@@ -29965,6 +30002,7 @@
       "attributes": {
         "docstring": "Represents a hyperlink in a worksheet.",
         "docstring_full": "Represents a hyperlink in a worksheet. A hyperlink can link to: - External web URLs (http, https, ftp) - Internal worksheet locations (Sheet2!A1) - Local or network files - Email addresses (mailto:) Examples: >>> # External URL >>> link = worksheet.hyperlinks.add(\"A1\", \"https://www.example.com\") >>> link.text_to_display = \"Visit Website\" >>> link.screen_tip = \"Click to visit our website\" >>> # Internal link >>> link = worksheet.hyperlinks.add(\"B2\", \"\", \"Sheet2!A1\") >>> link.text_to_display = \"Go to Sheet2\"",
+        "member_counts": "method=1,dunder=1,init=1,property=6,field=0,inherits=0",
         "signature": "class Hyperlink",
         "symbol_kind": "class"
       },
@@ -30117,6 +30155,7 @@
       "attributes": {
         "docstring": "Collection of hyperlinks in a worksheet.",
         "docstring_full": "Collection of hyperlinks in a worksheet. Provides methods to add, delete, and iterate over hyperlinks. Examples: >>> # Add external hyperlink >>> link = worksheet.hyperlinks.add(\"A1\", \"https://www.example.com\") >>> # Add internal hyperlink >>> link = worksheet.hyperlinks.add(\"B2\", \"\", \"Sheet2!A1\") >>> # Iterate over hyperlinks >>> for link in worksheet.hyperlinks: ... print(link.range, link.address) >>> # Get hyperlink count >>> count = worksheet.hyperlinks.count",
+        "member_counts": "method=3,dunder=4,init=1,property=1,field=0,inherits=0",
         "signature": "class Hyperlinks",
         "symbol_kind": "class"
       },
@@ -30231,6 +30270,7 @@
         "defined_at": "aspose.cells_foss.json_handler.JsonHandler",
         "docstring": "Handles JSON export operations for workbooks.",
         "docstring_full": "Handles JSON export operations for workbooks. Examples: >>> wb = Workbook('data.xlsx') >>> JsonHandler.save_json(wb, 'output.json')",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.json_handler.JsonHandler",
         "signature": "class JsonHandler",
         "symbol_kind": "class"
@@ -30297,6 +30337,7 @@
         "docstring": "Options for saving JSON files.",
         "docstring_full": "Options for saving JSON files. Attributes: encoding (str): File encoding. Default is 'utf-8'. worksheet_index (int): Index of worksheet to export (-1 for all). Default is -1. include_worksheet_name (bool): Include worksheet name in output. Default is True. date_format (str): Format string for date values. Default is '%Y-%m-%d'. datetime_format (str): Format string for datetime values. Default is '%Y-%m-%d %H:%M:%S'. time_format (str): Format string for time values. Default is '%H:%M:%S'. empty_cell_value: Value used for empty cells. Default is None (JSON null). skip_empty_rows (bool): Skip rows where all cells are empty. Default is False. indent (int): JSON indentation level. Default is 2. ensure_ascii (bool): Escape non-ASCII characters. Default is False.",
         "fields": "encoding, worksheet_index, include_worksheet_name, date_format, datetime_format, time_format, empty_cell_value, skip_empty_rows, indent, ensure_ascii",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=10,inherits=0",
         "public_paths": "aspose.cells_foss.json_handler.JsonSaveOptions",
         "signature": "class JsonSaveOptions",
         "symbol_kind": "class"
@@ -30365,6 +30406,7 @@
         "defined_at": "aspose.cells_foss.markdown_handler.MarkdownHandler",
         "docstring": "Handles Markdown export operations for workbooks.",
         "docstring_full": "Handles Markdown export operations for workbooks. This class provides static methods to export workbook data to Markdown format, creating properly formatted Markdown tables. Examples: # Export workbook to Markdown >>> wb = Workbook('data.xlsx') >>> MarkdownHandler.save_markdown(wb, 'output.md') # Export with custom options >>> options = MarkdownSaveOptions() >>> options.default_alignment = 'center' >>> MarkdownHandler.save_markdown(wb, 'output.md', options)",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.markdown_handler.MarkdownHandler",
         "signature": "class MarkdownHandler",
         "symbol_kind": "class"
@@ -30431,6 +30473,7 @@
         "docstring": "Options for saving Markdown files.",
         "docstring_full": "Options for saving Markdown files. Attributes: encoding (str): File encoding. Default is 'utf-8'. worksheet_index (int): Index of worksheet to export (-1 for all). Default is 0. include_worksheet_name (bool): Include worksheet name as header. Default is True. header_level (int): Markdown header level for worksheet name (1-6). Default is 2. column_alignments (dict): Column alignment overrides {col_index: 'left'|'center'|'right'}. default_alignment (str): Default column alignment. Default is 'left'. date_format (str): Format string for date values. Default is '%Y-%m-%d'. datetime_format (str): Format string for datetime values. Default is '%Y-%m-%d %H:%M:%S'. time_format (str): Format string for time values. Default is '%H:%M:%S'. empty_cell_placeholder (str): Text for empty cells. Default is '' (empty string). escape_pipes (bool): Escape pipe characters in cell values. Default is True. first_row_as_header (bool): Treat first row as table header. Default is True. include_row_numbers (bool): Include row numbers as first column. Default is False. max_column_width (int): Maximum column width (0 for unlimited). Default is 0. trim_whitespace (bool): Trim whitespace from cell values. Default is True. float_precision (int): Decimal places for floats (-1 for auto/smart rounding). Default is -1. skip_empty_rows (bool): Skip rows where all cells are empty. Default is False. newline_replacement (str): Replace newlines in cell values with this string. Default is ' '. detect_title_rows (bool): Detect single-cell rows and output as headings. Default is False. auto_detect_header (bool): Auto-detect actual header row (skip title rows). Default is False. compact_format (bool): Use compact format without cell padding. Default is False. simple_separators (bool): Use simple '---' separators without alignment colons. Default is False. Examples: >>> options = MarkdownSaveOptions() >>> options.default_alignment = 'center' >>> options.include_worksheet_name = True >>> MarkdownHandler.save_markdown(workbook, 'output.md', options)",
         "fields": "encoding, worksheet_index, include_worksheet_name, header_level, column_alignments, default_alignment, date_format, datetime_format, time_format, empty_cell_placeholder, escape_pipes, first_row_as_header, include_row_numbers, max_column_width, trim_whitespace, float_precision, skip_empty_rows, newline_replacement, detect_title_rows, auto_detect_header, compact_format, simple_separators",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=22,inherits=0",
         "public_paths": "aspose.cells_foss.markdown_handler.MarkdownSaveOptions",
         "signature": "class MarkdownSaveOptions",
         "symbol_kind": "class"
@@ -30500,6 +30543,7 @@
         "docstring": "Fill format properties for a shape.",
         "docstring_full": "Fill format properties for a shape. Attributes: fill_type (FillType): How the shape is filled. fore_color (str): Primary fill colour as a 6-hex-digit RRGGBB string. transparency (float): Opacity 0.0 (opaque) \u2013 1.0 (fully transparent).",
         "fields": "fill_type, fore_color, transparency",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=3,inherits=0",
         "public_paths": "aspose.cells_foss.shape.MsoFillFormat",
         "signature": "class MsoFillFormat",
         "symbol_kind": "class"
@@ -30570,6 +30614,7 @@
         "docstring": "Border/outline format properties for a shape.",
         "docstring_full": "Border/outline format properties for a shape. Attributes: is_visible (bool): Whether the border is drawn. color (str): Border colour as a 6-hex-digit RRGGBB string. weight (int): Line thickness in EMU (9525 = 0.75 pt; 12700 = 1 pt). dash_style (MsoLineDashStyle): Dash pattern. transparency (float): Opacity 0.0 (opaque) \u2013 1.0 (fully transparent).",
         "fields": "is_visible, color, weight, dash_style, transparency",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=5,inherits=0",
         "public_paths": "aspose.cells_foss.shape.MsoLineFormat",
         "signature": "class MsoLineFormat",
         "symbol_kind": "class"
@@ -30612,6 +30657,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.chart.NSeries",
         "docstring": "Collection of series for a chart.",
+        "member_counts": "method=3,dunder=3,init=1,property=1,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.chart.NSeries",
         "signature": "class NSeries",
         "symbol_kind": "class"
@@ -30712,6 +30758,7 @@
         "defined_at": "aspose.cells_foss.style.NumberFormat",
         "docstring": "Represents number format settings for a cell or range of cells.",
         "docstring_full": "Represents number format settings for a cell or range of cells. The NumberFormat class provides methods for applying built-in and custom number formats to display values in various formats such as currency, percentage, date, time, etc. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.number_format = '0.00' # Two decimal places >>> style.number_format = '#,##0.00' # Thousands separator with two decimals >>> style.number_format = '0%' # Percentage format",
+        "member_counts": "method=3,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.style.NumberFormat",
         "signature": "class NumberFormat",
         "symbol_kind": "class"
@@ -30847,6 +30894,7 @@
     {
       "attributes": {
         "fields": "name, chart_kind, bar_direction, bar_shape, gap_width, overlap, show_data_labels, data_label_position, data_label_color, x, y, width, height, background_fill_color, background_gradient_stops, background_gradient_angle, background_pattern_type, background_pattern_foreground, background_pattern_background, chart_border_color, chart_border_width, back_wall_fill_image, side_wall_fill_image, plot_x, plot_y, plot_width, plot_height, title, title_layout_x, title_layout_y, title_color, title_fill_image, title_border_color, categories, category_positions, axis_categories, category_rotation, show_vertical_gridlines, category_major_gridline_color, value_major_gridline_color, plot_border_color, show_minor_horizontal_gridlines, minor_gridline_color, value_axis_color, value_axis_position, value_major_tick_mark, value_minor_tick_mark, value_axis_text_color, value_axis_fill_image, category_axis_text_color, category_axis_fill_image, category_axis_title, value_axis_title, legend_text_color, legend_fill_image, legend_layout_x, legend_layout_y, is_3d, rotation_x, rotation_y, depth_percent, perspective, series, grouping, value_min, value_max, value_step, value_axis_log_base, axis_number_format, value_axis_display_unit, value_axis_display_unit_label, value_axis_display_unit_layout_x, value_axis_display_unit_layout_y, show_legend, show_data_table, data_table_show_keys, show_series_axis, title_font_resolution, axis_font_resolution, pie_point_styles, pie_series_point_styles, pie_first_slice_angle, pie_variant, pie_hole_size, pie_secondary_size, pie_secondary_indices, pie_other_style, pie_connector_color, pie_connector_width, title_gradient_stops, title_gradient_angle, legend_gradient_stops, legend_gradient_angle, chart_glow_color, chart_glow_opacity, chart_glow_radius, chart_soft_edge_radius, chart_bevel_top_width, radar_style, legend_position, box_show_mean_line, box_show_mean_marker, box_show_inner_points, box_show_outlier_points, box_gap_width, box_quartile_method, histogram_variant, histogram_bins, map_value_colors, stock_style, stock_has_high_low_lines, stock_has_up_down_bars, stock_has_volume, stock_axes_hidden, rounded_corners, stock_price_min, stock_price_max, stock_price_step, sunburst_paths, treemap_paths, waterfall_subtotals, waterfall_gap_width, scatter_style, scatter_x_min, scatter_x_max, scatter_x_step, scatter_x_number_format, scatter_text_outline_gradient_stops, scatter_text_outline_gradient_angle, scatter_vary_colors, bubble_scale, surface_wireframe, surface_band_colors, surface_axes_hidden",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=134,inherits=0",
         "signature": "class PdfChartLayout",
         "symbol_kind": "class"
       },
@@ -30865,6 +30913,7 @@
     {
       "attributes": {
         "fields": "name, values, color, line_width, line_cap, marker_symbol, marker_size, marker_fill_color, marker_border_color, marker_border_width, display_values, error_bars, pattern_type, pattern_foreground, pattern_background, hidden, x_values, line_visible, bubble_sizes, bubble_3d",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=20,inherits=0",
         "signature": "class PdfChartSeriesLayout",
         "symbol_kind": "class"
       },
@@ -30883,6 +30932,7 @@
     {
       "attributes": {
         "fields": "name, image_bytes, image_extension, x, y, width, height",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=7,inherits=0",
         "signature": "class PdfPictureLayout",
         "symbol_kind": "class"
       },
@@ -30901,6 +30951,7 @@
     {
       "attributes": {
         "fields": "name, preset_geometry, is_connector, rotation, flip_horizontal, flip_vertical, tail_end, x, y, width, height, fill_visible, fill_color, line_visible, line_color, line_width, text, text_wrapped, text_direction, text_horizontal_alignment, text_vertical_alignment, font, font_resolution, connector_start, connector_end",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=25,inherits=0",
         "signature": "class PdfShapeLayout",
         "symbol_kind": "class"
       },
@@ -30919,6 +30970,7 @@
     {
       "attributes": {
         "fields": "kind, x, y, width, height, values, color_series, color_negative, color_axis, empty_cells, line_width",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=11,inherits=0",
         "signature": "class PdfSparklineLayout",
         "symbol_kind": "class"
       },
@@ -30987,6 +31039,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRenderer3DAreaMixin",
         "symbol_kind": "class"
       },
@@ -31021,6 +31074,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRenderer3DBarMixin",
         "symbol_kind": "class"
       },
@@ -31055,6 +31109,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRenderer3DLineColumnMixin",
         "symbol_kind": "class"
       },
@@ -31089,6 +31144,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRendererDrawingMixin",
         "symbol_kind": "class"
       },
@@ -31123,6 +31179,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRendererPieBarMixin",
         "symbol_kind": "class"
       },
@@ -31157,6 +31214,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRendererSpecialChartsMixin",
         "symbol_kind": "class"
       },
@@ -31191,6 +31249,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class PdfRendererStockSurfaceMixin",
         "symbol_kind": "class"
       },
@@ -31210,6 +31269,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_layout.PdfCellLayout",
         "fields": "row, column, x, y, width, height, text, lines, line_runs, style, font_resolution, font_scale, line_height, indent_width, text_clip_width, numeric, rich_text, hyperlink, merged, data_bar, icon_set",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=21,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_layout.PdfCellLayout",
         "signature": "class PdfCellLayout",
         "symbol_kind": "class"
@@ -31234,6 +31294,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_layout.PdfDataBarLayout",
         "fields": "x, y, width, height, gradient_start_x, gradient_end_x, color, gradient, show_value",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=9,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_layout.PdfDataBarLayout",
         "signature": "class PdfDataBarLayout",
         "symbol_kind": "class"
@@ -31258,6 +31319,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_exporter.PdfExporter",
         "docstring": "Connects workbook models to prepared pages and a PDF renderer.",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_exporter.PdfExporter",
         "signature": "class PdfExporter",
         "symbol_kind": "class"
@@ -31318,6 +31380,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_layout.PdfIconSetLayout",
         "fields": "x, y, width, height, icon_set_type, icon_index, show_value",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=7,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_layout.PdfIconSetLayout",
         "signature": "class PdfIconSetLayout",
         "symbol_kind": "class"
@@ -31342,6 +31405,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_layout.PdfLayoutEngine",
         "docstring": "Materializes all worksheet pages before the renderer starts drawing.",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_layout.PdfLayoutEngine",
         "signature": "class PdfLayoutEngine",
         "symbol_kind": "class"
@@ -31384,6 +31448,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_layout.PdfPageLayout",
         "fields": "worksheet_name, page_width, page_height, content_left, content_top, content_width, content_height, primary_bounds, repeated_rows, repeated_columns, scale, cells, sparklines, pictures, shapes, charts, render_gridlines",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=17,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_layout.PdfPageLayout",
         "signature": "class PdfPageLayout",
         "symbol_kind": "class"
@@ -31409,6 +31474,7 @@
         "defined_at": "aspose.cells_foss.pdf_options.PdfSaveOptions",
         "docstring": "Controls worksheet selection and basic PDF rendering behavior.",
         "fields": "render_gridlines, export_hidden_worksheets",
+        "member_counts": "method=0,dunder=0,init=1,property=3,field=2,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_options.PdfSaveOptions",
         "signature": "class PdfSaveOptions",
         "symbol_kind": "class"
@@ -31490,6 +31556,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_layout.PdfTextRunLayout",
         "fields": "text, width, font_resolution, font_size, color, underline, underline_type, strikethrough, baseline_shift, advance_adjustment, synthetic_italic",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=11,inherits=0",
         "public_paths": "aspose.cells_foss.pdf_layout.PdfTextRunLayout",
         "signature": "class PdfTextRunLayout",
         "symbol_kind": "class"
@@ -31514,6 +31581,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.picture.Picture",
         "docstring": "Represents a worksheet picture anchored to cells.",
+        "member_counts": "method=1,dunder=0,init=1,property=6,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.picture.Picture",
         "signature": "class Picture",
         "symbol_kind": "class"
@@ -31685,6 +31753,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.picture.PictureCollection",
         "docstring": "Collection of pictures in a worksheet.",
+        "member_counts": "method=3,dunder=3,init=1,property=1,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.picture.PictureCollection",
         "signature": "class PictureCollection",
         "symbol_kind": "class"
@@ -31800,6 +31869,7 @@
         "defined_at": "aspose.cells_foss.render_bounds.RenderBounds",
         "docstring": "A 1-based, inclusive rectangular range in worksheet coordinates.",
         "fields": "min_row, min_col, max_row, max_col",
+        "member_counts": "method=2,dunder=0,init=0,property=7,field=4,inherits=0",
         "public_paths": "aspose.cells_foss.render_bounds.RenderBounds",
         "signature": "class RenderBounds(NamedTuple)",
         "symbol_kind": "class"
@@ -32004,6 +32074,7 @@
         "defined_at": "aspose.cells_foss.rich_text.RichTextRun",
         "docstring": "One formatted text run from an OOXML shared string.",
         "fields": "text, font_name, font_size, font_color, bold, italic, underline, underline_type, strikethrough, vertical_alignment",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=10,inherits=0",
         "public_paths": "aspose.cells_foss.rich_text.RichTextRun",
         "signature": "class RichTextRun",
         "symbol_kind": "class"
@@ -32046,6 +32117,7 @@
         "defined_at": "aspose.cells_foss.row_height.RowHeightCalculator",
         "docstring": "Computes effective row heights without mutating the worksheet.",
         "member_count": "2",
+        "member_counts": "method=5,dunder=0,init=0,property=0,field=0,inherits=0",
         "members": "CELL_HORIZONTAL_PADDING, CELL_VERTICAL_PADDING",
         "public_paths": "aspose.cells_foss.row_height.RowHeightCalculator",
         "signature": "class RowHeightCalculator",
@@ -32287,6 +32359,7 @@
         "docstring": "Represents a drawing shape (rectangle, oval, text box, arrow, etc.) on",
         "docstring_full": "Represents a drawing shape (rectangle, oval, text box, arrow, etc.) on a worksheet. Aligned with ECMA-376 xdr:sp element, Excel VBA Shape object, and Aspose.Cells for .NET Shape class. Anchor coordinates use the same row/column system as Picture: - upper_left_row / upper_left_column: top-left cell (0-based) - lower_right_row / lower_right_column: bottom-right cell (0-based, exclusive) - Offsets are in EMU (English Metric Units).",
         "fields": "name, drawing_type, fill, line, text, font, text_horizontal_alignment, text_vertical_alignment, is_text_wrapped, is_locked, is_hidden, placement, hyperlink",
+        "member_counts": "method=1,dunder=0,init=1,property=8,field=13,inherits=0",
         "public_paths": "aspose.cells_foss.shape.Shape",
         "signature": "class Shape",
         "symbol_kind": "class"
@@ -32492,6 +32565,7 @@
         "defined_at": "aspose.cells_foss.shape.ShapeCollection",
         "docstring": "Collection of Shape objects on a worksheet.",
         "docstring_full": "Collection of Shape objects on a worksheet. Accessed via worksheet.shapes. Mirrors PictureCollection in design: - add() marks the drawing dirty so the drawing XML is regenerated on save. - _add_loaded() is used internally by the loader without marking dirty.",
+        "member_counts": "method=4,dunder=3,init=1,property=1,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.shape.ShapeCollection",
         "signature": "class ShapeCollection",
         "symbol_kind": "class"
@@ -32614,6 +32688,7 @@
         "docstring": "Font properties for text inside a shape.",
         "docstring_full": "Font properties for text inside a shape. Attributes: name (str): Typeface name (e.g. \"Calibri\"). size (float): Font size in points. bold (bool): Bold formatting. italic (bool): Italic formatting. underline (bool): Underline formatting. color (str): Font colour as a 6-hex-digit RRGGBB string.",
         "fields": "name, size, bold, italic, underline, color",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=6,inherits=0",
         "public_paths": "aspose.cells_foss.shape.ShapeFont",
         "signature": "class ShapeFont",
         "symbol_kind": "class"
@@ -32672,6 +32747,7 @@
       "attributes": {
         "docstring": "Manages the Shared String Table for XLSX files according to ECMA-376 specification.",
         "fields": "strings, string_to_index, count",
+        "member_counts": "method=4,dunder=1,init=1,property=0,field=3,inherits=0",
         "signature": "class SharedStringTable",
         "symbol_kind": "class"
       },
@@ -32767,6 +32843,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.pdf_renderer.SkiaPdfRenderer",
         "docstring": "Draws materialized page layouts without owning layout or pagination.",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=1",
         "public_paths": "aspose.cells_foss.pdf_renderer.SkiaPdfRenderer",
         "signature": "class SkiaPdfRenderer(PdfRendererStockSurfaceMixin, PdfRendererSpecialChartsMixin, PdfRendererPieBarMixin, PdfRenderer3DBarMixin, PdfRenderer3DAreaMixin, PdfRenderer3DLineColumnMixin, PdfRendererDrawingMixin)",
         "symbol_kind": "class"
@@ -32810,6 +32887,7 @@
         "defined_at": "aspose.cells_foss.sparkline.Sparkline",
         "docstring": "One sparkline: a data source range paired with the cell where it appears.",
         "fields": "data_range, cell_reference",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=2,inherits=0",
         "public_paths": "aspose.cells_foss.sparkline.Sparkline",
         "signature": "class Sparkline",
         "symbol_kind": "class"
@@ -32897,6 +32975,7 @@
         "docstring": "A group of sparklines that share the same visual style.",
         "docstring_full": "A group of sparklines that share the same visual style. Corresponds to <x14:sparklineGroup> in the worksheet XML extension.",
         "fields": "type, display_empty_cells_as, color_series, color_negative, color_axis, color_markers, color_first, color_last, color_high, color_low, sparklines",
+        "member_counts": "method=2,dunder=0,init=1,property=1,field=11,inherits=0",
         "public_paths": "aspose.cells_foss.sparkline.SparklineGroup",
         "signature": "class SparklineGroup",
         "symbol_kind": "class"
@@ -32976,6 +33055,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.sparkline.SparklineGroupCollection",
         "docstring": "Collection of SparklineGroup objects (ws.sparkline_groups).",
+        "member_counts": "method=5,dunder=3,init=1,property=1,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.sparkline.SparklineGroupCollection",
         "signature": "class SparklineGroupCollection",
         "symbol_kind": "class"
@@ -33138,6 +33218,7 @@
         "docstring": "Parameters for Standard Encryption (ECMA-376 Part 2, Section 3).",
         "docstring_full": "Parameters for Standard Encryption (ECMA-376 Part 2, Section 3). This is the legacy encryption method used by Office 2007-2009. Maintained for compatibility but Agile encryption is recommended.",
         "fields": "salt_size, verifier_size",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=2,inherits=1",
         "public_paths": "aspose.cells_foss.encryption_params.StandardEncryptionParameters",
         "signature": "class StandardEncryptionParameters(EncryptionParameters)",
         "symbol_kind": "class"
@@ -33164,6 +33245,7 @@
         "docstring": "Represents formatting settings for a cell or range of cells.",
         "docstring_full": "Represents formatting settings for a cell or range of cells. The Style class provides a comprehensive set of properties for controlling the appearance of cells, including font, fill, borders, alignment, number format, and protection. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.font.bold = True >>> style.fill.set_solid_fill('FFFF0000') >>> style.borders.set_border('all', 'thin', 'FF000000') >>> style.alignment.horizontal = 'center'",
         "fields": "font, fill, borders, alignment, number_format, protection",
+        "member_counts": "method=20,dunder=0,init=1,property=0,field=6,inherits=0",
         "public_paths": "aspose.cells_foss.style.Style",
         "signature": "class Style",
         "symbol_kind": "class"
@@ -33207,6 +33289,7 @@
         "docstring": "Represents alignment settings for a cell or range of cells.",
         "docstring_full": "Represents alignment settings for a cell or range of cells. The Alignment class provides properties for controlling text alignment within cells, including horizontal and vertical alignment, text wrapping, rotation, and indentation. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.alignment.horizontal = 'center' >>> style.alignment.vertical = 'center' >>> style.alignment.wrap_text = True",
         "fields": "horizontal, vertical, wrap_text, indent, text_rotation, shrink_to_fit, reading_order, relative_indent",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=8,inherits=0",
         "signature": "class Alignment",
         "symbol_kind": "class"
       },
@@ -33227,6 +33310,7 @@
         "docstring": "Represents border settings for a single side of a cell or range of cells.",
         "docstring_full": "Represents border settings for a single side of a cell or range of cells. The Border class provides properties for controlling the appearance of cell borders, including line style, color, and weight. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.borders.top.line_style = 'thin' >>> style.borders.top.color = 'FFFF0000' # Red border",
         "fields": "line_style, color, weight, automatic_color",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=4,inherits=0",
         "signature": "class Border",
         "symbol_kind": "class"
       },
@@ -33247,6 +33331,7 @@
         "docstring": "Represents border settings for all sides of a cell or range of cells.",
         "docstring_full": "Represents border settings for all sides of a cell or range of cells. The Borders class provides properties for controlling borders on all four sides of a cell, as well as diagonal borders. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.borders.set_border('all', 'thin', 'FF000000') # Thin black border on all sides >>> style.borders.set_border('top', 'thick', 'FFFF0000') # Thick red top border",
         "fields": "top, bottom, left, right, diagonal_up, diagonal_down, diagonal",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=7,inherits=0",
         "signature": "class Borders",
         "symbol_kind": "class"
       },
@@ -33287,6 +33372,7 @@
         "docstring": "Represents fill settings for a cell or range of cells.",
         "docstring_full": "Represents fill settings for a cell or range of cells. The Fill class provides properties for controlling the background appearance of cells, including solid colors, patterns, and gradients. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.fill.set_solid_fill('FFFF0000') # Red background >>> style.fill.set_pattern_fill('gray125', 'FFCCCCCC', 'FFFFFFFF')",
         "fields": "pattern_type, foreground_color, background_color",
+        "member_counts": "method=4,dunder=0,init=1,property=0,field=3,inherits=0",
         "signature": "class Fill",
         "symbol_kind": "class"
       },
@@ -33383,6 +33469,7 @@
         "docstring": "Represents protection settings for a cell or range of cells.",
         "docstring_full": "Represents protection settings for a cell or range of cells. The Protection class provides properties for controlling cell protection when the worksheet is protected. Examples: >>> from aspose_cells import Style >>> style = Style() >>> style.protection.locked = False # Cell can be edited when sheet is protected >>> style.protection.hidden = True # Formula is hidden when sheet is protected",
         "fields": "locked, hidden",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=2,inherits=0",
         "signature": "class Protection",
         "symbol_kind": "class"
       },
@@ -33800,6 +33887,7 @@
         "defined_at": "aspose.cells_foss.style_resolver.StyleResolver",
         "docstring": "Resolves the effective visual style for worksheet cells.",
         "docstring_full": "Resolves the effective visual style for worksheet cells. Precedence: 1. workbook default style 2. table style 3. column style xf 4. cell style 5. matching conditional-format differential styles, when requested",
+        "member_counts": "method=4,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.style_resolver.StyleResolver",
         "signature": "class StyleResolver",
         "symbol_kind": "class"
@@ -33900,6 +33988,7 @@
         "docstring": "Represents an Excel structured table (ECMA-376 \u00a718.5).",
         "docstring_full": "Represents an Excel structured table (ECMA-376 \u00a718.5). Equivalent to ListObject in Aspose.Cells for .NET / Excel VBA.",
         "fields": "name, display_name, ref, has_headers, show_totals_row, show_auto_filter, table_style_info, columns",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=8,inherits=0",
         "public_paths": "aspose.cells_foss.table.Table",
         "signature": "class Table",
         "symbol_kind": "class"
@@ -33960,6 +34049,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.table.TableCollection",
         "docstring": "Collection of Table objects belonging to a worksheet (ws.tables).",
+        "member_counts": "method=5,dunder=3,init=1,property=1,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.table.TableCollection",
         "signature": "class TableCollection",
         "symbol_kind": "class"
@@ -34096,6 +34186,7 @@
         "defined_at": "aspose.cells_foss.table.TableColumn",
         "docstring": "Settings for a single table column.",
         "fields": "id, name, totals_row_function, totals_row_label, totals_row_formula",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=5,inherits=0",
         "public_paths": "aspose.cells_foss.table.TableColumn",
         "signature": "class TableColumn",
         "symbol_kind": "class"
@@ -34139,6 +34230,7 @@
         "defined_at": "aspose.cells_foss.table.TableStyleInfo",
         "docstring": "Visual style settings for an Excel table.",
         "fields": "name, show_first_column, show_last_column, show_row_stripes, show_column_stripes",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=5,inherits=0",
         "public_paths": "aspose.cells_foss.table.TableStyleInfo",
         "signature": "class TableStyleInfo",
         "symbol_kind": "class"
@@ -34251,6 +34343,7 @@
         "defined_at": "aspose.cells_foss.text_measure.TextMeasurer",
         "docstring": "Backend-neutral text measurement service used by layout and rendering.",
         "fields": "font_strategy",
+        "member_counts": "method=4,dunder=0,init=1,property=0,field=1,inherits=0",
         "public_paths": "aspose.cells_foss.text_measure.TextMeasurer",
         "signature": "class TextMeasurer",
         "symbol_kind": "class"
@@ -34382,6 +34475,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.value_formatter.ValueFormatter",
         "docstring": "Formats cells or raw values into display text.",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.value_formatter.ValueFormatter",
         "signature": "class ValueFormatter",
         "symbol_kind": "class"
@@ -34444,6 +34538,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.page_break.VerticalPageBreakCollection",
         "docstring": "Collection of manual vertical page breaks (column breaks).",
+        "member_counts": "method=8,dunder=3,init=1,property=2,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.page_break.VerticalPageBreakCollection",
         "signature": "class VerticalPageBreakCollection",
         "symbol_kind": "class"
@@ -34653,6 +34748,7 @@
         "defined_at": "aspose.cells_foss.workbook.Workbook",
         "docstring": "Represents an Excel workbook.",
         "docstring_full": "Represents an Excel workbook. The Workbook class provides methods and properties for working with Excel workbooks, including worksheet management, file I/O operations, and workbook-level settings. Examples: >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> ws.cells['A1'].value = \"Hello\" >>> wb.save('output.xlsx') >>> wb = Workbook('input.xlsx') >>> print(wb.worksheets[0].cells['A1'].value)",
+        "member_counts": "method=19,dunder=1,init=1,property=7,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.workbook.Workbook",
         "signature": "class Workbook",
         "symbol_kind": "class"
@@ -35256,6 +35352,7 @@
       "attributes": {
         "docstring": "Represents calculation properties for the workbook.",
         "docstring_full": "Represents calculation properties for the workbook. ECMA-376 Section: 18.2.2 Examples: >>> wb.properties.calculation.calc_mode = \"auto\" >>> wb.properties.calculation.iterate = True >>> wb.properties.calculation.iterate_count = 100",
+        "member_counts": "method=0,dunder=0,init=1,property=12,field=0,inherits=0",
         "signature": "class CalculationProperties",
         "symbol_kind": "class"
       },
@@ -35491,6 +35588,7 @@
       "attributes": {
         "docstring": "Represents a defined name in the workbook.",
         "docstring_full": "Represents a defined name in the workbook. ECMA-376 Section: 18.2.5 Examples: >>> name = DefinedName(\"MyRange\", \"Sheet1!$A$1:$D$10\") >>> wb.properties.defined_names.add(name)",
+        "member_counts": "method=0,dunder=0,init=1,property=6,field=0,inherits=0",
         "signature": "class DefinedName",
         "symbol_kind": "class"
       },
@@ -35618,6 +35716,7 @@
       "attributes": {
         "docstring": "Collection of defined names in the workbook.",
         "docstring_full": "Collection of defined names in the workbook. Examples: >>> wb.properties.defined_names.add(DefinedName(\"MyRange\", \"Sheet1!$A$1:$D$10\")) >>> name = wb.properties.defined_names[\"MyRange\"]",
+        "member_counts": "method=2,dunder=3,init=1,property=0,field=0,inherits=0",
         "signature": "class DefinedNameCollection",
         "symbol_kind": "class"
       },
@@ -35674,6 +35773,7 @@
       "attributes": {
         "docstring": "Represents file version information for the workbook.",
         "docstring_full": "Represents file version information for the workbook. ECMA-376 Section: 18.2.10 Examples: >>> wb.properties.file_version.app_name = \"xl\" >>> wb.properties.file_version.last_edited = \"7\"",
+        "member_counts": "method=0,dunder=0,init=1,property=4,field=0,inherits=0",
         "signature": "class FileVersion",
         "symbol_kind": "class"
       },
@@ -35765,6 +35865,7 @@
       "attributes": {
         "docstring": "Represents workbook properties (workbookPr element).",
         "docstring_full": "Represents workbook properties (workbookPr element). ECMA-376 Section: 18.2.13 Examples: >>> wb.properties.workbook_pr.date1904 = True >>> wb.properties.workbook_pr.code_name = \"ThisWorkbook\"",
+        "member_counts": "method=0,dunder=0,init=1,property=11,field=0,inherits=0",
         "signature": "class WorkbookPr",
         "symbol_kind": "class"
       },
@@ -35982,6 +36083,7 @@
       "attributes": {
         "docstring": "Container for all workbook-level properties.",
         "docstring_full": "Container for all workbook-level properties. Examples: >>> wb.properties.file_version.app_name = \"xl\" >>> wb.properties.protection.lock_structure = True >>> wb.properties.view.active_tab = 0 >>> wb.properties.calculation.calc_mode = \"auto\"",
+        "member_counts": "method=0,dunder=0,init=1,property=6,field=0,inherits=0",
         "signature": "class WorkbookProperties",
         "symbol_kind": "class"
       },
@@ -36109,6 +36211,7 @@
       "attributes": {
         "docstring": "Represents workbook protection settings.",
         "docstring_full": "Represents workbook protection settings. ECMA-376 Section: 18.2.29 Examples: >>> wb.properties.protection.lock_structure = True >>> wb.properties.protection.workbook_password = \"hashed_password\"",
+        "member_counts": "method=0,dunder=0,init=1,property=6,field=0,inherits=0",
         "signature": "class WorkbookProtection",
         "symbol_kind": "class"
       },
@@ -36236,6 +36339,7 @@
       "attributes": {
         "docstring": "Represents a workbook view configuration.",
         "docstring_full": "Represents a workbook view configuration. ECMA-376 Section: 18.2.30 Examples: >>> wb.properties.view.active_tab = 0 >>> wb.properties.view.show_sheet_tabs = True",
+        "member_counts": "method=0,dunder=0,init=1,property=12,field=0,inherits=0",
         "signature": "class WorkbookView",
         "symbol_kind": "class"
       },
@@ -36472,6 +36576,7 @@
         "defined_at": "aspose.cells_foss.worksheet.Worksheet",
         "docstring": "Represents a single worksheet in an Excel workbook.",
         "docstring_full": "Represents a single worksheet in an Excel workbook. The Worksheet class provides access to cells, ranges, and worksheet properties such as name, visibility, protection, and page setup settings. Examples: >>> wb = Workbook() >>> ws = wb.worksheets[0] >>> ws.name = \"MySheet\" >>> ws.cells[\"A1\"].value = \"Hello\"",
+        "member_counts": "method=42,dunder=0,init=1,property=23,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.worksheet.Worksheet",
         "signature": "class Worksheet",
         "symbol_kind": "class"
@@ -37662,6 +37767,7 @@
       "attributes": {
         "docstring": "Dictionary-like wrapper around SheetProtection for backward compatibility.",
         "docstring_full": "Dictionary-like wrapper around SheetProtection for backward compatibility. This wrapper allows accessing SheetProtection properties using dictionary syntax while maintaining backward compatibility with existing code that uses ws.protection['key'].",
+        "member_counts": "method=1,dunder=2,init=1,property=0,field=0,inherits=0",
         "signature": "class SheetProtectionDictWrapper",
         "symbol_kind": "class"
       },
@@ -37837,6 +37943,7 @@
       "attributes": {
         "docstring": "Represents header and footer settings.",
         "docstring_full": "Represents header and footer settings. ECMA-376 Section: 18.3.1.46 Examples: >>> ws.properties.header_footer.odd_header = \"&C&\"Arial,Bold\"Report Title\" >>> ws.properties.header_footer.odd_footer = \"&CPage &P of &N\"",
+        "member_counts": "method=0,dunder=0,init=1,property=10,field=0,inherits=0",
         "signature": "class HeaderFooter",
         "symbol_kind": "class"
       },
@@ -38036,6 +38143,7 @@
       "attributes": {
         "docstring": "Represents page margins.",
         "docstring_full": "Represents page margins. ECMA-376 Section: 18.3.1.62 Examples: >>> ws.properties.page_margins.left = 0.7 >>> ws.properties.page_margins.top = 0.75",
+        "member_counts": "method=0,dunder=0,init=1,property=6,field=0,inherits=1",
         "signature": "class PageMargins(_PropertyMapping)",
         "symbol_kind": "class"
       },
@@ -38163,6 +38271,7 @@
       "attributes": {
         "docstring": "Represents page setup settings.",
         "docstring_full": "Represents page setup settings. ECMA-376 Section: 18.3.1.63 Examples: >>> ws.properties.page_setup.orientation = \"landscape\" >>> ws.properties.page_setup.paper_size = 9 # A4 >>> ws.properties.page_setup.scale = 80",
+        "member_counts": "method=0,dunder=0,init=1,property=19,field=0,inherits=1",
         "signature": "class PageSetup(_PropertyMapping)",
         "symbol_kind": "class"
       },
@@ -38524,6 +38633,7 @@
       "attributes": {
         "docstring": "Represents pane (freeze/split) settings.",
         "docstring_full": "Represents pane (freeze/split) settings. ECMA-376 Section: 18.3.1.66 Examples: >>> ws.properties.pane.x_split = 1 >>> ws.properties.pane.y_split = 1 >>> ws.properties.pane.state = \"frozen\"",
+        "member_counts": "method=0,dunder=0,init=1,property=6,field=0,inherits=0",
         "signature": "class Pane",
         "symbol_kind": "class"
       },
@@ -38651,6 +38761,7 @@
       "attributes": {
         "docstring": "Represents print options.",
         "docstring_full": "Represents print options. ECMA-376 Section: 18.3.1.70 Examples: >>> ws.properties.print_options.print_grid_lines = True >>> ws.properties.print_options.print_headings = True",
+        "member_counts": "method=0,dunder=0,init=1,property=9,field=0,inherits=0",
         "signature": "class PrintOptions",
         "symbol_kind": "class"
       },
@@ -38832,6 +38943,7 @@
       "attributes": {
         "docstring": "Represents cell selection in a sheet view.",
         "docstring_full": "Represents cell selection in a sheet view. ECMA-376 Section: 18.3.1.81 Examples: >>> ws.properties.selection.active_cell = \"B2\" >>> ws.properties.selection.sqref = \"B2:D5\"",
+        "member_counts": "method=0,dunder=0,init=1,property=3,field=0,inherits=0",
         "signature": "class Selection",
         "symbol_kind": "class"
       },
@@ -38905,6 +39017,7 @@
       "attributes": {
         "docstring": "Represents sheet format properties.",
         "docstring_full": "Represents sheet format properties. ECMA-376 Section: 18.3.1.82 Examples: >>> ws.properties.format.default_row_height = 15 >>> ws.properties.format.default_col_width = 8.43",
+        "member_counts": "method=0,dunder=0,init=1,property=10,field=0,inherits=0",
         "signature": "class SheetFormatProperties",
         "symbol_kind": "class"
       },
@@ -39105,6 +39218,7 @@
       "attributes": {
         "docstring": "Represents sheet protection settings.",
         "docstring_full": "Represents sheet protection settings. ECMA-376 Section: 18.3.1.85 Examples: >>> ws.properties.protection.sheet = True >>> ws.properties.protection.format_cells = False",
+        "member_counts": "method=0,dunder=0,init=1,property=22,field=0,inherits=0",
         "signature": "class SheetProtection",
         "symbol_kind": "class"
       },
@@ -39520,6 +39634,7 @@
       "attributes": {
         "docstring": "Represents a sheet view configuration.",
         "docstring_full": "Represents a sheet view configuration. ECMA-376 Section: 18.3.1.87 Examples: >>> ws.properties.view.show_grid_lines = False >>> ws.properties.view.zoom_scale = 80",
+        "member_counts": "method=0,dunder=0,init=1,property=20,field=0,inherits=0",
         "signature": "class SheetView",
         "symbol_kind": "class"
       },
@@ -39899,6 +40014,7 @@
       "attributes": {
         "docstring": "Container for all worksheet-level properties.",
         "docstring_full": "Container for all worksheet-level properties. Examples: >>> ws.properties.view.show_grid_lines = False >>> ws.properties.protection.sheet = True >>> ws.properties.page_setup.orientation = \"landscape\"",
+        "member_counts": "method=0,dunder=0,init=1,property=9,field=0,inherits=0",
         "signature": "class WorksheetProperties",
         "symbol_kind": "class"
       },
@@ -40080,6 +40196,7 @@
       "attributes": {
         "defined_at": "aspose.cells_foss.render_bounds.WorksheetBoundsResolver",
         "docstring": "Resolve live worksheet bounds without relying on cached XLSX dimensions.",
+        "member_counts": "method=3,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.cells_foss.render_bounds.WorksheetBoundsResolver",
         "signature": "class WorksheetBoundsResolver",
         "symbol_kind": "class"
@@ -40175,6 +40292,7 @@
     {
       "attributes": {
         "docstring": "Handles decryption of XLSX files.",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class XLSXDecryptor",
         "symbol_kind": "class"
       },
@@ -40232,6 +40350,7 @@
       "attributes": {
         "docstring": "Handles encryption of XLSX files.",
         "fields": "params",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=1,inherits=0",
         "signature": "class XLSXEncryptor",
         "symbol_kind": "class"
       },
@@ -40289,6 +40408,7 @@
         "docstring": "Handles loading autofilter data from XML format for .xlsx files.",
         "docstring_full": "Handles loading autofilter data from XML format for .xlsx files. The AutoFilterXMLLoader class is responsible for parsing the XML representation of autofilter settings including filter columns, filter values, custom filters, color filters, dynamic filters, top10 filters, and sort state. Examples: >>> loader = AutoFilterXMLLoader(namespaces) >>> loader.load_auto_filter(worksheet, worksheet_root)",
         "fields": "ns",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=1,inherits=0",
         "signature": "class AutoFilterXMLLoader",
         "symbol_kind": "class"
       },
@@ -40345,6 +40465,7 @@
       "attributes": {
         "docstring": "Handles writing autofilter data to XML format for .xlsx files.",
         "docstring_full": "Handles writing autofilter data to XML format for .xlsx files. The AutoFilterXMLWriter class is responsible for creating the XML representation of autofilter settings including filter columns, filter values, custom filters, color filters, dynamic filters, top10 filters, and sort state. Examples: >>> writer = AutoFilterXMLWriter() >>> xml = writer.format_auto_filter_xml(worksheet.auto_filter)",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class AutoFilterXMLWriter",
         "symbol_kind": "class"
       },
@@ -40455,6 +40576,7 @@
       "attributes": {
         "docstring": "Handles writing chart-related XLSX parts:",
         "docstring_full": "Handles writing chart-related XLSX parts: - xl/charts/chartN.xml - xl/drawings/drawingN.xml - xl/drawings/_rels/drawingN.xml.rels",
+        "member_counts": "method=2,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class ChartXmlSaver",
         "symbol_kind": "class"
       },
@@ -40531,6 +40653,7 @@
         "docstring": "Handles loading conditional formatting data from XML format for .xlsx files.",
         "docstring_full": "Handles loading conditional formatting data from XML format for .xlsx files. The ConditionalFormatXMLLoader class is responsible for parsing the XML representation of conditional formatting rules including cell value rules, text rules, date rules, formula rules, color scales, data bars, icon sets, and more. Examples: >>> loader = ConditionalFormatXMLLoader(namespaces, workbook) >>> loader.load_conditional_formatting(worksheet, worksheet_root)",
         "fields": "ns, workbook",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=2,inherits=0",
         "signature": "class ConditionalFormatXMLLoader",
         "symbol_kind": "class"
       },
@@ -40587,6 +40710,7 @@
       "attributes": {
         "docstring": "Handles writing conditional formatting data to XML format for .xlsx files.",
         "docstring_full": "Handles writing conditional formatting data to XML format for .xlsx files. The ConditionalFormatXMLWriter class is responsible for creating the XML representation of conditional formatting rules including cell value rules, text rules, date rules, formula rules, color scales, data bars, icon sets, and more. Examples: >>> writer = ConditionalFormatXMLWriter(escape_xml_func) >>> xml = writer.format_conditional_formatting_xml(worksheet.conditional_formats)",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class ConditionalFormatXMLWriter",
         "symbol_kind": "class"
       },
@@ -40643,6 +40767,7 @@
       "attributes": {
         "docstring": "Loads DataValidation objects from ECMA-376 SpreadsheetML XML format.",
         "fields": "namespace, ns_prefix",
+        "member_counts": "method=3,dunder=0,init=1,property=0,field=2,inherits=0",
         "signature": "class DataValidationXmlLoader",
         "symbol_kind": "class"
       },
@@ -40756,6 +40881,7 @@
       "attributes": {
         "docstring": "Saves DataValidation objects to ECMA-376 SpreadsheetML XML format.",
         "fields": "namespace",
+        "member_counts": "method=3,dunder=0,init=1,property=0,field=1,inherits=0",
         "signature": "class DataValidationXmlSaver",
         "symbol_kind": "class"
       },
@@ -40869,6 +40995,7 @@
       "attributes": {
         "docstring": "Writes hyperlink relationships to _rels files.",
         "docstring_full": "Writes hyperlink relationships to _rels files. Creates or updates xl/worksheets/_rels/sheet{n}.xml.rels with hyperlink relationships.",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class HyperlinkRelationshipWriter",
         "symbol_kind": "class"
       },
@@ -40908,6 +41035,7 @@
         "docstring": "Loads hyperlinks from worksheet XML and relationship files.",
         "docstring_full": "Loads hyperlinks from worksheet XML and relationship files. ECMA-376 compliant hyperlink loading from: - xl/worksheets/sheet{n}.xml (hyperlink elements) - xl/worksheets/_rels/sheet{n}.xml.rels (relationship targets)",
         "fields": "ns",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=1,inherits=0",
         "signature": "class HyperlinkXMLLoader",
         "symbol_kind": "class"
       },
@@ -40946,6 +41074,7 @@
       "attributes": {
         "docstring": "Saves hyperlinks to worksheet XML and relationship files.",
         "docstring_full": "Saves hyperlinks to worksheet XML and relationship files. ECMA-376 compliant hyperlink saving to: - xl/worksheets/sheet{n}.xml (hyperlink elements) - xl/worksheets/_rels/sheet{n}.xml.rels (relationship targets)",
+        "member_counts": "method=3,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class HyperlinkXMLSaver",
         "symbol_kind": "class"
       },
@@ -41041,6 +41170,7 @@
         "docstring": "Handles loading of Excel workbook XML files.",
         "docstring_full": "Handles loading of Excel workbook XML files. This class provides methods to parse various XML components of an Excel workbook including workbook structure, shared strings, styles, and worksheet data.",
         "fields": "workbook, ns",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=2,inherits=0",
         "signature": "class XMLLoader",
         "symbol_kind": "class"
       },
@@ -41096,6 +41226,7 @@
     {
       "attributes": {
         "docstring": "Loads pictures from worksheet drawing parts.",
+        "member_counts": "method=3,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class PictureXmlLoader",
         "symbol_kind": "class"
       },
@@ -41183,6 +41314,7 @@
     {
       "attributes": {
         "docstring": "Handles writing picture-related drawing/media XML payloads.",
+        "member_counts": "method=5,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class PictureXmlSaver",
         "symbol_kind": "class"
       },
@@ -41306,6 +41438,7 @@
         "docstring": "Handles loading workbook properties from XML format for .xlsx files.",
         "docstring_full": "Handles loading workbook properties from XML format for .xlsx files. Examples: >>> loader = WorkbookPropertiesXMLLoader(namespaces) >>> loader.load_file_version(workbook.properties.file_version, root)",
         "fields": "ns",
+        "member_counts": "method=6,dunder=0,init=1,property=0,field=1,inherits=0",
         "signature": "class WorkbookPropertiesXMLLoader",
         "symbol_kind": "class"
       },
@@ -41440,6 +41573,7 @@
         "docstring": "Handles loading worksheet properties from XML format for .xlsx files.",
         "docstring_full": "Handles loading worksheet properties from XML format for .xlsx files. Examples: >>> loader = WorksheetPropertiesXMLLoader(namespaces) >>> loader.load_sheet_views(worksheet.properties, root)",
         "fields": "ns",
+        "member_counts": "method=7,dunder=0,init=1,property=0,field=1,inherits=0",
         "signature": "class WorksheetPropertiesXMLLoader",
         "symbol_kind": "class"
       },
@@ -41610,6 +41744,7 @@
       "attributes": {
         "docstring": "Handles writing workbook properties to XML format for .xlsx files.",
         "docstring_full": "Handles writing workbook properties to XML format for .xlsx files. Examples: >>> writer = WorkbookPropertiesXMLWriter(escape_xml_func) >>> xml = writer.format_file_version_xml(workbook.properties.file_version)",
+        "member_counts": "method=6,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class WorkbookPropertiesXMLWriter",
         "symbol_kind": "class"
       },
@@ -41743,6 +41878,7 @@
       "attributes": {
         "docstring": "Handles writing worksheet properties to XML format for .xlsx files.",
         "docstring_full": "Handles writing worksheet properties to XML format for .xlsx files. Examples: >>> writer = WorksheetPropertiesXMLWriter(escape_xml_func) >>> xml = writer.format_sheet_views_xml(worksheet.properties)",
+        "member_counts": "method=7,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class WorksheetPropertiesXMLWriter",
         "symbol_kind": "class"
       },
@@ -41913,6 +42049,7 @@
       "attributes": {
         "docstring": "Handles saving workbook data to XML format for .xlsx files.",
         "docstring_full": "Handles saving workbook data to XML format for .xlsx files. The XMLSaver class is responsible for creating all of the XML files that make up an Excel .xlsx file, including content types, relationships, workbook, styles, shared strings, and worksheet files. Examples: >>> saver = XMLSaver(workbook) >>> saver.save('output.xlsx')",
+        "member_counts": "method=9,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class XMLSaver",
         "symbol_kind": "class"
       },
@@ -42112,6 +42249,7 @@
     {
       "attributes": {
         "docstring": "Loads xdr:sp shape elements from a drawing XML part.",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class ShapeXmlLoader",
         "symbol_kind": "class"
       },
@@ -42167,6 +42305,7 @@
     {
       "attributes": {
         "docstring": "Generates drawing XML and relationship XML for worksheet shapes.",
+        "member_counts": "method=4,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class ShapeXmlSaver",
         "symbol_kind": "class"
       },
@@ -42279,6 +42418,7 @@
     {
       "attributes": {
         "docstring": "Loads sparkline group data from the <extLst> in a worksheet XML root.",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class SparklineXmlLoader",
         "symbol_kind": "class"
       },
@@ -42334,6 +42474,7 @@
     {
       "attributes": {
         "docstring": "Serialises SparklineGroupCollection to <extLst> XML.",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class SparklineXmlSaver",
         "symbol_kind": "class"
       },
@@ -42389,6 +42530,7 @@
     {
       "attributes": {
         "docstring": "Loads table definitions from an XLSX ZIP archive into a worksheet.",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "signature": "class TableXmlLoader",
         "symbol_kind": "class"
       },
@@ -42444,6 +42586,7 @@
     {
       "attributes": {
         "docstring": "Serialises Table objects to ECMA-376 table XML.",
+        "member_counts": "method=1,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class TableXmlSaver",
         "symbol_kind": "class"
       },
