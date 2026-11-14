@@ -11,60 +11,290 @@
    "run_id": "43572744168",
    "source_revision": "034594822f58194a9ae937237090a60161f57055",
    "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  },
+  {
+   "at": "2026-11-14T16:36:50+00:00",
+   "classes": [
+    "BC-07|unresolved|heading_q_is_not",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "live_readme_loss|inherited_unit|code_block"
+   ],
+   "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+   "findings": 11,
+   "outcome": "failure",
+   "run_id": "43613424481",
+   "source_revision": "034594822f58194a9ae937237090a60161f57055",
+   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T08:27:52+00:00",
+  "at": "2026-11-14T16:36:50+00:00",
   "classes": {
-   "job_error|job_error|unknown:model_output_was_rejected": {
-    "example": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:datamatrixoptions: identifiers that are not accepted fact values: DataMatrix (nearest accepted: DataMatrixOptions, DataMatrixOptions.shape)",
-    "findings": 1,
-    "origin_kind": "job_error",
+   "BC-07|unresolved|heading_q_is_not": {
+    "example": "heading '#### Complex-text Shaping (Embedded OpenType Fonts)' is not a shell heading in title case",
+    "findings": 5,
+    "origin_kind": "unresolved",
     "origins": [
-     "unknown"
+     "-"
     ],
-    "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "unknown:model_output_was_rejected",
+    "rule": "BC-07",
+    "scope": "eb0a32020f7cd800c1ce19abc5e68997d55f00fabb66e70255edab6840cd5e36",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "heading_q_is_not",
+    "upstream": ""
+   },
+   "disposition_coverage|inherited_unit|id_is_kept_verified_preserve": {
+    "example": "```ts\nimport { Document } from '@asposefoss/pdf';\nimport { readFileSync, writeFileSync } from 'node:fs';\n\nconst doc = Document.Open(new Uint8Array(readFileSync('xfa-form.pdf')));\nconst report = doc.ConvertXfaToAcroForm();\n\nconsole.log('packets:', report.packets.join(', '));\nfor (const f of report.fi",
+    "findings": 5,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:308.code_block",
+     "inherited_unit:456.code_block",
+     "inherited_unit:517.code_block",
+     "inherited_unit:519.code_block",
+     "inherited_unit:525.code_block"
+    ],
+    "rule": "disposition_coverage",
+    "scope": "1ec2c9308a46754789c5c9ac4d5332beabab8cf9e0dd9449900076561c02376b",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   "live_readme_loss|inherited_unit|code_block": {
+    "example": "import { Document } from '@asposefoss/pdf';\n\nconst doc = Document.OpenFile('in.pdf');\nconst svg = doc.Pages[0].ToSvg();          // standalone <svg> string\n// fs.writeFileSync('page1.svg', svg);\nconst png = doc.Pages[0].ToImage({ scale: 2 }); // Uint8Array of PNG bytes @144 DPI\n// fs.writeFileSync('",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:015.code_block"
+    ],
+    "rule": "live_readme_loss",
+    "scope": "1ec2c9308a46754789c5c9ac4d5332beabab8cf9e0dd9449900076561c02376b",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "code_block",
     "upstream": ""
    }
   },
-  "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+  "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:datamatrixoptions: identifiers that are not accepted fact values: DataMatrix (nearest accepted: DataMatrixOptions, DataMatrixOptions.shape)",
-   "kind": "unknown",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 81a1cb4204c1: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:308.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:456.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:517.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:519.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds i",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "unknown",
-    "message": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:datamatrixoptions: identifiers that are not accepted fact values: DataMatrix (nearest accepted: DataMatrixOptions, DataMatrixOptions.shape)",
+    "label": "disposition_coverage",
+    "message": "inherited_unit:308.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "unknown",
-     "kind": "job_error"
+     "id": "inherited_unit:308.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```ts\nimport { Document } from '@asposefoss/pdf';\nimport { readFileSync, writeFileSync } from 'node:fs';\n\nconst doc = Document.Open(new Uint8Array(readFileSync('xfa-form.pdf')));\nconst report = doc.ConvertXfaToAcroForm();\n\nconsole.log('packets:', report.packets.join(', '));\nfor (const f of report.fi",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:456.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:456.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```ts\nimport { Document } from '@asposefoss/pdf';\n\nconst doc = Document.OpenFile('in.pdf');\nconst svg = doc.Pages[0].ToSvg();          // standalone <svg> string\n// fs.writeFileSync('page1.svg', svg);\nconst png = doc.Pages[0].ToImage({ scale: 2 }); // Uint8Array of PNG bytes @144 DPI\n// fs.writeFile",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:517.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:517.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```ts\nimport { parseHtml } from '@asposefoss/pdf';\n\nconst doc = parseHtml('<p>Hello<p>World');\n// doc.children[0]            -> <html> element\n// html.children              -> [<head>, <body>]\n// body.children              -> [<p>Hello</p>, <p>World</p>]\n```",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:519.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:519.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```ts\nimport { parseHtmlBytes } from '@asposefoss/pdf';\nimport { readFile } from 'node:fs/promises';\n\nconst doc = parseHtmlBytes(new Uint8Array(await readFile('legacy.html')));\n// A <meta charset=\"windows-1251\"> is honoured, and so is one sitting past the\n// 1024-byte window a browser's prescan give",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:525.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:525.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```ts\nimport { parseMarkdown } from '@asposefoss/pdf';\n\nconst doc = parseMarkdown('# Title\\n\\nSome *emphasis* and a [link](/u).\\n');\n// doc.children[0] -> { type: 'heading', level: 1, children: [{ type: 'text', value: 'Title' }] }\n// doc.children[1] -> { type: 'paragraph', children: [ ... 'text', 'e",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: code block \"import { Document } from '@asposefoss/pdf';\"",
+    "origin": {
+     "id": "inherited_unit:015.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "import { Document } from '@asposefoss/pdf';\n\nconst doc = Document.OpenFile('in.pdf');\nconst svg = doc.Pages[0].ToSvg();          // standalone <svg> string\n// fs.writeFileSync('page1.svg', svg);\nconst png = doc.Pages[0].ToImage({ scale: 2 }); // Uint8Array of PNG bytes @144 DPI\n// fs.writeFileSync('",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|code_block",
+    "source": "review",
+    "sub_rule": "code_block",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Complex-text Shaping (Embedded OpenType Fonts)' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
-    "rule": "job_error",
+    "rule": "BC-07",
     "section_id": "",
-    "signature": "job_error|job_error|unknown:model_output_was_rejected",
-    "source": "job",
-    "sub_rule": "unknown:model_output_was_rejected",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Multi-page Tables' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Tagged Tables' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Mark, Then Apply' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Field Styling' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "ff570fa517d09ded373b2062090a2cbb1a634b2b",
+  "main_sha": "0bae77b5104d52709ef9dfcdf9137eadbd557f96",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:0+disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:308.code_block: supported_omission: OMIT_UNSUPPORTED claims no fact supports this code block, but its example example:080 is verified. Supersede it into quick_start or additional_examples (the plan renders every verified example there) or place it; do not omit a verified example; the unit's exact text is \"```ts\\nimport { Document } from '@asposefoss/pdf';\\nimport { readFileSync, writeFileSync } from 'node:fs';",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "43572744168",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43572744168",
+  "run_id": "43613424481",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43613424481",
   "schema_version": 1,
   "source_revision": "034594822f58194a9ae937237090a60161f57055",
   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
