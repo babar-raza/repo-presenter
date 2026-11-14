@@ -6298,3 +6298,76 @@ behind it. It needs the supervisor's `gatecli.py review`/`verify` of TC-022a and
 round audits them.
 
 Backlog: BL-013, BL-065, BL-070, BL-093
+
+## 2026-11-14: BL-093 and BL-094 — our own checks catch the two genuine defects left in "clean" M9 controls
+
+**Why (supervisor).** After the K05/K10 fixes, two re-certifying controls of round 43559491132 still carried a
+genuine defect that no deterministic check read. So they were labelled clean, and the model's correct flags on
+them counted as false flags:
+- PDF Python 8aecb5 states "385 public types are organized by module below" above 284 type rows.
+- Words Python ab8a03 states "`Style` | Class with 11 properties." for a class with 15 fields.
+
+**Fixes (existing components only).**
+- **BL-093: rule (h) and `listed_type_count` v2.**
+  - `surface_claims._LISTED_HERE` (BC-14 rule (h), so both lanes) now reads every listing verb: listed,
+    organized, grouped, shown, documented and tabulated, with up to five words before "below".
+  - A gap that names a link, reference, page or docs is not a listing.
+  - Lane L keeps the true total and states how many rows are listed. "385 public types are organized by module
+    below" becomes "385 public types — 284 of them organized by module below".
+  - Only the leading "[is|are] <verb>" is rewritten, so a phrase wrapped over two lines is corrected too.
+  - A total the facts do not record is left as the maintainers wrote it, because rewording it would make the
+    pipeline own a claim it cannot check.
+  - The auditor's count provenance reads the same verbs.
+- **BL-094: `type_description` v3 member counts.** Before this, no detector judged a count cell (they were only
+  reported as `NO_DOC_COMMENT`), and no fact counted members.
+  - `source_detail.python_member_counts` records, on each Python class fact as `member_counts`:
+    - its own public methods, dunders and `__init__`;
+    - its `@property` members;
+    - the fields `_python_members` already reads;
+    - whether a non-root base may add members.
+  - `recertify.current_surface` reads these counts from the pinned `.py` sources for facts sealed before the
+    attribute existed. It runs after `shipped_facts`, and `fetch_source` now reads the sources (bounded).
+  - A count cell that no reading matches gets the true count, and its row is kept (R14). The readings that leave
+    a count as written:
+    - "properties": fields plus properties, fields alone, or properties alone;
+    - "methods": with or without dunders and `__init__`.
+  - "members" is never judged.
+  - A count above every reading is not refuted when a base may add members.
+
+**O6 (report-only first; `scripts/measure_listed_and_member_counts.py`, every latest seal and live README).**
+- Listed-count rule:
+  - It read 7 count sentences and hit 2: PDF Python L (385 over 284), which is new, and Cells C++ R (195 over
+    157), which the old rule already read.
+  - No false positive was found at source.
+- Count cells:
+  - Of 484 count cells, 83 could be judged (Python classes that have `member_counts`). There were 11 hits.
+  - Every hit is true at the pinned source, so there was no false positive:
+    - Words Python: Border 6, Font 32, Row 4, RowFormat 6 and Style 15 fields;
+    - PDF Python: PerformanceLogger has 4 public methods.
+- "summarized" is deliberately not a listing verb, although it was asked for:
+  - Reading it would add 4 seal hits: PDF .NET 983/980, Cells Rust 213/208, Email .NET 29/23 and Words Python
+    189/144.
+  - `recertify --all` measured that as Lane L going from 28 to 26 and Lane R from 6 to 5, on the reading alone.
+    PDF .NET and Cells Rust have no honest Lane L correction (983 against the facts' 969, 213 against 115).
+  - A summary need not hold every type, so these cases are recorded for a decision as BL-095.
+
+**Measured, zero calls.**
+- `recertify --all --remote origin` (read-only), branch m9-facts-k05-k10 (ac05254) against this branch:
+  - Lane L stays 28/28 and Lane R stays 6/18. No seal changes outcome.
+  - PDF Python L 3d91633f: line 1970 now reads "385 public types — 284 of them organized by module below.".
+  - Words Python L a500a1b3 (on top of BL-065/BL-070): Border, Font, Row, RowFormat and Style now carry their
+    true counts.
+- `recertify --gate --base-baseline <origin/main baseline>`: OK, 46 seals, no regression and none missing.
+- Replay of round 43559491132 on the controls re-certified under this branch, with the frozen flags kept:
+  - Recall is 19/19 = 1.000.
+  - **False-flag is 2/22 = 0.091, at or below 0.10, with no exclusion.**
+    - 802069: a frozen flag on the duplicated-name sentence, which the re-certified seal no longer prints.
+    - ab8a03 line 401: a model flag on the true maintainer row "`Shading` | Class with 2 properties.".
+  - 8aecb5 line 1970 and ab8a03 row 402 are now cleared, each with its verified computation.
+- On the frozen texts the false-flag is 4/22 = 0.182. PSD .NET 5584e7 and Cells .NET 63b47d keep their v3 names
+  until they are re-certified.
+
+**Not done here (R41).** The hosted `recertify --write` on main writes the re-certified seals, and the next hosted
+round audits them.
+
+Backlog: BL-013, BL-093, BL-094, BL-095
