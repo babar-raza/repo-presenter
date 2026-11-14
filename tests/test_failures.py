@@ -400,3 +400,94 @@ def test_the_supervisor_tick_shows_failure_classes_next_to_the_backlog() -> None
     assert run.index('echo "### Backlog"') < run.index('echo "### Failure classes"') < run.index("for cmd in")
     assert "python -m repo_presenter.failures pareto" in run
     assert step["env"]["REPOSITORY_PRESENTER_STATE_TOKEN"] == "${{ github.token }}"
+
+
+# --------------------------------------------------------------------------- R42 upstream causes
+
+
+BACKFILL = json.loads((ROOT / "evidence" / "build" / "BL-084" / "backfill_records.json").read_text("utf-8"))
+
+
+def _real_finding(sub: str) -> dict[str, Any]:
+    for record in BACKFILL:
+        for finding in record["findings"]:
+            if finding["sub_rule"].endswith(sub):
+                return finding
+    raise AssertionError(sub)
+
+
+@pytest.mark.parametrize(
+    ("sub", "cause"),
+    [
+        ("unproven_build", failures.UPSTREAM_SOURCE_BUILD),
+        ("samples_reference", failures.UPSTREAM_PACKAGE),
+        ("stub_format", failures.UPSTREAM_SOURCE_STUB),
+        ("stub_described_working", failures.UPSTREAM_SOURCE_STUB),
+        ("failing_example", failures.UPSTREAM_MAINTAINER_EXAMPLE),
+        # this code's own classes are never upstream-caused
+        ("member_kind", ""),
+        ("never_thrown", ""),
+        ("not_implemented_but_returns", ""),
+        ("section_fit", ""),
+        ("false_claim", ""),
+        ("format_overclaim", ""),
+        ("section_authoring_output_truncated_at", ""),
+        ("LEDGER_NO_RECORDS", ""),
+    ],
+)
+def test_upstream_causes_on_real_finding_messages(sub: str, cause: str) -> None:
+    finding = _real_finding(sub)
+    assert failures.upstream_cause(finding["rule"], finding["sub_rule"], finding["message"]) == cause
+
+
+@pytest.mark.parametrize(
+    ("detail", "cause"),
+    [
+        ("FactsJobFailure: git clone of https://github.com/o/r failed: repository not found", failures.UPSTREAM_UNREADABLE),
+        ("LaneStepFailure: the upstream revision moved under the run (abc -> def)", failures.UPSTREAM_UNREADABLE),
+        ("LaneStepFailure: the README installs aspose-foo, a package that is not published on PyPI", failures.UPSTREAM_PACKAGE),
+        ("JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000)", ""),
+    ],
+)
+def test_unreadable_moved_upstream_and_unpublished_packages_are_upstream(detail: str, cause: str) -> None:
+    record = failures.build_record(repository="o/r", lane="R", outcome="failure", failure_detail=detail)
+    (item,) = record["classes"].values()
+    assert item["upstream"] == cause
+
+
+def test_the_pareto_shows_upstream_classes_apart_including_records_written_before_the_flag() -> None:
+    # The committed backfill predates the flag: class_upstream derives it from rule, sub-rule, example.
+    assert all("upstream" not in item for record in BACKFILL for item in record["classes"].values())
+    result = failures.pareto(failures.documents_from_records(BACKFILL))
+    assert result["upstream_classes"] == [
+        "claim_contradiction|inherited_unit|stub_described_working",
+        "claim_contradiction|unresolved|stub_format",
+        "lane_l_unrepaired_defect|lane_l_correction|failing_example",
+    ]
+    assert result["upstream_cells"] == 2  # 3D .NET Lane L carries two of them
+    text = failures.render_pareto(result, limit=50)
+    own, _, upstream = text.partition("**Upstream-caused classes (R42)**")
+    assert "stub_format" in upstream and "stub_format" not in own
+    assert "member_kind" in own and "member_kind" not in upstream
+    assert "(3 upstream-caused, in 2 cells)" in text
+
+
+def test_a_fresh_record_carries_the_flag_and_it_agrees_with_the_derived_one() -> None:
+    finding = _real_finding("unproven_build")
+    fresh = failures.build_record(repository="o/r", lane="R", outcome="failure",
+                                  validation_failures=[{"check": finding["rule"], "detail": finding["message"]}])
+    (item,) = fresh["classes"].values()
+    assert item["upstream"] == failures.UPSTREAM_SOURCE_BUILD
+    legacy = {key: value for key, value in item.items() if key != "upstream"}
+    assert failures.class_upstream(legacy) == failures.UPSTREAM_SOURCE_BUILD
+    assert failures.class_upstream({**item, "upstream": ""}) == ""  # a stored value wins
+
+
+def test_the_cohort_summary_lists_upstream_classes_apart() -> None:
+    plan = {"failure_pareto": [
+        {"signature": "claim_contradiction|unresolved|member_kind", "cells": 2, "findings": 12, "new": False, "upstream": ""},
+        {"signature": "BC-02|unresolved|unproven_build", "cells": 1, "findings": 1, "new": False, "upstream": "source_build"},
+    ]}
+    summary = render_summary(plan)
+    own, _, upstream = summary.partition("**Upstream-caused (R42)**")
+    assert "member_kind" in own and "unproven_build" in upstream and "unproven_build" not in own

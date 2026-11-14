@@ -157,6 +157,53 @@ def sub_rule(rule: str, text: str, *, section_id: str = "") -> str:
     return shape(re.sub(r"^line \d+ \([A-Z]+\):\s*", "", str(text)))
 
 
+#: R42 (owner, 2026-11-14): a class whose cause is the upstream repository itself. Its fix is not a
+#: code change here but learning how aspose.org's published readme-refresh candidate handled the same
+#: problem (BL-091). Deterministic: ``(rule pattern, sub-rule pattern, message pattern, cause)``, first
+#: match wins; an empty pattern matches anything.
+UPSTREAM_SOURCE_BUILD = "source_build"
+UPSTREAM_PACKAGE = "package"
+UPSTREAM_SOURCE_STUB = "source_stub"
+UPSTREAM_MAINTAINER_EXAMPLE = "maintainer_example"
+UPSTREAM_UNREADABLE = "upstream_unreadable"
+_UPSTREAM_CAUSES: tuple[tuple[str, str, str, str], ...] = (
+    # the source build does not pass: no build of the repository exited 0
+    (r"^BC-02$", r"^unproven_build$", "", UPSTREAM_SOURCE_BUILD),
+    # the samples or the README name a package that is not the published product package
+    (r"^claim_contradiction$", r"^samples_reference$", "", UPSTREAM_PACKAGE),
+    (r"", r"", r"\b(?:not published|unpublished|never published|foreign package|package is not on)\b", UPSTREAM_PACKAGE),
+    # the source itself only stubs the feature (dispatcher raises, the instance only throws)
+    (r"^claim_contradiction$", r"^(?:stub_format|stub_described_working)$", "", UPSTREAM_SOURCE_STUB),
+    # the maintainer's own example does not build or run
+    (r"", r"^failing_example$", "", UPSTREAM_MAINTAINER_EXAMPLE),
+    # the upstream repository could not be read, or moved under the run
+    (r"", r"", r"(?i)\b(?:clone|fetch)\b[^.]*\b(?:failed|refused|not found)\b|\brepository not found\b"
+     r"|\bupstream\b[^.]*\b(?:unreadable|not readable|moved)\b", UPSTREAM_UNREADABLE),
+)
+
+
+def upstream_cause(rule: str, sub: str, message: str = "") -> str:
+    """The R42 upstream cause of a finding's class (:data:`_UPSTREAM_CAUSES`), or ``""`` when the
+    cause is this repository's own code."""
+    for rule_pattern, sub_pattern, text_pattern, cause in _UPSTREAM_CAUSES:
+        if rule_pattern and not re.search(rule_pattern, rule):
+            continue
+        if sub_pattern and not re.search(sub_pattern, sub):
+            continue
+        if text_pattern and not re.search(text_pattern, str(message)):
+            continue
+        return cause
+    return ""
+
+
+def class_upstream(item: Mapping[str, Any]) -> str:
+    """A recorded class's upstream cause: its stored ``upstream`` field, or, for a record written
+    before the field existed, the same table applied to its rule, sub-rule and example."""
+    if "upstream" in item:
+        return str(item.get("upstream") or "")
+    return upstream_cause(str(item.get("rule") or ""), str(item.get("sub_rule") or ""), str(item.get("example") or ""))
+
+
 _README_TEXT = re.compile(r"The README text '(?P<quote>.+?)' is false", re.S)
 
 
@@ -407,6 +454,7 @@ def _finding(
         "quote": str(quote)[:_QUOTE_LIMIT],
         "message": str(text)[:_TEXT_LIMIT],
         "signature": f"{rule}|{origin['kind']}|{sub}",
+        "upstream": upstream_cause(rule, sub, text),
     }
 
 
@@ -437,7 +485,13 @@ def classes_of(findings: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, Any
                 "sub_rule": finding["sub_rule"],
                 "example": finding.get("quote") or finding.get("message", ""),
                 "origins": [],
+                "upstream": "",
             },
+        )
+        item["upstream"] = item["upstream"] or str(
+            finding.get("upstream")
+            if "upstream" in finding
+            else upstream_cause(str(finding.get("rule", "")), str(finding.get("sub_rule", "")), str(finding.get("message", "")))
         )
         item["findings"] += 1
         origin = finding["origin"].get("id") or "-"
@@ -517,6 +571,7 @@ def build_record(
                     "quote": "",
                     "message": str(failure_detail)[:_TEXT_LIMIT],
                     "signature": f"{RULE_JOB}|{ORIGIN_JOB}|{kind}:{sub}",
+                    "upstream": upstream_cause(RULE_JOB, f"{kind}:{sub}", failure_detail),
                 }
             )
     return {
@@ -775,8 +830,9 @@ def pareto(documents: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             row = rows.setdefault(
                 signature,
                 {"signature": signature, "cells": [], "findings": 0, "examples": [], "origins": [],
-                 "lanes": set(), "new": False},
+                 "lanes": set(), "new": False, "upstream": ""},
             )
+            row["upstream"] = row["upstream"] or class_upstream(item)
             row["cells"].append(cell)
             row["findings"] += int(item.get("findings") or 0)
             row["lanes"].add(str(record.get("lane")))
@@ -791,11 +847,15 @@ def pareto(documents: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     ordered = sorted(rows.values(), key=lambda r: (-len(r["cells"]), -r["findings"], r["signature"]))
     for row in ordered:
         row["lanes"] = sorted(row["lanes"])
+    upstream_cells = {cell for row in ordered if row["upstream"] for cell in row["cells"]}
     return {
         "cells": len(latest),
         "failing_cells": failing,
         "newest_code": newest_code[:12],
         "classes": ordered,
+        # R42: the classes the upstream repository causes, shown apart from this code's own.
+        "upstream_classes": [row["signature"] for row in ordered if row["upstream"]],
+        "upstream_cells": len(upstream_cells),
     }
 
 
@@ -805,29 +865,45 @@ _SIG_PIPE = " \\| "
 
 def render_pareto(result: Mapping[str, Any], *, limit: int = 25, markdown: bool = True) -> str:
     rows = list(result.get("classes") or [])
+    """The Pareto, this code's own classes first, then the upstream-caused ones (R42) apart."""
+    all_rows = list(result.get("classes") or [])
+    own = [row for row in all_rows if not row.get("upstream")]
+    upstream = [row for row in all_rows if row.get("upstream")]
     head = (
         f"{result.get('failing_cells', 0)} failing of {result.get('cells', 0)} recorded cells; "
-        f"{len(rows)} classes; newest code {result.get('newest_code') or '?'}"
+        f"{len(all_rows)} classes ({len(upstream)} upstream-caused, in {result.get('upstream_cells', 0)} cells); "
+        f"newest code {result.get('newest_code') or '?'}"
     )
     if not markdown:
         lines = [head]
-        for row in rows[:limit]:
-            lines.append(
-                f"{len(row['cells']):>3} cells {row['findings']:>4} findings  {'NEW ' if row['new'] else ''}"
-                f"{row['signature']}  [{', '.join(row['lanes'])}]  e.g. {(row['examples'] or ['-'])[0][:90]}"
-            )
+        for title, rows in (("", own), ("Upstream-caused (R42):", upstream)):
+            if title and rows:
+                lines.append(title)
+            for row in rows[:limit]:
+                lines.append(
+                    f"{len(row['cells']):>3} cells {row['findings']:>4} findings  {'NEW ' if row['new'] else ''}"
+                    + (f"[upstream:{row['upstream']}] " if row.get("upstream") else "")
+                    + f"{row['signature']}  [{', '.join(row['lanes'])}]  e.g. {(row['examples'] or ['-'])[0][:90]}"
+                )
         return "\n".join(lines) + "\n"
-    lines = [head, "", "| class (rule\\|origin\\|sub-rule) | cells | findings | lanes | new | example | origin |", "|---|---|---|---|---|---|---|"]
-    for row in rows[:limit]:
-        example = (row["examples"] or ["-"])[0].replace("|", _PIPE)
-        signature = row["signature"].replace("|", _SIG_PIPE)
-        lines.append(
-            f"| {signature} | {len(row['cells'])} | {row['findings']} | "
-            f"{', '.join(row['lanes'])} | {'yes' if row['new'] else ''} | {example[:100]} | "
-            f"{', '.join(row['origins'])[:80].replace('|', '/')} |"
-        )
-    if len(rows) > limit:
-        lines.append(f"\n... {len(rows) - limit} more classes")
+    lines = [head]
+    for title, rows in (("", own), ("Upstream-caused classes (R42)", upstream)):
+        if title:
+            if not rows:
+                continue
+            lines += ["", f"**{title}**"]
+        lines += ["", "| class (rule\\|origin\\|sub-rule) | cells | findings | lanes | new | upstream | example | origin |",
+                  "|---|---|---|---|---|---|---|---|"]
+        for row in rows[:limit]:
+            example = (row["examples"] or ["-"])[0].replace("|", _PIPE)
+            signature = row["signature"].replace("|", _SIG_PIPE)
+            lines.append(
+                f"| {signature} | {len(row['cells'])} | {row['findings']} | "
+                f"{', '.join(row['lanes'])} | {'yes' if row['new'] else ''} | {row.get('upstream') or ''} | {example[:100]} | "
+                f"{', '.join(row['origins'])[:80].replace('|', '/')} |"
+            )
+        if len(rows) > limit:
+            lines.append(f"\n... {len(rows) - limit} more classes")
     return "\n".join(lines) + "\n"
 
 
@@ -884,6 +960,43 @@ def known_failures(
                 "source_revision": str(record.get("source_revision") or ""),
                 "classes": classes,
             }
+    return found
+
+
+def scope_status(
+    documents: Sequence[Mapping[str, Any]], scope_of: Callable[[Sequence[str]], str]
+) -> dict[tuple[str, str], dict[str, Any]]:
+    """BL-086 (audit O2): per cell whose latest record failed, which of its classes a landed fix
+    reached. ``{(repository, lane): {run_id, source_revision, transient, changed, unchanged,
+    unscoped}}``: ``changed`` lists the classes whose recorded scope hash differs from
+    ``scope_of(paths)`` now (code that can change the class's outcome moved since the failure),
+    ``unchanged`` those still identical, ``unscoped`` those with no scope (transient, unknown rule,
+    job error of unknown kind). The planner dispatches a ``changed`` cell first and asks a cell
+    that failed twice in a row for a ``changed`` class before it pays again."""
+    found: dict[tuple[str, str], dict[str, Any]] = {}
+    for doc in documents:
+        record = doc.get("latest") or {}
+        if not record or record.get("outcome") == "success":
+            continue
+        changed: list[str] = []
+        unchanged: list[str] = []
+        unscoped: list[str] = []
+        for signature, item in sorted((record.get("classes") or {}).items()):
+            paths = item.get("scope_paths")
+            if not paths or not item.get("scope"):
+                unscoped.append(signature)
+            elif scope_of(paths) != item["scope"]:
+                changed.append(signature)
+            else:
+                unchanged.append(signature)
+        found[(str(record.get("repository")), str(record.get("lane")))] = {
+            "run_id": str(record.get("run_id") or ""),
+            "source_revision": str(record.get("source_revision") or ""),
+            "transient": bool((record.get("failure") or {}).get("transient")),
+            "changed": changed,
+            "unchanged": unchanged,
+            "unscoped": unscoped,
+        }
     return found
 
 
