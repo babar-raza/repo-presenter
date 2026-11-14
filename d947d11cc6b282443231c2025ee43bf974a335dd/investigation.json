@@ -3,7 +3,7 @@
     "fact_ids": [
       "example:003",
       "public_symbol:aspose.imaging.foss",
-      "identity:platform"
+      "identity:product-knowledge-refresh"
     ],
     "text": "Developers needing fast, non-blocking image format detection and metadata extraction without full decoding, especially in web or batch processing pipelines."
   },
@@ -11,39 +11,38 @@
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss",
-        "public_symbol:aspose.imaging",
-        "public_symbol:aspose"
+        "public_symbol:aspose.imaging"
       ],
-      "text": "Detects 14 image formats by reading only signature bytes using `ImageProbe.DetectFormat()` without decoding pixels.",
+      "text": "Detects 14 image formats by reading only signature bytes using ImageProbe.DetectFormat() without decoding pixels.",
       "title": "Format detection"
     },
     {
       "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.imaging.foss"
+        "public_symbol:aspose.imaging.foss",
+        "example:003"
       ],
-      "text": "Reads width, height, bit depth, and frame count directly from file headers for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF.",
+      "text": "ImageProbe.Probe() reads width, height, bit depth, and frame count directly from format-specific headers.",
       "title": "Header probing"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "Accurately counts frames in GIF, ICO, TIFF, and multi-page DJVU by walking their container structures.",
+      "text": "Counts real frames in GIF, ICO, TIFF, and multi-page DJVU by walking container structures like image-descriptor blocks and IFD chains.",
       "title": "Multi-frame counting"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "Provides both synchronous and asynchronous entry points (`ProbeFile`/`ProbeFileAsync`, `Probe`/`ProbeAsync`) for non-blocking I/O.",
+      "text": "Provides both synchronous and asynchronous entry points (ProbeFile/ProbeFileAsync, Probe/ProbeAsync) for non-blocking I/O.",
       "title": "Async support"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "Returns partial `ImageInfo` with only `Format` set for malformed or truncated files instead of throwing exceptions.",
+      "text": "Returns partial ImageInfo with only Format set for malformed or truncated files instead of throwing exceptions.",
       "title": "Robust error handling"
     },
     {
@@ -51,7 +50,7 @@
         "dependency:none",
         "package:name"
       ],
-      "text": "No external NuGet package dependencies; all format parsing is implemented natively within the library.",
+      "text": "Implements all format parsing natively with no external package references, declared in the main project file.",
       "title": "Zero dependencies"
     }
   ],
@@ -66,32 +65,32 @@
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "Frame count is only real for GIF, ICO, TIFF, and multi-page DJVU; other formats report fixed `1`."
+      "text": "FrameCount is only populated for GIF, ICO, TIFF, and multi-page DJVU; other formats return fixed 1."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "Classic (non-placeable) WMF headers lack bounding rectangle, so `Width`/`Height` are null for them."
+      "text": "Classic (non-placeable) WMF headers lack bounding rectangles, so Probe returns format-only ImageInfo."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "DICOM parsing stops at the first undefined-length element, such as a sequence or encapsulated pixel data."
+      "text": "DICOM parsing stops at the first undefined-length element, such as sequences or encapsulated pixel data."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "CDR format support is planned but not yet implemented; no handler exists in the current source tree."
+      "text": "CDR support is planned but not yet implemented; no CdrFormatHandler exists in the current source tree."
     }
   ],
   "problems_solved": [
     {
       "fact_ids": [
-        "install_command:dotnet",
-        "example:003"
+        "identity:family",
+        "public_symbol:aspose.imaging.foss"
       ],
       "text": "Avoids full image decoding just to determine format and basic properties like dimensions, bit depth, and frame count."
     },
@@ -100,11 +99,10 @@
         "public_symbol:aspose.imaging",
         "public_symbol:aspose.imaging.foss"
       ],
-      "text": "Provides format support for less common .NET imaging formats like PSD, EMF/WMF, DICOM, DJVU, AVIF, and HEIC/HEIF without external dependencies."
+      "text": "Provides format detection and header parsing for less common formats like PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF without external dependencies."
     },
     {
       "fact_ids": [
-        "example:003",
         "public_symbol:aspose.imaging.foss"
       ],
       "text": "Enables safe, unattended processing of untrusted files by returning partial results instead of throwing exceptions on malformed headers."
@@ -112,34 +110,37 @@
   ],
   "product_summary": {
     "fact_ids": [
-      "identity:repository",
       "identity:ecosystem",
       "identity:family",
+      "identity:platform",
       "package:name",
-      "license:spdx"
+      "package:target_framework",
+      "dependency:none",
+      "license:spdx",
+      "identity:repository"
     ],
-    "text": "Aspose.Imaging.Foss is a free, open-source .NET library for image format detection and header probing with zero dependencies."
+    "text": "Aspose.Imaging.Foss is a free, open-source .NET library for image format detection and header probing with zero dependencies, targeting netstandard2.0 and net8.0."
   },
   "uncertainties": [
-    "The exact set of DICOM transfer syntaxes supported beyond Implicit VR LE and Explicit VR LE/BLE is not fully specified.",
-    "Whether AVIF grid images report tile or full-canvas dimensions depends on `ispe`/`ipma`/`ipco` associations, but exact behavior for edge cases is unclear.",
-    "The behavior of `Probe()` on streams with partial or corrupted data beyond signature match is not detailed for all formats.",
-    "The scope of `ImageProbe`'s async behavior under high concurrency or with cancellation tokens is not elaborated.",
-    "The exact handling of truncated multi-frame formats (e.g., GIF with incomplete image descriptors) is not fully described.",
-    "Whether `Probe()` buffers non-seekable streams fully or uses streaming techniques is implied but not explicit.",
-    "The versioning scheme and release frequency for the package are not stated.",
-    "The exact set of formats for which `FrameCount` is `null` (e.g., indirect DJVM) is not exhaustively listed."
+    "The exact set of 14 supported formats is implied but not enumerated in facts; only the README lists them.",
+    "Whether AVIF/HEIC grid images report full canvas dimensions is described in the README but not verified by symbol facts.",
+    "The behavior of DJVU frame counting for indirect (multi-file) DJVM documents is described but not confirmed by symbols.",
+    "The exact transfer syntaxes supported for DICOM parsing beyond Implicit VR LE and Explicit VR LE/BEE are not specified in facts.",
+    "The behavior of non-seekable stream handling for DetectFormat and Probe is described but not proven by symbols.",
+    "The nullable ImageInfo fields (Width, Height, BitDepth, FrameCount) are described but not fully verified by symbols.",
+    "The exact test framework versions (xUnit, coverlet) are mentioned in the README but not in facts.",
+    "The release workflow behavior for version tagging and publishing is described but not fully verified by facts."
   ],
   "workflows": [
     {
       "fact_ids": [
+        "install_command:dotnet",
         "build_test_asset:build-command",
         "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "install_command:dotnet"
+        "build_test_asset:tests"
       ],
       "name": "Build and test",
-      "text": "Clone the repository and run `dotnet build Aspose.Imaging.Foss.sln` followed by `dotnet test Aspose.Imaging.Foss.sln` to validate functionality."
+      "text": "Clone the repository and run dotnet build Aspose.Imaging.Foss.sln, then dotnet test Aspose.Imaging.Foss.sln to execute the test suite."
     },
     {
       "fact_ids": [
@@ -147,14 +148,14 @@
         "build_test_asset:ci-matrix"
       ],
       "name": "CI validation",
-      "text": "Continuous integration runs on Ubuntu and Windows using workflows defined in `.github/workflows/`."
+      "text": "Continuous integration runs on Ubuntu and Windows using workflows in .github/workflows/ to validate builds and tests."
     },
     {
       "fact_ids": [
         "build_test_asset:release-workflow"
       ],
       "name": "Release publishing",
-      "text": "Tagged pushes trigger `.github/workflows/release.yml` to build and publish the package."
+      "text": "Tagged pushes trigger .github/workflows/release.yml to build and publish the package."
     }
   ]
 }

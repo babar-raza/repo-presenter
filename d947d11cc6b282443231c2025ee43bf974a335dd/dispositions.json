@@ -7,12 +7,13 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
         "package:name",
         "package:target_framework"
       ],
-      "rationale": "The H1 product name is rendered by the identity section from facts.",
+      "rationale": "The H1 product name is rendered deterministically from identity facts.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
@@ -49,7 +50,7 @@
         "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The badge row is rendered by the badges section from verified links and license fact.",
+      "rationale": "The badge row is rendered deterministically from verified CI, license, and contributors badges.",
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
@@ -59,21 +60,22 @@
         "link_target:product.banner",
         "link_target:product.homepage"
       ],
-      "rationale": "The product banner links to the enterprise homepage and is supported by verified link facts.",
+      "rationale": "The product banner links to the enterprise homepage and is supported by verified product links.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
       "destination_section": "opening",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:repository",
         "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
         "package:name",
         "package:target_framework",
         "dependency:none",
         "public_symbol:aspose.imaging.foss"
       ],
-      "rationale": "The paragraph's substance is captured by the product summary and dependency facts; rewritten to match the opening section's style.",
+      "rationale": "The paragraph's substance is captured by the product summary and zero-dependency facts, rephrased for the opening section.",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -83,10 +85,11 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation heading is rendered by the navigation section from the section list.",
+      "rationale": "The navigation heading is rendered deterministically by the navigation section.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
@@ -96,10 +99,11 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation list is rendered by the navigation section from the section list.",
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
       "unit_id": "inherited_unit:006.list"
     },
     {
@@ -108,7 +112,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The At a Glance heading is rendered by the at_a_glance section from the section list.",
+      "rationale": "The At a Glance heading is rendered deterministically by the at_a_glance section.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
@@ -118,7 +122,6 @@
         "dependency:none",
         "example:003",
         "package:name",
-        "public_symbol:aspose",
         "public_symbol:aspose.imaging",
         "public_symbol:aspose.imaging.foss"
       ],
@@ -131,7 +134,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Key Capabilities heading is rendered by the key_capabilities section from the section list.",
+      "rationale": "The Key Capabilities heading is rendered deterministically by the key_capabilities section.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
@@ -141,40 +144,32 @@
         "dependency:none",
         "example:003",
         "public_symbol:aspose.imaging",
-        "public_symbol:aspose.imaging.foss",
-        "public_symbol:aspose.imaging.foss.imageformat",
-        "public_symbol:aspose.imaging.foss.imageinfo",
-        "public_symbol:aspose.imaging.foss.imageprobe"
+        "public_symbol:aspose.imaging.foss"
       ],
-      "rationale": "The list's substance is captured by the capabilities investigation; rewritten to match the key_capabilities section's style.",
+      "rationale": "The list's substance is captured by the capabilities investigation and facts, rephrased for the key capabilities section.",
       "unit_id": "inherited_unit:010.list"
     },
     {
       "destination_section": "opening",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph provides maintainer insight on ecosystem gaps and is not contradicted by facts.",
+      "rationale": "The paragraph adds context about ecosystem gaps for PSD/EMF/DICOM that is not contradicted by facts and enriches the opening.",
       "unit_id": "inherited_unit:011.paragraph"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "public_symbol:aspose.imaging.foss",
-        "public_symbol:aspose.imaging.foss.imageprobe",
-        "public_symbol:aspose.imaging.foss.imageformat",
-        "public_symbol:aspose.imaging.foss.imageinfo"
-      ],
-      "rationale": "The table adds format-specific detail to capabilities and is supported by public symbol facts.",
+      "fact_ids": [],
+      "rationale": "The table provides format-specific detail not fully covered by the capabilities list and is supported by the public symbols.",
       "unit_id": "inherited_unit:012.table"
     },
     {
-      "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_MOVE",
+      "destination_section": "key_capabilities",
+      "disposition": "CORRECT_WITH_EVIDENCE",
       "fact_ids": [
-        "public_symbol:aspose.imaging.foss"
+        "finding:16dac1e9f08e"
       ],
-      "rationale": "The paragraph clarifies frame count behavior and is supported by the limitations investigation.",
+      "rationale": "The claim that every other format's FrameCount comes back as a fixed 1 is false; AVIF, HEIC and DICOM return null (no frameCount argument passed).",
       "unit_id": "inherited_unit:013.paragraph"
     },
     {
@@ -183,7 +178,7 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The Installation heading is rendered by the installation section from the section list.",
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
       "unit_id": "inherited_unit:014.heading"
     },
     {
@@ -201,34 +196,30 @@
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The code block is not the exact text of the install_command fact and is supported by the build-command fact.",
+      "rationale": "The code block describes a build command variant and is supported by the build command fact; it belongs in development_testing.",
       "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces the build output usage and is supported by the build workflow; it belongs in development_testing.",
+      "unit_id": "inherited_unit:017.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The XML snippet shows a project reference pattern and is supported by the build workflow; it belongs in development_testing.",
+      "unit_id": "inherited_unit:018.code_block"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "package:name"
+        "link_target:012"
       ],
-      "rationale": "Lead-in of the omitted block that follows (inherited_unit:018.code_block): withheld with it, never alone.",
-      "unit_id": "inherited_unit:017.paragraph"
-    },
-    {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "package:name"
-      ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
-      "unit_id": "inherited_unit:018.code_block"
-    },
-    {
-      "destination_section": "opening",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "inherited_unit:019.paragraph"
-      ],
-      "rationale": "The paragraph's substance about multi-targeting must be preserved in the opening section as it is not superseded by the dependencies section.",
+      "rationale": "Redundant with the verified facts it names: link_target:012. The paragraph incorrectly references a non-existent Dependencies section; the claim about target fr",
       "unit_id": "inherited_unit:019.paragraph"
     },
     {
@@ -237,7 +228,7 @@
       "fact_ids": [
         "dependency:none"
       ],
-      "rationale": "The Dependencies heading is rendered by the dependencies section from the section list.",
+      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
@@ -253,9 +244,9 @@
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "inherited_unit:022.paragraph"
+        "dependency:none"
       ],
-      "rationale": "The paragraph's substance (zero dependencies, native parsing) is covered by the dependencies section's verified-zero statement, but the superseding unit must be",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:022.paragraph"
     },
     {
@@ -265,7 +256,7 @@
         "dependency:none",
         "package:target_framework"
       ],
-      "rationale": "The 'Native and System Requirements' heading is superseded by the dependencies section, which includes target framework facts.",
+      "rationale": "The 'Native and System Requirements' heading is superseded by the dependencies section, which already covers target frameworks via package:target_framework.",
       "unit_id": "inherited_unit:023.heading"
     },
     {
@@ -275,7 +266,7 @@
         "dependency:none",
         "package:target_framework"
       ],
-      "rationale": "The list's target framework values are covered by the dependencies section's verified target framework fact.",
+      "rationale": "The list of target frameworks is superseded by the dependencies section, which already includes netstandard2.0 and net8.0.",
       "unit_id": "inherited_unit:024.list"
     },
     {
@@ -285,7 +276,7 @@
         "build_test_asset:test-command",
         "build_test_asset:tests"
       ],
-      "rationale": "The 'Development Dependencies' heading and its content are superseded by the development and testing section, which covers test dependencies and commands.",
+      "rationale": "The 'Development Dependencies' heading is superseded by the development and testing section, which covers test tooling.",
       "unit_id": "inherited_unit:025.heading"
     },
     {
@@ -295,7 +286,7 @@
         "build_test_asset:test-command",
         "build_test_asset:tests"
       ],
-      "rationale": "The test dependency list is covered by the development and testing section's build and test asset facts.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:026.list"
     },
     {
@@ -304,7 +295,7 @@
       "fact_ids": [
         "inherited_unit:027.paragraph"
       ],
-      "rationale": "The paragraph clarifying test-only usage must be preserved as it is not fully covered by the existing test command and test project facts alone.",
+      "rationale": "The paragraph clarifying test-only usage must be preserved as it is not fully covered by the development and testing section.",
       "unit_id": "inherited_unit:027.paragraph"
     },
     {
@@ -312,8 +303,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:001",
-        "install_command:dotnet",
-        "public_symbol:aspose.imaging.foss.imageprobe"
+        "install_command:dotnet"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:028.heading"
@@ -323,7 +313,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:001",
-        "install_command:dotnet",
+        "public_symbol:aspose.imaging.foss.imageinfo",
         "public_symbol:aspose.imaging.foss.imageprobe"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
@@ -333,7 +323,7 @@
       "destination_section": "scope_limitations",
       "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph describes robust error handling behavior not contradicted by facts; it adds maintainer insight on error behavior not fully captured by the scope &",
+      "rationale": "The note about robust error handling is valuable maintainer insight not confirmed by facts, so it is kept attributed.",
       "unit_id": "inherited_unit:030.paragraph"
     },
     {
@@ -342,7 +332,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Additional Examples' heading is superseded by the additional_examples section, which is conditionally rendered but present in the plan structure.",
+      "rationale": "The 'Additional Examples' heading is superseded because the section is not rendered at this revision.",
       "unit_id": "inherited_unit:031.heading"
     },
     {
@@ -360,7 +350,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading introduces an example for a section that is not rendered; it is unsupported and irrelevant.",
+      "rationale": "The 'Probe a File Asynchronously' heading is omitted because the additional_examples section is not rendered.",
       "unit_id": "inherited_unit:033.heading"
     },
     {
@@ -375,50 +365,43 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:002",
-        "public_symbol:aspose.imaging.foss.imageprobe"
+        "example:003"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:035.code_block"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:aspose.imaging.foss",
-        "public_symbol:aspose.imaging.foss.imageformat",
-        "public_symbol:aspose.imaging.foss.imageinfo",
-        "public_symbol:aspose.imaging.foss.imageprobe"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'Count Frames' heading is omitted because the additional_examples section is not rendered.",
       "unit_id": "inherited_unit:036.heading"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [],
-      "rationale": "The paragraph describes frame counting behavior supported by the public symbol fact; it adds maintainer insight on format-specific behavior.",
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:037.paragraph"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.imaging.foss.imageprobe"
+        "example:003"
       ],
-      "rationale": "The code block is a verified example (example:003) illustrating frame counting; it is preserved as a real, supported capability.",
+      "rationale": "The FrameCount example is superseded by quick_start, which renders the verified example:003.",
       "unit_id": "inherited_unit:038.code_block"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:aspose.imaging.foss",
-        "public_symbol:aspose.imaging.foss.imageformat",
-        "public_symbol:aspose.imaging.foss.imageinfo",
-        "public_symbol:aspose.imaging.foss.imageprobe"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'Detect a Format From an Unseekable Stream' heading is omitted because the additional_examples section is not rendered.",
       "unit_id": "inherited_unit:039.heading"
     },
     {
@@ -433,8 +416,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:003",
-        "example:004",
-        "public_symbol:aspose.imaging.foss"
+        "example:004"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:041.code_block"
@@ -454,21 +436,21 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading '## API Reference' is superseded by the deterministic section 'API Reference' which renders its own heading.",
+      "rationale": "The heading '## API Reference' is superseded by the deterministic section api_reference, which renders its own heading.",
       "unit_id": "inherited_unit:043.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Accurately describes `ImageProbe` as the single entry point and lists the core types; supported by the public symbol facts.",
+      "rationale": "Accurately describes ImageProbe as the single entry point and lists the types it returns, supported by public symbol facts.",
       "unit_id": "inherited_unit:044.paragraph"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "HTML opening tag with no matching closing tag; non-content artifact with no functional purpose.",
+      "rationale": "HTML opening tag with no matching closing tag; non-content artifact with no verifiable purpose.",
       "unit_id": "inherited_unit:045.html_block"
     },
     {
@@ -477,21 +459,21 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading '#### Detailed Member Reference' is superseded by the deterministic section 'API Reference' which renders its own heading.",
+      "rationale": "The heading '#### Detailed Member Reference' is superseded by the deterministic section api_reference, which renders its own heading.",
       "unit_id": "inherited_unit:046.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Lists the core types, their members, and constructor details; all items are supported by the public symbol facts.",
+      "rationale": "Lists the core types and their members with accurate detail supported by public symbol facts.",
       "unit_id": "inherited_unit:047.list"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "HTML closing tag with no matching opening tag; non-content artifact with no functional purpose.",
+      "rationale": "HTML closing tag with no matching opening tag; non-content artifact with no verifiable purpose.",
       "unit_id": "inherited_unit:048.html_block"
     },
     {
@@ -500,17 +482,14 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading '## Documentation & Resources' is superseded by the deterministic section 'Documentation & Resources' which renders its own heading.",
+      "rationale": "The heading '## Documentation & Resources' is superseded by the deterministic section documentation_resources, which renders its own heading.",
       "unit_id": "inherited_unit:049.heading"
     },
     {
       "destination_section": "documentation_resources",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:020",
-        "link_target:021",
-        "link_target:022",
-        "link_target:023"
+        "link_target:022"
       ],
       "rationale": "Not printed again: documentation resources already states this material from the facts it cites, so the kept unit is redundant.",
       "unit_id": "inherited_unit:050.list"
@@ -521,25 +500,26 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading '## Scope and Limitations' is superseded by the deterministic section 'Scope and Limitations' which renders its own heading.",
+      "rationale": "The heading '## Scope and Limitations' is superseded by the deterministic section scope_limitations, which renders its own heading.",
       "unit_id": "inherited_unit:051.heading"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
-      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Lists concrete limitations supported by the library's public symbols and the accepted investigation.",
       "unit_id": "inherited_unit:052.list"
     },
     {
       "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "link_target:024",
         "link_target:product.enterprise"
       ],
-      "rationale": "Maintainer insight on the relationship to the Enterprise Edition; not contradicted by facts and adds context for users.",
+      "rationale": "Relates FOSS scope to Enterprise Edition, supported by the verified product target link_target:024.",
       "unit_id": "inherited_unit:053.paragraph"
     },
     {
@@ -548,16 +528,16 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading '## Development and Testing' is superseded by the deterministic section 'Development and Testing' which renders its own heading.",
+      "rationale": "The heading '## Development and Testing' is superseded by the deterministic section development_testing, which renders its own heading.",
       "unit_id": "inherited_unit:054.heading"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "CORRECT_WITH_EVIDENCE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:test-command"
       ],
-      "rationale": "Replaces unsupported instruction with the exact supported command from the test-command fact.",
+      "rationale": "Accurately describes running the test suite; the command is verified by build_test_asset:test-command.",
       "unit_id": "inherited_unit:055.paragraph"
     },
     {
@@ -566,7 +546,7 @@
       "fact_ids": [
         "build_test_asset:test-command"
       ],
-      "rationale": "The test command code block matches the verified `dotnet test Aspose.Imaging.Foss.sln` command.",
+      "rationale": "The test command code block matches the verified build_test_asset:test-command fact.",
       "unit_id": "inherited_unit:056.code_block"
     },
     {
@@ -576,12 +556,12 @@
         "build_test_asset:tests",
         "build_test_asset:release-workflow"
       ],
-      "rationale": "Describes the test project structure and release workflow; supported by the build_test_asset facts.",
+      "rationale": "Describes test project setup and release workflow, supported by build_test_asset:tests and build_test_asset:release-workflow.",
       "unit_id": "inherited_unit:057.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "PRESERVE_ATTRIBUTED",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose.imaging.foss"
       ],
@@ -595,7 +575,7 @@
         "license:file",
         "license:spdx"
       ],
-      "rationale": "The heading '## License' is superseded by the deterministic section 'License' which renders its own heading.",
+      "rationale": "The heading '## License' is superseded by the deterministic section license, which renders its own heading.",
       "unit_id": "inherited_unit:059.heading"
     },
     {
@@ -606,7 +586,7 @@
         "license:spdx",
         "link_target:product.enterprise"
       ],
-      "rationale": "The license paragraph is accurate and supported by the MIT license facts; it is moved to enterprise_relationship to avoid duplication with the license section.",
+      "rationale": "License statement is accurate and supported; moved to enterprise_relationship to co-locate with FOSS/Enterprise relationship.",
       "unit_id": "inherited_unit:060.paragraph"
     }
   ]

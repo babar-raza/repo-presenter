@@ -415,7 +415,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 3: EXECUTED; compiled against Aspose.Imaging.Foss.csproj; SDK 10.0.403",
+          "detail": "example 3: EXECUTED; compiled against Aspose.Imaging.Foss.csproj; SDK 11.0.100",
           "path": "receipts.json"
         }
       ],
@@ -485,6 +485,29 @@
       "value": "net"
     },
     {
+      "attributes": {
+        "changed": "false",
+        "enterprise_target_status": "200",
+        "product_homepage_status": "200",
+        "stage": "product_knowledge_refresh"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "product_homepage; status 200",
+          "path": "https://products.aspose.org/imaging/net/"
+        },
+        {
+          "detail": "enterprise_target; status 200",
+          "path": "https://products.aspose.com/imaging/net/"
+        }
+      ],
+      "id": "identity:product-knowledge-refresh",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "checked 2 page(s) at revision d947d11cc6b2; changed=False"
+    },
+    {
       "attributes": null,
       "confidence": 1.0,
       "evidence": [
@@ -511,6 +534,151 @@
       "kind": "identity",
       "polarity": "SUPPORTED",
       "value": "d947d11cc6b282443231c2025ee43bf974a335dd"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "12",
+        "name": "CoreHeaderSize"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/BmpFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-bmpformathandler.coreheadersize",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "CoreHeaderSize = 12"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"1.2.840.10008.1.2.2\"",
+        "name": "ExplicitVrBigEndian"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/DicomFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-dicomformathandler.explicitvrbigendian",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "ExplicitVrBigEndian = \"1.2.840.10008.1.2.2\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"1.2.840.10008.1.2\"",
+        "name": "ImplicitVrLittleEndian"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/DicomFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-dicomformathandler.implicitvrlittleendian",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "ImplicitVrLittleEndian = \"1.2.840.10008.1.2\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "64",
+        "name": "MaxUidLength"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/DicomFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-dicomformathandler.maxuidlength",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "MaxUidLength = 64"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "4",
+        "name": "LongType"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/TiffFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-tiffformathandler.longtype",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "LongType = 4"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "65536",
+        "name": "MaxIfds"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/TiffFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-tiffformathandler.maxifds",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "MaxIfds = 65536"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "3",
+        "name": "ShortType"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; named literal constant",
+          "path": "src/Aspose.Imaging.Foss/Formats/TiffFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:constant.src-aspose.imaging.foss-formats-tiffformathandler.shorttype",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "ShortType = 3"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "exception": "EndOfStreamException",
+        "member": "JpegFormatHandler.ReadNextMarkerCode",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 76; throw in a non-public type's member",
+          "path": "src/Aspose.Imaging.Foss/Formats/JpegFormatHandler.cs"
+        }
+      ],
+      "id": "implementation:throws.src-aspose.imaging.foss-formats-jpegformathandler.cs.jpegformathandler.readnextmarkercode.endofstreamexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "JpegFormatHandler.ReadNextMarkerCode throws EndOfStreamException (non-public type)"
     },
     {
       "attributes": null,
@@ -1505,6 +1673,442 @@
       "value": "git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git\ncd Aspose.Imaging-FOSS-for-.NET\ndotnet build"
     },
     {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:26",
+        "declaration": "internal sealed class AvifFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/AvifFormatHandler.cs"
+        },
+        {
+          "detail": "line 26; constructs AvifFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-avifformathandler.avifformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "AvifFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:17",
+        "declaration": "internal sealed class BmpFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/BmpFormatHandler.cs"
+        },
+        {
+          "detail": "line 17; constructs BmpFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-bmpformathandler.bmpformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "BmpFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:24",
+        "declaration": "internal sealed class DicomFormatHandler : IFormatHandler",
+        "docstring_full": "Detects standard DICOM files (128-byte preamble + \"DICM\" magic) and reads Rows/Columns/ BitsAllocated from the data set. Handles Implicit VR Little Endian and Explicit VR Little/Big Endian transfer syntaxes; any other transfer syntax (including the common compressed ones) is treated as Explicit VR Little Endian, which is how their non-pixel elements are actually encoded. Sequence/encapsulated elements with an undefined length stop the walk rather than being parsed, since Rows/Columns/BitsAllocated always precede them in conformant files.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/DicomFormatHandler.cs"
+        },
+        {
+          "detail": "line 24; constructs DicomFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-dicomformathandler.dicomformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "DicomFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:25",
+        "declaration": "internal sealed class DjVuFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/DjVuFormatHandler.cs"
+        },
+        {
+          "detail": "line 25; constructs DjVuFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-djvuformathandler.djvuformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "DjVuFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:22",
+        "declaration": "internal sealed class EmfFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/EmfFormatHandler.cs"
+        },
+        {
+          "detail": "line 22; constructs EmfFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-emfformathandler.emfformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "EmfFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:16",
+        "declaration": "internal sealed class GifFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/GifFormatHandler.cs"
+        },
+        {
+          "detail": "line 16; constructs GifFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-gifformathandler.gifformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "GifFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:27",
+        "declaration": "internal sealed class HeicFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/HeicFormatHandler.cs"
+        },
+        {
+          "detail": "line 27; constructs HeicFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-heicformathandler.heicformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "HeicFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:19",
+        "declaration": "internal sealed class IcoFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/IcoFormatHandler.cs"
+        },
+        {
+          "detail": "line 19; constructs IcoFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-icoformathandler.icoformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "IcoFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:15",
+        "declaration": "internal sealed class JpegFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/JpegFormatHandler.cs"
+        },
+        {
+          "detail": "line 15; constructs JpegFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-jpegformathandler.jpegformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "JpegFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:14",
+        "declaration": "internal sealed class PngFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/PngFormatHandler.cs"
+        },
+        {
+          "detail": "line 14; constructs PngFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-pngformathandler.pngformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "PngFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:21",
+        "declaration": "internal sealed class PsdFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/PsdFormatHandler.cs"
+        },
+        {
+          "detail": "line 21; constructs PsdFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-psdformathandler.psdformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "PsdFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:20",
+        "declaration": "internal sealed class TiffFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/TiffFormatHandler.cs"
+        },
+        {
+          "detail": "line 20; constructs TiffFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-tiffformathandler.tiffformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "TiffFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:18",
+        "declaration": "internal sealed class WebPFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/WebPFormatHandler.cs"
+        },
+        {
+          "detail": "line 18; constructs WebPFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-webpformathandler.webpformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "WebPFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/ImageProbe.cs:23",
+        "declaration": "internal sealed class WmfFormatHandler : IFormatHandler",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 7; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Formats/WmfFormatHandler.cs"
+        },
+        {
+          "detail": "line 23; constructs WmfFormatHandler",
+          "path": "src/Aspose.Imaging.Foss/ImageProbe.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-formats-wmfformathandler.wmfformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "WmfFormatHandler"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class EndianReader",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Internal/EndianReader.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-internal-endianreader.endianreader",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "EndianReader"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class HeaderValues",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Internal/HeaderValues.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-internal-headervalues.headervalues",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "HeaderValues"
+    },
+    {
+      "attributes": {
+        "declaration": "internal interface IFormatHandler",
+        "symbol_kind": "interface",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; non-public interface declaration",
+          "path": "src/Aspose.Imaging.Foss/Internal/IFormatHandler.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-internal-iformathandler.iformathandler",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "IFormatHandler"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/Aspose.Imaging.Foss/Internal/IsoBaseMediaBox.cs:296",
+        "declaration": "private readonly struct Box",
+        "symbol_kind": "struct",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 302; non-public struct declaration",
+          "path": "src/Aspose.Imaging.Foss/Internal/IsoBaseMediaBox.cs"
+        },
+        {
+          "detail": "line 296; constructs Box",
+          "path": "src/Aspose.Imaging.Foss/Internal/IsoBaseMediaBox.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-internal-isobasemediabox.box",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Box"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class IsoBaseMediaBox",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Internal/IsoBaseMediaBox.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-internal-isobasemediabox.isobasemediabox",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "IsoBaseMediaBox"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class StreamExtensions",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; non-public class declaration",
+          "path": "src/Aspose.Imaging.Foss/Internal/StreamExtensions.cs"
+        }
+      ],
+      "id": "internal_symbol:src-aspose.imaging.foss-internal-streamextensions.streamextensions",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "StreamExtensions"
+    },
+    {
       "attributes": null,
       "confidence": 1.0,
       "evidence": [
@@ -2082,6 +2686,1391 @@
     },
     {
       "attributes": {
+        "files_checked": "22",
+        "language": "csharp"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no P/Invoke declaration in any of the 22 product source files",
+          "path": "src/Aspose.Imaging.Foss/Formats/AvifFormatHandler.cs"
+        }
+      ],
+      "id": "package_trait:pure_source.csharp",
+      "kind": "package_trait",
+      "polarity": "SUPPORTED",
+      "value": "pure managed .NET code: no P/Invoke declarations"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Avif_GenericMif1MajorBrandWithAvifCompatible_IsDetectedAsAvif"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 301; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.avif_genericmif1majorbrandwithavifcompatible_isdetectedasavif",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test avif generic mif1 major brand with avif compatible is detected as avif"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Avif_IspeDimensionAboveIntMax_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 383; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.avif_ispedimensionaboveintmax_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test avif ispe dimension above int max is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Bmp_HeightIntMinValue_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 109; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.bmp_heightintminvalue_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp height int min value is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Bmp_NegativeWidth_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 119; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.bmp_negativewidth_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp negative width is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Bmp_Os2CoreHeader_ReportsDimensionsAndBitCount"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 73; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.bmp_os2coreheader_reportsdimensionsandbitcount",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp os2 core header reports dimensions and bit count"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Bmp_TextStartingWithBM_IsNotDetectedAsBmp"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 100; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.bmp_textstartingwithbm_isnotdetectedasbmp",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp text starting with bm is not detected as bmp"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Bmp_TruncatedInfoHeader_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 128; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.bmp_truncatedinfoheader_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp truncated info header reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "DjVu_IndirectDocument_ReportsPageCountAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 404; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.djvu_indirectdocument_reportspagecountasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dj vu indirect document reports page count as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "DjVu_MultiPage_CountsPagesNotDirectoryFiles_AndUsesFirstPageSize"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 393; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.djvu_multipage_countspagesnotdirectoryfiles_andusesfirstpagesize",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dj vu multi page counts pages not directory files and uses first page size"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "DjVu_TruncatedBundledDocument_ReportsPageCountAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 413; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.djvu_truncatedbundleddocument_reportspagecountasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dj vu truncated bundled document reports page count as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Emf_BoundsSpanningWholeIntRange_AreReportedAsUnknownInsteadOfOverflowing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 274; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.emf_boundsspanningwholeintrange_arereportedasunknowninsteadofoverflowing",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test emf bounds spanning whole int range are reported as unknown instead of overflowing"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Emf_EmptyBounds_AreReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 264; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.emf_emptybounds_arereportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test emf empty bounds are reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Emf_SinglePixelBounds_IsOneByOne"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 255; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.emf_singlepixelbounds_isonebyone",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test emf single pixel bounds is one by one"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Gif_ZeroScreenWidth_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 292; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.gif_zeroscreenwidth_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test gif zero screen width is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Heic_CodecSpecificMajorBrand_WinsOverCompatibleAvif"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 322; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.heic_codecspecificmajorbrand_winsovercompatibleavif",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test heic codec specific major brand wins over compatible avif"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Heic_GenericMif1MajorBrandWithoutAvif_IsDetectedAsHeic"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 314; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.heic_genericmif1majorbrandwithoutavif_isdetectedasheic",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test heic generic mif1 major brand without avif is detected as heic"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Heic_GridImage_ReportsPrimaryItemSizeNotTileSize"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 330; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.heic_gridimage_reportsprimaryitemsizenottilesize",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test heic grid image reports primary item size not tile size"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Heic_WithoutItemAssociations_FallsBackToLargestIspe"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 372; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.heic_withoutitemassociations_fallsbacktolargestispe",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test heic without item associations falls back to largest ispe"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Ico_NoImages_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 147; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.ico_noimages_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test ico no images reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Ico_ZeroBitCount_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 138; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.ico_zerobitcount_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test ico zero bit count is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Jpeg_TruncatedInsideStartOfFrame_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 54; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.jpeg_truncatedinsidestartofframe_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test jpeg truncated inside start of frame reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Jpeg_ZeroHeightDeferredToDnl_ReportsHeightAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 64; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.jpeg_zeroheightdeferredtodnl_reportsheightasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test jpeg zero height deferred to dnl reports height as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Png_DimensionAboveIntMax_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.png_dimensionaboveintmax_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test png dimension above int max is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Png_FirstChunkIsNotIhdr_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.png_firstchunkisnotihdr_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test png first chunk is not ihdr reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Png_TruncatedInsideIhdr_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 30; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.png_truncatedinsideihdr_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test png truncated inside ihdr reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Png_ZeroWidth_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.png_zerowidth_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test png zero width is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Psd_TruncatedHeader_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 213; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.psd_truncatedheader_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test psd truncated header reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Psd_ZeroWidth_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 204; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.psd_zerowidth_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test psd zero width is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Tiff_LongDimensionAboveIntMax_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 157; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.tiff_longdimensionaboveintmax_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff long dimension above int max is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Tiff_RgbBitsPerSampleStoredOutOfLine_ReportsPerChannelDepth"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 171; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.tiff_rgbbitspersamplestoredoutofline_reportsperchanneldepth",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff rgb bits per sample stored out of line reports per channel depth"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Tiff_UnsupportedValueType_IsReportedAsUnknown"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 190; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.tiff_unsupportedvaluetype_isreportedasunknown",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff unsupported value type is reported as unknown"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "WebP_LossyWithoutStartCode_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 223; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.webp_lossywithoutstartcode_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test web p lossy without start code reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "WebP_TruncatedBitstreamHeader_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 238; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.webp_truncatedbitstreamheader_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test web p truncated bitstream header reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs",
+        "test": "Wmf_SwappedBoundingBoxCorners_ReportPositiveSize"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 283; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/HeaderCorrectnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-headercorrectnesstests.cs.wmf_swappedboundingboxcorners_reportpositivesize",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test wmf swapped bounding box corners report positive size"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Avif_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 432; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.avif_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test avif reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Bmp_NegativeHeight_ReportsPositiveMagnitude"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 105; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.bmp_negativeheight_reportspositivemagnitude",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp negative height reports positive magnitude"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Bmp_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 94; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.bmp_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test bmp reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "DetectFormat_MatchesProbeFormat"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 295; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.detectformat_matchesprobeformat",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test detect format matches probe format"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "DetectFormat_NonSeekableStream_StillWorks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 303; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.detectformat_nonseekablestream_stillworks",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test detect format non seekable stream still works"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Dicom_OversizedTransferSyntaxLength_DoesNotAllocateByDeclaredLength"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 261; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.dicom_oversizedtransfersyntaxlength_doesnotallocatebydeclaredlength",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dicom oversized transfer syntax length does not allocate by declared length"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Dicom_ReportsPixelDimensionsForCommonTransferSyntaxes"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 239; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.dicom_reportspixeldimensionsforcommontransfersyntaxes",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dicom reports pixel dimensions for common transfer syntaxes"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Dicom_TruncatedDataSet_DegradesGracefullyInsteadOfThrowing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 250; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.dicom_truncateddataset_degradesgracefullyinsteadofthrowing",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dicom truncated data set degrades gracefully instead of throwing"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Dicom_WithoutDataSet_ReportsFormatOnly"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 226; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.dicom_withoutdataset_reportsformatonly",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dicom without data set reports format only"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "DjVu_MultiPage_ReportsFrameCount"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 421; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.djvu_multipage_reportsframecount",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dj vu multi page reports frame count"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "DjVu_SinglePage_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 410; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.djvu_singlepage_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test dj vu single page reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Emf_DerivesDimensionsFromBounds"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 206; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.emf_derivesdimensionsfrombounds",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test emf derives dimensions from bounds"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Gif_MultiFrame_ReportsFrameCount"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 72; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.gif_multiframe_reportsframecount",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test gif multi frame reports frame count"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Gif_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 61; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.gif_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test gif reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Gif_TruncatedAfterScreenDescriptor_ReportsDimensionsButNoFrameCount"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 83; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.gif_truncatedafterscreendescriptor_reportsdimensionsbutnoframecount",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test gif truncated after screen descriptor reports dimensions but no frame count"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Gif_TruncatedMidFrameData_DegradesGracefullyInsteadOfThrowing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 272; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.gif_truncatedmidframedata_degradesgracefullyinsteadofthrowing",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test gif truncated mid frame data degrades gracefully instead of throwing"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Heic_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 442; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.heic_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test heic reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Ico_ReportsFormatDimensionsAndFrameCount"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 133; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.ico_reportsformatdimensionsandframecount",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test ico reports format dimensions and frame count"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Ico_ZeroDimensionByte_MeansTwoFiftySixPixels"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 144; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.ico_zerodimensionbyte_meanstwofiftysixpixels",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test ico zero dimension byte means two fifty six pixels"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Jpeg_EndingAfterMarker_DoesNotLoopForever"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 43; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.jpeg_endingaftermarker_doesnotloopforever",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test jpeg ending after marker does not loop forever"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Jpeg_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.jpeg_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test jpeg reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Jpeg_SegmentLengthBelowTwo_DoesNotLoopForever"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 52; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.jpeg_segmentlengthbelowtwo_doesnotloopforever",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test jpeg segment length below two does not loop forever"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Jpeg_TruncatedStream_DegradesToFormatOnlyInsteadOfThrowing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.jpeg_truncatedstream_degradestoformatonlyinsteadofthrowing",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test jpeg truncated stream degrades to format only instead of throwing"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Png_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.png_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test png reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Probe_FileInfo_ReturnsCorrectResult"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 351; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probe_fileinfo_returnscorrectresult",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe file info returns correct result"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Probe_NonSeekableStream_StillWorks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 330; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probe_nonseekablestream_stillworks",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe non seekable stream still works"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Probe_ReadOnlySpan_ReturnsCorrectResult"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 340; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probe_readonlyspan_returnscorrectresult",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe read only span returns correct result"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "ProbeAsync_CancellationToken_PropagatesCancellation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 452; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probeasync_cancellationtoken_propagatescancellation",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe async cancellation token propagates cancellation"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "ProbeAsync_NonSeekableStream_StillWorks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 381; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probeasync_nonseekablestream_stillworks",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe async non seekable stream still works"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "ProbeAsync_SeekableStream_ReturnsCorrectResult"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 370; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probeasync_seekablestream_returnscorrectresult",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe async seekable stream returns correct result"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "ProbeFile_ReadsFromDisk"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 311; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probefile_readsfromdisk",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe file reads from disk"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "ProbeFileAsync_ReadsFromDisk"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 391; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.probefileasync_readsfromdisk",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test probe file async reads from disk"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Psd_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 195; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.psd_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test psd reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Tiff_ChainOfMaximalIfds_IsCountedWithoutReadingEveryEntry"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 185; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.tiff_chainofmaximalifds_iscountedwithoutreadingeveryentry",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff chain of maximal ifds is counted without reading every entry"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Tiff_LittleEndian_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 153; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.tiff_littleendian_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff little endian reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Tiff_MultiPage_ReportsFrameCountFromIfdChain"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 165; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.tiff_multipage_reportsframecountfromifdchain",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff multi page reports frame count from ifd chain"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Tiff_SelfReferencingIfd_DoesNotLoopForever"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 176; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.tiff_selfreferencingifd_doesnotloopforever",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test tiff self referencing ifd does not loop forever"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "UnknownData_ReportsUnknownFormat"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 285; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.unknowndata_reportsunknownformat",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test unknown data reports unknown format"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "WebP_ReportsFormatAndDimensions"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 116; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.webp_reportsformatanddimensions",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test web p reports format and dimensions"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs",
+        "test": "Wmf_Placeable_ReportsDimensionsAt96Dpi"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 216; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/ImageProbeTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-imageprobetests.cs.wmf_placeable_reportsdimensionsat96dpi",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test wmf placeable reports dimensions at96 dpi"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/RobustnessTests.cs",
+        "test": "MutatedInput_NeverThrowsHangsOrReportsNonPositiveValues"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 42; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/RobustnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-robustnesstests.cs.mutatedinput_neverthrowshangsorreportsnonpositivevalues",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test mutated input never throws hangs or reports non positive values"
+    },
+    {
+      "attributes": {
+        "file": "tests/Aspose.Imaging.Foss.Tests/RobustnessTests.cs",
+        "test": "RandomBytes_NeverThrow"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 66; test case",
+          "path": "tests/Aspose.Imaging.Foss.Tests/RobustnessTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-aspose.imaging.foss.tests-robustnesstests.cs.randombytes_neverthrow",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test random bytes never throw"
+    },
+    {
+      "attributes": {
+        "package": "coverlet.collector",
+        "project": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "6.0.2"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; PackageReference of a test project",
+          "path": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.coverlet.collector",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "coverlet.collector 6.0.2"
+    },
+    {
+      "attributes": {
+        "package": "Microsoft.NET.Test.Sdk",
+        "project": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "17.12.0"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; PackageReference of a test project",
+          "path": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.microsoft.net.test.sdk",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "Microsoft.NET.Test.Sdk 17.12.0"
+    },
+    {
+      "attributes": {
+        "package": "xunit",
+        "project": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "2.9.2"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; PackageReference of a test project",
+          "path": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.xunit",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "xunit 2.9.2"
+    },
+    {
+      "attributes": {
+        "package": "xunit.runner.visualstudio",
+        "project": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "2.8.2"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; PackageReference of a test project",
+          "path": "tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.xunit.runner.visualstudio",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "xunit.runner.visualstudio 2.8.2"
+    },
+    {
+      "attributes": {
         "symbol_kind": "module"
       },
       "confidence": 1.0,
@@ -2130,7 +4119,11 @@
     },
     {
       "attributes": {
-        "symbol_kind": "enum"
+        "declaration": "public enum ImageFormat",
+        "member_count": "15",
+        "members": "Unknown, Png, Jpeg, Gif, Bmp, WebP, Ico, Tiff, Psd, Emf, Wmf, Dicom, DjVu, Avif, Heic",
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -2146,7 +4139,9 @@
     },
     {
       "attributes": {
-        "symbol_kind": "class"
+        "declaration": "public sealed class ImageInfo",
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -2162,6 +4157,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int?",
         "symbol_kind": "method"
       },
@@ -2179,6 +4176,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ImageFormat",
         "symbol_kind": "method"
       },
@@ -2196,6 +4195,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int?",
         "symbol_kind": "method"
       },
@@ -2213,6 +4214,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int?",
         "symbol_kind": "method"
       },
@@ -2230,6 +4233,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "constructor",
         "signature": "ImageInfo(ImageFormat format, int? width, int? height, int? bitDepth, int? frameCount)",
         "symbol_kind": "method"
       },
@@ -2247,6 +4252,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int?",
         "symbol_kind": "method"
       },
@@ -2264,7 +4271,9 @@
     },
     {
       "attributes": {
-        "symbol_kind": "class"
+        "declaration": "public static class ImageProbe",
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -2280,6 +4289,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "DetectFormat(Stream stream)",
         "symbol_kind": "method"
       },
@@ -2297,6 +4308,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Probe(Stream stream)",
         "symbol_kind": "method"
       },
@@ -2314,6 +4327,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ProbeAsync(Stream stream, CancellationToken cancellationToken)",
         "symbol_kind": "method"
       },
@@ -2331,6 +4346,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ProbeFile(string path)",
         "symbol_kind": "method"
       },
@@ -2348,6 +4365,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ProbeFileAsync(string path, CancellationToken cancellationToken)",
         "symbol_kind": "method"
       },
