@@ -117,23 +117,24 @@ def test_a_committed_batch_takes_precedence_over_hosted_ones() -> None:
     assert effective_document(newer, ledger, NOW)["batches"][-1]["id"] == "e2-002-owner"
 
 
-def test_the_stop_rule_fires_when_cost_per_sealed_candidate_more_than_doubles() -> None:
-    committed = _committed()
+def test_the_stop_rule_fires_when_the_rolling_window_cost_per_seal_more_than_doubles() -> None:
+    """R43(1): the last 12 settled hosted runs against the 12 before them, never one batch."""
+    committed = _committed(batches=[{"id": "e2-001", "calls_cap": 2400, "tokens_cap": 2_400_000,
+                                     "calls_spent": 0, "tokens_spent": 0, "repositories": []}])
     ledger = empty_ledger()
-    # batch 1: 600 calls, 6 seals -> 100/seal
-    for index in range(6):
+    # the previous 12: 1200 calls, 6 seals -> 200/seal
+    for index in range(12):
         ledger, _, _ = reserve(committed, ledger, reservation_id=f"a{index}", repository="o/a",
                                lanes=["R"], now=NOW)
-        ledger = _settled(ledger, f"a{index}", 100)
-    ledger, refusal = ensure_open_batch(committed, ledger, NOW)
-    assert refusal is None
-    # batch 2 (900 calls): 900 calls, 1 seal -> 900/seal > 2 x 100
-    for index in range(6):
+        ledger = _settled(ledger, f"a{index}", 100, sealed=("R",) if index % 2 else ())
+    # the last 12: 1200 calls, 1 seal -> 1200/seal > 2 x 200
+    for index in range(12):
         ledger, entry, _ = reserve(committed, ledger, reservation_id=f"b{index}", repository="o/a",
                                    lanes=["R"], now=NOW)
-        ledger = _settled(ledger, f"b{index}", 150, sealed=("R",) if index == 0 else ())
+        assert entry is not None, index
+        ledger = _settled(ledger, f"b{index}", 100, sealed=("R",) if index == 0 else ())
     ledger, refusal = ensure_open_batch(committed, ledger, NOW)
-    assert refusal is not None and "stop rule" in refusal
+    assert refusal is not None and "stop rule" in refusal and "last 12 settled hosted runs" in refusal
     assert ledger["entries"][-1]["kind"] == "stop"
     # and it stays stopped: no further batch, no reservation
     _, entry, refusal = reserve(committed, ledger, reservation_id="c", repository="o/a", lanes=["R"], now=NOW)
