@@ -1,0 +1,124 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T21:17:15+00:00",
+   "classes": [
+    "BC-05|unresolved|section_fit"
+   ],
+   "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "43640970669",
+   "source_revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+   "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T21:17:15+00:00",
+  "classes": {
+   "BC-05|unresolved|section_fit": {
+    "example": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Local documentation landing page](documentation/_site/index.html)'",
+    "findings": 3,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-05",
+    "scope": "09122d49e78072a35fbb304c6d48c9441a3c0b1752e67d43f5374d5788b054b5",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "section_fit",
+    "upstream": ""
+   }
+  },
+  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 84c5d935a8db: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Local documentation landing page](documentation/_site/index.html)'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Samples overview](samples/README.md)'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Contributor and agent instructions](agents.md)'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+  "run_id": "43640970669",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43640970669",
+  "schema_version": 1,
+  "source_revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+ },
+ "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
+ "schema_version": 1
+}
