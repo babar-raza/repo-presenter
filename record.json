@@ -5,7 +5,7 @@
   "provider_repository_id": 1359836523,
   "registry_revision": null,
   "active_transaction_id": "9a0323cb194b479193f48d554af46968",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set b8a378160410: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-06T12:12:24.860875+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-14T01:49:56.158240+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 6
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 65,
+  "state_version": 66,
   "recent_trigger_dedup_keys": {
     "run:41121245347:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "2e7a505898484cddb6abd5333eb93e50",
     "run:41169943876:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "1b0f7665bd0947518e5cc2c91b2fdace",
@@ -48,5 +48,5 @@
     "run:41177736649:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "91af1eca2c124fc791d75c294f44599a",
     "run:41295857744:aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET": "9a0323cb194b479193f48d554af46968"
   },
-  "recovery_count": 5
+  "recovery_count": 6
 }
