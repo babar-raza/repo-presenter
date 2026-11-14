@@ -153,6 +153,10 @@ class Recertification:
     seal_commit: str = ""
     regenerations: int = 0
     provider_calls: int = 0
+    #: R43(3): the Lane R policy current code applies to this repository, and the one the seal
+    #: recorded ("regenerate" for a seal made before the switch existed); empty for Lane L.
+    lane_r_policy: str = ""
+    sealed_lane_r_policy: str = ""
     #: What a writer needs; never serialized into a report.
     readme: bytes = field(default=b"", repr=False, compare=False)
     artifacts: Mapping[str, bytes] = field(default_factory=dict, repr=False, compare=False)
@@ -501,6 +505,10 @@ def current_dispositions(
     from repo_presenter.readme.reconciliation import dispositions as folds
 
     folded = copy.deepcopy(dict(dispositions))
+    # R43(3) then R43(2) (BL-103/BL-102), as S4's normalize applies them, before the register
+    # folds withhold what the register confirms false.
+    folds.fold_inherited_published(folded, document)
+    folds.fold_deterministic_sections(folded, document)
     folds._fold_register_corrections(folded, document)
     folds._fold_register_kept_units(folded, document, plan=plan)
     folds._fold_register_omitted_units(folded, document)
@@ -519,6 +527,9 @@ def current_plan(
     from repo_presenter.readme.composition.planning import missing_kept_list_links
 
     updated = copy.deepcopy(dict(plan))
+    # R43(2) (BL-102): Scope and Limitations has no planned limitation slot (planning.plan_checks).
+    if updated.get("material_limitations"):
+        updated["material_limitations"] = []
     missing = missing_kept_list_links(updated, document, dict(dispositions))
     if missing:
         updated["links"] = [*updated.get("links", []), *missing]
@@ -549,6 +560,7 @@ def _rerun_lane_r(
     sealed_units = _load_json(bundle, units_name)
     current = current_units(sealed_units, document)
     units_override: Mapping[str, Any] | None = current if current != sealed_units else None
+    dispositions = settled_dispositions(entry, document, plan, current, dispositions)
     failing, details, artifacts = _evaluate_lane_r(
         bundle, entry, source, dispositions, units_override, plan_override=plan
     )
@@ -620,11 +632,45 @@ def _rerun_lane_r(
     return failing, details, artifacts
 
 
+def settled_dispositions(
+    entry: Any,
+    document: FactsDocument,
+    plan: Mapping[str, Any],
+    units: Mapping[str, Any],
+    dispositions: Mapping[str, Any],
+) -> dict[str, Any]:
+    """The current dispositions after the S9 accounting the cascade applies after composing
+    (``repair.accounting.account_unprinted_units``): a kept unit the README prints nothing of
+    (every word stated by a section the facts render) is accounted as redundant, exactly as a
+    fresh run would settle it, and only when that changes nothing the README prints. Needed once
+    the R43 folds keep superseded maintainer text by default (BL-102/BL-103). Pure; zero calls."""
+    from repo_presenter.readme.composition.renderer import render_readme
+    from repo_presenter.readme.repair.accounting import account_unprinted_units
+    from repo_presenter.readme.validation.failures import Candidate
+
+    readme = render_readme(entry, document, dict(plan), dict(units), dict(dispositions))
+    candidate = Candidate(
+        entry=entry, facts=document, plan=dict(plan), units=dict(units),
+        dispositions=dict(dispositions), readme=readme, original_readme=None,
+        source_revision=document.source_revision, readme_sha256=None, tree_paths=[], tasks=[],
+    )
+    settled, accounted = account_unprinted_units(candidate)
+    if not accounted:
+        return dict(dispositions)
+    if render_readme(entry, document, dict(plan), dict(units), settled) != readme:
+        return dict(dispositions)
+    return settled
+
+
 def current_units(units: Mapping[str, Any], document: FactsDocument) -> dict[str, Any]:
     """The sealed content units without the Core API rows and member hubs of public types the
     current facts no longer carry (P5, BL-065: a type ``current_type_facts`` finds not public).
     The renderer prints no row for such a type; its authored unit would cite an unknown fact.
     Pure, zero calls; only removes."""
+    from repo_presenter.readme.composition.components.shell import (
+        DETERMINISTIC_SECTIONS,
+    )
+
     known = {fact.id for fact in document.facts}
     kept = [
         unit
@@ -634,6 +680,8 @@ def current_units(units: Mapping[str, Any], document: FactsDocument) -> dict[str
             and str(unit.get("slot", "")).startswith(("type:", "hub:"))
             and str(unit.get("slot")).split(":", 1)[1] not in known
         )
+        # R43(2) (BL-102): a deterministic section prints no authored unit; a sealed one goes.
+        and not (isinstance(unit, Mapping) and unit.get("section") in DETERMINISTIC_SECTIONS)
     ]
     if len(kept) == len(units.get("units", [])):
         return dict(units)
@@ -858,7 +906,22 @@ def recertify_bundle(
         seal_commit=seal_commit,
         readme=readme,
         artifacts=artifacts,
+        **_policies(lane, repository, sealed_deps),
     )
+
+
+def _policies(lane: str, repository: str, sealed_deps: Any) -> dict[str, str]:
+    """R43(3): the Lane R policy applied now and the one the seal recorded, for the per-policy
+    comparison of the two engines; nothing for Lane L."""
+    if lane == LANE_L:
+        return {}
+    from repo_presenter.readme.reconciliation.inherit import REGENERATE, lane_r_policy
+
+    recorded = (sealed_deps or {}).get("lane_r_policy") if isinstance(sealed_deps, dict) else None
+    return {
+        "lane_r_policy": lane_r_policy(repository),
+        "sealed_lane_r_policy": str((recorded or {}).get("name") or REGENERATE),
+    }
 
 
 # --- writing the re-certified seal -------------------------------------------------------------
@@ -1253,6 +1316,27 @@ def _print_table(results: Sequence[Recertification], out: Any = sys.stdout) -> N
             print(f"REGENERATED {rec.regenerations}x: {rec.repository} lane {rec.lane}", file=out)
     certified = {lane: sum(1 for r in results if r.lane == lane and r.certified) for lane in LANES}
     print(f"certified under current code: lane R {certified[LANE_R]}, lane L {certified[LANE_L]}", file=out)
+    split = policy_counts(results)
+    if split:
+        print(
+            "lane R by policy (certified/seals): "
+            + ", ".join(f"{name} {c}/{n}" for name, (c, n) in sorted(split.items())),
+            file=out,
+        )
+
+
+def policy_counts(results: Iterable[Recertification]) -> dict[str, tuple[int, int]]:
+    """R43(3), the owner's long-run requirement: Lane R (certified, seals) per policy the current
+    code applies (``inherit_and_correct`` / ``regenerate``), so the two Lane R engines -- and Lane
+    L beside them -- stay separately countable from the same run."""
+    split: dict[str, list[int]] = {}
+    for rec in results:
+        if rec.lane != LANE_R or not rec.lane_r_policy:
+            continue
+        row = split.setdefault(rec.lane_r_policy, [0, 0])
+        row[0] += int(rec.certified)
+        row[1] += 1
+    return {name: (c, n) for name, (c, n) in split.items()}
 
 
 def lane_counts(results: Iterable[Recertification]) -> dict[str, tuple[int, int]]:

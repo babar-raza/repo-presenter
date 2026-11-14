@@ -285,6 +285,11 @@ def current_dependencies_document(
             source_revision, facts, prompts, {"README.original.md": original_readme}
         )
     code = code_dependencies(prompts)
+    from repo_presenter.readme.reconciliation.inherit import (
+        LANE_R_POLICY_VERSION,
+        lane_r_policy,
+    )
+
     return {
         "schema_version": 1,
         "source": {"revision": source_revision},
@@ -294,7 +299,11 @@ def current_dependencies_document(
             for fact in sorted(facts.facts, key=lambda fact: fact.id)
         },
         "prompts": code["prompts"],
-        "components": code["components"],
+        # The policy logic's version is a mechanism (version set); which policy this repository
+        # ran under is a per-repository input (``lane_r_policy``, out of the fingerprint), so the
+        # two Lane R engines stay separately countable from the seals alone (R43(3), BL-103).
+        "components": {**code["components"], "lane_r_policy": LANE_R_POLICY_VERSION},
+        "lane_r_policy": {"name": lane_r_policy(facts.repository), "version": LANE_R_POLICY_VERSION},
     }
 
 
