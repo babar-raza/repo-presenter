@@ -133,14 +133,15 @@ def test_a_kept_code_block_cites_the_row_and_prints_without_only_the_false_line(
 
     assert repair_defect(case.rc, defect, case.repairs) is True
 
-    assert client.chat.completions.replies == []  # both asks spent; the fold made no call
+    # BL-088 (P2): the S4 fold cites the row on the first reply, so the second ask is never spent
+    assert len(client.chat.completions.replies) == 1
     assert case.repairs.attempts[defect.fingerprint]["outcome"] == "repaired"
     stored = case.stored_now()  # re-judged by schema, binding and checks, served with no call
     unit = _by_unit(stored)[COMMAND]
     assert unit["disposition"] == "VERIFIED_PRESERVE"
     assert unit["destination_section"] == HOME
     assert citation in unit["fact_ids"]
-    assert unit["rationale"].startswith("The findings register confirms")
+    assert unit["rationale"] == "the build commands, kept as written"  # the citation is the record
 
     [placed] = [p for p in placements(PLAN, stored, case.facts, "python") if p.unit_id == COMMAND]
     assert WRONG_LINE not in placed.text  # BC-18 no longer finds the quote

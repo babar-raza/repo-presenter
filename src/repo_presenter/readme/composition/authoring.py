@@ -115,6 +115,73 @@ _TYPE_OBJECTIVE = (
     "type's or a member's name alone that no listed fact states, never a claim no listed fact "
     "carries."
 )
+#: The most register rows one packet carries as do-not-claim records (the largest repository has 19).
+_REGISTER_CAP = 40
+#: A register quote shorter than this (squashed, without code ticks) is not matched in unit text: a
+#: fragment that short could be part of a true sentence.
+_REGISTER_MIN_QUOTE = 12
+
+
+def _register_rows(facts: FactsDocument) -> list[Any]:
+    """The findings-register rows BC-18 holds a Lane R candidate of this repository to
+    (``readme_findings.regression_rows``, read at call time from BC-18's own default register);
+    empty when the register is missing or unreadable."""
+    from repo_presenter.readme.validation import must_correct
+    from repo_presenter.readme_findings import LANE_R, FindingsRegisterError, regression_rows
+
+    try:
+        return regression_rows(facts.repository, LANE_R, must_correct.DEFAULT_FINDINGS_PATH)
+    except (OSError, ValueError, FindingsRegisterError):
+        return []
+
+
+def register_records(facts: FactsDocument) -> list[dict[str, str]]:
+    """The register's confirmed-false README claims of this repository as do-not-claim packet
+    records: the exact false text and what is true instead.
+
+    Decision (BL-087, supervisor 2026-11-14, audit O3 P3): the author is told before it writes,
+    not after BC-18 fails.
+    Until now the register reached only BC-18 and the repair loop, so every regeneration re-authored
+    the same false sentences from the same facts (measured on the 16 failing Lane R seals: 51 of
+    the 112 printed register quotes are in authored units, e.g. HTML Python's capability:6 "an
+    optional QuickJS-backed bridge exposing read-only DOM proxies to script code", printed again in
+    hosted run 43525324808), and repair rounds were spent rediscovering them."""
+    records = []
+    for row in _register_rows(facts)[:_REGISTER_CAP]:
+        record = {"id": row.citation_id(), "kind": "confirmed_false_claim", "value": row.quote}
+        if row.truth:
+            record["truth"] = row.truth
+        records.append(record)
+    return records
+
+
+def _ticks_squashed(text: str) -> str:
+    return " ".join(text.replace("`", "").split())
+
+
+def register_errors(units: Iterable[Mapping[str, Any]], facts: FactsDocument) -> list[str]:
+    """One error per authored unit whose text prints a register-confirmed false claim of this
+    repository (the BC-18 test, applied to the unit before it is accepted, ticks ignored because
+    the unit text is stored without them), carrying the row's truth so the retry corrects it."""
+    rows = [
+        (row, quote)
+        for row in _register_rows(facts)
+        if len(quote := _ticks_squashed(row.quote)) >= _REGISTER_MIN_QUOTE
+    ]
+    if not rows:
+        return []
+    errors: list[str] = []
+    for unit in units:
+        text = _ticks_squashed(str(unit.get("text", "")))
+        for row, quote in rows:
+            if quote in text:
+                errors.append(
+                    f"unit {unit.get('slot')}: prints {row.quote!r}, which the findings register "
+                    f"confirms false; {row.truth or 'remove or correct the claim'}"
+                )
+    return errors
+
+
 # BL-063 (K03, 2026-11-13): the batch gave member names only, and authors called a ``const int`` a
 # method (Email .NET ``MapiMessage.AttachMethodByValue``), static factories constructors
 # (``CfbDocument.FromFile``) and methods properties (``DirectoryEntry.IsRoot``). Each listed
@@ -256,7 +323,10 @@ _OBJECTIVES: dict[str, tuple[str, str]] = {
         "one unit per link, one sentence each",
     ),
     "scope_limitations": (
-        "One honest scope statement, then one sentence per material limitation.",
+        "One honest scope statement, then one sentence per material limitation. Never state the "
+        "project's license, its name or its terms ('licensed under', 'distributed under', 'MIT "
+        "License'): the License section states it from the facts; a sentence that also states a "
+        "requirement or a version states only that.",
         "one scope unit, then one unit per limitation, one sentence each",
     ),
     "development_testing": (
@@ -1104,11 +1174,14 @@ def authoring_tasks(
     name = product_name(entry)
     by_id = {fact.id: fact for fact in facts.facts}
     supported_ids = frozenset(fact.id for fact in facts.facts if fact.polarity == "SUPPORTED")
-    do_not_claim = bounded_records(
-        facts,
-        ["format", "install_command", "link_target", "example"],
-        ("CONTRADICTED", "UNRESOLVED"),
-    )
+    do_not_claim = [
+        *bounded_records(
+            facts,
+            ["format", "install_command", "link_target", "example"],
+            ("CONTRADICTED", "UNRESOLVED"),
+        ),
+        *register_records(facts),
+    ]
     tasks: list[SectionTask] = []
     for section in AUTHORED_SECTIONS:
         if section not in included:
@@ -1791,8 +1864,16 @@ def unit_checks(
     name: str,
     elsewhere_cited: Mapping[str, str] = MappingProxyType({}),
     dispositions: Mapping[str, Any] | None = None,
+    *,
+    register: bool = True,
 ) -> list[str]:
-    """Why the section's units may not be used, beyond schema and binding; empty when they hold."""
+    """Why the section's units may not be used, beyond schema and binding; empty when they hold.
+
+    ``register`` (default on: the authoring job, the coherence pass and every repair) holds each
+    unit to the findings register before composition (``register_errors``, BL-087). BC-04's
+    re-judgement of a finished candidate passes ``False``: there BC-18 already judges the printed
+    README against the same rows, and a second finding for one defect would route it to two
+    repairs (measured: 37 duplicate findings on the 18 sealed Lane R candidates)."""
     errors: list[str] = []
     if task.section_id == "opening" and dispositions is not None:
         preserved = preserved_section_text(dispositions, facts, task.section_id)
@@ -1989,6 +2070,8 @@ def unit_checks(
         )
     errors.extend(audience_errors(output.get("units", []), supporting, task.section_id))
     errors.extend(hygiene_errors(output.get("units", []), facts))
+    if register:
+        errors.extend(register_errors(output.get("units", []), facts))
     errors.extend(carried_unit_errors(output, task, elsewhere_cited))
     return errors
 
