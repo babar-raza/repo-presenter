@@ -83,7 +83,7 @@ def test_cells_cpp_total_becomes_the_facts_count_and_the_sentence_states_the_row
     edits = listed_type_count(ctx).edits
     assert [(e.original, e.replacement) for e in edits] == [
         ("197", "195"),
-        ("is listed below", "has 189 of them listed below"),
+        ("is listed", "has 189 of them listed"),
     ]
     assert all(e.kind == "FALSE_CLAIM_FIX" and e.fact_ids for e in edits)
     result = correct(ctx)
@@ -108,7 +108,7 @@ def test_html_python_total_stays_the_facts_303_and_the_sentence_says_238_are_lis
     ctx = _html(make_context, make_facts, make_fact)
     edits = listed_type_count(ctx).edits
     assert [(e.original, e.replacement) for e in edits] == [
-        ("listed below", "238 of them listed below")
+        ("listed", "238 of them listed")
     ]
     result = correct(ctx)
     assert "exposes 303 public types in total, 238 of them listed below by module" in (
@@ -161,33 +161,39 @@ def test_a_count_that_matches_its_rows_or_says_so_already_is_left_alone(
         assert listed_type_count(ctx).edits == ()
 
 
-def test_are_listed_fails_closed_and_the_validator_finding_stays(
+def test_are_listed_states_the_rows_since_v2_and_the_validator_finding_clears(
     make_context: Any, make_facts: Any, make_fact: Any
 ) -> None:
+    # v1 failed closed on "are listed"; v2 (BL-093) keeps the total and states the listed rows.
     facts = _facts(make_facts, make_fact, "| `A` | a |\n| `B` | b |\n", set(), 3)
     readme = (
         "## API Reference\n\nThe 3 public types are listed below.\n\n"
         "| Type | Description |\n|---|---|\n| `A` | a |\n| `B` | b |\n"
     )
     ctx = make_context(readme, facts)
-    assert listed_type_count(ctx).edits == ()
     assert _listed_findings(readme, ctx.facts)
+    assert [(e.original, e.replacement) for e in listed_type_count(ctx).edits] == [
+        ("are listed", "— 2 of them listed")
+    ]
+    corrected = correct(ctx).corrected
+    assert "The 3 public types — 2 of them listed below." in corrected
+    assert _listed_findings(corrected, ctx.facts) == []
 
 
 def test_a_total_above_the_facts_is_kept_when_it_was_not_the_tables_own_count(
     make_context: Any, make_facts: Any, make_fact: Any
 ) -> None:
-    # 5 stated over 2 rows, facts 3: the maintainers' total may count unrecorded kinds; only the
-    # listed number is stated.
+    # 5 stated over 2 rows, facts 3: the maintainers' total may count unrecorded kinds. v1 stated the
+    # listed number; v2 (BL-093) leaves the sentence: rewording it made the unverifiable total the
+    # pipeline's claim (PDF .NET Lane L, "983 public types ... 980 of them summarized": L-03 then
+    # held 983 to the facts' 969), while the unchanged sentence stays the pre-existing residual.
     facts = _facts(make_facts, make_fact, "| `A` | a |\n| `B` | b |\n", set(), 3)
     readme = (
         "## API Reference\n\nThe library exposes 5 public types in total, listed below.\n\n"
         "| Type | Description |\n|---|---|\n| `A` | a |\n| `B` | b |\n"
     )
     ctx = make_context(readme, facts)
-    assert [(e.original, e.replacement) for e in listed_type_count(ctx).edits] == [
-        ("listed below", "2 of them listed below")
-    ]
+    assert listed_type_count(ctx).edits == ()
 
 
 def test_the_validator_accepts_only_the_stated_listed_number() -> None:

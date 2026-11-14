@@ -258,7 +258,10 @@ _K05_COUNT = re.compile(
     r"(?i)(?<![\w.,])(?P<count>\d{1,3}(?:,\d{3})+|\d+)\s+(?:verified\s+)?(?:public\s+)?"
     r"(?P<noun>types?|classes(?:\s+and\s+(?:enumerations|enums))?|enums|interfaces)\b"
 )
-_LISTED_OF_THEM = re.compile(r"(?i)(?<![\w.,])(?P<count>\d{1,3}(?:,\d{3})+|\d+)\s+of\s+them\s+(?:are\s+)?listed\b")
+_LISTED_OF_THEM = re.compile(
+    r"(?i)(?<![\w.,])(?P<count>\d{1,3}(?:,\d{3})+|\d+)\s+of\s+them\s+(?:are\s+)?"
+    r"(?:listed|organi[sz]ed|grouped|shown|documented|tabulated)\b"  # rule (h)'s verbs (BL-093)
+)
 _TYPE_TABLE_ROW = re.compile(r"^\s*\|\s*`[^`]+`\s*\|")
 _LEVEL_1_2 = re.compile(r"^\s*#{1,2}\s")
 _EE_NAME = re.compile(r"(\[)?(?P<name>Aspose\.[^\]\[]*?)\s*[—–]\s*Enterprise\s+Edition(?:\]\((?P<url>[^)\s]+)\))?")
@@ -860,7 +863,7 @@ def case_derivation(
 
     bundle = Path(seal.bundle)
     try:
-        from repo_presenter.recertify import shipped_facts
+        from repo_presenter.recertify import current_surface as shipped_facts
 
         facts = read_facts(bundle / "facts.json")
         entry = require_listed(load_registry(REPO_ROOT / "data" / "registry.json"), seal.repository)

@@ -120,6 +120,9 @@ def test_counts_verify_against_the_computation_and_the_rows_listed() -> None:
     complete = pdf + table + [f"| `T{i}` | A type. |" for i in range(385)]
     assert auditor.class_provenance("K05", complete, 2, _types(354, 31))
     assert auditor.class_provenance("K05", complete, 2, _types(354, 30)) is None  # a different computation
+    # BL-093: the sentence listed_type_count v2 writes over the same 284 rows verifies
+    fixed = [pdf[0], "and delete workflows. 385 public types — 284 of them organized by module below.", ""]
+    assert auditor.class_provenance("K05", fixed + table + [f"| `T{i}` | A type. |" for i in range(284)], 2, _types(354, 31))
     # e48a84 line 271 (Cells Rust Lane R, 115 type facts): a renderer line with no fact value of its own
     rust = ["The public API has 115 types."]
     renderer = {"source": "renderer"}
