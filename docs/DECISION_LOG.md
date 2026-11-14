@@ -5841,3 +5841,22 @@ resolution that cites the aspose.org source consulted and the pipeline behaviour
 applied globally (R41) and never as a one-off candidate edit.
 
 Backlog: BL-091
+
+## 2026-11-14 — R42 clarified: aspose.org is the quick reference and the bar, not a mandate
+
+**Owner.** "As I said we need to do as aspose.org or beat it quality so inventing a better solution is still allowed,
+however for quick fixes and not to waste time on inventing solutions you can always learn from aspose.orgs candidates.
+In some cases they could also be wrong and not follow able, there you have to make your own decisions and take
+appropriate actions case to case."
+
+**Correction.** The first wording of R42 read as "do the same as aspose.org". It now says how aspose.org's published
+candidate is used:
+1. For a quick fix, adopt its approach.
+2. Where a better solution of our own is clearly better, build it. The bar is to match aspose.org's quality or beat it.
+3. Where its approach is wrong or not followable, decide case by case on the evidence.
+
+Every case records what aspose.org did and what was decided: adopted, improved on, or rejected as wrong, with the
+reason. The fix is always implemented in the pipeline, globally. The RULINGS row and checklist item 14, `CLAUDE.md`,
+the consolidated goals and BL-091 are updated to match.
+
+Backlog: BL-091
