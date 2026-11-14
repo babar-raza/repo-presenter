@@ -360,6 +360,13 @@ def _contradicted_links(facts: FactsDocument) -> frozenset[str]:
     )
 
 
+def _table_rows_printed(unit_text: str, readme_text: str) -> bool:
+    """Whether every body row of a type table is printed, cell for cell, as a README table row."""
+    from repo_presenter.readme.composition.placement import is_type_table, rows_not_rendered
+
+    return is_type_table(unit_text) and rows_not_rendered(unit_text, readme_text) == ""
+
+
 def _kept_text_printed(
     unit_text: str,
     unit_id: str,
@@ -411,6 +418,11 @@ def _kept_text_printed(
     # correctly judged lost, not waved through on a family resemblance.
     if unit_id.rsplit(".", 1)[-1] not in {"paragraph", "list", "table"}:
         return False
+    if unit_id.endswith(".table") and _table_rows_printed(unit_text, readme_text):
+        # Placement prints a kept type table's rows the rendered Core API table does not
+        # already print word for word (``placement.rows_not_rendered``, P4 2026-11-14): every
+        # row printed as a README row, in either table, is retained.
+        return True
     carries_all = carries_hard_tokens(unit_text, readme_text)
     return (
         carries_all

@@ -57,6 +57,35 @@ def _text_link(text: str, spelled: str) -> re.Match[str] | None:
     return match
 
 
+_RELEASE_NOTES = re.compile(r"(?i)release[\s_-]*notes|change[\s_-]*log|\breleases?\b")
+_VERSION = re.compile(r"(?i)(?<![\w.])v?(\d+(?:\.\d+)+)(?!\w)")
+
+
+def releases_target(ctx: Context, anchor: str, target: str) -> tuple[str, str] | None:
+    """``(url, tag)`` a dead release-notes link is repaired to, or ``None``: the repository's
+    Releases page when it has release tags (``ctx.release_tags``), or that one tag's release page
+    when the link names the version exactly one tag carries ("V26.10.0 release notes" ->
+    ``.../releases/tag/V26.10.0``, tag ``""`` otherwise).
+
+    Version 2 (BL-010, owner feedback a922e11316 on Cells Python: "Why the link was removed. isn't
+    it active. No need to remove a link which has active source."): version 1 unlinked a
+    release-notes link to a file the tree never held, but the repository does publish its
+    releases (Cells Python: tags V26.3.0 .. V26.10.0; Cells .NET: V26.4.0 .. V26.10.0), so the
+    link had a live destination. The words stay; only the dead target changes. A link that names
+    no release notes, or a repository with no release tag, is unlinked exactly as before."""
+    if not ctx.release_tags or not _RELEASE_NOTES.search(f"{anchor} {target}"):
+        return None
+    repository = ctx.entry.repository
+    if not repository or repository.count("/") != 1:
+        return None
+    base = f"https://github.com/{repository}/releases"
+    wanted = {m.group(1) for m in _VERSION.finditer(f"{anchor} {target}")}
+    tagged = [t for t in ctx.release_tags if t.lstrip("vV") in wanted]
+    if len(tagged) == 1:
+        return f"{base}/tag/{quote(tagged[0], safe='')}", tagged[0]
+    return base, ""
+
+
 @detector(DETECTOR)
 def dead_link(ctx: Context) -> DetectorResult:
     edits: list[Edit] = []
@@ -91,6 +120,29 @@ def dead_link(ctx: Context) -> DetectorResult:
         match = _text_link(line.text, spelled)
         if match is None:
             continue  # broken_link reports it, left exactly as written
+        releases = releases_target(ctx, match.group(1), target)
+        if releases is not None:
+            url, tag = releases
+            cited = [tag] if tag else list(ctx.release_tags[:3])
+            target_start = line.start + match.start() + len(match.group(1)) + 3
+            edits.append(
+                Edit(
+                    kind=BROKEN_LINK,
+                    detector=DETECTOR,
+                    start=target_start,
+                    end=target_start + len(spelled),
+                    original=spelled,
+                    replacement=url,
+                    fact_ids=(fact.id,),
+                    rationale=(
+                        f"the tree does not contain {target!r}; the repository publishes its "
+                        f"releases as tags ({', '.join(cited)}), so the release-notes link points "
+                        "at its Releases page, its text kept word for word"
+                    ),
+                    locators=tuple(f"tag:{t}" for t in cited),
+                )
+            )
+            continue
         edits.append(
             Edit(
                 kind=BROKEN_LINK,

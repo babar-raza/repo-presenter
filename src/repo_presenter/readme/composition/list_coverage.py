@@ -105,6 +105,87 @@ def is_link_list(text: str) -> bool:
     return len(items) >= _MIN_ITEMS and all(item_links(item) for item in items)
 
 
+#: A resource item's own description: the text after its leading (optionally bold) link and the
+#: dash or colon that follows it, ``**[Getting started guide](url)** — installation, ...``.
+_RESOURCE_DESCRIPTION = re.compile(
+    r"^\s*(?:\*\*|__)?\[[^\]]+\]\(\s*<?[^)\s>]+>?\s*\)(?:\*\*|__)?\s*(?:—|–|-{1,2}|:)\s*"
+    r"(?P<text>\S.*)$"
+)
+_SHELL_OWNED_LINKS = frozenset(
+    {
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage",
+        "link_target:badge.ci",
+    }
+)
+
+
+def kept_link_descriptions(
+    dispositions: Mapping[str, Any] | None, facts: FactsDocument
+) -> dict[str, str]:
+    """``link_target`` fact id -> the maintainers' own description of it, for every item of a
+    resource-links list kept as written in Documentation and Resources (P4, 2026-11-14).
+
+    Documentation and Resources prints one line per planned link, never a kept unit's text, so a
+    kept links list is printed through its links; its item descriptions are the maintainers'
+    words for those links, so the line is rendered from the link fact and that description
+    (R43(2): Documentation and Resources from facts plus kept maintainer text), never authored.
+    Measured: 3D .NET ``059.list``, Cells C++ ``053.list``, Words .NET ``080.list`` and PDF Java
+    (seals older than BL-004, whose plans carried only part of each list). Only an item with
+    exactly one document link and a description after it counts; the first item wins."""
+    if not dispositions:
+        return {}
+    by_value: dict[str, str] = {}
+    for fact in sorted(facts.by_kind("link_target"), key=lambda f: f.id):
+        if (
+            fact.polarity == "SUPPORTED"
+            and fact.id not in _SHELL_OWNED_LINKS
+            and not fact.value.startswith("#")
+        ):
+            by_value.setdefault(fact.value, fact.id)
+    texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    found: dict[str, str] = {}
+    for entry in dispositions.get("dispositions", []):
+        unit = str(entry.get("unit_id", ""))
+        text = texts.get(unit, "")
+        if (
+            entry.get("disposition") not in _AS_WRITTEN
+            or entry.get("destination_section") != "documentation_resources"
+            or not unit.endswith(".list")
+            or not is_link_list(text)
+        ):
+            continue
+        for item in list_items(text):
+            links = item_links(item)
+            lead = _GROUP_LEAD.match(item)
+            if len(links) > 1 and lead is not None:
+                # One item naming several links under a bold lead (PDF Java ``126.list``: "**In-repo
+                # topic guides**: [Getting Started](docs/getting-started.md), [Text Extraction]
+                # (...), ..."): each link line is described by that lead, the maintainers' words.
+                for link in links:
+                    if link in by_value:
+                        found.setdefault(by_value[link], f"{lead.group(1).strip()}.")
+                continue
+            if len(links) != 1 or links[0] not in by_value:
+                continue
+            match = _RESOURCE_DESCRIPTION.match(item)
+            if match is not None:
+                description = match.group("text").strip()
+            else:
+                # A link inside the item's sentence (Words .NET ``080.list``: "The public API
+                # matches the commercial [Aspose.Words for .NET](...), so ..."): the sentence is
+                # the description, its link printed as its label beside the line's own link.
+                description = _INLINE_LINK.sub(r"\1", item).strip()
+            if description:
+                found.setdefault(by_value[links[0]], description)
+    return found
+
+
+_INLINE_LINK = re.compile(r"\[([^\]]+)\]\(\s*<?[^)\s>]+>?\s*\)")
+_GROUP_LEAD = re.compile(r"^\s*(?:\*\*|__)([^*_\[\]]+?)(?:\*\*|__)\s*:")
+
+
 def missing_items(
     unit_text: str,
     destination_text: str,

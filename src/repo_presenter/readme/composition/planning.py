@@ -654,11 +654,14 @@ def _kept_list_links(
             or len(list_items(texts.get(unit, ""))) < 2
         ):
             continue
+        # Only the links the unit's own text prints, kept or corrected: a link cited purely as
+        # evidence is not a link to print (P4, 2026-11-14: Cells C++ ``053.list`` cites the
+        # Enterprise page ``link_target:025``, which no item prints, and the backstop owed it a
+        # Documentation and Resources line no unit describes).
         targets = [
             str(i)
             for i in entry.get("fact_ids") or []
-            if str(i) in assignable
-            and (not corrected or values.get(str(i), "") in texts.get(unit, ""))
+            if str(i) in assignable and values.get(str(i), "") in texts.get(unit, "")
         ]
         if not corrected:
             # BL-004 (owner P0, Aspose.3D FOSS for .NET): a links list kept in Documentation and
@@ -715,6 +718,10 @@ def _missing_kept_list_links(
         for fact_id, section in _kept_list_links(output, facts, dispositions).items()
         if fact_id not in planned
     ]
+
+
+#: Public name of the link backstop for zero-call re-certification (``recertify.current_plan``).
+missing_kept_list_links = _missing_kept_list_links
 
 
 def _hand_off_dropped_lists(

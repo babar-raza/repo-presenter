@@ -265,6 +265,10 @@ class Context:
     #: ``Context`` even though the one detector that reads it (``add_dependency_groups``) is not
     #: ported in this pass.
     requirements_v2: bool = True
+    #: The repository's release tags (``git ls-remote --tags``), read with the tree: what
+    #: ``dead_link`` repairs a dead release-notes link to (the Releases page), BL-010. Empty when
+    #: not read, and then no such repair is made.
+    release_tags: tuple[str, ...] = ()
 
     @functools.cached_property
     def lines(self) -> tuple[ReadmeLine, ...]:

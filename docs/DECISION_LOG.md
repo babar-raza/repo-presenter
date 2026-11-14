@@ -6510,3 +6510,90 @@ reported 7/27 false flags where the writer judged 0/20, because 7 stale Lane R s
 PDF Go, PDF Python, PDF .NET (a); 3D .NET, 3D Python, Cells .NET (c).
 
 Backlog: BL-075, BL-086, BL-100, BL-101, BL-110, BL-111
+
+## 2026-11-14 — Phase-3 owner feedback fixed at the class (R41): API descriptions, release-notes link, At a Glance, examples
+
+**Classes and decisions.**
+1. **Label-only API descriptions** (feedback 536baa63f4: "Class with 1 method.", "Interface in the 3D JAVA API.", "Enum
+   with 2 members.", "Created by lexchou on 12/14/2016."). `type_description` v4 replaces such a cell, when no usable doc
+   comment exists, with what the facts state: kind, nearest bases (declared, or the file an inherited member's evidence
+   points at), member names by recorded kind ("methods including ...", "members" when the kind is not recorded),
+   Python `fields`, or enum values (`enum_member` facts, else `enum_values` read by re-certification from the pinned
+   Java declaration, BL-006). Never purpose text; the row stays (R14). Rejected on measurement: "declares no public
+   members" for a type with no member facts (1,300+ such types do have members recorded elsewhere). Lane R uses the
+   same describer: renderer v40 passes over a label-only docstring/authored sentence and replaces the "Public class."
+   fallback; a kept maintainers' table prints the same cells through `surface_claims.kept_unit_form` (the one printed
+   form BC-05 and the reviewer judge), so the two lanes print the same row.
+   R42: aspose.org's published 3D Java README (live README.md:366,391,460,503) prints the same filler, and
+   `readme_refresh_checks.py` `check_no_generic_class_description` only flags it non-blocking — improved on.
+2. **Dead release-notes link** (feedback a922e11316). `dead_link` v2: when `git ls-remote --tags` lists release tags,
+   the dead target becomes `https://github.com/<repo>/releases` (or `/releases/tag/<tag>` when the link names a tagged
+   version); the words are kept; with no tags it unlinks as before. Report-only (no-publish) run over the 29 Lane L
+   live READMEs: 2 hits (Cells Python, Cells .NET), both true, 0 false positives. R42: aspose.org's live Cells Python
+   README.md:164 still links the dead `RELEASE_NOTES.md` — improved on.
+3. **At a Glance** (feedback d820dad695). (a) `estimated_width` counts drawn `-->` edges, bare or inline-declared: six
+   sealed Lane R `flowchart LR` diagrams measure 819–1578 px, which v1 reported as 252–511. (b) Lane R capabilities
+   that cite exactly one namespace below the product root sit in a sub-group with that heading, sub-groups stacked top
+   to bottom; every capability kept; fewer than two named groups keep the flat group. Cells Java (the feedback cell)
+   cites a single namespace, so no verified category exists there; Lane L diagrams carry no per-node facts (BL-135).
+   aspose.org has no grouping (its checks only pin canonical subgraph ids) — our own design.
+4. **Examples run, not only compile** (BL-061). `.NET` runs `dotnet run --no-build`, Java `java -cp` after a clean
+   compile: an unhandled exception is FAILED (CONTRADICTED), a missing input NEEDS_INPUT, a timeout TIMED_OUT. Proven
+   locally for Java with the real JDK; .NET by unit test (no SDK on this machine). Verdicts change only on hosted facts
+   re-runs (BL-131). Not landed, with reasons: withholding Lane L's genuinely CONTRADICTED examples needs a new block
+   withhold correction kind (R27; BL-133), and 18 of the 28 are stale receipts of the verifier fixed in d8bbcab;
+   withholding Lane R's 11 unverified retained fragments fails BC-17 parity on four RECERTIFIED seals (R10), so they
+   are to be chain-verified instead (BL-134).
+
+**Evidence (zero provider calls).** `recertify --all --json --remote origin`: before L 28/28, R 6/18; after L 29/29
+(the Page Python Lane L seal arrived on the state remote between runs), R 6/18, the same failing checks per Lane R
+seal. R10 gate `--base-baseline origin/main`: OK, 47 seals. Changed seals: Lane L 3D Java, 3D Python, Cells .NET,
+Cells Python, Cells Rust, Cells TypeScript, PDF Python, Words Python, Page Python; Lane R Email Python (grouped diagram).
+Label rows in the 10 audited seal READMEs 393 -> 203 (type-backed rows over all seals 276 -> 26; the rest name types
+the public-surface facts do not record, BL-130). printed_example_audit unchanged by re-certification: L 28 CONTRADICTED
+/ 64 UNRESOLVED, R 11 UNRESOLVED before; after, with the new Page Python seal, L 29 / 66, R 11.
+
+**Does not decide.** Publication: the changed seals reach the state remote only through the hosted `recertify
+--write` (BL-137, R37/R41); the items stay active until that run.
+
+Backlog: BL-005, BL-006, BL-007, BL-008, BL-010, BL-059, BL-061, BL-130, BL-131, BL-132, BL-133, BL-134, BL-135, BL-136, BL-137
+
+## 2026-11-14 — Phase 1 README fixes: API-row fallback, sealed-candidate folds, fact polarity, placement, .NET type count
+
+**Facts (zero calls).** `recertify --all --json --remote origin`, supervisor branch -> this branch: Lane R 6/18 -> 7/18
+RECERTIFIED (Aspose.Email-FOSS-for-Cpp), Lane L 28/28 -> 29/29 (the new Page Python seal); no seal changes outcome
+for the worse. Lane R BC-18 details 92 -> 58. BC-05 clears on 3D .NET, Cells C++ and Words .NET; Cells C++ goes from
+BC-05+BC-14+BC-18+REVIEW to BC-18 only, Words .NET from BC-05+BC-18 to BC-18 only and prints 615 public types.
+`recertify --gate --remote origin --base-baseline <origin/main baseline>`: OK, 47 seals, certified R 7 / L 29. The O6 report-only run (every sealed
+facts/dispositions document and the 15 live READMEs) found no false positive in any changed rule.
+
+**Decisions.**
+1. R43(4): a `type:`/`hub:` unit still failing after every ask is left out and recorded in `omitted`; the renderer prints
+   the type's fact-true row; a whole failing batch keeps one unit as the fact-true sentence (the contract needs one);
+   never when another defect remains or the unit carries a must-carry inherited unit (R14).
+2. Re-certification holds a sealed Lane R candidate to the current S4 folds (register folds with the sealed plan, BL-004
+   section fit and its link backstop): a seal is never judged by a disposition current code would not produce (R10/R41).
+3. A format fact whose own example receipt failed is not SUPPORTED, whatever static sources say (3D Python obj export).
+4. The Python floor is printed as aspose.org prints it (R42: adopted): "Requires Python 3.10 or later."; a setup.py
+   floor keeps its true key, as aspose.org's 3D Python README does.
+5. A kept API Reference type table prints only the rows the rendered Core API table does not print. A superseding fold
+   was measured and rejected (it raised BC-05/BC-17 on 10 seals and demoted 3).
+6. Not bumped: REVIEWER_LOGIC_VERSION (calibration record frozen at "10"; BL-125). Bumped: RENDERER_VERSION 40,
+   NORMALISATION_VERSION 37.
+
+Backlog: BL-104, BL-065, BL-120, BL-121, BL-122, BL-123, BL-124, BL-125
+
+## 2026-11-14 — Batch e2-011 committed on owner approval (audit + production)
+
+**Owner.** Chose "Audit + production batch".
+
+**Facts.** Batch e2-010 is spent: 269 of 270 calls, 6 runs, 1 seal. The M9 audit round 43620199171 failed with `BudgetExceededError`
+because no batch was open.
+
+**Decision.** Commit e2-011 at 420 calls and 17.2M tokens: an audit allowance of about 150 calls and 6M tokens, plus a
+production batch of 270 calls and 11.2M tokens. This is within the total caps.
+
+**Expected.** The audit accepts the certified candidates waiting for it: 5–6 in Lane R (Email C++ now re-certifies as
+well) and 4 in Lane L. Production resumes under the Phase 1 planner order.
+
+Backlog: BL-100, BL-101

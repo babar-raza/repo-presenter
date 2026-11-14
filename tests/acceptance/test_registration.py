@@ -394,8 +394,11 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     # listed-count correction): the Cells C++ and HTML Python Lane L seals re-certify again. 78 -> 85
     # (2026-11-14, BL-013/BL-065/BL-070 --write-baseline): the baseline moves to the current seal commits;
     # 3D .NET L and the newer Cells Java, Cells Rust, Email .NET, Email Python and Imaging .NET Lane R seals
-    # re-certify, and Cells Go Lane L is recorded for the first time (+7).
-    assert registration.shortfall.clean_twin_achieved == 85
+    # re-certify, and Cells Go Lane L is recorded for the first time (+7). 85 -> 87 (2026-11-14,
+    # BL-120 --write-baseline): Email C++ Lane R re-certifies under the register folds and the new
+    # Page Python Lane L seal is recorded (+2).
+    # 87 verified on the tree merging the Phase 1 README and Phase 3 feedback fixes (2026-11-14).
+    assert registration.shortfall.clean_twin_achieved == 87
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113

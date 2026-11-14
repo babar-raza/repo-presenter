@@ -125,6 +125,9 @@ class GlanceGroup:
     id: str
     title: str
     nodes: tuple[tuple[str, str], ...]
+    #: Named sub-groups drawn inside this group below its own nodes, stacked top to bottom
+    #: (BL-059: capabilities grouped by the namespace of the API each cites); each keeps its nodes.
+    subgroups: tuple["GlanceGroup", ...] = ()
 
 
 @dataclass(frozen=True)
@@ -143,7 +146,10 @@ class Glance:
         return (
             self.product_id,
             self.product,
-            tuple((group.id, group.title, group.nodes) for group in self.groups),
+            tuple(
+                (group.id, group.title, group.nodes, tuple((g.id, g.title, g.nodes) for g in group.subgroups))
+                for group in self.groups
+            ),
             self.chain,
         )
 
@@ -201,6 +207,21 @@ def _grid(nodes: Sequence[tuple[str, str]], indent: str) -> list[str]:
 def _group_lines(group: GlanceGroup) -> list[str]:
     lines = [f'  subgraph {group.id}["{group.title}"]', "    direction TB"]
     lines.extend(_grid(group.nodes, "    "))
+    for sub in group.subgroups:
+        lines.append(f'    subgraph {sub.id}["{sub.title}"]')
+        lines.append("      direction TB")
+        lines.extend(_grid(sub.nodes, "      "))
+        lines.append("    end")
+    if group.subgroups:
+        # The named groups stack top to bottom, under the group's own nodes: every node of the
+        # last row of loose nodes links to the first sub-group, each sub-group to the next.
+        ids = [node_id for node_id, _ in group.nodes]
+        columns = columns_for(len(ids)) if ids else 1
+        last_row = ids[(len(ids) - 1) // columns * columns :] if ids else []
+        lines.extend(f"    {node_id} ~~~ {group.subgroups[0].id}" for node_id in last_row)
+        lines.extend(
+            f"    {upper.id} ~~~ {lower.id}" for upper, lower in itertools.pairwise(group.subgroups)
+        )
     lines.append("  end")
     return lines
 
@@ -356,9 +377,41 @@ def estimated_width(body: str) -> float:
             frames[-1].direction = match.group(1)
         elif match := _INVISIBLE.match(line):
             frames[-1].links.append((match.group(1), match.group(2)))
+        elif chain := _edge_chain(line):
+            # A drawn edge ranks its ends exactly as an invisible link does: in an LR group (or an
+            # LR diagram's top level) every hop is one more rank ACROSS. Version 1 ignored edges,
+            # so an LR diagram -- Starting Points --> product --> Capabilities --> Outputs, laid
+            # side by side -- was estimated as wide as its widest group (BL-007 / 4a).
+            # An end declared inline (``Start["..."] --> Product["..."]``, the earlier renderer's
+            # shape) is a node of this group too, counted once.
+            known = {item_id for item_id, _ in frames[-1].items}
+            for node_id, label in chain:
+                if label is not None and node_id not in known:
+                    frames[-1].items.append((node_id, _node_px(label)))
+                    known.add(node_id)
+            frames[-1].links.extend(itertools.pairwise(node_id for node_id, _ in chain))
         elif match := _NODE.match(line):
             frames[-1].items.append((match.group(1), _node_px(match.group(2))))
-    return max([widest, *(px for _, px in frames[0].items)])
+    top = frames[0]
+    top_px = top.width() - _GROUP_PAD if top.items else 0.0
+    return max([widest, top_px, *(px for _, px in top.items)])
+
+
+_EDGE_SPLIT = re.compile(r"\s*(?:-->|==>|-\.->|---)(?:\|[^|]*\|)?\s*")
+
+
+_EDGE_END = re.compile(rf'^({_ID})(?:\["([^"]*)"\])?$')
+
+
+def _edge_chain(line: str) -> tuple[tuple[str, str | None], ...]:
+    """``(node id, inline label or None)`` of each end of a drawn edge line (``A --> B --> C``,
+    an edge label allowed, an end declared inline as ``A["label"]``), or ``()``."""
+    if "~~~" in line or not _EDGE_SPLIT.search(line):
+        return ()
+    parts = [_EDGE_END.match(part.strip()) for part in _EDGE_SPLIT.split(line)]
+    if len(parts) < 2 or any(part is None for part in parts):
+        return ()
+    return tuple((part.group(1), part.group(2)) for part in parts if part is not None)
 
 
 def draw_at_a_glance(
@@ -367,6 +420,7 @@ def draw_at_a_glance(
     starting_points: Sequence[str],
     capability_titles: Sequence[str],
     outputs: Sequence[str],
+    capability_groups: Sequence[str] = (),
 ) -> list[str]:
     """The fenced Mermaid block of the diagram: Starting Points, the product, Core Capabilities
     and Outputs, top to bottom (:func:`layout_glance`); a group with nothing verified is omitted
@@ -383,7 +437,7 @@ def draw_at_a_glance(
         )
 
     before = [group("StartingPoints", "Starting Points", "i", starting_points)]
-    after = [group("Capabilities", "Core Capabilities", "c", capability_titles)]
+    after = [_capabilities(capability_titles, capability_groups)]
     before = before if starting_points else []
     after = after if capability_titles else []
     if outputs:
@@ -395,6 +449,32 @@ def draw_at_a_glance(
         chain=(*(g.id for g in before), "PRODUCT", *(g.id for g in after)),
     )
     return ["```mermaid", *layout_glance(glance), "```"]
+
+
+def _capabilities(titles: Sequence[str], categories: Sequence[str]) -> GlanceGroup:
+    """The Core Capabilities group: every title once, as node ``c<n>`` in plan order. With
+    ``categories`` (one per title, ``""`` for none) naming at least two distinct groups, the titles
+    of each named category sit in a sub-group of that heading, in first-seen order, stacked top
+    to bottom under the uncategorized ones (BL-059, owner feedback d820dad695: "Organize the items
+    Core capabilities in further groups, and align groups vertically"). Fewer than two named
+    groups would add a box without telling the reader anything, so the flat group is kept."""
+    nodes = [
+        (f"c{index}", " ".join(_UNSAFE_LABEL.sub("", text).split()))
+        for index, text in enumerate(titles, start=1)
+    ]
+    named = [c for c in dict.fromkeys(categories) if c] if len(categories) == len(titles) else []
+    if len(named) < 2:
+        return GlanceGroup("Capabilities", "Core Capabilities", tuple(nodes))
+    loose = tuple(node for node, category in zip(nodes, categories) if not category)
+    subgroups = tuple(
+        GlanceGroup(
+            f"cg{index}",
+            " ".join(_UNSAFE_LABEL.sub("", heading).split()),
+            tuple(node for node, category in zip(nodes, categories) if category == heading),
+        )
+        for index, heading in enumerate(named, start=1)
+    )
+    return GlanceGroup("Capabilities", "Core Capabilities", loose, subgroups)
 
 
 def diagram_failures(body: str, has_inputs: bool) -> list[str]:

@@ -198,3 +198,70 @@ def test_the_estimate_reads_a_left_to_right_group_as_a_column() -> None:
     across = f'flowchart TD\n  subgraph G["G"]\n    direction TB\n{nodes}\n  end\n'
     stacked = across.replace("direction TB", "direction LR")
     assert estimated_width(stacked) < GLANCE_WIDTH_BUDGET < estimated_width(across)
+
+
+def test_the_estimate_counts_drawn_edges_of_a_left_to_right_diagram() -> None:
+    """BL-007 (4a): version 1 ignored ``-->`` edges, so the earlier presenter's LR diagram --
+    Starting Points --> product --> Capabilities --> Outputs, side by side -- was estimated as wide
+    as its widest group. Each hop is one more rank across."""
+    body = "\n".join(
+        [
+            "flowchart LR",
+            '  subgraph A["Starting Points"]',
+            '    i1["An existing STL file"]',
+            "  end",
+            '  P["Aspose.3D FOSS for Java"]',
+            '  subgraph B["Outputs"]',
+            '    o1["STL or OBJ file"]',
+            "  end",
+            "  A --> P --> B",
+        ]
+    )
+    widest_group = max(estimated_width(body.replace("flowchart LR", "flowchart TB")), 0)
+    assert estimated_width(body) > widest_group
+    assert estimated_width(body) > 2 * (len("Aspose.3D FOSS for Java") * 7.6)
+    # Top to bottom, the same chain stacks: as wide as its widest part, as before.
+    assert estimated_width(body.replace("flowchart LR", "flowchart TB")) < estimated_width(body)
+
+
+def test_capabilities_group_by_their_verified_namespace_stacked_vertically() -> None:
+    """BL-059 (owner feedback d820dad695): with categories naming two or more groups, each named
+    category is a titled sub-group inside Core Capabilities, stacked top to bottom under the
+    uncategorized titles; every capability is kept, in plan order within its group."""
+    titles = ["Scene graph construction", "Material assignment", "Format conversion",
+              "Per-format load/save options", "Mesh and vertex data", "Animation support"]
+    groups = ["", "Shading", "", "Formats", "Entities", ""]
+    lines = _lines(product="P", starting_points=(), capability_titles=titles, outputs=(),
+                   capability_groups=groups)
+    body = "\n".join(lines[1:-1])
+    assert 'subgraph cg1["Shading"]' in body and 'subgraph cg2["Formats"]' in body
+    assert "cg1 ~~~ cg2" in body and "cg2 ~~~ cg3" in body
+    for index, title in enumerate(titles, start=1):
+        assert f'c{index}["' in body
+        assert plain_label(body.split(f'c{index}["', 1)[1].split('"]', 1)[0]) == title
+    assert estimated_width(body) <= GLANCE_WIDTH_BUDGET
+
+
+def test_one_named_category_is_not_a_grouping() -> None:
+    titles = ["A thing", "B thing", "C thing"]
+    flat = _lines(product="P", starting_points=(), capability_titles=titles, outputs=())
+    one = _lines(product="P", starting_points=(), capability_titles=titles, outputs=(),
+                 capability_groups=["Shading", "", ""])
+    assert one == flat
+
+
+def test_inline_declared_edges_of_the_sealed_lr_shape_are_measured() -> None:
+    """The sealed 3D .NET Lane R diagram (03b940a46f7b) declares its nodes on its edge lines
+    (``Start["..."] --> Product["..."]``): version 1 read no node from such a line and measured it
+    511 px; drawn left to right it is three ranks of long labels."""
+    body = "\n".join(
+        [
+            "flowchart LR",
+            'Start["An existing 3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]',
+            'Start --> Product["Aspose.3D FOSS for .NET"]',
+            'Product["Aspose.3D FOSS for .NET"] --> Cap1["Scene graph construction"]',
+            'Cap1["Scene graph construction"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]',
+        ]
+    )
+    assert estimated_width(body) > 2 * GLANCE_WIDTH_BUDGET - 200
+    assert estimated_width(body.replace("flowchart LR", "flowchart TB")) < GLANCE_WIDTH_BUDGET

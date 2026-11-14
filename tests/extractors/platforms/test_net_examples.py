@@ -87,15 +87,19 @@ def test_a_snippet_that_compiles_is_executed_and_carries_the_sdk_version(
     )
     assert [r.outcome for r in receipts] == ["EXECUTED"]
     assert "SDK 10.0.204" in (receipts[0].detail or "")
-    assert calls[-1][:2] == ["dotnet", "build"]
+    # BL-061: after the build, the compiled example is run (``dotnet run --no-build``).
+    assert calls[-1][:3] == ["dotnet", "run", "--no-build"]
+    assert (receipts[0].detail or "").endswith("ran (exit 0)")
+    build = calls[-2]
+    assert build[:2] == ["dotnet", "build"]
     # Measured 2026-09-06 on Aspose.3D for .NET: the referenced product rebuilds from source
     # every time, and its own warnings - in an order the compiler does not guarantee between
     # builds - filled the 4000-character clip before either run reached the same content twice.
-    assert "-p:WarningLevel=0" in calls[-1]
+    assert "-p:WarningLevel=0" in build
     # The restore-time vulnerability audit reads a live advisory feed: its NU190x warnings (an
     # error under the product's TreatWarningsAsErrors) left all 12 Aspose.PDF-FOSS-for-.NET
     # examples NOT_VERIFIED before any C# was compiled. The example build turns it off.
-    assert "-p:NuGetAudit=false" in calls[-1]
+    assert "-p:NuGetAudit=false" in build
     # The wrapper references the product's own project and targets what this SDK builds.
     written = (tmp_path / "run" / "example_001" / "Example.csproj").read_text("utf-8")
     assert "net10.0" in written and "Aspose.Widget.csproj" in written
@@ -725,3 +729,30 @@ def test_a_look_alike_file_name_is_not_the_example(
     receipt = _outcome(tmp_path, project)
     assert receipt.outcome == "NOT_VERIFIED"
     assert "product's own build failed" in receipt.detail
+
+
+def test_a_compiled_example_that_throws_when_run_is_failed(
+    tmp_path: Path, project: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """BL-061 (K01): 3D .NET's Quick Start ``scene.Save(path, FileFormat.FBX7400Binary)`` compiles
+    and throws NotImplementedException (FileFormat.cs:66,83,347-350 @52b0f00ebf28): compiling
+    alone recorded it verified."""
+
+    def fake(argv: list[str], **kwargs: Any) -> ExecutionResult:
+        if argv[1] == "--version":
+            return _result(0, stdout="10.0.204\n")
+        if argv[1] == "run":
+            return _result(
+                134,
+                stderr="Unhandled exception. System.NotImplementedException: The method or operation is not implemented.",
+            )
+        return _result(0)
+
+    monkeypatch.setattr(net_examples, "dotnet_executable", lambda: "dotnet")
+    monkeypatch.setattr(net_examples, "execute", fake)
+    (receipt,) = net_examples.verify_net_examples(
+        tmp_path, project, [_candidate(1, "var w = new Widget();")], tmp_path / "run"
+    )
+    assert receipt.outcome == "FAILED"
+    assert "ran and threw System.NotImplementedException" in (receipt.detail or "")
+    assert receipt.prelude == ""

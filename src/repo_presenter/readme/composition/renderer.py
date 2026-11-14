@@ -105,7 +105,20 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # O8): Scope and Limitations never prints a license clause (source_topics.without_license_
 # statement); a kept retained-example heading prints in title case and a kept paragraph whose
 # colon introduces nothing printed after it ends with a full stop (formatting only).
-RENDERER_VERSION = "39"
+# 40 (2026-11-14, BL-005 / owner feedback 536baa63f4): no Core API row and no kept maintainers' API table
+# cell prints a count, a label or file-header bookkeeping ("Class with 1 method.", "Interface in the
+# 3D JAVA API.", "Created by lexchou on 12/14/2016."): the doc comment, else the fact-true description
+# of the type's kind, bases, members or values (type_description.TypeDescriber), shared with Lane L.
+# BL-059 (owner feedback d820dad695): At a Glance capabilities citing one namespace below the product
+# root sit in a sub-group of that heading, the groups stacked top to bottom (capability_categories).
+# 41 (2026-11-14, BL-104 / R43(4)): a Detailed Member Reference hub whose unit the API-row
+# fallback left out prints the type's fact-true description. P4: a Documentation and Resources
+# link a kept resource-links list describes prints the maintainers' description
+# (list_coverage.kept_link_descriptions), and a kept API Reference type table prints only the rows
+# the rendered Core API table does not (placement.rows_not_rendered). P3: the Python floor prints
+# "Requires Python 3.10 or later." (as aspose.org's published READMEs do); only a setup.py /
+# setup.cfg floor bullet still names its (true) python_requires key.
+RENDERER_VERSION = "41"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
@@ -768,7 +781,14 @@ def _dependencies(context: RenderContext) -> list[str]:
         floor = _FLOOR.fullmatch(requires.value.strip())
         path = requires.evidence[0].path
         declaration = (requires.attributes or {}).get("floor_declaration") or spec.floor_declaration
-        if floor:
+        if floor and requires.id == PYTHON_FLOOR_FACT_ID and declaration != "python_requires":
+            # P3 (2026-11-14): a pyproject.toml floor as aspose.org's published READMEs state it
+            # (HTML and Note Python: "- Requires Python 3.10 or later."), with no manifest key to
+            # get wrong (register rows on Cells, Email and HTML Python: "`python_requires=">=3.10"`
+            # in `pyproject.toml`"). A setup.py/setup.cfg floor keeps its true key, as aspose.org
+            # prints it (3D Python: "(`python_requires=">=3.7"` in `setup.py`)").
+            requirements.append(f"- {python_floor_sentence(floor.group(1))}")
+        elif floor:
             requirements.append(
                 f"- Requires {spec.floor_label} {floor.group(1)} or later "
                 f'(`{declaration}="{requires.value}"` in `{path}`).'
@@ -816,6 +836,10 @@ def _documentation_resources(context: RenderContext) -> list[str]:
     repository = context.fact("identity:repository")
     issues = f"https://github.com/{repository.value}/issues" if repository is not None else None
     api_included = any(section.id == "api_reference" for section in context.included)
+    from repo_presenter.readme.composition.list_coverage import kept_link_descriptions
+
+    # A link a kept resource-links list describes prints the maintainers' description (P4).
+    described = kept_link_descriptions(context.dispositions, context.facts)
     lines: list[str] = []
     seen: set[str] = set()
     for link in context.plan.get("links", []):
@@ -825,9 +849,17 @@ def _documentation_resources(context: RenderContext) -> list[str]:
         if target is None or target.value in seen or target.value == issues:
             continue
         seen.add(target.value)
-        sentence = context.unit(sid, f"link:{target.id}")
+        # A sealed candidate's authored line stands; a link no unit describes (one the link
+        # backstop owes a kept list) prints the maintainers' own description of it.
+        authored = context.unit(sid, f"link:{target.id}")
+        sentence = authored or described.get(target.id, "")
         host = (urlsplit(target.value).hostname or "").lower()
-        if host.startswith("reference.") and api_included:
+        if host.startswith("reference.") and api_included and not (
+            not authored and target.id in described and "public types" in sentence
+        ):
+            # A maintainers' description that already states the count (Words .NET ``080.list``:
+            # "for all 617 public types (the API reference section above covers the essentials)",
+            # count-corrected below) is not told it twice.
             count = _public_type_count(context)
             sentence += (
                 f" It covers all {count} public types; the "
@@ -1018,9 +1050,22 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
             if not form:
                 continue
             described = _described(context, fact, form)
+            if _label_only(described):
+                continue  # "Class with 1 method." is not a description (BL-005)
             if not _row_refused(context, fact, described):
                 return described
     return _described(context, fact, "")
+
+
+def _label_only(description: str) -> bool:
+    """Whether a Core API row description is only a count, a label or file-header bookkeeping
+    (``type_description.cell_shape``: "Class with 1 method.", "Interface in the 3D JAVA API.",
+    "Created by lexchou on 12/14/2016."): owner feedback 536baa63f4 names each a wrong
+    description, so the renderer passes it over for the fact-true one, exactly as the Lane L
+    correction replaces it (one classifier for both lanes)."""
+    from repo_presenter.readme.correction.detectors.type_description import NON_DESCRIPTIVE, cell_shape
+
+    return cell_shape(description) in NON_DESCRIPTIVE
 
 
 _SYMBOL_WORDING = re.compile(
@@ -1086,6 +1131,12 @@ def _described(context: RenderContext, fact: Fact, text: str) -> str:
     if not text and attributes.get("signature"):
         signature = attributes["signature"].replace("|", "/").replace("`", "")
         return f"Defined as `{signature}`."
+    if not text:
+        # BL-005: what the facts state about the type (kind, bases, member names, values), never
+        # the label "Public class." -- the shared fact-true description of both lanes.
+        from repo_presenter.readme.correction.detectors.type_description import describer_for
+
+        text = describer_for(context.facts).describe(fact)[0]
     if not text:
         text = f"Public {attributes.get('symbol_kind', 'symbol')}."
     described = _kind_true(context, fact, context.canonical(text.replace("|", "/").replace("`", "")))
@@ -1280,7 +1331,12 @@ def _api_reference(context: RenderContext) -> list[str]:
         lines += ["", "#### Detailed Member Reference"]
         for hub, symbol in hubs:
             lines += ["", f"### {names.get(symbol.value, symbol.value.rsplit('.', 1)[-1])}", ""]
-            lines.append(context.unit(sid, f"hub:{hub['symbol_fact_id']}"))
+            # A hub unit the API-row fallback left out (R43(4), BL-104) prints the type's
+            # fact-true description, exactly as its Core API row does.
+            lines.append(
+                context.unit(sid, f"hub:{hub['symbol_fact_id']}")
+                or _symbol_description(context, symbol)
+            )
             owned = sorted(hub_methods.get(symbol.value, []), key=lambda f: f.value)
             bullets = [
                 bullet
@@ -1527,18 +1583,37 @@ def _installation(context: RenderContext) -> list[str]:
         else ""
     )
     sentence = ""
+    floor = (
+        _FLOOR.fullmatch(requires.value.strip())
+        if requires is not None and requires.polarity == "SUPPORTED"
+        else None
+    )
     if versions is not None and versions.polarity == "SUPPORTED":
         listed = _oxford([v.strip() for v in versions.value.split(",") if v.strip()])
         sentence = f"The package supports Python {listed}"
-        if requires is not None and requires.polarity == "SUPPORTED":
-            sentence += f" and declares `{field}` as `{requires.value}`"
-        sentence += "."
+        if floor is not None:
+            sentence += f". {python_floor_sentence(floor.group(1))}"
+        else:
+            if requires is not None and requires.polarity == "SUPPORTED":
+                sentence += f" and declares `{field}` as `{requires.value}`"
+            sentence += "."
+    elif floor is not None:
+        # P3: the floor in aspose.org's words, deterministic (never "declares `<key>` as ...").
+        sentence = python_floor_sentence(floor.group(1))
     elif requires is not None and requires.polarity == "SUPPORTED":
         sentence = f"The package declares `{field}` as `{requires.value}`."
     if sentence:
         lines.append("")
         lines.append(sentence)
     return lines[1:] if lines and lines[0] == "" else lines
+
+
+PYTHON_FLOOR_FACT_ID = "package:python_requires"
+
+
+def python_floor_sentence(version: str) -> str:
+    """The Python-version requirement, worded as aspose.org's published READMEs word it."""
+    return f"Requires Python {version} or later."
 
 
 def _code_block(language: str, code: str) -> list[str]:
@@ -1594,7 +1669,66 @@ def _at_a_glance(context: RenderContext) -> list[str]:
         starting_points=(f"An existing {_or_list(inputs)} file",) if inputs else (),
         capability_titles=titles,
         outputs=(f"{_or_list(outputs)} file",) if outputs else (),
+        capability_groups=capability_categories(context.plan, context.facts),
     )
+
+
+def capability_categories(plan: dict[str, Any], facts: FactsDocument) -> list[str]:
+    """One verified category per At a Glance capability title, ``""`` for none (BL-059): the
+    namespace of the API the capability cites, below the product's own root namespace.
+
+    A capability's namespaces are those of the SUPPORTED public symbols its plan entry cites (a
+    type's or a member's enclosing namespace, a module itself); a namespace that encloses another
+    of them is dropped as the coarser one. Exactly one left, strictly inside the root every type
+    namespace shares, is its category, headed by the rest of its dotted name ("Shading",
+    "Workbook Properties"); a capability citing only the root, or two separate namespaces, has
+    none -- a category is never guessed. Empty when the titles and the plan's capabilities do
+    not line up one to one."""
+    glance = plan.get("at_a_glance") or {}
+    titles = list(glance.get("capability_titles", []))
+    capabilities = list(plan.get("core_capabilities", []))
+    if not titles or len(titles) != len(capabilities):
+        return []
+    by_id = {fact.id: fact for fact in facts.facts}
+    symbols = [f for f in facts.by_kind("public_symbol") if f.polarity == "SUPPORTED"]
+    kinds = {f.value: (f.attributes or {}).get("symbol_kind") for f in symbols}
+    type_namespaces = {
+        f.value.rpartition(".")[0]
+        for f in symbols
+        if kinds[f.value] in {"class", "enum", "interface", "struct", "trait"} and "." in f.value
+    }
+    if not type_namespaces:
+        return []
+    root = ".".join(
+        part[0] for part in zip(*(ns.split(".") for ns in type_namespaces)) if len(set(part)) == 1
+    )
+    categories: list[str] = []
+    for capability in capabilities:
+        spaces: set[str] = set()
+        for fact_id in capability.get("fact_ids", []):
+            fact = by_id.get(fact_id)
+            if fact is None or fact.kind != "public_symbol" or fact.polarity != "SUPPORTED":
+                continue
+            kind = kinds.get(fact.value)
+            if kind == "module":
+                spaces.add(fact.value)
+            elif kind in {"class", "enum", "interface", "struct", "trait"}:
+                spaces.add(fact.value.rpartition(".")[0])
+            else:
+                owner = fact.value.rpartition(".")[0]
+                spaces.add(owner.rpartition(".")[0] if kinds.get(owner) not in {None, "module"} else owner)
+        spaces.discard("")
+        finest = {s for s in spaces if not any(o != s and o.startswith(s + ".") for o in spaces)}
+        if len(finest) != 1:
+            categories.append("")
+            continue
+        space = finest.pop()
+        if not root or not space.startswith(root + "."):
+            categories.append("")
+            continue
+        rest = space[len(root) + 1 :]
+        categories.append(" / ".join(" ".join(w.capitalize() if w.islower() else w for w in part.split("_")) for part in rest.split(".")))
+    return categories
 
 
 def _example_entry(context: RenderContext, sid: str, example_id: str) -> list[str]:
