@@ -3,7 +3,7 @@
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.39s
+17 passed in 5.66s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/acceptance/test_registration.py -q
 $ python -m pytest tests/acceptance/test_registration.py -q
 --- stdout ---
 .................                                                        [100%]
-17 passed in 0.23s
+17 passed in 0.27s
 
 --- stderr ---
 
@@ -128,8 +128,11 @@ ______________ test_real_build_reports_the_honest_zero_call_floor ______________
         # 77 -> 76 (2026-11-13, BL-063..BL-065 baseline rewrite): Cells C++ and HTML Python Lane L are
         # NEEDS_REPAIR on the justified K05 listed-count defect (-2); Cells Go Lane R's newer seal
         # re-certifies (+1). Verified on the tree merged with main after PR #66 (baseline per-seal union). 76 -> 78 (2026-11-13, BL-065
-        # listed-count correction): the Cells C++ and HTML Python Lane L seals re-certify again.
-        assert registration.shortfall.clean_twin_achieved == 78
+        # listed-count correction): the Cells C++ and HTML Python Lane L seals re-certify again. 78 -> 85
+        # (2026-11-14, BL-013/BL-065/BL-070 --write-baseline): the baseline moves to the current seal commits;
+        # 3D .NET L and the newer Cells Java, Cells Rust, Email .NET, Email Python and Imaging .NET Lane R seals
+        # re-certify, and Cells Go Lane L is recorded for the first time (+7).
+        assert registration.shortfall.clean_twin_achieved == 85
         assert registration.shortfall.clean_twin_shortfall == 0
     
         assert len(registration.labelled_cases) == 113
@@ -139,15 +142,15 @@ ______________ test_real_build_reports_the_honest_zero_call_floor ______________
         # The digest is a real SHA-256 hex digest and is itself deterministic across two builds.
 >       assert len(registration.digest) == 64
 E       AssertionError: assert 32 == 64
-E        +  where 32 = len('d8eaf3b4ef367f6525727e5fec613103')
-E        +    where 'd8eaf3b4ef367f6525727e5fec613103' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='d8eaf3b4ef367f6525727e5fec613103').digest
+E        +  where 32 = len('fdfab2273264ec3d80b9c5ed21f0d2e1')
+E        +    where 'fdfab2273264ec3d80b9c5ed21f0d2e1' = A1Registration(labelled_cases=(CaseRecord(case_id='ref:words-python/real:unsupported_claim:8', source='calibration_reg..._in=True, sample_size=23, agreement=0.0, method='simple_majority_baseline'), digest='fdfab2273264ec3d80b9c5ed21f0d2e1').digest
 
-tests/acceptance/test_registration.py:403: AssertionError
+tests/acceptance/test_registration.py:406: AssertionError
 =========================== short test summary info ============================
 FAILED tests/acceptance/test_registration.py::test_digest_is_deterministic_and_pinned
 FAILED tests/acceptance/test_registration.py::test_load_calibration_registration_from_a_small_fixture
 FAILED tests/acceptance/test_registration.py::test_real_build_reports_the_honest_zero_call_floor
-3 failed, 14 passed in 0.28s
+3 failed, 14 passed in 89.16s (0:01:29)
 
 --- stderr ---
 
