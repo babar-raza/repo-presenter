@@ -293,16 +293,14 @@ structure directly for callers that need it.
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/email/cpp/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/email/cpp/)** — The how-to guides and FAQ provide task-focused answers for common MSG, EML, and CFB processing questions.
-- **[Full API reference](https://reference.aspose.org/email/cpp/)** — The full API reference offers the complete, browsable reference for all 26 public types. It covers all 26 public types; the [API Reference](#api-reference) section above covers the essentials.
-- **[Public API surface](PUBLIC_API.md)** — The public API surface documents the stable public namespaces and headers this library commits to.
-- **[Changelog](CHANGELOG.md)** — The changelog records the release history.
+- **[Getting started guide](https://docs.aspose.org/email/cpp/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/email/cpp/)** — task-focused answers for common MSG/EML/CFB processing questions.
+- **[Full API reference](https://reference.aspose.org/email/cpp/)** — the complete, browsable reference for all 26 public types (the [API reference](#api-reference) section above covers the essentials).
+- **[Public API surface](PUBLIC_API.md)** — the stable public namespaces and headers this library commits to.
+- **[Changelog](CHANGELOG.md)** — release history.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-Cpp/issues).
 
 ## Scope and Limitations
-
-Aspose.Email FOSS for Cpp reads and writes MSG, CFB, and EML containers and messages on disk, in memory, or in a stream; it is a file-format library for email message storage, not a mail client or transport library.
 
 - No SMTP, IMAP, POP3, or other network mail-protocol support — this library reads and writes MSG, CFB, and EML containers and messages already on disk, in memory, or in a stream; it is not a mail client or transport library.
 - No PST (Outlook Personal Folders) archive support — only single MSG-format messages and generic CFB containers are supported, not multi-message PST stores.
@@ -311,8 +309,6 @@ Aspose.Email FOSS for Cpp reads and writes MSG, CFB, and EML containers and mess
 These limitations don't apply to [full-featured Aspose.Email for Cpp — Enterprise Edition](https://products.aspose.com/email/cpp/). It adds mail-protocol connectivity, PST archive support, and broader MAPI property and format coverage across the full commercial product line.
 
 ## Development and Testing
-
-Aspose.Email FOSS for Cpp requires CMake 3.26 or later and a C++17 compiler, with the Ninja generator configured by the repository's default CMake preset. The project sets CMAKE_CXX_STANDARD to 17 and CMAKE_CXX_STANDARD_REQUIRED to ON, and no third-party dependencies are fetched during build or test. Test executables for the CFB layer, MSG layer, and public constants are registered with CTest and use only the standard library without an external test framework. Runnable examples reside in the examples/ directory and can be built separately by enabling ASPOSE_EMAIL_FOSS_BUILD_EXAMPLES while disabling ASPOSE_EMAIL_FOSS_BUILD_TESTS.
 
 The suite covers 3 test files under `tests/`.
 
@@ -327,42 +323,26 @@ cmake --build --preset default
 ctest --preset default
 ```
 
-This uses the repo's own `CMakePresets.json` "default" configuration (Ninja generator,
-`RelWithDebInfo`, tests on, examples off). The library target is `AsposeEmailFoss` (alias
-`AsposeEmailFoss::AsposeEmailFoss`); no third-party dependency is fetched to build or test it.
+This uses the repo's own `CMakePresets.json` "default" configuration (Ninja generator, `RelWithDebInfo`, tests on, examples off). The library target is `AsposeEmailFoss` (alias `AsposeEmailFoss::AsposeEmailFoss`); no third-party dependency is fetched to build or test it.
 
 ```powershell
 cmake --install out\build\default --prefix out\install\default
 ```
 
-This installs the headers plus a CMake package config (`AsposeEmailFossConfig.cmake`) under the
-given prefix, so a downstream project can consume the library with `find_package(AsposeEmailFoss)`
-instead of vendoring the source tree.
+This installs the headers plus a CMake package config (`AsposeEmailFossConfig.cmake`) under the given prefix, so a downstream project can consume the library with `find_package(AsposeEmailFoss)` instead of vendoring the source tree.
 
 - CMake 3.26 or later — the version floor set by the project's own `cmake_minimum_required`.
-- Ninja — the generator configured by the repository's own `default` CMake preset
-  (`CMakePresets.json`); any CMake-supported generator works if you configure the project directly
-  instead of through that preset.
+- Ninja — the generator configured by the repository's own `default` CMake preset (`CMakePresets.json`); any CMake-supported generator works if you configure the project directly instead of through that preset.
 
-Runnable CLI examples live in the [`examples/`](examples/) directory — turn on
-`ASPOSE_EMAIL_FOSS_BUILD_EXAMPLES` to build them (see
-[Development and Testing](#development-and-testing)); [`examples/README.md`](examples/README.md)
-maps each one to the specific API calls it exercises.
+For a full command-line workflow, see [`examples/create_msg_and_eml.cpp`](examples/create_msg_and_eml.cpp), [`examples/msg_reader.cpp`](examples/msg_reader.cpp), and [`examples/msg_summary.cpp`](examples/msg_summary.cpp) under Additional Examples below.
 
-`read_option()` (command-line argument parsing) and `to_underlying()` (enum-to-underlying-type
-cast) are small helpers defined earlier in the same file,
-[`examples/create_msg_and_eml.cpp`](examples/create_msg_and_eml.cpp) — this excerpt is its
-`main()`.
+Runnable CLI examples live in the [`examples/`](examples/) directory — turn on `ASPOSE_EMAIL_FOSS_BUILD_EXAMPLES` to build them (see [Development and Testing](#development-and-testing)); [`examples/README.md`](examples/README.md) maps each one to the specific API calls it exercises.
 
-`build_dump()` is a formatting helper defined earlier in the same file,
-[`examples/msg_reader.cpp`](examples/msg_reader.cpp), that walks the `msg_reader`/`msg_document`
-pair and renders their CFB directory/stream structure as text.
+`read_option()` (command-line argument parsing) and `to_underlying()` (enum-to-underlying-type cast) are small helpers defined earlier in the same file, [`examples/create_msg_and_eml.cpp`](examples/create_msg_and_eml.cpp) — this excerpt is its `main()`.
 
-[`examples/msg_summary.cpp`](examples/msg_summary.cpp) is a third example worth knowing about: it
-opens a `.msg` file through `mapi_message` and prints a high-level summary — subject, sender,
-recipients, attachments, and a body preview — including looking up an arbitrary MAPI property by
-ID and type when `--property-id`/`--property-type` are passed on the command line. Its `main()` is
-longer than is useful to reproduce here; see the file directly.
+`build_dump()` is a formatting helper defined earlier in the same file, [`examples/msg_reader.cpp`](examples/msg_reader.cpp), that walks the `msg_reader`/`msg_document` pair and renders their CFB directory/stream structure as text.
+
+[`examples/msg_summary.cpp`](examples/msg_summary.cpp) is a third example worth knowing about: it opens a `.msg` file through `mapi_message` and prints a high-level summary — subject, sender, recipients, attachments, and a body preview — including looking up an arbitrary MAPI property by ID and type when `--property-id`/`--property-type` are passed on the command line. Its `main()` is longer than is useful to reproduce here; see the file directly.
 
 ```powershell
 cmake --preset default
@@ -370,16 +350,9 @@ cmake --build --preset default
 ctest --preset default
 ```
 
-Three test executables are registered with CTest, each written directly against the standard
-library with no external test framework fetched: `aspose_email_foss_cfb_tests` (CFB layer),
-`aspose_email_foss_msg_tests` (MSG/`mapi_message` layer), and `aspose_email_foss_public_tests`
-(checks generated constant/enum values — the version string and CFB/MSG well-known constants —
-against expectations); see `tests/CMakeLists.txt`.
+Three test executables are registered with CTest, each written directly against the standard library with no external test framework fetched: `aspose_email_foss_cfb_tests` (CFB layer), `aspose_email_foss_msg_tests` (MSG/`mapi_message` layer), and `aspose_email_foss_public_tests` (checks generated constant/enum values — the version string and CFB/MSG well-known constants — against expectations); see `tests/CMakeLists.txt`.
 
-Runnable example programs have their own build instructions and a per-file task index in
-[`examples/README.md`](examples/README.md); turn them on with
-`-DASPOSE_EMAIL_FOSS_BUILD_EXAMPLES=ON -DASPOSE_EMAIL_FOSS_BUILD_TESTS=OFF` (they are off by
-default in the `default` preset).
+Runnable example programs have their own build instructions and a per-file task index in [`examples/README.md`](examples/README.md); turn them on with `-DASPOSE_EMAIL_FOSS_BUILD_EXAMPLES=ON -DASPOSE_EMAIL_FOSS_BUILD_TESTS=OFF` (they are off by default in the `default` preset).
 
 ## License
 
