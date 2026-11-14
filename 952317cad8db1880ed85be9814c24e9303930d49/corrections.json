@@ -4,26 +4,44 @@
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "e2a3169d348cf5a4a637ec1d5cd7bf5b4d5abb32eb7deda918a77cbe90d0b80d",
+  "corrected_sha256": "2061f72cb29f0f062afd5173166e2391b482582db3ab80f5812870b8b3979656",
   "edits": [
     {
       "detector": "dead_link",
-      "end": 4796,
+      "end": 4795,
       "evidence": [
         {
           "fact_id": "link_target:012",
           "kind": "link_target",
           "status": "CONTRADICTED",
           "value": "RELEASE_NOTES.md"
+        },
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "tag:V26.10.0"
+        },
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "tag:V26.3.0"
+        },
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "tag:V26.3.1"
         }
       ],
       "index": 0,
       "kind": "BROKEN_LINK",
       "line": 164,
-      "original": "[release notes](RELEASE_NOTES.md)",
-      "rationale": "the tree does not contain 'RELEASE_NOTES.md' and holds no file that stands in for it; the dead link is removed and its text kept word for word",
-      "replacement": "release notes",
-      "start": 4763
+      "original": "RELEASE_NOTES.md",
+      "rationale": "the tree does not contain 'RELEASE_NOTES.md'; the repository publishes its releases as tags (V26.10.0, V26.3.0, V26.3.1), so the release-notes link points at its Releases page, its text kept word for word",
+      "replacement": "https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/releases",
+      "start": 4779
     }
   ],
   "lane": "L",

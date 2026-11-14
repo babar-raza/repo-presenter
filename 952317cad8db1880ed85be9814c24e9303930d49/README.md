@@ -161,7 +161,7 @@ CSV import is available through `Workbook.load_csv()` or `load_csv_workbook()`.
 - Browse the executable [examples](examples) for feature-specific workflows.
 - See the package's public exports in
   [`aspose/cells_foss/__init__.py`](aspose/cells_foss/__init__.py).
-- Read the current release notes.
+- Read the current [release notes](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/releases).
 - Review development conventions in [AGENTS.md](AGENTS.md).
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/issues).
 
