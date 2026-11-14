@@ -6582,3 +6582,18 @@ facts/dispositions document and the 15 live READMEs) found no false positive in 
    NORMALISATION_VERSION 37.
 
 Backlog: BL-104, BL-065, BL-120, BL-121, BL-122, BL-123, BL-124, BL-125
+
+## 2026-11-14 — Batch e2-011 committed on owner approval (audit + production)
+
+**Owner.** Chose "Audit + production batch".
+
+**Facts.** Batch e2-010 is spent: 269 of 270 calls, 6 runs, 1 seal. The M9 audit round 43620199171 failed with `BudgetExceededError`
+because no batch was open.
+
+**Decision.** Commit e2-011 at 420 calls and 17.2M tokens: an audit allowance of about 150 calls and 6M tokens, plus a
+production batch of 270 calls and 11.2M tokens. This is within the total caps.
+
+**Expected.** The audit accepts the certified candidates waiting for it: 5–6 in Lane R (Email C++ now re-certifies as
+well) and 4 in Lane L. Production resumes under the Phase 1 planner order.
+
+Backlog: BL-100, BL-101
