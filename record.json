@@ -74,9 +74,83 @@
     }
    ],
    "run": "43473020251-1"
+  },
+  {
+   "at": "2026-11-14T13:46:31Z",
+   "checks": "ok",
+   "live_blockers": [
+    "pilot mode is 'dry_run' in data/issue_pilot.json (live writes need 'live')",
+    "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1"
+   ],
+   "mode": "dry_run",
+   "notes": [],
+   "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "rows": [
+    {
+     "decision": "NONE",
+     "error": null,
+     "issue": 4,
+     "note": "still reproduces at 66cb26df3b03; last statement 2026-10-20 at 66cb26df3b03; next dated re-check due 2026-11-19",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:8cde21488b87cb852d4e9d4396b2aa05399d28cd2f6af36bb965b4f27a07139a",
+     "performed": false,
+     "reason": "still reproduces at 66cb26df3b03; last statement 2026-10-20 at 66cb26df3b03; next dated re-check due 2026-11-19",
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "NONE",
+     "error": null,
+     "issue": 5,
+     "note": "still reproduces at 66cb26df3b03; last statement 2026-10-20 at 66cb26df3b03; next dated re-check due 2026-11-19",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:15b9a02be5786cb1011b8ba5c85d50e71df7a843e40df27c47c9ecf3cef564dc",
+     "performed": false,
+     "reason": "still reproduces at 66cb26df3b03; last statement 2026-10-20 at 66cb26df3b03; next dated re-check due 2026-11-19",
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "NONE",
+     "error": null,
+     "issue": 6,
+     "note": "still reproduces at 66cb26df3b03; last statement 2026-10-20 at 66cb26df3b03; next dated re-check due 2026-11-19",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:bd9dd6d3158795dec52e2686e4d00e146fd41016464d133df597055e0cb06341",
+     "performed": false,
+     "reason": "still reproduces at 66cb26df3b03; last statement 2026-10-20 at 66cb26df3b03; next dated re-check due 2026-11-19",
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "NONE",
+     "error": null,
+     "issue": 7,
+     "note": "still reproduces at 66cb26df3b03; last statement 2026-10-21 at 66cb26df3b03; next dated re-check due 2026-11-20",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:79cab766df466c6e95ac039447eed456ba1203d7a1e808c2d60ba4f2a0f804d4",
+     "performed": false,
+     "reason": "still reproduces at 66cb26df3b03; last statement 2026-10-21 at 66cb26df3b03; next dated re-check due 2026-11-20",
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "NONE",
+     "error": null,
+     "issue": 8,
+     "note": "still reproduces at 66cb26df3b03; last statement 2026-10-21 at 66cb26df3b03; next dated re-check due 2026-11-20",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:00bb2d39f1aed91283391771eab3a33ea444b6996ef2584a7f9046178a5d05b2",
+     "performed": false,
+     "reason": "still reproduces at 66cb26df3b03; last statement 2026-10-21 at 66cb26df3b03; next dated re-check due 2026-11-20",
+     "state": "open",
+     "verifiable": true
+    }
+   ],
+   "run": "43601356120-1"
   }
  ],
- "dry_run_cycles": 1,
+ "dry_run_cycles": 2,
  "ledger": [
   {
    "count": 1,
@@ -167,7 +241,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/4",
    "last_check": {
-    "at": "2026-11-13T17:29:10Z",
+    "at": "2026-11-14T13:46:31Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:8cde21488b87cb852d4e9d4396b2aa05399d28cd2f6af36bb965b4f27a07139a",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -221,7 +295,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/5",
    "last_check": {
-    "at": "2026-11-13T17:29:10Z",
+    "at": "2026-11-14T13:46:31Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:15b9a02be5786cb1011b8ba5c85d50e71df7a843e40df27c47c9ecf3cef564dc",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -279,7 +353,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/6",
    "last_check": {
-    "at": "2026-11-13T17:29:10Z",
+    "at": "2026-11-14T13:46:31Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:bd9dd6d3158795dec52e2686e4d00e146fd41016464d133df597055e0cb06341",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -329,7 +403,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/7",
    "last_check": {
-    "at": "2026-11-13T17:29:10Z",
+    "at": "2026-11-14T13:46:31Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:79cab766df466c6e95ac039447eed456ba1203d7a1e808c2d60ba4f2a0f804d4",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -387,7 +461,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/8",
    "last_check": {
-    "at": "2026-11-13T17:29:10Z",
+    "at": "2026-11-14T13:46:31Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:00bb2d39f1aed91283391771eab3a33ea444b6996ef2584a7f9046178a5d05b2",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
