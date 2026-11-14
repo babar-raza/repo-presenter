@@ -55,3 +55,103 @@
  ```
  
  ## Key Capabilities
+@@ -198,7 +200,7 @@
+ | `AllConnectorShapeInfo` | Class in the Cells TYPESCRIPT API. |
+ | `AllShapeInfo` | Class in the Cells TYPESCRIPT API. |
+ | `ArrowShapeType` | Class in the Cells TYPESCRIPT API. |
+-| `AutoFilter` | Class with 5 methods and 2 properties. |
++| `AutoFilter` | Class that declares the methods addFilterColumn, clear, removeFilterColumn and toXml and the members columns and range. |
+ | `BasicShapeInfoType` | Class with 1 property. |
+ | `BasicShapeSubType` | Class in the Cells TYPESCRIPT API. |
+ | `BentConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
+@@ -213,15 +215,15 @@
+ | `ChartRenderer` | Class with 1 method. |
+ | `ChartType` | Class in the Cells TYPESCRIPT API. |
+ | `CircleVariantShapeType` | Class in the Cells TYPESCRIPT API. |
+-| `Comment` | Class with 2 methods and 7 properties. |
+-| `CommentCollection` | Class with 6 methods and 1 property. |
+-| `ConditionalFormat` | Class with 5 methods. |
+-| `ConditionalFormatCollection` | Class with 5 methods and 1 property. |
++| `Comment` | Class that declares the method toXml and members including author, col, height, ref, row and text. |
++| `CommentCollection` | Class that declares the methods add, clear, get, getByCell, remove and toXml and the member count. |
++| `ConditionalFormat` | Class that declares the methods addArea, addRule, getRanges, getRules and toXml. |
++| `ConditionalFormatCollection` | Class that declares the methods add, clear, get, remove and toXml and the member count. |
+ | `CurvedConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
+ | `DOMParser` | Class with 2 methods. |
+ | `DataRelationship` | Class with 3 methods and 1 property. |
+ | `DataValidation-validation` | Class with 3 methods and 12 properties. |
+-| `DataValidationCollection` | Class with 5 methods and 1 property. |
++| `DataValidationCollection` | Class that declares the methods add, clear, get, remove and toXml and the member count. |
+ | `EllipseShapeType` | Class in the Cells TYPESCRIPT API. |
+ | `ExpDrawing` | Class with 9 methods. |
+ | `HtmlDocument` | Loads and represents an HTML document for conversion into a `Workbook`. |
+@@ -229,8 +231,8 @@
+ | `HtmlReader` | Reads and parses raw HTML markup into a `HtmlDocument`. |
+ | `HtmlTable` | Class with 10 methods and 14 properties. |
+ | `HtmlWriter` | Serializes a `HtmlDocument` back to HTML markup. |
+-| `Hyperlink` | Class with 2 methods and 8 properties. |
+-| `HyperlinkCollection` | Class with 6 methods and 1 property. |
++| `Hyperlink` | Class that declares the method toXml and members including address, col, display, ref, row and target. |
++| `HyperlinkCollection` | Class that declares the methods add, clear, get, getByCell, remove and toXml and the member count. |
+ | `ImpDrawing` | Class with 1 method and 5 properties. |
+ | `LineShapeType` | Class in the Cells TYPESCRIPT API. |
+ | `MathSymbolShapeType` | Class in the Cells TYPESCRIPT API. |
+@@ -248,36 +250,36 @@
+ | `Workbook` | The top-level container — `load()`/`save()`, `worksheets`, `images`, and `toHtml()`/`toCsv()`/`toJson()`/`toMarkdown()`. |
+ | `Worksheet` | A single sheet — cell access via `Cells`, styling, images/shapes, and layout settings. |
+ | `WorksheetCollection` | Iterable, array-like collection of `Worksheet` objects. |
+-| `Alignment` | Interface with 3 properties. |
++| `Alignment` | Interface that declares the members horizontal, vertical and wrapText. |
+ | `ArrowShapeInfo` | Interface with 1 property. |
+ | `AxisInfo` | Interface with 8 properties. |
+ | `BentConnectorShapeInfo` | Interface with 3 properties. |
+-| `Border` | Interface with 4 properties. |
+-| `BorderLine` | Interface with 2 properties. |
++| `Border` | Interface that declares the members bottom, left, right and top. |
++| `BorderLine` | Interface that declares the members color and style. |
+ | `BraceShapeInfo` | Interface with 1 property. |
+-| `CellCoordinates` | Interface with 2 properties. |
++| `CellCoordinates` | Interface that declares the members col and row. |
+ | `CellCoordinates-util` | Interface with 2 properties. |
+-| `CellRange` | Interface with 4 properties. |
++| `CellRange` | Interface that declares the members endCol, endRow, startCol and startRow. |
+ | `CellRange-util` | Interface with 4 properties. |
+ | `CellStyle` | Interface with 23 properties. |
+ | `ChartArea` | Interface with 4 properties. |
+ | `ChartInfo` | Interface with 21 properties. |
+ | `ChartSeries` | Interface with 3 properties. |
+ | `CircleVariantShapeInfo` | Interface with 1 property. |
+-| `ColorScaleRule` | Interface with 3 properties. |
++| `ColorScaleRule` | Interface that declares the members maxColor, midColor and minColor. |
+ | `Comment-types` | Interface with 4 properties. |
+-| `ConditionalFormatRule` | Interface with 8 properties. |
++| `ConditionalFormatRule` | Interface that declares members including colorScale, dataBar, formula1, formula2, iconSet and operator. |
+ | `CurvedConnectorShapeInfo` | Interface with 3 properties. |
+-| `DataBarRule` | Interface with 4 properties. |
+-| `DataValidation` | Interface with 12 properties. |
++| `DataBarRule` | Interface that declares the members color, direction, maxValue and minValue. |
++| `DataValidation` | Interface that declares the methods addArea, getRanges and toXml and members including allowBlank, errorMessage, errorStyle, errorTitle, formula1 and formula2. |
+ | `EllipseShapeInfo` | Interface with 1 property. |
+-| `Fill` | Interface with 3 properties. |
+-| `FilterColumn` | Interface with 3 properties. |
+-| `Font` | Interface with 7 properties. |
++| `Fill` | Interface that declares the members bgColor, fgColor and patternType. |
++| `FilterColumn` | Interface that declares the method filters and the members blank and col. |
++| `Font` | Interface that declares members including bold, color, italic, name, size and strikeout. |
+ | `HtmlParseOptions` | Interface with 2 properties. |
+ | `HtmlSaveOptions` | Interface with 2 properties. |
+ | `Hyperlink-types` | Interface with 5 properties. |
+-| `IconSetRule` | Interface with 2 properties. |
++| `IconSetRule` | Interface that declares the members iconSet and reverse. |
+ | `ImageInfo` | Interface with 5 properties. |
+ | `LegendInfo` | Interface with 2 properties. |
+ | `LineShapeInfo` | Interface with 3 properties. |
+@@ -286,7 +288,7 @@
+ | `PictureShapeInfo` | Interface with 2 properties. |
+ | `PlotArea` | Interface with 4 properties. |
+ | `PolygonShapeInfo` | Interface with 1 property. |
+-| `Protection` | Interface with 2 properties. |
++| `Protection` | Interface that declares the members hidden and locked. |
+ | `QuadrilateralShapeInfo` | Interface with 1 property. |
+ | `RectangleShapeInfo` | Interface with 1 property. |
+ | `RectangleVariantShapeInfo` | Interface with 1 property. |

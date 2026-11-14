@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 1,
+    "edits": 23,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "afcb0eb3b102564b6040c0721953539cef7788755cc7a8d8a6c9e7064b9e27c7",
+  "corrected_sha256": "f408145409d3f0dde0407cdbf50abec0362dfae288f268d539e9bff8f0f48bc4",
   "edits": [
     {
       "detector": "glance_layout",
@@ -24,6 +24,1120 @@
       "rationale": "the At a Glance diagram draws about 1976 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 722 px; every label, group title and the chain unchanged",
       "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .xlsx<br/>workbook\"]\n    i2[\"An existing HTML<br/>document\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Cell values, formulas,<br/>and shared strings\"]\n    c2[\"Style formatting<br/>(font, fill, border,<br/>alignment, number<br/>formats)\"]\n    c3[\"Worksheet settings<br/>(column widths, row<br/>heights, merges, auto<br/>filter)\"]\n    c4[\"Data validation and<br/>conditional formatting\"]\n    c5[\"Hyperlinks and defined<br/>names\"]\n    c6[\"Embedded pictures and<br/>shapes\"]\n    c7[\"HTML round-trip import<br/>and export\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c7\n    c6 ~~~ c7\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A workbook document\"]\n    o2[\"An HTML document\"]\n    o3[\"Plain text files\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
       "start": 1393
+    },
+    {
+      "detector": "type_description",
+      "end": 7269,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:autofilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.addfiltercolumn",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.addFilterColumn"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.clear"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.columns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.columns"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.constructor"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.range",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.range"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.removefiltercolumn",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.removeFilterColumn"
+        },
+        {
+          "fact_id": "public_symbol:autofilter.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AutoFilter.toXml"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 201,
+      "original": "Class with 5 methods and 2 properties.",
+      "rationale": "line 201: the count only cell 'Class with 5 methods and 2 properties.' does not describe AutoFilter and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods addFilterColumn, clear, removeFilterColumn and toXml and the members columns and range.",
+      "start": 7231
+    },
+    {
+      "detector": "type_description",
+      "end": 8169,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:comment",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment"
+        },
+        {
+          "fact_id": "public_symbol:comment.author",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.author"
+        },
+        {
+          "fact_id": "public_symbol:comment.col",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.col"
+        },
+        {
+          "fact_id": "public_symbol:comment.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.constructor"
+        },
+        {
+          "fact_id": "public_symbol:comment.height",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.height"
+        },
+        {
+          "fact_id": "public_symbol:comment.ref",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.ref"
+        },
+        {
+          "fact_id": "public_symbol:comment.row",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.row"
+        },
+        {
+          "fact_id": "public_symbol:comment.text",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.text"
+        },
+        {
+          "fact_id": "public_symbol:comment.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.toXml"
+        },
+        {
+          "fact_id": "public_symbol:comment.width",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Comment.width"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 216,
+      "original": "Class with 2 methods and 7 properties.",
+      "rationale": "line 216: the count only cell 'Class with 2 methods and 7 properties.' does not describe Comment and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method toXml and members including author, col, height, ref, row and text.",
+      "start": 8131
+    },
+    {
+      "detector": "type_description",
+      "end": 8232,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:commentcollection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.add"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.clear"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.count",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.count"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.get"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.getbycell",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.getByCell"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.remove",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.remove"
+        },
+        {
+          "fact_id": "public_symbol:commentcollection.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CommentCollection.toXml"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 217,
+      "original": "Class with 6 methods and 1 property.",
+      "rationale": "line 217: the count only cell 'Class with 6 methods and 1 property.' does not describe CommentCollection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods add, clear, get, getByCell, remove and toXml and the member count.",
+      "start": 8196
+    },
+    {
+      "detector": "type_description",
+      "end": 8280,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:conditionalformat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormat"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformat.addarea",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormat.addArea"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformat.addrule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormat.addRule"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformat.getranges",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormat.getRanges"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformat.getrules",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormat.getRules"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformat.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormat.toXml"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 218,
+      "original": "Class with 5 methods.",
+      "rationale": "line 218: the count only cell 'Class with 5 methods.' does not describe ConditionalFormat and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods addArea, addRule, getRanges, getRules and toXml.",
+      "start": 8259
+    },
+    {
+      "detector": "type_description",
+      "end": 8353,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:conditionalformatcollection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatcollection.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection.add"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatcollection.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection.clear"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatcollection.count",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection.count"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatcollection.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection.get"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatcollection.remove",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection.remove"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatcollection.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatCollection.toXml"
+        }
+      ],
+      "index": 5,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 219,
+      "original": "Class with 5 methods and 1 property.",
+      "rationale": "line 219: the count only cell 'Class with 5 methods and 1 property.' does not describe ConditionalFormatCollection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods add, clear, get, remove and toXml and the member count.",
+      "start": 8317
+    },
+    {
+      "detector": "type_description",
+      "end": 8667,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:datavalidationcollection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection"
+        },
+        {
+          "fact_id": "public_symbol:datavalidationcollection.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection.add"
+        },
+        {
+          "fact_id": "public_symbol:datavalidationcollection.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection.clear"
+        },
+        {
+          "fact_id": "public_symbol:datavalidationcollection.count",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection.count"
+        },
+        {
+          "fact_id": "public_symbol:datavalidationcollection.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection.get"
+        },
+        {
+          "fact_id": "public_symbol:datavalidationcollection.remove",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection.remove"
+        },
+        {
+          "fact_id": "public_symbol:datavalidationcollection.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidationCollection.toXml"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 224,
+      "original": "Class with 5 methods and 1 property.",
+      "rationale": "line 224: the count only cell 'Class with 5 methods and 1 property.' does not describe DataValidationCollection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods add, clear, get, remove and toXml and the member count.",
+      "start": 8631
+    },
+    {
+      "detector": "type_description",
+      "end": 9189,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:hyperlink",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.address",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.address"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.col",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.col"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.constructor"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.display",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.display"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.ref",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.ref"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.row",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.row"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.target",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.target"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.tooltip",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.tooltip"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.toXml"
+        },
+        {
+          "fact_id": "public_symbol:hyperlink.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Hyperlink.type"
+        }
+      ],
+      "index": 7,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 232,
+      "original": "Class with 2 methods and 8 properties.",
+      "rationale": "line 232: the count only cell 'Class with 2 methods and 8 properties.' does not describe Hyperlink and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method toXml and members including address, col, display, ref, row and target.",
+      "start": 9151
+    },
+    {
+      "detector": "type_description",
+      "end": 9254,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:hyperlinkcollection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.add"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.clear"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.count",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.count"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.get"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.getbycell",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.getByCell"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.remove",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.remove"
+        },
+        {
+          "fact_id": "public_symbol:hyperlinkcollection.toxml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HyperlinkCollection.toXml"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 233,
+      "original": "Class with 6 methods and 1 property.",
+      "rationale": "line 233: the count only cell 'Class with 6 methods and 1 property.' does not describe HyperlinkCollection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods add, clear, get, getByCell, remove and toXml and the member count.",
+      "start": 9218
+    },
+    {
+      "detector": "type_description",
+      "end": 10506,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:alignment",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Alignment"
+        },
+        {
+          "fact_id": "public_symbol:alignment.horizontal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Alignment.horizontal"
+        },
+        {
+          "fact_id": "public_symbol:alignment.vertical",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Alignment.vertical"
+        },
+        {
+          "fact_id": "public_symbol:alignment.wraptext",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Alignment.wrapText"
+        }
+      ],
+      "index": 9,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 251,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 251: the count only cell 'Interface with 3 properties.' does not describe Alignment and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members horizontal, vertical and wrapText.",
+      "start": 10478
+    },
+    {
+      "detector": "type_description",
+      "end": 10706,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:border",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Border"
+        },
+        {
+          "fact_id": "public_symbol:border.bottom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Border.bottom"
+        },
+        {
+          "fact_id": "public_symbol:border.left",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Border.left"
+        },
+        {
+          "fact_id": "public_symbol:border.right",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Border.right"
+        },
+        {
+          "fact_id": "public_symbol:border.top",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Border.top"
+        }
+      ],
+      "index": 10,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 255,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 255: the count only cell 'Interface with 4 properties.' does not describe Border and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members bottom, left, right and top.",
+      "start": 10678
+    },
+    {
+      "detector": "type_description",
+      "end": 10754,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:borderline",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "BorderLine"
+        },
+        {
+          "fact_id": "public_symbol:borderline.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "BorderLine.color"
+        },
+        {
+          "fact_id": "public_symbol:borderline.style",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "BorderLine.style"
+        }
+      ],
+      "index": 11,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 256,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 256: the count only cell 'Interface with 2 properties.' does not describe BorderLine and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members color and style.",
+      "start": 10726
+    },
+    {
+      "detector": "type_description",
+      "end": 10857,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:cellcoordinates",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellCoordinates"
+        },
+        {
+          "fact_id": "public_symbol:cellcoordinates.col",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellCoordinates.col"
+        },
+        {
+          "fact_id": "public_symbol:cellcoordinates.row",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellCoordinates.row"
+        }
+      ],
+      "index": 12,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 258,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 258: the count only cell 'Interface with 2 properties.' does not describe CellCoordinates and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members col and row.",
+      "start": 10829
+    },
+    {
+      "detector": "type_description",
+      "end": 10962,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:cellrange",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellRange"
+        },
+        {
+          "fact_id": "public_symbol:cellrange.endcol",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellRange.endCol"
+        },
+        {
+          "fact_id": "public_symbol:cellrange.endrow",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellRange.endRow"
+        },
+        {
+          "fact_id": "public_symbol:cellrange.startcol",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellRange.startCol"
+        },
+        {
+          "fact_id": "public_symbol:cellrange.startrow",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellRange.startRow"
+        }
+      ],
+      "index": 13,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 260,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 260: the count only cell 'Interface with 4 properties.' does not describe CellRange and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members endCol, endRow, startCol and startRow.",
+      "start": 10934
+    },
+    {
+      "detector": "type_description",
+      "end": 11316,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:colorscalerule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ColorScaleRule"
+        },
+        {
+          "fact_id": "public_symbol:colorscalerule.maxcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ColorScaleRule.maxColor"
+        },
+        {
+          "fact_id": "public_symbol:colorscalerule.midcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ColorScaleRule.midColor"
+        },
+        {
+          "fact_id": "public_symbol:colorscalerule.mincolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ColorScaleRule.minColor"
+        }
+      ],
+      "index": 14,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 267,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 267: the count only cell 'Interface with 3 properties.' does not describe ColorScaleRule and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members maxColor, midColor and minColor.",
+      "start": 11288
+    },
+    {
+      "detector": "type_description",
+      "end": 11426,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:conditionalformatrule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.colorscale",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.colorScale"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.databar",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.dataBar"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.formula1",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.formula1"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.formula2",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.formula2"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.iconset",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.iconSet"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.operator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.operator"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.style",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.style"
+        },
+        {
+          "fact_id": "public_symbol:conditionalformatrule.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ConditionalFormatRule.type"
+        }
+      ],
+      "index": 15,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 269,
+      "original": "Interface with 8 properties.",
+      "rationale": "line 269: the count only cell 'Interface with 8 properties.' does not describe ConditionalFormatRule and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including colorScale, dataBar, formula1, formula2, iconSet and operator.",
+      "start": 11398
+    },
+    {
+      "detector": "type_description",
+      "end": 11537,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:databarrule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataBarRule"
+        },
+        {
+          "fact_id": "public_symbol:databarrule.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataBarRule.color"
+        },
+        {
+          "fact_id": "public_symbol:databarrule.direction",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataBarRule.direction"
+        },
+        {
+          "fact_id": "public_symbol:databarrule.maxvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataBarRule.maxValue"
+        },
+        {
+          "fact_id": "public_symbol:databarrule.minvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataBarRule.minValue"
+        }
+      ],
+      "index": 16,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 271,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 271: the count only cell 'Interface with 4 properties.' does not describe DataBarRule and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members color, direction, maxValue and minValue.",
+      "start": 11509
+    },
+    {
+      "detector": "type_description",
+      "end": 11590,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:datavalidation",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.addarea",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.addArea"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.allowblank",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.allowBlank"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.errormessage",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.errorMessage"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.errorstyle",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.errorStyle"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.errortitle",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.errorTitle"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.formula1",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.formula1"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.formula2",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.formula2"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.getranges",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.getRanges"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.inputmessage",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.inputMessage"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.inputtitle",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.inputTitle"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.operator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.operator"
+        },
+        {
+          "fact_id": "public_symbol:datavalidation.showdropdown",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DataValidation.showDropDown"
+        }
+      ],
+      "index": 17,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 272,
+      "original": "Interface with 12 properties.",
+      "rationale": "line 272: the count only cell 'Interface with 12 properties.' does not describe DataValidation and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the methods addArea, getRanges and toXml and members including allowBlank, errorMessage, errorStyle, errorTitle, formula1 and formula2.",
+      "start": 11561
+    },
+    {
+      "detector": "type_description",
+      "end": 11684,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:fill",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Fill"
+        },
+        {
+          "fact_id": "public_symbol:fill.bgcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Fill.bgColor"
+        },
+        {
+          "fact_id": "public_symbol:fill.fgcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Fill.fgColor"
+        },
+        {
+          "fact_id": "public_symbol:fill.patterntype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Fill.patternType"
+        }
+      ],
+      "index": 18,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 274,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 274: the count only cell 'Interface with 3 properties.' does not describe Fill and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members bgColor, fgColor and patternType.",
+      "start": 11656
+    },
+    {
+      "detector": "type_description",
+      "end": 11734,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:filtercolumn",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FilterColumn"
+        },
+        {
+          "fact_id": "public_symbol:filtercolumn.blank",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FilterColumn.blank"
+        },
+        {
+          "fact_id": "public_symbol:filtercolumn.col",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FilterColumn.col"
+        },
+        {
+          "fact_id": "public_symbol:filtercolumn.filters",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FilterColumn.filters"
+        }
+      ],
+      "index": 19,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 275,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 275: the count only cell 'Interface with 3 properties.' does not describe FilterColumn and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the method filters and the members blank and col.",
+      "start": 11706
+    },
+    {
+      "detector": "type_description",
+      "end": 11776,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:font",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font"
+        },
+        {
+          "fact_id": "public_symbol:font.bold",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.bold"
+        },
+        {
+          "fact_id": "public_symbol:font.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.color"
+        },
+        {
+          "fact_id": "public_symbol:font.italic",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.italic"
+        },
+        {
+          "fact_id": "public_symbol:font.name",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.name"
+        },
+        {
+          "fact_id": "public_symbol:font.size",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.size"
+        },
+        {
+          "fact_id": "public_symbol:font.strikeout",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.strikeout"
+        },
+        {
+          "fact_id": "public_symbol:font.underline",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Font.underline"
+        }
+      ],
+      "index": 20,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 276,
+      "original": "Interface with 7 properties.",
+      "rationale": "line 276: the count only cell 'Interface with 7 properties.' does not describe Font and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including bold, color, italic, name, size and strikeout.",
+      "start": 11748
+    },
+    {
+      "detector": "type_description",
+      "end": 11985,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:iconsetrule",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "IconSetRule"
+        },
+        {
+          "fact_id": "public_symbol:iconsetrule.iconset",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "IconSetRule.iconSet"
+        },
+        {
+          "fact_id": "public_symbol:iconsetrule.reverse",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "IconSetRule.reverse"
+        }
+      ],
+      "index": 21,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 280,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 280: the count only cell 'Interface with 2 properties.' does not describe IconSetRule and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members iconSet and reverse.",
+      "start": 11957
+    },
+    {
+      "detector": "type_description",
+      "end": 12435,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:protection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Protection"
+        },
+        {
+          "fact_id": "public_symbol:protection.hidden",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Protection.hidden"
+        },
+        {
+          "fact_id": "public_symbol:protection.locked",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Protection.locked"
+        }
+      ],
+      "index": 22,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 289,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 289: the count only cell 'Interface with 2 properties.' does not describe Protection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members hidden and locked.",
+      "start": 12407
     }
   ],
   "lane": "L",
@@ -39,20 +1153,10 @@
     "provider_calls": 0
   },
   "summary": {
-    "DIAGRAM_FIX": 1
+    "DIAGRAM_FIX": 1,
+    "FALSE_CLAIM_FIX": 22
   },
   "unapplied": [
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:autofilter"
-      ],
-      "line": 201,
-      "reason": "the count only cell does not describe AutoFilter, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 methods and 2 properties."
-    },
     {
       "defect": false,
       "detector": "type_description",
@@ -63,237 +1167,6 @@
       "reason": "the boilerplate label cell does not describe CellValue, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Class in the Cells TYPESCRIPT API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:comment"
-      ],
-      "line": 216,
-      "reason": "the count only cell does not describe Comment, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 methods and 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:commentcollection"
-      ],
-      "line": 217,
-      "reason": "the count only cell does not describe CommentCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 6 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:conditionalformat"
-      ],
-      "line": 218,
-      "reason": "the count only cell does not describe ConditionalFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 methods."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:conditionalformatcollection"
-      ],
-      "line": 219,
-      "reason": "the count only cell does not describe ConditionalFormatCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:datavalidationcollection"
-      ],
-      "line": 224,
-      "reason": "the count only cell does not describe DataValidationCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:hyperlink"
-      ],
-      "line": 232,
-      "reason": "the count only cell does not describe Hyperlink, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 methods and 8 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:hyperlinkcollection"
-      ],
-      "line": 233,
-      "reason": "the count only cell does not describe HyperlinkCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 6 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:alignment"
-      ],
-      "line": 251,
-      "reason": "the count only cell does not describe Alignment, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:border"
-      ],
-      "line": 255,
-      "reason": "the count only cell does not describe Border, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:borderline"
-      ],
-      "line": 256,
-      "reason": "the count only cell does not describe BorderLine, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:cellcoordinates"
-      ],
-      "line": 258,
-      "reason": "the count only cell does not describe CellCoordinates, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:cellrange"
-      ],
-      "line": 260,
-      "reason": "the count only cell does not describe CellRange, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:colorscalerule"
-      ],
-      "line": 267,
-      "reason": "the count only cell does not describe ColorScaleRule, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:conditionalformatrule"
-      ],
-      "line": 269,
-      "reason": "the count only cell does not describe ConditionalFormatRule, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 8 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:databarrule"
-      ],
-      "line": 271,
-      "reason": "the count only cell does not describe DataBarRule, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:datavalidation"
-      ],
-      "line": 272,
-      "reason": "the count only cell does not describe DataValidation, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 12 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:fill"
-      ],
-      "line": 274,
-      "reason": "the count only cell does not describe Fill, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:filtercolumn"
-      ],
-      "line": 275,
-      "reason": "the count only cell does not describe FilterColumn, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:font"
-      ],
-      "line": 276,
-      "reason": "the count only cell does not describe Font, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:iconsetrule"
-      ],
-      "line": 280,
-      "reason": "the count only cell does not describe IconSetRule, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:protection"
-      ],
-      "line": 289,
-      "reason": "the count only cell does not describe Protection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Interface with 2 properties."
     },
     {
       "defect": false,
