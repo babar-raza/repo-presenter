@@ -1,0 +1,74 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T08:20:47+00:00",
+   "classes": [
+    "job_error|job_error|unknown:model_output_was_rejected"
+   ],
+   "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43572741039",
+   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
+   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T08:20:47+00:00",
+  "classes": {
+   "job_error|job_error|unknown:model_output_was_rejected": {
+    "example": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.permissions: identifiers that are not accepted fact values: AssembleDocument, ExtractContentWithDisabilities, FillForm, ModifyTextAnnotations (nearest accepted: Modi",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "unknown"
+    ],
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "unknown:model_output_was_rejected",
+    "upstream": ""
+   }
+  },
+  "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.permissions: identifiers that are not accepted fact values: AssembleDocument, ExtractContentWithDisabilities, FillForm, ModifyTextAnnotations (nearest accepted: ModifyAnnotations), PrintingQuality",
+   "kind": "unknown",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "unknown",
+    "message": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.permissions: identifiers that are not accepted fact values: AssembleDocument, ExtractContentWithDisabilities, FillForm, ModifyTextAnnotations (nearest accepted: Modi",
+    "origin": {
+     "id": "unknown",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|unknown:model_output_was_rejected",
+    "source": "job",
+    "sub_rule": "unknown:model_output_was_rejected",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "ff570fa517d09ded373b2062090a2cbb1a634b2b",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
+  "run_id": "43572741039",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43572741039",
+  "schema_version": 1,
+  "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
+  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+ },
+ "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
+ "schema_version": 1
+}
