@@ -2,351 +2,89 @@
   "coherence": {
     "applied": true,
     "revised": [
-      "documentation_resources/link:link_target:010",
-      "documentation_resources/link:link_target:011",
-      "documentation_resources/link:link_target:013",
-      "documentation_resources/link:link_target:014",
-      "scope_limitations/limitation:1",
-      "scope_limitations/limitation:2",
-      "scope_limitations/limitation:3",
-      "scope_limitations/limitation:4",
+      "scope_limitations/scope",
       "development_testing/summary"
     ]
   },
   "omitted": [
     {
-      "fact_id": "example:005",
-      "reason": "contradicted example, not used",
-      "section": "opening"
+      "fact_id": "inherited_unit:006.list",
+      "reason": "The list is a source of facts for other units but is not itself a capability unit; its items are covered individually in the eight capability slots.",
+      "section": "key_capabilities"
     },
     {
-      "fact_id": "format:output.csv",
-      "reason": "unresolved direction, not used",
-      "section": "opening"
-    },
-    {
-      "fact_id": "format:output.json",
-      "reason": "unresolved direction, not used",
-      "section": "opening"
-    },
-    {
-      "fact_id": "format:output.md",
-      "reason": "unresolved direction, not used",
-      "section": "opening"
-    },
-    {
-      "fact_id": "format:output.pdf",
-      "reason": "unresolved direction, not used",
-      "section": "opening"
-    },
-    {
-      "fact_id": "link_target:012",
-      "reason": "contradicted link target, not used",
-      "section": "opening"
-    },
-    {
-      "fact_id": "link_target:product.enterprise",
-      "reason": "unresolved link target, not used",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "identity fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "identity fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "identity fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "identity fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "identity fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:license",
-      "reason": "license fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "package name fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "version fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:python_requires",
-      "reason": "runtime requirement fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "version fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "license:spdx",
-      "reason": "license fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "install_command:pip",
-      "reason": "installation command, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:006",
-      "reason": "example fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:001",
-      "reason": "example fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:002",
-      "reason": "example fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:003",
-      "reason": "example fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:004",
-      "reason": "example fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.workbook",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.worksheet",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.cells",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.workbook_properties",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.worksheet_properties",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.style",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.font",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.richtextrun",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.filltype",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.textalignmenttype",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.shapecollection",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.picturecollection",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.tablecollection",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.sparklinegroupcollection",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.hyperlink",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.horizontalpagebreakcollection",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.verticalpagebreakcollection",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.chartseries",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.charttype",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.sparklinetype",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.sparklinegroup",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.datavalidationtype",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.datavalidationoperator",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.conditional_format",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.pdfsaveoptions",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.saveformat",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.standardencryptionparameters",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.agileencryptionparameters",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.load_csv_workbook",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.csvloadoptions",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.cells_foss.csv_handler",
-      "reason": "public symbol fact, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:003.badge_row",
-      "reason": "inherited unit, not needed in opening prose",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "Ecosystem identity is not relevant to toolchain or requirements description.",
+      "fact_id": "inherited_unit:013.code_block",
+      "reason": "The renderer prints the skia-python installation command verbatim after this unit; the prose unit must not repeat or describe the command.",
       "section": "development_testing"
     },
     {
-      "fact_id": "identity:family",
-      "reason": "Family identity is not relevant to toolchain or requirements description.",
+      "fact_id": "inherited_unit:037.code_block",
+      "reason": "The renderer prints the dev-install and pytest command verbatim after this unit; the prose unit must not repeat or describe the command.",
       "section": "development_testing"
     },
     {
-      "fact_id": "identity:platform",
-      "reason": "Platform identity is not relevant to toolchain or requirements description.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Repository identity is not relevant to toolchain or requirements description.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Revision identity is not relevant to toolchain or requirements description.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:license",
-      "reason": "License identity is not relevant to toolchain or requirements description.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "Package name is not relevant to toolchain or requirements description.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "Published version is not relevant to toolchain or requirements description.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:python_requires",
-      "reason": "Python version requirement is already covered by inherited_unit:010.paragraph.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "Package version is not relevant to toolchain or requirements description.",
+      "fact_id": "inherited_unit:038.paragraph",
+      "reason": "The output location of generated workbooks is not part of the toolchain or requirements to build and test; it describes artifact placement, not developer setup.",
       "section": "development_testing"
     },
     {
       "fact_id": "build_test_asset:examples",
-      "reason": "Examples directory path is already covered by inherited_unit:038.paragraph.",
+      "reason": "The examples directory is referenced only by the test command the renderer prints; the prose unit must not state file paths or counts.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "The ecosystem is implied by the Python version requirement and not stated separately.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "The family is implied by the product name and not stated separately.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "The platform is implied by the product name and not stated separately.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Provenance metadata, not a user-facing fact.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Provenance metadata, not a user-facing fact.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Provenance metadata, not a user-facing fact.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:license",
+      "reason": "License is not part of the toolchain or requirements to build and test.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "The product name is used once in the section title; the package name is not repeated in prose.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Version is not part of the toolchain or requirements to build and test.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:python_requires",
+      "reason": "The Python version requirement is stated in prose from inherited_unit:010.paragraph; this fact is cited indirectly.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Version is not part of the toolchain or requirements to build and test.",
       "section": "development_testing"
     }
   ],
@@ -354,103 +92,106 @@
   "units": [
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "license:spdx",
         "format:input.xlsx",
+        "format:output.csv",
+        "format:output.tsv",
+        "format:output.json",
+        "format:output.markdown",
+        "format:output.md",
+        "format:output.pdf",
         "format:output.xlsx",
-        "public_symbol:aspose.cells_foss.save_workbook_as_csv",
-        "public_symbol:aspose.cells_foss.save_workbook_as_json",
-        "public_symbol:aspose.cells_foss.save_workbook_as_markdown",
-        "public_symbol:aspose.cells_foss.pdf_exporter",
-        "public_symbol:aspose.cells_foss.encrypt_xlsx",
-        "public_symbol:aspose.cells_foss.decrypt_xlsx",
-        "public_symbol:aspose.cells_foss.workbook_hash_password",
+        "format:output.xlsm",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cell",
+        "public_symbol:aspose.cells_foss.style",
         "public_symbol:aspose.cells_foss.datavalidation",
+        "public_symbol:aspose.cells_foss.agileencryptionparameters",
+        "public_symbol:aspose.cells_foss.standardencryptionparameters",
+        "public_symbol:aspose.cells_foss.load_csv_workbook",
+        "public_symbol:aspose.cells_foss.csvloadoptions",
         "public_symbol:aspose.cells_foss.chart",
-        "public_symbol:aspose.cells_foss.sparkline",
-        "public_symbol:aspose.cells_foss.table"
+        "public_symbol:aspose.cells_foss.chartcollection",
+        "public_symbol:aspose.cells_foss.picture",
+        "public_symbol:aspose.cells_foss.shapecollection",
+        "public_symbol:aspose.cells_foss.tablecollection",
+        "public_symbol:aspose.cells_foss.sparklinegroupcollection",
+        "public_symbol:aspose.cells_foss.formula_evaluator",
+        "public_symbol:aspose.cells_foss.datavalidationtype",
+        "public_symbol:aspose.cells_foss.datavalidationalertstyle",
+        "public_symbol:aspose.cells_foss.datavalidationoperator",
+        "public_symbol:aspose.cells_foss.pdfsaveoptions",
+        "inherited_unit:004.paragraph"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Cells FOSS for Python reads and writes .xlsx files. It converts workbooks to CSV, JSON, Markdown, and PDF formats. It supports workbook encryption and decryption with password protection, and provides classes for data validation, charts, sparklines, and tables."
+      "text": "Aspose.Cells FOSS for Python reads and writes Excel .xlsx workbooks, converts them to .csv, .tsv, .json, .markdown, .md, .pdf, and .xlsm formats, and supports encryption and decryption of .xlsx files. It reads .xlsx workbooks and loads .csv data using load_csv_workbook and CSVLoadOptions. It provides classes such as Workbook, Worksheet, Cells, Cell, Style, and DataValidation to create, modify, and style workbooks, apply data validation rules, and manage charts, pictures, shapes, tables, and sparklines."
     },
     {
       "fact_ids": [
         "example:001",
         "example:002",
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "public_symbol:aspose.cells_foss.cell",
         "public_symbol:aspose.cells_foss.cells",
         "public_symbol:aspose.cells_foss.workbook",
-        "public_symbol:aspose.cells_foss.workbook_properties",
-        "public_symbol:aspose.cells_foss.worksheet",
-        "public_symbol:aspose.cells_foss.worksheet_properties"
+        "public_symbol:aspose.cells_foss.worksheet"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It creates new workbooks, loads existing ones, and saves them as .xlsx files, allowing direct access to worksheets and their cells to read or write values and formulas using A1-style references."
+      "text": "It reads and writes Excel workbooks in .xlsx format, allowing users to create new workbooks, access worksheets via the Workbook.worksheets collection, and read or write cell values using A1-style references through the Cells and Cell objects."
     },
     {
       "fact_ids": [
         "example:003",
-        "public_symbol:aspose.cells_foss.filltype",
+        "public_symbol:aspose.cells_foss.cell",
         "public_symbol:aspose.cells_foss.font",
-        "public_symbol:aspose.cells_foss.richtextrun",
-        "public_symbol:aspose.cells_foss.style",
-        "public_symbol:aspose.cells_foss.textalignmenttype"
+        "public_symbol:aspose.cells_foss.style"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It applies styles to cells and ranges using the Style, Font, RichTextRun, FillType, and TextAlignmentType objects to set bold, color, size, fill, and alignment properties."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.horizontalpagebreakcollection",
-        "public_symbol:aspose.cells_foss.hyperlink",
-        "public_symbol:aspose.cells_foss.picturecollection",
-        "public_symbol:aspose.cells_foss.shapecollection",
-        "public_symbol:aspose.cells_foss.sparklinegroupcollection",
-        "public_symbol:aspose.cells_foss.tablecollection",
-        "public_symbol:aspose.cells_foss.verticalpagebreakcollection",
-        "public_symbol:aspose.cells_foss.worksheet"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:3",
-      "text": "It manages workbook elements including hyperlinks, shapes, pictures, tables, sparkline groups, and page breaks through dedicated collections on the Worksheet and Workbook objects."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.chart",
-        "public_symbol:aspose.cells_foss.chartseries",
-        "public_symbol:aspose.cells_foss.charttype",
-        "public_symbol:aspose.cells_foss.sparkline",
-        "public_symbol:aspose.cells_foss.sparklinegroup",
-        "public_symbol:aspose.cells_foss.sparklinetype"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:4",
-      "text": "It adds charts and sparklines to worksheets using Chart, ChartSeries, ChartType, Sparkline, SparklineType, and SparklineGroup objects to visualize data directly in the workbook."
+      "text": "It applies fonts, fills, borders, alignment, and number formats to cells using the Style, Font, and related objects, enabling bold text, custom colors, and size adjustments that persist when saving workbooks."
     },
     {
       "fact_ids": [
         "example:004",
-        "public_symbol:aspose.cells_foss.conditional_format",
         "public_symbol:aspose.cells_foss.datavalidation",
+        "public_symbol:aspose.cells_foss.datavalidationalertstyle",
         "public_symbol:aspose.cells_foss.datavalidationoperator",
         "public_symbol:aspose.cells_foss.datavalidationtype"
       ],
       "section": "key_capabilities",
-      "slot": "capability:5",
-      "text": "It applies data validation and conditional formatting rules to cells using DataValidation, DataValidationType, DataValidationOperator, and conditional_format objects to enforce input constraints and highlight values."
+      "slot": "capability:3",
+      "text": "It adds data validation rules to cell ranges using DataValidation objects with DataValidationType, DataValidationAlertStyle, DataValidationOperator, and formula1 settings to enforce list, numeric, or text constraints."
     },
     {
       "fact_ids": [
-        "example:001",
+        "format:output.csv",
+        "format:output.json",
+        "format:output.markdown",
+        "format:output.md",
+        "format:output.pdf",
+        "format:output.tsv",
         "public_symbol:aspose.cells_foss.pdfsaveoptions",
         "public_symbol:aspose.cells_foss.save_workbook_as_csv",
         "public_symbol:aspose.cells_foss.save_workbook_as_json",
-        "public_symbol:aspose.cells_foss.save_workbook_as_markdown",
-        "public_symbol:aspose.cells_foss.saveformat"
+        "public_symbol:aspose.cells_foss.save_workbook_as_markdown"
       ],
       "section": "key_capabilities",
-      "slot": "capability:6",
-      "text": "It exports workbooks to CSV, JSON, Markdown, and PDF formats using save_workbook_as_csv, save_workbook_as_json, save_workbook_as_markdown, and PdfSaveOptions with SaveFormat targets."
+      "slot": "capability:4",
+      "text": "It exports workbooks to .csv, .tsv, .json, .markdown, .md, and .pdf formats using Workbook.save() with format inferred from extension or PdfSaveOptions for PDF."
     },
     {
       "fact_ids": [
@@ -461,18 +202,40 @@
         "public_symbol:aspose.cells_foss.standardencryptionparameters"
       ],
       "section": "key_capabilities",
-      "slot": "capability:7",
-      "text": "It encrypts and decrypts .xlsx workbooks using encrypt_xlsx and decrypt_xlsx with StandardEncryptionParameters or AgileEncryptionParameters to protect content with a password."
+      "slot": "capability:5",
+      "text": "It encrypts and decrypts .xlsx workbooks using password-based protection via Workbook.save() with a password argument or Workbook constructor with a password argument; encrypt_xlsx and decrypt_xlsx are convenience functions."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.cells_foss.csv_handler",
+        "public_symbol:aspose.cells_foss.chart",
+        "public_symbol:aspose.cells_foss.chartcollection",
+        "public_symbol:aspose.cells_foss.picture",
+        "public_symbol:aspose.cells_foss.shapecollection",
+        "public_symbol:aspose.cells_foss.sparklinegroupcollection",
+        "public_symbol:aspose.cells_foss.tablecollection"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It creates and manages charts, pictures, shapes, tables, and sparklines through dedicated collections such as ChartCollection, ShapeCollection, TableCollection, and SparklineGroupCollection on each worksheet."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "public_symbol:aspose.cells_foss.formula_evaluator"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It preserves formulas during load and save operations; the project is not a full Excel calculation engine."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
         "public_symbol:aspose.cells_foss.csvloadoptions",
         "public_symbol:aspose.cells_foss.load_csv_workbook"
       ],
       "section": "key_capabilities",
       "slot": "capability:8",
-      "text": "It imports data from CSV files using load_csv_workbook with CSVLoadOptions and the csv_handler to control parsing and loading behavior."
+      "text": "It imports data from comma-separated and tab-separated files using load_csv_workbook with CSVLoadOptions to configure delimiters and load content into a new workbook."
     },
     {
       "fact_ids": [
@@ -480,7 +243,7 @@
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "The first example creates a new workbook, writes a simple two-column table with headers and one data row, and saves it as an Excel file named report.xlsx."
+      "text": "Create a new workbook, populate cells with headers and data, and save it as an Excel file named report.xlsx."
     },
     {
       "fact_ids": [
@@ -488,25 +251,16 @@
       ],
       "section": "quick_start",
       "slot": "lead_in:2",
-      "text": "The second example opens the previously saved report.xlsx file and prints the value stored in cell B2."
+      "text": "Open an existing Excel file named report.xlsx and print the value stored in cell B2."
     },
     {
       "fact_ids": [
-        "example:003",
         "example:004",
         "example:006"
       ],
       "section": "additional_examples",
       "slot": "preview",
-      "text": "The following examples demonstrate creating styled cells, adding data validation lists, and encrypting workbooks with Aspose.Cells FOSS for Python."
-    },
-    {
-      "fact_ids": [
-        "example:003"
-      ],
-      "section": "additional_examples",
-      "slot": "workflow:example:003",
-      "text": "Apply bold red font styling to a cell and save the workbook."
+      "text": "Create data validation lists and protect workbooks with passwords."
     },
     {
       "fact_ids": [
@@ -514,7 +268,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:004",
-      "text": "Add a Yes/No dropdown list validation to a cell range."
+      "text": "Add a data validation list to cells A1 through A10."
     },
     {
       "fact_ids": [
@@ -522,10 +276,14 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:006",
-      "text": "Encrypt a workbook with a password and load it back."
+      "text": "Save a workbook with password protection and load it back."
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.cells_foss.cell",
+        "public_symbol:aspose.cells_foss.cell-2",
+        "public_symbol:aspose.cells_foss.cells",
+        "public_symbol:aspose.cells_foss.cells-2",
         "public_symbol:aspose.cells_foss.workbook",
         "public_symbol:aspose.cells_foss.workbook-2",
         "public_symbol:aspose.cells_foss.worksheet",
@@ -533,179 +291,178 @@
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "Aspose.Cells FOSS for Python provides the aspose.cells_foss.Workbook class as the primary entry point for creating, reading, and manipulating spreadsheet files, and the aspose.cells_foss.Worksheet class as the container for tabular data within a workbook."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.workbook",
-        "public_symbol:aspose.cells_foss.workbook-2",
-        "public_symbol:aspose.cells_foss.workbook_hash_password",
-        "public_symbol:aspose.cells_foss.workbook_properties"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.workbook",
-      "text": "The aspose.cells_foss.Workbook class represents a spreadsheet file and provides methods to manage worksheets, access workbook properties, apply protection, and save the file in various formats including CSV, JSON, Markdown, and PDF."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.worksheet",
-        "public_symbol:aspose.cells_foss.worksheet-2",
-        "public_symbol:aspose.cells_foss.worksheet_properties"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.worksheet",
-      "text": "The aspose.cells_foss.Worksheet class represents a single worksheet within a workbook and provides access to cells, charts, data validations, and formatting options."
+      "text": "Aspose.Cells FOSS for Python provides the Workbook class as the primary entry point for creating, loading, and manipulating spreadsheet files, with Worksheet, Cells, and Cell classes representing the hierarchical structure of a workbook."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.cells_foss.cell",
         "public_symbol:aspose.cells_foss.cell-2",
         "public_symbol:aspose.cells_foss.cells",
-        "public_symbol:aspose.cells_foss.cells-2"
+        "public_symbol:aspose.cells_foss.cells-2",
+        "public_symbol:aspose.cells_foss.workbook",
+        "public_symbol:aspose.cells_foss.workbook-2",
+        "public_symbol:aspose.cells_foss.worksheet",
+        "public_symbol:aspose.cells_foss.worksheet-2"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.cells",
-      "text": "The aspose.cells_foss.Cells class provides a collection of aspose.cells_foss.Cell objects and supports operations such as getting or setting cell values, applying styles, and managing cell ranges."
+      "slot": "hub:public_symbol:aspose.cells_foss.workbook",
+      "text": "The Workbook class supports loading existing files, creating new worksheets, copying worksheets, accessing individual worksheets by index or name, and saving in multiple formats including XLSX, CSV, TSV, JSON, Markdown, and PDF."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.cells_foss.saveformat.auto",
+        "enum_member:aspose.cells_foss.saveformat.csv",
+        "enum_member:aspose.cells_foss.saveformat.json",
+        "enum_member:aspose.cells_foss.saveformat.markdown",
+        "enum_member:aspose.cells_foss.saveformat.pdf",
+        "enum_member:aspose.cells_foss.saveformat.tsv",
+        "enum_member:aspose.cells_foss.saveformat.xlsx",
+        "public_symbol:aspose.cells_foss.saveformat"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.cells_foss.saveformat",
+      "text": "The SaveFormat enum provides values for saving workbooks in formats including XLSX, CSV, TSV, JSON, Markdown, PDF, and AUTO."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.cells_foss.datavalidationtype.custom",
+        "enum_member:aspose.cells_foss.datavalidationtype.date",
+        "enum_member:aspose.cells_foss.datavalidationtype.decimal",
+        "enum_member:aspose.cells_foss.datavalidationtype.list",
+        "enum_member:aspose.cells_foss.datavalidationtype.none",
+        "enum_member:aspose.cells_foss.datavalidationtype.text_length",
+        "enum_member:aspose.cells_foss.datavalidationtype.time",
+        "enum_member:aspose.cells_foss.datavalidationtype.whole_number",
+        "public_symbol:aspose.cells_foss.datavalidationtype"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.cells_foss.datavalidationtype",
+      "text": "The DataValidationType enum specifies validation types for cell data including WHOLE_NUMBER, DECIMAL, LIST, DATE, TIME, TEXT_LENGTH, CUSTOM, and NONE."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.cells_foss.charttype.area",
+        "enum_member:aspose.cells_foss.charttype.bar",
+        "enum_member:aspose.cells_foss.charttype.combo",
+        "enum_member:aspose.cells_foss.charttype.line",
+        "enum_member:aspose.cells_foss.charttype.pie",
+        "enum_member:aspose.cells_foss.charttype.scatter",
+        "public_symbol:aspose.cells_foss.charttype"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.cells_foss.charttype",
+      "text": "The ChartType enum defines chart types including AREA, BAR, LINE, PIE, SCATTER, and COMBO."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.cells_foss.cipheralgorithm.aes_128",
+        "enum_member:aspose.cells_foss.cipheralgorithm.aes_192",
+        "enum_member:aspose.cells_foss.cipheralgorithm.aes_256",
+        "public_symbol:aspose.cells_foss.cipheralgorithm"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.cells_foss.cipheralgorithm",
+      "text": "The CipherAlgorithm enum lists supported encryption algorithms including AES_128, AES_192, and AES_256."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.cells_foss.hashalgorithm.sha1",
+        "enum_member:aspose.cells_foss.hashalgorithm.sha256",
+        "enum_member:aspose.cells_foss.hashalgorithm.sha384",
+        "enum_member:aspose.cells_foss.hashalgorithm.sha512",
+        "public_symbol:aspose.cells_foss.hashalgorithm"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.cells_foss.hashalgorithm",
+      "text": "The HashAlgorithm enum specifies hash algorithms including SHA1, SHA256, SHA384, and SHA512."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.cells_foss.encryption_params.encryptiontype.agile",
+        "enum_member:aspose.cells_foss.encryption_params.encryptiontype.standard",
+        "public_symbol:aspose.cells_foss.encryption_params"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.cells_foss.encryption_params",
+      "text": "The encryption_params class supports encryption types including AGILE and STANDARD."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.cells_foss.font",
-        "public_symbol:aspose.cells_foss.richtextrun",
+        "public_symbol:aspose.cells_foss.fontstrategy",
         "public_symbol:aspose.cells_foss.style",
         "public_symbol:aspose.cells_foss.style-2"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.cells_foss.style",
-      "text": "The aspose.cells_foss.Style class defines formatting attributes for cells, and the aspose.cells_foss.Font and aspose.cells_foss.RichTextRun classes support detailed text styling within cell contents."
+      "text": "The Style class and its associated Font and FontStrategy classes provide formatting capabilities for cells and ranges."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.cells_foss.datavalidation",
-        "public_symbol:aspose.cells_foss.datavalidationcollection",
-        "public_symbol:aspose.cells_foss.datavalidationoperator",
-        "public_symbol:aspose.cells_foss.datavalidationtype"
+        "enum_member:aspose.cells_foss.filltype.automatic",
+        "enum_member:aspose.cells_foss.filltype.gradient",
+        "enum_member:aspose.cells_foss.filltype.none",
+        "enum_member:aspose.cells_foss.filltype.pattern",
+        "enum_member:aspose.cells_foss.filltype.solid",
+        "public_symbol:aspose.cells_foss.filltype"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.datavalidation",
-      "text": "The aspose.cells_foss.DataValidation class and aspose.cells_foss.DataValidationCollection class support defining and managing data validation rules on cell ranges using specific types and operators."
+      "slot": "hub:public_symbol:aspose.cells_foss.filltype",
+      "text": "The FillType enum defines fill types including AUTOMATIC, SOLID, GRADIENT, PATTERN, and NONE."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.cells_foss.chart",
-        "public_symbol:aspose.cells_foss.chart-2",
-        "public_symbol:aspose.cells_foss.chartseries",
-        "public_symbol:aspose.cells_foss.charttype"
+        "enum_member:aspose.cells_foss.textalignmenttype.center",
+        "enum_member:aspose.cells_foss.textalignmenttype.distributed",
+        "enum_member:aspose.cells_foss.textalignmenttype.justify",
+        "enum_member:aspose.cells_foss.textalignmenttype.left",
+        "enum_member:aspose.cells_foss.textalignmenttype.right",
+        "public_symbol:aspose.cells_foss.textalignmenttype"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.chart",
-      "text": "The aspose.cells_foss.Chart class and aspose.cells_foss.ChartSeries class enable creation and configuration of charts within a worksheet using specific chart types defined by aspose.cells_foss.ChartType."
+      "slot": "hub:public_symbol:aspose.cells_foss.textalignmenttype",
+      "text": "The TextAlignmentType enum specifies text alignment options including LEFT, CENTER, RIGHT, JUSTIFY, and DISTRIBUTED."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.cells_foss.csvsaveoptions",
-        "public_symbol:aspose.cells_foss.jsonsaveoptions",
-        "public_symbol:aspose.cells_foss.pdfsaveoptions",
-        "public_symbol:aspose.cells_foss.saveformat"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.saveformat",
-      "text": "The aspose.cells_foss.SaveFormat class lists supported output formats, and the aspose.cells_foss.CSVSaveOptions, aspose.cells_foss.JsonSaveOptions, and aspose.cells_foss.PdfSaveOptions classes provide format-specific save configuration options."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.agileencryptionparameters",
-        "public_symbol:aspose.cells_foss.decrypt_xlsx",
-        "public_symbol:aspose.cells_foss.encrypt_xlsx",
-        "public_symbol:aspose.cells_foss.standardencryptionparameters"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.encrypt_xlsx",
-      "text": "The aspose.cells_foss.encrypt_xlsx function and aspose.cells_foss.decrypt_xlsx function support encryption and decryption of Excel files using either aspose.cells_foss.StandardEncryptionParameters or aspose.cells_foss.AgileEncryptionParameters."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.csv_handler",
-        "public_symbol:aspose.cells_foss.csvloadoptions",
-        "public_symbol:aspose.cells_foss.load_csv_workbook"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.load_csv_workbook",
-      "text": "The aspose.cells_foss.load_csv_workbook function creates a workbook from a CSV file using options provided by aspose.cells_foss.CSVLoadOptions and a handler defined by aspose.cells_foss.csv_handler."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.cells_foss.sparkline",
-        "public_symbol:aspose.cells_foss.sparkline-2",
-        "public_symbol:aspose.cells_foss.sparklinegroup",
+        "enum_member:aspose.cells_foss.sparklinetype.column",
+        "enum_member:aspose.cells_foss.sparklinetype.line",
+        "enum_member:aspose.cells_foss.sparklinetype.win_loss",
         "public_symbol:aspose.cells_foss.sparklinetype"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.sparkline",
-      "text": "The aspose.cells_foss.Sparkline class and aspose.cells_foss.SparklineGroup class support creating sparklines within a worksheet using sparkline types defined by aspose.cells_foss.SparklineType."
+      "slot": "hub:public_symbol:aspose.cells_foss.sparklinetype",
+      "text": "The SparklineType enum defines sparkline types including LINE, COLUMN, and WIN_LOSS."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.cells_foss.table",
-        "public_symbol:aspose.cells_foss.table-2",
-        "public_symbol:aspose.cells_foss.tablecollection",
-        "public_symbol:aspose.cells_foss.tablecolumn"
+        "public_symbol:aspose.cells_foss.msodrawingtype",
+        "public_symbol:aspose.cells_foss.msofillformat",
+        "public_symbol:aspose.cells_foss.msolinedashstyle",
+        "public_symbol:aspose.cells_foss.msolineformat"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.table",
-      "text": "The aspose.cells_foss.Table class and aspose.cells_foss.TableCollection class support creating and managing tables in a worksheet, with individual columns represented by aspose.cells_foss.TableColumn objects."
+      "slot": "hub:public_symbol:aspose.cells_foss.msofillformat",
+      "text": "The MsoFillFormat class provides access to Microsoft Office fill formatting properties including fill type and color."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.cells_foss.picture",
-        "public_symbol:aspose.cells_foss.shape",
-        "public_symbol:aspose.cells_foss.shape-2",
-        "public_symbol:aspose.cells_foss.shapecollection"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.cells_foss.shape",
-      "text": "The aspose.cells_foss.Shape class and aspose.cells_foss.ShapeCollection class support adding and managing shapes and pictures in a worksheet."
-    },
-    {
-      "fact_ids": [
-        "link_target:010"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:010",
-      "text": "Browse the executable examples for feature-specific workflows."
-    },
-    {
-      "fact_ids": [
-        "link_target:011"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:011",
-      "text": "See the package's public exports in aspose/cells_foss/__init__.py."
-    },
-    {
-      "fact_ids": [
-        "link_target:013"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:013",
-      "text": "Review development conventions in AGENTS.md."
-    },
-    {
-      "fact_ids": [
-        "link_target:014"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:014",
-      "text": "Open an issue to report bugs or request features."
-    },
-    {
-      "fact_ids": [
-        "format:input.xlsx",
-        "format:output.xlsx",
-        "inherited_unit:032.list"
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "inherited_unit:032.list",
+        "inherited_unit:039.heading",
+        "inherited_unit:040.paragraph"
       ],
       "section": "scope_limitations",
       "slot": "scope",
-      "text": "Aspose.Cells FOSS for Python reads and writes Excel workbooks in the .xlsx format, supports loading encrypted .xlsx files, and provides basic workbook manipulation capabilities including cell access, styling, and formula handling while preserving formula expressions and cached results."
+      "text": "Aspose.Cells FOSS for Python reads and writes Excel workbooks in the Open XML .xlsx format, preserves formula expressions and cached results, and exposes core cell and worksheet operations such as reading and writing cell values, applying styles, and managing data validations. It supports the .xlsx format for loading and saving workbooks and provides classes such as Workbook, Worksheet, Cells, Cell, Style, and DataValidation. The project is licensed under the MIT License."
     },
     {
       "fact_ids": [
@@ -714,49 +471,41 @@
       ],
       "section": "scope_limitations",
       "slot": "limitation:1",
-      "text": "Formula expressions and cached results are preserved, but this project is not a full Excel calculation engine."
+      "text": "It does not implement a full Excel calculation engine, so formula expressions and cached results are preserved but not recalculated, and it supports only the .xlsx format for loading and saving workbooks, not .xls, .ods, or .xlsb."
     },
     {
       "fact_ids": [
-        "format:input.xlsx",
-        "format:output.xlsx",
-        "inherited_unit:029.table",
         "inherited_unit:032.list"
       ],
       "section": "scope_limitations",
       "slot": "limitation:2",
-      "text": "Native workbook loading and saving targets the Open XML .xlsx format; other spreadsheet formats such as .xls, .ods, and .xlsb are not supported."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:032.list",
-        "public_symbol:aspose.cells_foss.xml_loader",
-        "public_symbol:aspose.cells_foss.xml_saver"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:3",
       "text": "Some advanced Excel features are preserved as source package parts rather than exposed as editable Python objects."
     },
     {
       "fact_ids": [
-        "inherited_unit:032.list",
-        "install_command:pip",
-        "public_symbol:aspose.cells_foss.skiapdfrenderer"
+        "inherited_unit:032.list"
       ],
       "section": "scope_limitations",
-      "slot": "limitation:4",
-      "text": "PDF output depends on locally available fonts and the optional aspose.cells_foss.SkiaPdfRenderer class."
+      "slot": "limitation:3",
+      "text": "PDF output depends on locally available fonts and the optional skia-python renderer."
     },
     {
       "fact_ids": [
-        "inherited_unit:036.paragraph",
-        "inherited_unit:037.code_block",
-        "inherited_unit:038.paragraph",
-        "inherited_unit:010.paragraph"
+        "package:python_requires"
+      ],
+      "section": "scope_limitations",
+      "slot": "limitation:4",
+      "text": "The package requires Python version 3.10 or later."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:010.paragraph",
+        "inherited_unit:012.paragraph",
+        "inherited_unit:036.paragraph"
       ],
       "section": "development_testing",
       "slot": "summary",
-      "text": "Development dependencies are installed and the example test suite is run to verify functionality. Generated workbooks are written below examples/outputfiles/ and are not intended for source control."
+      "text": "The package requires Python 3.10 or later with core runtime dependencies pycryptodome>=3.15.0 and olefile>=0.46. PDF export requires the optional skia-python renderer, which must be installed separately. To build and test from the repository, install the development dependencies and run the example test suite."
     },
     {
       "fact_ids": [
@@ -764,7 +513,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdfcelllayout",
-      "text": "PdfCellLayout represents the layout settings for a cell when rendering to PDF."
+      "text": "PdfCellLayout class holds the layout settings for a cell in a PDF document."
     },
     {
       "fact_ids": [
@@ -772,7 +521,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdfdatabarlayout",
-      "text": "PdfDataBarLayout represents the layout settings for a data bar conditional formatting when rendering to PDF."
+      "text": "PdfDataBarLayout class holds the layout settings for a data bar in a PDF document."
     },
     {
       "fact_ids": [
@@ -780,7 +529,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdficonsetlayout",
-      "text": "PdfIconSetLayout represents the layout settings for an icon set conditional formatting when rendering to PDF."
+      "text": "PdfIconSetLayout class holds the layout settings for an icon set in a PDF document."
     },
     {
       "fact_ids": [
@@ -788,7 +537,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdfpagelayout",
-      "text": "PdfPageLayout represents the page layout settings for rendering a worksheet to PDF."
+      "text": "PdfPageLayout class holds the layout settings for a page in a PDF document."
     },
     {
       "fact_ids": [
@@ -796,7 +545,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdftextrunlayout",
-      "text": "PdfTextRunLayout represents the layout settings for a text run when rendering to PDF."
+      "text": "PdfTextRunLayout class holds the layout settings for a text run in a PDF document."
     },
     {
       "fact_ids": [
@@ -804,7 +553,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.sparklineemptycells",
-      "text": "SparklineEmptyCells specifies how empty cells are handled in sparkline rendering."
+      "text": "SparklineEmptyCells enum lists the CONNECTED, GAP and ZERO values for handling empty cells in sparklines."
     },
     {
       "fact_ids": [
@@ -812,7 +561,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.sparklinetype",
-      "text": "SparklineType specifies the type of sparkline to render."
+      "text": "SparklineType enum lists the COLUMN, LINE and WIN_LOSS values for sparkline types."
     },
     {
       "fact_ids": [
@@ -820,7 +569,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_layout.pdfchartlayout",
-      "text": "PdfChartLayout represents the layout settings for a chart when rendering to PDF."
+      "text": "PdfChartLayout class holds the layout settings for a chart in a PDF document."
     },
     {
       "fact_ids": [
@@ -828,7 +577,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_layout.pdfchartserieslayout",
-      "text": "PdfChartSeriesLayout represents the layout settings for a chart series when rendering to PDF."
+      "text": "PdfChartSeriesLayout class holds the layout settings for a chart series in a PDF document."
     },
     {
       "fact_ids": [
@@ -836,7 +585,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_layout.pdfpicturelayout",
-      "text": "PdfPictureLayout represents the layout settings for a picture when rendering to PDF."
+      "text": "PdfPictureLayout class holds the layout settings for a picture in a PDF document."
     },
     {
       "fact_ids": [
@@ -844,7 +593,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_layout.pdfshapelayout",
-      "text": "PdfShapeLayout represents the layout settings for a shape when rendering to PDF."
+      "text": "PdfShapeLayout class holds the layout settings for a shape in a PDF document."
     },
     {
       "fact_ids": [
@@ -852,7 +601,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_layout.pdfsparklinelayout",
-      "text": "PdfSparklineLayout represents the layout settings for a sparkline when rendering to PDF."
+      "text": "PdfSparklineLayout class holds the layout settings for a sparkline in a PDF document."
     },
     {
       "fact_ids": [
@@ -860,7 +609,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_3d_area.pdfrenderer3dareamixin",
-      "text": "PdfRenderer3DAreaMixin provides rendering capabilities for 3D area charts in PDF output."
+      "text": "PdfRenderer3DAreaMixin class provides rendering capabilities for 3D area charts in a PDF document."
     },
     {
       "fact_ids": [
@@ -868,7 +617,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_3d_bar.pdfrenderer3dbarmixin",
-      "text": "PdfRenderer3DBarMixin provides rendering capabilities for 3D bar charts in PDF output."
+      "text": "PdfRenderer3DBarMixin class provides rendering capabilities for 3D bar charts in a PDF document."
     },
     {
       "fact_ids": [
@@ -876,7 +625,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_3d_line_column.pdfrenderer3dlinecolumnmixin",
-      "text": "PdfRenderer3DLineColumnMixin provides rendering capabilities for 3D line and column charts in PDF output."
+      "text": "PdfRenderer3DLineColumnMixin class provides rendering capabilities for 3D line and column charts in a PDF document."
     },
     {
       "fact_ids": [
@@ -884,7 +633,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_drawing.pdfrendererdrawingmixin",
-      "text": "PdfRendererDrawingMixin provides rendering capabilities for drawing objects in PDF output."
+      "text": "PdfRendererDrawingMixin class provides rendering capabilities for drawing elements in a PDF document."
     },
     {
       "fact_ids": [
@@ -892,7 +641,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_pie_bar.pdfrendererpiebarmixin",
-      "text": "PdfRendererPieBarMixin provides rendering capabilities for pie and bar charts in PDF output."
+      "text": "PdfRendererPieBarMixin class provides rendering capabilities for pie and bar charts in a PDF document."
     },
     {
       "fact_ids": [
@@ -900,7 +649,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_special_charts.pdfrendererspecialchartsmixin",
-      "text": "PdfRendererSpecialChartsMixin provides rendering capabilities for special charts in PDF output."
+      "text": "PdfRendererSpecialChartsMixin class provides rendering capabilities for special charts in a PDF document."
     },
     {
       "fact_ids": [
@@ -908,7 +657,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.cells_foss.pdf_renderer_stock_surface.pdfrendererstocksurfacemixin",
-      "text": "PdfRendererStockSurfaceMixin provides rendering capabilities for stock and surface charts in PDF output."
+      "text": "PdfRendererStockSurfaceMixin class provides rendering capabilities for stock and surface charts in a PDF document."
     }
   ]
 }

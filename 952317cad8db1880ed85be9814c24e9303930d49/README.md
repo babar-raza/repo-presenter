@@ -4,7 +4,7 @@
 
 [![Aspose.Cells FOSS for Python](https://products.aspose.org/media/cells/python/banner-readme.png)](https://products.aspose.org/cells/python/)
 
-Aspose.Cells FOSS for Python reads and writes `.xlsx` files. It converts workbooks to CSV, JSON, Markdown, and PDF formats. It supports workbook encryption and decryption with password protection, and provides classes for data validation, charts, sparklines, and tables.
+Aspose.Cells FOSS for Python reads and writes Excel `.xlsx` workbooks, converts them to `.csv`, `.tsv`, `.json`, `.markdown`, `.md`, `.pdf`, and `.xlsm` formats, and supports encryption and decryption of `.xlsx` files. It reads `.xlsx` workbooks and loads `.csv` data using `load_csv_workbook` and `CSVLoadOptions`. It provides classes such as `Workbook`, `Worksheet`, `Cells`, `Cell`, `Style`, and `DataValidation` to create, modify, and style workbooks, apply data validation rules, and manage charts, pictures, shapes, tables, and sparklines.
 
 Aspose.Cells FOSS for Python is a free, open-source, pure-Python library for creating, reading,
 modifying, and exporting Excel `.xlsx` workbooks without requiring Microsoft Excel.
@@ -18,7 +18,6 @@ modifying, and exporting Excel `.xlsx` workbooks without requiring Microsoft Exc
 - [Quick Start](#quick-start)
 - [Additional Examples](#additional-examples)
 - [API Reference](#api-reference)
-- [Documentation & Resources](#documentation--resources)
 - [Scope and Limitations](#scope-and-limitations)
 - [Development and Testing](#development-and-testing)
 - [Third-Party Notices](#third-party-notices)
@@ -27,35 +26,40 @@ modifying, and exporting Excel `.xlsx` workbooks without requiring Microsoft Exc
 ## At a Glance
 
 ```mermaid
-flowchart LR
-Start["An existing XLSX file"]
-Start --> Product["Aspose.Cells FOSS for Python"]
-Product["Aspose.Cells FOSS for Python"] --> Cap1["Create and edit workbooks"]
-Cap2["Format cells and ranges"]
-Cap3["Export to multiple formats"]
-Cap4["Encrypt and decrypt workbooks"]
-Product["Aspose.Cells FOSS for Python"] --> Cap2["Format cells and ranges"]
-Product["Aspose.Cells FOSS for Python"] --> Cap3["Export to multiple formats"]
-Product["Aspose.Cells FOSS for Python"] --> Cap4["Encrypt and decrypt workbooks"]
-Cap1["Create and edit workbooks"] --> Output["XLSX file"]
-Cap2["Format cells and ranges"] --> Output["XLSX file"]
-Cap3["Export to multiple formats"] --> Output["XLSX file"]
-Cap4["Encrypt and decrypt workbooks"] --> Output["XLSX file"]
+flowchart TB
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing XLSX file"]
+  end
+  PRODUCT["Aspose.Cells FOSS for Python"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Read and write Excel<br/>workbooks"]
+    c2["Export to multiple<br/>formats"]
+    c3["Workbook encryption"]
+    c4["Data validation and<br/>conditional rules"]
+    c1 ~~~ c3
+    c2 ~~~ c4
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["CSV, JSON, MARKDOWN,<br/>PDF, TSV, or XLSX file"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
 
-- **Create and edit workbooks.** It creates new workbooks, loads existing ones, and saves them as `.xlsx` files, allowing direct access to worksheets and their cells to read or write values and formulas using A1-style references.
-- **Format cells and ranges.** It applies styles to cells and ranges using the `Style`, `Font`, `RichTextRun`, `FillType`, and `TextAlignmentType` objects to set bold, color, size, fill, and alignment properties.
-- **Manage workbook elements.** It manages workbook elements including hyperlinks, shapes, pictures, tables, sparkline groups, and page breaks through dedicated collections on the `Worksheet` and `Workbook` objects.
-- **Add charts and sparklines.** It adds charts and sparklines to worksheets using `Chart`, `ChartSeries`, `ChartType`, `Sparkline`, `SparklineType`, and `SparklineGroup` objects to visualize data directly in the workbook.
-- **Apply data validation and conditional formatting.** It applies data validation and conditional formatting rules to cells using `DataValidation`, `DataValidationType`, `DataValidationOperator`, and `conditional_format` objects to enforce input constraints and highlight values.
-- **Export to multiple formats.** It exports workbooks to CSV, JSON, Markdown, and PDF formats using `save_workbook_as_csv`, `save_workbook_as_json`, `save_workbook_as_markdown`, and `PdfSaveOptions` with `SaveFormat` targets.
-- **Encrypt and decrypt workbooks.** It encrypts and decrypts `.xlsx` workbooks using `encrypt_xlsx` and `decrypt_xlsx` with `StandardEncryptionParameters` or `AgileEncryptionParameters` to protect content with a password.
-- **Import CSV data.** It imports data from CSV files using `load_csv_workbook` with `CSVLoadOptions` and the `csv_handler` to control parsing and loading behavior.
-
-- Apply fonts, fills, borders, alignment, and number formats
-- Preserve unsupported workbook parts where possible during load/save round trips
+- **Read and write Excel workbooks.** It reads and writes Excel workbooks in `.xlsx` format, allowing users to create new workbooks, access worksheets via the `Workbook.worksheets` collection, and read or write cell values using A1-style references through the `Cells` and `Cell` objects.
+- **Cell formatting and styling.** It applies fonts, fills, borders, alignment, and number formats to cells using the `Style`, `Font`, and related objects, enabling bold text, custom colors, and size adjustments that persist when saving workbooks.
+- **Data validation and conditional rules.** It adds data validation rules to cell ranges using `DataValidation` objects with `DataValidationType`, `DataValidationAlertStyle`, `DataValidationOperator`, and formula1 settings to enforce list, numeric, or text constraints.
+- **Export to multiple formats.** It exports workbooks to `.csv`, `.tsv`, `.json`, `.markdown`, `.md`, and `.pdf` formats using `Workbook.save()` with format inferred from extension or `PdfSaveOptions` for PDF.
+- **Workbook encryption.** It encrypts and decrypts `.xlsx` workbooks using password-based protection via `Workbook.save()` with a password argument or `Workbook` constructor with a password argument; `encrypt_xlsx` and `decrypt_xlsx` are convenience functions.
+- **Chart and shape support.** It creates and manages charts, pictures, shapes, tables, and sparklines through dedicated collections such as `ChartCollection`, `ShapeCollection`, `TableCollection`, and `SparklineGroupCollection` on each worksheet.
+- **Formula and calculation preservation.** It preserves formulas during load and save operations; the project is not a full Excel calculation engine.
+- **Import CSV data.** It imports data from comma-separated and tab-separated files using `load_csv_workbook` with `CSVLoadOptions` to configure delimiters and load content into a new workbook.
 
 ## Installation
 
@@ -79,7 +83,7 @@ Verify the install:
 python -c "import aspose.cells_foss"
 ```
 
-The package declares `python_requires` as `>=3.10`.
+Requires Python 3.10 or later.
 
 ## Dependencies
 
@@ -90,7 +94,7 @@ The package declares `python_requires` as `>=3.10`.
 
 ### Native and System Requirements
 
-- Requires Python 3.10 or later (`python_requires=">=3.10"` in `pyproject.toml`).
+- Requires Python 3.10 or later.
 
 ### Development Dependencies
 
@@ -99,7 +103,7 @@ The package declares `python_requires` as `>=3.10`.
 
 ## Quick Start
 
-The first example creates a new workbook, writes a simple two-column table with headers and one data row, and saves it as an Excel file named `report.xlsx`.
+Create a new workbook, populate cells with headers and data, and save it as an Excel file named `report.xlsx`.
 
 ```python
 from aspose.cells_foss import Workbook
@@ -115,7 +119,7 @@ worksheet.cells["B2"].value = 1250.50
 workbook.save("report.xlsx")
 ```
 
-The second example opens the previously saved `report.xlsx` file and prints the value stored in cell B2.
+Open an existing Excel file named `report.xlsx` and print the value stored in cell B2.
 
 ```python
 from aspose.cells_foss import Workbook
@@ -126,11 +130,13 @@ worksheet = workbook.worksheets[0]
 print(worksheet.cells["B2"].value)
 ```
 
+Install the package from PyPI.
+
 ## Additional Examples
 
-The following examples demonstrate creating styled cells, adding data validation lists, and encrypting workbooks with Aspose.Cells FOSS for Python.
+Create data validation lists and protect workbooks with passwords.
 
-### Encrypt a Workbook with a Password and Load It Back
+### Save a Workbook with Password Protection and Load It Back
 
 ```python
 from aspose.cells_foss import Workbook
@@ -146,25 +152,7 @@ print(loaded.worksheets[0].cells["A1"].value)
 <details>
 <summary>View Additional Examples</summary>
 
-### Apply Bold Red Font Styling to a Cell and Save the Workbook
-
-```python
-from aspose.cells_foss import Workbook
-
-workbook = Workbook()
-cell = workbook.worksheets[0].cells["A1"]
-cell.value = "Quarterly Report"
-
-style = cell.get_style()
-style.font.bold = True
-style.font.color = "#FF0000"
-style.font.size = 14
-cell.apply_style(style)
-
-workbook.save("styled.xlsx")
-```
-
-### Add a Yes/No Dropdown List Validation to a Cell Range
+### Add a Data Validation List to Cells A1 Through A10
 
 ```python
 from aspose.cells_foss import DataValidationType, Workbook
@@ -179,15 +167,36 @@ validation.formula1 = '"Yes,No"'
 workbook.save("validation.xlsx")
 ```
 
+### Export a Workbook
+
+The output format is inferred from the file extension:
+
+```python
+from aspose.cells_foss import Workbook
+
+workbook = Workbook("report.xlsx")
+workbook.save("report.csv")
+workbook.save("report.json")
+workbook.save("report.md")
+workbook.save("report.pdf")  # Requires skia-python
+```
+
 CSV import is available through `Workbook.load_csv()` or `load_csv_workbook()`.
+
+- Browse the executable [examples](examples) for feature-specific workflows.
+- See the package's public exports in
+  [`aspose/cells_foss/__init__.py`](aspose/cells_foss/__init__.py).
+- Read the current release notes.
+- Review development conventions in [AGENTS.md](AGENTS.md).
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/issues).
 
 </details>
 
 ## API Reference
 
-Aspose.Cells FOSS for Python provides the `aspose.cells_foss.Workbook` class as the primary entry point for creating, reading, and manipulating spreadsheet files, and the `aspose.cells_foss.Worksheet` class as the container for tabular data within a workbook.
+Aspose.Cells FOSS for Python provides the `Workbook` class as the primary entry point for creating, loading, and manipulating spreadsheet files, with `Worksheet`, `Cells`, and `Cell` classes representing the hierarchical structure of a workbook.
 
-The verified public surface has 160 types.
+The public API has 160 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -222,14 +231,14 @@ The verified public surface has 160 types.
 | `MsoLineFormat` | Border/outline format properties for a shape. |
 | `NSeries` | Collection of series for a chart. |
 | `NumberFormat` | Represents number format settings for a cell or range of cells. |
-| `PdfCellLayout` | PdfCellLayout represents the layout settings for a cell when rendering to PDF. |
-| `PdfDataBarLayout` | PdfDataBarLayout represents the layout settings for a data bar conditional formatting when rendering to PDF. |
+| `PdfCellLayout` | PdfCellLayout class holds the layout settings for a cell in a PDF document. |
+| `PdfDataBarLayout` | PdfDataBarLayout class holds the layout settings for a data bar in a PDF document. |
 | `PdfExporter` | Connects workbook models to prepared pages and a PDF renderer. |
-| `PdfIconSetLayout` | PdfIconSetLayout represents the layout settings for an icon set conditional formatting when rendering to PDF. |
+| `PdfIconSetLayout` | PdfIconSetLayout class holds the layout settings for an icon set in a PDF document. |
 | `PdfLayoutEngine` | Materializes all worksheet pages before the renderer starts drawing. |
-| `PdfPageLayout` | PdfPageLayout represents the page layout settings for rendering a worksheet to PDF. |
+| `PdfPageLayout` | PdfPageLayout class holds the layout settings for a page in a PDF document. |
 | `PdfSaveOptions` | Controls worksheet selection and basic PDF rendering behavior. |
-| `PdfTextRunLayout` | PdfTextRunLayout represents the layout settings for a text run when rendering to PDF. |
+| `PdfTextRunLayout` | PdfTextRunLayout class holds the layout settings for a text run in a PDF document. |
 | `Picture` | Represents a worksheet picture anchored to cells. |
 | `PictureCollection` | Collection of pictures in a worksheet. |
 | `RenderBounds` | A 1-based, inclusive rectangular range in worksheet coordinates. |
@@ -276,18 +285,18 @@ The verified public surface has 160 types.
 | `FormulaEvaluator` | Basic formula evaluator for XLSX cells without cached values. |
 | `Hyperlink` | Represents a hyperlink in a worksheet. |
 | `Hyperlinks` | Collection of hyperlinks in a worksheet. |
-| `PdfChartLayout` | PdfChartLayout represents the layout settings for a chart when rendering to PDF. |
-| `PdfChartSeriesLayout` | PdfChartSeriesLayout represents the layout settings for a chart series when rendering to PDF. |
-| `PdfPictureLayout` | PdfPictureLayout represents the layout settings for a picture when rendering to PDF. |
-| `PdfShapeLayout` | PdfShapeLayout represents the layout settings for a shape when rendering to PDF. |
-| `PdfSparklineLayout` | PdfSparklineLayout represents the layout settings for a sparkline when rendering to PDF. |
-| `PdfRenderer3DAreaMixin` | PdfRenderer3DAreaMixin provides rendering capabilities for 3D area charts in PDF output. |
-| `PdfRenderer3DBarMixin` | PdfRenderer3DBarMixin provides rendering capabilities for 3D bar charts in PDF output. |
-| `PdfRenderer3DLineColumnMixin` | PdfRenderer3DLineColumnMixin provides rendering capabilities for 3D line and column charts in PDF output. |
-| `PdfRendererDrawingMixin` | PdfRendererDrawingMixin provides rendering capabilities for drawing objects in PDF output. |
-| `PdfRendererPieBarMixin` | PdfRendererPieBarMixin provides rendering capabilities for pie and bar charts in PDF output. |
-| `PdfRendererSpecialChartsMixin` | PdfRendererSpecialChartsMixin provides rendering capabilities for special charts in PDF output. |
-| `PdfRendererStockSurfaceMixin` | PdfRendererStockSurfaceMixin provides rendering capabilities for stock and surface charts in PDF output. |
+| `PdfChartLayout` | PdfChartLayout class holds the layout settings for a chart in a PDF document. |
+| `PdfChartSeriesLayout` | PdfChartSeriesLayout class holds the layout settings for a chart series in a PDF document. |
+| `PdfPictureLayout` | PdfPictureLayout class holds the layout settings for a picture in a PDF document. |
+| `PdfShapeLayout` | PdfShapeLayout class holds the layout settings for a shape in a PDF document. |
+| `PdfSparklineLayout` | PdfSparklineLayout class holds the layout settings for a sparkline in a PDF document. |
+| `PdfRenderer3DAreaMixin` | PdfRenderer3DAreaMixin class provides rendering capabilities for 3D area charts in a PDF document. |
+| `PdfRenderer3DBarMixin` | PdfRenderer3DBarMixin class provides rendering capabilities for 3D bar charts in a PDF document. |
+| `PdfRenderer3DLineColumnMixin` | PdfRenderer3DLineColumnMixin class provides rendering capabilities for 3D line and column charts in a PDF document. |
+| `PdfRendererDrawingMixin` | PdfRendererDrawingMixin class provides rendering capabilities for drawing elements in a PDF document. |
+| `PdfRendererPieBarMixin` | PdfRendererPieBarMixin class provides rendering capabilities for pie and bar charts in a PDF document. |
+| `PdfRendererSpecialChartsMixin` | PdfRendererSpecialChartsMixin class provides rendering capabilities for special charts in a PDF document. |
+| `PdfRendererStockSurfaceMixin` | PdfRendererStockSurfaceMixin class provides rendering capabilities for stock and surface charts in a PDF document. |
 | `SharedStringTable` | Manages the Shared String Table for XLSX files according to ECMA-376 specification. |
 | `Alignment` | Represents alignment settings for a cell or range of cells. |
 | `Border` | Represents border settings for a single side of a cell or range of cells. |
@@ -356,8 +365,8 @@ The verified public surface has 160 types.
 | `MsoDrawingType` | Shape preset geometry types (maps to ECMA-376 a:prstGeom prst attributes). |
 | `MsoLineDashStyle` | Shape border/line dash style (ECMA-376 a:prstDash val attribute). |
 | `SaveFormat` | Specifies the format for saving a workbook. |
-| `SparklineEmptyCells` | SparklineEmptyCells specifies how empty cells are handled in sparkline rendering. |
-| `SparklineType` | SparklineType specifies the type of sparkline to render. |
+| `SparklineEmptyCells` | SparklineEmptyCells enum lists the CONNECTED, GAP and ZERO values for handling empty cells in sparklines. |
+| `SparklineType` | SparklineType enum lists the COLUMN, LINE and WIN_LOSS values for sparkline types. |
 | `TextAlignmentType` | Horizontal text alignment inside a shape (ECMA-376 a:pPr algn attribute). |
 | `TextAnchorType` | Vertical text anchor inside a shape (ECMA-376 a:bodyPr anchor attribute). |
 | `EncryptionType` | Encryption type enumeration. |
@@ -366,7 +375,7 @@ The verified public surface has 160 types.
 
 ### Workbook
 
-The `aspose.cells_foss.Workbook` class represents a spreadsheet file and provides methods to manage worksheets, access workbook properties, apply protection, and save the file in various formats including CSV, JSON, Markdown, and PDF.
+The `Workbook` class supports loading existing files, creating new worksheets, copying worksheets, accessing individual worksheets by index or name, and saving in multiple formats including XLSX, CSV, TSV, JSON, Markdown, and PDF.
 
 - `add_worksheet`: Adds a new worksheet to the workbook.
 - `copy_worksheet`: Copy a worksheet and append the copy to the workbook. Returns the new worksheet.
@@ -395,123 +404,38 @@ The `aspose.cells_foss.Workbook` class represents a spreadsheet file and provide
 - `unprotect`: Remove workbook structure/window protection.
 - `worksheets`: Gets collection of worksheets in the workbook.
 
-### Worksheet
+### SaveFormat
 
-The `aspose.cells_foss.Worksheet` class represents a single worksheet within a workbook and provides access to cells, charts, data validations, and formatting options.
+The `SaveFormat` enum provides values for saving workbooks in formats including XLSX, CSV, TSV, JSON, Markdown, PDF, and AUTO.
 
-- `activate`: Activates the worksheet (makes it the active worksheet).
-- `auto_filter`: Gets the AutoFilter object for this worksheet.
-- `calculate_formula`: Calculates formulas in the worksheet.
-- `calculate_row_heights`: Return layout-time row heights in points without changing the worksheet.
-- `cells`: Gets the Cells collection for this worksheet.
-- `charts`: Gets the collection of charts for this worksheet.
-- `clear_print_area`: Clears the worksheet print area.
-- `clear_print_titles`: Clear repeated rows and columns.
-- `clear_tab_color`: Clear the worksheet tab color.
-- `conditional_formats`: Gets the collection of conditional formats for this worksheet.
-- `copy`: Creates a copy of the worksheet.
-- `data_validations`: Gets the collection of data validations for this worksheet.
-- `delete`: Deletes the worksheet from the workbook.
-- `get_content_bounds`: Return bounds of live renderable content, or None for an empty sheet.
-- `get_effective_default_row_height`: Return the workbook-font-derived default row height unless the sheet marks
-- `get_effective_style`: Returns the resolved visual style for a cell.
-- `get_page_margins`: Return a copy of the page margins dict.
-- `get_page_orientation`: Return the page orientation ('portrait', 'landscape', or None).
-- `get_paper_size`: Return the paper size integer code.
-- `get_print_title_ranges`: Return 1-based inclusive row/column tuples for pagination.
-- `get_printable_bounds`: Return printable areas, preserving discontiguous explicit print areas.
-- `get_range`: Gets a range of cells.
-- `get_render_bounds`: Return the final printable envelope consumed by layout and pagination.
-- `get_tab_color`: Return the worksheet tab color (8-char AARRGGBB hex) or None.
-- `get_visibility`: Return current worksheet visibility (True, False, or 'veryHidden').
-- `horizontal_page_breaks`: Gets manual horizontal page break collection.
-- `hyperlinks`: Gets the collection of hyperlinks for this worksheet.
-- `is_protected`: Checks if the worksheet is protected.
-- `measure_cell_text`: Measure a cell's display text using its resolved effective style.
-- `measure_text`: Measure text using the workbook's shared font strategy when available.
-- `merged_cells`: Gets merged cell ranges in A1 notation.
-- `move`: Moves the worksheet to the specified position in the workbook.
-- `name`: Gets or sets the name of the worksheet.
-- `page_margins`: Gets the page margins for this worksheet.
-- `page_setup`: Gets the page setup settings for this worksheet.
-- `pictures`: Gets the collection of pictures for this worksheet.
-- `print_area`: Gets or sets print area in A1 notation.
-- `print_title_columns`: Columns repeated at the left of each printed page, such as A:C.
-- `print_title_rows`: Rows repeated at the top of each printed page, such as 1:3.
-- `properties`: Gets the worksheet properties.
-- `protect`: Protects the worksheet with optional password and protection options.
-- `protection`: Gets the protection settings for this worksheet.
-- `rename`: Renames the worksheet.
-- `select`: Selects the worksheet.
-- `set_fit_to_pages`: Set fit-to-pages: width and height are page counts (0 = auto).
-- `set_page_margins`: Set page margins (in inches). Only provided values are updated.
-- `set_page_orientation`: Set page orientation. orientation must be 'portrait' or 'landscape'.
-- `set_paper_size`: Set the paper size (integer code, e.g. 9 = A4).
-- `set_print_area`: Sets the worksheet print area.
-- `set_print_scale`: Set print scale percentage (10–400).
-- `set_print_titles`: Set repeated print-title rows and columns; None clears an axis.
-- `set_tab_color`: Set the worksheet tab color. color must be an 8-char AARRGGBB hex string.
-- `set_view`: Sets view options for the worksheet.
-- `set_visibility`: Set worksheet visibility. Accepts True, False, or 'veryHidden'.
-- `shapes`: Gets the collection of drawing shapes for this worksheet.
-- `sparkline_groups`: Gets the collection of sparkline groups for this worksheet.
-- `tab_color`: Gets or sets the tab color of the worksheet.
-- `tables`: Gets the collection of structured tables (ListObjects) for this worksheet.
-- `unprotect`: Unprotects the worksheet.
-- `vertical_page_breaks`: Gets manual vertical page break collection.
-- `visible`: Gets or sets the visibility state of the worksheet.
+- `from_extension`: Determines the save format from file extension.
 
-### Cells
+### DataValidationType
 
-The `aspose.cells_foss.Cells` class provides a collection of `aspose.cells_foss.Cell` objects and supports operations such as getting or setting cell values, applying styles, and managing cell ranges.
+The `DataValidationType` enum specifies validation types for cell data including WHOLE_NUMBER, DECIMAL, LIST, DATE, TIME, TEXT_LENGTH, CUSTOM, and NONE.
 
-- `auto_fit_row`: Auto-fit one 0-based row from its current display text and styles.
-- `auto_fit_rows`: Auto-fit an inclusive range of 0-based rows and return their heights.
-- `cell`: Accesses a cell by row and column (1-based).
-- `clear`: Clears all cells in the collection.
-- `clear_horizontal_page_breaks`: Clears all manual horizontal page breaks.
-- `clear_vertical_page_breaks`: Clears all manual vertical page breaks.
-- `column_index_from_string`: Converts a column letter to a 1-based index.
-- `column_letter_from_index`: Converts a 1-based column index to a letter.
-- `coordinate_from_string`: Converts an A1 coordinate string to (row, column) tuple (1-based).
-- `coordinate_to_string`: Converts row and column (1-based) to an A1 coordinate string.
-- `count`: Gets the number of cells in the collection.
-- `delete_cell`: Deletes a cell from the collection.
-- `get_all_cells`: Gets all cells in the collection.
-- `get_cell`: Gets a cell by row and column (1-based).
-- `get_cell_by_name`: Gets a cell by its name (reference).
-- `get_column_width`: Gets the width of the specified column in character units.
-- `get_horizontal_page_breaks`: Gets all manual horizontal page breaks.
-- `get_merged_cells`: Gets all merged cell ranges in A1 notation.
-- `get_range`: Gets a range of cells as a list of lists.
-- `get_row_height`: Gets the height of the specified row in points.
-- `get_vertical_page_breaks`: Gets all manual vertical page breaks.
-- `has_cell`: Checks if a cell exists in the collection.
-- `hide_column`: Hides the specified column.
-- `hide_row`: Hides the specified row.
-- `is_column_hidden`: Checks if the specified column is hidden.
-- `is_row_hidden`: Checks if the specified row is hidden.
-- `iter_cols`: Iterates over columns in the worksheet.
-- `iter_rows`: Iterates over rows in the worksheet.
-- `merge`: Merges a rectangular range of cells.
-- `merge_range`: Merges a range specified in A1 notation.
-- `remove_horizontal_page_break`: Removes a manual horizontal page break at the specified 0-based row index.
-- `remove_vertical_page_break`: Removes a manual vertical page break at the specified 0-based column index.
-- `set_cell`: Sets a cell value by row and column (1-based).
-- `set_cell_by_name`: Sets a cell value by its name (reference).
-- `set_column_width`: Sets the width of the specified column in character units.
-- `set_horizontal_page_break`: Adds a manual horizontal page break at the specified 0-based row index.
-- `set_range`: Sets values for a range of cells.
-- `set_row_height`: Sets the height of the specified row in points.
-- `set_vertical_page_break`: Adds a manual vertical page break at the specified 0-based column index.
-- `unhide_column`: Unhides the specified column.
-- `unhide_row`: Unhides the specified row.
-- `unmerge`: Unmerges a previously merged rectangular range of cells.
-- `unmerge_range`: Unmerges a range specified in A1 notation.
+### ChartType
+
+The `ChartType` enum defines chart types including AREA, BAR, LINE, PIE, SCATTER, and COMBO.
+
+### CipherAlgorithm
+
+The `CipherAlgorithm` enum lists supported encryption algorithms including AES_128, AES_192, and AES_256.
+
+- `block_size`: Get block size in bytes (AES uses 16-byte blocks).
+- `key_bytes`: Get key size in bytes.
+
+### HashAlgorithm
+
+The `HashAlgorithm` enum specifies hash algorithms including SHA1, SHA256, SHA384, and SHA512.
+
+### encryption_params
+
+The `encryption_params` class supports encryption types including AGILE and STANDARD.
 
 ### Style
 
-The `aspose.cells_foss.Style` class defines formatting attributes for cells, and the `aspose.cells_foss.Font` and `aspose.cells_foss.RichTextRun` classes support detailed text styling within cell contents.
+The `Style` class and its associated `Font` and `FontStrategy` classes provide formatting capabilities for cells and ranges.
 
 - `copy`: Creates a deep copy of this Style object.
 - `set_border`: Sets complete border properties for a specific side.
@@ -534,112 +458,36 @@ The `aspose.cells_foss.Style` class defines formatting attributes for cells, and
 - `set_text_wrap`: Sets whether text wraps within the cell.
 - `set_vertical_alignment`: Sets the vertical alignment of cell content.
 
-### DataValidation
+### FillType
 
-The `aspose.cells_foss.DataValidation` class and `aspose.cells_foss.DataValidationCollection` class support defining and managing data validation rules on cell ranges using specific types and operators.
+The `FillType` enum defines fill types including AUTOMATIC, SOLID, GRADIENT, PATTERN, and NONE.
 
-- `add`: Configures the data validation with the specified parameters.
-- `alert_style`: Gets or sets the style of the error alert.
-- `allow_blank`: Gets or sets whether blank/empty entries are valid.
-- `copy`: Creates a copy of this DataValidation.
-- `delete`: Clears the validation settings (resets to no validation).
-- `error`: Alias for error_message (ECMA-376 compatibility).
-- `error_message`: Gets or sets the error message displayed when invalid data is entered.
-- `error_title`: Gets or sets the title of the error alert dialog.
-- `formula1`: Gets or sets the first formula for validation.
-- `formula2`: Gets or sets the second formula for validation.
-- `ignore_blank`: Alias for allow_blank (Excel VBA compatibility).
-- `ime_mode`: Gets or sets the IME (Input Method Editor) mode.
-- `in_cell_dropdown`: Alias for show_dropdown (Excel VBA compatibility).
-- `input_message`: Gets or sets the input message displayed when the cell is selected.
-- `input_title`: Gets or sets the title of the input message dialog.
-- `modify`: Modifies the data validation settings.
-- `operator`: Gets or sets the comparison operator.
-- `prompt`: Alias for input_message (ECMA-376 compatibility).
-- `prompt_title`: Alias for input_title (ECMA-376 compatibility).
-- `ranges`: Gets the cell range(s) as a list.
-- `show_dropdown`: Gets or sets whether to show the dropdown arrow for list validation.
-- `show_error`: Alias for show_error_message (Excel VBA compatibility).
-- `show_error_message`: Gets or sets whether to show the error alert when invalid data is entered.
-- `show_input`: Alias for show_input_message (Excel VBA compatibility).
-- `show_input_message`: Gets or sets whether to show the input message when the cell is selected.
-- `sqref`: Gets or sets the cell range(s) for this validation.
-- `type`: Gets or sets the validation type.
+### TextAlignmentType
 
-### Chart
+The `TextAlignmentType` enum specifies text alignment options including LEFT, CENTER, RIGHT, JUSTIFY, and DISTRIBUTED.
 
-The `aspose.cells_foss.Chart` class and `aspose.cells_foss.ChartSeries` class enable creation and configuration of charts within a worksheet using specific chart types defined by `aspose.cells_foss.ChartType`.
+### SparklineType
 
-- `NSeries`: PascalCase alias of n_series.
-- `View3D`: PascalCase alias of view_3d.
-- `add_axis`: Adds an axis to the chart and returns it.
-- `add_series`: Convenience method to add a series.
-- `axes`: List of ChartAxis objects defining all axes for the chart.
-- `histogram_bin_count`: Number of bins for count-based binning (int or None for auto/size-based).
-- `histogram_bin_size`: Bin width for size-based binning (float or None for auto/count-based).
-- `histogram_interval_closed`: Which side of each bin interval is closed: 'r' (right) or 'l' (left).
-- `histogram_overflow`: Overflow bin boundary value (float or None).
-- `histogram_underflow`: Underflow bin boundary value (float or None).
-- `radar_style`: Radar chart style: 'standard', 'marker', or 'filled'.
-- `sub_charts`: List of sub-chart descriptors for combo charts.
+The `SparklineType` enum defines sparkline types including LINE, COLUMN, and WIN_LOSS.
 
-### SaveFormat
+### MsoFillFormat
 
-The `aspose.cells_foss.SaveFormat` class lists supported output formats, and the `aspose.cells_foss.CSVSaveOptions`, `aspose.cells_foss.JsonSaveOptions`, and `aspose.cells_foss.PdfSaveOptions` classes provide format-specific save configuration options.
-
-- `from_extension`: Determines the save format from file extension.
-
-### encrypt_xlsx
-
-The `aspose.cells_foss.encrypt_xlsx` function and `aspose.cells_foss.decrypt_xlsx` function support encryption and decryption of Excel files using either `aspose.cells_foss.StandardEncryptionParameters` or `aspose.cells_foss.AgileEncryptionParameters`.
-
-### load_csv_workbook
-
-The `aspose.cells_foss.load_csv_workbook` function creates a workbook from a CSV file using options provided by `aspose.cells_foss.CSVLoadOptions` and a handler defined by `aspose.cells_foss.csv_handler`.
-
-### Sparkline
-
-The `aspose.cells_foss.Sparkline` class and `aspose.cells_foss.SparklineGroup` class support creating sparklines within a worksheet using sparkline types defined by `aspose.cells_foss.SparklineType`.
-
-### Table
-
-The `aspose.cells_foss.Table` class and `aspose.cells_foss.TableCollection` class support creating and managing tables in a worksheet, with individual columns represented by `aspose.cells_foss.TableColumn` objects.
-
-### Shape
-
-The `aspose.cells_foss.Shape` class and `aspose.cells_foss.ShapeCollection` class support adding and managing shapes and pictures in a worksheet.
+The `MsoFillFormat` class provides access to Microsoft Office fill formatting properties including fill type and color.
 
 </details>
 
-## Documentation & Resources
-
-- **[examples](examples)** — Browse the executable examples for feature-specific workflows.
-- **[aspose/cells_foss/__init__.py](aspose/cells_foss/__init__.py)** — See the package's public exports in `aspose/cells_foss/__init__.py`.
-- **[AGENTS.md](AGENTS.md)** — Review development conventions in `AGENTS.md`.
-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Python/issues).
-
 ## Scope and Limitations
 
-Aspose.Cells FOSS for Python reads and writes Excel workbooks in the `.xlsx` format, supports loading encrypted `.xlsx` files, and provides basic workbook manipulation capabilities including cell access, styling, and formula handling while preserving formula expressions and cached results.
+Aspose.Cells FOSS for Python reads and writes Excel workbooks in the Open XML `.xlsx` format, preserves formula expressions and cached results, and exposes core cell and worksheet operations such as reading and writing cell values, applying styles, and managing data validations. It supports the `.xlsx` format for loading and saving workbooks and provides classes such as `Workbook`, `Worksheet`, `Cells`, `Cell`, `Style`, and `DataValidation`.
 
-- Formula expressions and cached results are preserved, but this project is not a full Excel calculation engine.
-- Native workbook loading and saving targets the Open XML `.xlsx` format; other spreadsheet formats such as .xls, .ods, and .xlsb are not supported.
+- It does not implement a full Excel calculation engine, so formula expressions and cached results are preserved but not recalculated, and it supports only the `.xlsx` format for loading and saving workbooks, not .xls, .ods, or .xlsb.
 - Some advanced Excel features are preserved as source package parts rather than exposed as editable Python objects.
-- PDF output depends on locally available fonts and the optional `aspose.cells_foss.SkiaPdfRenderer` class.
-
-| Format | Load | Save |
-|---|:---:|:---:|
-| XLSX | Yes | Yes |
-| Encrypted XLSX | Yes | Yes |
-| CSV | Yes | Yes |
-| TSV | No | Yes |
-| JSON | No | Yes |
-| Markdown | No | Yes |
-| PDF | No | Yes |
+- PDF output depends on locally available fonts and the optional skia-python renderer.
+- The package requires Python version 3.10 or later.
 
 ## Development and Testing
 
-Development dependencies are installed and the example test suite is run to verify functionality. Generated workbooks are written below examples/outputfiles/ and are not intended for source control.
+The package requires Python 3.10 or later with core runtime dependencies pycryptodome>=3.15.0 and olefile>=0.46. PDF export requires the optional skia-python renderer, which must be installed separately. To build and test from the repository, install the development dependencies and run the example test suite.
 
 PDF export uses `skia-python`, which is not currently installed by the core package.
 Install the renderer separately:
