@@ -6448,3 +6448,16 @@ Cells Rust L, Email .NET R) and that no honest correction exists for two of them
 delegated, R11). This is revisited only if a reviewer or the M9 audit flags a summarized total as misleading.
 
 Backlog: BL-099
+
+## 2026-11-14 — Batch e2-010 committed on owner approval after the R25 stop
+
+**Owner.** "Renew budget."
+
+**Facts.** The stop rule fired on hosted batch e2-009 at 09:04:57Z: 5 runs, 0 sealed, 185 calls, 8.68M tokens against a
+5.21M token cap. The cost per seal was infinite. No cell was dispatched for more than 5 hours, so the fixes in PRs
+#74–#77 never ran on a hosted candidate.
+
+**Decision.** Commit e2-010 at 270 calls and 11.2M tokens. That is 1.5× e2-009's measured median (30 calls, 1.24M tokens)
+× 6, within the total caps. The root causes are tracked as BL-100.
+
+Backlog: BL-100
