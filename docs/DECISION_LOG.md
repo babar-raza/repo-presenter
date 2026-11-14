@@ -6298,3 +6298,70 @@ behind it. It needs the supervisor's `gatecli.py review`/`verify` of TC-022a and
 round audits them.
 
 Backlog: BL-013, BL-065, BL-070, BL-093
+
+## 2026-11-14: BL-094..BL-097 — first-attempt rejections on the PDF family: packet-listed enum values, run-together names, recorded placeholders, planning replies bounded
+
+**Evidence.** Hosted Lane R runs on version set 81a1cb4204c1 (main ff570fa), read with `gh run view <id> --log` and
+from `refs/repository-presenter-state/failures/*`: 43572737387 (PDF Go), 43572739220 (PDF Python), 43572741039
+(PDF .NET), 43572742592 (PDF C++), 43572744168 (PDF TypeScript). The runs' artifacts could not be read here (the
+artifact blob host answers 403), so each repository's facts were re-extracted locally at the pinned revision with the
+facts stage's own code (`present.facts_pipeline`'s path, pinned clone): Go 2eed1113, Python 6493dfc2, .NET 1d21c959,
+C++ 4b83c9fe, TypeScript 03459482. Every rejection was then replayed zero-call through `unit_checks`.
+
+**Classes.**
+
+| Class | Cells | Root cause | Check right? | Fix |
+|---|---|---|---|---|
+| (a) enum values refused in their own type unit (BL-094) | PDF .NET, PDF C++ | The type batch's packet lists an enum's values (`type_members` -> `type_values`, from SUPPORTED `enum_member` facts); the identifier check admitted only fact values, symbol suffixes and method names. | No: it refused what its own packet handed. Not an extractor gap: every value is an `enum_member` fact at the pinned revision (src/Security/Permissions.cs). | `type_slot_members`: a `type:` unit may spell its own type's listed members (bare and `Type.member`). Scoped: an enum value elsewhere is still judged by the general rule. |
+| (b) `DataMatrix` (BL-095) | PDF TypeScript | The model ran the symbology name "Data Matrix" together. It is no public identifier (the public `symbology` takes 'datamatrix'; `PmdSymbology`'s 'DataMatrix' is not exported). The nearest names (DataMatrixOptions) mean something else, so the re-ask could not be followed. | Yes. | `restore_word_forms`: a stray bare CamelCase token whose word form a SUPPORTED fact's prose spells is written as those words (makeDataMatrix's doc comment, Form.AddBarcodeField's). A strict-prefix shortening's re-ask now says to write the accepted name in full or use plain words. |
+| (c) `<name>` as HTML (BL-096) | PDF Go | development_testing restated the maintainer paragraph (inherited_unit:087: `_examples/<name>/main.go`, `go run ./_examples/<name>`). Normalisation strips a unit's backticks, so a code span the model writes never reaches the README either. | Partly: right to refuse markup in prose, wrong for a recorded placeholder. | `recorded_placeholders`: a placeholder token a SUPPORTED fact spells inside code is exempt; element names, attributes, closing tags and unrecorded placeholders stay refused. The renderer prints every placeholder token in a code span. |
+| (d) planning reply truncated at 6000 (BL-097) | PDF Python | With every array full, every planning schema on record (18 sealed, 4 PDF) allows a 21,000-34,500 character reply; 6000 tokens hold about 18,000. Free-text strings had no maxLength (the item-75 runaway shape). | n/a | `output_bounds.bound_planning_reply` (BL-082's module and rule), applied in `planning_schema`: maxLength on every string, `sections` bounded to the shell, `deviations` capped so the reply fits. |
+
+**(d) measured.**
+- 82 successful planning calls in the 18 sealed ledgers: median 2004 completion tokens, p95 3861, max 4033 of 6000.
+- Sealed replies (composed `sections` excluded): 2,550 to 10,360 characters, 2.77 to 3.45 characters a token.
+- Worst case per part at each schema's own id width: core_capabilities 4,200-8,300, api_hubs 4,700-9,400,
+  material_limitations 3,800-5,800, deviations 5,500-9,300 characters.
+- `deviations` is never printed and nothing downstream reads it (only `plan_checks` checks its section ids), so it is
+  the part to bound, as `omitted` was in BL-082. Printed selections at p95 (8,000 characters) plus deviations at
+  their bound fit 75% of `max_output_tokens`.
+- Raising `max_output_tokens` was rejected: it changes the manifest, so every candidate's version set, and the
+  strings would still have no terminating condition.
+- Churn: every planning request hash changes (the string bounds apply everywhere; 17 of 18 sealed schemas also get a
+  lower deviation id cap, 5-10). One re-paid planning call per re-run cell. 2 sealed plans (Cells Go, Words .NET)
+  hold more deviation ids than their new bound, which no section packet reads, so section requests do not change.
+- Not observed: the truncated reply itself (artifacts unreadable here). If PDF Python truncates again, read the
+  reply from its call store before any budget change.
+
+**Zero-call evidence (O6, check behaviour before and after).**
+- Logged shapes replayed, origin/main vs branch: all three rejection messages reproduce on main, byte for byte for
+  (a); all three accepted on the branch.
+- (a) over every type unit stating its packet-listed members: origin/main refuses PDF .NET 2/60, PDF C++ 28/246, PDF
+  Go 1/1, PDF Python 0/24, PDF TypeScript 0/171, sealed Lane R 15/316. The branch refuses 0. The old check's
+  false-refusal rate on correct output: 46 of 818 type units (5.6%), in 9 of 23 repositories; the new rate is 0.
+- (c) over 46 bundles: 1,250 sealed authored units, 0 hits old and new; 1,040 live-README prose units, 1 hit old and
+  new (Slides .NET 074.paragraph, `<Application>` XML outside a code span, still refused), 0 exempted. New-rule
+  false-positive rate 0, no HTML let through.
+- (b) touches only a refused stray, so no sealed unit (none holds one) changes.
+- `recertify --all --remote origin` (read-only, zero calls), origin/main to branch: Lane R 6 RECERTIFIED / 12
+  NEEDS_REPAIR to the same, Lane L 28 RECERTIFIED to 28. No seal differs in outcome, findings or printed README. The
+  renderer's output is unchanged for every stored input (no sealed unit holds a placeholder), so RENDERER_VERSION
+  stays 39.
+- R10 gate: `recertify --gate --remote origin --base-baseline <origin/main data/recertification_baseline.json>`:
+  "OK: no seal that re-certified in the baseline regressed (46 seals checked)".
+
+**R42.**
+
+| Case | Upstream-caused? | What aspose.org did | Decision |
+|---|---|---|---|
+| (c) `<name>` | Yes: the maintainer's placeholder (README of Aspose-PDF-FOSS-for-Go). | Its published README (PR #1, merge 2306eeb, lines 889 and 891) keeps `_examples/<name>/main.go` and `go run ./_examples/<name>` in code spans. | Adopted: the renderer prints every placeholder in a code span, and the check accepts only placeholders the facts record in code. |
+| (a) enum values | No: our check. | The published C++ README (PR #1, merge 888700a, line 652) prints "`LineIntent` - Enum with 3 members." without naming them. | Improved on: we name the verified values (owner review 2026-11-13: a label is not a description). |
+| (b) DataMatrix | No: model wording. | The published TypeScript README (PR #2, merge 92446cc) predates the barcode feature; no candidate. | Own decision (above). |
+
+**Proof.** tests/readme/composition/test_first_attempt_rejections_bl094.py (8) and test_planning_bound_bl097.py (4),
+real logged shapes, each with a negative control.
+
+**Does NOT decide.** Whether the hosted re-runs of the five PDF cells now seal (the closing evidence for each item).
+Whether an enum value named outside its own type unit should be accepted (left to the general rule).
+
+Backlog: BL-094, BL-095, BL-096, BL-097

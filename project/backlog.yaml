@@ -1252,3 +1252,60 @@ items:
       - "2026-11-14: zero-call recertify --all: SECTION_FIT_LICENSE_IN_SCOPE on seals 1 -> 0 (3D .NET 'This project is licensed under the MIT License, as stated in the LICENSE file.' no longer printed); no new finding"
     next_action: "supervisor merges; hosted re-run of Cells Python and Cells TypeScript is the closing evidence"
     updated: "2026-11-14"
+  - id: BL-094
+    title: "A type unit may spell the enum values its own packet lists (identifier check refused packet-listed enum_member values)"
+    type: defect
+    source: "hosted runs 43572741039 (Aspose.PDF-FOSS-for-.NET, Lane R) and 43572742592 (Aspose.PDF-FOSS-for-Cpp, Lane R) on version set 81a1cb4204c1: OutputRejectedError section_authoring three times, last 'unit type:public_symbol:aspose.pdf.permissions: identifiers that are not accepted fact values: AssembleDocument, ExtractContentWithDisabilities, FillForm, ModifyTextAnnotations (nearest accepted: ModifyAnnotations), PrintingQuality' / 'lineintent: LineArrow, LineDimension'"
+    priority: P0
+    status: active
+    depends_on: []
+    implementation_path: "readme/composition/authoring.py type_slot_members (type_members of the slot's own type, bare and Type.member), unioned into unit_checks' per-unit verified set; scoped to the type's own unit. Not an extractor gap: every refused value is a SUPPORTED enum_member fact at the pinned revision (src/Security/Permissions.cs)"
+    acceptance: "hosted re-runs of PDF .NET and PDF C++ Lane R pass section_authoring's type batches; zero-call recertify --all shows no new finding; R10 gate OK; R41 re-verification"
+    evidence:
+      - "2026-11-14: facts re-extracted locally at the failing revisions (1d21c959, 4b83c9fe); replay of unit_checks on every type unit stating its packet-listed members: origin/main refuses PDF .NET 2/60 (the logged message byte for byte), PDF C++ 28/246 (LineIntent's LineArrow, LineDimension as logged), PDF Go 1/1, sealed Lane R 15/316; branch 0 of all"
+      - "2026-11-14: tests/readme/composition/test_first_attempt_rejections_bl094.py (BL-094 part: 3 tests, real Permissions/LineIntent values, negative control: another enum's value and an invented value stay refused)"
+      - "2026-11-14 (BL-094..BL-097 together, branch first-attempt-rejections): recertify --all --remote origin read-only, origin/main -> branch: Lane R 6 RECERTIFIED / 12 NEEDS_REPAIR -> same, Lane L 28 -> 28, 0 seals differ; recertify --gate --base-baseline <origin/main baseline> OK (46 seals); full suite 6456 passed, 29 skipped, 1 deselected; ops/gatecli.py validate OK"
+    next_action: "supervisor merges; the next hosted Lane R run of PDF .NET and PDF C++ is the closing evidence"
+    updated: "2026-11-14"
+  - id: BL-095
+    title: "A run-together name the facts spell as words (DataMatrix -> Data Matrix) is written as those words; a shortened name's re-ask says to write the accepted name in full"
+    type: defect
+    source: "hosted run 43572744168 (Aspose.PDF-FOSS-for-TypeScript, Lane R) on version set 81a1cb4204c1: section_authoring rejected three times, last 'unit type:public_symbol:datamatrixoptions: identifiers that are not accepted fact values: DataMatrix (nearest accepted: DataMatrixOptions, DataMatrixOptions.shape)'"
+    priority: P0
+    status: active
+    depends_on: []
+    implementation_path: "readme/composition/authoring.py restore_word_forms (after restore_case_variants in unit_checks: a stray bare CamelCase token whose word form occurs in a SUPPORTED public_symbol/format/standard_reference/capability fact's value or doc comment is written as those words), is_shortening + _SHORTENING_HINT on the identifier rejection. The check itself is right: DataMatrix is no public identifier at 03459482 (public symbology field takes 'datamatrix'; PmdSymbology's 'DataMatrix' literal is not exported)"
+    acceptance: "a hosted re-run of PDF TypeScript Lane R passes the DataMatrixOptions type unit; zero-call recertify --all shows no new finding; R10 gate OK"
+    evidence:
+      - "2026-11-14: replay of the logged shape: origin/main 'DataMatrix (nearest accepted: DataMatrixOptions)', branch accepted with 'a Data Matrix symbol'; tests/readme/composition/test_first_attempt_rejections_bl094.py (BL-095 part: 2 tests, negative control: a name the facts never spell as words stays refused and the re-ask carries the full-name hint)"
+    next_action: "supervisor merges; the next hosted Lane R run of PDF TypeScript is the closing evidence"
+    updated: "2026-11-14"
+  - id: BL-096
+    title: "A maintainer's <word> placeholder in a recorded path (_examples/<name>/main.go) is not HTML; the renderer prints it in a code span"
+    type: defect
+    source: "hosted run 43572737387 (Aspose-PDF-FOSS-for-Go, Lane R) on version set 81a1cb4204c1: section_authoring rejected three times, last 'unit summary: text contains HTML ('<'): <name>' (development_testing restating inherited_unit:087.paragraph)"
+    priority: P0
+    status: active
+    depends_on: []
+    implementation_path: "readme/composition/authoring.py recorded_placeholders (placeholder tokens a SUPPORTED fact spells inside a code span or fence), _bare_angle_bracket/angle_markup exempt exactly those tokens; HTML element names (HTML_ELEMENT_NAMES), attributes, closing tags and unrecorded placeholders stay refused. readme/composition/renderer.py RenderContext.prose wraps every placeholder token in a code span (the unit's own backticks are stripped by normalisation, so the renderer must present it). R42: adopted aspose.org's handling (placeholder kept in a code span, published README at 2306eeb lines 889/891)"
+    acceptance: "a hosted re-run of PDF Go Lane R passes development_testing; O6 report-only shows no live or sealed HTML let through; zero-call recertify --all shows no new finding; R10 gate OK"
+    evidence:
+      - "2026-11-14: replay of the logged shape: origin/main \"text contains HTML ('<'): <name>\", branch accepted; renderer prints `_examples/<name>/main.go` and `./_examples/<name>`; tests/readme/composition/test_first_attempt_rejections_bl094.py (BL-096 part: 3 tests, negative controls <b>, <br>, <a href>, <div>, an unrecorded bare <name>, a recorded `<code>`)"
+      - "2026-11-14: O6 report-only over 46 bundles: 1,250 sealed authored units, 0 hits old and new; 1,040 live-README prose units, 1 hit old and new (Slides .NET 074.paragraph '<Application>'), 0 exempted by the new rule"
+    next_action: "supervisor merges; the next hosted Lane R run of PDF Go is the closing evidence"
+    updated: "2026-11-14"
+  - id: BL-097
+    title: "presentation_planning replies bounded to max_output_tokens: every free-text string gets a maxLength, the ignored sections array is bounded, deviations (internal accounting) capped to fit"
+    type: defect
+    source: "hosted run 43572739220 (Aspose-PDF-FOSS-for-Python, Lane R) on version set 81a1cb4204c1: JobError 'presentation_planning: output truncated at the manifest's max_output_tokens (6000); raise the budget or bound the output, never retry'"
+    priority: P0
+    status: active
+    depends_on: [BL-082]
+    implementation_path: "readme/composition/output_bounds.py bound_planning_reply / deviations_bound (BL-082's module and rule: printed selections at measured p95 size plus the internal list at its bound must fit 75% of max_output_tokens); planning.planning_schema applies it (cascade, repair loop: every caller). max_output_tokens unchanged (6000)"
+    acceptance: "a hosted re-run of PDF Python Lane R passes presentation_planning; zero-call recertify --all shows no change; R10 gate OK; the next planning calls on record stay under the budget"
+    evidence:
+      - "2026-11-14: 82 successful planning calls in the 18 sealed Lane R ledgers: median 2004 completion tokens, p95 3861, max 4033 of 6000; replies 2,550-10,360 chars (sections excluded), 2.77-3.45 chars a token; with every array full, the 18 sealed and 4 PDF schemas allow 21,000-34,500 chars; deviations (never printed, no downstream reader) is the largest part, 5,500-9,300 chars"
+      - "2026-11-14: deviations bound over the 18 sealed schemas: 17 bounded (fact_ids 5-10), 1 unchanged (PDF Java); 2 sealed plans (Cells Go, Words .NET) hold more deviation ids than their bound, which no section packet reads. tests/readme/composition/test_planning_bound_bl097.py (4, negative control: a fitting schema keeps its bound)"
+      - "2026-11-14: ASSUMPTION: the truncated PDF Python reply itself is not recoverable here (the run's artifacts are refused by the artifact blob host), so which part ran over is inferred from the schema bound, not observed"
+    next_action: "supervisor merges; the next hosted Lane R run of PDF Python is the closing evidence; if it truncates again, read the reply from its call store before any budget change"
+    updated: "2026-11-14"

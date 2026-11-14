@@ -240,18 +240,93 @@ _ANCHORED_ONLY = frozenset({"- ", "* "})
 _MARKUP_OPENER = re.compile(r"<[A-Za-z_/!?]")
 
 
-def _bare_angle_bracket(raw_text: str) -> bool:
-    """Whether ``raw_text`` carries a ``<`` outside any code span - real HTML in running prose."""
-    return _MARKUP_OPENER.search(_CODE_SPAN.sub("", raw_text)) is not None
+#: A whitespace-free run holding one or more ``<word>`` placeholders and no other angle bracket:
+#: ``_examples/<name>/main.go``, ``./_examples/<name>``, ``<name>``.
+PLACEHOLDER_TOKEN = re.compile(r"[^\s<>`]*(?:<[A-Za-z][\w-]*>[^\s<>`]*)+")
+_PLACEHOLDER = re.compile(r"<([A-Za-z][\w-]*)>")
+_TOKEN_TRAIL = ".,;:!?)"
+_TOKEN_LEAD = "("
+#: Element names a ``<word>`` must never be: real HTML (and SVG/MathML that GitHub's sanitizer
+#: knows) is never treated as a placeholder, whatever the facts spell.
+HTML_ELEMENT_NAMES = frozenset(
+    "a abbr address area article aside audio b base bdi bdo big blink blockquote body br button "
+    "canvas caption center cite code col colgroup data datalist dd del details dfn dialog div dl "
+    "dt em embed fieldset figcaption figure font footer form frame frameset h1 h2 h3 h4 h5 h6 head "
+    "header hr html i iframe img input ins kbd label legend li link main map mark marquee math menu "
+    "meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt "
+    "ruby s samp script section select slot small source span strike strong style sub summary sup "
+    "svg table tbody td template textarea tfoot th thead time title tr track tt u ul var video wbr "
+    "path g circle rect line polyline polygon text use defs symbol image".split()
+)
+
+
+def is_placeholder_token(token: str) -> bool:
+    """Whether ``token`` (``PLACEHOLDER_TOKEN``'s match) holds only ``<word>`` placeholders, none of
+    them an HTML element name."""
+    names = _PLACEHOLDER.findall(token)
+    return bool(names) and all(name.lower() not in HTML_ELEMENT_NAMES for name in names)
+
+
+def placeholder_tokens(text: str) -> list[str]:
+    """The placeholder tokens of ``text``, edge punctuation trimmed, in order."""
+    found: list[str] = []
+    for match in PLACEHOLDER_TOKEN.finditer(text):
+        token = match.group(0).lstrip(_TOKEN_LEAD).rstrip(_TOKEN_TRAIL)
+        if token and is_placeholder_token(token) and token not in found:
+            found.append(token)
+    return found
+
+
+def recorded_placeholders(facts: FactsDocument) -> frozenset[str]:
+    """Every placeholder token a SUPPORTED fact's value spells inside a code span or fence: a
+    maintainer's own ``_examples/<name>/main.go``, the only placeholders a unit may restate."""
+    found: set[str] = set()
+    for fact in facts.facts:
+        if fact.polarity != "SUPPORTED" or "<" not in fact.value:
+            continue
+        code = [match.group(1) for match in _CODE_SPAN.finditer(fact.value)]
+        code.extend(re.findall(r"```[^\n]*\n(.*?)```", fact.value, flags=re.S))
+        for piece in code:
+            found.update(placeholder_tokens(piece))
+    return frozenset(found)
+
+
+def _without_placeholders(text: str, placeholders: Collection[str]) -> str:
+    """``text`` with each recorded placeholder token blanked (the renderer prints it in a code
+    span, ``renderer.RenderContext.prose``)."""
+    if not placeholders:
+        return text
+
+    def blank(match: re.Match[str]) -> str:
+        token = match.group(0).lstrip(_TOKEN_LEAD).rstrip(_TOKEN_TRAIL)
+        return " " if token in placeholders else match.group(0)
+
+    return PLACEHOLDER_TOKEN.sub(blank, text)
+
+
+def _bare_angle_bracket(raw_text: str, placeholders: Collection[str] = ()) -> bool:
+    """Whether ``raw_text`` carries a ``<`` outside any code span - real HTML in running prose.
+
+    A ``<word>`` placeholder inside a path or command the facts record in code (``placeholders``,
+    ``recorded_placeholders``) is not HTML: the renderer prints it in a code span. Decision
+    (BL-096, 2026-11-14): measured on Aspose-PDF-FOSS-for-Go (hosted run 43572737387), the
+    development_testing summary was refused three times for "text contains HTML ('<'): <name>",
+    restating the maintainer's carried paragraph (inherited_unit:087: "Standalone runnable example
+    programs live in `_examples/<name>/main.go` ... `go run ./_examples/<name>`"). The unit's
+    backticks are stripped before rendering, so the placeholder must be presented by the
+    renderer, never trusted to the model. Real HTML (an element name, attributes, a closing tag)
+    is still refused."""
+    outside = _without_placeholders(_CODE_SPAN.sub("", raw_text), placeholders)
+    return _MARKUP_OPENER.search(outside) is not None
 
 
 _ANGLE_QUOTED = 3
 _ANGLE_SPAN = 40
 
 
-def angle_markup(raw_text: str) -> list[str]:
+def angle_markup(raw_text: str, placeholders: Collection[str] = ()) -> list[str]:
     """The distinct markup fragments ``_bare_angle_bracket`` found in ``raw_text``, in order."""
-    outside = _CODE_SPAN.sub("", raw_text)
+    outside = _without_placeholders(_CODE_SPAN.sub("", raw_text), placeholders)
     quoted: list[str] = []
     for opener in _MARKUP_OPENER.finditer(outside):
         close = outside.find(">", opener.start())
@@ -1476,6 +1551,81 @@ def restore_case_variants(text: str, strays: Iterable[str], pool: Iterable[str])
     return text
 
 
+_CAMEL_WORD = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z][a-z]+|[A-Z]+|[a-z]+|\d+")
+_BARE_CAMEL = re.compile(r"[A-Z][A-Za-z0-9]*[a-z][A-Za-z0-9]*\Z")
+_WORD_FORM_TEXT_KINDS = frozenset({"public_symbol", "format", "standard_reference", "capability"})
+_word_form_cache: dict[tuple[int, str, str, int], str] = {}
+
+
+def _facts_prose(facts: FactsDocument) -> str:
+    """Every SUPPORTED fact's own prose (value and doc comment) in one string, cached per
+    document: what a stray CamelCase token's word form is looked up in."""
+    key = (id(facts), facts.repository, facts.source_revision, len(facts.facts))
+    cached = _word_form_cache.get(key)
+    if cached is None:
+        parts: list[str] = []
+        for fact in facts.facts:
+            if fact.polarity != "SUPPORTED" or fact.kind not in _WORD_FORM_TEXT_KINDS:
+                continue
+            parts.append(fact.value)
+            attributes = fact.attributes or {}
+            parts.extend(str(attributes.get(name, "")) for name in ("docstring", "docstring_full"))
+        cached = "\n".join(parts)
+        _word_form_cache.clear()
+        _word_form_cache[key] = cached
+    return cached
+
+
+def word_form(token: str) -> str | None:
+    """``token``'s words when it is a bare CamelCase run of two or more words ("DataMatrix" ->
+    "Data Matrix", "QRCode" -> "QR Code"); ``None`` for anything else (a dotted name, a call,
+    a snake_case name, a single word)."""
+    if not _BARE_CAMEL.fullmatch(token):
+        return None
+    words = _CAMEL_WORD.findall(token)
+    if len(words) < 2 or "".join(words) != token:
+        return None
+    return " ".join(words)
+
+
+def restore_word_forms(text: str, strays: Iterable[str], facts: FactsDocument) -> str:
+    """``text`` with each stray CamelCase token that the facts' own prose spells as words
+    written as those words.
+
+    Decision (BL-095, 2026-11-14): measured on Aspose.PDF-FOSS-for-TypeScript (hosted run
+    43572744168), the DataMatrixOptions unit was refused three times for "DataMatrix (nearest
+    accepted: DataMatrixOptions, DataMatrixOptions.shape)". "DataMatrix" is no public identifier
+    at the pinned revision (the public ``symbology`` field takes 'datamatrix'; the 'DataMatrix'
+    literal of ``PmdSymbology`` is not exported): it is the barcode symbology the facts spell
+    "Data Matrix" (``makeDataMatrix``'s doc comment, ``Form.AddBarcodeField``'s, ISO/IEC 16022),
+    run together. The check is right to refuse it as an identifier, and the nearest accepted
+    names are a different thing (the options type), so the re-ask could not be followed. The
+    facts' own words carry the same meaning and are no identifier claim."""
+    prose: str | None = None
+    for token in strays:
+        words = word_form(token)
+        if words is None:
+            continue
+        if prose is None:
+            prose = _facts_prose(facts)
+        if re.search(rf"(?<![\w.]){re.escape(words)}(?![\w])", prose):
+            text = re.sub(rf"(?<![\w.`]){re.escape(token)}(?![\w`])", words, text)
+    return text
+
+
+_SHORTENING_HINT = (
+    "; a shortened or run-together name is not an identifier: where you mean the accepted "
+    "name, write it in full exactly as listed, otherwise name the thing in plain words"
+)
+
+
+def is_shortening(token: str, near: Iterable[str]) -> bool:
+    """Whether ``token`` is a strict prefix of one of its nearest accepted spellings (the model
+    cut an accepted name short, as "DataMatrix" for "DataMatrixOptions")."""
+    bare = token[:-2] if token.endswith("()") else token
+    return any(name != bare and name.startswith(bare) for name in near)
+
+
 def stray_identifiers(tokens: Iterable[str], unaccepted: Callable[[str], bool]) -> list[str]:
     """The identifiers among ``tokens`` that ``unaccepted`` refuses, sorted, each once."""
     found: list[str] = []
@@ -1594,6 +1744,35 @@ def implementation_identifiers(
         if exception:
             found.add(exception)
     return frozenset(found)
+
+
+def type_slot_members(slot: str, facts: FactsDocument) -> frozenset[str]:
+    """The member names a ``type:<fact id>`` unit's packet lists with its type (``type_members``:
+    its verified methods and, for an enum, its verified values), so the unit may spell exactly
+    what it was handed; empty for any other slot.
+
+    Decision (BL-094, 2026-11-14): the type batch's packet hands an enum's values to the model
+    (``type_unit_facts`` -> ``type_members`` -> ``type_values``, from SUPPORTED ``enum_member``
+    facts), but the identifier check admitted only fact values, their dotted suffixes for symbol
+    kinds, and public method names, so a value the packet itself listed was refused. Measured on
+    the PDF family under version set 81a1cb4204c1: Aspose.PDF-FOSS-for-.NET (hosted run
+    43572741039) "aspose.pdf.permissions: identifiers that are not accepted fact values:
+    AssembleDocument, ExtractContentWithDisabilities, FillForm, ModifyTextAnnotations,
+    PrintingQuality" and Aspose.PDF-FOSS-for-Cpp (43572742592) "lineintent: ... LineArrow,
+    LineDimension", each the third rejection of one cell; every one is an ``enum_member`` fact
+    of that enum at the pinned revision (src/Security/Permissions.cs). Not an extractor gap.
+    Scoped to the unit of the type the values belong to: an enum value elsewhere in prose is
+    still judged by the general rule, so a common value name (``Default``, ``None``) never
+    becomes an accepted identifier portfolio-wide."""
+    if not slot.startswith("type:"):
+        return frozenset()
+    type_id = slot.removeprefix("type:")
+    type_fact = next((fact for fact in facts.by_kind("public_symbol") if fact.id == type_id), None)
+    if type_fact is None or type_fact.polarity != "SUPPORTED":
+        return frozenset()
+    owner = type_fact.value.rsplit(".", 1)[-1]
+    names = type_members(type_fact, facts)
+    return frozenset([*names, *(f"{owner}.{name}" for name in names)])
 
 
 def cited_inherited_identifiers(facts: FactsDocument, fact_ids: Iterable[str]) -> frozenset[str]:
@@ -1892,6 +2071,7 @@ def unit_checks(
     members = verified_members(facts)
     methods = surface_members(facts)
     nouns = prose_nouns(facts, name)
+    placeholders = recorded_placeholders(facts)
     merge_repeated_slots(output)
     expected = list(task.slots)
     output["units"] = [unit for unit in output.get("units", []) if unit.get("slot") in expected]
@@ -2002,14 +2182,14 @@ def unit_checks(
             if meaning in meanings:
                 continue
             if marker == "<":
-                matched = _bare_angle_bracket(raw_text)
+                matched = _bare_angle_bracket(raw_text, placeholders)
             else:
                 matched = text.startswith(marker) if marker in _ANCHORED_ONLY else marker in text
             if matched:
                 meanings.add(meaning)
                 found = f"{meaning} ({marker.strip()!r})"
                 if marker == "<":
-                    found += f": {', '.join(angle_markup(raw_text))}"
+                    found += f": {', '.join(angle_markup(raw_text, placeholders))}"
                 forbidden.append(found)
         if forbidden:
             errors.append(f"unit {slot}: text contains {', '.join(forbidden)}")
@@ -2023,7 +2203,7 @@ def unit_checks(
         bound_here = task.slot_facts.get(str(slot))
         verified_here = implementation_identifiers(
             facts, task.accepted_ids if bound_here is None else bound_here
-        )
+        ) | type_slot_members(str(slot), facts)
 
         def unaccepted(
             token: str,
@@ -2043,7 +2223,7 @@ def unit_checks(
         )
         pool = allowed | members | frozenset(name for found in methods.values() for name in found)
         if strays:
-            restored = restore_case_variants(text, strays, pool)
+            restored = restore_word_forms(restore_case_variants(text, strays, pool), strays, facts)
             if restored != text:
                 text = restored
                 unit["text"] = text
@@ -2052,11 +2232,14 @@ def unit_checks(
                 )
         if strays:
             shown = []
+            shortened = False
             for token in strays:
                 near = nearest_accepted_identifiers(token, pool)
                 shown.append(f"{token} (nearest accepted: {', '.join(near)})" if near else token)
+                shortened = shortened or is_shortening(token, near)
             errors.append(
                 f"unit {slot}: identifiers that are not accepted fact values: {', '.join(shown)}"
+                + (_SHORTENING_HINT if shortened else "")
             )
         outside = sorted(
             set(unit_fact_ids) - task.accepted_ids - task.superseded_ids - task.restored_out_ids
