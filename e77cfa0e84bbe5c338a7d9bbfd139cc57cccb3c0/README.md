@@ -66,6 +66,10 @@ flowchart TB
 - **CSV import/export.** CSV import/export moves data between `.csv` files and workbooks using `Workbook.ImportFromCSV` and `Workbook.ExportToCSV`, supporting caller-supplied delimiters and converting types as Excel does.
 - **Streaming and I/O.** Streaming and I/O loads workbooks from a source path with `LoadFrom`, saves workbooks with `SaveWorkbook`, and processes large files row-by-row using `NewStreamingReader` and `StreamingReader.ProcessRows` to keep memory usage proportional to one row.
 
+- Font, fill, alignment, and borders combine into a `Style` applied to any cell via
+  `Cell.SetStyle`, with automatic deduplication of identical styles during save. Styles carry
+  number formats (built-in or custom codes), and `TimeToSerial`/`SerialToTime` convert between
+  Go times and Excel date serials (1900 date system).
 - `Workbook.ExportToCSV` and `Workbook.ImportFromCSV` move data to and from CSV with a
   caller-supplied delimiter; export converts typed cell values to their CSV string form via
   `CellToString` and writes a UTF-8 BOM with CRLF line endings for Excel, while import infers
@@ -591,27 +595,24 @@ For the complete API reference and usage guide, see **[docs/usage.md](docs/usage
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/cells/go/)** — The getting started guide covers loading, editing, styling, and saving spreadsheets in Go.
-- **[How-to guides & FAQ](https://kb.aspose.org/cells/go/)** — The how-to guides and FAQ provide articles, answers, and troubleshooting for common tasks with Aspose.Cells FOSS for Go.
-- **[Full API reference](https://reference.aspose.org/cells/go/)** — The full API reference offers a complete, browsable reference for the public API. It covers all 37 public types; the [API Reference](#api-reference) section above covers the essentials.
-- **[CHANGELOG.md](CHANGELOG.md)** — The `CHANGELOG.md` file documents the release history, with the current release being 26.11.
-- **[AGENTS.md](AGENTS.md)** — The `AGENTS.md` file outlines the repository's contribution guide for AI-assisted development, including source-of-truth conventions and areas to avoid changing without review.
+- **[Getting started guide](https://docs.aspose.org/cells/go/)** — Go documentation for Aspose.Cells FOSS for Go: loading, editing, styling, and saving spreadsheets.
+- **[How-to guides & FAQ](https://kb.aspose.org/cells/go/)** — Go knowledge base for Aspose.Cells FOSS for Go: how-to articles, FAQ, and troubleshooting guides.
+- **[Full API reference](https://reference.aspose.org/cells/go/)** — the complete, browsable reference for the public API (the [API reference](#api-reference) section above covers the essentials). It covers all 37 public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[CHANGELOG.md](CHANGELOG.md)** — release history; the current release is **26.11**.
+- **[AGENTS.md](AGENTS.md)** — the repository's own contribution guide for AI-assisted development, covering source-of-truth conventions and areas to avoid changing without review.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/issues).
 
 ## Scope and Limitations
 
-Aspose.Cells FOSS for Go reads and writes Excel files using the XLSX format and provides a Go API for cell manipulation, formula calculation, chart creation, pivot table generation, and VBA project storage. It supports A1-style cell references, the 1900 date system, and ECMA-376-compatible XML generation, preserving unmodified content byte-for-byte on save.
-
-- `Cell` references are A1-style strings only; tuple or array indices are not supported, and the `Cells.Get` and `Cells.Set` methods operate exclusively with this reference style.
-- `CalculateFormula` covers only 22 functions, arithmetic/comparison operators, and same-workbook cross-sheet references; the full Excel function library, external-workbook references, and dependency-driven recalculation are not included, and `FormulaError` may be returned for unsupported formulas.
-- `TimeToSerial` and `SerialToTime` use the 1900 date system only, reject serials below 61 due to Excel's 1900 leap-year bug, and do not support dates beyond 9999-12-31 or the 1904 date system.
-- `Chart` supports bar, line, pie, scatter, and area with axis titles, hidden axes, and legends; 3D and combo charts, secondary axes, data labels, and gridline styling are not supported, and chart data is referenced by cell range, not embedded. `PivotTable` covers row, column, and data fields; calculated fields, grouping, and custom aggregations are not supported.
-- VBA support is storage-only: `VBAProject` bytes round-trip via `Workbook.GetVBAProject`, but VBA code cannot be created, edited, or executed.
-- `Workbook.Save` reuses unmodified content verbatim from the original XML byte-for-byte and regenerates only content touched since load; `Workbook.SourceXML` exposes the underlying XML, and generated XML follows ECMA-376 element ordering to preserve round-trip compatibility.
-
-- Hidden rows/columns, outline grouping, print setup, and sheet protection are not modeled.
-  Parts the library does not model (themes, docProps, comments, calcChain) are preserved
-  byte-for-byte on round-trip instead.
+- Cell references are A1-style strings only (`"A1"`, `"B2"`); tuple/array indices (e.g. `[0, 0]`) are not supported.
+- `CalculateFormula` covers the 22 functions, arithmetic/comparison operators, and same-workbook cross-sheet references; the full Excel function library, external-workbook references (`[Book.xlsx]Sheet!A1`), and a dependency-driven recalculation graph are not included. `InsertRow`/`DeleteRow` shift references but never rewrite formula text.
+- Number formats use the 1900 date system only: `TimeToSerial`/`SerialToTime` reject serials below 61 (ambiguous because of Excel's 1900 leap-year bug) and dates beyond 9999-12-31. The 1904 date system is not supported.
+- Charts cover bar, line, pie, scatter, and area with axis titles, hidden axes, and legends; 3D and combo charts, secondary axes, data labels, and gridline styling are not supported, and chart data is referenced by cell range, not embedded. Pivot tables cover row, column, and data fields; calculated fields, grouping, and custom aggregations are not supported.
+- Conditional formatting does not cover the Excel 2010+ extensions (x14 gradient data bars, negative-value formats).
+- Hidden rows/columns, outline grouping, print setup, and sheet protection are not modeled. Parts the library does not model (themes, docProps, comments, calcChain) are preserved byte-for-byte on round-trip instead.
+- VBA support is storage-only: `vbaProject.bin` bytes round-trip, but VBA code cannot be created, edited, or executed.
+- On save, unmodified content is reused verbatim from the original XML byte-for-byte, and only content touched since load is regenerated — round-trip fidelity depends on this split, not a full re-serialization of every part.
+- Generated XML follows ECMA-376's own element ordering; this preserves round-trip compatibility but isn't independently configurable.
 
 - **A1-style references** (e.g. `"A1"`, `"B2"`) — tuple/array indices (e.g. `[0, 0]`) are not supported
 - Modified content regenerates XML; unmodified content reuses original XML
@@ -622,8 +623,6 @@ Aspose.Cells FOSS for Go reads and writes Excel files using the XLSX format and 
 These limitations don't apply to [full-featured Aspose.Cells for Go — Enterprise Edition](https://products.aspose.com/cells/go-cpp/). It adds the complete Excel formula function library, additional file-format coverage, and commercial support.
 
 ## Development and Testing
-
-The toolchain requires Go 1.24.5 or later, as specified by the `go.mod` directive. The full test suite and integration tests cover the public API surface. Example programs under the examples directory write output files to a subdirectory and must not be committed with generated artifacts.
 
 The suite covers 31 test files under `tests/`.
 
@@ -654,17 +653,11 @@ cd examples
 for d in */; do go run ./$d; done
 ```
 
-`examples/` is its own Go module, with a `replace` directive already pointing it back at the
-repository root — the exact version named in its `require` line never needs to resolve to a real
-published release, only to satisfy Go's own version-string syntax. If building or running anything
-under `examples/` reports an invalid module version, replace that line's version with any
-well-formed pseudo-version for major version 26 and re-run.
+`examples/` is its own Go module, with a `replace` directive already pointing it back at the repository root — the exact version named in its `require` line never needs to resolve to a real published release, only to satisfy Go's own version-string syntax. If building or running anything under `examples/` reports an invalid module version, replace that line's version with any well-formed pseudo-version for major version 26 and re-run.
 
-Example programs under `examples/` write their output files to `examples/outputfiles/` (created
-on first run) — avoid committing generated `.xlsx`/`.csv` files or that directory's contents.
+Example programs under `examples/` write their output files to `examples/outputfiles/` (created on first run) — avoid committing generated `.xlsx`/`.csv` files or that directory's contents.
 
-For a complete usage walkthrough beyond this README, see the repository's own
-[docs/usage.md](docs/usage.md).
+For a complete usage walkthrough beyond this README, see the repository's own [docs/usage.md](docs/usage.md).
 
 ## License
 
