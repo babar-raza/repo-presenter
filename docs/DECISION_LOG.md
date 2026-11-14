@@ -5798,3 +5798,24 @@ A CI test keeps the baseline reproducible from its inputs. This merge is analysi
 audit's code prototypes, nor the BL-084 pipeline classifier; both wait for the owner's discussion of options O1–O8.
 
 Backlog: BL-085
+
+## 2026-11-14 — Decisions on the Lane R audit options O1–O8 (owner-delegated)
+
+**Owner.** "O1-O8 options are yours to decide. As I said I need results not questions to answer."
+
+**Decisions** (the evidence is in `docs/investigations/2026-11-13-lane-r-not-progressing.md`; the baseline is measured
+with its `measure.py`). Lane R seals went from 2 to 6 between the audit and these decisions, through O1 alone.
+- **O1 (re-run cells whose blocker is fixed):** kept. It is the loop's normal behaviour, and it produced Cells Java,
+  Email .NET, Cells Rust and Imaging .NET overnight.
+- **O2 (reach the 27 never-attempted cells):** adopted. The planner order becomes changed-scope cells first, then
+  never-attempted cells, then the rest, with a repeat cap (BL-086).
+- **O3 (register at the source):** adopted in the parts proven safe: P1 API-row wording, and P3 register rows in authoring
+  and unit checks. P2 waits on O4 (BL-087).
+- **O4 ("omit, citing the register row"):** adopted (BL-088).
+- **O5 / BL-084 (durable failure records and the planner hold):** merged once verified.
+- **O6:** adopted as process, as checklist item 13 in `docs/RULINGS.md` (BL-090).
+- **O7 (blank unit becomes a plan-level drop):** adopted (BL-083).
+- **O8:** the license-in-Scope check is kept, because it is the owner's earlier 3D .NET feedback, and its producer
+  side is fixed. Kept maintainer formatting is auto-corrected as a recorded formatting-only edit (BL-089).
+
+Backlog: BL-083, BL-084, BL-086, BL-087, BL-088, BL-089, BL-090

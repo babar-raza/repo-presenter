@@ -29,6 +29,7 @@ by machinery built.**
 10. Is this being executed through the governed pipeline, and will it be done only when reproducible, verified and evidenced (R38)? Re-read `docs/R38_CHECKPOINT.md` from time to time.
 11. Did everything I called next / not done / left for later / blocked become a `project/backlog.yaml` item, and did every decision-log entry get a `Backlog:` line (R40)? Prose-only follow-ups are how work was silently dropped.
 12. Is this a fix for owner feedback or a defect? It applies to both lanes and every candidate, and it is done only after every candidate is re-verified under the fixed code, with evidence (R41).
+13. Does this add or change a blocking check? It lands only together with its producer-side fix (authoring, renderer or repair), after a report-only run over every sealed and live README shows a false-positive rate under 5%, and with a `recertify --all` before/after diff in the PR. A check never lands alone (supervisor process decision 2026-11-14, owner-delegated; evidence: 7 of 10 new Lane R failure classes came from checks landing without their fix, docs/investigations/2026-11-13-lane-r-not-progressing.md S2).
 
 ## New rulings, 2026-11-13 (owner)
 

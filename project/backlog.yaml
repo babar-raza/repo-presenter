@@ -1107,3 +1107,16 @@ items:
     next_action: "owner discussion of options O1-O8 (section 7)"
     updated: "2026-11-14"
 
+  - id: BL-090
+    title: "Process (O6): a blocking check lands only with its producer-side fix, a measured false-positive rate under 5%, and a recertify --all diff"
+    type: requirement
+    source: "supervisor decision 2026-11-14 (owner-delegated), audit O6 and S2"
+    priority: P1
+    status: active
+    implementation_path: "docs/RULINGS.md pre-work checklist item 13; every worker brief carries it"
+    acceptance: "every PR adding or changing a blocking check states its report-only false-positive rate and the recertify --all diff; no new Lane R failure class appears that a merged check introduced without its fix (measured with docs/investigations/2026-11-13-lane-r-not-progressing/measure.py)"
+    evidence:
+      - "checklist item 13 added 2026-11-14; applied to the O3/O4/O7/O8 worker brief"
+    next_action: "enforce in review of every check-changing PR"
+    updated: "2026-11-14"
+
