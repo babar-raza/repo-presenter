@@ -205,8 +205,22 @@ _PUBLIC_QUALIFIER = re.compile(r"(?i)\b(?:public|verified|exported)\b")
 # BL-065 (K05, 2026-11-12 register row, Aspose.Cells-FOSS-for-Cpp): "The full public surface -- 195
 # public types -- is listed below" over tables of 157 rows. A count the sentence says is listed is
 # also held to the rows that follow it, up to the next second-level heading.
+# BL-093 (M9 round 43559491132, PDF Python Lane L control 8aecb5): "385 public types are organized by
+# module below" over 284 rows -- "listed" was the only verb read, so the same defect under another
+# listing verb (organized, grouped, shown, documented, tabulated) was never held to the rows. Up to
+# five plain words may sit between the verb and "below" ("organized by module below", "grouped by
+# namespace in the table below"); a gap naming a link, reference, page, site or docs points at a
+# document elsewhere, not at rows that follow.
+#
+# "summarized" is deliberately NOT a listing verb (O6 report-only run, 2026-11-14): a summary need not
+# hold every type, and the four "N ... summarized ... below" sentences of the portfolio's seals (PDF
+# .NET 983/980, Cells Rust 213/208, Email .NET 29/23, Words Python 189/144) would each turn a
+# re-certifying seal into NEEDS_REPAIR on that reading alone -- two with no honest Lane L correction
+# (a maintainers' total the facts cannot check). Recorded as BL-099 for an owner-level reading.
+_LISTING_VERB = r"(?:listed|organi[sz]ed|grouped|shown|documented|tabulated)"
 _LISTED_HERE = re.compile(
-    r"(?i)\b(?:(?:is|are)\s+)?listed\s+(?:below|here|in\s+the\s+(?:table|tables)\s+below)\b"
+    rf"(?i)\b(?:(?:is|are)\s+)?(?<![\w-]){_LISTING_VERB}(?:\s+(?!below\b|here\b|link|reference|page|site|docs?\b|documentation)[\w'-]+){{0,5}}?"
+    r"\s+(?:below|here|in\s+the\s+(?:[\w-]+\s+)?(?:table|tables)\s+below)\b"
     r"|\bas\s+follows\b"
 )
 _SECTION_HEADING = re.compile(r"^\s*#{1,2}\s")

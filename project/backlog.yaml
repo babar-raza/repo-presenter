@@ -226,6 +226,7 @@ items:
       - "2026-11-14 branch m9-facts-k05-k10: K05/K10 leave the known-false list only by provenance -- run_m9_auditor.class_provenance: a count clears when every count on the line is the shipped-package facts' computation (types/classes/enums; 'N of them listed' and any total said to be listed/organized/summarized below held to the type-table rows that follow), a name when every '<name> -- Enterprise Edition' is the H1 name at the SUPPORTED target's level, at that target's URL, never right after a link naming it; register rows and claim detectors still refute first; the computation is written into the cleared row. Audit packet computed_counts carries classes, enums and the counted facts by source root"
       - "O6 report-only over every latest seal and live README (scripts/measure_m9_derivation.py classes): seal K05 57 lines, 45 verified, 6 of them refuted by register rows (Words .NET 618 x5: stale C# facts; Cells TypeScript 31: table elsewhere); seal K10 60 lines, 46 verified, 1 refuted (the Words .NET register row); every verified-but-false line is caught by the register first, so the combined rule clears none of them; live READMEs K05 6/20, K10 17/21 verified, 0 refuted"
       - "zero-call replay of round 43559491132 (measure_m9_derivation.py replay; 45/45 cases reproduced, recall 19/19 = 1.000 at every step): corrected auditor 5/22 = 0.227 -> + BL-065 5/22 (ab8a03's 198 lines now CONFIRMED by rule (h), still flagged on line 632 and maintainer rows) -> + BL-070 7/22 = 0.318 (PSD .NET 5584e7 and Cells .NET 63b47d sealed v3 names the fixed engine no longer writes: underived until re-certified) -> + provenance 5/22 = 0.227 (e43a75, e48a84 and 802069:266 cleared with their computation; the 5 left each carry a defect at the frozen text) -> projected on the re-certified control texts 3/22 = 0.136: 8aecb5 (385 'organized by module below' over 284 rows, a genuine K05 defect, BL-093), ab8a03 (maintainer rows 401-402, 402 a pre-existing false 'Style | 11 properties'), 802069 (a frozen flag on the broken sentence the re-certified seal no longer prints); excluding the two controls with a genuine defect, 1/20 = 0.050. Evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_k05_k10_2026-11-14.json"
+      - "2026-11-14 branch m9-clean-controls (BL-093, BL-094): zero-call replay of round 43559491132 on the controls re-certified under the branch, frozen flags kept: recall 19/19 = 1.000, false-flag 2/22 = 0.091 with no exclusion (802069: a frozen flag on the duplicated-name sentence the re-certified seal no longer prints; ab8a03 line 401: a model flag on the true maintainer row 'Shading | Class with 2 properties.'); 8aecb5 and ab8a03 row 402 now cleared by provenance. Frozen texts: 4/22 = 0.182 (PSD .NET 5584e7 and Cells .NET 63b47d carry v3 names until re-certified). Evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_bl093_bl094_2026-11-14.json"
     next_action: "supervisor: re-verify TC-022a (STALE: tests/acceptance/test_registration.py clean-twin floor 78 -> 85 after the R10 baseline rewrite) and regenerate the dashboard; merge; let the hosted recertify --write on main re-certify every Lane L seal (R41) so the next round audits v4/shipped-package seals; fix BL-093 (listed-count phrasing) so 8aecb5 is clean; then the next hosted round must show recall >= 0.90 and false-flag <= 0.10; then BL-075, BL-092"
 
   - id: BL-014
@@ -1172,12 +1173,42 @@ items:
     type: defect
     source: "BL-013 K05/K10 provenance check of M9 round 43559491132 (2026-11-14)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "readme/validation/surface_claims.py _LISTED_HERE (rule (h)) recognises only 'listed below|here|in the table(s) below|as follows'; readme/correction/detectors/stale_type_count.py rewrites the number of any such sentence it does not recognise, and listed_type_count fails closed on it. Widen the listing phrase (organized/summarized/grouped ... below, 'the module-grouped table(s) below'), let listed_type_count write the shipped total with the listed rows, and skip the sentence in stale_type_count; O6 report-only first, with recertify --all before/after"
     acceptance: "PDF Python Lane L at 02b0c0e4 no longer states '385 public types are organized by module below' over 284 type rows (the live README says 277 over 284); rule (h) flags the shape; report-only FP < 5% over every seal and live README; R10 gate OK"
     evidence:
       - "PDF Python Lane L seal 3d91633f (control 8aecb5): corrections.json stale_type_count line 1965 '277' -> '385'; 284 type-table rows follow to the next level-2 heading; run_m9_auditor.count_provenance keeps the model flag on it (rows != total). Cells Rust Lane L line 349 '213 public types, summarized in the module-grouped table' is the same phrasing (unverified). Evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_k05_k10_2026-11-14.json"
-    next_action: "queue next after the BL-013 merge"
+      - "2026-11-14 branch m9-clean-controls: surface_claims._LISTED_HERE (BC-14 rule (h), both lanes) reads listed/organized/grouped/shown/documented/tabulated with up to five words before 'below' (a gap naming a link/reference/page/docs is not a listing); listed_type_count v2 rewrites only the leading '[is|are] <verb>' ('are organized' -> '— 284 of them organized', so wrapped phrases are corrected too) and leaves a total the facts do not record; the auditor's count provenance reads the same verbs. Tests: tests/readme/correction/detectors/test_listed_type_count_bl093.py (verbatim PDF Python section, tests/fixtures/listed_count/pdf_python_api_reference.md)"
+      - "O6 report-only over every latest seal and live README (scripts/measure_listed_and_member_counts.py): 7 count sentences read, 2 hits (PDF Python L 385/284, new; Cells C++ R 195/157, already read), 0 false positives at source. recertify --all: Lane L 28/28 and Lane R 6/18 unchanged; PDF Python L README now '385 public types — 284 of them organized by module below.'; R10 gate OK (46 seals); evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_bl093_bl094_2026-11-14.json"
+    next_action: "merge; hosted recertify --write on main re-certifies PDF Python Lane L (R41 run id), then done; the 'summarized' reading is BL-099"
+    updated: "2026-11-14"
+
+  - id: BL-098
+    title: "K05 member counts: a maintainer's API-table count cell ('Class with 11 properties.') is never held to the class's members"
+    type: defect
+    source: "supervisor 2026-11-14 after BL-013 round 2: Words Python Lane L control ab8a03 row 402 'Style | Class with 11 properties.' (Style has 15 fields) left the control mislabelled clean"
+    priority: P0
+    status: active
+    implementation_path: "readme/evidence/facts/source_detail.py python_member_counts (class fact member_counts) + recertify.current_surface (member counts from the pinned .py sources for facts sealed before them) + readme/correction/detectors/type_description.py v3 true_count_cell"
+    acceptance: "Words Python Lane L at 2d2efee2 states 'Style | Class with 15 properties.' (and every other refuted count cell its true count), rows kept (R14); report-only FP < 5%; R10 gate OK"
+    evidence:
+      - "branch m9-clean-controls: no Lane L detector judged count cells (type_description reported them NO_DOC_COMMENT) and no fact recorded member counts. Readings that leave a count as written: properties = fields+properties, fields or properties; methods with or without dunders/__init__; 'members' never judged; a count above every reading is not refuted when a non-root base may add members. Tests: tests/readme/correction/detectors/test_type_description_member_counts.py (verbatim Words Python and PDF Python class bodies, negative controls)"
+      - "O6 report-only: 484 count cells over every latest seal and live README, 83 judged (Python classes with member_counts), 11 hits, each true at the pinned source (Words Python Border 6, Font 32, Row 4, RowFormat 6, Style 15 fields; PDF Python PerformanceLogger 4 public methods): 0% false positive. recertify --all: counts unchanged; Words Python Lane L a500a1b3 rows Border/Font/Row/RowFormat/Style corrected, still RECERTIFIED; R10 gate OK; evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_bl093_bl094_2026-11-14.json"
+    next_action: "merge; hosted recertify --write on main re-certifies Words Python Lane L (R41 run id), then done"
+    updated: "2026-11-14"
+
+  - id: BL-099
+    title: "Owner reading: is 'N public types ... summarized in the table below' over fewer rows a false claim?"
+    type: gap
+    source: "BL-093 O6 report-only run (2026-11-14)"
+    priority: P1
+    status: done
+    implementation_path: "readme/validation/surface_claims.py _LISTING_VERB: 'summarized' left out of rule (h)'s listing verbs on the measurement"
+    acceptance: "a recorded decision (with the four cases) whether a summarized total is held to its rows; if yes, a producer-side fix for maintainers' totals the facts cannot check lands with it (checklist 13)"
+    evidence:
+      - "decided by the supervisor 2026-11-14 (owner-delegated, R11): 'summarized below' is not held to the row count -- a summary need not list every type; holding it would demote three seals with no honest correction (PDF .NET, Cells Rust, Email .NET); recorded in docs/DECISION_LOG.md"
+      - "with 'summarized' read as a listing verb: PDF .NET Lane L 983/980 (seal and live), Cells Rust Lane L 213/208, Email .NET Lane R 29/23, Words Python Lane L 189/144 are hits; recertify --all measured Lane L 28 -> 26 and Lane R 6 -> 5; PDF .NET and Cells Rust have no honest Lane L correction (totals the facts do not record: 983 vs 969 facts, 213 vs 115). Evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_bl093_bl094_2026-11-14.json"
+    next_action: "decide on the evidence with the BL-093 merge"
     updated: "2026-11-14"
 
   - id: BL-084

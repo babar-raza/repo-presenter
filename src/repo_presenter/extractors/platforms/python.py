@@ -548,6 +548,36 @@ class PythonPlugin:
             return facts
         return [fact for fact in facts if not unshipped_fact(fact, shipped[1])]
 
+    def member_count_facts(self, document: Any, sources: Mapping[str, str]) -> tuple[Any, int]:
+        """``(document, changed)``: every SUPPORTED class fact without ``member_counts`` gains it,
+        read from the class at its evidence line in ``sources`` (``source_detail.python_member_counts``,
+        exactly what the extractor now records) -- re-certification's view of facts sealed before
+        the attribute existed (BL-098). A class whose file or line cannot be read stays as it is."""
+        import re
+        from dataclasses import replace
+
+        from repo_presenter.readme.evidence.facts.source_detail import class_member_counts_from_source
+
+        facts, changed = [], 0
+        for fact in document.facts:
+            attributes = fact.attributes or {}
+            if (
+                fact.kind == "public_symbol" and fact.polarity == "SUPPORTED"
+                and attributes.get("symbol_kind") == "class" and "member_counts" not in attributes
+                and fact.evidence
+            ):
+                found = re.match(r"line (\d+);", fact.evidence[0].detail or "")
+                path = fact.evidence[0].path
+                counts = (
+                    class_member_counts_from_source(sources[path], fact.value, path, int(found.group(1)))
+                    if found and path in sources else None
+                )
+                if counts is not None:
+                    fact = replace(fact, attributes={**attributes, "member_counts": counts})
+                    changed += 1
+            facts.append(fact)
+        return (replace(document, facts=tuple(facts)) if changed else document), changed
+
     def shipped_path_filter(self, manifests: Mapping[str, str], tree_paths: Sequence[str]):
         """The build's package list as a path predicate (``shipped_path_filter``); also used by
         re-certification over a sealed facts document (``recertify.shipped_facts``)."""

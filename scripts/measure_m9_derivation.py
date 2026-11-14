@@ -137,7 +137,7 @@ def replay(args: argparse.Namespace) -> dict:
     from repo_presenter.acceptance.audit.seed import CLEAN_SHAPE
     from repo_presenter.core.facts import read_facts
     from repo_presenter.core.registry.loader import load_registry, require_listed
-    from repo_presenter.recertify import fetch_source, recertify_bundle, shipped_facts
+    from repo_presenter.recertify import current_surface as shipped_facts, fetch_source, recertify_bundle
 
     spec = importlib.util.spec_from_file_location("run_acceptance_writer", REPO_ROOT / "scripts" / "run_acceptance_writer.py")
     writer = importlib.util.module_from_spec(spec)
@@ -253,7 +253,7 @@ def classes(args: argparse.Namespace) -> dict:
 
     from repo_presenter.core.facts import read_facts
     from repo_presenter.core.registry.loader import load_registry, require_listed
-    from repo_presenter.recertify import fetch_source, shipped_facts
+    from repo_presenter.recertify import current_surface as shipped_facts, fetch_source
 
     registry = load_registry(REPO_ROOT / "data" / "registry.json")
     register = auditor.load_register()
