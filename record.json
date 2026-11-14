@@ -1,0 +1,761 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T17:06:15+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-06|unresolved|n_aspose_com_links",
+    "BC-17|inherited_unit|section_coverage",
+    "BC-17|inherited_unit|technical_content",
+    "live_readme_loss|inherited_unit|link_https"
+   ],
+   "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+   "findings": 32,
+   "outcome": "failure",
+   "run_id": "43617110277",
+   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T17:06:15+00:00",
+  "classes": {
+   "BC-05|inherited_unit|superseded_unstated": {
+    "example": "inherited_unit:022.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (dotnet add package aspose.slides.foss --version 26.9.0): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "findings": 3,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:022.code_block",
+     "inherited_unit:091.paragraph",
+     "inherited_unit:095.paragraph"
+    ],
+    "rule": "BC-05",
+    "scope": "c570367016f3e0d7be11a03ab3a6c6755de849f58f4015c25efa9be94490d369",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   "BC-06|unresolved|n_aspose_com_links": {
+    "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 2088 visible words and 8 verified examples)",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-06",
+    "scope": "eb0a32020f7cd800c1ce19abc5e68997d55f00fabb66e70255edab6840cd5e36",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "n_aspose_com_links",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|section_coverage": {
+    "example": "inherited_unit:067.table holds h2 'What it cannot do', which the published README prints and this candidate loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 4,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:067.table",
+     "inherited_unit:080.paragraph",
+     "inherited_unit:083.list",
+     "inherited_unit:091.paragraph"
+    ],
+    "rule": "BC-17",
+    "scope": "c570367016f3e0d7be11a03ab3a6c6755de849f58f4015c25efa9be94490d369",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "section_coverage",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:067.table holds api_identifiers 'Ppt', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 21,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:067.table",
+     "inherited_unit:083.list",
+     "inherited_unit:091.paragraph"
+    ],
+    "rule": "BC-17",
+    "scope": "c570367016f3e0d7be11a03ab3a6c6755de849f58f4015c25efa9be94490d369",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   "live_readme_loss|inherited_unit|link_https": {
+    "example": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+    "findings": 3,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:083.list"
+    ],
+    "rule": "live_readme_loss",
+    "scope": "1ec2c9308a46754789c5c9ac4d5332beabab8cf9e0dd9449900076561c02376b",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "link_https",
+    "upstream": ""
+   }
+  },
+  "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 81a1cb4204c1: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|link_https",
+    "source": "review",
+    "sub_rule": "link_https",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|link_https",
+    "source": "review",
+    "sub_rule": "link_https",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|link_https",
+    "source": "review",
+    "sub_rule": "link_https",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:022.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (dotnet add package aspose.slides.foss --version 26.9.0): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:022.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:091.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 2 piece(s) of it (link 'https://github.com/aspose-slides-foss/aspose.slides-foss-for-.net/blob/main/code_of_conduct.md'; link 'https://github.com/aspose-slides-foss/aspose.slides-foss-for-.net/blob/main/changelog.md'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:091.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:095.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 2 piece(s) of it (link 'https://github.com/aspose-slides-foss/aspose.slides-foss-for-.net/blob/main/license'; 'Copyright (c) 2026 Aspose Pty Ltd.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:095.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-06",
+    "message": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 2088 visible words and 8 verified examples)",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-06",
+    "section_id": "",
+    "signature": "BC-06|unresolved|n_aspose_com_links",
+    "source": "validation",
+    "sub_rule": "n_aspose_com_links",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds h2 'What it cannot do', which the published README prints and this candidate loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|section_coverage",
+    "source": "validation",
+    "sub_rule": "section_coverage",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:080.paragraph holds h2 'Choosing an edition', which the published README prints and this candidate loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:080.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|section_coverage",
+    "source": "validation",
+    "sub_rule": "section_coverage",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:083.list holds h2 'Choosing an edition', which the published README prints and this candidate loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|section_coverage",
+    "source": "validation",
+    "sub_rule": "section_coverage",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:091.paragraph holds h2 'Contributing', which the published README prints and this candidate loses (section_coverage): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:091.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|section_coverage",
+    "source": "validation",
+    "sub_rule": "section_coverage",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Ppt', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Xps', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Tiff', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Odp', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Ppsm', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Potm', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Html', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Swf', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Otp', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Pps', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Pot', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Fodp', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Gif', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Html5', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Md', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:067.table holds api_identifiers 'Xml', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:083.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:083.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:083.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:083.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:091.paragraph holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:091.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:091.paragraph holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET/blob', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:091.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "4c502590be7ace92988f42e43d37d76f75f74cc5",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:067.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:080.paragraph: still DEFER_UNRESOLVED, which is the defect: deferring it loses its content. Keep it as written in a section that can hold it (opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), or omit it citing the fact that contradicts it; revised_output: inherited_unit:080.paragraph: DEFER_UNRE",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:091.paragraph: still SUPERSEDE_REDUNDANT (you answered VERIFIED_PRESERVE into enterprise_relationship, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, ",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:022.code_block: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into quick_start, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, additional_examples, api_reference, documentation",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:083.list: still DEFER_UNRESOLVED, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_UNSU",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:095.paragraph: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into scope_limitations, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_refere",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-06",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S5"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:091.paragraph: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or O",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+  "run_id": "43617110277",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43617110277",
+  "schema_version": 1,
+  "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+ },
+ "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+ "schema_version": 1
+}
