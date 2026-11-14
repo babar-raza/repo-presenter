@@ -1,9 +1,7 @@
 {
   "coherence": {
     "applied": true,
-    "revised": [
-      "development_testing/summary"
-    ]
+    "revised": []
   },
   "omitted": [
     {
@@ -37,119 +35,154 @@
       "section": "opening"
     },
     {
+      "fact_id": "package:java_release",
+      "reason": "Java release version is not used in the opening unit; it supports platform context but does not describe actions or capabilities.",
+      "section": "opening"
+    },
+    {
       "fact_id": "package:published_version",
-      "reason": "Published version is not used in the opening unit; version numbers are not stated in the opening prose.",
+      "reason": "Published version is not used in the opening unit; it is metadata, not capability.",
       "section": "opening"
     },
     {
       "fact_id": "license:spdx",
-      "reason": "License identity is not used in the opening unit; licensing is not described in the opening.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "install_command:maven",
-      "reason": "Install command is not used in the opening unit; installation is not described in the opening.",
+      "reason": "License identifier is not used in the opening unit; it is metadata, not capability.",
       "section": "opening"
     },
     {
       "fact_id": "dependency:none",
-      "reason": "Dependency absence is not used in the opening unit; dependencies are not described in the opening.",
+      "reason": "Dependency absence is not used in the opening unit; it is metadata, not capability.",
       "section": "opening"
     },
     {
       "fact_id": "dependency:development.org.apache.poi-poi-ooxml",
-      "reason": "Development dependency is not used in the opening unit; dependencies are not described in the opening.",
+      "reason": "Development dependency is not used in the opening unit; it is metadata, not capability.",
       "section": "opening"
     },
     {
-      "fact_id": "inherited_unit:010.list",
-      "reason": "Not relevant to this capability; inherited list items are covered in other capability units.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "Not relevant to this capability; ecosystem identity is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "Not relevant to this capability; family identity is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "Not relevant to this capability; platform identity is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Not relevant to this capability; knowledge refresh metadata is internal provenance.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Not relevant to this capability; repository identity is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Not relevant to this capability; revision metadata is internal provenance.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:java_release",
-      "reason": "Not relevant to this capability; Java release version is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "Not relevant to this capability; package name is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "Not relevant to this capability; published version is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "Not relevant to this capability; version is covered in other sections.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:002",
-      "reason": "Not relevant to this capability; example:002 describes workbook loading and repair.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:003",
-      "reason": "Not relevant to this capability; example:003 describes validation and conditional formatting.",
-      "section": "key_capabilities"
-    },
-    {
       "fact_id": "inherited_unit:028.code_block",
-      "reason": "Cited only for a code block in another section; not used in this section's units.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:029.heading",
-      "reason": "Cited only for a heading in another section; not used in this section's units.",
+      "reason": "Not cited by any unit in this section; belongs to a different example slot.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:031.code_block",
-      "reason": "Cited only for a code block in another section; not used in this section's units.",
+      "reason": "Not cited by any unit in this section; belongs to a different example slot.",
       "section": "additional_examples"
     },
     {
-      "fact_id": "inherited_unit:035.heading",
-      "reason": "The renderer prints this heading; it is not prose and must not be written.",
-      "section": "api_reference"
+      "fact_id": "build_test_asset:ci",
+      "reason": "The CI workflow path is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
     },
     {
-      "fact_id": "inherited_unit:038.heading",
-      "reason": "The renderer prints this heading; it is not prose and must not be written.",
-      "section": "api_reference"
+      "fact_id": "build_test_asset:docs",
+      "reason": "The docs directory path is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "build_test_asset:release-workflow",
+      "reason": "The release workflow path is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "build_test_asset:tests",
+      "reason": "The tests directory path is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "The ecosystem value java is already covered by the JDK version requirement and is not needed in this summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "The family value cells is already covered by the product name and is not needed in this summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "The platform value java is already covered by the JDK version requirement and is not needed in this summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "The knowledge refresh metadata is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "The repository name is already covered by the product name and is not needed in this summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "The revision hash is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:java_release",
+      "reason": "The Java release version is already covered by the JDK version requirement and is not needed in this summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "The package name is already covered by the product name and is not needed in this summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "The published version is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "The version is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:032.heading",
+      "reason": "The heading text is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:033.paragraph",
+      "reason": "The project structure description is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:034.code_block",
+      "reason": "The project structure code block is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:050.heading",
+      "reason": "The heading text is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:052.code_block",
+      "reason": "The test command code block is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:053.paragraph",
+      "reason": "The other commands paragraph is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:054.code_block",
+      "reason": "The other commands code block is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:055.paragraph",
+      "reason": "The release workflow paragraph is not relevant to the toolchain and requirements summary.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:057.paragraph",
+      "reason": "The license information is unrelated to the commercial product's additional capabilities and belongs in a license or permissions section, not in the enterprise relationship context.",
+      "section": "enterprise_relationship"
     }
   ],
   "schema_version": 1,
@@ -159,24 +192,22 @@
         "example:001",
         "example:002",
         "example:003",
-        "package:java_release",
         "package:name",
         "package:version",
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format. It loads existing files and saves modified ones, supporting strict mode and repair options for damaged packages. It inspects and modifies cell contents, styles, and worksheet properties such as row height and column width. It creates and applies validation rules and conditional formatting to cells."
+      "text": "Aspose.Cells FOSS for Java reads and writes Excel files in the .xlsx format. It converts workbooks by loading existing files and saving modified versions, supporting operations such as cell value assignment, style formatting, row height and column width adjustment, and document property updates. It also handles workbook loading diagnostics, including repair attempts and issue reporting for malformed files. Conditional formatting and data validation rules can be applied to worksheet ranges and saved to output files."
     },
     {
       "fact_ids": [
         "example:001",
-        "example:002",
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It reads, writes, and edits Excel workbooks through the Workbook class, which owns a WorksheetCollection of Worksheet objects, supports adding, removing, and renaming sheets, and exposes a Cells collection for reading and writing string, numeric, boolean, date/time, and formula values."
+      "text": "It manages workbooks and worksheets through the Workbook class, which owns a WorksheetCollection of Worksheet objects, allowing add, remove, rename, and visibility control per sheet, while each worksheet exposes a Cells collection for reading and writing string, numeric, boolean, date/time, and formula values."
     },
     {
       "fact_ids": [
@@ -185,7 +216,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It sets font weight, border lines, fill color, cell alignment, numeric display patterns, and cell lock status through the Style object obtained from a Cell, and applies custom patterns like thousands separators with decimal places."
+      "text": "It applies full cell styling and formatting through the Style class, which carries font, borders, fill, alignment, number format, and protection flags, set via Cell.getStyle() and setStyle(), with NumberFormat supporting built-in Excel number-format codes."
     },
     {
       "fact_ids": [
@@ -194,23 +225,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It enforces data validation and conditional formatting on worksheet ranges using Validation and FormatCondition objects, supporting validation types like whole number and operators such as between, and applying formatting like bold font to cells meeting specified criteria."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:4",
-      "text": "It creates 18 of the 25 ChartType values programmatically via ChartCollection.add() and preserves the remaining 7 ChartEx types verbatim when loading workbooks, and adds, retrieves, and removes drawing objects across 38 AutoShapeType geometries via ShapeCollection."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:5",
-      "text": "It configures print layout and page setup via PageSetup, freezes rows and/or columns by coordinate or cell name, and controls workbook and worksheet protection with separate passwords for structure, windows, and revisions."
+      "text": "It enforces data validation and conditional formatting on worksheet ranges via ValidationCollection and ConditionalFormattingCollection, both scoped to CellArea, supporting validation types like whole numbers with operators and conditional formatting based on cell values."
     },
     {
       "fact_ids": [
@@ -218,8 +233,24 @@
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It provides load diagnostics and repair through LoadOptions with strict-mode toggles and package/XML repair flags, and Workbook.getLoadDiagnostics() returns a report with repair details and preservation notes for unsupported package parts encountered during load and save."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It supports embedded content such as cell comments with author, text, visibility, and size via CommentCollection, and images from bytes, streams, or file paths with two-cell anchor positioning via PictureCollection, which detects JPEG, PNG, GIF, and BMP formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It repairs malformed workbooks by setting LoadOptions to non-strict mode and enabling package and XML repair, then exposes load diagnostics through Workbook.getLoadDiagnostics() to report issues encountered during loading."
+      "text": "It renders charts and shapes by creating 18 of the 25 ChartType values programmatically via ChartCollection.add(), while the remaining 7 ChartEx types round-trip verbatim from loaded workbooks, and ShapeCollection adds, retrieves, and removes 38 preset AutoShapeType geometries."
     },
     {
       "fact_ids": [
@@ -227,7 +258,7 @@
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "The first example creates a new workbook, names the first worksheet Report, writes a text value and a number into cells A1 and B1, applies bold formatting and a custom number format to the number, adjusts row height and column width, and saves the result as report.xlsx."
+      "text": "Create a new workbook, set up a worksheet named Report with formatted data in cells A1 and B1, adjust row height and column width, and save the result as report.xlsx."
     },
     {
       "fact_ids": [
@@ -235,7 +266,7 @@
       ],
       "section": "quick_start",
       "slot": "lead_in:2",
-      "text": "The second example loads a potentially corrupted workbook with repair options enabled, prints any repair issues found, updates the document author property, and saves the repaired workbook as output.xlsx."
+      "text": "Load a potentially corrupted Excel file with repair options enabled, print any diagnostic messages, update the document author property, and save the repaired workbook as output.xlsx."
     },
     {
       "fact_ids": [
@@ -252,7 +283,7 @@
       ],
       "section": "additional_examples",
       "slot": "preview",
-      "text": "Aspose.Cells FOSS for Java supports data validation and conditional formatting workflows. The following examples demonstrate these capabilities."
+      "text": "Aspose.Cells FOSS for Java supports data validation and conditional formatting workflows. Example 003 demonstrates creating a validation rule and applying conditional formatting to a cell range."
     },
     {
       "fact_ids": [
@@ -270,7 +301,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:003",
-      "text": "Create data validation and conditional formatting rules in a worksheet."
+      "text": "Create a validation rule and apply conditional formatting to a cell range."
     },
     {
       "fact_ids": [
@@ -281,6 +312,8 @@
         "identity:repository",
         "identity:revision",
         "inherited_unit:036.paragraph",
+        "inherited_unit:038.heading",
+        "inherited_unit:040.heading",
         "package:java_release",
         "package:name",
         "package:published_version",
@@ -289,15 +322,25 @@
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "Aspose.Cells FOSS for Java provides a Java API for spreadsheet processing, with org.aspose.cells_foss as the public entry point. It supports reading, writing, and manipulating spreadsheet files through a set of 183 public types."
+      "text": "Aspose.Cells FOSS for Java provides a Java API for spreadsheet processing, with the public entry point org.aspose.cells_foss. The classes below cover the full supported public API surface — 183 public types organized into one module."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
+        "public_symbol:org.aspose.cells_foss",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:java_release",
+        "package:name",
+        "package:published_version",
+        "package:version"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:org.aspose.cells_foss",
-      "text": "The org.aspose.cells_foss package serves as the core API surface for spreadsheet operations in Aspose.Cells FOSS for Java, exposing 183 public types."
+      "text": "The org.aspose.cells_foss package serves as the public entry point for the Aspose.Cells FOSS for Java library, exposing 183 public types across one module."
     },
     {
       "fact_ids": [
@@ -313,7 +356,7 @@
       ],
       "section": "documentation_resources",
       "slot": "link:link_target:024",
-      "text": "The how-to guides and FAQ provide Java knowledge base content for Aspose.Cells FOSS for Java, including how-to articles, frequently asked questions, and troubleshooting guides."
+      "text": "The how-to guides and FAQ provide Java knowledge base content for Aspose.Cells FOSS for Java, including how-to articles, frequently asked questions, and troubleshooting guidance."
     },
     {
       "fact_ids": [
@@ -349,21 +392,13 @@
     },
     {
       "fact_ids": [
-        "link_target:019"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:019",
-      "text": "This section provides links to documentation and resources for Aspose.Cells FOSS for Java, including guides, references, and contribution information."
-    },
-    {
-      "fact_ids": [
         "inherited_unit:047.heading",
         "inherited_unit:048.list",
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "scope_limitations",
       "slot": "scope",
-      "text": "Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format, supporting workbook creation, data manipulation, and formula handling for the Java 17 runtime."
+      "text": "Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format, supporting workbook creation, data manipulation, and formula storage for round-trip preservation."
     },
     {
       "fact_ids": [
@@ -376,37 +411,30 @@
     },
     {
       "fact_ids": [
-        "inherited_unit:048.list"
+        "inherited_unit:048.list",
+        "public_symbol:org.aspose.cells_foss"
       ],
       "section": "scope_limitations",
       "slot": "limitation:2",
-      "text": "Formulas are stored and round-tripped, but the library is not a full spreadsheet calculation engine."
+      "text": "Formulas are stored and round-tripped, but the library is not a full spreadsheet calculation engine, and a handful of public XML-mapper classes are unimplemented skeleton code carried over from an early scaffold."
     },
     {
       "fact_ids": [
-        "inherited_unit:048.list"
+        "inherited_unit:048.list",
+        "public_symbol:org.aspose.cells_foss"
       ],
       "section": "scope_limitations",
       "slot": "limitation:3",
-      "text": "A handful of public XML-mapper classes are unimplemented skeleton code carried over from an early scaffold, and some APIs exist mainly to preserve OOXML metadata and package fidelity rather than to provide full Excel feature parity."
+      "text": "Some APIs exist mainly to preserve OOXML metadata and package fidelity rather than to provide full Excel feature parity."
     },
     {
       "fact_ids": [
-        "build_test_asset:tests",
-        "build_test_asset:test-command",
-        "inherited_unit:032.heading",
-        "inherited_unit:033.paragraph",
-        "inherited_unit:034.code_block",
-        "inherited_unit:050.heading",
-        "inherited_unit:051.paragraph",
-        "inherited_unit:052.code_block",
-        "inherited_unit:053.paragraph",
-        "inherited_unit:054.code_block",
-        "inherited_unit:055.paragraph"
+        "inherited_unit:016.paragraph",
+        "inherited_unit:051.paragraph"
       ],
       "section": "development_testing",
       "slot": "summary",
-      "text": "The project requires JDK 17 and Maven as the build tool. The test suite is located under src/test/java/org.aspose.cells_foss/ and contains scenario-driven integration tests for workbook behavior and XLSX round-tripping, as well as fast, focused unit tests for individual API classes without XLSX I/O."
+      "text": "The project requires JDK 17 or later and Maven as the build tool. It depends on Apache POI only in test scope and never at runtime. The test suite is located under src/test/java/org/aspose/cells_foss/ and includes scenario-driven integration tests for workbook behavior and XLSX round-tripping, as well as fast, focused unit tests for individual API classes without XLSX I/O."
     },
     {
       "fact_ids": [
