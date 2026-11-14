@@ -1988,7 +1988,7 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `Destination` | Base class for a view destination on a document page. |
 | `DocFormat` | Target format for a save operation. |
 | `Document-document` | Pythonic wrapper for PDF document lifecycle and core operations. |
-| `Duplex` | Enum with 4 members. |
+| `Duplex` | Enumerates DUPLEX, NONE, SIMPLEX and TUMBLE. |
 | `ExtractedBlock` | Immutable heading, paragraph, list, table or figure snapshot with source page, position anchor and JSON-ready data. |
 | `ExtractedTable` | Immutable text-table snapshot with source page, rows, inferred column spans, list conversion and CSV export. |
 | `Field` | A field of an interactive form. |
@@ -2062,7 +2062,7 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `PadesLevel` | PAdES baseline conformance level reached by a signature. |
 | `Page` | A page of a PDF document. |
 | `PageCollection` | A collection to manage PDF pages within a Document. |
-| `PageInfo` | Class with 1 property. |
+| `PageInfo` | Class that declares the field margin. |
 | `PageTextComparison` | Immutable page-pair text report with original strings, match status and a normalized unified diff. |
 | `PageVisualComparison` | Immutable page-pair comparison with changed/ignored pixel counts, ratio, bounds, match status and optional difference image. |
 | `Paragraph` | One paragraph of a text block: what it says, and how it differs from the block. |
@@ -2070,7 +2070,7 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `PdfAValidateOptions-pdfa` | Container for PDF/A validation settings. |
 | `PdfAValidationResult-pdfa` | Detailed result of a PDF/A validation run. |
 | `PdfAValidator` | Plugin that runs PDF/A validation on one or more inputs. |
-| `PdfConsts` | Class with 2 methods. |
+| `PdfConsts` | Class that declares the members decimal_to_octal and octal_to_decimal. |
 | `PdfException` | Base class for PDF-related exceptions. |
 | `PdfExtractor` | Simple PDF text and image extractor. |
 | `PdfFileEditor` | Facade for PDF file editing operations. |
@@ -2095,8 +2095,8 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `PluginOptions` | Hold input/output data sources and their PDF resource-limit policy. |
 | `Point` | Represents a point in 2D space. |
 | `Point3D` | Represents a 3D point. |
-| `PrinterSettings` | Class with 11 properties. |
-| `PrintRange` | Enum with 4 members. |
+| `PrinterSettings` | Class that declares fields including collate, copies, duplex, from_page, maximum_page and minimum_page. |
+| `PrintRange` | Enumerates ALL_PAGES, PAGE_RANGE, SELECTION and SOME_PAGES. |
 | `Recipient` | One certificate that may open the document, and what it may then do. |
 | `Rectangle` | Rectangle representing image placement bounds on a PDF page. |
 | `RegexResult` | Wraps a single regular-expression match found on a PDF page. |
@@ -2109,13 +2109,13 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `StatisticsEntry` | Entry for tracking statistics and timing information. |
 | `StreamDataSource` | A data source backed by a binary stream (e.g. ``io.BytesIO``). |
 | `StructureElement` | A mutable logical-structure element in a tagged PDF. |
-| `StructureTypeStandard` | Enum with 15 members. |
+| `StructureTypeStandard` | Enumerates values including DIV, DOCUMENT, P, PART, RB, RP, RT and SECT. |
 | `SubmitFormAction` | Send the form's field values to a URL. |
 | `SvgLoadOptions-load_options` | Options for loading SVG files. |
 | `SvgLoadOptions-svg` | Class with 1 method and 2 properties. |
 | `SystemFontSource` | Collect fonts from common system font directories. |
 | `TaggedContent` | Editable view of a document's logical structure tree. |
-| `TaggedContext` | Class with 4 properties. |
+| `TaggedContext` | Class that declares the fields document, structure_tree_root, mark_info and language. |
 | `TextAbsorber` | Absorbs text from PDF pages (legacy class, alias for TextFragmentAbsorber). |
 | `TextBlock` | Paragraphs wrapped to a measure, ready to be placed on a page. |
 | `TextExtractionOptions` | Options for text extraction from PDF pages. |
@@ -2167,7 +2167,7 @@ and delete workflows. 385 public types — 284 of them organized by module below
 |---|---|
 | `AnnotationFlags` | Flags that define annotation behaviour. |
 | `AnnotationType` | Known annotation subtype names (PDF 32000-1:2008, Table 169). |
-| `PDF3DLightingScheme` | Enum with 5 members. |
+| `PDF3DLightingScheme` | Enumerates CUSTOM, DARK, GRAY, HEADLAMP and WHITE. |
 | `PDF3DRenderMode` | PDF3DRenderMode and PDF3DLightingScheme enums let developers choose rendering style (SOLID, WIREFRAME, TRANSPARENT) and lighting (HEADLAMP, WHITE, etc.) for 3D annotations. |
 
 ---
@@ -2206,8 +2206,8 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `Decoder-jbig2` | JBIG2 decoder that parses segment structure and extracts bitmap data. |
 | `Decoder-jpx` | JPEG 2000 (JPX) Stream Decoder. |
 | `DssMaterial` | Validation material destined for (or harvested from) a ``/DSS``. |
-| `Encoding` | Class with 1 method and 4 members. |
-| `EncodingType` | Enum with 5 members. |
+| `Encoding` | Class that declares the member encode. |
+| `EncodingType` | Enumerates MAC_EXPERT, MAC_ROMAN, PDF_DOC, UNICODE and WIN_ANSI. |
 | `EncryptionUtils` | Utility class for PDF-compliant AES-CBC, RC4 encryption, and key derivation. |
 | `FilterType` | The FilterType enum lists the supported stream filter names such as FLATE_DECODE, LZW_DECODE, and DCT_DECODE. |
 | `FontResolver` | Index external font sources and resolve PDF font names against them. |
@@ -2240,14 +2240,14 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `PdfNull` | Represent PDF null object. |
 | `PdfNumber` | Represents a PDF number primitive (integer or real). |
 | `PdfObject` | Base class for all PDF COS objects. |
-| `PdfObjectID` | Class with 2 properties. |
+| `PdfObjectID` | Class that declares the fields object_number and generation_number. |
 | `PdfObjectRegistry` | PdfObjectRegistry.register(obj) returns a PdfObjectID that uniquely identifies the stored PDF object within the registry. |
 | `PdfParseError` | Base exception for PDF parsing errors. |
 | `PdfParseWarning` | Non-fatal parsing issue that was recovered from. |
 | `PdfSecurityError` | Encryption or permission related error. |
 | `PdfStream` | A stream object: a dictionary plus a byte payload. |
-| `PdfString` | Class with 1 method and 1 property. |
-| `PdfTrailerable` | Class with 1 method. |
+| `PdfString` | Class that inherits from PdfObject and declares the field value. |
+| `PdfTrailerable` | Class that declares the member get_dictionary. |
 | `PdfValidationError` | PDF/A or general structural validation error. |
 | `PredefinedCMap` | A resolved predefined CMap and its semantic Unicode mapping. |
 | `PredefinedCMapEncoding` | Compact code-to-CID view of a predefined CMap. |
@@ -2255,8 +2255,8 @@ and delete workflows. 385 public types — 284 of them organized by module below
 | `RecipientPayload` | What one opened envelope carries. |
 | `Reshaper` | Policy for shaping complex-script replacements during a text edit. |
 | `ResolvedFace` | A font program picked for a non-embedded PDF font. |
-| `RevocationResult` | Class with 3 properties. |
-| `RichRun` | Class with 2 properties. |
+| `RevocationResult` | Class that declares the fields status, source and detail. |
+| `RichRun` | Class that declares the fields text and style. |
 | `RichStyle` | The resolved style of a text run. |
 | `SfntFace` | Metadata recovered from a single SFNT face. |
 | `Shading` | Base class for bounded RGB sampling in a shading's target space. |
@@ -2299,7 +2299,7 @@ and delete workflows. 385 public types — 284 of them organized by module below
 
 | Class | Description |
 |---|---|
-| `CompromiseCheckResult` | Class with 4 properties. |
+| `CompromiseCheckResult` | Class that declares the fields has_compromised_signatures, signatures_coverage and reasons and the member compromised. |
 | `SignaturesCompromiseDetector` | Detect possible compromise indicators around signed PDFs. |
 
 ---
