@@ -936,30 +936,24 @@ runnable samples alongside it at the repository root:
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/cells/rust/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/cells/rust/)** — The how-to guides and FAQ provide task-focused answers for common spreadsheet-processing questions.
-- **[Full API reference](https://reference.aspose.org/cells/rust/)** — The full API reference offers the complete, browsable reference for the public API surface. It covers all 115 public types; the [API Reference](#api-reference) section above covers the essentials.
-- **[samples/README.md](samples/README.md)** — The samples overview lists every runnable example, one per feature area.
-- **[Contributor guide](AGENTS.md)** — The contributor guide provides architecture notes, module wiring, and conventions for contributors.
+- **[Getting started guide](https://docs.aspose.org/cells/rust/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/cells/rust/)** — task-focused answers for common spreadsheet-processing questions.
+- **[Full API reference](https://reference.aspose.org/cells/rust/)** — the complete, browsable reference for the public API surface (the [API reference](#api-reference) section above covers the essentials). It covers all 115 public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[samples/README.md](samples/README.md)** — every runnable example, one per feature area.
+- **[Contributor guide](AGENTS.md)** — architecture notes, module wiring, and conventions for contributors.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Rust/issues).
 
 ## Scope and Limitations
 
-Aspose.Cells FOSS for Rust reads and writes `.xlsx` (OOXML/`SpreadsheetML`) files and provides a Rust API for workbook and worksheet manipulation, with version 26.7.0 targeting the Rust 2021 edition.
-
-- The crate is not yet published to crates.io, requiring installation via git clone and cargo build as shown in the install command.
-- No automated test suite ships yet, as cargo test --all-targets currently reports 0 tests.
+- Reads and writes `.xlsx` (OOXML/SpreadsheetML) only — no legacy `.xls` (BIFF), ODS, or CSV.
+- A workbook must always keep at least one worksheet: `WorksheetsMut::remove_at` returns a `CellsError::Unsupported` error when asked to remove the last remaining worksheet.
 - The public API surface is broad but, by the repository's own account, not a complete match for Aspose.Cells — some features are still partial, and the crate is early-stage and evolving.
-- A workbook must always keep at least one worksheet: `WorksheetsMut.remove_at` returns a CellsError::Unsupported error when asked to remove the last remaining worksheet.
-
-- A workbook must always keep at least one worksheet: `WorksheetsMut::remove_at` returns
-  a `CellsError::Unsupported` error when asked to remove the last remaining worksheet.
+- No automated test suite ships yet (`cargo test --all-targets` currently reports 0 tests) — see [Development and Testing](#development-and-testing) for how correctness is exercised today.
+- Not yet published to crates.io — see [Installation](#installation) for the current git-dependency workaround.
 
 These limitations don't apply to [full-featured Aspose.Cells — Enterprise Edition](https://products.aspose.com/cells/). It adds broader format coverage (including legacy XLS, CSV, and ODS), full feature completeness, and commercial support.
 
 ## Development and Testing
-
-The Aspose.Cells FOSS for Rust package targets the Rust 2021 edition and requires a recent stable Rust toolchain. No proprietary Aspose runtime or Microsoft Office installation is required. The repository provides sample programs in the samples/ directory that serve as the de-facto verification suite, each creating a workbook, saving it under output/samples/, loading it back, and printing what it read. CI runs formatting, linting, testing, and the core samples as smoke tests on Ubuntu, Windows, and macOS.
 
 The [ci workflow](.github/workflows/ci.yml) runs on Ubuntu, Windows, macOS 14 and macOS 13.
 
@@ -975,13 +969,9 @@ For local development against a cloned copy, use a path dependency instead:
 aspose-cells-foss-rust = { path = "../Aspose.Cells-FOSS-for-Rust" }
 ```
 
-The package name is `aspose-cells-foss-rust`; the library is imported as
-`aspose_cells_foss_rust`. Requires a recent stable Rust toolchain (2021 edition or later).
-No proprietary Aspose runtime and no Microsoft Office installation is required.
+The package name is `aspose-cells-foss-rust`; the library is imported as `aspose_cells_foss_rust`. Requires a recent stable Rust toolchain (2021 edition or later). No proprietary Aspose runtime and no Microsoft Office installation is required.
 
-The repository currently has no unit or integration test suite —
-`cargo test --all-targets` reports 0 tests. After a change that touches
-the read/write path, run the core samples and confirm they still round-trip:
+The repository currently has no unit or integration test suite — `cargo test --all-targets` reports 0 tests. The `samples/` directory is the de-facto verification suite instead: each sample creates a workbook, saves it under `output/samples/`, loads it back, and prints what it read. After a change that touches the read/write path, run the core samples and confirm they still round-trip:
 
 ```bash
 cargo build
@@ -994,15 +984,7 @@ cargo run --bin sample_loading
 cargo run --bin sample_styles
 ```
 
-The `samples/` directory demonstrates every feature area — `basic.rs`,
-`styles.rs`, `worksheet_settings.rs`, `validations.rs`, `conditional_formatting.rs`,
-`hyperlinks_and_names.rs`, `pagesetup.rs`, `comments.rs`, `charts.rs`, `list_objects.rs`,
-`pictures.rs`, `shapes.rs`, and `document_properties.rs` (see
-[`samples/README.md`](samples/README.md) for the full overview). Generate local API docs
-with `cargo doc --no-deps --open`; published API docs are deployed by GitHub Pages
-through [`pages.yml`](.github/workflows/pages.yml) — enabling
-`Settings -> Pages -> GitHub Actions` on the repository makes pushes to `main`
-automatically rebuild and publish the rustdoc site.
+The `samples/` directory demonstrates every feature area — `basic.rs`, `styles.rs`, `worksheet_settings.rs`, `validations.rs`, `conditional_formatting.rs`, `hyperlinks_and_names.rs`, `pagesetup.rs`, `comments.rs`, `charts.rs`, `list_objects.rs`, `pictures.rs`, `shapes.rs`, and `document_properties.rs` (see [`samples/README.md`](samples/README.md) for the full overview). Generate local API docs with `cargo doc --no-deps --open`; published API docs are deployed by GitHub Pages through [`pages.yml`](.github/workflows/pages.yml) — enabling `Settings -> Pages -> GitHub Actions` on the repository makes pushes to `main` automatically rebuild and publish the rustdoc site.
 
 ## License
 
