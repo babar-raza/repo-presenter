@@ -636,6 +636,8 @@ def test_a_platform_ecosystem_spec_is_registered_before_recertifying(
 
 
 # --- TC-019b: zero-call restore of a unit a parity check names as lost ------------------------------
+# Re-verified under R43(2)/(3) (BL-102/BL-103): the restore still re-dispositions only the unit the
+# check names; the only other rows that move are the deterministic-section S4 folds asserted below.
 
 
 def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal(
