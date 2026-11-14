@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set 68277adca33b: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: identifiers that are not accepted fact values: Newtonsoft.Json, System.Drawing.Common",
+    "classification": "validation_failed",
+    "detail": "attempt under version set f39787980017: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02; nothing sealed",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-13T12:20:10.345716+00:00",
+    "occurred_at": "2026-11-14T06:24:08.761271+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 14,
+  "state_version": 15,
   "recent_trigger_dedup_keys": {
     "run:41130121031:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "9a2805b2c6d2484e9b00f1b379bc1419",
     "run:42687441140:aspose-gis-foss/Aspose.GIS.FOSS-for-.Net": "684993bc5cc643f2b69abb9132669e08",
