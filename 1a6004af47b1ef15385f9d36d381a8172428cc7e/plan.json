@@ -4,12 +4,13 @@
     {
       "fact_ids": [
         "public_symbol:autofilter",
-        "public_symbol:autofilter.set_range",
-        "public_symbol:autofilter.get_range",
         "public_symbol:autofilter.clear",
         "public_symbol:autofilter.filter_columns",
         "public_symbol:autofilter.get_filter_columns",
+        "public_symbol:autofilter.get_range",
         "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofilter.range",
+        "public_symbol:autofilter.set_range",
         "public_symbol:autofilter.sort_state"
       ],
       "symbol_fact_id": "public_symbol:autofilter"
@@ -17,129 +18,189 @@
     {
       "fact_ids": [
         "public_symbol:cell",
-        "public_symbol:cell.get_string_value",
-        "public_symbol:cell.get_double_value",
-        "public_symbol:cell.get_bool_value",
-        "public_symbol:cell.get_date_time_value",
-        "public_symbol:cell.value",
+        "public_symbol:cell.bool_value",
+        "public_symbol:cell.column",
+        "public_symbol:cell.date_time_value",
+        "public_symbol:cell.display_string_value",
+        "public_symbol:cell.double_value",
+        "public_symbol:cell.formatted_string_value",
         "public_symbol:cell.formula_cached_value",
-        "public_symbol:cell.style"
+        "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_column",
+        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cell.get_display_string_value"
       ],
       "symbol_fact_id": "public_symbol:cell"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:cellmut",
-        "public_symbol:cellmut.put_value_string",
-        "public_symbol:cellmut.put_value_i32",
-        "public_symbol:cellmut.put_value_bool",
-        "public_symbol:cellmut.put_value_date_time",
-        "public_symbol:cellmut.put_formula_with_cached_value",
-        "public_symbol:cellmut.set_style",
-        "public_symbol:cellmut.set_value"
-      ],
-      "symbol_fact_id": "public_symbol:cellmut"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:cellstyle",
-        "public_symbol:cellstyle.font",
-        "public_symbol:cellstyle.fill",
-        "public_symbol:cellstyle.borders",
-        "public_symbol:cellstyle.number_format",
-        "public_symbol:cellstyle.horizontal_alignment",
-        "public_symbol:cellstyle.vertical_alignment",
-        "public_symbol:cellstyle.wrap_text"
-      ],
-      "symbol_fact_id": "public_symbol:cellstyle"
     },
     {
       "fact_ids": [
         "public_symbol:chart",
         "public_symbol:chart.chart_type",
         "public_symbol:chart.data_range",
+        "public_symbol:chart.delete",
         "public_symbol:chart.get_chart_type",
         "public_symbol:chart.get_data_range",
-        "public_symbol:chart.delete"
+        "public_symbol:chart.get_extent_cx",
+        "public_symbol:chart.get_extent_cy",
+        "public_symbol:chart.get_lower_right_column",
+        "public_symbol:chart.get_lower_right_row",
+        "public_symbol:chart.get_name",
+        "public_symbol:chart.get_upper_left_column"
       ],
       "symbol_fact_id": "public_symbol:chart"
     },
     {
       "fact_ids": [
-        "public_symbol:chartcollection",
-        "public_symbol:chartcollection.add",
-        "public_symbol:chartcollection.count",
-        "public_symbol:chartcollection.get",
-        "public_symbol:chartcollection.item"
-      ],
-      "symbol_fact_id": "public_symbol:chartcollection"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:charttype",
-        "public_symbol:charttype"
-      ],
-      "symbol_fact_id": "public_symbol:charttype"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:conditionalformattingcollection",
-        "public_symbol:conditionalformattingcollection.add",
-        "public_symbol:conditionalformattingcollection.count",
-        "public_symbol:conditionalformattingcollection.get"
-      ],
-      "symbol_fact_id": "public_symbol:conditionalformattingcollection"
-    },
-    {
-      "fact_ids": [
         "public_symbol:definedname",
+        "public_symbol:definedname.get_comment",
         "public_symbol:definedname.get_formula",
+        "public_symbol:definedname.get_local_sheet_index",
         "public_symbol:definedname.get_name",
+        "public_symbol:definedname.is_hidden",
+        "public_symbol:definedname.set_comment",
         "public_symbol:definedname.set_formula",
+        "public_symbol:definedname.set_hidden",
+        "public_symbol:definedname.set_local_sheet_index",
         "public_symbol:definedname.set_name"
       ],
       "symbol_fact_id": "public_symbol:definedname"
     },
     {
       "fact_ids": [
-        "public_symbol:formatcondition",
-        "public_symbol:formatcondition.set_type",
-        "public_symbol:formatcondition.set_priority",
-        "public_symbol:formatcondition.get_style",
-        "public_symbol:formatcondition.set_style"
+        "public_symbol:font",
+        "public_symbol:font.clear_color",
+        "public_symbol:font.color",
+        "public_symbol:font.default",
+        "public_symbol:font.get_color",
+        "public_symbol:font.get_double_size",
+        "public_symbol:font.get_is_bold",
+        "public_symbol:font.get_is_italic",
+        "public_symbol:font.get_is_strikeout",
+        "public_symbol:font.get_name",
+        "public_symbol:font.get_size",
+        "public_symbol:font.get_underline"
       ],
-      "symbol_fact_id": "public_symbol:formatcondition"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:hyperlink",
-        "public_symbol:hyperlink.address",
-        "public_symbol:hyperlink.area",
-        "public_symbol:hyperlink.get_address",
-        "public_symbol:hyperlink.get_area"
-      ],
-      "symbol_fact_id": "public_symbol:hyperlink"
+      "symbol_fact_id": "public_symbol:font"
     },
     {
       "fact_ids": [
         "public_symbol:loadoptions",
+        "public_symbol:loadoptions.default",
+        "public_symbol:loadoptions.load_format",
+        "public_symbol:loadoptions.preserve_unsupported_parts",
+        "public_symbol:loadoptions.strict_mode",
         "public_symbol:loadoptions.try_repair_package",
-        "public_symbol:loadoptions.try_repair_xml",
-        "public_symbol:loadoptions.default"
+        "public_symbol:loadoptions.try_repair_xml"
       ],
       "symbol_fact_id": "public_symbol:loadoptions"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagesetup",
+        "public_symbol:pagesetup.add_horizontal_page_break",
+        "public_symbol:pagesetup.add_vertical_page_break",
+        "public_symbol:pagesetup.bottom_margin",
+        "public_symbol:pagesetup.bottom_margin_inch",
+        "public_symbol:pagesetup.center_footer",
+        "public_symbol:pagesetup.center_header",
+        "public_symbol:pagesetup.center_horizontally",
+        "public_symbol:pagesetup.center_vertically",
+        "public_symbol:pagesetup.clear_horizontal_page_breaks",
+        "public_symbol:pagesetup.clear_vertical_page_breaks"
+      ],
+      "symbol_fact_id": "public_symbol:pagesetup"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:picture",
+        "public_symbol:picture.data",
+        "public_symbol:picture.delete",
+        "public_symbol:picture.extension",
+        "public_symbol:picture.get_data",
+        "public_symbol:picture.get_extension",
+        "public_symbol:picture.get_image_type",
+        "public_symbol:picture.get_lower_right_column",
+        "public_symbol:picture.get_lower_right_row",
+        "public_symbol:picture.get_name",
+        "public_symbol:picture.get_upper_left_column"
+      ],
+      "symbol_fact_id": "public_symbol:picture"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:shape",
+        "public_symbol:shape.auto_shape_type",
+        "public_symbol:shape.auto_shape_type_to_geometry",
+        "public_symbol:shape.delete",
+        "public_symbol:shape.geometry_to_auto_shape_type",
+        "public_symbol:shape.get_auto_shape_type",
+        "public_symbol:shape.get_lower_right_column",
+        "public_symbol:shape.get_lower_right_row",
+        "public_symbol:shape.get_name",
+        "public_symbol:shape.get_upper_left_column",
+        "public_symbol:shape.get_upper_left_row"
+      ],
+      "symbol_fact_id": "public_symbol:shape"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sparklinegroup",
+        "public_symbol:sparklinegroup.data_range",
+        "public_symbol:sparklinegroup.get_data_range",
+        "public_symbol:sparklinegroup.get_location_range",
+        "public_symbol:sparklinegroup.get_sparkline_type",
+        "public_symbol:sparklinegroup.location_range",
+        "public_symbol:sparklinegroup.remove",
+        "public_symbol:sparklinegroup.set_data_range",
+        "public_symbol:sparklinegroup.set_location_range",
+        "public_symbol:sparklinegroup.set_sparkline_type",
+        "public_symbol:sparklinegroup.sparkline_type"
+      ],
+      "symbol_fact_id": "public_symbol:sparklinegroup"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:styleflag",
+        "public_symbol:styleflag.alignments",
+        "public_symbol:styleflag.all",
+        "public_symbol:styleflag.borders",
+        "public_symbol:styleflag.bottom_border",
+        "public_symbol:styleflag.cell_shading",
+        "public_symbol:styleflag.diagonal_down_border",
+        "public_symbol:styleflag.diagonal_up_border",
+        "public_symbol:styleflag.font",
+        "public_symbol:styleflag.font_bold",
+        "public_symbol:styleflag.font_color"
+      ],
+      "symbol_fact_id": "public_symbol:styleflag"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellmut",
+        "public_symbol:cellmut.apply_bold",
+        "public_symbol:cellmut.apply_border_color",
+        "public_symbol:cellmut.apply_border_line_style",
+        "public_symbol:cellmut.apply_fill",
+        "public_symbol:cellmut.apply_fill_color",
+        "public_symbol:cellmut.apply_font",
+        "public_symbol:cellmut.apply_horizontal_alignment",
+        "public_symbol:cellmut.apply_italic",
+        "public_symbol:cellmut.apply_number_format",
+        "public_symbol:cellmut.apply_text_wrap"
+      ],
+      "symbol_fact_id": "public_symbol:cellmut"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Read and write XLSX files",
+      "Read and write .xlsx files",
       "Cell value management",
       "Styling and formatting",
-      "Worksheet management",
-      "Data validation and conditional formatting",
-      "Charts and shapes",
+      "Worksheet organization",
+      "Charts and graphics",
       "Document properties and protection",
-      "Auto-filters and tables"
+      "Data validation",
+      "Sparklines and hyperlinks"
     ],
     "input_format_ids": [
       "format:input.xlsx"
@@ -154,18 +215,19 @@
         "format:input.xlsx",
         "format:output.xlsx",
         "public_symbol:workbook.load_xlsx",
-        "public_symbol:workbook.load_xlsx_from_bytes",
         "public_symbol:workbook.save_xlsx"
       ],
       "shared_fact_ids": [],
-      "title": "Read and write XLSX files"
+      "title": "Read and write .xlsx files"
     },
     {
       "fact_ids": [
-        "public_symbol:cell.get_string_value",
-        "public_symbol:cell.get_double_value",
-        "public_symbol:cell.get_bool_value",
-        "public_symbol:cell.get_date_time_value",
+        "example:001",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_decimal",
+        "public_symbol:cellmut.put_value_date_time",
         "public_symbol:cellmut.put_formula_with_cached_value"
       ],
       "shared_fact_ids": [],
@@ -173,111 +235,122 @@
     },
     {
       "fact_ids": [
-        "public_symbol:cellstyle.font",
-        "public_symbol:cellstyle.fill",
-        "public_symbol:cellstyle.borders",
-        "public_symbol:cellstyle.number_format",
-        "public_symbol:cellstyle.horizontal_alignment"
+        "public_symbol:cellstyle",
+        "public_symbol:font",
+        "public_symbol:fill",
+        "public_symbol:border",
+        "public_symbol:formatcondition"
       ],
       "shared_fact_ids": [],
       "title": "Styling and formatting"
     },
     {
       "fact_ids": [
-        "public_symbol:worksheetsmut.add",
-        "public_symbol:worksheet.set_name",
-        "public_symbol:worksheet.set_visibility_type",
-        "public_symbol:worksheet.set_tab_color",
-        "public_symbol:worksheet.set_zoom"
+        "public_symbol:worksheets",
+        "public_symbol:worksheet",
+        "public_symbol:rows",
+        "public_symbol:columns",
+        "public_symbol:autofilter",
+        "public_symbol:listobject"
       ],
       "shared_fact_ids": [],
-      "title": "Worksheet management"
+      "title": "Worksheet organization"
     },
     {
       "fact_ids": [
-        "public_symbol:validationcollection.add",
-        "public_symbol:validation.set_type",
-        "public_symbol:formatconditioncollection.add",
-        "public_symbol:formatcondition.set_type"
+        "public_symbol:chart",
+        "public_symbol:charttype",
+        "public_symbol:picture",
+        "public_symbol:shape",
+        "public_symbol:shapecollection"
       ],
       "shared_fact_ids": [],
-      "title": "Data validation and conditional formatting"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:chartcollection.add",
-        "public_symbol:chart.chart_type",
-        "public_symbol:picturecollection.add_from_file",
-        "public_symbol:shapecollection.add"
-      ],
-      "shared_fact_ids": [],
-      "title": "Charts and shapes"
+      "title": "Charts and graphics"
     },
     {
       "fact_ids": [
         "public_symbol:workbook.document_properties",
-        "public_symbol:workbook.protect",
-        "public_symbol:worksheet.freeze_panes",
-        "public_symbol:pagesetup.paper_size"
+        "public_symbol:coredocumentproperties",
+        "public_symbol:workbookprotection",
+        "public_symbol:definedname"
       ],
       "shared_fact_ids": [],
       "title": "Document properties and protection"
     },
     {
       "fact_ids": [
-        "public_symbol:autofilter.set_range",
-        "public_symbol:autofiltercolorfilter.set_cell_color",
-        "public_symbol:autofiltercustomfilter.set_operator",
-        "public_symbol:listobjectcollection.add"
+        "public_symbol:validation",
+        "public_symbol:validationcollection",
+        "public_symbol:validationtype",
+        "public_symbol:operatortype"
       ],
       "shared_fact_ids": [],
-      "title": "Auto-filters and tables"
+      "title": "Data validation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sparklinegroup",
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlinkcollection"
+      ],
+      "shared_fact_ids": [],
+      "title": "Sparklines and hyperlinks"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "inherited_unit:026.code_block"
-      ],
-      "section_id": "quick_start",
-      "text": "No verified examples are available; the example in the inherited README is UNRESOLVED and cannot be cited."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:031.code_block",
-        "inherited_unit:034.code_block",
-        "inherited_unit:036.code_block",
-        "inherited_unit:038.code_block",
-        "inherited_unit:040.code_block",
-        "inherited_unit:042.code_block"
+        "example:001"
       ],
       "section_id": "additional_examples",
-      "text": "No further verified examples are available; all examples in the inherited README are UNRESOLVED and cannot be cited."
+      "text": "No additional examples are included because the only verified example (example:001) is used for the Quick Start section and no further verified examples are available."
     },
     {
       "fact_ids": [
         "inherited_unit:048.paragraph"
       ],
       "section_id": "api_reference",
-      "text": "The claim of 213 public types is unsupported; the section describes core entry points without the unsupported count."
+      "text": "The API reference section omits the unsupported claim of 213 public types and the dangling table pointer from the inherited README."
     },
     {
       "fact_ids": [
-        "inherited_unit:078.code_block"
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:test-command"
       ],
       "section_id": "development_testing",
-      "text": "The full code block of commands is not fully supported; only 'cargo check --all-targets' and 'cargo test --all-targets' are verified."
+      "text": "The CI description was corrected to reflect that cargo test reports 0 tests, and the CI job coverage claim was removed."
     },
     {
       "fact_ids": [
-        "inherited_unit:079.paragraph"
+        "package:rust_edition"
       ],
-      "section_id": "development_testing",
-      "text": "The paragraph about CI and samples is unsupported; only CI matrix and example directory facts are verified."
+      "section_id": "scope_limitations",
+      "text": "The Rust 2021 edition requirement was moved from 'Native and System Requirements' to scope_limitations as a toolchain limitation."
+    },
+    {
+      "fact_ids": [
+        "link_target:027",
+        "link_target:product.enterprise"
+      ],
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition paragraph was moved from the license section to enterprise_relationship to avoid duplication."
     }
   ],
   "flagship_example_id": null,
   "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "banner"
+    },
     {
       "link_fact_id": "link_target:022",
       "section_id": "documentation_resources"
@@ -288,7 +361,7 @@
     },
     {
       "link_fact_id": "link_target:024",
-      "section_id": "api_reference"
+      "section_id": "documentation_resources"
     },
     {
       "link_fact_id": "link_target:021",
@@ -301,82 +374,6 @@
     {
       "link_fact_id": "link_target:026",
       "section_id": "documentation_resources"
-    },
-    {
-      "link_fact_id": "link_target:027",
-      "section_id": "enterprise_relationship"
-    },
-    {
-      "link_fact_id": "link_target:001",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:003",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:007",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:008",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:009",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:010",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:011",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:012",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:014",
-      "section_id": "api_reference"
-    },
-    {
-      "link_fact_id": "link_target:015",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:016",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:017",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:018",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:020",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:028",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:029",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:002",
-      "section_id": "license"
-    },
-    {
-      "link_fact_id": "link_target:004",
-      "section_id": "identity"
     }
   ],
   "material_limitations": [
@@ -384,28 +381,36 @@
       "fact_ids": [
         "install_command:cargo"
       ],
-      "unit_ids": []
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
     },
     {
       "fact_ids": [
         "build_test_asset:test-command"
       ],
-      "unit_ids": []
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
     },
     {
       "fact_ids": [
         "install_command:cargo"
       ],
-      "unit_ids": []
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
     },
     {
       "fact_ids": [
         "public_symbol:worksheetsmut.remove_at"
       ],
-      "unit_ids": []
+      "unit_ids": [
+        "inherited_unit:074.list"
+      ]
     }
   ],
-  "quick_start_example_id": null,
+  "quick_start_example_id": "example:001",
   "second_quick_start_example_id": null,
   "sections": [
     {
@@ -454,8 +459,8 @@
       "section_id": "dependencies"
     },
     {
-      "include": false,
-      "reason": "its condition does not hold",
+      "include": true,
+      "reason": "its condition holds",
       "section_id": "quick_start"
     },
     {

@@ -4,27 +4,35 @@
   "findings": [],
   "model_served": "qwen3-next",
   "model_verdict": "ACCEPT",
-  "prompt_version": "17",
+  "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "85434bcee7cadfbf13ec3c71833a1ec954ef78d78c5dd133a8897e047fb5726b",
+  "request_sha256": "099baabe377443b85eb5d260b0defbf1bc92faa4d5053a910699724242493f80",
   "retryable": false,
-  "reviewer_logic_version": "6",
+  "reviewer_logic_version": "10",
   "schema_version": 2,
   "unit_reviews": [
     {
       "findings": 0,
       "lines": [
         7,
-        7,
-        1
+        167,
+        36
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "ecc4f674ba78c587489916d4bd9a4afe1df3b9392bdee62e3779234223d89adb",
+      "request_sha256": "843a92f866c39fad28cb50330f0279f3cdc5ab64a9e103421d7619d97fa888f1",
       "sections": [
-        "opening"
+        "opening",
+        "key_capabilities",
+        "quick_start",
+        "additional_examples"
       ],
       "status": "reviewed",
       "unit": "u1"
@@ -32,17 +40,21 @@
     {
       "findings": 0,
       "lines": [
-        56,
-        128,
-        43
+        269,
+        933,
+        25
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "1fd41ff16aa2e95cb263611f186a4cd9a1a817f408f142257f978d69e67c2c7f",
+      "request_sha256": "0487df5a2125614265b2d953ceaf22e34a4f64da4a926188210373d86e196b09",
       "sections": [
-        "key_capabilities",
-        "quick_start"
+        "api_reference"
       ],
       "status": "reviewed",
       "unit": "u2"
@@ -50,38 +62,26 @@
     {
       "findings": 0,
       "lines": [
-        278,
-        817,
-        16
+        939,
+        1005,
+        30
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "dd27c122663b736cc72cd9358800a9a50b95b12533fa0169f871a1a23cba0c9b",
-      "sections": [
-        "api_reference"
-      ],
-      "status": "reviewed",
-      "unit": "u3"
-    },
-    {
-      "findings": 0,
-      "lines": [
-        825,
-        866,
-        17
-      ],
-      "model_verdict": "ACCEPT",
-      "reason": "",
-      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "24e01ad6a3b2c9dcba834961f02a6a41852a75784f633976d308886120192d95",
+      "request_sha256": "df103a014e78f1e84070036de8d354032ed9dcb7843f4d22ca45ae21a8cb5ba2",
       "sections": [
         "documentation_resources",
         "scope_limitations",
         "development_testing"
       ],
       "status": "reviewed",
-      "unit": "u4"
+      "unit": "u3"
     }
   ],
   "verdict": "ACCEPT"

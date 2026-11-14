@@ -1,639 +1,932 @@
 {
   "coherence": {
     "applied": true,
-    "revised": [
-      "development_testing/summary"
-    ]
+    "revised": []
   },
   "omitted": [
     {
-      "fact_id": "inherited_unit:008.code_block",
-      "reason": "The renderer owns the Mermaid flowchart block and it is not prose to be written.",
-      "section": "key_capabilities"
+      "fact_id": "identity:repository",
+      "reason": "Repository URL is not part of the opening description of what the product is and does.",
+      "section": "opening"
     },
     {
-      "fact_id": "inherited_unit:009.heading",
-      "reason": "The renderer owns the heading '## Key Capabilities' and it is not prose to be written.",
-      "section": "key_capabilities"
+      "fact_id": "identity:revision",
+      "reason": "Revision hash is provenance metadata, not part of the product's functional description.",
+      "section": "opening"
     },
     {
-      "fact_id": "inherited_unit:010.list",
-      "reason": "The renderer owns the bullet list and it is not prose to be written.",
-      "section": "key_capabilities"
+      "fact_id": "package:rust_edition",
+      "reason": "Rust edition is a build configuration detail, not part of the product's functional description.",
+      "section": "opening"
     },
     {
-      "fact_id": "example:001",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "fact_id": "install_command:cargo",
+      "reason": "Installation commands are not part of the opening description of what the product is and does.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:loadoptions",
+      "reason": "LoadOptions is not used in the opening description; only the core load_xlsx capability is cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:loaddiagnostics",
+      "reason": "LoadDiagnostics is not used in the opening description; only the core load_xlsx capability is cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:cellstyle",
+      "reason": "CellStyle and its members are not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:font",
+      "reason": "Font is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:fill",
+      "reason": "Fill is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:border",
+      "reason": "Border is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:formatcondition",
+      "reason": "FormatCondition is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:worksheets",
+      "reason": "Worksheets is not used in the opening description; only Worksheet and Cells are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:rows",
+      "reason": "Rows is not used in the opening description; only Worksheet and Cells are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:columns",
+      "reason": "Columns is not used in the opening description; only Worksheet and Cells are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:autofilter",
+      "reason": "AutoFilter is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:listobject",
+      "reason": "ListObject is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:chart",
+      "reason": "Chart is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:charttype",
+      "reason": "ChartType is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:picture",
+      "reason": "Picture is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:shape",
+      "reason": "Shape is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:shapecollection",
+      "reason": "ShapeCollection is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:workbook.document_properties",
+      "reason": "document_properties is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:coredocumentproperties",
+      "reason": "CoreDocumentProperties is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:workbookprotection",
+      "reason": "WorkbookProtection is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:definedname",
+      "reason": "DefinedName is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:validation",
+      "reason": "Validation is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:validationcollection",
+      "reason": "ValidationCollection is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:validationtype",
+      "reason": "ValidationType is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:operatortype",
+      "reason": "OperatorType is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:sparklinegroup",
+      "reason": "SparklineGroup is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:hyperlink",
+      "reason": "Hyperlink is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:hyperlinkcollection",
+      "reason": "HyperlinkCollection is not used in the opening description; only value-setting capabilities are cited.",
+      "section": "opening"
     },
     {
       "fact_id": "example:002",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used in the opening description.",
+      "section": "opening"
     },
     {
       "fact_id": "example:003",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used in the opening description.",
+      "section": "opening"
     },
     {
       "fact_id": "example:004",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used in the opening description.",
+      "section": "opening"
     },
     {
       "fact_id": "example:005",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used in the opening description.",
+      "section": "opening"
     },
     {
       "fact_id": "example:006",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used in the opening description.",
+      "section": "opening"
     },
     {
       "fact_id": "example:007",
-      "reason": "Examples are not cited in capability descriptions per evidence discipline.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used in the opening description.",
+      "section": "opening"
     },
     {
       "fact_id": "link_target:019",
-      "reason": "The renderer owns the link to crates.io and it is not prose to be written.",
-      "section": "key_capabilities"
+      "reason": "Contradicted link target; not used in the opening description.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:026.code_block",
+      "reason": "The code block is rendered by the deterministic renderer and must not be repeated in prose.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:041.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
+      "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:044.heading",
-      "reason": "inherited_unit:044.heading is not a public API symbol and is omitted from the API reference section",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:045.paragraph",
-      "reason": "inherited_unit:045.paragraph is not a public API symbol and is omitted from the API reference section",
+      "reason": "paragraph is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:046.code_block",
-      "reason": "inherited_unit:046.code_block is not a public API symbol and is omitted from the API reference section",
+      "reason": "code_block is not a prose capability and is not cited by any unit in the api_reference section",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:047.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:048.paragraph",
-      "reason": "inherited_unit:048.paragraph is not a public API symbol and is omitted from the API reference section",
+      "reason": "paragraph is cited by the intro unit but the fact itself is not a capability; the unit cites it only for the structural relationship between Workbook and Worksheet",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:050.heading",
-      "reason": "inherited_unit:050.heading is not a public API symbol and is omitted from the API reference section",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:051.heading",
-      "reason": "inherited_unit:051.heading is not a public API symbol and is omitted from the API reference section",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:053.heading",
-      "reason": "inherited_unit:053.heading is not a public API symbol and is omitted from the API reference section",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:055.heading",
-      "reason": "inherited_unit:055.heading is not a public API symbol and is omitted from the API reference section",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:059.001.list",
-      "reason": "inherited_unit:059.001.list is not a public API symbol and is omitted from the API reference section",
+      "fact_id": "inherited_unit:057.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:059.002.list",
-      "reason": "inherited_unit:059.002.list is not a public API symbol and is omitted from the API reference section",
+      "fact_id": "inherited_unit:058.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:059.003.list",
-      "reason": "inherited_unit:059.003.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:060.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:061.001.list",
-      "reason": "inherited_unit:061.001.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:061.002.list",
-      "reason": "inherited_unit:061.002.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:062.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:063.001.list",
-      "reason": "inherited_unit:063.001.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:063.002.list",
-      "reason": "inherited_unit:063.002.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:063.003.list",
-      "reason": "inherited_unit:063.003.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:063.004.list",
-      "reason": "inherited_unit:063.004.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:064.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:065.001.list",
-      "reason": "inherited_unit:065.001.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:065.002.list",
-      "reason": "inherited_unit:065.002.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:066.heading",
+      "reason": "heading is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:067.001.list",
-      "reason": "inherited_unit:067.001.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:067.002.list",
-      "reason": "inherited_unit:067.002.list is not a public API symbol and is omitted from the API reference section",
+      "reason": "list is not a prose capability and is not cited by any unit in the api_reference section",
       "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:067.003.list",
-      "reason": "inherited_unit:067.003.list is not a public API symbol and is omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:001",
-      "reason": "example:001 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:002",
-      "reason": "example:002 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:003",
-      "reason": "example:003 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:004",
-      "reason": "example:004 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:005",
-      "reason": "example:005 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:006",
-      "reason": "example:006 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "example:007",
-      "reason": "example:007 is an example and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "link_target:019",
-      "reason": "link_target:019 is a link target and not a public API symbol, omitted from the API reference section",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:072.list",
-      "reason": "The list item for the full API reference is omitted because the section does not include a link_target:024 slot for it, and no other slot covers that content.",
-      "section": "documentation_resources"
-    },
-    {
-      "fact_id": "inherited_unit:023.list",
-      "reason": "The requirement for a recent stable Rust toolchain (2021 edition or later) is stated in limitation:3 using the same fact value.",
-      "section": "scope_limitations"
-    },
-    {
-      "fact_id": "inherited_unit:030.paragraph",
-      "reason": "Defensive workbook loading with LoadOptions repair flags and structured diagnostics is not listed as a limitation in the accepted facts and is not covered by any slot.",
-      "section": "scope_limitations"
-    },
-    {
-      "fact_id": "inherited_unit:069.001.list",
-      "reason": "The CellsError enum and its members are not tied to a specific limitation slot and no limitation unit cites them.",
-      "section": "scope_limitations"
-    },
-    {
-      "fact_id": "inherited_unit:069.002.list",
-      "reason": "The additional exception types are not tied to a specific limitation slot and no limitation unit cites them.",
-      "section": "scope_limitations"
-    },
-    {
-      "fact_id": "inherited_unit:074.list",
-      "reason": "The remaining items in the list are either covered by other slots (no .xls, ODS, or CSV support is implied by scope; WorksheetsMut.remove_at is limitation:4) or not cited by any slot (partial API, no crates.io publication, no test suite).",
-      "section": "scope_limitations"
     },
     {
       "fact_id": "build_test_asset:build-command",
-      "reason": "The command cargo check --all-targets is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "build_test_asset:test-command",
-      "reason": "The command cargo test --all-targets is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "reason": "The renderer prints the build command verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "build_test_asset:ci",
-      "reason": "The CI workflow path .github/workflows/ is not relevant to local build and test requirements.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "build_test_asset:ci-matrix",
-      "reason": "The CI matrix os=ubuntu-latest,windows-latest,macos-14,macos-13 describes remote testing infrastructure, not local toolchain requirements.",
+      "reason": "The renderer prints the CI workflow path verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "build_test_asset:examples",
-      "reason": "The examples directory samples/ is already referenced in the inherited unit 077.paragraph; stating it again would duplicate content.",
+      "reason": "The samples/ directory is already referenced in prose; stating its purpose again would duplicate the renderer's command block.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "build_test_asset:test-command",
+      "reason": "The renderer prints the test command verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "identity:family",
-      "reason": "The family cells is not mentioned in the summary slot's scope; it is covered in identity sections.",
+      "reason": "Family identity is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Product knowledge refresh metadata is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is not relevant to toolchain or requirements.",
       "section": "development_testing"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "The revision hash is provenance, not a toolchain requirement.",
+      "reason": "Revision identity is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Package name is already stated in prose.",
       "section": "development_testing"
     },
     {
       "fact_id": "package:version",
-      "reason": "The version 26.7.0 is not a build or test requirement.",
+      "reason": "Version identity is not relevant to toolchain or requirements.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:013.code_block",
-      "reason": "The dependency snippet is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "reason": "The renderer prints the dependency snippet verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:014.paragraph",
-      "reason": "The path dependency instruction is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "reason": "The renderer prints the path dependency snippet verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:015.code_block",
-      "reason": "The dependency snippet is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "reason": "The renderer prints the path dependency snippet verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
-      "fact_id": "inherited_unit:016.paragraph",
-      "reason": "The Rust toolchain requirement and import path are already stated in this unit; repeating them would duplicate content.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:017.code_block",
-      "reason": "The build command sequence is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "fact_id": "inherited_unit:017.paragraph",
+      "reason": "The renderer prints the build command verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:018.code_block",
-      "reason": "The build command sequence is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "reason": "The renderer prints the build command verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
     },
     {
       "fact_id": "inherited_unit:078.code_block",
-      "reason": "The full toolchain command list is rendered by the toolchain as a separate fenced block after this unit; stating its purpose would duplicate the renderer's output.",
+      "reason": "The renderer prints the full command sequence verbatim after this unit; describing what it does would duplicate the command's substance.",
       "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:079.paragraph",
+      "reason": "The renderer prints the CI and documentation commands verbatim after this unit; describing what they do would duplicate the command's substance.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "Unresolved example is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "Unresolved example is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "Unresolved example is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "example:005",
+      "reason": "Unresolved example is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "example:006",
+      "reason": "Unresolved example is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "example:007",
+      "reason": "Unresolved example is not relevant to toolchain or requirements.",
+      "section": "development_testing"
+    },
+    {
+      "fact_id": "inherited_unit:081.paragraph",
+      "reason": "The license information is unrelated to the commercial product's additional capabilities and does not belong in this context sentence.",
+      "section": "enterprise_relationship"
     }
   ],
   "schema_version": 1,
   "units": [
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version",
         "format:input.xlsx",
         "format:output.xlsx",
+        "public_symbol:workbook",
+        "public_symbol:worksheet",
+        "public_symbol:cells",
         "public_symbol:workbook.load_xlsx",
-        "public_symbol:workbook.load_xlsx_from_bytes",
         "public_symbol:workbook.save_xlsx",
-        "public_symbol:loadoptions.try_repair_package",
-        "public_symbol:loadoptions.try_repair_xml",
-        "public_symbol:workbook.get_load_diagnostics",
-        "public_symbol:cell.get_string_value",
-        "public_symbol:cell.get_double_value",
-        "public_symbol:cell.get_bool_value",
-        "public_symbol:cell.get_date_time_value",
+        "public_symbol:cellmut.put_value_string",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_decimal",
+        "public_symbol:cellmut.put_value_date_time",
         "public_symbol:cellmut.put_formula_with_cached_value",
-        "public_symbol:cellstyle.font",
-        "public_symbol:cellstyle.fill",
-        "public_symbol:cellstyle.borders",
-        "public_symbol:cellstyle.number_format",
-        "public_symbol:cellstyle.horizontal_alignment",
-        "public_symbol:worksheetsmut.add",
-        "public_symbol:worksheet.set_name",
-        "public_symbol:worksheet.set_visibility_type",
-        "public_symbol:worksheet.set_tab_color",
-        "public_symbol:worksheet.set_zoom",
-        "public_symbol:worksheet.freeze_panes",
-        "public_symbol:pagesetup.paper_size",
-        "public_symbol:workbook.document_properties",
-        "public_symbol:workbook.protect",
-        "public_symbol:autofilter.set_range",
-        "public_symbol:autofiltercolorfilter.set_cell_color",
-        "public_symbol:autofiltercustomfilter.set_operator",
-        "public_symbol:validationcollection.add",
-        "public_symbol:validation.set_type",
-        "public_symbol:formatconditioncollection.add",
-        "public_symbol:formatcondition.set_type",
-        "public_symbol:chartcollection.add",
-        "public_symbol:chart.chart_type",
-        "public_symbol:picturecollection.add_from_file",
-        "public_symbol:shapecollection.add",
-        "public_symbol:listobjectcollection.add"
+        "example:001"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Cells FOSS for Rust reads and writes .xlsx workbooks and provides programmatic access to workbook content including cells, styles, charts, shapes, pictures, tables, validations, conditional formatting, and auto-filters. It supports loading from files or byte arrays, and offers repair options for damaged packages or XML. The product exposes methods to read cell values as strings, doubles, booleans, or date-time values, and to write formulas with cached values. It allows setting worksheet properties such as name, visibility, tab color, zoom level, freeze panes, and page setup paper size, as well as workbook-level features like document properties and protection."
+      "text": "Aspose.Cells FOSS for Rust reads and writes .xlsx files. It creates new workbooks, loads existing ones with Workbook.load_xlsx, and saves them with Workbook.save_xlsx. It provides access to worksheets, cells, and their values through Workbook, Worksheet, and Cells, supporting string, integer, boolean, decimal, date-time, and formula values via CellMut.put_value_string, CellMut.put_value_i32, CellMut.put_value_bool, CellMut.put_value_decimal, CellMut.put_value_date_time, and CellMut.put_formula_with_cached_value."
     },
     {
       "fact_ids": [
         "format:input.xlsx",
         "format:output.xlsx",
         "public_symbol:workbook.load_xlsx",
-        "public_symbol:workbook.load_xlsx_from_bytes",
         "public_symbol:workbook.save_xlsx"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It reads and writes .xlsx workbooks using Workbook.load_xlsx from a file path, load_xlsx_from_bytes from in-memory bytes, and save_xlsx to a file path."
+      "text": "It reads and writes .xlsx files using Workbook.load_xlsx and Workbook.save_xlsx."
     },
     {
       "fact_ids": [
-        "public_symbol:cell.get_bool_value",
-        "public_symbol:cell.get_date_time_value",
-        "public_symbol:cell.get_double_value",
-        "public_symbol:cell.get_string_value",
-        "public_symbol:cellmut.put_formula_with_cached_value"
+        "example:001",
+        "public_symbol:cellmut.put_formula_with_cached_value",
+        "public_symbol:cellmut.put_value_bool",
+        "public_symbol:cellmut.put_value_date_time",
+        "public_symbol:cellmut.put_value_decimal",
+        "public_symbol:cellmut.put_value_i32",
+        "public_symbol:cellmut.put_value_string"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It retrieves typed cell values with Cell.get_string_value, Cell.get_double_value, Cell.get_bool_value, and Cell.get_date_time_value, and writes formulas with cached results using CellMut.put_formula_with_cached_value."
+      "text": "It manages cell values by storing strings, integers, booleans, decimals, dates, and formulas with cached results via CellMut.put_value_string, CellMut.put_value_i32, CellMut.put_value_bool, CellMut.put_value_decimal, CellMut.put_value_date_time, and CellMut.put_formula_with_cached_value."
     },
     {
       "fact_ids": [
-        "public_symbol:cellstyle.borders",
-        "public_symbol:cellstyle.fill",
-        "public_symbol:cellstyle.font",
-        "public_symbol:cellstyle.horizontal_alignment",
-        "public_symbol:cellstyle.number_format"
+        "public_symbol:border",
+        "public_symbol:cellstyle",
+        "public_symbol:fill",
+        "public_symbol:font",
+        "public_symbol:formatcondition"
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It applies cell styling through CellStyle with font, fill, borders, number_format, and horizontal_alignment settings."
+      "text": "It applies styling and formatting through CellStyle, Font, Fill, Border, and FormatCondition."
     },
     {
       "fact_ids": [
-        "public_symbol:worksheet.set_name",
-        "public_symbol:worksheet.set_tab_color",
-        "public_symbol:worksheet.set_visibility_type",
-        "public_symbol:worksheet.set_zoom",
-        "public_symbol:worksheetsmut.add"
+        "public_symbol:autofilter",
+        "public_symbol:columns",
+        "public_symbol:listobject",
+        "public_symbol:rows",
+        "public_symbol:worksheet",
+        "public_symbol:worksheets"
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It manages worksheets by adding new sheets with WorksheetsMut.add and configuring each sheet's name, visibility, tab color, and zoom level."
+      "text": "It organizes worksheets using Worksheets, Worksheet, Rows, Columns, AutoFilter, and ListObject."
     },
     {
       "fact_ids": [
-        "public_symbol:formatcondition.set_type",
-        "public_symbol:formatconditioncollection.add",
-        "public_symbol:validation.set_type",
-        "public_symbol:validationcollection.add"
+        "public_symbol:chart",
+        "public_symbol:charttype",
+        "public_symbol:picture",
+        "public_symbol:shape",
+        "public_symbol:shapecollection"
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It enforces data validation rules with Validation.set_type and FormatCondition.set_type for conditional formatting including cell-value, expression, color-scale, data-bar, and icon-set rules."
+      "text": "It creates charts, pictures, and shapes using Chart, ChartType, Picture, Shape, and ShapeCollection."
     },
     {
       "fact_ids": [
-        "public_symbol:chart.chart_type",
-        "public_symbol:chartcollection.add",
-        "public_symbol:picturecollection.add_from_file",
-        "public_symbol:shapecollection.add"
+        "public_symbol:coredocumentproperties",
+        "public_symbol:definedname",
+        "public_symbol:workbook.document_properties",
+        "public_symbol:workbookprotection"
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It creates charts with ChartCollection.add and Chart.chart_type, embeds pictures using PictureCollection.add_from_file, and adds shapes via ShapeCollection.add."
+      "text": "It manages document properties and protection through Workbook.document_properties, CoreDocumentProperties, WorkbookProtection, and DefinedName."
     },
     {
       "fact_ids": [
-        "public_symbol:pagesetup.paper_size",
-        "public_symbol:workbook.document_properties",
-        "public_symbol:workbook.protect",
-        "public_symbol:worksheet.freeze_panes"
+        "public_symbol:operatortype",
+        "public_symbol:validation",
+        "public_symbol:validationcollection",
+        "public_symbol:validationtype"
       ],
       "section": "key_capabilities",
       "slot": "capability:7",
-      "text": "It configures document properties with Workbook.document_properties, protects workbooks with Workbook.protect, sets page layout with PageSetup.paper_size, and freezes panes using Worksheet.freeze_panes."
+      "text": "It enforces data validation using Validation, ValidationCollection, ValidationType, and OperatorType."
     },
     {
       "fact_ids": [
-        "public_symbol:autofilter.set_range",
-        "public_symbol:autofiltercolorfilter.set_cell_color",
-        "public_symbol:autofiltercustomfilter.set_operator",
-        "public_symbol:listobjectcollection.add"
+        "public_symbol:hyperlink",
+        "public_symbol:hyperlinkcollection",
+        "public_symbol:sparklinegroup"
       ],
       "section": "key_capabilities",
       "slot": "capability:8",
-      "text": "It applies auto-filters with AutoFilter.set_range, sets color filters using AutoFilterColorFilter.set_cell_color, defines custom filter operators with AutoFilterCustomFilter.set_operator, and creates structured tables via ListObjectCollection.add."
+      "text": "It adds sparkline groups and hyperlinks using SparklineGroup, Hyperlink, and HyperlinkCollection."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "This example creates a new workbook, writes values and a formula to cells, saves the file as hello.xlsx, and then loads it back to print the value of cell A1."
     },
     {
       "fact_ids": [
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "inherited_unit:048.paragraph"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The Aspose.Cells FOSS for Rust library exposes workbook-level operations through the Workbook type, which owns a collection of Worksheet objects. Each Worksheet provides access to its cells, charts, shapes, pictures, and other elements through dedicated accessor methods."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
         "package:name",
         "package:rust_edition",
         "package:version",
         "public_symbol:autofilter",
-        "public_symbol:cell",
-        "public_symbol:cellmut",
-        "public_symbol:cellstyle",
-        "public_symbol:chart",
-        "public_symbol:chartcollection",
-        "public_symbol:charttype",
-        "public_symbol:conditionalformattingcollection",
-        "public_symbol:definedname",
-        "public_symbol:formatcondition",
-        "public_symbol:hyperlink",
-        "public_symbol:loadoptions"
-      ],
-      "section": "api_reference",
-      "slot": "intro",
-      "text": "Aspose.Cells FOSS for Rust provides the Workbook entry point for reading and writing Excel workbooks, and the Worksheet entry point for accessing cells, charts, and formatting. The public API surface includes AutoFilter, Cell, CellMut, CellStyle, Chart, ChartCollection, ChartType, ConditionalFormattingCollection, DefinedName, FormatCondition, Hyperlink, and LoadOptions."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:autofilter",
         "public_symbol:autofilter.clear",
         "public_symbol:autofilter.filter_columns",
         "public_symbol:autofilter.get_filter_columns",
         "public_symbol:autofilter.get_range",
         "public_symbol:autofilter.get_sort_state",
+        "public_symbol:autofilter.range",
         "public_symbol:autofilter.set_range",
         "public_symbol:autofilter.sort_state"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:autofilter",
-      "text": "The AutoFilter type provides range-based filtering on a worksheet with AutoFilter.set_range to define the filtered area, AutoFilter.get_range to retrieve it, AutoFilter.clear to remove filtering, AutoFilter.filter_columns to apply column-specific filters, AutoFilter.get_filter_columns to read current filters, and AutoFilter.get_sort_state and AutoFilter.sort_state to manage sort settings."
+      "text": "The AutoFilter type provides filtering and sorting controls for a worksheet range, with methods to set and retrieve the filtered range, apply column filters, and manage sort state."
     },
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
         "public_symbol:cell",
+        "public_symbol:cell.bool_value",
+        "public_symbol:cell.column",
+        "public_symbol:cell.date_time_value",
+        "public_symbol:cell.display_string_value",
+        "public_symbol:cell.double_value",
+        "public_symbol:cell.formatted_string_value",
         "public_symbol:cell.formula_cached_value",
         "public_symbol:cell.get_bool_value",
+        "public_symbol:cell.get_column",
         "public_symbol:cell.get_date_time_value",
-        "public_symbol:cell.get_double_value",
-        "public_symbol:cell.get_string_value",
-        "public_symbol:cell.style",
-        "public_symbol:cell.value"
+        "public_symbol:cell.get_display_string_value"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:cell",
-      "text": "The Cell type represents a read-only cell with Cell.get_string_value, Cell.get_double_value, Cell.get_bool_value, and Cell.get_date_time_value for typed value retrieval, Cell.value for the underlying value, and Cell.formula_cached_value for cached formula results, while Cell.style provides access to the cell's formatting."
+      "text": "The Cell type represents a single cell in a worksheet and exposes methods to retrieve its value in various types including boolean, date-time, double, display string, formatted string, and formula cached value, as well as its column index."
     },
     {
       "fact_ids": [
-        "public_symbol:cellmut",
-        "public_symbol:cellmut.put_formula_with_cached_value",
-        "public_symbol:cellmut.put_value_bool",
-        "public_symbol:cellmut.put_value_date_time",
-        "public_symbol:cellmut.put_value_i32",
-        "public_symbol:cellmut.put_value_string",
-        "public_symbol:cellmut.set_style",
-        "public_symbol:cellmut.set_value"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:cellmut",
-      "text": "The CellMut type provides mutable cell operations with CellMut.put_value_string, CellMut.put_value_i32, CellMut.put_value_bool, and CellMut.put_value_date_time for setting values, CellMut.put_formula_with_cached_value for formulas, CellMut.set_value for generic value assignment, and CellMut.set_style to update formatting."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:cellstyle",
-        "public_symbol:cellstyle.borders",
-        "public_symbol:cellstyle.fill",
-        "public_symbol:cellstyle.font",
-        "public_symbol:cellstyle.horizontal_alignment",
-        "public_symbol:cellstyle.number_format",
-        "public_symbol:cellstyle.vertical_alignment",
-        "public_symbol:cellstyle.wrap_text"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:cellstyle",
-      "text": "The CellStyle type exposes formatting properties including CellStyle.font for font settings, CellStyle.fill for background patterns, CellStyle.borders for border configuration, CellStyle.number_format for numeric formatting, CellStyle.horizontal_alignment and CellStyle.vertical_alignment for text alignment, and CellStyle.wrap_text for line wrapping control."
-    },
-    {
-      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
         "public_symbol:chart",
         "public_symbol:chart.chart_type",
         "public_symbol:chart.data_range",
         "public_symbol:chart.delete",
         "public_symbol:chart.get_chart_type",
-        "public_symbol:chart.get_data_range"
+        "public_symbol:chart.get_data_range",
+        "public_symbol:chart.get_extent_cx",
+        "public_symbol:chart.get_extent_cy",
+        "public_symbol:chart.get_lower_right_column",
+        "public_symbol:chart.get_lower_right_row",
+        "public_symbol:chart.get_name",
+        "public_symbol:chart.get_upper_left_column"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:chart",
-      "text": "The Chart type represents a chart object with Chart.chart_type and Chart.data_range to define its appearance and data source, Chart.get_chart_type and Chart.get_data_range to inspect them, and Chart.delete to remove the chart from its worksheet."
+      "text": "The Chart type represents a chart object on a worksheet, exposing its type, data range, name, and position through methods such as get_chart_type, get_data_range, get_name, and get_lower_right_column."
     },
     {
       "fact_ids": [
-        "public_symbol:chartcollection",
-        "public_symbol:chartcollection.add",
-        "public_symbol:chartcollection.count",
-        "public_symbol:chartcollection.get",
-        "public_symbol:chartcollection.item"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:chartcollection",
-      "text": "The ChartCollection type manages charts on a worksheet with ChartCollection.add to insert new charts, ChartCollection.count to retrieve the total, ChartCollection.get to access a chart by index, and ChartCollection.item as an alias for indexed retrieval."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:charttype"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:charttype",
-      "text": "The ChartType enumeration defines supported chart types for use with ChartCollection.add and Chart.chart_type."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:conditionalformattingcollection",
-        "public_symbol:conditionalformattingcollection.add",
-        "public_symbol:conditionalformattingcollection.count",
-        "public_symbol:conditionalformattingcollection.get"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:conditionalformattingcollection",
-      "text": "The ConditionalFormattingCollection type manages conditional formatting rules with ConditionalFormattingCollection.add to create new rules, ConditionalFormattingCollection.count to list them, and ConditionalFormattingCollection.get to access individual rules."
-    },
-    {
-      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
         "public_symbol:definedname",
+        "public_symbol:definedname.get_comment",
         "public_symbol:definedname.get_formula",
+        "public_symbol:definedname.get_local_sheet_index",
         "public_symbol:definedname.get_name",
+        "public_symbol:definedname.is_hidden",
+        "public_symbol:definedname.set_comment",
         "public_symbol:definedname.set_formula",
+        "public_symbol:definedname.set_hidden",
+        "public_symbol:definedname.set_local_sheet_index",
         "public_symbol:definedname.set_name"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:definedname",
-      "text": "The DefinedName type represents a named range with DefinedName.get_name and DefinedName.get_formula to read its identifier and formula, and DefinedName.set_name and DefinedName.set_formula to update them."
+      "text": "The DefinedName type represents a named range or formula at workbook or worksheet scope, with methods to get and set its name, formula, comment, local sheet index, and hidden status."
     },
     {
       "fact_ids": [
-        "public_symbol:formatcondition",
-        "public_symbol:formatcondition.get_style",
-        "public_symbol:formatcondition.set_priority",
-        "public_symbol:formatcondition.set_style",
-        "public_symbol:formatcondition.set_type"
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:font",
+        "public_symbol:font.clear_color",
+        "public_symbol:font.color",
+        "public_symbol:font.default",
+        "public_symbol:font.get_color",
+        "public_symbol:font.get_double_size",
+        "public_symbol:font.get_is_bold",
+        "public_symbol:font.get_is_italic",
+        "public_symbol:font.get_is_strikeout",
+        "public_symbol:font.get_name",
+        "public_symbol:font.get_size",
+        "public_symbol:font.get_underline"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:formatcondition",
-      "text": "The FormatCondition type configures conditional formatting rules with FormatCondition.set_type to choose the condition type, FormatCondition.set_priority to adjust evaluation order, FormatCondition.get_style and FormatCondition.set_style to manage the applied formatting."
+      "slot": "hub:public_symbol:font",
+      "text": "The Font type describes text formatting attributes such as color, size, bold, italic, strikeout, underline, and name, with methods to get and set each property."
     },
     {
       "fact_ids": [
-        "public_symbol:hyperlink",
-        "public_symbol:hyperlink.address",
-        "public_symbol:hyperlink.area",
-        "public_symbol:hyperlink.get_address",
-        "public_symbol:hyperlink.get_area"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:hyperlink",
-      "text": "The Hyperlink type represents a clickable link with Hyperlink.address and Hyperlink.area to define its target and cell range, and Hyperlink.get_address and Hyperlink.get_area to inspect them."
-    },
-    {
-      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
         "public_symbol:loadoptions",
         "public_symbol:loadoptions.default",
+        "public_symbol:loadoptions.load_format",
+        "public_symbol:loadoptions.preserve_unsupported_parts",
+        "public_symbol:loadoptions.strict_mode",
         "public_symbol:loadoptions.try_repair_package",
         "public_symbol:loadoptions.try_repair_xml"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:loadoptions",
-      "text": "The LoadOptions type controls workbook loading behavior with LoadOptions.default to create default settings, LoadOptions.try_repair_package to enable package-level recovery, and LoadOptions.try_repair_xml to enable XML-level recovery."
+      "text": "The LoadOptions type controls how a workbook file is loaded, with options to enable strict mode, preserve unsupported parts, and attempt repair of the package or XML content."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:pagesetup",
+        "public_symbol:pagesetup.add_horizontal_page_break",
+        "public_symbol:pagesetup.add_vertical_page_break",
+        "public_symbol:pagesetup.bottom_margin",
+        "public_symbol:pagesetup.bottom_margin_inch",
+        "public_symbol:pagesetup.center_footer",
+        "public_symbol:pagesetup.center_header",
+        "public_symbol:pagesetup.center_horizontally",
+        "public_symbol:pagesetup.center_vertically",
+        "public_symbol:pagesetup.clear_horizontal_page_breaks",
+        "public_symbol:pagesetup.clear_vertical_page_breaks"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:pagesetup",
+      "text": "The PageSetup type manages page layout settings for a worksheet, including margins, headers, footers, centering options, and horizontal and vertical page breaks."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:picture",
+        "public_symbol:picture.data",
+        "public_symbol:picture.delete",
+        "public_symbol:picture.extension",
+        "public_symbol:picture.get_data",
+        "public_symbol:picture.get_extension",
+        "public_symbol:picture.get_image_type",
+        "public_symbol:picture.get_lower_right_column",
+        "public_symbol:picture.get_lower_right_row",
+        "public_symbol:picture.get_name",
+        "public_symbol:picture.get_upper_left_column"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:picture",
+      "text": "The Picture type represents an image embedded in a worksheet, exposing its data, extension, image type, and position through methods such as get_data, get_extension, and get_lower_right_column."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:shape",
+        "public_symbol:shape.auto_shape_type",
+        "public_symbol:shape.auto_shape_type_to_geometry",
+        "public_symbol:shape.delete",
+        "public_symbol:shape.geometry_to_auto_shape_type",
+        "public_symbol:shape.get_auto_shape_type",
+        "public_symbol:shape.get_lower_right_column",
+        "public_symbol:shape.get_lower_right_row",
+        "public_symbol:shape.get_name",
+        "public_symbol:shape.get_upper_left_column",
+        "public_symbol:shape.get_upper_left_row"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:shape",
+      "text": "The Shape type represents a drawing object such as an auto shape on a worksheet, exposing its type, position, and name through methods such as get_auto_shape_type, get_lower_right_column, and get_upper_left_row."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:sparklinegroup",
+        "public_symbol:sparklinegroup.data_range",
+        "public_symbol:sparklinegroup.get_data_range",
+        "public_symbol:sparklinegroup.get_location_range",
+        "public_symbol:sparklinegroup.get_sparkline_type",
+        "public_symbol:sparklinegroup.location_range",
+        "public_symbol:sparklinegroup.remove",
+        "public_symbol:sparklinegroup.set_data_range",
+        "public_symbol:sparklinegroup.set_location_range",
+        "public_symbol:sparklinegroup.set_sparkline_type",
+        "public_symbol:sparklinegroup.sparkline_type"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:sparklinegroup",
+      "text": "The SparklineGroup type manages a group of sparklines on a worksheet, exposing its data range, location range, and sparkline type through methods such as get_data_range, get_location_range, and get_sparkline_type."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:styleflag",
+        "public_symbol:styleflag.alignments",
+        "public_symbol:styleflag.all",
+        "public_symbol:styleflag.borders",
+        "public_symbol:styleflag.bottom_border",
+        "public_symbol:styleflag.cell_shading",
+        "public_symbol:styleflag.diagonal_down_border",
+        "public_symbol:styleflag.diagonal_up_border",
+        "public_symbol:styleflag.font",
+        "public_symbol:styleflag.font_bold",
+        "public_symbol:styleflag.font_color"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:styleflag",
+      "text": "The StyleFlag type is a bitmask used to indicate which style attributes should be applied when setting cell styles, including alignments, borders, font, and fill properties."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:rust_edition",
+        "package:version",
+        "public_symbol:cellmut",
+        "public_symbol:cellmut.apply_bold",
+        "public_symbol:cellmut.apply_border_color",
+        "public_symbol:cellmut.apply_border_line_style",
+        "public_symbol:cellmut.apply_fill",
+        "public_symbol:cellmut.apply_fill_color",
+        "public_symbol:cellmut.apply_font",
+        "public_symbol:cellmut.apply_horizontal_alignment",
+        "public_symbol:cellmut.apply_italic",
+        "public_symbol:cellmut.apply_number_format",
+        "public_symbol:cellmut.apply_text_wrap"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:cellmut",
+      "text": "The CellMut type provides mutable access to a cell and exposes methods to apply formatting such as bold, italic, font, fill, border color, border line style, horizontal alignment, number format, and text wrap."
     },
     {
       "fact_ids": [
@@ -653,11 +946,19 @@
     },
     {
       "fact_ids": [
+        "link_target:024"
+      ],
+      "section": "documentation_resources",
+      "slot": "link:link_target:024",
+      "text": "The full API reference offers the complete, browsable reference for the public API surface."
+    },
+    {
+      "fact_ids": [
         "link_target:021"
       ],
       "section": "documentation_resources",
       "slot": "link:link_target:021",
-      "text": "The samples overview lists many runnable examples, one per feature area."
+      "text": "The samples overview lists every runnable example, one per feature area."
     },
     {
       "fact_ids": [
@@ -680,64 +981,66 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
+        "inherited_unit:074.list",
         "package:name",
         "package:rust_edition",
         "package:version"
       ],
       "section": "scope_limitations",
       "slot": "scope",
-      "text": "Aspose.Cells FOSS for Rust reads and writes .xlsx (OOXML/SpreadsheetML) workbooks, supports workbook creation, loading, and saving, and exposes worksheet and cell manipulation through a Rust API."
+      "text": "Aspose.Cells FOSS for Rust reads and writes .xlsx (OOXML/SpreadsheetML) files and provides a Rust API for workbook and worksheet manipulation, with version 26.7.0 targeting the Rust 2021 edition."
     },
     {
       "fact_ids": [
+        "inherited_unit:074.list",
         "install_command:cargo"
       ],
       "section": "scope_limitations",
       "slot": "limitation:1",
-      "text": "Installation uses a git dependency in Cargo.toml, and the crate is not yet published to crates.io."
+      "text": "The crate is not yet published to crates.io, requiring installation via git clone and cargo build as shown in the install command."
     },
     {
       "fact_ids": [
-        "build_test_asset:test-command"
+        "build_test_asset:test-command",
+        "inherited_unit:074.list"
       ],
       "section": "scope_limitations",
       "slot": "limitation:2",
-      "text": "The repository ships no automated test suite: cargo test --all-targets currently reports 0 tests."
+      "text": "No automated test suite ships yet, as cargo test --all-targets currently reports 0 tests."
     },
     {
       "fact_ids": [
+        "inherited_unit:074.list",
         "install_command:cargo"
       ],
       "section": "scope_limitations",
       "slot": "limitation:3",
-      "text": "A recent stable Rust toolchain (2021 edition or later) is required to build and use aspose-cells-foss-rust."
+      "text": "The public API surface is broad but, by the repository's own account, not a complete match for Aspose.Cells — some features are still partial, and the crate is early-stage and evolving."
     },
     {
       "fact_ids": [
+        "inherited_unit:074.list",
         "public_symbol:worksheetsmut.remove_at"
       ],
       "section": "scope_limitations",
       "slot": "limitation:4",
-      "text": "WorksheetsMut.remove_at returns a CellsError::Unsupported error when asked to remove the last remaining worksheet."
+      "text": "A workbook must always keep at least one worksheet: WorksheetsMut.remove_at returns a CellsError::Unsupported error when asked to remove the last remaining worksheet."
     },
     {
       "fact_ids": [
         "identity:ecosystem",
-        "identity:family",
         "identity:platform",
-        "identity:repository",
-        "identity:revision",
-        "package:name",
         "package:rust_edition",
-        "package:version",
-        "build_test_asset:examples",
-        "inherited_unit:077.paragraph"
+        "inherited_unit:016.paragraph",
+        "inherited_unit:077.paragraph",
+        "build_test_asset:ci-matrix"
       ],
       "section": "development_testing",
       "slot": "summary",
-      "text": "The repository uses the Rust toolchain with edition 2021 and requires no proprietary Aspose runtime or Microsoft Office installation. The package name is aspose-cells-foss-rust and the library imports as aspose_cells_foss_rust. The samples/ directory serves as the de-facto verification suite: each sample creates a workbook, saves it under output/samples/, loads it back, and prints what it read. After a change that touches the read/write path, run the core samples and confirm they still round-trip."
+      "text": "The Aspose.Cells FOSS for Rust package targets the Rust 2021 edition and requires a recent stable Rust toolchain. No proprietary Aspose runtime or Microsoft Office installation is required. The repository provides sample programs in the samples/ directory that serve as the de-facto verification suite, each creating a workbook, saving it under output/samples/, loading it back, and printing what it read. CI runs formatting, linting, testing, and the core samples as smoke tests on Ubuntu, Windows, and macOS."
     },
     {
       "fact_ids": [
@@ -753,7 +1056,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:cellobjectvalue",
-      "text": "CellObjectValue represents the type of value stored in a cell."
+      "text": "CellObjectValue enum lists the Bool, Empty, Number, and String cell object values, and provides a from method to construct them."
     },
     {
       "fact_ids": [
@@ -761,7 +1064,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:cellvalue",
-      "text": "CellValue holds the actual data content of a cell, such as text, number, boolean, or decimal."
+      "text": "CellValue enum lists the Bool, Empty, Error, Formula, Number, and String cell value types, and provides methods as_bool, as_f64, as_i32, as_i64, as_str, as_string, and get_type to access its contents."
     },
     {
       "fact_ids": [
@@ -769,7 +1072,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:cellserror",
-      "text": "CellsError indicates an error condition encountered while processing cell data."
+      "text": "CellsError enum lists the Io, Unsupported, and csharp_exception_type_name, fmt, to_cells_exception, to_formula_exception, to_invalid_file_format_exception, to_style_exception, to_unsupported_feature_exception, to_workbook_load_exception methods."
     },
     {
       "fact_ids": [
@@ -777,7 +1080,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:datesystem",
-      "text": "DateSystem specifies the date system used for date calculations in a workbook."
+      "text": "DateSystem enum lists the Mac1904 and Windows1900 date system values."
     },
     {
       "fact_ids": [
@@ -785,7 +1088,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:diagnosticseverity",
-      "text": "DiagnosticSeverity classifies the severity level of a diagnostic issue reported during workbook loading."
+      "text": "DiagnosticSeverity enum lists the Fatal, Recoverable, and Warning diagnostic severity values."
     },
     {
       "fact_ids": [
@@ -793,7 +1096,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:horizontalalignment",
-      "text": "HorizontalAlignment defines the horizontal alignment of content within a cell."
+      "text": "HorizontalAlignment enum lists the Center, Distributed, Fill, General, Justify, Left, and Right horizontal alignment values."
     },
     {
       "fact_ids": [
@@ -801,7 +1104,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:verticalalignment",
-      "text": "VerticalAlignment defines the vertical alignment of content within a cell."
+      "text": "VerticalAlignment enum lists the Bottom, Center, Distributed, Justify, and Top vertical alignment values."
     }
   ]
 }
