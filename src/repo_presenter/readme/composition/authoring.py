@@ -51,7 +51,11 @@ from repo_presenter.readme.composition.components.identity import (
     product_name_tokens,
     spells_the_product,
 )
-from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL, section_ids
+from repo_presenter.readme.composition.components.shell import (
+    DETERMINISTIC_SECTIONS,
+    SEMANTIC_SHELL,
+    section_ids,
+)
 from repo_presenter.readme.composition.components.terminology import canonical_forms
 from repo_presenter.readme.composition.coverage import Destinations, states_all, uncovered
 from repo_presenter.readme.composition.list_coverage import (
@@ -69,7 +73,12 @@ CONTENT_UNITS_FILENAME = "content_units.json"
 # artifact. write_raw_calls itself depends on repair/rounds.py's batch-call machinery, not ported.
 RAW_CALLS_FILENAME = "raw_calls.json"
 AUTHORED_SECTIONS: tuple[str, ...] = tuple(
-    section.id for section in SEMANTIC_SHELL if section.owner != "D" and section.id != "at_a_glance"
+    section.id
+    for section in SEMANTIC_SHELL
+    if section.owner != "D"
+    and section.id != "at_a_glance"
+    # R43(2): rendered from facts plus kept maintainer text; no authored slot.
+    and section.id not in DETERMINISTIC_SECTIONS
 )
 _COMPOSITE_VALUE = re.compile(r"(?=\S+\Z)\S*[-/.]\S*")
 _DOTTED = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+\b")
@@ -214,7 +223,10 @@ _TYPE_IMPLEMENTATION_RULE = (
 )
 # 37 (2026-11-14, BL-104 / R43(4)): a type:/hub: slot recorded as an API-row fallback in
 # ``omitted`` (API_ROW_FALLBACK_REASON) is owed no unit; the renderer prints its fact-true row.
-NORMALISATION_VERSION = "37"
+# 38 (2026-11-14, R43(2) / BL-102): Development and Testing, Documentation and Resources and Scope and
+# Limitations are no longer authored (AUTHORED_SECTIONS); an opening or key-capability unit that spells
+# a number, count, file name or manifest key name is rejected (value_tokens, NO_VALUES_RULE).
+NORMALISATION_VERSION = "38"
 _EXCEPTION_SUFFIXES = ("Error", "Exception", "Warning")
 EDITION_SUBSTITUTE = re.compile(
     r"(?i)\b(?:commercial|on[- ]?premises?|premium|paid|full|licensed|proprietary)[\s-]+"
@@ -363,6 +375,54 @@ def _strip_echoed_fact_ids(text: str, fact_ids: Any) -> str | None:
     return stripped if stripped != text else None
 
 
+#: R43(2) (owner, 2026-11-14; BL-102): the model writes only the opening and the key-capability
+#: sentences, and those carry no number, count, file name or manifest/config key name: the renderer
+#: prints every such value from the facts (Installation's floor, Dependencies, the API Reference
+#: count, At a Glance's formats, Development and Testing's paths and commands).
+VALUE_FREE_SECTIONS = frozenset({"opening", "key_capabilities"})
+NO_VALUES_RULE = (
+    "Write no number, version, count (spelled or in digits), file or directory name, or "
+    "manifest/config key name: the renderer prints those values from the facts around this text."
+)
+_NUMBER = re.compile(r"(?<![\w.\-])\d+(?:[.,]\d+)*%?(?![\w\-])")
+_COUNT_WORD = re.compile(
+    r"(?i)\b(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|"
+    r"fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty)\b(?!-)"
+    r"|\b(?:hundreds|thousands|dozens) of\b"
+)
+_SOURCE_EXTENSIONS = (
+    "py|pyi|md|rst|txt|json|toml|ya?ml|cfg|ini|xml|csproj|sln|props|targets|gradle|kts|java|cs|"
+    "go|mod|sum|rs|ts|tsx|js|mjs|cjs|cpp|cc|cxx|hpp|hh|h|c|php|lock|sh|ps1|bat|cmake"
+)
+_FILE_NAME = re.compile(
+    rf"(?<![\w./-])(?:[\w.-]+/)*[\w-][\w.-]*\.(?:{_SOURCE_EXTENSIONS})(?![\w-]|\.[A-Za-z_])"
+    r"|(?<![\w./-])[\w.-]+(?:/[\w.-]+)*/(?![\w])"
+    r"|\b(?:README|LICENSE|CHANGELOG|Makefile|Dockerfile|CMakeLists)\b"
+)
+_KEY_NAMES = frozenset(
+    {
+        "python_requires", "requires-python", "install_requires", "extras_require",
+        "optional-dependencies", "TargetFramework", "TargetFrameworks", "PackageId",
+        "LangVersion", "PackageReference", "groupId", "artifactId", "rust-version",
+        "devDependencies", "peerDependencies", "engines", "go.mod", "package.json",
+    }
+)
+_KEY_TOKEN = re.compile(r"[A-Za-z_][\w.-]*")
+
+
+def value_tokens(text: str, name: str) -> list[str]:
+    """The numbers, counts, file names and key names ``text`` spells, outside the product name
+    (``Aspose.3D FOSS for .NET``), each once, in order (R43(2))."""
+    plain = text.replace(name, " ")
+    for token in product_name_tokens(name):
+        plain = re.sub(rf"(?<![\w.]){re.escape(token)}(?![\w])", " ", plain)
+    found: list[str] = []
+    for pattern in (_NUMBER, _COUNT_WORD, _FILE_NAME):
+        found.extend(match.group(0) for match in pattern.finditer(plain))
+    found.extend(token for token in _KEY_TOKEN.findall(plain) if token in _KEY_NAMES)
+    return list(dict.fromkeys(found))
+
+
 _OBJECTIVES: dict[str, tuple[str, str]] = {
     "opening": (
         "Two to four sentences that state what the product is and does, as its own actions "
@@ -375,11 +435,12 @@ _OBJECTIVES: dict[str, tuple[str, str]] = {
         "so in those words. A format fact's own `direction` field says whether the product reads "
         "that extension as input or writes it as output; when the opening names a format, state "
         "exactly that direction, never the opposite and never a direction the fact does not "
-        "carry.",
+        "carry. " + NO_VALUES_RULE,
         "one unit of two to four sentences",
     ),
     "key_capabilities": (
-        "One sentence per core capability that adds concrete visitor detail beyond its title.",
+        "One sentence per core capability that adds concrete visitor detail beyond its title. "
+        + NO_VALUES_RULE,
         "one unit per capability, one sentence each",
     ),
     "quick_start": (
@@ -2084,6 +2145,7 @@ def unit_checks(
     dispositions: Mapping[str, Any] | None = None,
     *,
     register: bool = True,
+    values: bool = True,
 ) -> list[str]:
     """Why the section's units may not be used, beyond schema and binding; empty when they hold.
 
@@ -2091,7 +2153,13 @@ def unit_checks(
     unit to the findings register before composition (``register_errors``, BL-087). BC-04's
     re-judgement of a finished candidate passes ``False``: there BC-18 already judges the printed
     README against the same rows, and a second finding for one defect would route it to two
-    repairs (measured: 37 duplicate findings on the 18 sealed Lane R candidates)."""
+    repairs (measured: 37 duplicate findings on the 18 sealed Lane R candidates).
+
+    ``values`` (default on) holds an opening or key-capability unit to R43(2)'s no-values rule
+    (``value_tokens``) at authoring, coherence and repair. BC-04's re-judgement of a finished
+    candidate passes ``False``: the rule binds the producer, it is not a new blocking check on
+    sealed candidates (checklist item 13; the report-only run over every sealed opening and
+    capability unit is in BL-102's evidence)."""
     errors: list[str] = []
     if task.section_id == "opening" and dispositions is not None:
         preserved = preserved_section_text(dispositions, facts, task.section_id)
@@ -2138,6 +2206,14 @@ def unit_checks(
                 f"unit {unit.get('slot')}: names the edition as {phrase!r}; Enterprise Edition is "
                 "the only edition name and the shell prints it, so name no edition"
             )
+        if values and task.section_id in VALUE_FREE_SECTIONS:
+            spelled = value_tokens(text, name)
+            if spelled:
+                errors.append(
+                    f"unit {unit.get('slot')}: spells {', '.join(repr(v) for v in spelled)}; "
+                    + NO_VALUES_RULE
+                    + " Name the capability in words instead."
+                )
     for unit in output.get("units", []):
         title = task.slot_titles.get(str(unit.get("slot")))
         text = str(unit.get("text", ""))

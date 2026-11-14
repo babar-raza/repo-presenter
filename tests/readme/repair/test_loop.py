@@ -56,7 +56,6 @@ LABELS = [
     "key_capabilities",
     "quick_start",
     "api_reference",
-    "scope_limitations",
 ]
 REPAIRED_TEXT = (
     "This shows a reader how the library turns its output into a finished file."
@@ -206,7 +205,7 @@ def test_a_rejected_finding_is_repaired_once_through_run_job_and_the_cascade_is_
         registry_path=registry_path,
         max_rounds=1,
     )
-    assert first.provider_calls == 9
+    assert first.provider_calls == 8  # 9 before R43(2) removed the Scope and Limitations call
     # The fixture's own real verdict is REJECT, for heading losses no repair here can touch
     # (deterministic sections). Those stay, unrepairable, after the settle as well. Its kept
     # quick-start code block used to be a second finding; the renderer prints that block from the
@@ -382,7 +381,7 @@ def test_a_repair_that_only_restates_the_input_is_unrepairable_and_not_retried(
 def _real_repair_context(
     tmp_path: Path, clone_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> tuple[Any, Any]:
-    """A real RepairContext from a real cascade run (phase 1, 9 scripted calls), whose ``store``
+    """A real RepairContext from a real cascade run (phase 1, 8 scripted calls), whose ``store``
     is then swapped for a FRESH, EMPTY one -- exactly what the call store looks like for a
     section/plan ``--restore-sealed-bundle`` never re-generated this run. Returns ``(rc, prompts)``."""
     from dataclasses import replace as dc_replace

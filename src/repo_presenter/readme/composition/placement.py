@@ -21,7 +21,10 @@ from urllib.parse import unquote
 
 from repo_presenter.core.ecosystems import spec_for
 from repo_presenter.core.facts import Fact, FactsDocument
-from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
+from repo_presenter.readme.composition.components.shell import (
+    DETERMINISTIC_SECTIONS,
+    SEMANTIC_SHELL,
+)
 from repo_presenter.readme.composition.coverage import (
     Destinations,
     uncovered,
@@ -689,6 +692,8 @@ def placements(
         outcome: Outcome = "overlap" if overlap else "placed"
         if outcome == "placed" and not unit_id.endswith(".code_block"):
             text = resolve_intra_document_anchors(text, planned_slugs)
+            if destination in DETERMINISTIC_SECTIONS:
+                text = pointer_free_form(unwrapped_form(unit_id, text))
         if outcome == "placed" and _introduces_nothing_rendered(
             unit_id,
             text,
@@ -727,6 +732,68 @@ def colon_closed_form(text: str) -> str:
     if not stripped.endswith(":") or stripped.endswith("::"):
         return text
     return stripped[:-1].rstrip() + "." + text[len(stripped) :]
+
+
+_POSITIONAL_PHRASE = re.compile(
+    r"\s+listed\s+(?:above|below)\b"
+    r"|\s*\((?:see\s+)?(?:above|below)\)",
+    re.IGNORECASE,
+)
+
+
+def pointer_free_form(text: str) -> str:
+    """A kept unit printed in a deterministic section (R43(2)) without a positional pointer at
+    content the live layout held elsewhere ("the 22 functions listed above" -> "the 22
+    functions"); only when the unit, standing alone in its section, dangles (BC-07's own
+    ``references.dangling_references``). Words that point are removed, nothing else changes.
+
+    Decision (BL-102, supervisor 2026-11-14; R42 rejected as not followable): aspose.org's
+    published Cells Go README prints "``CalculateFormula`` covers the 22 functions listed
+    above" at the top of Scope and Limitations, pointing at its Key Capabilities list; Lane R
+    authors Key Capabilities itself, so the pointer would name a list this README does not
+    print there."""
+    from repo_presenter.readme.composition.references import dangling_references
+
+    dangling = [
+        ref for ref in dangling_references(text) if "above" in ref.reason or "below" in ref.reason
+    ]
+    if not dangling:
+        return text
+    return _POSITIONAL_PHRASE.sub("", text)
+
+
+_BLOCK_START = re.compile(r"^\s*(?:[-*+]\s|\d{1,3}[.)]\s|```|~~~|\||>|#|<)")
+
+
+def unwrapped_form(unit_id: str, text: str) -> str:
+    """A kept paragraph or list printed in a deterministic section (R43(2)) with its source's hard
+    line wraps joined: each soft-wrapped continuation line joins the line it continues with one
+    space, exactly as Markdown renders it, so the README reads the same and BC-07's visible-line
+    budget counts the maintainers' sentences, not their editor's wrap column. A line ending in a
+    hard break (two spaces or a backslash), a blank line, and any line that starts a new block
+    (an item, a fence, a table row, a quote, a heading or HTML) are never joined.
+
+    Decision (BL-102, supervisor 2026-11-14; R42 improved on): aspose.org's published READMEs wrap
+    Scope and Limitations and Development and Testing at about 100 columns (3D Python: 19 visible
+    lines of limitations become 38), which pushed the inherited 3D Python candidate over the 300
+    visible-line budget the rendered sentences fit in."""
+    if not unit_id.endswith((".paragraph", ".list")) or "\n" not in text:
+        return text
+    lines = text.split("\n")
+    joined: list[str] = [lines[0]]
+    for line in lines[1:]:
+        previous = joined[-1]
+        if (
+            line.strip()
+            and previous.strip()
+            and not _BLOCK_START.match(line)
+            and not previous.endswith(("  ", "\\"))
+            and not previous.lstrip().startswith(("```", "~~~", "|"))
+        ):
+            joined[-1] = previous.rstrip() + " " + line.strip()
+        else:
+            joined.append(line)
+    return "\n".join(joined)
 
 
 def placed_texts(decisions: list[Placement]) -> dict[str, list[str]]:

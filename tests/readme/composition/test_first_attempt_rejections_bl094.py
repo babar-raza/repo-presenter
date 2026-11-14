@@ -273,11 +273,12 @@ def test_the_renderer_prints_a_placeholder_in_a_code_span() -> None:
     text = "Programs live in _examples/<name>/main.go; run one with go run ./_examples/<name>."
     units = {
         "units": [
-            {"section": "development_testing", "slot": "summary", "text": text, "fact_ids": []}
+            # R43(2): Development and Testing is no longer authored; the opening carries the shape.
+            {"section": "opening", "slot": "opening", "text": text, "fact_ids": []}
         ],
         "omitted": [],
     }
-    plan = {"sections": [{"section_id": "development_testing", "include": True}]}
+    plan = {"sections": [{"section_id": "opening", "include": True}]}
     readme = render_readme(entry, facts, plan, units, {"dispositions": []})
     assert "`_examples/<name>/main.go`" in readme
     assert "`./_examples/<name>`" in readme

@@ -163,6 +163,8 @@ DEPENDENCY_SCOPES: dict[str, str] = {
     "validators": "validator",
     "acceptance_profile_version": "reviewer",
     "policy": "planning",
+    # R43(3): which Lane R policy (inherit_and_correct / regenerate) the seal ran; a switch reopens S4.
+    "lane_r_policy": "reconciliation",
 }
 PROMPT_SCOPES: dict[str, str] = {
     "repository_investigation": "evidence",
@@ -176,6 +178,7 @@ COMPONENT_SCOPES: dict[str, str] = {
     "shell": "presentation",
     "renderer": "presentation",
     "normalisation": "authoring",
+    "lane_r_policy": "reconciliation",
     "reviewer_logic": "reviewer",
     "correction_engine": "correction",
 }

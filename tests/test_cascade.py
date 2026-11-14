@@ -1,6 +1,6 @@
 """BUILD_PRESENT_EQUIVALENT_ORCHESTRATOR (project/state.yaml): one process runs the whole S3-S8
 cascade under one Invocation/Ledger. The one property no per-script test could ever prove is
-exercised directly here: every one of the 9 real provider calls this test makes (investigation,
+exercised directly here: every one of the 8 real provider calls this test makes (investigation,
 reconciliation, planning, 5 authoring tasks, 1 coherence batch) lands in the SAME ledger file
 under the SAME invocation_id -- the exact thing seal.py's no-op proof needs and the six separate
 scripts could never give it.
@@ -72,7 +72,7 @@ class _FakeClient:
 
 # Every reply below was confirmed, by actually running it through run_job against this exact
 # fixture, to be accepted on the FIRST attempt (zero retries, zero narrowed re-asks) -- so this
-# test's own expected provider-call count (9) is a measured fact, not an estimate.
+# test's own expected provider-call count (8; 9 before R43(2) removed the Scope call) is a measured fact, not an estimate.
 _INVESTIGATION_REPLY = {
     "product_summary": {"text": "A widget library.", "fact_ids": ["package:name"]},
     "audience": {"text": "Python developers.", "fact_ids": ["identity:ecosystem"]},
@@ -187,12 +187,7 @@ _AUTHORING_REPLIES = [
             ),
         ]
     ),
-    _authoring_reply(
-        [
-            ("scope_limitations", "scope", ["package:name"]),
-            ("scope_limitations", "limitation:1", ["inherited_unit:006.paragraph"]),
-        ]
-    ),
+    # R43(2) (BL-102): Scope and Limitations is rendered from facts and kept text, never authored.
 ]
 
 
@@ -216,12 +211,12 @@ def _fixed_git_revision(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def _scripted_replies() -> list[Any]:
-    """The 9 real calls this fixture makes, in authoring_tasks()'s own order. Coherence echoes
+    """The 8 real calls this fixture makes, in authoring_tasks()'s own order. Coherence echoes
     the authored units back unchanged -- a trivially valid no-op revision against
     coherence_schema's own minItems=maxItems=len(existing) shape."""
     from repo_presenter.readme.composition.authoring import merge_units
 
-    labels = ["opening", "key_capabilities", "quick_start", "api_reference", "scope_limitations"]
+    labels = ["opening", "key_capabilities", "quick_start", "api_reference"]
     merged_units = merge_units(dict(zip(labels, _AUTHORING_REPLIES)))
     return [
         _completion(_INVESTIGATION_REPLY),
@@ -259,7 +254,7 @@ def test_run_cascade_produces_every_artifact_under_one_shared_invocation(
     )
 
     assert result.repository == entry.repository
-    assert result.provider_calls == 9
+    assert result.provider_calls == 8
 
     for name in (
         "investigation.json", "dispositions.json", "plan.json", "content_units.json",
@@ -272,7 +267,7 @@ def test_run_cascade_produces_every_artifact_under_one_shared_invocation(
     # SAME ledger file, under the SAME invocation_id -- never five separate ledgers.
     ledger_path = out_dir / "llm_cache" / "ledger.jsonl"
     records = load_records(ledger_path)
-    assert len(records) == 9
+    assert len(records) == 8
     assert {record.invocation_id for record in records} == {result.invocation.invocation_id}
 
     invocation_record_path = (

@@ -182,7 +182,7 @@ def test_the_model_reviews_a_clean_candidate_once_on_the_one_ledger(
     result = run.cascade()
 
     assert provider.replies == []
-    assert result.provider_calls == 10 and provider.reviewer_calls == 1
+    assert result.provider_calls == 9 and provider.reviewer_calls == 1
     verdict = result.review_verdict
     assert verdict.verdict == "ACCEPT" and verdict.model_reviewed
     assert verdict.prompt_version == "21" and verdict.model_served == "qwen3-next"
@@ -206,7 +206,7 @@ def test_a_deterministic_rejection_is_never_sent_to_the_model(
     assert result.review_verdict.verdict == "REJECT"
     assert not result.review_verdict.model_reviewed
     assert (
-        result.provider_calls == 9
+        result.provider_calls == 8
         and provider.reviewer_calls == 0
         and provider.replies == []
     )
@@ -223,7 +223,7 @@ def test_a_failing_blocking_check_is_never_sent_to_the_model(
     result = run.cascade()  # the fixture's real validation fails BC-02/03/06
     assert result.validation["summary"]["fail"] > 0
     assert not result.review_verdict.model_reviewed
-    assert result.provider_calls == 9 and provider.reviewer_calls == 0
+    assert result.provider_calls == 8 and provider.reviewer_calls == 0
 
 
 def test_an_unavailable_review_raises_and_leaves_only_an_unsealable_verdict(
@@ -269,7 +269,7 @@ def test_a_blocking_finding_is_repaired_by_its_causal_stage_then_re_reviewed(
 
     assert provider.replies == []
     # nine authored calls, review, one repair, the re-asked coherence pass, the re-review
-    assert result.provider_calls == 13 and provider.reviewer_calls == 2
+    assert result.provider_calls == 12 and provider.reviewer_calls == 2
     assert (
         result.review_verdict.verdict == "ACCEPT"
         and result.review_verdict.model_reviewed
@@ -306,7 +306,7 @@ def test_a_finding_that_returns_after_its_repair_is_not_retried_and_the_candidat
     assert (
         provider.replies == []
     )  # one fingerprint, one attempt: no third repair is asked
-    assert result.provider_calls == 13
+    assert result.provider_calls == 12
     verdict = result.review_verdict
     assert verdict.verdict == "REJECT" and verdict.model_reviewed
     assert run.verdict_file() == verdict
@@ -333,7 +333,7 @@ def test_repair_rounds_stop_at_the_bound_and_the_candidate_is_blocked(
     result = run.cascade(review_repair_rounds=1)
 
     assert provider.replies == []
-    assert result.provider_calls == 13 and provider.reviewer_calls == 2
+    assert result.provider_calls == 12 and provider.reviewer_calls == 2
     assert result.review_verdict.verdict == "REJECT"
     assert [f.criterion for f in result.review_verdict.blocking_findings] == [
         "coherence"
@@ -369,7 +369,7 @@ def test_two_repair_rounds_then_blocked_with_the_exact_predicate(
         provider.replies == []
     )  # the third rejection is not repaired: the bound is two rounds
     # nine authored calls + 3 reviews + 2 repairs + 2 re-asked coherence passes
-    assert result.provider_calls == 16 and provider.reviewer_calls == 3
+    assert result.provider_calls == 15 and provider.reviewer_calls == 3
     verdict = result.review_verdict
     assert verdict.verdict == "REJECT" and verdict.model_reviewed
     assert second_text in (run.out / "README.coherent.md").read_text(encoding="utf-8")
@@ -392,7 +392,7 @@ def test_a_finding_no_stage_can_revise_is_recorded_unrepairable_and_blocks(
 
     assert provider.replies == []
     assert (
-        result.provider_calls == 10
+        result.provider_calls == 9
     )  # no repair was attempted, so no re-review either
     assert result.review_verdict.verdict == "REJECT"
     attempts = RepairLedger(run.out / REPAIRS_FILENAME).attempts

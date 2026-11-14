@@ -4,6 +4,8 @@ latest seal cannot dodge the gate, an unreadable explicit base baseline fails cl
 Row shapes are those of the real ``data/recertification_baseline.json`` (``seals[]`` with
 repository/lane/commit/outcome/failing_checks/justification)."""
 
+# Re-verified under R43(2)/(3) (BL-102/BL-103: deterministic sections, Lane R policy) -- TC-028a.
+
 from __future__ import annotations
 
 import json

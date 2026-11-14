@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import Any
 
 #: Top-level dependencies-record keys that are per-repository inputs, never mechanisms.
-INPUT_KEYS = frozenset({"source", "facts"})
+INPUT_KEYS = frozenset({"source", "facts", "lane_r_policy"})
 #: The one ``environment`` field that is a code version rather than a fact about the machine.
 ENVIRONMENT_MECHANISM_KEYS = frozenset({"inherited_units_version"})
 #: Short display length of a fingerprint (the full sha256 is what is compared).

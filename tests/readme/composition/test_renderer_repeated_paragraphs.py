@@ -41,8 +41,8 @@ def _plan() -> dict:
     return {
         "sections": [
             {"section_id": "opening", "include": True},
-            {"section_id": "scope_limitations", "include": True},
-            {"section_id": "development_testing", "include": True},
+            {"section_id": "quick_start", "include": True},
+            {"section_id": "additional_examples", "include": True},
         ]
     }
 
@@ -51,10 +51,12 @@ def _units(second: str) -> dict:
     return {
         "units": [
             {"section": "opening", "slot": "opening", "text": SUMMARY, "fact_ids": []},
-            {"section": "scope_limitations", "slot": "scope", "text": second, "fact_ids": []},
+            # R43(2): Scope and Development and Testing are no longer authored; two authored
+            # paragraph slots of other sections carry the same shape.
+            {"section": "quick_start", "slot": "lead_in", "text": second, "fact_ids": []},
             {
-                "section": "development_testing",
-                "slot": "summary",
+                "section": "additional_examples",
+                "slot": "preview",
                 "text": "Run the test suite with pytest from the repository root.",
                 "fact_ids": [],
             },

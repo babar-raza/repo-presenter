@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 .................................................                        [100%]
-49 passed in 9.01s
+49 passed in 5.88s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 .................................................                        [100%]
-49 passed in 10.92s
+49 passed in 5.45s
 
 --- stderr ---
 
@@ -25,8 +25,8 @@ F....FFF..FF.....................................                        [100%]
 =================================== FAILURES ===================================
 _ test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-367/test_a_candidate_that_loses_on0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e4fada70>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1018/test_a_candidate_that_loses_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f80ac153820>
 
     def test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -34,13 +34,13 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e4fada70>
 >       run, seen = _run_to_review(tmp_path, monkeypatch, "DEFER_UNRESOLVED", None)
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:86: 
+tests/test_cascade_restore.py:88: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:77: in _run_to_review
+tests/test_cascade_restore.py:79: in _run_to_review
     run.cascade(max_rounds=1)
-tests/test_cascade_s9.py:97: in cascade
+tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1029: in run_cascade
+src/repo_presenter/cascade.py:1213: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -51,12 +51,13 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-367/test_a_candidate_that_loses_on0/out')
-require_clean_review = False
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1018/test_a_candidate_that_loses_on0/out')
+require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
     ) -> _Settled:
         """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -106,11 +107,11 @@ require_clean_review = False
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:798: TypeError
+src/repo_presenter/cascade.py:957: TypeError
 _ test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-367/test_restorable_defects_make_z0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e4f33450>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1018/test_restorable_defects_make_z0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f80ac192a50>
 
     def test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -118,16 +119,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e4f33450>
 >       run, client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=True)
                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:208: 
+tests/test_cascade_restore.py:210: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:199: in _settle_run
+tests/test_cascade_restore.py:201: in _settle_run
     run.cascade(max_rounds=3)
-tests/test_cascade_s9.py:97: in cascade
+tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1029: in run_cascade
+src/repo_presenter/cascade.py:1213: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
                                     ^^^^^^^^^^^^^^^^^^^^
-src/repo_presenter/cascade.py:683: in _settle_s9
+src/repo_presenter/cascade.py:702: in _settle_s9
     restored = _restore_lost_content(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
@@ -137,12 +138,13 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-367/test_restorable_defects_make_z0/out')
-require_clean_review = True
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1018/test_restorable_defects_make_z0/out')
+require_clean_review = True, unrestorable = set()
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
     ) -> _Settled:
         """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -192,11 +194,11 @@ require_clean_review = True
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:798: TypeError
+src/repo_presenter/cascade.py:957: TypeError
 _ test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-367/test_a_restorable_bc17_defect_0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e500d400>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1018/test_a_restorable_bc17_defect_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f80ac0254f0>
 
     def test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -207,16 +209,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e500d400>
 >       _run, _client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=False)
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:221: 
+tests/test_cascade_restore.py:223: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:199: in _settle_run
+tests/test_cascade_restore.py:201: in _settle_run
     run.cascade(max_rounds=3)
-tests/test_cascade_s9.py:97: in cascade
+tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1029: in run_cascade
+src/repo_presenter/cascade.py:1213: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_cascade_restore.py:192: in <lambda>
+tests/test_cascade_restore.py:194: in <lambda>
     lambda settled, **kw: settled if kw.get("require_clean_review") else real(settled, **kw),
                                                                          ^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -227,12 +229,13 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-367/test_a_restorable_bc17_defect_0/out')
-require_clean_review = False
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1018/test_a_restorable_bc17_defect_0/out')
+require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
     ) -> _Settled:
         """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -282,11 +285,11 @@ require_clean_review = False
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:798: TypeError
+src/repo_presenter/cascade.py:957: TypeError
 ______ test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model _______
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-367/test_without_the_filter_the_sa0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e51398b0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1018/test_without_the_filter_the_sa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f80abddc8c0>
 
     def test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -295,16 +298,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e51398b0>
 >       _run, _client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=False)
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:232: 
+tests/test_cascade_restore.py:234: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:199: in _settle_run
+tests/test_cascade_restore.py:201: in _settle_run
     run.cascade(max_rounds=3)
-tests/test_cascade_s9.py:97: in cascade
+tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1029: in run_cascade
+src/repo_presenter/cascade.py:1213: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_cascade_restore.py:192: in <lambda>
+tests/test_cascade_restore.py:194: in <lambda>
     lambda settled, **kw: settled if kw.get("require_clean_review") else real(settled, **kw),
                                                                          ^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -315,12 +318,13 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-367/test_without_the_filter_the_sa0/out')
-require_clean_review = False
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1018/test_without_the_filter_the_sa0/out')
+require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
         settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
         tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
     ) -> _Settled:
         """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
         they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
@@ -370,10 +374,10 @@ require_clean_review = False
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:798: TypeError
+src/repo_presenter/cascade.py:957: TypeError
 _ test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair _
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e5764ae0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f80ac175640>
 
     def test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair(
         monkeypatch: pytest.MonkeyPatch,
@@ -385,10 +389,10 @@ E
 E         Left contains one more item: 'fp-inherited_unit:026.paragraph'
 E         Use -v to get more diff
 
-tests/test_cascade_restore.py:338: AssertionError
+tests/test_cascade_restore.py:340: AssertionError
 ___ test_negative_control_without_the_pointer_guard_both_defects_are_dropped ___
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ff1e5034a10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f80ac15a090>
 
     def test_negative_control_without_the_pointer_guard_both_defects_are_dropped(
         monkeypatch: pytest.MonkeyPatch,
@@ -402,7 +406,7 @@ E
 E         Left contains 2 more items, first extra item: 'fp-inherited_unit:025.paragraph'
 E         Use -v to get more diff
 
-tests/test_cascade_restore.py:347: AssertionError
+tests/test_cascade_restore.py:349: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_cascade_restore.py::test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored
 FAILED tests/test_cascade_restore.py::test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review
@@ -410,7 +414,7 @@ FAILED tests/test_cascade_restore.py::test_a_restorable_bc17_defect_is_never_sen
 FAILED tests/test_cascade_restore.py::test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model
 FAILED tests/test_cascade_restore.py::test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair
 FAILED tests/test_cascade_restore.py::test_negative_control_without_the_pointer_guard_both_defects_are_dropped
-6 failed, 43 passed in 5.16s
+6 failed, 43 passed in 5.82s
 
 --- stderr ---
 

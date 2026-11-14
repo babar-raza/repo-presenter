@@ -148,7 +148,7 @@ SCOPE_LIST = (
 )
 
 
-def test_a_scope_unit_is_withheld_only_when_no_planned_limitation_covers_it() -> None:
+def test_a_scope_unit_is_withheld_whatever_the_sealed_plan_covers() -> None:
     facts = _facts(("inherited_unit:064.list", SCOPE_LIST))
     sealed = {"dispositions": [_kept("inherited_unit:064.list", "scope_limitations")]}
     uncovered = current_dispositions(sealed, facts, {"links": [], "material_limitations": []})
@@ -158,7 +158,9 @@ def test_a_scope_unit_is_withheld_only_when_no_planned_limitation_covers_it() ->
         "material_limitations": [{"fact_ids": [], "unit_ids": ["inherited_unit:064.list"]}],
     }
     covered = current_dispositions(sealed, facts, covered_plan)
-    assert covered["dispositions"][0]["fact_ids"] == []
+    # R43(2) (BL-102): no planned limitation is authored any more, so a kept Scope unit is
+    # withheld where the register confirms a line false whatever the sealed plan said.
+    assert covered["dispositions"][0]["fact_ids"] == ["finding:5d6facf1dfb3"]
 
 
 RESOURCES = (

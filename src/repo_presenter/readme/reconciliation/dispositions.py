@@ -85,6 +85,7 @@ from repo_presenter.readme.composition.authoring import (
     inherited_unit_named_symbols,
 )
 from repo_presenter.readme.composition.components.shell import (
+    DETERMINISTIC_SECTIONS,
     SEMANTIC_SHELL,
     SUBSECTION_HEADINGS,
     placeable_section_ids,
@@ -1526,6 +1527,8 @@ def normalize(
     api_listings = api_listing_units(facts)
     _fold_api_listings(output, facts, api_listings)
     _fold_uncovered(output, facts, coverage)
+    fold_inherited_published(output, facts)  # R43(3): before the register folds withhold
+    fold_deterministic_sections(output, facts)  # R43(2)
     _fold_register_corrections(output, facts)
     _fold_register_kept_units(output, facts)
     for entry in output.get("dispositions", []):
@@ -2055,7 +2058,117 @@ def _fold_register_corrections(output: dict[str, Any], facts: FactsDocument) -> 
 
 #: The dispositions that print an inherited unit as the maintainers wrote it.
 _KEPT_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"})
-_REGISTER_KEPT_EXCLUDED = frozenset({"scope_limitations"})
+#: R43(2) (BL-102): Scope and Limitations has no authored limitation slot any more, so a unit kept
+#: there is always withheld where the register confirms a line false (it was excluded while
+#: planned limitations re-authored such claims).
+_REGISTER_KEPT_EXCLUDED: frozenset[str] = frozenset()
+
+_DETERMINISTIC_KEEP_RATIONALE = (
+    "Kept as written: {section} is rendered from facts plus kept maintainer text (R43(2)). "
+)
+_INHERIT_KEEP_RATIONALE = "Kept as written (inherit-and-correct, R43(3)). "
+_INHERIT_KINDS = (".paragraph", ".list", ".table", ".blockquote")
+#: Supersessions made for section fit or by another fold, never undone by the two folds below.
+_FIT_RATIONALES = ("Superseded by the License section", "Kept in ")
+
+
+def _leads_an_unkept_block(
+    entry: Mapping[str, Any], output: Mapping[str, Any], facts: FactsDocument
+) -> bool:
+    """A paragraph whose very next inherited unit is a code block not kept as written in the same
+    section: its lead-in ("Or add it directly to a project file.") would print with nothing after
+    it (Email .NET ``015.paragraph`` before the superseded ``PackageReference`` block)."""
+    unit_id = str(entry.get("unit_id", ""))
+    ordinal = _unit_ordinal(unit_id)
+    if ordinal is None or not unit_id.endswith(".paragraph"):
+        return False
+    for row in output.get("dispositions", []):
+        other = str(row.get("unit_id", ""))
+        if _unit_ordinal(other) == ordinal + 1 and other.endswith(".code_block"):
+            return not (
+                row.get("disposition") in _KEPT_AS_WRITTEN
+                and row.get("destination_section") == entry.get("destination_section")
+            )
+    return False
+
+
+def _keepable_supersession(
+    entry: Mapping[str, Any], facts: FactsDocument, output: Mapping[str, Any] | None = None
+) -> bool:
+    """A SUPERSEDE_REDUNDANT prose unit nothing forces out: no contradicted link in it, no fit
+    or other fold's supersession, not the lead-in of a block that is not printed beside it."""
+    if entry.get("disposition") != "SUPERSEDE_REDUNDANT":
+        return False
+    if output is not None and _leads_an_unkept_block(entry, output, facts):
+        return False
+    rationale = str(entry.get("rationale") or "")
+    if rationale.startswith(_FIT_RATIONALES):
+        return False
+    unit_id = str(entry.get("unit_id", ""))
+    units = facts.by_kind("inherited_unit")
+    unit = next((f for f in units if f.id == unit_id), None)
+    if unit is None:
+        return False
+    text = unit.value
+    # What another section already prints from the facts (Installation, Dependencies) is left out
+    # by placement's own remainder rule, and a unit left with nothing to print is settled back to
+    # SUPERSEDE_REDUNDANT by the S9 accounting (``repair.accounting.account_unprinted_units``,
+    # which re-certification applies too): the facts force that re-write, the rest is kept.
+    # A unit that points at what preceded or followed it in the live layout ("the 22 functions
+    # listed above") does not stand on its own once moved: BC-07 would fail it (Cells Go 057.list).
+    if dangling_references(text):
+        return False
+    return not contradicted_embedded_links(text, contradicted_link_hrefs(facts))
+
+
+def fold_deterministic_sections(output: dict[str, Any], facts: FactsDocument) -> None:
+    """R43(2) (BL-102): a prose unit reconciliation superseded INTO Development and Testing or
+    Scope and Limitations, whose substance the section's authored units used to carry
+    (``authoring.carried_units``), is kept as written there instead: nothing authors those
+    sections now, so the maintainers' own words are what carries it (R14: never dropped). The
+    register folds that run after this one withhold any line the findings register confirms
+    false. In place; every repository, both policies."""
+    from repo_presenter.readme.composition.authoring import carried_units
+
+    for section in ("development_testing", "scope_limitations"):
+        carried = set(carried_units(output, section, facts))
+        for entry in output.get("dispositions", []):
+            if str(entry.get("unit_id", "")) not in carried or not _keepable_supersession(
+                entry, facts, output
+            ):
+                continue
+            entry["disposition"] = "VERIFIED_PRESERVE"
+            entry["rationale"] = (
+                _DETERMINISTIC_KEEP_RATIONALE.format(section=section)
+                + str(entry.get("rationale") or "")
+            )[:_RATIONALE_LIMIT]
+
+
+def fold_inherited_published(output: dict[str, Any], facts: FactsDocument) -> None:
+    """R43(3) (BL-103), inherit-and-correct: for a repository whose live README is aspose.org's
+    published readme-refresh candidate (``reconciliation.inherit``), while that policy is in force,
+    every prose unit (paragraph, list, table, blockquote) reconciliation superseded into one of the
+    deterministic sections is kept as written instead (VERIFIED_PRESERVE): the published text is
+    the default. What the facts force stays superseded (a contradicted link, a section-fit or
+    other fold's supersession); what the findings register proves false is withheld by the
+    register folds that run after this one. The model-authored opening and key capabilities, the
+    renderer-owned sections and the examples are re-authored as before. In place; a no-op for any
+    other repository or under the ``regenerate`` policy."""
+    from repo_presenter.readme.reconciliation.inherit import inherits
+
+    if not inherits(facts.repository):
+        return
+    for entry in output.get("dispositions", []):
+        if (
+            entry.get("destination_section") not in DETERMINISTIC_SECTIONS
+            or not str(entry.get("unit_id", "")).endswith(_INHERIT_KINDS)
+            or not _keepable_supersession(entry, facts, output)
+        ):
+            continue
+        entry["disposition"] = "VERIFIED_PRESERVE"
+        entry["rationale"] = (_INHERIT_KEEP_RATIONALE + str(entry.get("rationale") or ""))[
+            :_RATIONALE_LIMIT
+        ]
 
 
 def _fold_register_kept_units(

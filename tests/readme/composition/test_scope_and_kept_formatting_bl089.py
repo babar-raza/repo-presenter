@@ -77,17 +77,19 @@ def test_scope_and_limitations_never_prints_a_license_statement() -> None:
         _scope_units("The package writes GLB only.", CELLS_PYTHON, THREED_NET, "It has no CLI."),
         _dispositions(),
     )
-    scope = section_texts(readme)["scope_limitations"]
+    scope = section_texts(readme).get("scope_limitations", "")
     assert not [line for line in scope.splitlines() if is_license_statement(line)]
-    assert "- This project requires Python version 3.10 or later." in scope
-    assert "- It has no CLI." in scope
-    assert "as stated in the LICENSE file" not in scope
+    # R43(2) (BL-102): a sealed authored scope or limitation unit is never printed; the section is
+    # the maintainers' kept text plus the facts, so no license clause can reach it from a unit.
+    assert "It has no CLI." not in readme
+    assert "as stated in the LICENSE file" not in readme
+    assert "requires Python version 3.10" not in scope
 
 
-def test_negative_control_a_scope_without_a_license_renders_as_before() -> None:
+def test_negative_control_authored_scope_units_never_print() -> None:
     units = _scope_units("The package writes GLB only.", "It has no CLI.")
     readme = render_readme(ENTRY, _facts(), _plan(), units, _dispositions())
-    assert "The package writes GLB only.\n\n- It has no CLI." in readme
+    assert "The package writes GLB only." not in readme and "It has no CLI." not in readme
 
 
 def test_the_authoring_packet_forbids_the_license_in_scope() -> None:

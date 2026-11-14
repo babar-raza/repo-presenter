@@ -17,11 +17,13 @@ from repo_presenter.readme.composition.planning import (
     _required_link_sections,
     plan_checks,
 )
+from repo_presenter.readme.composition.renderer import render_readme
 from tests.readme.composition.synthetic import make_entry, make_facts
 from tests.readme.composition.test_pipeline import _dispositions, _plan
 
 GOOD = "link_target:019"
 BAD = "link_target:020"
+BAD_VALUE = "https://example.invalid/stale"
 
 
 def _facts() -> FactsDocument:
@@ -93,13 +95,14 @@ def test_authoring_never_offers_a_non_supported_link_even_if_the_plan_carries_on
     plan_checks(plan, facts, dispositions=_rewrite_dispositions(), ecosystem="python")
     plan["links"].append({"link_fact_id": BAD, "section_id": "documentation_resources"})
     tasks = authoring_tasks(make_entry(), facts, {}, _rewrite_dispositions(), plan)
-    docs = [task for task in tasks if task.section_id == "documentation_resources"]
-    assert docs, "documentation_resources is authored for the SUPPORTED link"
+    # R43(2) (BL-102): Documentation and Resources is rendered from the link facts, never
+    # authored, so no task offers any link slot at all, SUPPORTED or not.
+    assert not [task for task in tasks if task.section_id == "documentation_resources"]
     for task in tasks:
         assert f"link:{BAD}" not in task.slots
         assert f"link:{BAD}" not in task.slot_facts
         assert BAD not in task.accepted_ids
         for slot in task.slots:
             assert BAD not in citable(task, slot)
-    assert f"link:{GOOD}" in docs[0].slots
-    assert GOOD in citable(docs[0], f"link:{GOOD}")
+    readme = render_readme(make_entry(), facts, plan, {"units": [], "omitted": []}, _rewrite_dispositions())
+    assert BAD_VALUE not in readme

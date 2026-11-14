@@ -213,6 +213,14 @@ SEMANTIC_SHELL: tuple[Section, ...] = (
 )
 
 
+#: R43(2) (owner, 2026-11-14; BL-102): sections the renderer prints from facts plus the maintainers'
+#: kept text, with no authored slot. They stay placeable (owner ``M``/``L``): a kept inherited unit
+#: is still placed there, printed as written without what the findings register confirms false.
+DETERMINISTIC_SECTIONS: frozenset[str] = frozenset(
+    {"development_testing", "documentation_resources", "scope_limitations"}
+)
+
+
 def section_ids() -> tuple[str, ...]:
     return tuple(section.id for section in SEMANTIC_SHELL)
 

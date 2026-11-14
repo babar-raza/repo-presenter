@@ -98,6 +98,10 @@ def _authored(section: str, slot: str, text: str) -> dict[str, Any]:
     }
 
 
+def _capabilities(fact_id: str) -> list[dict]:
+    return [{"title": "Work with the data", "fact_ids": [fact_id], "shared_fact_ids": []}]
+
+
 def _disposition_entry(
     unit: str,
     disposition: str,
@@ -145,14 +149,14 @@ def test_a_trimmed_remainder_paragraph_is_recognized_as_printed(ecosystem: str) 
                 "badges",
                 "opening",
                 "navigation",
-                "scope_limitations",
+                "key_capabilities",
                 "license",
             ]
         ],
-        "core_capabilities": [],
-        "material_limitations": [
-            {"fact_ids": ["format:archive_formats"], "unit_ids": []}
-        ],
+        # R43(2): Scope and Limitations is no longer authored; Key Capabilities carries the same
+        # authored-content-restates-a-kept-unit shape (its plan facts are the overlap).
+        "core_capabilities": _capabilities("format:archive_formats"),
+        "material_limitations": [],
         "api_hubs": [],
         "links": [],
         "deviations": [],
@@ -163,8 +167,8 @@ def test_a_trimmed_remainder_paragraph_is_recognized_as_printed(ecosystem: str) 
                 "opening", "opening", f"Demo for {ecosystem} reads legacy archives."
             ),
             _authored(
-                "scope_limitations",
-                "scope",
+                "key_capabilities",
+                "capability:1",
                 "Read-only access to legacy archive formats is all this package provides.",
             ),
         ],
@@ -175,7 +179,7 @@ def test_a_trimmed_remainder_paragraph_is_recognized_as_printed(ecosystem: str) 
             _disposition_entry(
                 "030.paragraph",
                 "VERIFIED_PRESERVE",
-                "scope_limitations",
+                "key_capabilities",
                 ["format:archive_formats"],
             )
         ]
@@ -236,7 +240,7 @@ def _redundant_omission_candidate(
 ) -> tuple[Candidate, str]:
     """A heading and its one list child, both ``OMIT_UNSUPPORTED`` with an empty ``fact_ids`` and
     a "redundant with X" rationale (the Go hosted shape: inherited_unit:072/073) -- the list's
-    content is, in fact, restated by ``scope_limitations``' own authored content. A sibling
+    content is, in fact, restated by ``key_capabilities``' own authored content. A sibling
     heading/paragraph pair (``020``/``021``) is genuinely unsupported: nothing restates it, so it
     must be left alone. Returns the candidate and the original (live) README the units came from."""
     entry = _entry(ecosystem)
@@ -266,12 +270,12 @@ def _redundant_omission_candidate(
                 "badges",
                 "opening",
                 "navigation",
-                "scope_limitations",
+                "key_capabilities",
                 "license",
             ]
         ],
-        "core_capabilities": [],
-        "material_limitations": [{"fact_ids": ["format:row_limit"], "unit_ids": []}],
+        "core_capabilities": _capabilities("format:row_limit"),
+        "material_limitations": [],
         "api_hubs": [],
         "links": [],
         "deviations": [],
@@ -282,8 +286,8 @@ def _redundant_omission_candidate(
                 "opening", "opening", f"Demo for {ecosystem} edits spreadsheets."
             ),
             _authored(
-                "scope_limitations",
-                "scope",
+                "key_capabilities",
+                "capability:1",
                 "Rows beyond 1,048,576 are rejected, and only UTF-8 input is accepted.",
             ),
         ],
@@ -297,7 +301,7 @@ def _redundant_omission_candidate(
                 None,
                 [],
                 "The Constraints heading is not supported by any fact and is redundant with "
-                "the scope_limitations section.",
+                "the key_capabilities section.",
             ),
             _disposition_entry(
                 "011.list",
@@ -359,7 +363,7 @@ def test_an_omit_unsupported_heading_redundant_with_a_real_section_is_backfilled
     by_unit = {a.unit_id: a for a in accounted}
     heading = by_unit["inherited_unit:010.heading"]
     content = by_unit["inherited_unit:011.list"]
-    assert heading.destination == content.destination == "scope_limitations"
+    assert heading.destination == content.destination == "key_capabilities"
     assert heading.fact_ids and set(heading.fact_ids) <= known
     assert content.fact_ids and set(content.fact_ids) <= known
 

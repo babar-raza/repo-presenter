@@ -289,9 +289,29 @@ def test_a_seal_under_renderer_n_recertifies_under_n_plus_1_with_zero_calls_and_
     new_deps = json.loads((written / "dependencies.json").read_text(encoding="utf-8"))
     assert fingerprint(new_deps, LANE_R) == current
     assert new_deps["facts"] == sealed_deps["facts"] and new_deps["source"] == sealed_deps["source"]
-    for name in ("plan.json", "dispositions.json", "content_units.coherent.json",
-                 "review_verdict.json", "ledger.jsonl", "facts.json"):
+    for name in ("review_verdict.json", "ledger.jsonl", "facts.json"):
         assert (written / name).read_bytes() == (bundle / name).read_bytes(), name
+    # R43(2)/(3) (BL-102/BL-103): the LLM outputs are carried, held to current S4/S5 folds only --
+    # the plan names no material limitation, the deterministic sections' authored units go, and a
+    # superseded unit those sections carried is kept as written; nothing else moves.
+    from repo_presenter.readme.composition.components.shell import (
+        DETERMINISTIC_SECTIONS,
+    )
+
+    def load(root: Path, name: str) -> Any:
+        return json.loads((root / name).read_text(encoding="utf-8"))
+
+    assert load(written, "plan.json") == {**load(bundle, "plan.json"), "material_limitations": []}
+    assert load(written, "content_units.coherent.json")["units"] == [
+        unit
+        for unit in load(bundle, "content_units.coherent.json")["units"]
+        if unit["section"] not in DETERMINISTIC_SECTIONS
+    ]
+    sealed_rows = {e["unit_id"]: e for e in load(bundle, "dispositions.json")["dispositions"]}
+    for row in load(written, "dispositions.json")["dispositions"]:
+        if row != sealed_rows[row["unit_id"]]:
+            assert row["disposition"] in ("VERIFIED_PRESERVE", "SUPERSEDE_REDUNDANT"), row
+            assert row["destination_section"] in DETERMINISTIC_SECTIONS, row
     provenance = json.loads((written / "recertification.json").read_text(encoding="utf-8"))
     assert provenance["recertified_from"]["version_set"] == fingerprint(sealed_deps, LANE_R)
     assert provenance["provider_calls"] == 0
@@ -616,13 +636,17 @@ def test_a_platform_ecosystem_spec_is_registered_before_recertifying(
 
 
 # --- TC-019b: zero-call restore of a unit a parity check names as lost ------------------------------
+# Re-verified under R43(2)/(3) (BL-102/BL-103): the restore still re-dispositions only the unit the
+# check names; the only other rows that move are the deterministic-section S4 folds asserted below.
 
 
 def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_seal(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, no_provider: list[str]
 ) -> None:
     bundle = seal_lane_r(tmp_path, monkeypatch, renderer="35")
-    unit = "inherited_unit:024.paragraph"  # SUPERSEDE_REDUNDANT -> development_testing in the seal
+    # SUPERSEDE_REDUNDANT -> installation in the seal (R43(2): a unit superseded into Development
+    # and Testing is already kept as written by the S4 fold, so it is no longer a lost unit).
+    unit = "inherited_unit:014.paragraph"
     kept = {"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"}
 
     def lost_unless_kept(candidate: Any) -> list[Failure]:
@@ -662,4 +686,12 @@ def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_sea
     after = {e["unit_id"]: e for e in json.loads((written / "dispositions.json").read_text())["dispositions"]}
     before = {e["unit_id"]: e for e in json.loads((bundle / "dispositions.json").read_text())["dispositions"]}
     assert after[unit]["disposition"] in kept and before[unit]["disposition"] == "SUPERSEDE_REDUNDANT"
-    assert {k: v for k, v in after.items() if k != unit} == {k: v for k, v in before.items() if k != unit}
+    from repo_presenter.readme.composition.components.shell import (
+        DETERMINISTIC_SECTIONS,
+    )
+
+    # Besides the restored unit, only the R43 S4 folds move a row: a superseded unit of a
+    # deterministic section kept as written (or settled back by the S9 accounting).
+    for key, row in after.items():
+        if key != unit and row != before[key]:
+            assert row["destination_section"] in DETERMINISTIC_SECTIONS, row

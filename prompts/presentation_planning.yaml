@@ -1,7 +1,7 @@
 prompt_id: presentation_planning
-version: "14"
+version: "15"
 stage: S5
-purpose: Choose what the README shows - conditional sections, the three to eight core capabilities, the At a Glance formats, the minimal and additional examples, the hub APIs, the material limitations, and which verified links help which section - using only IDs from the supplied fact set.
+purpose: Choose what the README shows - conditional sections, the three to eight core capabilities, the At a Glance formats, the minimal and additional examples, the hub APIs, and which verified links help which section - using only IDs from the supplied fact set.
 model_route: qwen3-next
 route_rationale: The owner designated qwen3-next as the one chat model this system uses (2026-10-27); the legacy gateway characterization also found it reliable for strict structured JSON output and for instruction-critical planning steps; this job returns a JSON plan built only from supplied IDs, so it routes to qwen3-next. Revisited whenever preflight records a changed catalog.
 sampling:
@@ -108,12 +108,12 @@ output:
           properties:
             symbol_fact_id: { type: string, minLength: 1 }
             fact_ids: { type: array, minItems: 1, items: { type: string } }
-      # maxItems 10: G4-W17 arrival items 77/85 - measured headroom over the widest count on
-      # record across every sealed bundle's plan.json (3, 14 bundles); fact_ids/unit_ids below get
-      # their own bound from _pin_fact_id_arrays (planning.py), not this file.
+      # maxItems 0 (version 15, R43(2) / BL-102): Scope and Limitations has no authored slot; it is
+      # rendered from the implementation facts and the maintainers' kept limitations, so the plan
+      # names none. The key stays (sealed plans carry it; plan_checks empties it).
       material_limitations:
         type: array
-        maxItems: 10
+        maxItems: 0
         items:
           type: object
           required: [fact_ids, unit_ids]
@@ -198,7 +198,7 @@ system: |
   the facts that justify its description. A symbol_fact_id is the ID as printed in the facts list,
   not the class name you recall from the product elsewhere - a plausible-looking spelling that is
   one letter off from the real ID is exactly as unresolvable as an invented one, and rejects the
-  whole plan the same way. Material limitations cite limitation facts or deferred units. Links map
+  whole plan the same way. material_limitations is always an empty array: Scope and Limitations is rendered from the facts. Links map
   verified link_target facts to the section they explain, never a fact the shell already renders
   on its own (a banner or homepage or Enterprise-edition target); Aspose links stay within the
   policy ceilings. Deviations record any justified departure from the shell with facts.

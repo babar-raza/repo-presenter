@@ -56,21 +56,28 @@ def _facts() -> FactsDocument:
 
 
 def _plan() -> dict:
-    return {"sections": [{"section_id": "scope_limitations", "include": True}]}
+    # R43(2): Scope and Limitations is no longer authored; authored opening/lead-in prose carries
+    # the same identifier shapes through the same RenderContext.prose.
+    return {
+        "sections": [
+            {"section_id": "opening", "include": True},
+            {"section_id": "quick_start", "include": True},
+        ]
+    }
 
 
 def _units() -> dict:
     return {
         "units": [
             {
-                "section": "scope_limitations",
-                "slot": "scope",
+                "section": "quick_start",
+                "slot": "lead_in",
                 "text": "The library has some real limits.",
                 "fact_ids": [],
             },
             {
-                "section": "scope_limitations",
-                "slot": "limitation:1",
+                "section": "opening",
+                "slot": "opening",
                 "text": (
                     "A workbook must always keep at least one worksheet, as "
                     "WorksheetsMut.remove_at returns a CellsError::Unsupported error when asked "

@@ -259,9 +259,10 @@ def _context(facts: FactsDocument, units: dict[str, Any], dispositions: dict[str
 
 
 def _scope_units(text: str) -> dict[str, Any]:
+    # R43(2): Scope and Limitations is no longer authored; the opening carries the claim.
     units = copy.deepcopy(UNITS)
     for unit in units["units"]:
-        if unit["section"] == "scope_limitations":
+        if unit["section"] == "opening":
             unit["text"] = text
     return units
 
@@ -272,7 +273,7 @@ def _review_defect(detail: str) -> Defect:
         "fp-claim",
         "review",
         "claim_contradiction:0",
-        "scope_limitations",
+        "opening",
         "S6",
         {
             "id": "claim_contradiction:0",
@@ -287,15 +288,15 @@ def _review_defect(detail: str) -> Defect:
 def _s6_guard(claimed: str) -> Any:
     facts = _threed_facts()
     rc = _context(facts, _scope_units(claimed), _dispositions())
-    task = SimpleNamespace(section_id="scope_limitations", slots=("scope",))
-    original = {"units": [{"slot": "scope", "text": claimed, "fact_ids": ["identity:repository"]}]}
+    task = SimpleNamespace(section_id="opening", slots=("opening",))
+    original = {"units": [{"slot": "opening", "text": claimed, "fact_ids": ["identity:repository"]}]}
     return reject_still_failing(
         lambda revised: [], rc, _review_defect(THROW_DETAIL), original, section_composer(rc, task)
     )
 
 
 def _scope(text: str) -> dict[str, Any]:
-    return {"units": [{"slot": "scope", "text": text, "fact_ids": ["identity:repository"]}]}
+    return {"units": [{"slot": "opening", "text": text, "fact_ids": ["identity:repository"]}]}
 
 
 def test_the_defect_names_its_own_rule_failure() -> None:
@@ -328,7 +329,7 @@ def test_a_revision_that_adds_a_sibling_false_claim_is_rejected() -> None:
 def test_the_stage_checks_still_run_first() -> None:
     facts = _threed_facts()
     rc = _context(facts, _scope_units("x"), _dispositions())
-    task = SimpleNamespace(section_id="scope_limitations", slots=("scope",))
+    task = SimpleNamespace(section_id="opening", slots=("opening",))
     guard = reject_still_failing(
         lambda revised: ["stage says no"], rc, _review_defect(THROW_DETAIL), _scope("x"),
         section_composer(rc, task),

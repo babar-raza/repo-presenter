@@ -20,6 +20,7 @@ from jsonschema import Draft202012Validator
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
 from repo_presenter.core.llm.prompts import load_manifests
 from repo_presenter.readme.composition.authoring import (
+    SectionTask,
     authoring_schema,
     authoring_tasks,
 )
@@ -83,12 +84,14 @@ def _dispositions_placing_docs() -> dict:
 
 
 def _docs_task():
+    """R43(2) (BL-102): Documentation and Resources is never authored, so the Words .NET shape
+    gives it no task at all; a slotless task (any section the plan leaves no slot) keeps the
+    schema shape this file pins, built directly."""
     facts, dispositions, plan = _facts(), _dispositions_placing_docs(), _plan()
     assert plan_checks(plan, facts, dispositions=dispositions, ecosystem="python") == []
     tasks = authoring_tasks(make_entry(), facts, {}, dispositions, plan)
-    docs = [task for task in tasks if task.section_id == "documentation_resources"]
-    assert len(docs) == 1
-    return docs[0]
+    assert not [task for task in tasks if task.section_id == "documentation_resources"]
+    return SectionTask("documentation_resources", {"slots": []}, frozenset({"package:name"}), ())
 
 
 def _unit(fact_ids: list[str]) -> dict:

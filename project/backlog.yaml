@@ -1401,11 +1401,16 @@ items:
     type: requirement
     source: "owner ruling R43 (2026-11-14)"
     priority: P0
-    status: open
-    implementation_path: "readme/composition planning + renderer: these sections rendered from facts and kept maintainer text; the model writes only the opening and key capabilities without numbers/file/key names"
+    status: active
+    implementation_path: "components/shell.DETERMINISTIC_SECTIONS; authoring.AUTHORED_SECTIONS excludes them (S6 has no dev/docs/scope task); planning.plan_checks empties material_limitations and presentation_planning.yaml v15 pins maxItems 0 (S5 plans no limitation slot); renderer v42 prints them from facts plus kept text (Dev: suite/CI/release sentences, build/test commands, asset locators, kept text; Docs: planned SUPPORTED links with the maintainers' description from kept/superseded/rewritten link lists -- register-withheld, product name canonicalised -- else renderer.link_target_description; Scope: kept limitations, then renderer.scope_fact_bullets from always-throwing stubs grouped by type, never-thrown exceptions and unreachable format directions, collapsed beside kept text, else a format scope sentence); dispositions.fold_deterministic_sections keeps a superseded unit those sections' authored units had to carry; _REGISTER_KEPT_EXCLUDED emptied (kept Scope text always register-withheld); placement.unwrapped_form/pointer_free_form for kept text in those sections; opening/key-capability units carry no number/count/file/key name (authoring.NO_VALUES_RULE in the packet objective and section_authoring.yaml v22; unit_checks value_tokens; BC-04 re-judgement passes values=False, so the rule binds the producer and never demotes a seal); recertify holds sealed candidates to all of it (current_units drops those sections' units, current_plan empties material_limitations, settled_dispositions applies the S9 accounting); NORMALISATION_VERSION 38, RENDERER_VERSION 42"
     acceptance: "zero-call render of the 18 Lane R seals with those sections deterministic shows fewer BC/REVIEW failures and no new class; hosted re-runs seal at a higher rate"
-    evidence: []
-    next_action: "worker dispatched 2026-11-14"
+    evidence:
+      - "2026-11-14 branch r43-sections, zero-call re-judgement of the latest seal of all 18 Lane R cells through recertify._rerun_lane_r (/home/user/.supervisor/w-r43/r43_exp.py, the fold_exp.py shape; main extracted with git archive vs branch): failure details 92 -> 65 (BC-18 58 -> 35, BC-14 9 -> 8, REVIEW 10 -> 8, BC-04 6 -> 5, BC-05 3, BC-17 5, BC-07 1 unchanged); no new failing check on any repository; check classes cleared: 3D .NET BC-14 + REVIEW:claim_contradiction, PDF Java BC-04 + REVIEW:disposition_coverage, PSD .NET BC-18; the 7 RECERTIFIED seals stay RECERTIFIED"
+      - "recertify --all --json --remote origin (read-only), main -> branch: Lane L 29/29 -> 29/29, Lane R 7/18 -> 7/18 (same 7); changed: 3D .NET [BC-14, BC-18, REVIEW] -> [BC-18], PDF Java [BC-04, BC-05, BC-17, BC-18, REVIEW] -> [BC-05, BC-17, BC-18], PSD .NET [BC-07, BC-18] -> [BC-07]"
+      - "measure.py --hosted hosted_lane_r.jsonl, seal classes main -> branch: REGISTER_ROW_REPRINTED 58 -> 35 (baseline 112), RETURNS_CLAIMED_NOT_IMPLEMENTED 1 -> 0, SUPERSEDED_UNCITED 1 -> 0, every other class unchanged, none new; certified 7 -> 7"
+      - "O6 report-only (checklist 13): value_tokens over all 584 sealed opening/key-capability units of 152 Lane R bundles: 36 units / 51 tokens hit, all numbers ('14 image formats', '18 of the 25 ChartType values', 'Python 3.10', 'RFC 5322'), 0 false positives after calibration (the first cut also hit 'two-cell', 'thousands' and the dotted module 'aspose_html.js'; fixed before landing); placement.pointer_free_form 1 hit of 131 kept dev/scope/docs prose units of the 18 seals' live READMEs (Cells Go 057.list 'the 22 functions listed above', true); unwrapped_form 63 hits, 0 word changes, 272 visible lines saved (3D Python stays inside the 300-line budget: without it BC-07 314 > 300 was a new class)"
+      - "tests: tests/readme/composition/test_deterministic_sections_r43.py (9), tests/readme/reconciliation/test_inherit_policy_r43.py (10); 22 existing tests ported off authored Scope/Dev/Docs units (cascade call counts 9 -> 8: one authoring call fewer per Lane R run)"
+    next_action: "hosted proof (BL-140): next Lane R runs of the 33 cells without a certified seal; publish the re-certified seals with recertify --write (BL-141)"
     updated: "2026-11-14"
 
   - id: BL-103
@@ -1413,11 +1418,15 @@ items:
     type: requirement
     source: "owner ruling R43 (2026-11-14)"
     priority: P0
-    status: open
-    implementation_path: "S4 default VERIFIED_PRESERVE plus register withholding for those repos; re-author only what facts or the register force; keep the Lane R/Lane L engines separate and record per-lane metrics so differences are measurable"
+    status: active
+    implementation_path: "data/aspose_published_readmes.json (31 repositories mapped family/platform -> registry from aspose.org data/readme_published_state.json, plus the policy in force); readme/reconciliation/inherit.py (lane_r_policy: inherit_and_correct for a listed repository while that policy is in force, else regenerate; REPO_PRESENTER_LANE_R_POLICY overrides it per process for a live A/B run); dispositions.fold_inherited_published in S4 normalize and recertify.current_dispositions, before the register folds: a SUPERSEDE_REDUNDANT paragraph/list/table/blockquote in a deterministic section becomes VERIFIED_PRESERVE (the published text) unless the facts force it out (section-fit or other fold's supersession, a contradicted link, a dangling positional pointer, the lead-in of a block not printed beside it); the register folds then withhold what the register proves false, and the S9 accounting settles a kept unit with nothing left to print; the opening and key capabilities stay model-authored (R43(2)); seal.current_dependencies_document records lane_r_policy {name, version} per seal (a per-repository input outside the version set, version_set.INPUT_KEYS) and components.lane_r_policy (the policy logic's version); evaluation reopens RECONCILING on a policy switch; recertify rows carry lane_r_policy/sealed_lane_r_policy and the table prints Lane R certified/seals per policy (recertify.policy_counts)"
     acceptance: "applies only to repos listed in aspose.org data/readme_published_state.json; Lane R/Lane L outputs stay separately produced and compared"
-    evidence: []
-    next_action: "worker dispatched 2026-11-14"
+    evidence:
+      - "2026-11-14 branch r43-sections: 31 repositories mapped, every one on data/registry.json by family/platform (tests/readme/reconciliation/test_inherit_policy_r43.py also checks the aspose.org file when the checkout is beside this one); 16 of the 18 sealed Lane R cells are listed (not Imaging .NET, PSD .NET)"
+      - "recertify --all --json --remote origin on the branch: Lane R by policy inherit_and_correct 6/16 certified, regenerate 1/2; Lane L 29/29 produced by its own correction engine, untouched (Lane L never calls normalize or the renderer)"
+      - "zero-call re-judgement of the 18 Lane R seals with the policy applied to the stored dispositions: no seal lost, no new failing check on any repository, BC-18 rows 58 -> 35 (see BL-102 for the per-repository table)"
+      - "switch: tests prove a listed repository inherits, an unlisted one never does, REPO_PRESENTER_LANE_R_POLICY=regenerate turns it off, an unknown value changes nothing, the seal records the policy outside the version set and a switch reopens RECONCILING"
+    next_action: "long-run (owner): keep both engines evaluable live -- BL-140 compares Lane R seal rate per policy on hosted runs; an A/B regenerate run of a listed cell needs REPO_PRESENTER_LANE_R_POLICY passed into the hosted job (not wired yet: BL-142)"
     updated: "2026-11-14"
 
   - id: BL-104
@@ -1650,3 +1659,62 @@ items:
     next_action: "rebuild and republish the page; confirm every badge renders"
     updated: "2026-11-14"
 
+  - id: BL-150
+    title: "R43(2)/(3) hosted proof: Lane R runs under deterministic sections and inherit-and-correct, seal rate per policy"
+    type: task
+    source: "owner ruling R43(2)/(3); BL-102/BL-103 acceptance ('hosted re-runs seal at a higher rate'); R37"
+    priority: P0
+    status: open
+    implementation_path: "the R37 loop's next Lane R cohort after r43-sections merges (no code); count seals per lane_r_policy from recertify --all (policy_counts) against the rolling 12-run window (R43(1))"
+    acceptance: "the next 12 settled Lane R runs: cost per seal and seals per run, split inherit_and_correct / regenerate, recorded with run ids; no section_authoring call is made for Development and Testing, Documentation and Resources or Scope and Limitations"
+    evidence: []
+    next_action: "after merge; the planner's cohort order is unchanged"
+    updated: "2026-11-14"
+
+  - id: BL-151
+    title: "R41: publish the zero-call re-certification of the R43(2)/(3) change (3 Lane R seals change checks, every Lane R seal re-rendered)"
+    type: task
+    source: "owner ruling R41; BL-102/BL-103"
+    priority: P0
+    status: open
+    implementation_path: "hosted recertify --write (recertify.yml) after r43-sections merges; record the run id and per-lane result in BL-102/BL-103"
+    acceptance: "run id with Lane L 29 / Lane R 7 certified and the re-rendered Lane R seals published with lane_r_policy recorded in their dependencies"
+    evidence: []
+    next_action: "after merge"
+    updated: "2026-11-14"
+
+  - id: BL-152
+    title: "R43(3) long-run: pass the Lane R policy switch into the hosted present job so an A/B regenerate run of a listed cell is a dispatch, not a code change"
+    type: requirement
+    source: "owner ruling R43(3) ('in long run, keep lanes separate so we could evaluate the differences in real time')"
+    priority: P2
+    status: open
+    implementation_path: "present.yml / run-request input -> REPO_PRESENTER_LANE_R_POLICY in the job env (readme/reconciliation/inherit.POLICY_ENV already reads it); the seal records which policy ran"
+    acceptance: "one hosted Lane R run of a listed repository under regenerate seals with dependencies.lane_r_policy.name == regenerate, beside its inherit_and_correct seal, both counted by policy_counts"
+    evidence: []
+    next_action: "after BL-150 shows the near-term policy's seal rate (owner: near-term inherit, long-run separately evaluable)"
+    updated: "2026-11-14"
+
+  - id: BL-153
+    title: "Email .NET Lane R prints the kept lead-in 'Or add it directly to a project file.' while its corrected block prints nothing"
+    type: defect
+    source: "R43(2) review of the re-rendered Development and Testing sections, 2026-11-14 (pre-existing on main: the same line prints in main's render of the sealed candidate)"
+    priority: P2
+    status: open
+    implementation_path: "S9 accounting / placement: a kept paragraph whose next unit is a CORRECT_WITH_EVIDENCE code block that prints nothing is a lead-in to nothing (014.paragraph -> 015.code_block); settle it with the block, the way dispositions._leads_an_unkept_block already keeps R43's folds from creating new ones"
+    acceptance: "the zero-call re-render of Email .NET Lane R prints no orphan lead-in and stays RECERTIFIED"
+    evidence: []
+    next_action: "fold into the next S9 accounting change"
+    updated: "2026-11-14"
+
+  - id: BL-154
+    title: "Cells Go Lane R Scope prints two overlapping maintainer lists (057.list and the Constraints list) now that planned limitations no longer drop overlap"
+    type: defect
+    source: "R43(2) review of the re-rendered Scope and Limitations sections, 2026-11-14"
+    priority: P2
+    status: open
+    implementation_path: "placement: a kept list whose every item another kept list of the same section already states prints only its remainder (coverage.uncovered against the section's own kept text)"
+    acceptance: "Cells Go Lane R Scope prints 'tuple/array indices are not supported' once and stays RECERTIFIED"
+    evidence: []
+    next_action: "measure against every sealed Scope section before changing placement (checklist 13)"
+    updated: "2026-11-14"

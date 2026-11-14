@@ -49,11 +49,16 @@ from repo_presenter.readme.composition.components.ecosystems import (
 )
 from repo_presenter.readme.composition.components.glance import draw_at_a_glance
 from repo_presenter.readme.composition.components.identity import (
+    canonicalise_name_variants,
     elide_noncanonical,
     product_name,
     product_name_tokens,
 )
-from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL, Section
+from repo_presenter.readme.composition.components.shell import (
+    DETERMINISTIC_SECTIONS,
+    SEMANTIC_SHELL,
+    Section,
+)
 from repo_presenter.readme.composition.components.terminology import LOWER_WORD, to_title_case
 from repo_presenter.readme.composition.coverage import Destinations
 from repo_presenter.readme.composition.placement import (
@@ -65,7 +70,6 @@ from repo_presenter.readme.composition.placement import (
     renders_verbatim,
     with_attribution,
 )
-from repo_presenter.readme.composition.source_topics import without_license_statement
 from repo_presenter.readme.composition.retained_examples import (
     RetainedBlock,
     active_retained,
@@ -118,9 +122,19 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # the rendered Core API table does not (placement.rows_not_rendered). P3: the Python floor prints
 # "Requires Python 3.10 or later." (as aspose.org's published READMEs do); only a setup.py /
 # setup.cfg floor bullet still names its (true) python_requires key.
-RENDERER_VERSION = "41"
+# 42 (2026-11-14, R43(2) / BL-102): Development and Testing, Documentation and Resources and Scope and
+# Limitations print no authored unit. Development and Testing: the facts' sentences and commands, a
+# locator sentence for each build/test asset nothing else in the section names, then the
+# maintainers' kept text. Documentation and Resources: each planned link with the maintainers' own
+# description of it, else a fact-derived description of its target (docs/KB/reference/product
+# page, repository path, host). Scope and Limitations: the maintainers' kept limitations (withheld
+# where the findings register confirms a line false), then one bullet per implementation fact class
+# the kept text does not already name (always-throwing stubs grouped by type, declared-but-never-
+# thrown exceptions, unreachable format directions), else one scope sentence from the format facts.
+RENDERER_VERSION = "42"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
+UNIMPLEMENTED_SUMMARY = "View Other Unimplemented Members"
 README_FILENAME = "README.md"
 PATCH_FILENAME = "README.patch"
 __all__ = ["renders_verbatim"]  # re-exported for the validator and the tests
@@ -227,13 +241,18 @@ class RenderContext:
             if section.id in self.planned or section.id in self.retained
         ]
         self.rendered_ids: frozenset[str] | None = None
+        # R43(2): a deterministic section prints no authored unit, a sealed one included.
+        authored = [
+            unit
+            for unit in units.get("units", [])
+            if unit.get("section") not in DETERMINISTIC_SECTIONS
+        ]
         self.units: dict[tuple[str, str], str] = without_repeated_paragraphs(
-            {(unit["section"], unit["slot"]): unit["text"] for unit in units.get("units", [])},
+            {(unit["section"], unit["slot"]): unit["text"] for unit in authored},
             [section.id for section in self.included],
         )
         self.unit_fact_ids: dict[tuple[str, str], list[str]] = {
-            (unit["section"], unit["slot"]): unit.get("fact_ids", [])
-            for unit in units.get("units", [])
+            (unit["section"], unit["slot"]): unit.get("fact_ids", []) for unit in authored
         }
         self.dispositions = dispositions
         self._unplaced = False
@@ -830,6 +849,41 @@ def _public_type_count(context: RenderContext) -> int:
     )
 
 
+#: R42 (adopted): aspose.org's published READMEs describe the three product sites in these words
+#: (3D Python live README "Documentation & Resources": "installation, walkthroughs, and feature
+#: guides for this library", "task-focused answers ...", "the complete, browsable reference").
+_SITE_DESCRIPTIONS = (
+    ("docs.", "Installation, walkthroughs, and feature guides for this library."),
+    ("kb.", "Task-focused how-to articles and answers to common questions."),
+    ("reference.", "The complete, browsable reference for the public API."),
+    ("products.", "The product page."),
+)
+
+
+def link_target_description(target: Fact) -> str:
+    """A fact-true description of a link's target when no maintainer text describes it (R43(2)):
+    the product site it belongs to, the repository path it names, or the host it is on."""
+    split = urlsplit(target.value)
+    host = (split.hostname or "").lower()
+    if target.value.startswith("#"):
+        return "A section of this README."
+    if not split.scheme and not host:
+        path = target.value.split("#", 1)[0].rstrip("/") or target.value
+        last = path.rsplit("/", 1)[-1]
+        if target.value.endswith("/") or "." not in last:
+            return f"The `{path}` directory in this repository."
+        # The line's own label already names it when the maintainers gave it a title.
+        return "In this repository." if link_text(target) not in (path, last) else (
+            f"`{path}` in this repository."
+        )
+    for prefix, description in _SITE_DESCRIPTIONS:
+        if host.startswith(prefix) and host.endswith(("aspose.org", "aspose.com")):
+            return description
+    if host == "github.com" and "/releases" in split.path:
+        return "Release history."
+    return f"On {host}." if host else ""
+
+
 def _documentation_resources(context: RenderContext) -> list[str]:
     """One list, each item a bold link, an em dash, and the authored sentence."""
     sid = "documentation_resources"
@@ -846,16 +900,25 @@ def _documentation_resources(context: RenderContext) -> list[str]:
         if link.get("section_id") != sid:
             continue
         target = context.fact(link.get("link_fact_id", ""))
-        if target is None or target.value in seen or target.value == issues:
+        if (
+            target is None
+            or target.polarity != "SUPPORTED"  # R43(2): only a verified target is printed
+            or target.value in seen
+            or target.value == issues
+        ):
             continue
         seen.add(target.value)
-        # A sealed candidate's authored line stands; a link no unit describes (one the link
-        # backstop owes a kept list) prints the maintainers' own description of it.
-        authored = context.unit(sid, f"link:{target.id}")
-        sentence = authored or described.get(target.id, "")
+        # R43(2): never an authored sentence. The maintainers' own description of the link (a
+        # kept or superseded resource-links list), else a description of its target from the
+        # link fact itself.
+        sentence = (
+            canonicalise_name_variants(described[target.id], context.name)
+            if described.get(target.id)
+            else link_target_description(target)
+        )
         host = (urlsplit(target.value).hostname or "").lower()
         if host.startswith("reference.") and api_included and not (
-            not authored and target.id in described and "public types" in sentence
+            target.id in described and "public types" in sentence
         ):
             # A maintainers' description that already states the count (Words .NET ``080.list``:
             # "for all 617 public types (the API reference section above covers the essentials)",
@@ -1763,6 +1826,154 @@ def _with_retained_examples(lines: list[str], blocks: list[RetainedBlock]) -> li
     return lines
 
 
+#: Exceptions that mark an always-throwing member as unimplemented (a stub), never a guard.
+STUB_EXCEPTIONS = frozenset(
+    {"NotImplementedError", "NotImplementedException", "UnsupportedOperationException"}
+)
+_SCOPE_STUB_TYPES = 8
+_SCOPE_STUB_TYPES_BESIDE_KEPT = 3
+_SCOPE_STUB_MEMBERS = 4
+_SCOPE_NEVER_THROWN = 4
+_NAMED = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
+
+def _member_label(name: str) -> str:
+    return "its constructor" if name in ("__init__", "constructor", ".ctor") else f"`{name}`"
+
+
+def scope_fact_bullets(context: RenderContext, kept: str) -> list[str]:
+    """Scope and Limitations bullets from implementation facts (R43(2)), each only for what the
+    maintainers' kept text does not already name: public members that always throw a
+    not-implemented exception, grouped by type; exceptions declared but never thrown; format
+    directions the dispatcher never reaches."""
+    named = set(_NAMED.findall(kept))
+    stubs: dict[tuple[str, str], list[str]] = {}
+    never: list[str] = []
+    for fact in context.supported("implementation"):
+        attributes = fact.attributes or {}
+        aspect = attributes.get("aspect")
+        if aspect == "never_thrown":
+            type_name = str(attributes.get("type") or "").strip()
+            if type_name and type_name not in named and type_name not in never:
+                never.append(type_name)
+            continue
+        if (
+            aspect != "throws"
+            or attributes.get("condition") != "always"
+            or attributes.get("exception") not in STUB_EXCEPTIONS
+            or attributes.get("visibility")
+            or "non-public" in fact.value
+        ):
+            continue
+        owner, _, member = str(attributes.get("member") or "").rpartition(".")
+        type_name = owner.rsplit(".", 1)[-1]
+        if not type_name or not member or type_name in named:
+            continue
+        names = stubs.setdefault((type_name, str(attributes["exception"])), [])
+        if member not in names:
+            names.append(member)
+    def spelled(token: str) -> bool:
+        return identifier_allowed(token, context.allowed, context.members, context.methods)
+
+    bullets: list[str] = []
+    ranked = sorted(
+        (
+            (key, members)
+            for key, members in stubs.items()
+            if spelled(key[0]) and any(spelled(m) or m == "__init__" for m in members)
+        ),
+        key=lambda item: (-len(item[1]), item[0]),
+    )
+    # Beside the maintainers' own limitations the fact list is the short tail they did not name.
+    cap = _SCOPE_STUB_TYPES_BESIDE_KEPT if kept.strip() else _SCOPE_STUB_TYPES
+    for (type_name, exception), members in ranked[:cap]:
+        known = [name for name in sorted(members) if spelled(name) or name == "__init__"]
+        shown = [_member_label(name) for name in known[:_SCOPE_STUB_MEMBERS]]
+        more = len(members) - len(shown)
+        if more:
+            shown.append(f"{more} more")
+        # The exception is the runtime's (NotImplementedError ...), never a fact value: plain text.
+        raise_verb = "raise" if exception.endswith("Error") else "throw"
+        verb = raise_verb if len(members) > 1 else f"{raise_verb}s"
+        bullets.append(f"`{type_name}`: {_join_and(shown)} {verb} {exception}.")
+    rest = ranked[cap:]
+    if rest and not kept.strip():
+        exceptions = sorted({exception for (_, exception), _ in rest})
+        bullets.append(
+            f"Members of {len(rest)} further types also "
+            f"{'raise' if all(e.endswith('Error') for e in exceptions) else 'throw'} "
+            f"{_join_and(exceptions)}."
+        )
+    for type_name in sorted(never)[:_SCOPE_NEVER_THROWN]:
+        if spelled(type_name):
+            # Worded as BC-14 asks ("say it is unused"): a throw verb here reads as a throw claim.
+            bullets.append(f"`{type_name}` is declared but unused by the library's own code.")
+    for fact in context.facts.by_kind("format"):
+        if fact.polarity == "SUPPORTED" or not any(
+            "unreachable)" in (evidence.detail or "") for evidence in fact.evidence
+        ):
+            continue
+        direction = "Saving" if fact.id.startswith("format:output.") else "Loading"
+        name = format_name(fact.value)
+        if name not in named:
+            bullets.append(f"{direction} {name} files is not reachable through the format dispatcher.")
+    return bullets
+
+
+def _scope_statement(context: RenderContext) -> str:
+    """One fact-true scope sentence when neither kept text nor an implementation fact speaks:
+    the formats the facts record the product reading and writing."""
+    directions: dict[str, list[str]] = {"input": [], "output": []}
+    for fact in context.supported("format"):
+        direction = fact.id.split(":", 1)[-1].split(".", 1)[0]
+        name = format_name(fact.value)
+        if direction in directions and name not in directions[direction]:
+            directions[direction].append(name)
+    reads, writes = directions["input"], directions["output"]
+    if reads and writes:
+        return f"{context.name} reads {_oxford(reads)} files and writes {_oxford(writes)} files."
+    if reads:
+        return f"{context.name} reads {_oxford(reads)} files."
+    if writes:
+        return f"{context.name} writes {_oxford(writes)} files."
+    if any(section.id == "api_reference" for section in context.included):
+        return (
+            f"{context.name} provides the public types listed in the "
+            "[API Reference](#api-reference) section."
+        )
+    return ""
+
+
+#: Build and test assets a reader looks for, and the sentence that locates each (R43(2)).
+_ASSET_LOCATORS = (
+    ("build_test_asset:tests", "Tests live under `{path}`."),
+    ("build_test_asset:examples", "Example programs live under `{path}`."),
+    ("build_test_asset:docs", "Project documentation lives under `{path}`."),
+)
+
+
+def _asset_locators(context: RenderContext) -> list[str]:
+    """A locator sentence for each build/test asset nothing else Development and Testing prints
+    names: the suite sentence, the commands, or the maintainers' kept text."""
+    shown = " ".join(
+        [
+            *_development_sentences(context),
+            *_development_commands(context)[1],
+            *context.placed.get("development_testing", []),
+        ]
+    )
+    sentences: list[str] = []
+    for fact_id, template in _ASSET_LOCATORS:
+        fact = context.fact(fact_id)
+        if fact is None or fact.polarity != "SUPPORTED":
+            continue
+        path = fact.value.strip()
+        if not path or path.rstrip("/") in shown:
+            continue
+        sentences.append(template.format(path=path))
+    return sentences
+
+
 def _section_body(context: RenderContext, section: Section) -> list[str]:
     sid = section.id
     plan = context.plan
@@ -1831,32 +2042,20 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
     elif sid == "documentation_resources":
         lines.extend(_documentation_resources(context))
     elif sid == "scope_limitations":
-        # Scope never states the project's license (BC-05 section fit; the License section
-        # does): a license clause goes, the rest of its sentence stays (BL-089, audit O8a).
-        raw_scope = context.unit(sid, "scope")
-        scope = without_license_statement(raw_scope)
-        scope_printed = bool(scope) or not raw_scope  # an empty unit printed as before
-        if scope_printed:
-            lines.append(scope)
-        slots = sorted(
-            (int(slot.split(":", 1)[1]), slot)
-            for (section, slot) in context.units
-            if section == sid and slot.startswith("limitation:") and slot[11:].isdigit()
-        )
-        bullets = [
-            text
-            for _, slot in slots
-            if (text := without_license_statement(raw := context.unit(sid, slot))) or not raw
-        ]
-        if bullets:
-            if scope_printed:
-                lines.append("")
-            lines.extend(f"- {text}" for text in bullets)
+        # R43(2): no authored unit. The maintainers' kept limitations print below (``printed``),
+        # then the implementation facts they do not already name; with neither, one scope
+        # sentence from the format facts.
+        kept = "\n".join(context.placed.get(sid, []))
+        bullets = scope_fact_bullets(context, kept)
+        if not kept.strip() and not bullets:
+            statement = _scope_statement(context)
+            if statement:
+                lines.append(statement)
     elif sid == "development_testing":
-        lines.append(context.unit(sid, "summary"))
-        facts_sentences = _development_sentences(context)
+        # R43(2): no authored unit. The facts' sentences, the build and test commands, then the
+        # maintainers' kept text (``printed``, below).
+        facts_sentences = [*_development_sentences(context), *_asset_locators(context)]
         if facts_sentences:
-            lines.append("")
             lines.append(" ".join(facts_sentences))
         lead, commands = _development_commands(context)
         if commands:
@@ -1891,6 +2090,19 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
             lines.append("")
             lines.append(verbatim.rstrip("\n"))
     if sid == "scope_limitations":
+        kept = "\n".join(context.placed.get(sid, []))
+        bullets = scope_fact_bullets(context, kept)
+        if bullets:
+            if any(line.strip() for line in lines):
+                lines.append("")
+            if kept.strip():
+                # Beside the maintainers' own limitations, the fact tail is collapsed (BC-07's
+                # visible budget; aspose.org collapses secondary detail the same way).
+                lines.extend(["<details>", f"<summary>{UNIMPLEMENTED_SUMMARY}</summary>", ""])
+                lines.extend(f"- {bullet}" for bullet in bullets)
+                lines.extend(["", "</details>"])
+            else:
+                lines.extend(f"- {bullet}" for bullet in bullets)
         closing = _enterprise_paragraph(context)
         if closing:
             lines.append("")

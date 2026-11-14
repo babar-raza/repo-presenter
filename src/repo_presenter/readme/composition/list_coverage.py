@@ -146,17 +146,31 @@ def kept_link_descriptions(
             by_value.setdefault(fact.value, fact.id)
     texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
     found: dict[str, str] = {}
+    # R43(2) (BL-102): no unit describes a link any more, so a links list superseded or rewritten by the
+    # section's link lines describes them too (its words are the maintainers'), never one whose
+    # description the findings register confirms false.
+    from repo_presenter.readme.validation.must_correct import open_finding_citations
+
+    quotes = [
+        " ".join(row.quote.split())
+        for row in open_finding_citations(facts.repository).values()
+        if row.quote.strip()
+    ]
     for entry in dispositions.get("dispositions", []):
         unit = str(entry.get("unit_id", ""))
         text = texts.get(unit, "")
         if (
-            entry.get("disposition") not in _AS_WRITTEN
+            entry.get("disposition")
+            not in (*_AS_WRITTEN, "SUPERSEDE_REDUNDANT", "VERIFIED_REWRITE", "CORRECT_WITH_EVIDENCE")
             or entry.get("destination_section") != "documentation_resources"
             or not unit.endswith(".list")
             or not is_link_list(text)
         ):
             continue
         for item in list_items(text):
+            squashed = " ".join(item.split())
+            if any(quote in squashed for quote in quotes):
+                continue
             links = item_links(item)
             lead = _GROUP_LEAD.match(item)
             if len(links) > 1 and lead is not None:
