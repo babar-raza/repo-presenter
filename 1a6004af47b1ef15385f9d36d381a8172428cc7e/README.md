@@ -543,18 +543,18 @@ below.
 | `AutoShapeType` | Specifies the type of an auto shape (preset geometry). |
 | `BorderLineStyle` | Represents border. |
 | `BorderStyleType` | Specifies border style type. |
-| `CellObjectValue` | Enum with 14 methods and 5 members. |
-| `CellValue` | Enum with 8 methods and 7 members. |
+| `CellObjectValue` | Enumerates Bool, DateTime, Empty, Number and String. |
+| `CellValue` | Enumerates Bool, DateTime, Empty, Error, Formula, Number and String. |
 | `CellValueType` | Specifies cell value type. |
-| `CellsError` | Enum with 9 methods and 10 members. |
+| `CellsError` | Enumerates values including IndexOutOfRange, InvalidCellReference, InvalidInput, InvalidSheetName, InvalidZoom, Io, OverlappingMergedRange and SheetNotFound. |
 | `ChartType` | Specifies the chart type. |
-| `DateSystem` | Enum with 2 members. |
-| `DiagnosticSeverity` | Enum with 4 members. |
+| `DateSystem` | Enumerates Mac1904 and Windows1900. |
+| `DiagnosticSeverity` | Enumerates Fatal, LossyRecoverable, Recoverable and Warning. |
 | `FillPattern` | Specifies fill pattern. |
 | `FilterOperatorType` | Represents FilterOperatorType. |
 | `FontUnderlineType` | Enumerates font underline types. |
 | `FormatConditionType` | Specifies format condition type. |
-| `HorizontalAlignment` | Enum with 8 members. |
+| `HorizontalAlignment` | Enumerates Center, CenterContinuous, Distributed, Fill, General, Justify, Left and Right. |
 | `ImageType` | Represents the format of an image stored in a worksheet. |
 | `LoadFormat` | Specifies load format. |
 | `OperatorType` | Specifies operator type. |
@@ -568,7 +568,7 @@ below.
 | `TotalsCalculation` | Represents the aggregation function shown in a table totals row cell. |
 | `ValidationAlertType` | Specifies validation alert type. |
 | `ValidationType` | Specifies validation type. |
-| `VerticalAlignment` | Enum with 5 members. |
+| `VerticalAlignment` | Enumerates Bottom, Center, Distributed, Justify and Top. |
 | `VisibilityType` | Specifies visibility type. |
 
 #### Traits

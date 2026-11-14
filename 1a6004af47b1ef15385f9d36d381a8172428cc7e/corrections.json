@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 6,
+    "edits": 13,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "942fb22ccb9ccd52f3cc3471abddab91322c7f868dfae542e9ab0b3641008f02",
+  "corrected_sha256": "9fc21b9c03d651e5e84ace7a0556a9f44e2e9b1d72cd22a4a27f61b8bc94e74e",
   "edits": [
     {
       "detector": "glance_layout",
@@ -87,6 +87,116 @@
       "start": 24680
     },
     {
+      "detector": "type_description",
+      "end": 24832,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:cellobjectvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellObjectValue"
+        },
+        {
+          "fact_id": "enum_member:cellobjectvalue.bool",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellObjectValue.Bool"
+        },
+        {
+          "fact_id": "enum_member:cellobjectvalue.datetime",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellObjectValue.DateTime"
+        },
+        {
+          "fact_id": "enum_member:cellobjectvalue.empty",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellObjectValue.Empty"
+        },
+        {
+          "fact_id": "enum_member:cellobjectvalue.number",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellObjectValue.Number"
+        },
+        {
+          "fact_id": "enum_member:cellobjectvalue.string",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellObjectValue.String"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 542,
+      "original": "Enum with 14 methods and 5 members.",
+      "rationale": "line 542: the count only cell 'Enum with 14 methods and 5 members.' does not describe CellObjectValue and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates Bool, DateTime, Empty, Number and String.",
+      "start": 24797
+    },
+    {
+      "detector": "type_description",
+      "end": 24885,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:cellvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellValue"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.bool",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.Bool"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.datetime",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.DateTime"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.empty",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.Empty"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.error",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.Error"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.formula",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.Formula"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.number",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.Number"
+        },
+        {
+          "fact_id": "enum_member:cellvalue.string",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellValue.String"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 543,
+      "original": "Enum with 8 methods and 7 members.",
+      "rationale": "line 543: the count only cell 'Enum with 8 methods and 7 members.' does not describe CellValue and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates Bool, DateTime, Empty, Error, Formula, Number and String.",
+      "start": 24851
+    },
+    {
       "detector": "absent_type_row",
       "end": 24931,
       "evidence": [
@@ -139,13 +249,154 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 2,
+      "index": 4,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 544,
       "original": "| `CellValueKind` | Enum with 7 members. |\n",
       "rationale": "line 544 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
       "replacement": "",
       "start": 24888
+    },
+    {
+      "detector": "type_description",
+      "end": 25032,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:cellserror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CellsError"
+        },
+        {
+          "fact_id": "enum_member:cellserror.indexoutofrange",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.IndexOutOfRange"
+        },
+        {
+          "fact_id": "enum_member:cellserror.invalidcellreference",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.InvalidCellReference"
+        },
+        {
+          "fact_id": "enum_member:cellserror.invalidinput",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.InvalidInput"
+        },
+        {
+          "fact_id": "enum_member:cellserror.invalidsheetname",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.InvalidSheetName"
+        },
+        {
+          "fact_id": "enum_member:cellserror.invalidzoom",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.InvalidZoom"
+        },
+        {
+          "fact_id": "enum_member:cellserror.io",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.Io"
+        },
+        {
+          "fact_id": "enum_member:cellserror.overlappingmergedrange",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.OverlappingMergedRange"
+        },
+        {
+          "fact_id": "enum_member:cellserror.sheetnotfound",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "CellsError.SheetNotFound"
+        }
+      ],
+      "index": 5,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 546,
+      "original": "Enum with 9 methods and 10 members.",
+      "rationale": "line 546: the count only cell 'Enum with 9 methods and 10 members.' does not describe CellsError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates values including IndexOutOfRange, InvalidCellReference, InvalidInput, InvalidSheetName, InvalidZoom, Io, OverlappingMergedRange and SheetNotFound.",
+      "start": 24997
+    },
+    {
+      "detector": "type_description",
+      "end": 25116,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:datesystem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DateSystem"
+        },
+        {
+          "fact_id": "enum_member:datesystem.mac1904",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "DateSystem.Mac1904"
+        },
+        {
+          "fact_id": "enum_member:datesystem.windows1900",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "DateSystem.Windows1900"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 548,
+      "original": "Enum with 2 members.",
+      "rationale": "line 548: the count only cell 'Enum with 2 members.' does not describe DateSystem and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates Mac1904 and Windows1900.",
+      "start": 25096
+    },
+    {
+      "detector": "type_description",
+      "end": 25164,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:diagnosticseverity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "DiagnosticSeverity"
+        },
+        {
+          "fact_id": "enum_member:diagnosticseverity.fatal",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "DiagnosticSeverity.Fatal"
+        },
+        {
+          "fact_id": "enum_member:diagnosticseverity.lossyrecoverable",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "DiagnosticSeverity.LossyRecoverable"
+        },
+        {
+          "fact_id": "enum_member:diagnosticseverity.recoverable",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "DiagnosticSeverity.Recoverable"
+        },
+        {
+          "fact_id": "enum_member:diagnosticseverity.warning",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "DiagnosticSeverity.Warning"
+        }
+      ],
+      "index": 7,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 549,
+      "original": "Enum with 4 members.",
+      "rationale": "line 549: the count only cell 'Enum with 4 members.' does not describe DiagnosticSeverity and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates Fatal, LossyRecoverable, Recoverable and Warning.",
+      "start": 25144
     },
     {
       "detector": "absent_type_row",
@@ -200,13 +451,80 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 3,
+      "index": 8,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 551,
       "original": "| `FillPatternKind` | Enum with 18 members. |\n",
       "rationale": "line 551 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
       "replacement": "",
       "start": 25211
+    },
+    {
+      "detector": "type_description",
+      "end": 25481,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:horizontalalignment",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.center",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.Center"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.centercontinuous",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.CenterContinuous"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.distributed",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.Distributed"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.fill",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.Fill"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.general",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.General"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.justify",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.Justify"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.left",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.Left"
+        },
+        {
+          "fact_id": "enum_member:horizontalalignment.right",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "HorizontalAlignment.Right"
+        }
+      ],
+      "index": 9,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 555,
+      "original": "Enum with 8 members.",
+      "rationale": "line 555: the count only cell 'Enum with 8 members.' does not describe HorizontalAlignment and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates Center, CenterContinuous, Distributed, Fill, General, Justify, Left and Right.",
+      "start": 25461
     },
     {
       "detector": "absent_type_row",
@@ -261,7 +579,7 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 4,
+      "index": 10,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 563,
       "original": "| `SheetVisibility` | SheetVisibility enum defines three visibility states: Visible, Hidden, and VeryHidden. |\n",
@@ -322,13 +640,62 @@
           "value": "AutoFilter.set_range"
         }
       ],
-      "index": 5,
+      "index": 11,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 569,
       "original": "| `ValidationMessageSeverity` | Enum with 3 members. |\n",
       "rationale": "line 569 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
       "replacement": "",
       "start": 26296
+    },
+    {
+      "detector": "type_description",
+      "end": 26445,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:verticalalignment",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "VerticalAlignment"
+        },
+        {
+          "fact_id": "enum_member:verticalalignment.bottom",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "VerticalAlignment.Bottom"
+        },
+        {
+          "fact_id": "enum_member:verticalalignment.center",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "VerticalAlignment.Center"
+        },
+        {
+          "fact_id": "enum_member:verticalalignment.distributed",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "VerticalAlignment.Distributed"
+        },
+        {
+          "fact_id": "enum_member:verticalalignment.justify",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "VerticalAlignment.Justify"
+        },
+        {
+          "fact_id": "enum_member:verticalalignment.top",
+          "kind": "enum_member",
+          "status": "SUPPORTED",
+          "value": "VerticalAlignment.Top"
+        }
+      ],
+      "index": 12,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 571,
+      "original": "Enum with 5 members.",
+      "rationale": "line 571: the count only cell 'Enum with 5 members.' does not describe VerticalAlignment and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates Bottom, Center, Distributed, Justify and Top.",
+      "start": 26425
     }
   ],
   "lane": "L",
@@ -345,85 +712,8 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
+    "FALSE_CLAIM_FIX": 7,
     "TABLE_ROW_REMOVAL": 5
   },
-  "unapplied": [
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:cellobjectvalue"
-      ],
-      "line": 542,
-      "reason": "the count only cell does not describe CellObjectValue, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 14 methods and 5 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:cellvalue"
-      ],
-      "line": 543,
-      "reason": "the count only cell does not describe CellValue, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 8 methods and 7 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:cellserror"
-      ],
-      "line": 546,
-      "reason": "the count only cell does not describe CellsError, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 9 methods and 10 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:datesystem"
-      ],
-      "line": 548,
-      "reason": "the count only cell does not describe DateSystem, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 2 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:diagnosticseverity"
-      ],
-      "line": 549,
-      "reason": "the count only cell does not describe DiagnosticSeverity, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 4 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:horizontalalignment"
-      ],
-      "line": 555,
-      "reason": "the count only cell does not describe HorizontalAlignment, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 8 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:verticalalignment"
-      ],
-      "line": 571,
-      "reason": "the count only cell does not describe VerticalAlignment, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 5 members."
-    }
-  ]
+  "unapplied": []
 }
