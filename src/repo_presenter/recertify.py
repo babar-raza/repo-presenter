@@ -131,6 +131,9 @@ class SourceSnapshot:
     #: The root build manifests' text (``pyproject.toml``, ``setup.cfg``, ``setup.py``) at the pinned
     #: revision: which tree packages the build ships (BL-065, ``shipped_facts``).
     manifests: Mapping[str, str] = field(default_factory=dict)
+    #: The ``.py`` sources at the pinned revision when the root has a Python build manifest: what a
+    #: sealed facts document's class facts are re-read from (BL-098, ``shipped_facts``).
+    sources: Mapping[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -237,8 +240,41 @@ def fetch_source(
             done = run_git(["--git-dir", str(git_dir), "cat-file", "blob", f"{revision}:{name}"])
             if done.returncode == 0:
                 manifests[name] = done.stdout
+    sources = _python_sources(git_dir, revision, paths) if manifests else {}
     shutil.rmtree(git_dir, ignore_errors=True)
-    return SourceSnapshot(tree_paths=paths, readme=readme, manifests=manifests)
+    return SourceSnapshot(tree_paths=paths, readme=readme, manifests=manifests, sources=sources)
+
+
+#: Bounds on the Python sources a snapshot reads (one ``cat-file --batch`` of the tracked ``.py``).
+_MAX_SOURCE_FILES = 5000
+_MAX_SOURCE_BYTES = 64 * 1024 * 1024
+
+
+def _python_sources(git_dir: Path, revision: str, paths: Sequence[str]) -> dict[str, str]:
+    """Every tracked ``.py`` file's text at ``revision`` (empty when over the bounds)."""
+    import subprocess
+
+    wanted = [p for p in paths if p.endswith(".py")]
+    if not wanted or len(wanted) > _MAX_SOURCE_FILES:
+        return {}
+    done = subprocess.run(
+        ["git", "--git-dir", str(git_dir), "cat-file", "--batch"],
+        input="".join(f"{revision}:{p}\n" for p in wanted).encode("utf-8"),
+        capture_output=True, check=False,
+    )
+    if done.returncode != 0 or len(done.stdout) > _MAX_SOURCE_BYTES:
+        return {}
+    out, data, at = {}, done.stdout, 0
+    for path in wanted:
+        end = data.index(b"\n", at)
+        header = data[at:end].split()
+        at = end + 1
+        if len(header) != 3 or header[1] != b"blob":
+            continue
+        size = int(header[2])
+        out[path] = data[at : at + size].decode("utf-8", errors="replace")
+        at += size + 1
+    return out
 
 
 #: Root build manifests a platform plugin may read the shipped package list from (BL-065).
@@ -278,13 +314,36 @@ def shipped_facts(document: FactsDocument, ecosystem: str, source: SourceSnapsho
     return replace(document, facts=kept), clause
 
 
+def current_surface(document: FactsDocument, ecosystem: str, source: SourceSnapshot) -> tuple[FactsDocument, str | None]:
+    """``shipped_facts``, then the class facts' ``member_counts`` read from the pinned sources where
+    the sealed facts predate them (BL-098: the extractor now records each Python class's own public
+    methods, properties and annotated fields; a sealed "Class with 11 properties." cell is held to
+    them). Pure, zero calls; adds an attribute, never a fact; ``None``: nothing changed."""
+    narrowed, clause = shipped_facts(document, ecosystem, source)
+    if not source.sources:
+        return narrowed, clause
+    from repo_presenter.extractors.platforms.registry import plugin_for
+
+    try:
+        plugin = plugin_for(ecosystem)
+    except Exception:  # noqa: BLE001
+        return narrowed, clause
+    counted = getattr(plugin, "member_count_facts", None)
+    if counted is None:
+        return narrowed, clause
+    updated, changed = counted(narrowed, source.sources)
+    if not changed:
+        return narrowed, clause
+    return updated, "; ".join(filter(None, [clause, f"member_counts of {changed} class facts from the pinned sources"]))
+
+
 def _bundle_facts(bundle: Path, entry: Any, source: SourceSnapshot) -> FactsDocument:
-    return shipped_facts(read_facts(bundle / "facts.json"), str(getattr(entry, "ecosystem", "")), source)[0]
+    return current_surface(read_facts(bundle / "facts.json"), str(getattr(entry, "ecosystem", "")), source)[0]
 
 
 def _facts_artifact(bundle: Path, entry: Any, source: SourceSnapshot) -> dict[str, bytes]:
-    """``{"facts.json": ...}`` when ``shipped_facts`` changes the sealed facts, else nothing."""
-    document, clause = shipped_facts(read_facts(bundle / "facts.json"), str(getattr(entry, "ecosystem", "")), source)
+    """``{"facts.json": ...}`` when ``current_surface`` changes the sealed facts, else nothing."""
+    document, clause = current_surface(read_facts(bundle / "facts.json"), str(getattr(entry, "ecosystem", "")), source)
     return {} if clause is None else {"facts.json": document.to_json().encode("utf-8")}
 
 

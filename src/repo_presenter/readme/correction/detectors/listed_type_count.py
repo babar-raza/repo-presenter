@@ -29,8 +29,13 @@ Which statement is true, decided from the facts:
 The count this detector judges is the one the corrected README states (``stale_type_count``'s
 replacement when it rewrites it) and the rows are those ``absent_type_row`` leaves, so the edit is
 exactly what makes the corrected sentence pass rule (h) (``states_listed_count``). It fails closed
-(no edit, the validator's finding stays) when the listed phrase is "are listed" or "as follows"
-(no short wording that stays true), or is split by a line break or a code span.
+(no edit, the validator's finding stays) when the listed phrase is "as follows" (no short wording
+that stays true), or is split by a line break or a code span.
+
+Version 2 (BL-093, M9 round 43559491132): every listing verb rule (h) now reads -- listed, organized,
+grouped, shown, documented, tabulated -- and "are <verb> ... below" is made true too:
+PDF Python's "385 public types are organized by module below" (284 rows) becomes "385 public types —
+284 of them organized by module below".
 """
 
 from __future__ import annotations
@@ -67,6 +72,8 @@ from repo_presenter.readme.validation.surface_claims import (
 DETECTOR = "listed_type_count"
 _CITED = 8  # the same sample convention as stale_type_count / absent_type_row
 _AUX = re.compile(r"(?i)^(?P<aux>is|are)\s+")
+#: The leading "[is|are] <verb>" of a listing phrase: the words an edit rewrites.
+_HEAD = re.compile(r"(?i)^(?:(?:is|are)\s+)?[\w-]+")
 
 
 def _rows_after(lines: tuple[ReadmeLine, ...], number: int) -> list[ReadmeLine]:
@@ -184,22 +191,36 @@ def listed_type_count(ctx: Context) -> DetectorResult:
                 edits.append(count_edit)
             if len(left) >= final or states_listed_count(sentence, len(left)):
                 continue  # the (corrected) total is what the table lists, or already says so
+            if final not in allowed:
+                # v2 (BL-093): a total the facts do not record (PDF .NET's 983 = 969 class/enum facts +
+                # 14 delegates) is the maintainers' own; rewording its sentence would make it the
+                # pipeline's claim without making it true. It stays, and its listed-count finding with
+                # it (a pre-existing R21 residual when the rows were the live README's).
+                continue
             phrase = listed_here.group(0)
+            if phrase.lower() == "as follows":
+                continue
+            # v2: only the leading "[is|are] <verb>" is rewritten, so the rest of the phrase may wrap
+            # onto the next line ("summarized in the module-grouped table" / "below.")
+            head = _HEAD.match(phrase).group(0)
             phrase_at = offset + listed_here.start()
-            span = where[phrase_at : phrase_at + len(phrase)]
-            if not _contiguous(span) or ctx.readme[span[0] : span[-1] + 1] != phrase:
+            span = where[phrase_at : phrase_at + len(head)]
+            if not _contiguous(span) or ctx.readme[span[0] : span[-1] + 1] != head:
                 continue
-            if span[0] in claimed or phrase.lower() == "as follows":
+            if span[0] in claimed:
                 continue
-            aux = _AUX.match(phrase)
-            if aux is not None and aux.group("aux").lower() == "are":
-                continue  # "N types are listed below": no short rewording stays true
+            aux = _AUX.match(head)
             listed_count = f"{len(left):,}" if "," in final_text else str(len(left))
-            if aux is not None:
+            if aux is not None and aux.group("aux").lower() == "are":
+                # v2 (BL-093): "385 public types are organized by module below" ->
+                # "385 public types — 284 of them organized by module below"
+                replacement = f"— {listed_count} of them {head[aux.end():]}"
+            elif aux is not None:
                 verb = "Has" if aux.group("aux")[0].isupper() else "has"
-                replacement = f"{verb} {listed_count} of them {phrase[aux.end():]}"
+                replacement = f"{verb} {listed_count} of them {head[aux.end():]}"
             else:
-                replacement = f"{listed_count} of them {phrase}"
+                replacement = f"{listed_count} of them {head}"
+            phrase = head
             claimed.add(span[0])
             edits.append(
                 Edit(

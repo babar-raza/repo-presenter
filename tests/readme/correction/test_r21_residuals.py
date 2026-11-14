@@ -64,7 +64,7 @@ def test_the_absent_row_is_a_residual_when_the_count_edit_made_the_run_a_net_imp
     # listed_type_count edit now states the listed number, so it is repaired, not carried.
     assert [(e.original, e.replacement) for e in result.edits] == [
         ("243", "303"),
-        ("listed below", "5 of them listed below"),
+        ("listed", "5 of them listed"),
     ]
     assert net_improvement(ctx, result)
     assert [f for f in findings if f.rule == RULE_CLAIMS] == []  # L-03 no longer blocks
