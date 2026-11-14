@@ -27,7 +27,8 @@ when it is:
   any code) and no class of its last failure has a changed code scope since -- after two misses a
   cell needs a fix that reaches one of its classes, not merely any commit or an upstream move, before
   the loop pays for it again. A last failure that was transient (an infrastructure retry) does not
-  cap.
+  cap, and neither does a last attempt with no failure record: the cap rests on recorded classes,
+  so such a cell runs once and its run writes the record.
 
 Attempts are the ``settle`` entries of the durable provider-spend ledger
 (``core.llm.budget.LEDGER_REF``), which every hosted ``present`` job writes on success or failure;
@@ -358,14 +359,14 @@ def plan_cohort(
                     reason = "code changed since the last attempt"
                 changed = list((status or {}).get("changed") or [])
                 streak = hosted_failure_streak(history)
+                # The cap rests on evidence: only a cell whose last attempt HAS a failure record can be
+                # capped. Without one there is no class whose scope could ever change, so capping it
+                # would hold it for good; it runs once instead, and that run writes its record.
                 if (
-                    streak >= max_hosted_failures and not changed
-                    and not (status or {}).get("transient")
+                    status is not None and streak >= max_hosted_failures and not changed
+                    and not status.get("transient")
                 ):
-                    why = (
-                        "no failure record of the last attempt" if status is None
-                        else "no class of the last failure has a changed code scope"
-                    )
+                    why = "no class of the last failure has a changed code scope"
                     capped.append(
                         {"repository": repository, "lane": lane, "consecutive_failures": streak,
                          "last_run": last.get("run_url", ""), "why": why}
