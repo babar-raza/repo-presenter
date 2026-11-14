@@ -228,18 +228,38 @@ def printed_where(quote: str) -> str:
     return ""
 
 
+_EXCEPTION = r"([A-Z][A-Za-z]+(?:Error|Failure|Unavailable|Exception))\s*:\s*(.*)"
+#: present.py's own wording around an exception it caught (``model output was rejected by the job's
+#: own checks after its bounded re-asks (retryable: ...): OutputRejectedError: <stage>: ...``).
+_WRAPPED_EXCEPTION = re.compile(r"\):\s*" + _EXCEPTION, re.S)
+#: The last of a stage's bounded re-asks (``authoring_retry``): what the final rejection named.
+_LAST_REJECTION = re.compile(r";\s*last rejection:\s*(?:unit \S+?:\s+)?(.*)", re.S)
+#: Exceptions whose failure is a deterministic check of this code rejecting the model's output: still
+#: transient (never held, never capped: a re-run asks the model again), but scoped like any class, so
+#: a fix to the check or to what feeds it ranks the cell "fix landed" (BL-110).
+SCOPED_TRANSIENT_KINDS = frozenset({"OutputRejectedError"})
+
+
 def job_error_kind(detail: str) -> tuple[str, str]:
     """``(exception type, sub-rule)`` of a transaction failure detail: ``JobError: section_authoring:
     output truncated ...`` -> ``("JobError", "section_authoring_output_truncated_at")``; a
-    bracketed code (``NoOpProofError: [LEDGER_NO_RECORDS] ...``) is the sub-rule itself."""
+    bracketed code (``NoOpProofError: [LEDGER_NO_RECORDS] ...``) is the sub-rule itself. An exception
+    present.py wrapped in its own wording is read from inside the wording (BL-110): ``model output was
+    rejected ... (retryable: ...): OutputRejectedError: section_authoring: output rejected three times
+    ...; last rejection: unit type:x: identifiers that are not accepted fact values: ...`` ->
+    ``("OutputRejectedError", "section_authoring_identifiers_that_are_not")`` -- the stage and the
+    shape of what its last rejection named, never ``unknown:model_output_was_rejected``."""
     text = re.sub(r"^attempt under version set [0-9a-f]+:\s*", "", str(detail).strip())
-    match = re.match(r"([A-Z][A-Za-z]+(?:Error|Failure|Unavailable|Exception))\s*:\s*(.*)", text, re.S)
+    match = re.match(_EXCEPTION, text, re.S) or _WRAPPED_EXCEPTION.search(text)
     kind, rest = (match.group(1), match.group(2)) if match else ("unknown", text)
     code = re.match(r"\[([A-Z_]+)\]", rest)
     if code:
         return kind, code.group(1)
     head = re.match(r"([a-z][a-z0-9_]+):\s*(.*)", rest, re.S)
     if head:
+        last = _LAST_REJECTION.search(head.group(2)) if kind in SCOPED_TRANSIENT_KINDS else None
+        if last:
+            return kind, f"{head.group(1)}_{shape(last.group(1))}"
         return kind, f"{head.group(1)}_{shape(head.group(2), 3)}"
     return kind, shape(rest)
 
@@ -381,12 +401,20 @@ _RULE_SCOPES: tuple[tuple[str, tuple[str, ...]], ...] = (
     (r"^BC-\d+$", (f"{_SRC}/readme/validation", f"{_SRC}/readme/parity_gate.py", "data/readme_findings.json")),
     (r"^llm:", (f"{_SRC}/readme/review", "prompts")),
     (r"^lane_l_", (f"{_SRC}/readme/correction", f"{_SRC}/lane_l_review.py")),
-    (rf"^{RULE_JOB}$", (f"{_SRC}/core", f"{_SRC}/present.py", "prompts", "pyproject.toml")),
+    # BL-110: a job error is raised by the stage that ran: the core jobs, the driver, and the
+    # composition stages (planning, authoring and their output bounds, where BL-094..BL-097 landed).
+    (rf"^{RULE_JOB}$", (f"{_SRC}/core", f"{_SRC}/present.py", f"{_SRC}/readme/composition", "prompts", "pyproject.toml")),
 )
 #: The code that printed the quoted text (part 2).
 _ORIGIN_SCOPES: dict[str, tuple[str, ...]] = {
     ORIGIN_RENDERER: (f"{_SRC}/readme/composition/renderer.py", f"{_SRC}/extractors", f"{_SRC}/readme/evidence"),
-    ORIGIN_AUTHORED: (f"{_SRC}/readme/composition", "prompts"),
+    # BL-110: what writes and checks an authored unit -- not every composition module (an unrelated
+    # planner or renderer change is no fix of an authored unit's class).
+    ORIGIN_AUTHORED: (
+        f"{_SRC}/readme/composition/authoring.py", f"{_SRC}/readme/composition/authoring_retry.py",
+        f"{_SRC}/readme/composition/coherence.py", f"{_SRC}/readme/composition/text_hygiene.py",
+        "prompts/section_authoring.yaml",
+    ),
     ORIGIN_INHERITED: (f"{_SRC}/readme/reconciliation", f"{_SRC}/readme/evidence/facts/inherited.py", "prompts"),
     ORIGIN_EXAMPLE: (f"{_SRC}/extractors", f"{_SRC}/readme/composition"),
     ORIGIN_CORRECTION: (f"{_SRC}/readme/correction",),
@@ -411,6 +439,73 @@ def class_scope_paths(rule: str, origin_kind: str, lane: str) -> tuple[str, ...]
     if rule_paths is None:
         return None
     return tuple(sorted({*rule_paths, *_ORIGIN_SCOPES.get(origin_kind, _ORIGIN_SCOPES[ORIGIN_UNRESOLVED]), *_LANE_SCOPES.get(lane, ())}))
+
+
+def record_job_kind(record: Mapping[str, Any]) -> str:
+    """The job-error kind of a record's failure, read again from its detail with the current parser
+    (a record written before BL-110 stored ``unknown`` for a wrapped ``OutputRejectedError``)."""
+    failure = record.get("failure") or {}
+    detail = str(failure.get("detail") or "")
+    return job_error_kind(detail)[0] if detail else str(failure.get("kind") or "unknown")
+
+
+def record_class_paths(record: Mapping[str, Any], item: Mapping[str, Any]) -> tuple[str, ...] | None:
+    """The code scope of one recorded class under the CURRENT tables (:data:`_RULE_SCOPES`,
+    :data:`_ORIGIN_SCOPES`, :data:`_LANE_SCOPES`): ``None`` for a transient failure (unless its kind is
+    a :data:`SCOPED_TRANSIENT_KINDS` check rejection) and for a job error of unknown kind."""
+    failure = record.get("failure") or {}
+    kind = record_job_kind(record) if failure else ""
+    if failure.get("transient") and kind not in SCOPED_TRANSIENT_KINDS:
+        return None
+    if item.get("rule") == RULE_JOB and kind in ("unknown", *JOB_KINDS.values()):
+        return None
+    return class_scope_paths(str(item.get("rule") or ""), str(item.get("origin_kind") or ""), str(record.get("lane") or ""))
+
+
+def reclassified(record: Mapping[str, Any]) -> dict[str, Any]:
+    """``record`` with a job-error class written before BL-110 re-keyed by the current parser:
+    ``job_error|job_error|unknown:model_output_was_rejected`` becomes
+    ``job_error|job_error|OutputRejectedError:section_authoring_<shape>`` (read, never rewritten)."""
+    classes = record.get("classes") or {}
+    failure = record.get("failure") or {}
+    if not failure.get("detail") or not any(str(sig).startswith(f"{RULE_JOB}|{ORIGIN_JOB}|unknown:") for sig in classes):
+        return dict(record)
+    kind, sub = job_error_kind(str(failure["detail"]))
+    if kind == "unknown":
+        return dict(record)
+    renamed: dict[str, Any] = {}
+    for signature, item in classes.items():
+        if str(signature).startswith(f"{RULE_JOB}|{ORIGIN_JOB}|unknown:"):
+            signature = f"{RULE_JOB}|{ORIGIN_JOB}|{kind}:{sub}"
+            item = {**item, "sub_rule": f"{kind}:{sub}"}
+        renamed[signature] = item
+    return {**record, "classes": renamed, "failure": {**failure, "kind": kind}}
+
+
+def class_scope_changed(
+    record: Mapping[str, Any],
+    item: Mapping[str, Any],
+    scope_of: Callable[[Sequence[str]], str],
+    scope_at: Callable[[Sequence[str], str], str] | None = None,
+) -> bool | None:
+    """Whether a fix reached one recorded class since its run: ``True`` changed, ``False`` unchanged,
+    ``None`` unscoped. The scope is the class's paths under the CURRENT tables (so a widened or narrowed
+    table applies to records already written, BL-110), hashed at the run's ``main_sha``
+    (``scope_at``) and now (``scope_of``); when those paths equal the recorded ones, or the run's tree
+    cannot be read, the recorded hash is the baseline instead."""
+    paths = record_class_paths(record, item)
+    recorded_paths = list(item.get("scope_paths") or [])
+    recorded = str(item.get("scope") or "")
+    if not paths:
+        return None
+    baseline = ""
+    if list(paths) != recorded_paths and scope_at is not None and record.get("main_sha"):
+        baseline = scope_at(paths, str(record["main_sha"]))
+    if not baseline:
+        if not recorded_paths or not recorded:
+            return None
+        paths, baseline = recorded_paths, recorded
+    return scope_of(paths) != baseline
 
 
 def scope_fingerprint(paths: Sequence[str], root: Path, revision: str = "HEAD") -> str:
@@ -615,13 +710,10 @@ def finalize(
         at=at or record.get("at") or datetime.now(UTC).isoformat(timespec="seconds"),
         code=code if code is not None else code_fingerprint(root, revision),
     )
-    transient = bool((record.get("failure") or {}).get("transient"))
     classes = {}
     for signature, item in (record.get("classes") or {}).items():
         item = dict(item)
-        paths = None if transient else class_scope_paths(item["rule"], item["origin_kind"], record["lane"])
-        if item["rule"] == RULE_JOB and (record.get("failure") or {}).get("kind") in ("unknown", *JOB_KINDS.values()):
-            paths = None
+        paths = record_class_paths(record, item)
         item["scope_paths"] = list(paths) if paths else None
         item["scope"] = scope_fingerprint(paths, root, revision) if paths else ""
         classes[signature] = item
@@ -811,7 +903,7 @@ def pareto(documents: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     """The portfolio Pareto over each cell's latest record: class signature -> cells, findings,
     example quotes, origins, lanes, and whether the class is new since the previous code
     fingerprint (seen under the newest code and in no record of any older code)."""
-    latest = [doc["latest"] for doc in documents if isinstance(doc.get("latest"), dict)]
+    latest = [reclassified(doc["latest"]) for doc in documents if isinstance(doc.get("latest"), dict)]
     newest_code = max(latest, key=lambda r: str(r.get("at") or ""), default={}).get("code", "")
     older: set[str] = set()
     for doc in documents:
@@ -927,33 +1019,37 @@ def render_run_summary(records: Sequence[Mapping[str, Any]]) -> str:
 # --------------------------------------------------------------------------------------- planner hold
 
 
-def unchanged_classes(record: Mapping[str, Any], scope_of: Callable[[Sequence[str]], str]) -> list[str] | None:
-    """The classes of a failed record when EVERY one is still unchanged under current code (its
-    recorded scope hash equals ``scope_of(its paths)`` now), else ``None``: a class with no scope
-    (transient, unknown rule, job error of unknown kind) or a changed scope releases the cell."""
-    if record.get("outcome") == "success":
+def unchanged_classes(
+    record: Mapping[str, Any],
+    scope_of: Callable[[Sequence[str]], str],
+    scope_at: Callable[[Sequence[str], str], str] | None = None,
+) -> list[str] | None:
+    """The classes of a failed record when EVERY one is still unchanged under current code
+    (:func:`class_scope_changed` is ``False``), else ``None``: a transient failure, a class with no
+    scope (unknown rule, job error of unknown kind) or a changed scope releases the cell."""
+    if record.get("outcome") == "success" or (record.get("failure") or {}).get("transient"):
         return None
+    record = reclassified(record)
     classes = record.get("classes") or {}
     if not classes:
         return None
     for item in classes.values():
-        paths = item.get("scope_paths")
-        if not paths or not item.get("scope"):
-            return None
-        if scope_of(paths) != item["scope"]:
+        if class_scope_changed(record, item, scope_of, scope_at) is not False:
             return None
     return sorted(classes)
 
 
 def known_failures(
-    documents: Sequence[Mapping[str, Any]], scope_of: Callable[[Sequence[str]], str]
+    documents: Sequence[Mapping[str, Any]],
+    scope_of: Callable[[Sequence[str]], str],
+    scope_at: Callable[[Sequence[str], str], str] | None = None,
 ) -> dict[tuple[str, str], dict[str, Any]]:
     """``{(repository, lane): {run_id, source_revision, classes}}`` for every cell the planner may
     hold: its latest record failed in classes all unchanged under current code."""
     found: dict[tuple[str, str], dict[str, Any]] = {}
     for doc in documents:
         record = doc.get("latest") or {}
-        classes = unchanged_classes(record, scope_of)
+        classes = unchanged_classes(record, scope_of, scope_at)
         if classes:
             found[(str(record.get("repository")), str(record.get("lane")))] = {
                 "run_id": str(record.get("run_id") or ""),
@@ -964,31 +1060,30 @@ def known_failures(
 
 
 def scope_status(
-    documents: Sequence[Mapping[str, Any]], scope_of: Callable[[Sequence[str]], str]
+    documents: Sequence[Mapping[str, Any]],
+    scope_of: Callable[[Sequence[str]], str],
+    scope_at: Callable[[Sequence[str], str], str] | None = None,
 ) -> dict[tuple[str, str], dict[str, Any]]:
     """BL-086 (audit O2): per cell whose latest record failed, which of its classes a landed fix
     reached. ``{(repository, lane): {run_id, source_revision, transient, changed, unchanged,
-    unscoped}}``: ``changed`` lists the classes whose recorded scope hash differs from
-    ``scope_of(paths)`` now (code that can change the class's outcome moved since the failure),
-    ``unchanged`` those still identical, ``unscoped`` those with no scope (transient, unknown rule,
-    job error of unknown kind). The planner dispatches a ``changed`` cell first and asks a cell
-    that failed twice in a row for a ``changed`` class before it pays again."""
+    unscoped}}``: ``changed`` lists the classes whose code scope moved since the failure
+    (:func:`class_scope_changed`: the current tables' paths, hashed at the run's ``main_sha`` and
+    now), ``unchanged`` those still identical, ``unscoped`` those with no scope (a transient failure
+    other than a check rejection, an unknown rule, a job error of unknown kind). The planner
+    dispatches a ``changed`` cell first and asks a cell that failed twice in a row for a ``changed``
+    class before it pays again."""
     found: dict[tuple[str, str], dict[str, Any]] = {}
     for doc in documents:
         record = doc.get("latest") or {}
         if not record or record.get("outcome") == "success":
             continue
+        record = reclassified(record)
         changed: list[str] = []
         unchanged: list[str] = []
         unscoped: list[str] = []
         for signature, item in sorted((record.get("classes") or {}).items()):
-            paths = item.get("scope_paths")
-            if not paths or not item.get("scope"):
-                unscoped.append(signature)
-            elif scope_of(paths) != item["scope"]:
-                changed.append(signature)
-            else:
-                unchanged.append(signature)
+            verdict = class_scope_changed(record, item, scope_of, scope_at)
+            (unscoped if verdict is None else changed if verdict else unchanged).append(signature)
         found[(str(record.get("repository")), str(record.get("lane")))] = {
             "run_id": str(record.get("run_id") or ""),
             "source_revision": str(record.get("source_revision") or ""),
