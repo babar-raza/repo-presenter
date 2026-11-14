@@ -5798,3 +5798,67 @@ A CI test keeps the baseline reproducible from its inputs. This merge is analysi
 audit's code prototypes, nor the BL-084 pipeline classifier; both wait for the owner's discussion of options O1–O8.
 
 Backlog: BL-085
+
+## 2026-11-14 — BL-087/BL-088/BL-089/BL-083: audit options O3, O4, O7, O8 implemented in the existing components
+
+**Decision (supervisor, owner-delegated, 2026-11-14).** Implement O3 (P1 and P3), O4 (with P2 on top if it adds no
+finding), O7 and O8 of `docs/investigations/2026-11-13-lane-r-not-progressing.md`, each inside the component it
+fixes, each with a regression test from the real logged or sealed data and negative controls. Zero LLM calls.
+
+- **O3 P1 (BL-087).** A Core API row never prints the analysis wording ("X class is a public symbol in ...") or a
+  findings-register quote: the renderer keeps the row's substance without the lead, else the fact-true fallback
+  (`renderer._symbol_description`, RENDERER_VERSION 39).
+- **O3 P3 (BL-087).** The repository's Lane R register rows go into the authoring packet's `do_not_claim`, each with
+  its stored truth, and `unit_checks` rejects an authored unit that prints one (authoring, coherence, repairs).
+  BC-04's re-judgement of a finished candidate does not repeat it, because BC-18 judges the same rows on the printed
+  README; repeating it gave 37 duplicate findings on the seals. `section_authoring` v21; request hashes change, which
+  is accepted.
+- **O4 (BL-088).** An S4 fold omits an example block that has no printable form because the register refutes a line
+  of it, together with its lead-in, citing the OPEN register row. The row is the R14 recorded decision. BC-17,
+  live_readme_loss, disposition_coverage and S4's coverage audit accept the omission by one marker plus the
+  citation. The case is 3D .NET `024`/`028.code_block`.
+- **P2 on top of O4 (BL-088).** Adopted with two exclusions: example blocks, and units kept in Scope and
+  Limitations. The parity gate's section test now measures a withheld kept unit by its withheld form. The
+  unrestricted prototype raised 3 new findings; the restricted fold raises none.
+- **O7 (BL-083).** A targeted S6 repair whose ledger blanks a unit becomes a deterministic plan-level drop of that
+  slot. The plan item is removed, a `deviations` record is written, the plan is judged by `plan_checks`, and the
+  trimmed section output is stored. A slot that carries an inherited unit is refused with that reason. The 3D Python
+  `.dae` shape does not reproduce as a blank: its ledger claims a non-empty rewrite, so it keeps its refusal.
+- **O8 (BL-089).**
+  - (a) The license-in-Scope check stays. The Scope objective now forbids stating the license, and the renderer
+    strips a license clause from every Scope and Limitations unit. "This project is licensed under the MIT License
+    and requires Python version 3.10 or later." becomes "This project requires Python version 3.10 or later."
+  - (b) Formatting-only corrections of kept maintainer text: a kept retained-example heading prints in title case,
+    and a placed kept paragraph whose colon introduces nothing printed after it ends with a full stop. The reviewer
+    reads the same form.
+
+**Measured, zero-call.**
+- `recertify --all --remote origin` (read-only), origin/main to branch:
+  - Lane R certified 6 to 6, Lane L 27 to 27. No seal changes outcome.
+  - 68 seal findings are gone (3D .NET 55, Words .NET 13) and none are new.
+- `measure.py` against the baseline, seal classes:
+  - INTERNAL_WORDING_TYPE_ROW 89 to 0.
+  - SECTION_FIT_LICENSE_IN_SCOPE 1 to 0.
+  - REGISTER_ROW_REPRINTED 112 to 92.
+  - No new class.
+- The S4 folds act at normalize, which read-only recertify does not re-run. A fold replay over all 18 Lane R seals
+  (stored dispositions plus the folds, judged by recertify's own `_evaluate_lane_r`) shows O4 alone changes nothing,
+  and P2 on top removes 27 findings and adds none.
+- The R10 gate is OK (45 seals checked).
+
+**O6 (process rule).** The one new check, `register_errors`, was run report-only first:
+- 1,250 sealed authored units gave 37 hits, all confirmed printed by BC-18.
+- 1,386 live-README units gave 56 hits, 2 of which differ from the register quote only in code-span ticks.
+- The strict false-positive rate is 2.2%, under the 5% bar.
+
+**R42 (owner: aspose.org's published README is the quick reference and the bar).**
+
+| Case | Upstream-caused? | What aspose.org did | Decision and change |
+|---|---|---|---|
+| Cells C++ `cmake --build` (BC-02) | Yes: the source build did not pass in our run. | The published README (aspose.org PR #2 on Aspose.Cells-FOSS-for-Cpp, merge 9f852d0) prints the CMake/ctest block. Its skill (`skills/readme-refresh.md`, "Transient defects are never narrated"; `readme_refresh_checks.check_no_undisclosed_blocking_commands`) drops a command only when a BLOCKING upstream issue reproduces its failure. | Rejected as not followable here: our build receipt records the failure, and printing an unproven command is an unverified claim. BC-02's existing remedy (omit, state only what the repository documents) is aspose.org's "never ship a blocking command" half. No change in this item; the class did not recur after 2b95fb0. |
+| 3D Python `.dae` stub | Yes. | The published README (PR #3, merge 65b1f57) lists only the reachable output formats and states "COLLADA export is registered but not reachable through `Scene.save()`" under Scope and Limitations. | Adopted. P3 now hands the register rows ("reads and writes OBJ, STL, glTF, and COLLADA files", the `.dae` export sentence) to the author as must-not-say with their truth, and rejects a unit that prints one. |
+| 3D .NET example blocks 024/028 | Yes: `FileFormat.FBX7400Binary`/`WavefrontOBJ` save throws. | The published README at 52b0f00 prints both examples; aspose.org proved them by compiling. | Rejected as wrong: the register's source evidence shows the save throws at runtime. Improved on by O4, which omits them citing the register row. |
+| Cells Python heading and colon | Yes: maintainer text. | Every published aspose.org README heading is in title case (its Rule 6), and a lead-in colon sits directly above its block. | Adopted (title case). Improved on: the colon is closed only when nothing printed follows it. |
+| License sentences in Scope | No: our authored text. | The published READMEs state the license only in the License section and its badge. | Adopted: the packet rule plus the clause strip. |
+
+Backlog: BL-083, BL-087, BL-088, BL-089
