@@ -1,0 +1,2775 @@
+{
+ "manifests": {
+  "pyproject.toml": "[build-system]\nrequires = [\"setuptools>=61.0\", \"wheel\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"aspose-cells-foss\"\nversion = \"26.10.0\"\ndescription = \"A Python library for creating, reading, and modifying Excel files (.xlsx format)\"\nreadme = \"README.md\"\nrequires-python = \">=3.10\"\nlicense = \"MIT\"\nlicense-files = [\"License/LICENSE.txt\"]\nauthors = [\n    {name = \"Aspose\"}\n]\nkeywords = [\"excel\", \"xlsx\", \"spreadsheet\", \"aspose\", \"cells\"]\nclassifiers = [\n    \"Development Status :: 4 - Beta\",\n    \"Intended Audience :: Developers\",\n    \"Programming Language :: Python :: 3\",\n    \"Programming Language :: Python :: 3.10\",\n    \"Programming Language :: Python :: 3.11\",\n    \"Programming Language :: Python :: 3.12\",\n    \"Topic :: Office/Business :: Financial :: Spreadsheet\",\n    \"Topic :: Software Development :: Libraries :: Python Modules\",\n]\n\ndependencies = [\n    \"pycryptodome>=3.15.0\",\n    \"olefile>=0.46\",\n]\n\n[project.optional-dependencies]\ndev = [\n    \"pytest>=7.0.0\",\n    \"pytest-cov>=4.0.0\",\n]\n\n[project.urls]\nHomepage = \"https://github.com/aspose-cells-foss/aspose-cells-python\"\nDocumentation = \"https://github.com/aspose-cells-foss/aspose-cells-python#readme\"\nRepository = \"https://github.com/aspose-cells-foss/aspose-cells-python.git\"\nIssues = \"https://github.com/aspose-cells-foss/aspose-cells-python/issues\"\n\n[tool.setuptools]\npackages = [\"aspose\", \"aspose.cells_foss\", \"examples\"]\n\n[tool.setuptools.package-data]\n\"aspose.cells_foss\" = [\"*.py\", \"*.geojson\"]\nexamples = [\"*.py\"]\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\", \"examples\"]\npythonpath = [\".\"]\n"
+ },
+ "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Python",
+ "revision": "952317cad8db1880ed85be9814c24e9303930d49",
+ "surface": [
+  {
+   "detail": "package declared",
+   "id": "import_path:aspose",
+   "kind": "import_path",
+   "paths": [
+    "pyproject.toml"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": null,
+   "value": "aspose"
+  },
+  {
+   "detail": "package declared",
+   "id": "import_path:aspose.cells_foss",
+   "kind": "import_path",
+   "paths": [
+    "pyproject.toml"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": null,
+   "value": "aspose.cells_foss"
+  },
+  {
+   "detail": "package declared",
+   "id": "import_path:examples",
+   "kind": "import_path",
+   "paths": [
+    "pyproject.toml"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": null,
+   "value": "examples"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss"
+  },
+  {
+   "detail": "line 73; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.agileencryptionparameters",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.AgileEncryptionParameters"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.auto_filter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/auto_filter.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.auto_filter"
+  },
+  {
+   "detail": "line 186; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.auto_filter.autofilter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/auto_filter.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.auto_filter.AutoFilter"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.auto_filter.filtercolumn",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/auto_filter.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.auto_filter.FilterColumn"
+  },
+  {
+   "detail": "line 18; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cell",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cell.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Cell"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.cell-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cell.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.cell"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.cell_value_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cell_value_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.cell_value_handler"
+  },
+  {
+   "detail": "line 17; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cell_value_handler.cellvaluehandler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cell_value_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.cell_value_handler.CellValueHandler"
+  },
+  {
+   "detail": "line 13; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cells",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cells.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Cells"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.cells-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cells.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.cells"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.cfb_handler"
+  },
+  {
+   "detail": "line 17; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_handler.cfbreader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.cfb_handler.CFBReader"
+  },
+  {
+   "detail": "line 336; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_handler.cfbwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.cfb_handler.CFBWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_writer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_writer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.cfb_writer"
+  },
+  {
+   "detail": "line 30; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_writer.cfbwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_writer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.cfb_writer.CFBWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_writer_minimal",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_writer_minimal.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.cfb_writer_minimal"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.cfb_writer_minimal.minimalcfbwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/cfb_writer_minimal.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.cfb_writer_minimal.MinimalCFBWriter"
+  },
+  {
+   "detail": "line 476; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.chart",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Chart"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.chart-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.chart"
+  },
+  {
+   "detail": "line 72; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.chartaxis",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ChartAxis"
+  },
+  {
+   "detail": "line 1074; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.chartcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ChartCollection"
+  },
+  {
+   "detail": "line 31; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.charterrorbars",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ChartErrorBars"
+  },
+  {
+   "detail": "line 140; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.chartseries",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ChartSeries"
+  },
+  {
+   "detail": "line 11; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.charttype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.ChartType"
+  },
+  {
+   "detail": "line 332; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.chartview3d",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ChartView3D"
+  },
+  {
+   "detail": "line 17; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.cipheralgorithm",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.CipherAlgorithm"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.comment_xml",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/comment_xml.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.comment_xml"
+  },
+  {
+   "detail": "line 310; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.comment_xml.commentxmlreader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/comment_xml.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.comment_xml.CommentXMLReader"
+  },
+  {
+   "detail": "line 25; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.comment_xml.commentxmlwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/comment_xml.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.comment_xml.CommentXMLWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.conditional_format",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/conditional_format.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.conditional_format"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.conditional_format.conditionalformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/conditional_format.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.conditional_format.ConditionalFormat"
+  },
+  {
+   "detail": "line 1059; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.conditional_format.conditionalformatcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/conditional_format.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.conditional_format.ConditionalFormatCollection"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.csv_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/csv_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.csv_handler"
+  },
+  {
+   "detail": "line 119; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.csvhandler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/csv_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.CSVHandler"
+  },
+  {
+   "detail": "line 33; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.csvloadoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/csv_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.CSVLoadOptions"
+  },
+  {
+   "detail": "line 81; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.csvsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/csv_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.CSVSaveOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.data_validation",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.data_validation"
+  },
+  {
+   "detail": "line 83; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.datavalidation",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.DataValidation"
+  },
+  {
+   "detail": "line 51; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.datavalidationalertstyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.DataValidationAlertStyle"
+  },
+  {
+   "detail": "line 651; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.datavalidationcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.DataValidationCollection"
+  },
+  {
+   "detail": "line 63; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.datavalidationimemode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.DataValidationImeMode"
+  },
+  {
+   "detail": "line 34; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.datavalidationoperator",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.DataValidationOperator"
+  },
+  {
+   "detail": "line 17; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.datavalidationtype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/data_validation.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.DataValidationType"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.displayvalueoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/value_formatter.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.DisplayValueOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.document_properties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/document_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.document_properties"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.document_properties.coreproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/document_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.document_properties.CoreProperties"
+  },
+  {
+   "detail": "line 249; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.document_properties.documentproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/document_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.document_properties.DocumentProperties"
+  },
+  {
+   "detail": "line 145; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.document_properties.extendedproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/document_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.document_properties.ExtendedProperties"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_crypto",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_crypto.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.encryption_crypto"
+  },
+  {
+   "detail": "line 79; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_crypto.encryptionverifier",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_crypto.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.encryption_crypto.EncryptionVerifier"
+  },
+  {
+   "detail": "line 210; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_crypto.packageencryption",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_crypto.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.encryption_crypto.PackageEncryption"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_crypto.passwordderivation",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_crypto.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.encryption_crypto.PasswordDerivation"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_params",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.encryption_params"
+  },
+  {
+   "detail": "line 52; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_params.encryptionparameters",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.encryption_params.EncryptionParameters"
+  },
+  {
+   "detail": "line 11; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.encryption_params.encryptiontype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.encryption_params.EncryptionType"
+  },
+  {
+   "detail": "line 55; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.filltype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.FillType"
+  },
+  {
+   "detail": "line 12; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.font",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Font"
+  },
+  {
+   "detail": "line 51; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.fontstrategy",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/text_measure.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.FontStrategy"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.formula_evaluator",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/formula_evaluator.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.formula_evaluator"
+  },
+  {
+   "detail": "line 21; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.formula_evaluator.formulaevaluator",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/formula_evaluator.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.formula_evaluator.FormulaEvaluator"
+  },
+  {
+   "detail": "line 39; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.hashalgorithm",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.HashAlgorithm"
+  },
+  {
+   "detail": "line 10; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.horizontalpagebreakcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/page_break.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.HorizontalPageBreakCollection"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.hyperlink",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/hyperlink.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.hyperlink"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.hyperlink.hyperlink",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/hyperlink.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.hyperlink.Hyperlink"
+  },
+  {
+   "detail": "line 206; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.hyperlink.hyperlinks",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/hyperlink.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.hyperlink.Hyperlinks"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.json_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/json_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.json_handler"
+  },
+  {
+   "detail": "line 43; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.jsonhandler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/json_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.JsonHandler"
+  },
+  {
+   "detail": "line 13; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.jsonsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/json_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.JsonSaveOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.markdown_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/markdown_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.markdown_handler"
+  },
+  {
+   "detail": "line 81; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.markdownhandler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/markdown_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.MarkdownHandler"
+  },
+  {
+   "detail": "line 21; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.markdownsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/markdown_handler.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.MarkdownSaveOptions"
+  },
+  {
+   "detail": "line 15; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.msodrawingtype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.MsoDrawingType"
+  },
+  {
+   "detail": "line 174; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.msofillformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.MsoFillFormat"
+  },
+  {
+   "detail": "line 64; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.msolinedashstyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.MsoLineDashStyle"
+  },
+  {
+   "detail": "line 197; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.msolineformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.MsoLineFormat"
+  },
+  {
+   "detail": "line 409; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.nseries",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/chart.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.NSeries"
+  },
+  {
+   "detail": "line 280; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.numberformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.NumberFormat"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.page_break",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/page_break.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.page_break"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_exporter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_exporter.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_exporter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_layout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_layout"
+  },
+  {
+   "detail": "line 160; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_layout.pdfchartlayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_layout.PdfChartLayout"
+  },
+  {
+   "detail": "line 136; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_layout.pdfchartserieslayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_layout.PdfChartSeriesLayout"
+  },
+  {
+   "detail": "line 96; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_layout.pdfpicturelayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_layout.PdfPictureLayout"
+  },
+  {
+   "detail": "line 107; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_layout.pdfshapelayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_layout.PdfShapeLayout"
+  },
+  {
+   "detail": "line 56; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_layout.pdfsparklinelayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_layout.PdfSparklineLayout"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_options",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_options"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_3d_area",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_3d_area.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_3d_area"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_3d_area.pdfrenderer3dareamixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_3d_area.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_3d_area.PdfRenderer3DAreaMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_3d_bar",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_3d_bar.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_3d_bar"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_3d_bar.pdfrenderer3dbarmixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_3d_bar.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_3d_bar.PdfRenderer3DBarMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_3d_line_column",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_3d_line_column.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_3d_line_column"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_3d_line_column.pdfrenderer3dlinecolumnmixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_3d_line_column.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_3d_line_column.PdfRenderer3DLineColumnMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_drawing",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_drawing"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_drawing.pdfrendererdrawingmixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_drawing.PdfRendererDrawingMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_pie_bar",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_pie_bar.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_pie_bar"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_pie_bar.pdfrendererpiebarmixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_pie_bar.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_pie_bar.PdfRendererPieBarMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_special_charts",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_special_charts.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_special_charts"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_special_charts.pdfrendererspecialchartsmixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_special_charts.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_special_charts.PdfRendererSpecialChartsMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_stock_surface",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_stock_surface.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.pdf_renderer_stock_surface"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdf_renderer_stock_surface.pdfrendererstocksurfacemixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer_stock_surface.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.pdf_renderer_stock_surface.PdfRendererStockSurfaceMixin"
+  },
+  {
+   "detail": "line 71; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdfcelllayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfCellLayout"
+  },
+  {
+   "detail": "line 32; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdfdatabarlayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfDataBarLayout"
+  },
+  {
+   "detail": "line 10; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdfexporter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_exporter.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfExporter"
+  },
+  {
+   "detail": "line 45; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdficonsetlayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfIconSetLayout"
+  },
+  {
+   "detail": "line 318; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdflayoutengine",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfLayoutEngine"
+  },
+  {
+   "detail": "line 298; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdfpagelayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfPageLayout"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdfsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_options.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfSaveOptions"
+  },
+  {
+   "detail": "line 17; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.pdftextrunlayout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_layout.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PdfTextRunLayout"
+  },
+  {
+   "detail": "line 10; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.picture",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/picture.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Picture"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.picture-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/picture.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.picture"
+  },
+  {
+   "detail": "line 109; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.picturecollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/picture.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.PictureCollection"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.render_bounds",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/render_bounds.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.render_bounds"
+  },
+  {
+   "detail": "line 10; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.renderbounds",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/render_bounds.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.RenderBounds"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.rich_text",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/rich_text.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.rich_text"
+  },
+  {
+   "detail": "line 7; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.richtextrun",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/rich_text.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.RichTextRun"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.row_height",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/row_height.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.row_height"
+  },
+  {
+   "detail": "line 6; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.rowheightcalculator",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/row_height.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.RowHeightCalculator"
+  },
+  {
+   "detail": "line 30; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.saveformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.SaveFormat"
+  },
+  {
+   "detail": "line 262; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.shape",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Shape"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.shape-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.shape"
+  },
+  {
+   "detail": "line 445; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.shapecollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ShapeCollection"
+  },
+  {
+   "detail": "line 226; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.shapefont",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ShapeFont"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.shared_strings",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shared_strings.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.shared_strings"
+  },
+  {
+   "detail": "line 3; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.shared_strings.sharedstringtable",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shared_strings.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.shared_strings.SharedStringTable"
+  },
+  {
+   "detail": "line 15; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.skiapdfrenderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/pdf_renderer.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.SkiaPdfRenderer"
+  },
+  {
+   "detail": "line 104; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.sparkline",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/sparkline.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Sparkline"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.sparkline-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/sparkline.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.sparkline"
+  },
+  {
+   "detail": "line 30; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.sparklineemptycells",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/sparkline.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.SparklineEmptyCells"
+  },
+  {
+   "detail": "line 119; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.sparklinegroup",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/sparkline.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.SparklineGroup"
+  },
+  {
+   "detail": "line 196; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.sparklinegroupcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/sparkline.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.SparklineGroupCollection"
+  },
+  {
+   "detail": "line 24; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.sparklinetype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/sparkline.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.SparklineType"
+  },
+  {
+   "detail": "line 101; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.standardencryptionparameters",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/encryption_params.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.StandardEncryptionParameters"
+  },
+  {
+   "detail": "line 454; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.style",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Style"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.style-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.style"
+  },
+  {
+   "detail": "line 234; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.style.alignment",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.style.Alignment"
+  },
+  {
+   "detail": "line 162; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.style.border",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.style.Border"
+  },
+  {
+   "detail": "line 202; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.style.borders",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.style.Borders"
+  },
+  {
+   "detail": "line 68; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.style.fill",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.style.Fill"
+  },
+  {
+   "detail": "line 423; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.style.protection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.style.Protection"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.style_resolver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style_resolver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.style_resolver"
+  },
+  {
+   "detail": "line 22; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.styleresolver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/style_resolver.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.StyleResolver"
+  },
+  {
+   "detail": "line 104; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.table",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/table.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Table"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.table-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/table.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.table"
+  },
+  {
+   "detail": "line 140; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.tablecollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/table.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.TableCollection"
+  },
+  {
+   "detail": "line 80; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.tablecolumn",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/table.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.TableColumn"
+  },
+  {
+   "detail": "line 56; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.tablestyleinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/table.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.TableStyleInfo"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.text_measure",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/text_measure.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.text_measure"
+  },
+  {
+   "detail": "line 75; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.textalignmenttype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.TextAlignmentType"
+  },
+  {
+   "detail": "line 84; enum; public by name",
+   "id": "public_symbol:aspose.cells_foss.textanchortype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/shape.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.cells_foss.TextAnchorType"
+  },
+  {
+   "detail": "line 295; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.textmeasurer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/text_measure.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.TextMeasurer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.value_formatter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/value_formatter.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.value_formatter"
+  },
+  {
+   "detail": "line 37; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.valueformatter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/value_formatter.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.ValueFormatter"
+  },
+  {
+   "detail": "line 89; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.verticalpagebreakcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/page_break.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.VerticalPageBreakCollection"
+  },
+  {
+   "detail": "line 80; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Workbook"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.workbook"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_hash_password",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_hash_password.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.workbook_hash_password"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.workbook_properties"
+  },
+  {
+   "detail": "line 393; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.calculationproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.CalculationProperties"
+  },
+  {
+   "detail": "line 532; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.definedname",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.DefinedName"
+  },
+  {
+   "detail": "line 608; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.definednamecollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.DefinedNameCollection"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.fileversion",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.FileVersion"
+  },
+  {
+   "detail": "line 65; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.workbookpr",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.WorkbookPr"
+  },
+  {
+   "detail": "line 665; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.workbookproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.WorkbookProperties"
+  },
+  {
+   "detail": "line 189; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.workbookprotection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.WorkbookProtection"
+  },
+  {
+   "detail": "line 258; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.workbook_properties.workbookview",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/workbook_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.workbook_properties.WorkbookView"
+  },
+  {
+   "detail": "line 136; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.Worksheet"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.worksheet"
+  },
+  {
+   "detail": "line 29; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet.sheetprotectiondictwrapper",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet.SheetProtectionDictWrapper"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.worksheet_properties"
+  },
+  {
+   "detail": "line 1061; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.headerfooter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.HeaderFooter"
+  },
+  {
+   "detail": "line 985; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.pagemargins",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.PageMargins"
+  },
+  {
+   "detail": "line 719; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.pagesetup",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.PageSetup"
+  },
+  {
+   "detail": "line 300; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.pane",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.Pane"
+  },
+  {
+   "detail": "line 1175; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.printoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.PrintOptions"
+  },
+  {
+   "detail": "line 255; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.selection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.Selection"
+  },
+  {
+   "detail": "line 372; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.sheetformatproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.SheetFormatProperties"
+  },
+  {
+   "detail": "line 490; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.sheetprotection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.SheetProtection"
+  },
+  {
+   "detail": "line 36; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.sheetview",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.SheetView"
+  },
+  {
+   "detail": "line 1279; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheet_properties.worksheetproperties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/worksheet_properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.worksheet_properties.WorksheetProperties"
+  },
+  {
+   "detail": "line 64; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.worksheetboundsresolver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/render_bounds.py",
+    "aspose/cells_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.WorksheetBoundsResolver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xlsx_encryptor",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xlsx_encryptor.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xlsx_encryptor"
+  },
+  {
+   "detail": "line 224; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xlsx_encryptor.xlsxdecryptor",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xlsx_encryptor.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xlsx_encryptor.XLSXDecryptor"
+  },
+  {
+   "detail": "line 30; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xlsx_encryptor.xlsxencryptor",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xlsx_encryptor.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xlsx_encryptor.XLSXEncryptor"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_autofilter_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_autofilter_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_autofilter_loader"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_autofilter_loader.autofilterxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_autofilter_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_autofilter_loader.AutoFilterXMLLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_autofilter_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_autofilter_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_autofilter_saver"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_autofilter_saver.autofilterxmlwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_autofilter_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_autofilter_saver.AutoFilterXMLWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_chart_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_chart_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_chart_loader"
+  },
+  {
+   "detail": "line 38; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_chart_loader.chartxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_chart_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_chart_loader.ChartXmlLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_chart_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_chart_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_chart_saver"
+  },
+  {
+   "detail": "line 25; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_chart_saver.chartxmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_chart_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_chart_saver.ChartXmlSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_conditional_format_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_conditional_format_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_conditional_format_loader"
+  },
+  {
+   "detail": "line 15; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_conditional_format_loader.conditionalformatxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_conditional_format_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_conditional_format_loader.ConditionalFormatXMLLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_conditional_format_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_conditional_format_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_conditional_format_saver"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_conditional_format_saver.conditionalformatxmlwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_conditional_format_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_conditional_format_saver.ConditionalFormatXMLWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_datavalidation_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_datavalidation_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_datavalidation_loader"
+  },
+  {
+   "detail": "line 63; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_datavalidation_loader.datavalidationxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_datavalidation_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_datavalidation_loader.DataValidationXmlLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_datavalidation_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_datavalidation_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_datavalidation_saver"
+  },
+  {
+   "detail": "line 63; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_datavalidation_saver.datavalidationxmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_datavalidation_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_datavalidation_saver.DataValidationXmlSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_hyperlink_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_hyperlink_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_hyperlink_handler"
+  },
+  {
+   "detail": "line 271; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_hyperlink_handler.hyperlinkrelationshipwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_hyperlink_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_hyperlink_handler.HyperlinkRelationshipWriter"
+  },
+  {
+   "detail": "line 16; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_hyperlink_handler.hyperlinkxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_hyperlink_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_hyperlink_handler.HyperlinkXMLLoader"
+  },
+  {
+   "detail": "line 140; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_hyperlink_handler.hyperlinkxmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_hyperlink_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_hyperlink_handler.HyperlinkXMLSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_loader"
+  },
+  {
+   "detail": "line 28; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_loader.xmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_loader.XMLLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_picture_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_picture_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_picture_loader"
+  },
+  {
+   "detail": "line 32; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_picture_loader.picturexmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_picture_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_picture_loader.PictureXmlLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_picture_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_picture_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_picture_saver"
+  },
+  {
+   "detail": "line 13; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_picture_saver.picturexmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_picture_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_picture_saver.PictureXmlSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_properties_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_properties_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_properties_loader"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_properties_loader.workbookpropertiesxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_properties_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_properties_loader.WorkbookPropertiesXMLLoader"
+  },
+  {
+   "detail": "line 211; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_properties_loader.worksheetpropertiesxmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_properties_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_properties_loader.WorksheetPropertiesXMLLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_properties_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_properties_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_properties_saver"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_properties_saver.workbookpropertiesxmlwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_properties_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_properties_saver.WorkbookPropertiesXMLWriter"
+  },
+  {
+   "detail": "line 239; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_properties_saver.worksheetpropertiesxmlwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_properties_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_properties_saver.WorksheetPropertiesXMLWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_saver"
+  },
+  {
+   "detail": "line 104; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_saver.xmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_saver.XMLSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_shape_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_shape_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_shape_loader"
+  },
+  {
+   "detail": "line 30; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_shape_loader.shapexmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_shape_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_shape_loader.ShapeXmlLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_shape_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_shape_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_shape_saver"
+  },
+  {
+   "detail": "line 21; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_shape_saver.shapexmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_shape_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_shape_saver.ShapeXmlSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_sparkline_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_sparkline_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_sparkline_loader"
+  },
+  {
+   "detail": "line 32; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_sparkline_loader.sparklinexmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_sparkline_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_sparkline_loader.SparklineXmlLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_sparkline_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_sparkline_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_sparkline_saver"
+  },
+  {
+   "detail": "line 26; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_sparkline_saver.sparklinexmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_sparkline_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_sparkline_saver.SparklineXmlSaver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_table_loader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_table_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_table_loader"
+  },
+  {
+   "detail": "line 19; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_table_loader.tablexmlloader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_table_loader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_table_loader.TableXmlLoader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_table_saver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_table_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.cells_foss.xml_table_saver"
+  },
+  {
+   "detail": "line 9; class; public by name",
+   "id": "public_symbol:aspose.cells_foss.xml_table_saver.tablexmlsaver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/cells_foss/xml_table_saver.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.cells_foss.xml_table_saver.TableXmlSaver"
+  }
+ ],
+ "tree_py": [
+  "aspose/__init__.py",
+  "aspose/cells_foss/__init__.py",
+  "aspose/cells_foss/auto_filter.py",
+  "aspose/cells_foss/cell.py",
+  "aspose/cells_foss/cell_value_handler.py",
+  "aspose/cells_foss/cells.py",
+  "aspose/cells_foss/cfb_handler.py",
+  "aspose/cells_foss/cfb_writer.py",
+  "aspose/cells_foss/cfb_writer_minimal.py",
+  "aspose/cells_foss/chart.py",
+  "aspose/cells_foss/comment_xml.py",
+  "aspose/cells_foss/conditional_format.py",
+  "aspose/cells_foss/csv_handler.py",
+  "aspose/cells_foss/data_validation.py",
+  "aspose/cells_foss/document_properties.py",
+  "aspose/cells_foss/encryption_crypto.py",
+  "aspose/cells_foss/encryption_params.py",
+  "aspose/cells_foss/formula_evaluator.py",
+  "aspose/cells_foss/hyperlink.py",
+  "aspose/cells_foss/json_handler.py",
+  "aspose/cells_foss/markdown_handler.py",
+  "aspose/cells_foss/page_break.py",
+  "aspose/cells_foss/pdf_exporter.py",
+  "aspose/cells_foss/pdf_layout.py",
+  "aspose/cells_foss/pdf_options.py",
+  "aspose/cells_foss/pdf_renderer.py",
+  "aspose/cells_foss/pdf_renderer_3d_area.py",
+  "aspose/cells_foss/pdf_renderer_3d_bar.py",
+  "aspose/cells_foss/pdf_renderer_3d_line_column.py",
+  "aspose/cells_foss/pdf_renderer_drawing.py",
+  "aspose/cells_foss/pdf_renderer_pie_bar.py",
+  "aspose/cells_foss/pdf_renderer_special_charts.py",
+  "aspose/cells_foss/pdf_renderer_stock_surface.py",
+  "aspose/cells_foss/picture.py",
+  "aspose/cells_foss/render_bounds.py",
+  "aspose/cells_foss/rich_text.py",
+  "aspose/cells_foss/row_height.py",
+  "aspose/cells_foss/shape.py",
+  "aspose/cells_foss/shared_strings.py",
+  "aspose/cells_foss/sparkline.py",
+  "aspose/cells_foss/style.py",
+  "aspose/cells_foss/style_resolver.py",
+  "aspose/cells_foss/table.py",
+  "aspose/cells_foss/text_measure.py",
+  "aspose/cells_foss/value_formatter.py",
+  "aspose/cells_foss/workbook.py",
+  "aspose/cells_foss/workbook_hash_password.py",
+  "aspose/cells_foss/workbook_properties.py",
+  "aspose/cells_foss/worksheet.py",
+  "aspose/cells_foss/worksheet_properties.py",
+  "aspose/cells_foss/xlsx_encryptor.py",
+  "aspose/cells_foss/xml_autofilter_loader.py",
+  "aspose/cells_foss/xml_autofilter_saver.py",
+  "aspose/cells_foss/xml_chart_loader.py",
+  "aspose/cells_foss/xml_chart_saver.py",
+  "aspose/cells_foss/xml_conditional_format_loader.py",
+  "aspose/cells_foss/xml_conditional_format_saver.py",
+  "aspose/cells_foss/xml_datavalidation_loader.py",
+  "aspose/cells_foss/xml_datavalidation_saver.py",
+  "aspose/cells_foss/xml_hyperlink_handler.py",
+  "aspose/cells_foss/xml_loader.py",
+  "aspose/cells_foss/xml_picture_loader.py",
+  "aspose/cells_foss/xml_picture_saver.py",
+  "aspose/cells_foss/xml_properties_loader.py",
+  "aspose/cells_foss/xml_properties_saver.py",
+  "aspose/cells_foss/xml_saver.py",
+  "aspose/cells_foss/xml_shape_loader.py",
+  "aspose/cells_foss/xml_shape_saver.py",
+  "aspose/cells_foss/xml_sparkline_loader.py",
+  "aspose/cells_foss/xml_sparkline_saver.py",
+  "aspose/cells_foss/xml_table_loader.py",
+  "aspose/cells_foss/xml_table_saver.py",
+  "examples/__init__.py",
+  "examples/output_path_helper.py",
+  "examples/test_alignment_properties.py",
+  "examples/test_auto_filter.py",
+  "examples/test_border_settings.py",
+  "examples/test_cell_protection_locked.py",
+  "examples/test_cell_values.py",
+  "examples/test_comment_size.py",
+  "examples/test_comments.py",
+  "examples/test_conditional_formatting.py",
+  "examples/test_create_all_charts.py",
+  "examples/test_create_exceltable.py",
+  "examples/test_create_picture.py",
+  "examples/test_create_shape.py",
+  "examples/test_create_sparkline.py",
+  "examples/test_csv_import_export.py",
+  "examples/test_data_validation.py",
+  "examples/test_document_properties.py",
+  "examples/test_encryption.py",
+  "examples/test_fill_settings.py",
+  "examples/test_font_settings.py",
+  "examples/test_hyperlinks.py",
+  "examples/test_manual_page_breaks.py",
+  "examples/test_merge_cells.py",
+  "examples/test_number_formats.py",
+  "examples/test_print_area.py",
+  "examples/test_workbook_protection.py",
+  "examples/test_worksheet_management.py",
+  "examples/test_worksheet_properties.py",
+  "examples/test_worksheet_protection.py",
+  "examples/test_xlsx_to_json.py",
+  "examples/test_xlsx_to_markdown.py",
+  "examples/test_xlsx_to_pdf.py"
+ ]
+}

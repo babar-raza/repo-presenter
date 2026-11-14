@@ -663,3 +663,37 @@ def test_restore_re_dispositions_a_unit_a_check_names_and_writes_a_verifying_sea
     before = {e["unit_id"]: e for e in json.loads((bundle / "dispositions.json").read_text())["dispositions"]}
     assert after[unit]["disposition"] in kept and before[unit]["disposition"] == "SUPERSEDE_REDUNDANT"
     assert {k: v for k, v in after.items() if k != unit} == {k: v for k, v in before.items() if k != unit}
+
+
+def test_a_narrowed_surface_rides_along_as_the_recertified_seals_facts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, no_provider: list[str]
+) -> None:
+    """BL-065: when ``shipped_facts`` drops tree-package facts the build never ships, the re-certified
+    seal stores the narrowed ``facts.json`` and its dependencies record those facts; with nothing to
+    drop the sealed ``facts.json`` is copied byte for byte (negative control)."""
+    from dataclasses import replace
+
+    bundle = seal_lane_l(tmp_path, monkeypatch)
+    prompts = load_manifests(PROMPTS)
+    plain = recertify.recertify_bundle(bundle, LANE_L, entry=entry(), source=source())
+    assert "facts.json" not in plain.artifacts
+    written = recertify.write_recertified(bundle, plain, candidates_root=tmp_path / "plain", prompts=prompts)
+    assert (written / "facts.json").read_bytes() == (bundle / "facts.json").read_bytes()
+
+    sealed = recertify.read_facts(bundle / "facts.json")
+    dropped = next(f for f in sealed.facts if f.kind == "public_symbol")
+
+    def narrow(document, _ecosystem, _source):
+        kept = tuple(f for f in document.facts if f.id != dropped.id)
+        return (replace(document, facts=kept), "tool.hatch.build.targets.wheel.packages") if len(kept) < len(document.facts) else (document, None)
+
+    monkeypatch.setattr(recertify, "shipped_facts", narrow)
+    rec = recertify.recertify_bundle(bundle, LANE_L, entry=entry(), source=source())
+    assert rec.outcome == OUTCOME_RECERTIFIED, rec.details
+    assert "facts.json" in rec.artifacts
+    written = recertify.write_recertified(bundle, rec, candidates_root=tmp_path / "narrowed", prompts=prompts)
+    stored = recertify.read_facts(written / "facts.json")
+    assert dropped.id not in {f.id for f in stored.facts} and len(stored.facts) == len(sealed.facts) - 1
+    deps = json.loads((written / "dependencies.json").read_text(encoding="utf-8"))
+    assert set(deps["facts"]) == {f.id for f in stored.facts}
+    assert recertify.verify_bundle(written, LANE_L) is not None

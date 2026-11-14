@@ -1,0 +1,3607 @@
+{
+ "manifests": {
+  "pyproject.toml": "[project]\nname = \"aspose-words-foss\"\nversion = \"26.7.0\"\ndescription = \"Lightweight free open-source alternative to Aspose.Words \u2014 convert DOCX, DOC, RTF to Markdown, text, and PDF\"\nreadme = \"README.md\"\nlicense = \"MIT\"\nlicense-files = [\"LICENSE\"]\nauthors = [\n    {name = \"Aspose\"}\n]\nkeywords = [\n    \"word\", \"docx\", \"doc\", \"rtf\", \"markdown\", \"pdf\",\n    \"aspose\", \"office\", \"openxml\", \"document\", \"convert\",\n]\nrequires-python = \">=3.10,<3.13\"\ndependencies = [\n    \"olefile>=0.46\",\n    \"fpdf2>=2.7.5\",\n    \"pydantic>=2.0.0\"\n]\n\nclassifiers = [\n    \"Development Status :: 4 - Beta\",\n    \"Intended Audience :: Developers\",\n    \"Intended Audience :: Science/Research\",\n    \"Operating System :: OS Independent\",\n    \"Programming Language :: Python :: 3\",\n    \"Programming Language :: Python :: 3.10\",\n    \"Programming Language :: Python :: 3.11\",\n    \"Programming Language :: Python :: 3.12\",\n    \"Topic :: Office/Business\",\n    \"Topic :: Software Development :: Libraries :: Python Modules\",\n    \"Topic :: Text Processing :: Markup\",\n    \"Typing :: Typed\",\n]\n\n[project.urls]\nHomepage = \"https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python\"\nRepository = \"https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python\"\nIssues = \"https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-Python/issues\"\n\n[project.optional-dependencies]\ndev = [\n    \"Pillow>=10.0.0\",\n    \"pytest>=9.0.2\",\n]\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\npython_files = [\"test_*.py\"]\n\n[tool.black]\nline-length = 100\ntarget-version = [\"py310\", \"py311\", \"py312\"]\n\n[tool.mypy]\npython_version = \"3.10\"\nwarn_return_any = true\nwarn_unused_configs = true\n\n[build-system]\nrequires = [\"hatchling\"]\nbuild-backend = \"hatchling.build\"\n\n[tool.hatch.build.targets.wheel]\npackages = [\"aspose\"]\n"
+ },
+ "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+ "revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+ "surface": [
+  {
+   "detail": "package dir",
+   "id": "import_path:apiexamples",
+   "kind": "import_path",
+   "paths": [
+    "ApiExamples/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": null,
+   "value": "ApiExamples"
+  },
+  {
+   "detail": "package dir",
+   "id": "import_path:aspose",
+   "kind": "import_path",
+   "paths": [
+    "aspose/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": null,
+   "value": "aspose"
+  },
+  {
+   "detail": "package dir",
+   "id": "import_path:aspose.words_foss",
+   "kind": "import_path",
+   "paths": [
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": null,
+   "value": "aspose.words_foss"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.conftest",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/conftest.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.conftest"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.convert_document",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/convert_document.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.convert_document"
+  },
+  {
+   "detail": "line 38; class; public by name",
+   "id": "public_symbol:apiexamples.convert_document.convertdocument",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/convert_document.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.convert_document.ConvertDocument"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.docs_examples_base",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/docs_examples_base.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.docs_examples_base"
+  },
+  {
+   "detail": "line 41; class; public by name",
+   "id": "public_symbol:apiexamples.docs_examples_base.docsexamplesbase",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/docs_examples_base.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.docs_examples_base.DocsExamplesBase"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.loading_document",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/loading_document.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.loading_document"
+  },
+  {
+   "detail": "line 24; class; public by name",
+   "id": "public_symbol:apiexamples.loading_document.loadingdocument",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/loading_document.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.loading_document.LoadingDocument"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.loading_markdown",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/loading_markdown.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.loading_markdown"
+  },
+  {
+   "detail": "line 69; class; public by name",
+   "id": "public_symbol:apiexamples.loading_markdown.loadingmarkdown",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/loading_markdown.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.loading_markdown.LoadingMarkdown"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.working_with_images",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.working_with_images"
+  },
+  {
+   "detail": "line 35; class; public by name",
+   "id": "public_symbol:apiexamples.working_with_images.workingwithimages",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.working_with_images.WorkingWithImages"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.working_with_markdown_save_options",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_markdown_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.working_with_markdown_save_options"
+  },
+  {
+   "detail": "line 26; class; public by name",
+   "id": "public_symbol:apiexamples.working_with_markdown_save_options.workingwithmarkdownsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_markdown_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.working_with_markdown_save_options.WorkingWithMarkdownSaveOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.working_with_ooxml_save_options",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_ooxml_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.working_with_ooxml_save_options"
+  },
+  {
+   "detail": "line 27; class; public by name",
+   "id": "public_symbol:apiexamples.working_with_ooxml_save_options.workingwithooxmlsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_ooxml_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.working_with_ooxml_save_options.WorkingWithOoxmlSaveOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.working_with_pdf_save_options",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_pdf_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.working_with_pdf_save_options"
+  },
+  {
+   "detail": "line 26; class; public by name",
+   "id": "public_symbol:apiexamples.working_with_pdf_save_options.workingwithpdfsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_pdf_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.working_with_pdf_save_options.WorkingWithPdfSaveOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:apiexamples.working_with_txt_save_options",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_txt_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "ApiExamples.working_with_txt_save_options"
+  },
+  {
+   "detail": "line 23; class; public by name",
+   "id": "public_symbol:apiexamples.working_with_txt_save_options.workingwithtxtsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "ApiExamples/working_with_txt_save_options.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "ApiExamples.working_with_txt_save_options.WorkingWithTxtSaveOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.converters",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.converters"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.converters.list_handler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/list_handler.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.converters.list_handler"
+  },
+  {
+   "detail": "line 9; class; public by name",
+   "id": "public_symbol:aspose.words_foss.converters.listhandler",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/list_handler.py",
+    "aspose/words_foss/converters/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.converters.ListHandler"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.converters.paragraph",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/paragraph.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.converters.paragraph"
+  },
+  {
+   "detail": "line 10; class; public by name",
+   "id": "public_symbol:aspose.words_foss.converters.paragraphconverter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/paragraph.py",
+    "aspose/words_foss/converters/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.converters.ParagraphConverter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.converters.table",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/table.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.converters.table"
+  },
+  {
+   "detail": "line 10; class; public by name",
+   "id": "public_symbol:aspose.words_foss.converters.tableconverter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/converters/table.py",
+    "aspose/words_foss/converters/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.converters.TableConverter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.constants",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/constants.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.constants"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.doc_file_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/doc_file_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.doc_file_reader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.doc_file_reader_core",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/doc_file_reader_core.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.doc_file_reader_core"
+  },
+  {
+   "detail": "line 71; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.doc_file_reader_core.docfilereadercore",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/doc_file_reader_core.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.doc_file_reader_core.DocFileReaderCore"
+  },
+  {
+   "detail": "line 58; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.docfilereader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/doc_file_reader.py",
+    "aspose/words_foss/doc_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.DocFileReader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.fib",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/fib.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.fib"
+  },
+  {
+   "detail": "line 8; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.fib.fibdata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/fib.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.fib.FibData"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.fonts",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/fonts.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.fonts"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.images"
+  },
+  {
+   "detail": "line 16; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images.blipinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.images.BlipInfo"
+  },
+  {
+   "detail": "line 464; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images.childanchorinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.images.ChildAnchorInfo"
+  },
+  {
+   "detail": "line 476; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images.groupshapeinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.images.GroupShapeInfo"
+  },
+  {
+   "detail": "line 66; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images.shapeanchor",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.images.ShapeAnchor"
+  },
+  {
+   "detail": "line 28; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images.shapecropinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.images.ShapeCropInfo"
+  },
+  {
+   "detail": "line 50; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.images.shapelineprops",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/images.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.images.ShapeLineProps"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.lists",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/lists.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.lists"
+  },
+  {
+   "detail": "line 82; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.lists.listdef",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/lists.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.lists.ListDef"
+  },
+  {
+   "detail": "line 65; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.lists.listleveldata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/lists.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.lists.ListLevelData"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.properties",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.properties"
+  },
+  {
+   "detail": "line 164; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.properties.charprops",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.properties.CharProps"
+  },
+  {
+   "detail": "line 114; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.properties.paraprops",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.properties.ParaProps"
+  },
+  {
+   "detail": "line 930; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.properties.tablerowprops",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/properties.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.properties.TableRowProps"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.styles",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/styles.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.styles"
+  },
+  {
+   "detail": "line 66; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.styles.styledata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/styles.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.styles.StyleData"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.table_builder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/table_builder.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.table_builder"
+  },
+  {
+   "detail": "line 20; class; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.table_builder.doctablebuildermixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/table_builder.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.doc_reader.table_builder.DocTableBuilderMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.tables",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/tables.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.tables"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.doc_reader.text",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/doc_reader/text.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.doc_reader.text"
+  },
+  {
+   "detail": "line 173; class; public by name",
+   "id": "public_symbol:aspose.words_foss.document",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/document.py",
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.Document"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.document-2",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/document.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.document"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader"
+  },
+  {
+   "detail": "line 42; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.celldata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.CellData"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.constants",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/constants.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.constants"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.data_classes",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.data_classes"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.document_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/document_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.document_reader"
+  },
+  {
+   "detail": "line 43; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.documentreader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/document_reader.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.DocumentReader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.field_mappings",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/field_mappings.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.field_mappings"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.cascading",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/cascading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.cascading"
+  },
+  {
+   "detail": "line 96; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.cascading.fontbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/cascading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.cascading.FontBuilder"
+  },
+  {
+   "detail": "line 413; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.cascading.fontresolver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/cascading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.cascading.FontResolver"
+  },
+  {
+   "detail": "line 265; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.cascading.paragraphformatbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/cascading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.cascading.ParagraphFormatBuilder"
+  },
+  {
+   "detail": "line 478; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.cascading.paragraphformatresolver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/cascading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.cascading.ParagraphFormatResolver"
+  },
+  {
+   "detail": "line 57; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.cascading.stylechainresolver",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/cascading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.cascading.StyleChainResolver"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.definitions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/definitions.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.definitions"
+  },
+  {
+   "detail": "line 270; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.definitions.listbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/definitions.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.definitions.ListBuilder"
+  },
+  {
+   "detail": "line 70; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.definitions.stylebuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/definitions.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.definitions.StyleBuilder"
+  },
+  {
+   "detail": "line 38; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.ldmbuildermixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/mixin.py",
+    "aspose/words_foss/docx_reader/ldm_builder/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.LdmBuilderMixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.mixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/mixin.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.mixin"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.paragraphs",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/paragraphs.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.paragraphs"
+  },
+  {
+   "detail": "line 121; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.paragraphs.paragraphbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/paragraphs.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.paragraphs.ParagraphBuilder"
+  },
+  {
+   "detail": "line 62; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.paragraphs.runbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/paragraphs.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.paragraphs.RunBuilder"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.sections",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/sections.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.sections"
+  },
+  {
+   "detail": "line 61; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.sections.pagesetupbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/sections.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.sections.PageSetupBuilder"
+  },
+  {
+   "detail": "line 163; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.sections.sectionbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/sections.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.sections.SectionBuilder"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.tables",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/tables.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.tables"
+  },
+  {
+   "detail": "line 222; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.tables.cellbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/tables.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.tables.CellBuilder"
+  },
+  {
+   "detail": "line 168; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.tables.rowbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/tables.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.tables.RowBuilder"
+  },
+  {
+   "detail": "line 60; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.ldm_builder.tables.tablebuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/ldm_builder/tables.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ldm_builder.tables.TableBuilder"
+  },
+  {
+   "detail": "line 73; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.numberinginfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.NumberingInfo"
+  },
+  {
+   "detail": "line 64; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.numberinglevel",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.NumberingLevel"
+  },
+  {
+   "detail": "line 27; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.paragraphdata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.ParagraphData"
+  },
+  {
+   "detail": "line 50; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.rowdata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.RowData"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.rundata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.RunData"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.shapes",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/shapes.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.shapes"
+  },
+  {
+   "detail": "line 43; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.shapes.shapeparsermixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/shapes.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.shapes.ShapeParserMixin"
+  },
+  {
+   "detail": "line 57; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.tabledata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/data_classes.py",
+    "aspose/words_foss/docx_reader/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_reader.TableData"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_reader.utils",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_reader/utils.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_reader.utils"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.blank_template",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/blank_template.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.blank_template"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.bookmarks",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/bookmarks.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.bookmarks"
+  },
+  {
+   "detail": "line 13; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.bookmarks.bookmarkstate",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/bookmarks.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_writer.bookmarks.BookmarkState"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.constants",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/constants.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.constants"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.doc_props_part",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/doc_props_part.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.doc_props_part"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.document_part",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/document_part.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.document_part"
+  },
+  {
+   "detail": "line 44; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.docxwriterlossywarning",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/writer.py",
+    "aspose/words_foss/docx_writer/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_writer.DocxWriterLossyWarning"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.drawing",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.drawing"
+  },
+  {
+   "detail": "line 88; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.drawing.imageentry",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_writer.drawing.ImageEntry"
+  },
+  {
+   "detail": "line 107; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.drawing.imagerenderstate",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_writer.drawing.ImageRenderState"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.headers_footers",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/headers_footers.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.headers_footers"
+  },
+  {
+   "detail": "line 109; class; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.ldmdocxwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/writer.py",
+    "aspose/words_foss/docx_writer/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.docx_writer.LdmDocxWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.numbering_part",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/numbering_part.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.numbering_part"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.package",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/package.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.package"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.paragraphs",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/paragraphs.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.paragraphs"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.runs",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/runs.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.runs"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.settings_part",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/settings_part.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.settings_part"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.styles_part",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/styles_part.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.styles_part"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.tables",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/tables.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.tables"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.writer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/writer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.writer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.docx_writer.xml_utils",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/docx_writer/xml_utils.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.docx_writer.xml_utils"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.drawing",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.drawing"
+  },
+  {
+   "detail": "line 461; class; public by name",
+   "id": "public_symbol:aspose.words_foss.drawing.imagedata",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py",
+    "aspose/words_foss/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.drawing.ImageData"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.drawing.imagetype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/image.py",
+    "aspose/words_foss/drawing.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.drawing.ImageType"
+  },
+  {
+   "detail": "line 494; class; public by name",
+   "id": "public_symbol:aspose.words_foss.drawing.shape",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py",
+    "aspose/words_foss/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.drawing.Shape"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.drawing.wraptype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/wrap_type.py",
+    "aspose/words_foss/drawing.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.drawing.WrapType"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.light_document_model"
+  },
+  {
+   "detail": "line 956; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.body",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Body"
+  },
+  {
+   "detail": "line 590; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.bookmarkend",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.BookmarkEnd"
+  },
+  {
+   "detail": "line 575; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.bookmarkstart",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.BookmarkStart"
+  },
+  {
+   "detail": "line 139; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.border",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Border"
+  },
+  {
+   "detail": "line 779; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.cell",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Cell"
+  },
+  {
+   "detail": "line 761; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.cellformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.CellFormat"
+  },
+  {
+   "detail": "line 156; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.conditionalstylemask",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.ConditionalStyleMask"
+  },
+  {
+   "detail": "line 1061; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.doclist",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.DocList"
+  },
+  {
+   "detail": "line 1104; class; public by name; shadowed by aspose.words_foss.Document, reachable only by this path",
+   "id": "public_symbol:aspose.words_foss.light_document_model.document",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "UNRESOLVED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Document"
+  },
+  {
+   "detail": "line 567; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.fieldend",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.FieldEnd"
+  },
+  {
+   "detail": "line 560; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.fieldseparator",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.FieldSeparator"
+  },
+  {
+   "detail": "line 553; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.fieldstart",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.FieldStart"
+  },
+  {
+   "detail": "line 273; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.font",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Font"
+  },
+  {
+   "detail": "line 387; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.frameformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.FrameFormat"
+  },
+  {
+   "detail": "line 940; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.headerfooter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.HeaderFooter"
+  },
+  {
+   "detail": "line 440; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.listformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.ListFormat"
+  },
+  {
+   "detail": "line 446; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.listlabel",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.ListLabel"
+  },
+  {
+   "detail": "line 1035; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.listlevel",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.ListLevel"
+  },
+  {
+   "detail": "line 1053; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.listleveloverride",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.ListLevelOverride"
+  },
+  {
+   "detail": "line 88; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.nodecastmixin",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.NodeCastMixin"
+  },
+  {
+   "detail": "line 915; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.pagesetup",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.PageSetup"
+  },
+  {
+   "detail": "line 639; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.paragraph",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Paragraph"
+  },
+  {
+   "detail": "line 320; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.paragraphformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.ParagraphFormat"
+  },
+  {
+   "detail": "line 733; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.preferredwidth",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.PreferredWidth"
+  },
+  {
+   "detail": "line 797; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.row",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Row"
+  },
+  {
+   "detail": "line 788; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.rowformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.RowFormat"
+  },
+  {
+   "detail": "line 486; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.run",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Run"
+  },
+  {
+   "detail": "line 977; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.section",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Section"
+  },
+  {
+   "detail": "line 148; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.shading",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Shading"
+  },
+  {
+   "detail": "line 1011; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.style",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Style"
+  },
+  {
+   "detail": "line 824; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.table",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.Table"
+  },
+  {
+   "detail": "line 991; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.tablestyleformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.TableStyleFormat"
+  },
+  {
+   "detail": "line 1001; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.tablestyleproperty",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.TableStyleProperty"
+  },
+  {
+   "detail": "line 225; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.tabstop",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.TabStop"
+  },
+  {
+   "detail": "line 232; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.TabStopCollection"
+  },
+  {
+   "detail": "line 897; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.textcolumn",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.TextColumn"
+  },
+  {
+   "detail": "line 902; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.textcolumns",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.TextColumns"
+  },
+  {
+   "detail": "line 862; class; public by name",
+   "id": "public_symbol:aspose.words_foss.light_document_model.unknownnode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.light_document_model.UnknownNode"
+  },
+  {
+   "detail": "line 52; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.loadformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/document.py",
+    "aspose/words_foss/__init__.py",
+    "aspose/words_foss/loading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.LoadFormat"
+  },
+  {
+   "detail": "line 8; module; public by reexport; re-export of aspose.words_foss.loading",
+   "id": "public_symbol:aspose.words_foss.loading",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.loading"
+  },
+  {
+   "detail": "line 98; class; public by name",
+   "id": "public_symbol:aspose.words_foss.loadoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/document.py",
+    "aspose/words_foss/__init__.py",
+    "aspose/words_foss/loading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.LoadOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.markdown_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/markdown_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.markdown_reader"
+  },
+  {
+   "detail": "line 24; class; public by name",
+   "id": "public_symbol:aspose.words_foss.markdown_reader.markdownreader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/markdown_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.markdown_reader.MarkdownReader"
+  },
+  {
+   "detail": "line 115; class; public by name",
+   "id": "public_symbol:aspose.words_foss.markdownloadoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/document.py",
+    "aspose/words_foss/__init__.py",
+    "aspose/words_foss/loading.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.MarkdownLoadOptions"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import"
+  },
+  {
+   "detail": "line 168; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.atxheadingblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.AtxHeadingBlock"
+  },
+  {
+   "detail": "line 378; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.autolinkblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.AutolinkBlock"
+  },
+  {
+   "detail": "line 75; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.block",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.Block"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.block_parser",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/block_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import.block_parser"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.blocks",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import.blocks"
+  },
+  {
+   "detail": "line 35; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.blocktype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.md_import.BlockType"
+  },
+  {
+   "detail": "line 387; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.boldinlineblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.BoldInlineBlock"
+  },
+  {
+   "detail": "line 245; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.bulletlistitemblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.BulletListItemBlock"
+  },
+  {
+   "detail": "line 279; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.cellblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.CellBlock"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.document_builder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/document_builder.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import.document_builder"
+  },
+  {
+   "detail": "line 128; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.documentblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.DocumentBlock"
+  },
+  {
+   "detail": "line 193; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.fencedcodeblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.FencedCodeBlock"
+  },
+  {
+   "detail": "line 432; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.footnotedefinitionblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.FootnoteDefinitionBlock"
+  },
+  {
+   "detail": "line 424; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.footnotereferenceblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.FootnoteReferenceBlock"
+  },
+  {
+   "detail": "line 160; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.headingblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.HeadingBlock"
+  },
+  {
+   "detail": "line 203; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.horizontalruleblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.HorizontalRuleBlock"
+  },
+  {
+   "detail": "line 79; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.htmlinsertoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/document_builder.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.HtmlInsertOptions"
+  },
+  {
+   "detail": "line 311; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.htmltagblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.HtmlTagBlock"
+  },
+  {
+   "detail": "line 185; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.indentedcodeblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.IndentedCodeBlock"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.inline_parser",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/inline_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import.inline_parser"
+  },
+  {
+   "detail": "line 415; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.inlinecodeblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.InlineCodeBlock"
+  },
+  {
+   "detail": "line 394; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.italicinlineblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.ItalicInlineBlock"
+  },
+  {
+   "detail": "line 145; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.linebreakblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.LineBreakBlock"
+  },
+  {
+   "detail": "line 355; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.linktextblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.LinkTextBlock"
+  },
+  {
+   "detail": "line 210; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.listblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.ListBlock"
+  },
+  {
+   "detail": "line 221; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.listitemblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.ListItemBlock"
+  },
+  {
+   "detail": "line 64; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.listmarker",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.md_import.ListMarker"
+  },
+  {
+   "detail": "line 20; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.markdownblocklevel",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.md_import.MarkdownBlockLevel"
+  },
+  {
+   "detail": "line 222; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.markdowndocumentbuilder",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/document_builder.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.MarkdownDocumentBuilder"
+  },
+  {
+   "detail": "line 80; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.markdownreadercontext",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/reader_context.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.MarkdownReaderContext"
+  },
+  {
+   "detail": "line 250; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.orderedlistitemblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.OrderedListItemBlock"
+  },
+  {
+   "detail": "line 153; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.paragraphblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.ParagraphBlock"
+  },
+  {
+   "detail": "line 178; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.quoteblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.QuoteBlock"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.reader_context",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/reader_context.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import.reader_context"
+  },
+  {
+   "detail": "line 267; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.rowblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.RowBlock"
+  },
+  {
+   "detail": "line 173; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.setextheadingblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.SetextHeadingBlock"
+  },
+  {
+   "detail": "line 401; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.strikethroughblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.StrikethroughBlock"
+  },
+  {
+   "detail": "line 255; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.tableblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.TableBlock"
+  },
+  {
+   "detail": "line 135; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.textblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.TextBlock"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.traversal",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/traversal.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_import.traversal"
+  },
+  {
+   "detail": "line 408; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_import.underlineblock",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_import/blocks.py",
+    "aspose/words_foss/md_import/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_import.UnderlineBlock"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.md_writer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_writer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.md_writer"
+  },
+  {
+   "detail": "line 142; class; public by name",
+   "id": "public_symbol:aspose.words_foss.md_writer.ldmmarkdownwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/md_writer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.md_writer.LdmMarkdownWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.border",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/border.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.border"
+  },
+  {
+   "detail": "line 12; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.cellmerge",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/table.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.CellMerge"
+  },
+  {
+   "detail": "line 21; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.cellverticalalignment",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/table.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.CellVerticalAlignment"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.font",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/font.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.font"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.heightrule",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/layout.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.HeightRule"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.image",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/image.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.image"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.layout",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/layout.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.layout"
+  },
+  {
+   "detail": "line 20; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.linespacingrule",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/paragraph.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.LineSpacingRule"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.linestyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/border.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.LineStyle"
+  },
+  {
+   "detail": "line 442; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.numberstyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/style.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.NumberStyle"
+  },
+  {
+   "detail": "line 29; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.orientation",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/layout.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.Orientation"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.paragraph",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/paragraph.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.paragraph"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.paragraphalignment",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/paragraph.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.ParagraphAlignment"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.preferredwidthtype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/table.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.PreferredWidthType"
+  },
+  {
+   "detail": "line 18; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.sectionstart",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/layout.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.SectionStart"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.style",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/style.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.style"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.styleidentifier",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/style.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.StyleIdentifier"
+  },
+  {
+   "detail": "line 432; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.styletype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/style.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.StyleType"
+  },
+  {
+   "detail": "line 409; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.tabalignment",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/style.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.TabAlignment"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.table",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/table.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.enums.table"
+  },
+  {
+   "detail": "line 421; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.tableader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/style.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.TabLeader"
+  },
+  {
+   "detail": "line 4; class; public by name",
+   "id": "public_symbol:aspose.words_foss.model.enums.underline",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/enums/font.py",
+    "aspose/words_foss/model/enums/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.model.enums.Underline"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.list_limits",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/list_limits.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.list_limits"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.style_identifiers",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/style_identifiers.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.style_identifiers"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.model.wrap_type",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/model/wrap_type.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.model.wrap_type"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.models",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.models"
+  },
+  {
+   "detail": "line 32; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.models.codeblockstyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.models.CodeBlockStyle"
+  },
+  {
+   "detail": "line 40; class; public by name",
+   "id": "public_symbol:aspose.words_foss.models.conversionoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.models.ConversionOptions"
+  },
+  {
+   "detail": "line 17; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.models.headingstyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.models.HeadingStyle"
+  },
+  {
+   "detail": "line 24; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.models.listmarker",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.models.ListMarker"
+  },
+  {
+   "detail": "line 91; class; public by name",
+   "id": "public_symbol:aspose.words_foss.models.paragraphinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.models.ParagraphInfo"
+  },
+  {
+   "detail": "line 78; class; public by name",
+   "id": "public_symbol:aspose.words_foss.models.runformatting",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.models.RunFormatting"
+  },
+  {
+   "detail": "line 127; class; public by name",
+   "id": "public_symbol:aspose.words_foss.models.table",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.models.Table"
+  },
+  {
+   "detail": "line 108; class; public by name",
+   "id": "public_symbol:aspose.words_foss.models.tablecell",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.models.TableCell"
+  },
+  {
+   "detail": "line 119; class; public by name",
+   "id": "public_symbol:aspose.words_foss.models.tablerow",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/models.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.models.TableRow"
+  },
+  {
+   "detail": "line 21; class; public by name",
+   "id": "public_symbol:aspose.words_foss.nodetype",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/light_document_model.py",
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.NodeType"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.parsers"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.numbering_parser",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/numbering_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.parsers.numbering_parser"
+  },
+  {
+   "detail": "line 22; class; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.numbering_parser.listinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/numbering_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.parsers.numbering_parser.ListInfo"
+  },
+  {
+   "detail": "line 11; class; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.numbering_parser.listlevelinfo",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/numbering_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.parsers.numbering_parser.ListLevelInfo"
+  },
+  {
+   "detail": "line 30; class; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.numberingparser",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/numbering_parser.py",
+    "aspose/words_foss/parsers/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.parsers.NumberingParser"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.style_parser",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/style_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.parsers.style_parser"
+  },
+  {
+   "detail": "line 9; class; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.style_parser.parsedstyle",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/style_parser.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.parsers.style_parser.ParsedStyle"
+  },
+  {
+   "detail": "line 23; class; public by name",
+   "id": "public_symbol:aspose.words_foss.parsers.styleparser",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/parsers/style_parser.py",
+    "aspose/words_foss/parsers/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.parsers.StyleParser"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.color",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/color.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.color"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.constants",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/constants.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.constants"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.font",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/font.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.font"
+  },
+  {
+   "detail": "line 114; class; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.ldmpdfwriter",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/writer.py",
+    "aspose/words_foss/pdf_writer/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.pdf_writer.LdmPdfWriter"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.page_bands",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/page_bands.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.page_bands"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.paragraph_renderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/paragraph_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.paragraph_renderer"
+  },
+  {
+   "detail": "line 118; class; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.paragraph_renderer.paragraphrenderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/paragraph_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.pdf_writer.paragraph_renderer.ParagraphRenderer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.run_renderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/run_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.run_renderer"
+  },
+  {
+   "detail": "line 34; class; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.run_renderer.runrenderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/run_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.pdf_writer.run_renderer.RunRenderer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.shape_renderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/shape_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.shape_renderer"
+  },
+  {
+   "detail": "line 35; class; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.shape_renderer.shaperenderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/shape_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.pdf_writer.shape_renderer.ShapeRenderer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.table_renderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/table_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.table_renderer"
+  },
+  {
+   "detail": "line 50; class; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.table_renderer.tablerenderer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/table_renderer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.pdf_writer.table_renderer.TableRenderer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.text",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/text.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.text"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.pdf_writer.writer",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/pdf_writer/writer.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.pdf_writer.writer"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.reader_factory",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/reader_factory.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.reader_factory"
+  },
+  {
+   "detail": "line 14; class; public by name",
+   "id": "public_symbol:aspose.words_foss.reader_factory.documentformatreader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/reader_factory.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.reader_factory.DocumentFormatReader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.rtf_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/rtf_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.rtf_reader"
+  },
+  {
+   "detail": "line 22; class; public by name",
+   "id": "public_symbol:aspose.words_foss.rtf_reader.rtffilereader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/rtf_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.rtf_reader.RtfFileReader"
+  },
+  {
+   "detail": "line 133; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saveformat",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/document.py",
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.SaveFormat"
+  },
+  {
+   "detail": "line 8; module; public by reexport; re-export of aspose.words_foss.saving",
+   "id": "public_symbol:aspose.words_foss.saving",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.saving"
+  },
+  {
+   "detail": "line 158; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.colormode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.ColorMode"
+  },
+  {
+   "detail": "line 271; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.compressionlevel",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.CompressionLevel"
+  },
+  {
+   "detail": "line 84; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.markdownemptyparagraphexportmode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.MarkdownEmptyParagraphExportMode"
+  },
+  {
+   "detail": "line 76; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.markdownexportashtml",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.MarkdownExportAsHtml"
+  },
+  {
+   "detail": "line 68; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.markdownlinkexportmode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.MarkdownLinkExportMode"
+  },
+  {
+   "detail": "line 61; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.markdownlistexportmode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.MarkdownListExportMode"
+  },
+  {
+   "detail": "line 354; class; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.markdownsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.saving.MarkdownSaveOptions"
+  },
+  {
+   "detail": "line 263; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.ooxmlcompliance",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.OoxmlCompliance"
+  },
+  {
+   "detail": "line 305; class; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.ooxmlsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.saving.OoxmlSaveOptions"
+  },
+  {
+   "detail": "line 165; class; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.outlineoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.saving.OutlineOptions"
+  },
+  {
+   "detail": "line 92; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdfcompliance",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.PdfCompliance"
+  },
+  {
+   "detail": "line 150; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdffontembeddingmode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.PdfFontEmbeddingMode"
+  },
+  {
+   "detail": "line 121; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdfimagecompression",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.PdfImageCompression"
+  },
+  {
+   "detail": "line 128; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdfpagemode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.PdfPageMode"
+  },
+  {
+   "detail": "line 187; class; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdfsaveoptions",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.saving.PdfSaveOptions"
+  },
+  {
+   "detail": "line 114; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdftextcompression",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.PdfTextCompression"
+  },
+  {
+   "detail": "line 139; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.pdfzoombehavior",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.PdfZoomBehavior"
+  },
+  {
+   "detail": "line 52; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.tablecontentalignment",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.TableContentAlignment"
+  },
+  {
+   "detail": "line 294; enum; public by name",
+   "id": "public_symbol:aspose.words_foss.saving.zip64mode",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/saving.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "enum",
+   "value": "aspose.words_foss.saving.Zip64Mode"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.text_reader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/text_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.text_reader"
+  },
+  {
+   "detail": "line 94; class; public by name",
+   "id": "public_symbol:aspose.words_foss.text_reader.markdownfilereader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/text_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.text_reader.MarkdownFileReader"
+  },
+  {
+   "detail": "line 30; class; public by name",
+   "id": "public_symbol:aspose.words_foss.text_reader.textfilereader",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/text_reader.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "class",
+   "value": "aspose.words_foss.text_reader.TextFileReader"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.utils",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/utils/__init__.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.utils"
+  },
+  {
+   "detail": "line 1; module; public by name",
+   "id": "public_symbol:aspose.words_foss.utils.xml_helpers",
+   "kind": "public_symbol",
+   "paths": [
+    "aspose/words_foss/utils/xml_helpers.py"
+   ],
+   "polarity": "SUPPORTED",
+   "symbol_kind": "module",
+   "value": "aspose.words_foss.utils.xml_helpers"
+  }
+ ],
+ "tree_py": [
+  "ApiExamples/__init__.py",
+  "ApiExamples/conftest.py",
+  "ApiExamples/convert_document.py",
+  "ApiExamples/docs_examples_base.py",
+  "ApiExamples/loading_document.py",
+  "ApiExamples/loading_markdown.py",
+  "ApiExamples/working_with_images.py",
+  "ApiExamples/working_with_markdown_save_options.py",
+  "ApiExamples/working_with_ooxml_save_options.py",
+  "ApiExamples/working_with_pdf_save_options.py",
+  "ApiExamples/working_with_txt_save_options.py",
+  "aspose/__init__.py",
+  "aspose/words_foss/__init__.py",
+  "aspose/words_foss/_visible_runs.py",
+  "aspose/words_foss/converters/__init__.py",
+  "aspose/words_foss/converters/list_handler.py",
+  "aspose/words_foss/converters/paragraph.py",
+  "aspose/words_foss/converters/table.py",
+  "aspose/words_foss/doc_reader/__init__.py",
+  "aspose/words_foss/doc_reader/constants.py",
+  "aspose/words_foss/doc_reader/doc_file_reader.py",
+  "aspose/words_foss/doc_reader/doc_file_reader_core.py",
+  "aspose/words_foss/doc_reader/fib.py",
+  "aspose/words_foss/doc_reader/fonts.py",
+  "aspose/words_foss/doc_reader/images.py",
+  "aspose/words_foss/doc_reader/lists.py",
+  "aspose/words_foss/doc_reader/properties.py",
+  "aspose/words_foss/doc_reader/styles.py",
+  "aspose/words_foss/doc_reader/table_builder.py",
+  "aspose/words_foss/doc_reader/tables.py",
+  "aspose/words_foss/doc_reader/text.py",
+  "aspose/words_foss/document.py",
+  "aspose/words_foss/docx_reader/__init__.py",
+  "aspose/words_foss/docx_reader/constants.py",
+  "aspose/words_foss/docx_reader/data_classes.py",
+  "aspose/words_foss/docx_reader/document_reader.py",
+  "aspose/words_foss/docx_reader/field_mappings.py",
+  "aspose/words_foss/docx_reader/ldm_builder/__init__.py",
+  "aspose/words_foss/docx_reader/ldm_builder/_context.py",
+  "aspose/words_foss/docx_reader/ldm_builder/_helpers.py",
+  "aspose/words_foss/docx_reader/ldm_builder/cascading.py",
+  "aspose/words_foss/docx_reader/ldm_builder/definitions.py",
+  "aspose/words_foss/docx_reader/ldm_builder/mixin.py",
+  "aspose/words_foss/docx_reader/ldm_builder/paragraphs.py",
+  "aspose/words_foss/docx_reader/ldm_builder/sections.py",
+  "aspose/words_foss/docx_reader/ldm_builder/tables.py",
+  "aspose/words_foss/docx_reader/shapes.py",
+  "aspose/words_foss/docx_reader/utils.py",
+  "aspose/words_foss/docx_writer/__init__.py",
+  "aspose/words_foss/docx_writer/blank_template.py",
+  "aspose/words_foss/docx_writer/bookmarks.py",
+  "aspose/words_foss/docx_writer/constants.py",
+  "aspose/words_foss/docx_writer/doc_props_part.py",
+  "aspose/words_foss/docx_writer/document_part.py",
+  "aspose/words_foss/docx_writer/drawing.py",
+  "aspose/words_foss/docx_writer/headers_footers.py",
+  "aspose/words_foss/docx_writer/numbering_part.py",
+  "aspose/words_foss/docx_writer/package.py",
+  "aspose/words_foss/docx_writer/paragraphs.py",
+  "aspose/words_foss/docx_writer/runs.py",
+  "aspose/words_foss/docx_writer/settings_part.py",
+  "aspose/words_foss/docx_writer/styles_part.py",
+  "aspose/words_foss/docx_writer/tables.py",
+  "aspose/words_foss/docx_writer/writer.py",
+  "aspose/words_foss/docx_writer/xml_utils.py",
+  "aspose/words_foss/drawing.py",
+  "aspose/words_foss/light_document_model.py",
+  "aspose/words_foss/loading.py",
+  "aspose/words_foss/markdown_reader.py",
+  "aspose/words_foss/md_import/__init__.py",
+  "aspose/words_foss/md_import/_image_loader.py",
+  "aspose/words_foss/md_import/_list_mixin.py",
+  "aspose/words_foss/md_import/_reader_constants.py",
+  "aspose/words_foss/md_import/_style_mixin.py",
+  "aspose/words_foss/md_import/block_parser.py",
+  "aspose/words_foss/md_import/blocks.py",
+  "aspose/words_foss/md_import/document_builder.py",
+  "aspose/words_foss/md_import/inline_parser.py",
+  "aspose/words_foss/md_import/reader_context.py",
+  "aspose/words_foss/md_import/traversal.py",
+  "aspose/words_foss/md_writer.py",
+  "aspose/words_foss/model/__init__.py",
+  "aspose/words_foss/model/enums/__init__.py",
+  "aspose/words_foss/model/enums/border.py",
+  "aspose/words_foss/model/enums/font.py",
+  "aspose/words_foss/model/enums/image.py",
+  "aspose/words_foss/model/enums/layout.py",
+  "aspose/words_foss/model/enums/paragraph.py",
+  "aspose/words_foss/model/enums/style.py",
+  "aspose/words_foss/model/enums/table.py",
+  "aspose/words_foss/model/list_limits.py",
+  "aspose/words_foss/model/style_identifiers.py",
+  "aspose/words_foss/model/wrap_type.py",
+  "aspose/words_foss/models.py",
+  "aspose/words_foss/parsers/__init__.py",
+  "aspose/words_foss/parsers/numbering_parser.py",
+  "aspose/words_foss/parsers/style_parser.py",
+  "aspose/words_foss/pdf_writer/__init__.py",
+  "aspose/words_foss/pdf_writer/_context.py",
+  "aspose/words_foss/pdf_writer/color.py",
+  "aspose/words_foss/pdf_writer/constants.py",
+  "aspose/words_foss/pdf_writer/font.py",
+  "aspose/words_foss/pdf_writer/page_bands.py",
+  "aspose/words_foss/pdf_writer/paragraph_renderer.py",
+  "aspose/words_foss/pdf_writer/run_renderer.py",
+  "aspose/words_foss/pdf_writer/shape_renderer.py",
+  "aspose/words_foss/pdf_writer/table_renderer.py",
+  "aspose/words_foss/pdf_writer/text.py",
+  "aspose/words_foss/pdf_writer/writer.py",
+  "aspose/words_foss/reader_factory.py",
+  "aspose/words_foss/rtf_reader.py",
+  "aspose/words_foss/saving.py",
+  "aspose/words_foss/text_reader.py",
+  "aspose/words_foss/utils/__init__.py",
+  "aspose/words_foss/utils/xml_helpers.py"
+ ]
+}
