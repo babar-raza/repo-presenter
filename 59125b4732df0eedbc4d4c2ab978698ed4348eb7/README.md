@@ -317,9 +317,9 @@ Aspose.Email FOSS for .Net targets net8.0 and is built using the .NET CLI. The t
 The suite covers 5 test files under `tests/`.
 
 The published NuGet package ID is `Aspose.Email.Foss` (confirmed against the library's own
-`.csproj`, which is what NuGet actually built and published from):
+`.csproj`, which is what NuGet actually built and published from).
 
-Or add it directly to a project file:
+Or add it directly to a project file.
 
 The published `Aspose.Email.Foss` package builds
 from `src/Aspose.Email.Foss/Aspose.Email.Foss.csproj`, which declares zero `<PackageReference>`
