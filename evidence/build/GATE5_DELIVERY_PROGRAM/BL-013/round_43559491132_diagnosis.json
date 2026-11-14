@@ -946,5 +946,405 @@
    "seeded_text": "PsdImageGhost",
    "status": "caught (ambiguous ['invent_api_name', 'misdescribe_type'])"
   }
+ },
+ "supervisor_review_2026_11_14": {
+  "columns": [
+   "flag",
+   "line origin",
+   "verdict",
+   "evidence",
+   "under corrected B"
+  ],
+  "non_clean_controls": {
+   "802069b3f156fa85": "Cells C++ Lane L: line 561 duplicated name (BL-070)",
+   "ab8a038272515065": "Words Python Lane L: '198 public types' x2 false (BL-065), line 632 name (BL-070)"
+  },
+  "question": "is every flag the first fix B cleared actually false? (R36: question the checks)",
+  "replay": {
+   "A_plus_corrected_B": {
+    "false_flag": "5/22 0.227",
+    "recall": "19/19 1.000"
+   },
+   "excluding_non_clean": {
+    "false_flag": "3/20 0.150",
+    "remaining": [
+     "8aecb5 count 385",
+     "e43a75 Enterprise Edition name",
+     "e48a84 count 115"
+    ]
+   }
+  },
+  "rows": [
+   [
+    "e43a75 L 633",
+    "Lane L edit enterprise_edition_naming (link_target:product.enterprise)",
+    "true",
+    "upstream README@3d2ed6be names it '[Aspose.3D for Java \u2014 Enterprise Edition](https://products.aspose.com/3d/java/)'",
+    "kept (K10)"
+   ],
+   [
+    "802069 L 266",
+    "Lane L edit listed_type_count",
+    "true (not refuted)",
+    "189 table rows follow (lines 267-528, exact); 195 = facts 168 classes + 27 enums; a regex over Aspose.Cells.Foss.Cpp/include@9f852d0f finds ~166 classes + 26 enum classes",
+    "kept (K05)"
+   ],
+   [
+    "802069 L 561",
+    "Lane L edit enterprise_edition_naming",
+    "FALSE",
+    "duplicated product name breaks the sentence: '[Aspose.Cells for C++ \u2014 Enterprise Edition](\u2026), the Aspose.Cells for C++ \u2014 Enterprise Edition line this FOSS edition's API is modeled on' (engine defect, BL-070)",
+    "kept (K10)"
+   ],
+   [
+    "8aecb5 L 1970",
+    "Lane L edit stale_type_count",
+    "true (not refuted)",
+    "src/aspose_pdf@02b0c0e4: 392 public class definitions in public modules (re-exported duplicates), 31 enums = 31 enum facts; 385 = extractor's resolved surface",
+    "kept (K05)"
+   ],
+   [
+    "5584e7 L 56",
+    "Lane L edit stale_package_version (package:published_version SUPPORTED)",
+    "true",
+    "NuGet aspose.psd.foss versions [26.10.0], authors Aspose, projectUrl products.aspose.org/psd",
+    "cleared"
+   ],
+   [
+    "ab8a03 L 337",
+    "Lane L edit stale_type_count",
+    "FALSE",
+    "198 includes 9 ApiExamples/ classes; pyproject.toml:66 packages = ['aspose'] ships 189 (BL-065)",
+    "kept (K05)"
+   ],
+   [
+    "ab8a03 L 401",
+    "maintainer row beside a removed row",
+    "true",
+    "aspose/words_foss/light_document_model.py Shading: 2 public fields",
+    "kept (maintainer text)"
+   ],
+   [
+    "ab8a03 L 402",
+    "maintainer row beside a removed row",
+    "FALSE (pre-existing, R21 residual)",
+    "Style has 15 public fields, not 11",
+    "kept (maintainer text)"
+   ],
+   [
+    "ab8a03 L 614",
+    "Lane L edit stale_type_count",
+    "FALSE",
+    "same 198 vs 189 (BL-065)",
+    "kept (K05)"
+   ],
+   [
+    "ab8a03 L 632",
+    "Lane L edit enterprise_edition_naming",
+    "FALSE",
+    "'Aspose.Words \u2014 Enterprise Edition': the repository's name is 'Aspose.Words for Python \u2014 Enterprise Edition' (BL-070)",
+    "kept (K10)"
+   ],
+   [
+    "913acd R 419",
+    "renderer docstring row",
+    "true",
+    "src/main/java/org/aspose/cells_foss/DiagnosticSeverity.java:3-6 javadoc verbatim; public enum",
+    "cleared"
+   ],
+   [
+    "e48a84 R 271",
+    "renderer type count",
+    "true (not refuted)",
+    "src/lib.rs@1a6004af re-exports 124 capitalized names: the 115 fact types plus 9 `pub type` aliases",
+    "kept (no fact value in line; K05)"
+   ],
+   [
+    "e48a84 R 818",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 819",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 820",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 821",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 825",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 826",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 827",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 828",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 829",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 830",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 831",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 832",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 833",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 834",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 835",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 836",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "e48a84 R 837",
+    "renderer member bullet",
+    "true",
+    "### CellMut heading (line 761); src/Aspose.Cells_FOSS/Cell.rs impl CellMut (line 220+) defines it with doc comment (model read the bullets as Cell's)",
+    "cleared"
+   ],
+   [
+    "659509 R 85 (stale control)",
+    "renderer install line",
+    "true",
+    "NuGet aspose.cells.cpp.foss 26.4.0/26.4.1, authors Aspose.Cells, projectUrl the repository",
+    "cleared"
+   ],
+   [
+    "63d5f5 R 315 (stale control)",
+    "renderer row",
+    "true",
+    "aspose_cells/html/htmlDocument.ts:12-15 interface with 2 properties",
+    "kept (no fact value in line)"
+   ],
+   [
+    "511daf R 72 (seeded, stale)",
+    "renderer dependency line",
+    "true",
+    "CMakeLists.txt: no target_link_libraries/find_package; only target_compile_features PUBLIC cxx_std_17",
+    "cleared"
+   ],
+   [
+    "7782a6 R 62 (seeded, stale)",
+    "renderer install line",
+    "partly unverified",
+    "PyPI aspose-html-foss 404 (true); 'no build or install command succeeds' not executed",
+    "kept (K02 behaviour)"
+   ],
+   [
+    "7782a6 R 76 (seeded, stale)",
+    "renderer requirements line",
+    "FALSE",
+    "register: the pyproject key is requires-python, not python_requires",
+    "kept (findings register)"
+   ],
+   [
+    "7782a6 R 90 (seeded, stale)",
+    "renderer requirements line",
+    "FALSE",
+    "register: same",
+    "kept (findings register)"
+   ],
+   [
+    "bb00f4 R 290 (seeded, stale)",
+    "authored type row",
+    "FALSE",
+    "IncorrectDocumentStructureException is never raised in src/ (0 raise sites)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 286 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 287 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 288 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 289 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 291 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 292 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 293 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 294 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 295 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 296 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 297 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 298 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 313 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "bb00f4 R 314 (seeded, stale)",
+    "authored type row",
+    "true",
+    "src/aspose/note/model.py / exceptions.py: class exists, description matches its members (no docstring: authored)",
+    "kept (authored unit text)"
+   ],
+   [
+    "1f6001 R 64 (seeded, stale)",
+    "renderer install line",
+    "true",
+    "NuGet aspose.psd.foss 26.10.0 by Aspose",
+    "cleared"
+   ],
+   [
+    "1f6001 R 200 (seeded, stale)",
+    "renderer development line",
+    "true",
+    "src/Aspose.PSD.FOSS.Test@b6f778e9: 11 *Tests.cs files (plus 2 helpers)",
+    "cleared"
+   ]
+  ],
+  "summary": {
+   "cleared_under_corrected_B": 23,
+   "false": 8,
+   "false_cleared_under_corrected_B": 0,
+   "flags": 52
+  }
  }
 }

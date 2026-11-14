@@ -201,12 +201,45 @@ def deterministic_adjudications(
     return out
 
 
+def _narrowed(derived: frozenset[int], clearable_for: Any, seal: Any, sealed: str, case_id: str = "") -> frozenset[int]:
+    if clearable_for is None or not derived:
+        return derived
+    clearable = clearable_for(seal, sealed, case_id)
+    return derived & clearable if clearable is not None else frozenset()
+
+
+def auditor_clearable(work: Path, findings: Sequence[Mapping[str, Any]] = ()) -> Callable[[Any, str, str], frozenset[int] | None]:
+    """The M9 auditor's clearance (``run_m9_auditor.case_derivation``) as the refutation's extra condition,
+    judged on the flagged lines of each case only (``findings``)."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("run_m9_auditor", REPO_ROOT / "scripts" / "run_m9_auditor.py")
+    auditor = importlib.util.module_from_spec(spec)
+    sys.modules.setdefault("run_m9_auditor", auditor)
+    spec.loader.exec_module(auditor)
+
+    flagged: dict[str, set[int]] = {}
+    for item in findings:
+        if item.get("verdict") in FLAGGED_VERDICTS and isinstance(item.get("line"), int):
+            flagged.setdefault(str(item.get("candidate_id")), set()).add(item["line"])
+
+    def clearable(seal: Any, sealed: str, case_id: str = "") -> frozenset[int] | None:
+        derived = auditor.case_derivation(seal, sealed, work / "trees", ask=frozenset(flagged.get(case_id, ())))
+        return None if derived is None else derived.clearable
+
+    return clearable
+
+
 def case_evidence(
     case_index: Sequence[Mapping[str, Any]],
     history: Mapping[tuple[str, str], Sequence[Any]],
     recertified: Recertified,
+    clearable_for: Callable[[Any, str, str], frozenset[int] | None] | None = None,
 ) -> dict[str, CaseEvidence]:
-    """``CaseEvidence`` for every case whose audited seal is readable in ``history``."""
+    """``CaseEvidence`` for every case whose audited seal is readable in ``history``. ``clearable_for``
+    (the hosted writer: ``auditor_clearable``) narrows the derived lines to those the auditor's own
+    clearance accepts: printed from SUPPORTED facts, refuted by no register row or claim detector, in no
+    known-false class (a derived line is only consistent with the facts, not necessarily true)."""
     from repo_presenter.core.facts import read_facts
 
     found: dict[str, CaseEvidence] = {}
@@ -227,7 +260,8 @@ def case_evidence(
         seal_revision, certified = recertified.get((repository, lane), ("", False))
         found[str(entry["case_id"])] = CaseEvidence(
             lane=lane, facts=facts, sealed=sealed,
-            derived=derived_lines(lane, sealed, facts, bundle, original),
+            derived=_narrowed(derived_lines(lane, sealed, facts, bundle, original), clearable_for, seal, sealed,
+                              str(entry["case_id"])),
             certified=bool(certified) and seal_revision == revision,
         )
     return found
@@ -450,7 +484,8 @@ def main(
             recertified = recertify()
         else:
             recertified, history = recertified_with_history(args.remote, Path(work))
-        cases = (evidence or (lambda index, recert: case_evidence(index, history, recert)))(case_index, recertified)
+        clear = auditor_clearable(Path(work), findings)
+        cases = (evidence or (lambda index, recert: case_evidence(index, history, recert, clear)))(case_index, recertified)
         derived = deterministic_adjudications(
             findings, read_texts(case_index, args.case_index.parent / "candidates"), cases
         )

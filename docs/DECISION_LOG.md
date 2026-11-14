@@ -5925,3 +5925,42 @@ model alone on no seed (BL-092); 7 of the 10 Lane R seeds were on stale seals (B
 corrections. If it passes, the re-certifying controls are attested (22 in this population: 18 Lane L, 4 Lane R).
 
 Backlog: BL-013, BL-075, BL-092
+
+## 2026-11-14: BL-013 fix B corrected after supervisor review — a reproduced line is consistent with our facts, not necessarily true
+
+**Review (supervisor, R36 "question the checks").** The first B cleared a model flag whenever a deterministic stage
+reproduces the line. The 2026-11-13 fact-check registered real false claims printed by those very stages (renderer
+docstring rows, the "Enterprise Edition" template name K10, computed type counts K05), so B could hide real defects.
+
+**Check, at the pinned source** (52 cleared flags, which include every flag of the 7 false-flag controls; table with
+line origin, verdict and evidence in `evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_diagnosis.json`,
+`supervisor_review_2026_11_14`): **8 are false claims** — Words Python "198 public types" ×2 (9 `ApiExamples/` classes
+counted; `pyproject.toml` ships only `aspose`: 189), Words Python "Aspose.Words — Enterprise Edition" (a name the
+repository never uses), Words Python "`Style` | Class with 11 properties" (15 fields; pre-existing maintainer text),
+Cells C++ line 561 (the Lane L engine duplicated the product name and broke the sentence), HTML Python `python_requires`
+×2 (register rows), Note Python `IncorrectDocumentStructureException` "raised" (never raised). One more (HTML Python
+"no build or install command succeeds") is unverified. The other 43 are true (NuGet versions, javadoc text, `CellMut`
+member bullets the model misread as `Cell`'s, counts not refuted).
+
+**Correction (B').** Detection of underived owned lines is unchanged. A model flag on a reproduced line is cleared only
+when: (1) the line comes from SUPPORTED facts — a Lane L engine edit citing only SUPPORTED facts (never unchanged
+maintainer text, never a locator-only structure fix), or a Lane R line identical in a facts-only render (every authored
+unit replaced by a sentinel) that states at least one fact and only SUPPORTED ones; (2) no OPEN row of
+`data/readme_findings.json` and no claim detector refutes it; (3) it is in no known-false class — K05 counts, K10
+"Enterprise Edition" (and the Lane L detectors `enterprise_edition_naming`, `stale_type_count`, `listed_type_count`),
+K03 "Gets or sets", K02 behaviour words (throws/raised/not implemented/succeeds/fails). Every other flag stays and
+records `kept_because`. The writer's REFUTED adjudication takes the same condition (`auditor_clearable`), so a
+reproduced-but-false line can no longer unblock a candidate either: with fix A alone it would have refuted the false
+Words Python counts. Under B' 23 of the 52 are cleared, every one true at source; none of the 8 false ones is.
+
+**Replay (zero calls), frozen findings.** Round writer 8/19, 7/22. A + B': recall **19/19 = 1.000** (detection
+unchanged), false-flag **5/22 = 0.227** — Cells C++ 802069, PDF Python 8aecb5, Words Python ab8a03, 3D Java e43a75,
+Cells Rust e48a84. Two of these controls are **not clean**: ab8a03 (false counts, BL-065; wrong name, BL-070) and 802069
+(broken sentence, BL-070). Excluding them as BL-013 excluded non-re-certifying controls gives **3/20 = 0.150**, still
+above 0.10: the remaining three are model flags on true lines of known-false classes (count 385, the 3D Java Enterprise
+Edition name, count 115). The gate stays failed until (a) BL-065's Python package-list fix and BL-070's
+`enterprise_edition_naming` fix land and both seals are re-verified (R41), and (b) the K05/K10 classes are re-checked
+portfolio-wide so their lines may leave the known-false list, or the audit packet carries each count's computation.
+Thresholds unchanged; the exclusion is reported, not applied in code.
+
+Backlog: BL-013, BL-065, BL-070, BL-092

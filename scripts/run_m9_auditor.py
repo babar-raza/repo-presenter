@@ -70,7 +70,7 @@ import os
 import subprocess
 import sys
 import tempfile
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -194,27 +194,62 @@ def audit_scope(lane: str, source: Any, text: str) -> tuple[Mapping[str, Any], f
 
 # --- derivation: the lines the pipeline's own deterministic stages re-derive (BL-013, round 2) ----------
 #
-# Hosted round 43559491132 (recall 0.421, false-flag 0.318): 20 of the 31 model flags on re-certifying
-# controls were on lines a deterministic stage writes from the pinned evidence -- Lane L lines the
-# zero-call correction engine wrote (counts equal to the computed type count, the Enterprise Edition
-# name, a corrected package version) and Lane R lines the renderer printed (the type count, member
-# bullets, a docstring row) -- and 10 of the 11 missed seeds sat on such a line (the ``# Title`` line
-# the Lane R renderer prints, or a Lane L line that no correction writes). Neither needs a model: the
-# auditor re-derives those lines itself, blind -- the Lane L engine re-run over the PUBLIC live README
-# with the pinned facts and tree, the Lane R renderer re-run over the pinned facts, plan and
-# dispositions -- and never reads the seal's README. Only lines a deterministic stage owns are
-# compared (every line of a Lane L candidate, whose every edit is the engine's; a Lane R line the
-# renderer prints, ``scope.line_sections`` with the authored rows, never an authored line), so an
-# authored line is still the model's alone.
+# Hosted round 43559491132 (recall 0.421, false-flag 0.318): 10 of the 11 missed seeds sat on a line a
+# deterministic stage owns (the ``# Title`` line the Lane R renderer prints, or a Lane L line no
+# correction writes), and 20 of the 31 model flags on re-certifying controls were on lines such a stage
+# writes. The auditor re-derives those lines itself, blind -- the Lane L engine re-run over the PUBLIC
+# live README with the pinned facts and tree, the Lane R renderer re-run over the pinned facts, plan,
+# units and dispositions -- and never reads the seal's README.
+#
+# DETECTION: a deterministic-owned line the re-derivation does not produce is a deterministic finding.
+#
+# CLEARANCE is narrower (supervisor review, R36 "question the checks"): a reproduced line is only
+# consistent with OUR facts, and the 2026-11-13 fact-check registered real false claims those very stages
+# print. A model flag on a reproduced line is cleared only when (1) the line derives from SUPPORTED facts
+# -- a Lane L engine edit whose every cited fact is SUPPORTED (never unchanged maintainer text, never a
+# locator-only structure fix), a Lane R line the renderer prints from facts alone (identical when every
+# authored unit is replaced by a sentinel, so no authored unit text is ever cleared); (2) no row of the
+# findings register (``data/readme_findings.json``) and no claim detector refutes it; and (3) its origin
+# is not a known-false class: counts (K05), "Enterprise Edition" naming and its detector (K10), "Gets or
+# sets" (K03), throw/raise/not-implemented behaviour (K02). Every other flag stays.
+
+#: Line-text classes the 2026-11-13 fact-check found false in deterministic output
+#: (docs/investigations/2026-11-13-lane-r-false-claim-review.md, K01-K11).
+KNOWN_FALSE_PATTERNS: tuple[tuple[str, str], ...] = (
+    ("K05 type count", r"\b\d+\s+(?:verified\s+)?(?:public\s+)?(?:types?|classes|enums|interfaces)\b"),
+    ("K10 Enterprise Edition naming", r"Enterprise\s+Edition"),
+    ("K03 accessor wording", r"\bGets\s+or\s+sets\b"),
+    ("K02 behaviour claim", r"\b(?:throws?|thrown|raises?|raised|not\s+implemented|always\s+returns|succeeds?|succeeded|fails?|failed)\b"),
+)
+#: Lane L detectors whose output is a known-false class.
+KNOWN_FALSE_DETECTORS: Mapping[str, str] = {
+    "enterprise_edition_naming": "K10 Enterprise Edition naming",
+    "stale_type_count": "K05 type count",
+    "listed_type_count": "K05 type count",
+}
+#: The text every authored unit is replaced by in the facts-only Lane R render.
+_SENTINEL = "Authored unit {index} placeholder."
+
+
+class Rederived(NamedTuple):
+    """The README a deterministic stage writes, and per line (0-based) where it came from: ``{"source":
+    "edit", "detector", "fact_ids"}`` or ``{"source": "maintainer"}`` (Lane L); ``{"source": "renderer"}``
+    or ``{"source": "authored"}`` (Lane R)."""
+
+    text: str
+    origins: tuple[Mapping[str, Any], ...]
 
 
 class Derivation(NamedTuple):
-    """For one case text: ``derivable`` -- the deterministic-owned lines the re-derivation reproduces
-    (a model flag there is cleared); ``underived`` -- the deterministic-owned lines it does not (each
-    is a deterministic finding: no deterministic stage of the pipeline writes that text)."""
+    """For one case text: ``derivable`` -- deterministic-owned lines the re-derivation reproduces;
+    ``underived`` -- deterministic-owned lines it does not (each a deterministic finding);
+    ``clearable`` -- the derivable lines a model flag may be cleared on; ``kept`` -- every other
+    derivable line, with why a flag there stays."""
 
     derivable: frozenset[int]
     underived: frozenset[int]
+    clearable: frozenset[int] = frozenset()
+    kept: Mapping[int, str] = {}
 
 
 def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
@@ -230,25 +265,174 @@ def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
                      if row.strip() and section is None)
 
 
-def derivation(lane: str, text: str, facts: Any, rederived: str) -> Derivation:
-    """Align ``text`` with the re-derived README (``difflib`` over whole lines); a deterministic-owned
-    line in an ``equal`` block is derivable, any other deterministic-owned line is underived."""
+def keep_reason(lane: str, row: str, origin: Mapping[str, Any] | None, facts: Any) -> str | None:
+    """Why a model flag on this reproduced line must stay (``None``: it may be cleared). See the
+    section comment: SUPPORTED-fact origin and not a known-false class. The register and the claim
+    detectors are checked by the caller (they need the whole text)."""
+    import re
+
+    if not origin:
+        return "no recorded origin"
+    source = origin.get("source")
+    if lane == "L":
+        if source != "edit":
+            return "maintainer text, not derived from a fact"
+        detector = str(origin.get("detector") or "")
+        if detector in KNOWN_FALSE_DETECTORS:
+            return KNOWN_FALSE_DETECTORS[detector]
+        fact_ids = list(origin.get("fact_ids") or ())
+        if not fact_ids:
+            return "edit cites no fact (locator only)"
+        known = {fact.id: fact for fact in getattr(facts, "facts", ())}
+        if any(known.get(fid) is None or known[fid].polarity != "SUPPORTED" for fid in fact_ids):
+            return "edit cites a fact that is not SUPPORTED"
+    elif source != "renderer":
+        return "authored unit text"
+    else:
+        polarities = facts_in_line(row, facts)
+        if not polarities:
+            return "no fact value in the line"
+        if any(p != "SUPPORTED" for p in polarities):
+            return "the line carries a fact that is not SUPPORTED"
+    for label, pattern in KNOWN_FALSE_PATTERNS:
+        if re.search(pattern, row, re.IGNORECASE):
+            return label
+    return None
+
+
+_FACT_INDEX: dict[int, tuple[Any, dict[str, list[str]], list[tuple[str, str]]]] = {}
+
+
+def _fact_index(facts: Any) -> tuple[dict[str, list[str]], list[tuple[str, str]]]:
+    """(symbol name -> polarities, by qualified value and by last segment; [(spaced value, polarity)] of
+    every other fact), built once per facts document."""
+    from repo_presenter.readme.review.matching import spaced
+
+    cached = _FACT_INDEX.get(id(facts))
+    if cached is not None and cached[0] is facts:
+        return cached[1], cached[2]
+    symbols: dict[str, list[str]] = {}
+    others: list[tuple[str, str]] = []
+    for fact in getattr(facts, "facts", ()):
+        value = str(fact.value or "")
+        if len(value) < 4 or fact.kind == "inherited_unit":
+            continue
+        if fact.kind == "public_symbol":
+            for name in {value, value.rsplit(".", 1)[-1]}:
+                symbols.setdefault(name, []).append(str(fact.polarity))
+        else:
+            others.append((spaced(value), str(fact.polarity)))
+    _FACT_INDEX[id(facts)] = (facts, symbols, others)
+    return symbols, others
+
+
+def facts_in_line(row: str, facts: Any) -> list[str]:
+    """The polarities of the facts a renderer-printed line states: a fact whose value occurs in the line
+    (``matching.present``, the strict reader), or a ``public_symbol`` whose qualified value or last name
+    segment is a backticked identifier of the line. Values shorter than four characters are ignored."""
+    import re
+
+    from repo_presenter.readme.review.matching import present, spaced
+
+    symbols, others = _fact_index(facts)
+    found: list[str] = []
+    for ticked in set(re.findall(r"`([^`]+)`", row)):
+        for name in {ticked, ticked.rsplit(".", 1)[-1]}:
+            found.extend(symbols.get(name, ()))
+    flat = spaced(row)
+    for value, polarity in others:
+        if value in flat and present(value, row):
+            found.append(polarity)
+    return found
+
+
+def refuted_lines(text: str, facts: Any, repository: str, register: Sequence[Mapping[str, Any]] = ()) -> dict[int, str]:
+    """1-based lines of ``text`` a claim detector or an OPEN register row of ``repository`` refutes."""
+    out: dict[int, str] = {}
+    try:
+        from repo_presenter.readme.validation.claims import claim_findings
+
+        for finding in claim_findings(text, facts):
+            last = finding.last if finding.last is not None else finding.line
+            for number in range(finding.line + 1, last + 2):
+                out.setdefault(number, "claim detector")
+    except Exception:  # noqa: BLE001 -- a detector that cannot run refutes nothing; the flag is not cleared either
+        return {n: "claim detector unavailable" for n in range(1, len(text.splitlines()) + 1)}
+    quotes = [" ".join(str(r.get("quote") or "").split()) for r in register
+              if r.get("repository") == repository and r.get("status") == "OPEN"]
+    for number, row in enumerate(text.splitlines(), 1):
+        flat = " ".join(row.split())
+        if len(flat) >= 12 and any(q and (q in flat or flat in q) for q in quotes):
+            out.setdefault(number, "findings register")
+    return out
+
+
+def load_register(path: Path = REPO_ROOT / "data" / "readme_findings.json") -> list[Mapping[str, Any]]:
+    try:
+        return list(json.loads(path.read_text(encoding="utf-8")).get("findings") or [])
+    except (OSError, ValueError):
+        return []
+
+
+def derivation(
+    lane: str, text: str, facts: Any, rederived: str | Rederived, *, repository: str = "",
+    register: Sequence[Mapping[str, Any]] = (), ask: Collection[int] | None = None,
+) -> Derivation:
+    """Align ``text`` with the re-derived README (``difflib`` over whole lines). A deterministic-owned
+    line in an ``equal`` block is derivable, any other deterministic-owned line is underived; a
+    derivable line is clearable only under the section comment's three conditions. ``ask`` (the lines a
+    model flag sits on) limits that judgement to those lines; every other derivable line is ``kept``."""
     import difflib
 
+    if isinstance(rederived, str):
+        rederived = Rederived(rederived, ())
     owned = owned_lines(lane, text, facts)
-    equal: set[int] = set()
-    matcher = difflib.SequenceMatcher(None, rederived.splitlines(), text.splitlines(), autojunk=False)
-    for tag, _i1, _i2, j1, j2 in matcher.get_opcodes():
+    rows = text.splitlines()
+    source_of: dict[int, Mapping[str, Any] | None] = {}
+    matcher = difflib.SequenceMatcher(None, rederived.text.splitlines(), rows, autojunk=False)
+    for tag, i1, _i2, j1, j2 in matcher.get_opcodes():
         if tag == "equal":
-            equal.update(range(j1 + 1, j2 + 1))
-    return Derivation(derivable=frozenset(owned & equal), underived=frozenset(owned - equal))
+            for k in range(j2 - j1):
+                i = i1 + k
+                source_of[j1 + k + 1] = rederived.origins[i] if i < len(rederived.origins) else None
+    derivable = frozenset(owned & set(source_of))
+    refuted = refuted_lines(text, facts, repository, register) if derivable and (ask is None or ask) else {}
+    kept: dict[int, str] = {}
+    for number in sorted(derivable):
+        if ask is not None and number not in ask:
+            kept[number] = "not asked"
+            continue
+        why = refuted.get(number) or keep_reason(lane, rows[number - 1], source_of[number], facts)
+        if why:
+            kept[number] = why
+    return Derivation(derivable=derivable, underived=frozenset(owned - set(source_of)),
+                      clearable=frozenset(derivable - set(kept)), kept=kept)
 
 
-def rederived_readme(lane: str, bundle: Path, entry: Any, original: str, tree_paths: Sequence[str] = ()) -> str:
-    """The README the pipeline's deterministic stage writes from the pinned inputs, zero calls: Lane L,
-    the correction engine over the live README (``recertify._rerun_lane_l``'s context); Lane R, the
-    renderer over the stored facts, plan, content units and dispositions. The seal's README is never
-    read."""
+def _line_origins(text: str, spans: Sequence[tuple[int, int]], edits: Sequence[Any]) -> tuple[Mapping[str, Any], ...]:
+    """Per line of the corrected ``text``: the engine edit whose output span covers it, else maintainer."""
+    starts = [0]
+    for index, char in enumerate(text):
+        if char == "\n":
+            starts.append(index + 1)
+    origins: list[Mapping[str, Any]] = []
+    for number, start in enumerate(starts[: len(text.splitlines())]):
+        end = starts[number + 1] - 1 if number + 1 < len(starts) else len(text)
+        found: Mapping[str, Any] = {"source": "maintainer"}
+        for edit, (a, b) in zip(edits, spans):
+            if b > a and a < end + 1 and b > start:  # a deletion (empty span) writes no line
+                found = {"source": "edit", "detector": edit.detector, "fact_ids": tuple(edit.fact_ids)}
+                break
+        origins.append(found)
+    return tuple(origins)
+
+
+def rederived_readme(lane: str, bundle: Path, entry: Any, original: str, tree_paths: Sequence[str] = ()) -> Rederived:
+    """The README the pipeline's deterministic stage writes from the pinned inputs, zero calls, with each
+    line's origin: Lane L, the correction engine over the live README (``recertify._rerun_lane_l``'s
+    context); Lane R, the renderer over the stored facts, plan, content units and dispositions, and once
+    more with every authored unit replaced by a sentinel (a line identical in both is printed from facts
+    alone). The seal's README is never read."""
     from repo_presenter.core.facts import read_facts
 
     facts = read_facts(bundle / "facts.json")
@@ -266,8 +450,11 @@ def rederived_readme(lane: str, bundle: Path, entry: Any, original: str, tree_pa
                                     platform=entry.platform, ecosystem=entry.ecosystem),
             facts=facts, readme=original, tree_paths=tuple(tree_paths), readme_path=readme_path,
         )
-        return correct(ctx).corrected
+        result = correct(ctx)
+        return Rederived(result.corrected, _line_origins(result.corrected, result.output_spans, result.edits))
     import contextlib
+    import copy
+    import difflib
 
     from repo_presenter.extractors.platforms.registry import plugin_for
     from repo_presenter.readme.composition.renderer import render_readme
@@ -281,24 +468,45 @@ def rederived_readme(lane: str, bundle: Path, entry: Any, original: str, tree_pa
         return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else {}
 
     units_name = "content_units.coherent.json" if (bundle / "content_units.coherent.json").is_file() else "content_units.json"
-    return render_readme(entry, facts, read("plan.json"), read(units_name), read("dispositions.json"))
+    plan, units, dispositions = read("plan.json"), read(units_name), read("dispositions.json")
+    full = render_readme(entry, facts, plan, units, dispositions)
+    blank = copy.deepcopy(units)
+    for index, unit in enumerate(blank.get("units") or []):
+        if isinstance(unit, dict) and isinstance(unit.get("text"), str):
+            unit["text"] = _SENTINEL.format(index=index)
+    origins: list[Mapping[str, Any]] = [{"source": "authored"}] * len(full.splitlines())
+    try:
+        facts_only = render_readme(entry, facts, plan, blank, dispositions)
+    except Exception:  # noqa: BLE001 -- no facts-only render: nothing is known to be fact-derived
+        return Rederived(full, tuple(origins))
+    matcher = difflib.SequenceMatcher(None, facts_only.splitlines(), full.splitlines(), autojunk=False)
+    for tag, _i1, _i2, j1, j2 in matcher.get_opcodes():
+        if tag == "equal":
+            for j in range(j1, j2):
+                origins[j] = {"source": "renderer"}
+    return Rederived(full, tuple(origins))
 
 
 def apply_derivation(case_id: str, text: str, rows: Sequence[Mapping[str, Any]], derived: Derivation | None) -> list[dict[str, Any]]:
     """The case's finding rows with the derivation applied (see the section comment): a located model
-    flag on a derivable line is cleared (``supported``, ``cleared_by``), every underived line gets one
-    deterministic finding. ``None`` (no re-derivation) changes nothing: nothing is cleared, nothing is
-    added (fail closed both ways)."""
+    flag on a CLEARABLE line is cleared (``supported``, ``cleared_by``); a flag on any other derivable
+    line stays and records why (``kept_because``); every underived line gets one deterministic finding.
+    ``None`` (no re-derivation) changes nothing: nothing is cleared, nothing is added (fail closed)."""
     out = [dict(r) for r in rows]
     if derived is None:
         return out
     for row in out:
-        if (row.get("source") == "llm" and row.get("verdict") != "supported" and row.get("located")
-                and row.get("line") in derived.derivable):
+        if row.get("source") != "llm" or row.get("verdict") == "supported" or not row.get("located"):
+            continue
+        line = row.get("line")
+        if line in derived.clearable:
             row["verdict"] = "supported"
             row["cleared_by"] = "derivation"
-            row["evidence"] = ("cleared: a deterministic stage re-derives this line from the pinned evidence "
-                               f"(zero calls); was: {row.get('evidence', '')}")[:500]
+            row["evidence"] = ("cleared: the line is printed from SUPPORTED facts by a deterministic stage "
+                               "(zero-call re-derivation), no register row or claim detector refutes it, and it is "
+                               f"in no known-false class; was: {row.get('evidence', '')}")[:500]
+        elif line in derived.kept:
+            row["kept_because"] = derived.kept[line]
     lines = text.splitlines()
     for number in sorted(derived.underived):
         out.append({
@@ -378,7 +586,7 @@ def audit_cases(
     review: Reviewer,
     *,
     retries: int = 1,
-    derive: Callable[[Mapping[str, Any], str], Derivation | None] | None = None,
+    derive: Callable[[Mapping[str, Any], str, frozenset[int]], Derivation | None] | None = None,
 ) -> list[dict[str, Any]]:
     """Every case reviewed, in case-index order; ``AuditError`` when any case has no valid review after
     ``retries`` more attempts (a partial findings file is never returned). ``derive`` (the hosted run:
@@ -402,7 +610,9 @@ def audit_cases(
             raise AuditError(f"case {case_id}: no valid review ({getattr(problem, 'reason', problem)})")
         rows = findings_for(case_id, texts[case_id], verdict.findings)
         if derive is not None:
-            rows = apply_derivation(case_id, texts[case_id], rows, derive(entry, texts[case_id]))
+            asked = frozenset(r["line"] for r in rows if r.get("source") == "llm" and r.get("located")
+                              and r.get("verdict") != "supported")
+            rows = apply_derivation(case_id, texts[case_id], rows, derive(entry, texts[case_id], asked))
         findings.extend(rows)
         print(f"{case_id} {entry.get('lane')} {verdict.verdict}: {len(rows)} findings", file=sys.stderr)
     return findings
@@ -454,9 +664,9 @@ def cmd_audit(args: argparse.Namespace) -> int:
         seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]))
         return str(entry["lane"]), source_for(seal, str(entry["case_id"]))
 
-    def derive(entry: Mapping[str, Any], text: str) -> Derivation | None:
+    def derive(entry: Mapping[str, Any], text: str, asked: frozenset[int]) -> Derivation | None:
         seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]))
-        return case_derivation(seal, text, work / "trees")
+        return case_derivation(seal, text, work / "trees", ask=asked)
 
     try:
         findings = audit_cases(case_index, texts, sources, review, derive=derive)
@@ -473,7 +683,9 @@ def cmd_audit(args: argparse.Namespace) -> int:
     return 0
 
 
-def case_derivation(seal: Any, text: str, work: Path, fetch: Callable[..., Any] | None = None) -> Derivation | None:
+def case_derivation(
+    seal: Any, text: str, work: Path, fetch: Callable[..., Any] | None = None, ask: Collection[int] | None = None,
+) -> Derivation | None:
     """``derivation`` for one case from its seal's pinned inputs (never its README): Lane L reads the
     public live README the bundle records and the revision's tracked tree (``recertify.fetch_source``,
     read-only, for the link detectors); ``None`` when anything cannot be re-derived (fail closed)."""
@@ -495,7 +707,7 @@ def case_derivation(seal: Any, text: str, work: Path, fetch: Callable[..., Any] 
     except Exception as error:  # noqa: BLE001 -- no re-derivation is no derivation, never a crash
         print(f"derivation unavailable for {seal.repository} lane {seal.lane}: {error}", file=sys.stderr)
         return None
-    return derivation(seal.lane, text, facts, rederived)
+    return derivation(seal.lane, text, facts, rederived, repository=seal.repository, register=load_register(), ask=ask)
 
 
 def evidence_validity(findings: Sequence[Mapping[str, Any]]) -> tuple[bool, str]:
