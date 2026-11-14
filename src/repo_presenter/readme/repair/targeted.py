@@ -1024,6 +1024,134 @@ def _resolve_change_path(document: Any, path: str) -> Any:
     return value
 
 
+_UNIT_TEXT_PATH = re.compile(
+    r"^(?:\$\.)?(?:revised_output\.)?units(?:\[(\d+)\]|\.(\d+))\.text$"
+)
+
+
+def blanked_slots(reply: Mapping[str, Any], original: Mapping[str, Any]) -> list[str]:
+    """The slots a targeted S6 repair asked to drop: a ``changes[]`` entry that takes a unit's
+    ``text`` to nothing while the revision still holds the unit unchanged (a unit's text has a
+    ``minLength`` of 1, so the reply cannot blank it in place). Empty when there is none, or when
+    any blanking claim cannot be tied to one unit of the causal stage's own output.
+
+    Decision (BL-083, supervisor 2026-11-14, audit O7): such a reply is a request to drop the
+    slot, which the plan owns, never a false ledger entry to refuse. Measured: hosted Lane R runs
+    43516323114 (Aspose.Cells-FOSS-for-Cpp, F01-F03: ``units[2].text`` and ``units[3].text`` of
+    scope_limitations to ``''``) and 43516330798 (Aspose.Cells-FOSS-for-Python, BC-18:
+    ``units[1].text`` 'Apply bold red font styling to a cell.' to ``''``), each refused as
+    "the causal stage's own input and this revision hold the identical value there"."""
+    units = original.get("units") if isinstance(original, Mapping) else None
+    revised = reply.get("revised_output") if isinstance(reply, Mapping) else None
+    revised_units = revised.get("units") if isinstance(revised, Mapping) else None
+    if not isinstance(units, list) or not isinstance(revised_units, list):
+        return []
+    slots: list[str] = []
+    for change in reply.get("changes") or []:
+        if not isinstance(change, Mapping):
+            continue
+        after = change.get("after")
+        if after is not None and (not isinstance(after, str) or after.strip()):
+            continue
+        match = _UNIT_TEXT_PATH.match(str(change.get("path") or "").strip())
+        if match is None:
+            continue
+        index = int(match.group(1) or match.group(2))
+        if not 0 <= index < len(units) or not isinstance(units[index], Mapping):
+            return []
+        slot = str(units[index].get("slot") or "")
+        kept = [
+            unit for unit in revised_units
+            if isinstance(unit, Mapping) and str(unit.get("slot") or "") == slot
+        ]
+        if not slot or any(unit.get("text") != units[index].get("text") for unit in kept):
+            return []  # the revision did change the unit: not a drop request
+        slots.append(slot)
+    return list(dict.fromkeys(slots))
+
+
+#: A slot's plan item: the plan list it lives in and how the item names the slot.
+_DROPPABLE: dict[str, tuple[str, str]] = {
+    "limitation": ("material_limitations", "index"),
+    "capability": ("core_capabilities", "index"),
+    "workflow": ("additional_example_ids", "value"),
+    "hub": ("api_hubs", "symbol_fact_id"),
+    "link": ("links", "link_fact_id"),
+}
+
+
+def plan_without_slots(
+    plan: Mapping[str, Any], section: str, slots: Sequence[str], reason: str
+) -> tuple[dict[str, Any], list[str], list[dict[str, Any]]] | None:
+    """``plan`` with the items that give ``section`` these slots removed, a ``deviations`` record
+    naming the drop, the facts the dropped items cited and the ``changes`` ledger of the edit; or
+    ``None`` when any slot is not one the plan owns (the opening, a scope statement, a lead-in) or
+    names no plan item. Pure: the caller judges the result with ``plan_checks``."""
+    revised = copy.deepcopy(dict(plan))
+    dropped: dict[str, list[int]] = {}
+    changes: list[dict[str, Any]] = []
+    cited: list[str] = []
+    for slot in slots:
+        kind, _, key = slot.partition(":")
+        spec = _DROPPABLE.get(kind)
+        if spec is None or not key:
+            return None
+        field_name, how = spec
+        items = revised.get(field_name)
+        if not isinstance(items, list):
+            return None
+        if how == "index":
+            if not key.isdigit() or not 1 <= int(key) <= len(items):
+                return None
+            position = int(key) - 1
+        elif how == "value":
+            if key not in items:
+                return None
+            position = items.index(key)
+        else:
+            position = next(
+                (
+                    i
+                    for i, item in enumerate(items)
+                    if isinstance(item, Mapping)
+                    and str(item.get(how)) == key
+                    and (field_name != "links" or item.get("section_id") == section)
+                ),
+                -1,
+            )
+            if position < 0:
+                return None
+        dropped.setdefault(field_name, []).append(position)
+        item = items[position]
+        if isinstance(item, Mapping):
+            cited.extend(str(fid) for fid in item.get("fact_ids") or [])
+            for name in ("symbol_fact_id", "link_fact_id"):
+                if item.get(name):
+                    cited.append(str(item[name]))
+        else:
+            cited.append(str(item))
+        changes.append(
+            {"path": f"{field_name}[{position}]", "before": item, "after": None,
+             "reason": f"drop slot {slot}: {reason}"[:300]}
+        )
+    for field_name, positions in dropped.items():
+        revised[field_name] = [
+            item for i, item in enumerate(revised[field_name]) if i not in set(positions)
+        ]
+    cited = list(dict.fromkeys(cited))
+    deviations = list(revised.get("deviations") or [])
+    if cited and len(deviations) < 10:
+        deviations.append(
+            {
+                "section_id": section,
+                "text": f"Dropped {', '.join(slots)} at repair: {reason}"[:300],
+                "fact_ids": cited[:12],
+            }
+        )
+        revised["deviations"] = deviations
+    return revised, cited, changes
+
+
 def _uncorroborated_changes(
     changes: Sequence[Mapping[str, Any]], original: Mapping[str, Any], revised: Mapping[str, Any]
 ) -> list[str]:

@@ -69,6 +69,67 @@ LICENSE_STATEMENT = re.compile(
     re.IGNORECASE,
 )
 _LICENSE_HEADING = re.compile(r"\blicen[cs]\w*\b")
+#: The license clause of a sentence that also says other things: "is licensed under the MIT
+#: License", ", distributed under the MIT license", "and is released under the Apache-2.0 License".
+_LICENSE_CLAUSE = re.compile(
+    r"(?P<lead>,\s*(?:and\s+)?|\s+and\s+)?"
+    r"(?:(?:is|are)\s+)?(?:(?:also|freely)\s+)?"
+    r"(?:licen[cs]ed|distributed|released|provided|available|published|offered)\s+under\s+"
+    r"(?:the\s+)?(?:terms\s+of\s+the\s+)?\[?[\w.\-` ]{0,30}?\blicen[cs]e\b`?\]?(?:\([^)]*\))?"
+    r"(?:,?\s+as\s+stated\s+in\s+[^,.;]*)?"
+    r"(?P<tail>\s+and\s+)?",
+    re.IGNORECASE,
+)
+_CLAUSE_SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z`\[(*_])")
+#: A sentence left with this few words after its license clause goes says nothing else.
+_MIN_REMAINING_WORDS = 4
+
+
+def _without_license_clause(sentence: str) -> str:
+    """``sentence`` without its license clause, or ``""`` when nothing else is left of it."""
+    match = _LICENSE_CLAUSE.search(sentence)
+    if match is None:
+        return ""
+    if match.group("lead") and match.group("tail"):
+        joiner = match.group("lead") if "," in match.group("lead") else " and "
+    elif match.group("tail") and match.start() > 0:
+        joiner = " "
+    else:
+        joiner = ""
+    rest = sentence[: match.start()].rstrip() + joiner + sentence[match.end() :].lstrip()
+    rest = " ".join(rest.split())
+    rest = re.sub(r"\s+([.,;!?])(?=\s|$)", r"\1", rest)
+    rest = re.sub(r"[,;]\s*([.!?])$", r"\1", rest).strip(" ,;")
+    if not rest.endswith((".", "!", "?")):
+        rest += "."
+    if is_license_statement(rest) or len(rest.rstrip(".!?").split()) < _MIN_REMAINING_WORDS:
+        return ""
+    return rest
+
+
+def without_license_statement(text: str) -> str:
+    """``text`` (one authored Scope and Limitations unit) without any statement of the project's
+    license: a sentence that only states the license goes, and a sentence that also says other
+    things keeps them ("This project is licensed under the MIT License and requires Python 3.10 or
+    later." -> "This project requires Python 3.10 or later."). Empty when nothing is left.
+
+    Decision (BL-089, supervisor 2026-11-14, audit O8a): the BC-05 section-fit rule stays (owner
+    feedback on 3D .NET: the License section states the license, Scope never does); the producer
+    side is fixed here and in the authoring packet. Measured: hosted Lane R runs 43516330798 (Cells
+    Python, two Scope sentences) and 43520974296 (Cells TypeScript: "The package version is 1.0.0
+    and is named excel-cells, distributed under the MIT license.") failed BC-05 on nothing else,
+    and the targeted repair returned the unit unchanged twice (a no-op)."""
+    if not is_license_statement(text):
+        return text
+    kept: list[str] = []
+    for sentence in _CLAUSE_SENTENCE_END.split(text.strip()):
+        if not is_license_statement(sentence):
+            kept.append(sentence)
+            continue
+        rest = _without_license_clause(sentence)
+        if rest:
+            kept.append(rest)
+    return " ".join(kept)
 
 
 def is_license_statement(text: str) -> bool:

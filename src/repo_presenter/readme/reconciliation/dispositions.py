@@ -833,6 +833,10 @@ def _spelled_supported_facts(unit_text: str, facts: FactsDocument) -> frozenset[
 
 def _omission_gap(unit_id: str, entry: Mapping[str, Any], ctx: _Coverage) -> tuple[str, str] | None:
     """Why an OMIT_UNSUPPORTED is not a failed support lookup, or ``None`` when it stands."""
+    from repo_presenter.readme.validation.must_correct import is_register_omission
+
+    if is_register_omission(entry):
+        return None  # omitted on the findings register's confirmed row (BL-088, audit O4)
     kind = _unit_kind(unit_id)
     if kind not in _CONTENT_KINDS or unit_id in ctx.commands_blocks:
         return None
@@ -1513,6 +1517,7 @@ def normalize(
     _fold_api_listings(output, facts, api_listings)
     _fold_uncovered(output, facts, coverage)
     _fold_register_corrections(output, facts)
+    _fold_register_kept_units(output, facts)
     for entry in output.get("dispositions", []):
         unit = str(entry.get("unit_id", "?"))
         destination = entry.get("destination_section")
@@ -1951,6 +1956,7 @@ def normalize(
     _fold_dangling_rewrites(output, facts)
     _fold_headings_into_kept_body(output, facts)
     _prune_incidental_coverage(output, coverage)
+    _fold_register_omitted_units(output, facts)
     return errors
 
 
@@ -2035,6 +2041,145 @@ def _fold_register_corrections(output: dict[str, Any], facts: FactsDocument) -> 
         entry["disposition"] = "VERIFIED_PRESERVE"
         entry["fact_ids"] = [*cited, *(cid for cid in ids if cid not in cited)]
         entry["rationale"] = (_REGISTER_KEPT_RATIONALE + str(entry.get("rationale") or ""))[:160]
+
+
+#: The dispositions that print an inherited unit as the maintainers wrote it.
+_KEPT_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"})
+_REGISTER_KEPT_EXCLUDED = frozenset({"scope_limitations"})
+
+
+def _fold_register_kept_units(output: dict[str, Any], facts: FactsDocument) -> None:
+    """Every inherited unit kept as written whose text prints an OPEN findings-register quote cites
+    that register row, in place, so the unit prints without exactly the false line, sentence, row
+    or item (``must_correct.withheld_form``, applied by ``placement`` and honoured by BC-05, BC-17,
+    the reviewer and the parity gate) - only when something of the unit is still left to print
+    (``omission_holds``); otherwise the model's disposition stands and BC-18 judges it.
+
+    Decision (BL-088, supervisor 2026-11-14, audit O3 P2 adopted on top of O4): cite
+    deterministically, never rely on the model to cite. Two exclusions, each measured by the
+    zero-call re-judgement of all 18 Lane R seals (the prototype raised 5 new findings there): an
+    example block (no printable form; ``_fold_register_omitted_units`` omits it) and a unit kept in
+    Scope and Limitations (3D .NET ``061.list``: withheld, the planned limitations cover the rest,
+    so placement drops it as overlap and it reads "kept but not printed"). The
+    withheld form exists for exactly this case (3D .NET ``050.table``), but the reconciliation and
+    repair prompts only *allow* the citation, and the S4 packet never names which rows are
+    confirmed false, so the model kept such units uncited and BC-18 failed on maintainer text the
+    register had already settled. Measured on the 16 failing Lane R seals (zero calls): 44 of the
+    112 register quotes they print come from inherited units kept as written; on hosted run
+    43525324808 (HTML Python ``080.list``) the targeted repair returned the unit unchanged twice.
+    The register row is the evidence (R36 (a)(2): omit the claim citing what contradicts it); the
+    rest of the maintainers' unit is kept (R14)."""
+    from repo_presenter.readme.validation.must_correct import (
+        omission_holds,
+        open_finding_citations,
+    )
+
+    examples = _example_status(facts)
+    entries = [
+        entry
+        for entry in output.get("dispositions", [])
+        if entry.get("disposition") in _KEPT_AS_WRITTEN
+        # An example block prints only through the plan: _fold_register_omitted_units decides it.
+        and str(entry.get("unit_id", "")) not in examples
+        # Scope and Limitations re-authors such claims from the facts (the authoring packet now
+        # carries the register row, BL-087): a withheld kept list there is covered by the plan's
+        # own limitations and dropped as overlap, so it is left to BC-18 and the repair.
+        and entry.get("destination_section") not in _REGISTER_KEPT_EXCLUDED
+    ]
+    if not entries:
+        return
+    rows = open_finding_citations(facts.repository)
+    if not rows:
+        return
+    units = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    for entry in entries:
+        unit_id = str(entry.get("unit_id", ""))
+        text = units.get(unit_id, "")
+        squashed = " ".join(text.split())
+        cited = [str(fid) for fid in entry.get("fact_ids") or []]
+        ids = [
+            cid
+            for cid, row in rows.items()
+            if cid not in cited and " ".join(row.quote.split()) in squashed
+        ]
+        if not ids:
+            continue
+        quotes = [rows[c].quote for c in (*ids, *(c for c in cited if c in rows))]
+        if not omission_holds(unit_id, text, quotes):
+            continue
+        entry["fact_ids"] = [*cited, *ids]
+
+
+#: Dispositions that already withhold a unit: the register fold leaves them alone.
+_WITHHELD = frozenset({"DEFER_UNRESOLVED", "NON_CONTENT"})
+
+
+def _fold_register_omitted_units(output: dict[str, Any], facts: FactsDocument) -> None:
+    """An inherited example code block that has no printable form because the findings register
+    refutes a line of it is omitted citing that register row (``must_correct.
+    REGISTER_OMITTED_RATIONALE``), together with the lead-in paragraph that introduces it.
+
+    Decision (BL-088, supervisor 2026-11-14, audit O4): the register row is the R14 recorded
+    decision; R36 (a)(2) "omit the claim citing the fact that contradicts it". Such an example is
+    unselectable (``planning.register_refuted_example_ids``, BL-081), and an example fence prints
+    only through the plan (``placement.renders_verbatim``), so keeping the block fails
+    disposition_coverage ("kept but not printed") and superseding or omitting it uncited fails
+    live_readme_loss / BC-17 -- no disposition the model could give passed. Measured: hosted Lane R
+    run 43529876835 (Aspose.3D-FOSS-for-.NET ``024.code_block``/``028.code_block``, whose
+    ``scene.Save(..., FileFormat.FBX7400Binary)`` / ``FileFormat.WavefrontOBJ`` lines are OPEN
+    register rows). Every reader accepts the omission by the same marker and citation: BC-17
+    (``parity_gate.disposition_is_non_loss``), live_readme_loss (an accounting disposition citing a
+    row), disposition_coverage (nothing is kept) and S4's coverage audit (``_omission_gap``)."""
+    from repo_presenter.readme.composition.planning import register_refuted_example_ids
+    from repo_presenter.readme.validation.must_correct import (
+        REGISTER_OMITTED_RATIONALE,
+        open_finding_citations,
+    )
+
+    refuted = register_refuted_example_ids(facts)
+    if not refuted:
+        return
+    rows = open_finding_citations(facts.repository)
+    if not rows:
+        return
+    units = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    by_unit = {str(entry.get("unit_id", "")): entry for entry in output.get("dispositions", [])}
+    by_ordinal = {
+        ordinal: unit_id
+        for unit_id in by_unit
+        if (ordinal := _unit_ordinal(unit_id)) is not None
+    }
+    for unit_id, (polarity, example_id) in sorted(_example_status(facts).items()):
+        entry = by_unit.get(unit_id)
+        if entry is None or polarity != "SUPPORTED" or example_id not in refuted:
+            continue
+        if entry.get("disposition") in _WITHHELD:
+            continue
+        squashed = " ".join(units.get(unit_id, "").split())
+        ids = sorted(cid for cid, row in rows.items() if " ".join(row.quote.split()) in squashed)
+        if not ids:
+            continue
+        entry["disposition"] = "OMIT_UNSUPPORTED"
+        entry["destination_section"] = None
+        entry["fact_ids"] = ids
+        entry["rationale"] = (
+            REGISTER_OMITTED_RATIONALE + f"its example {example_id} prints a refuted line."
+        )[:_RATIONALE_LIMIT]
+        ordinal = _unit_ordinal(unit_id)
+        lead_id = by_ordinal.get(ordinal - 1) if ordinal is not None else None
+        lead = by_unit.get(lead_id or "")
+        if (
+            lead is not None
+            and _unit_kind(str(lead_id)) == "paragraph"
+            and units.get(str(lead_id), "").rstrip().endswith(":")
+            and lead.get("disposition") not in _WITHHELD
+        ):
+            lead["disposition"] = "OMIT_UNSUPPORTED"
+            lead["destination_section"] = None
+            lead["fact_ids"] = ids
+            lead["rationale"] = (
+                REGISTER_OMITTED_RATIONALE + f"lead-in of the omitted {unit_id}."
+            )[:_RATIONALE_LIMIT]
 
 
 def _fold_positional_pointers(output: dict[str, Any], facts: FactsDocument) -> None:

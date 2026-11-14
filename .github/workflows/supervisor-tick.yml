@@ -46,6 +46,8 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          # Read-only here (contents: read): fetches the failure refs for the Pareto below.
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
         run: |
           status=0
           {
@@ -67,6 +69,14 @@ jobs:
             python ops/checks/backlog_check.py --report 2>&1 | tail -30
             set -e
             echo '```'
+            echo
+            # BL-084 (owner, 2026-11-13): every hosted failure is classified at its source; the
+            # portfolio Pareto of each cell's latest record says which class to fix first (R36b).
+            echo "### Failure classes"
+            echo
+            set +e
+            python -m repo_presenter.failures pareto --remote "https://github.com/${GITHUB_REPOSITORY}.git" --limit 15 2>&1 | tail -25
+            set -e
             for cmd in "doctor" "tick" "worker-tick --dry-run --holder supervisor"; do
               echo
               echo "### gatecli.py $cmd"
