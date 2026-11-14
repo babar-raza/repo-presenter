@@ -3,20 +3,19 @@
   "card": "TC-028a",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-09T21:48:18Z",
-  "base_rev": "91bf36dd96e6e14cd3dd4af5b5fc72dbb9d3141c",
-  "head_rev": "9c08111bd4e9bd89f5983a62f8cde8e50e0d7756",
+  "generated_at": "2026-11-14T21:47:07Z",
+  "base_rev": "f59a6e93deae23aa1d9944a253157e788e98fbe7",
+  "head_rev": "ae56329d53155e08eaf05ec8d8f1f5dc3bec2e4c",
   "card_sha256": "aee44520766910cbadd9108e3880d45566ec3a4b4056ebc504bccd381b3ad644",
-  "checker_fileset_sha256": "d94619bccd01934755bd7d11a23bb17e14d6de0f2c1ba69b71d49b1eb255c24f",
+  "checker_fileset_sha256": "5159fd4f399e1bc2f6165dec7ce2583579964a4a90f86725387828ed4b436d83",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
-    "python": "3.13.15",
-    "platform": "Windows-11-10.0.26300-SP0"
+    "python": "3.13.18",
+    "platform": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
     "changed_paths": [
-      "src/repo_presenter/recertify.py",
       "tests/test_recertify_gate.py"
     ],
     "violations": [],
@@ -29,8 +28,8 @@
         {
           "command": "python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q",
           "exit_code": 0,
-          "duration_s": 32.182,
-          "stdout_sha256": "502212337c4d390f1eeb566a13e77d2fa9ae74f8379eb6aeefdb02c21edda7dc"
+          "duration_s": 10.506,
+          "stdout_sha256": "cfe84b229a25152f55a1c79db219b6c4e079d534103eceb5abb12486398c0aca"
         }
       ],
       "all_passed": true
@@ -41,8 +40,8 @@
         {
           "command": "python -m pytest tests/test_recertify_gate.py tests/test_recertify.py -q",
           "exit_code": 0,
-          "duration_s": 28.995,
-          "stdout_sha256": "cf4a67cde2c6ce7ff620fc386ef50d72327eb7d80dd62291d473963bfffad2d8"
+          "duration_s": 10.28,
+          "stdout_sha256": "60d5f97189fb27f7ab1108137ec2bf56eaec6fd1e25787836e5cbf597f03525c"
         }
       ],
       "all_passed": true
