@@ -1,0 +1,851 @@
+{
+  "confinement": {
+    "edits": 3,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "30d6026119d74b98025cb34b45fc08313831f1f5b89131cbe90124e7acb0c264",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2596,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction LR\n    i1[\"An existing EPS or XPS document (.ps, .eps, and .xps files)\"]\n    i2[\"Nothing — authored from scratch\"]\n  end\n  PRODUCT[\"Aspose.Page FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Read PS and EPS documents (PsDocument)\"]\n      c2[\"Read XPS packages (XpsDocument)\"]\n      c3[\"Author new documents (PsDocument.create, XpsDocument.create)\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"Build the render model (RenderModelBuilder)\"]\n      c5[\"Write PDF and raster output (PdfWriter, RasterRenderer)\"]\n      c6[\"MCP server tools for automated conversion\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF documents\"]\n    o2[\"PNG, JPEG, BMP, and TIFF images\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1316 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing EPS or XPS<br/>document (.ps, .eps,<br/>and .xps files)\"]\n    i2[\"Nothing — authored<br/>from scratch\"]\n  end\n  PRODUCT[\"Aspose.Page FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Read PS and EPS<br/>documents (PsDocument)\"]\n    c2[\"Read XPS packages<br/>(XpsDocument)\"]\n    c3[\"Author new documents<br/>(PsDocument.create,<br/>XpsDocument.create)\"]\n    c4[\"Build the render model<br/>(RenderModelBuilder)\"]\n    c5[\"Write PDF and raster<br/>output (PdfWriter,<br/>RasterRenderer)\"]\n    c6[\"MCP server tools for<br/>automated conversion\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF documents\"]\n    o2[\"PNG, JPEG, BMP, and<br/>TIFF images\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1671
+    },
+    {
+      "detector": "type_description",
+      "end": 13237,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.pdf.fonts.pdfembeddedfont",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.pdf.fonts.PdfEmbeddedFont"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 353,
+      "original": "Class with 17 properties.",
+      "rationale": "line 353: the count cell 'Class with 17 properties.' miscounts the own public members of PdfEmbeddedFont (method=0,dunder=0,init=0,property=0,field=19,inherits=0); the true count replaces it",
+      "replacement": "Class with 19 properties.",
+      "start": 13212
+    },
+    {
+      "detector": "type_description",
+      "end": 14693,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.imagesaveoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.ImageSaveOptions"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 384,
+      "original": "Class with 5 properties.",
+      "rationale": "line 384: the count cell 'Class with 5 properties.' miscounts the own public members of ImageSaveOptions (method=0,dunder=0,init=0,property=0,field=6,inherits=0); the true count replaces it",
+      "replacement": "Class with 6 properties.",
+      "start": 14669
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "2018a53f745f96370b49ac41f56afd062c07834693623dafe0997c47875bb81e",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1,
+    "FALSE_CLAIM_FIX": 2
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "format:input.jxr",
+        "format:input.wdp"
+      ],
+      "line": 0,
+      "reason": "2 verified format(s) named nowhere in the README; would fill At a Glance or Key Capabilities: format:input.jxr, format:input.wdp",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 55,
+      "reason": "the README marks 'PDF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+      "text": "o1[\"PDF documents\"]"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:008"
+      ],
+      "line": 265,
+      "reason": "the example verifier recorded a failure for the example on lines 265-270: example 8: FAILED; ImportError; ran against the repository source tree; the package would not build",
+      "text": "from aspose.page.mcp import create_server"
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.axialshading"
+      ],
+      "line": 288,
+      "reason": "the count only cell does not describe AxialShading, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.ciebasedcolorspace"
+      ],
+      "line": 289,
+      "reason": "the count only cell does not describe CieBasedColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.colorspacepaint"
+      ],
+      "line": 291,
+      "reason": "the count only cell does not describe ColorSpacePaint, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.devicecolorspace"
+      ],
+      "line": 292,
+      "reason": "the count only cell does not describe DeviceColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.devicencolorspace"
+      ],
+      "line": 293,
+      "reason": "the count only cell does not describe DeviceNColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.indexedcolorspace"
+      ],
+      "line": 296,
+      "reason": "the count only cell does not describe IndexedColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.patterncolorspace"
+      ],
+      "line": 302,
+      "reason": "the count only cell does not describe PatternColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.patternpaint"
+      ],
+      "line": 303,
+      "reason": "the count only cell does not describe PatternPaint, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.radialshading"
+      ],
+      "line": 305,
+      "reason": "the count only cell does not describe RadialShading, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.sampledfunction"
+      ],
+      "line": 312,
+      "reason": "the count only cell does not describe SampledFunction, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 8 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.separationcolorspace"
+      ],
+      "line": 313,
+      "reason": "the count only cell does not describe SeparationColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.shadingpattern"
+      ],
+      "line": 314,
+      "reason": "the count only cell does not describe ShadingPattern, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.stitchingfunction"
+      ],
+      "line": 317,
+      "reason": "the count only cell does not describe StitchingFunction, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 5 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.common.color_resources.tilingpattern"
+      ],
+      "line": 320,
+      "reason": "the count only cell does not describe TilingPattern, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.image.raster_writer.rasterwriter"
+      ],
+      "line": 331,
+      "reason": "the count only cell does not describe RasterWriter, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.image.raster_writer.rendermodelrasterwriter"
+      ],
+      "line": 332,
+      "reason": "the count only cell does not describe RenderModelRasterWriter, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.pdf.fonts.pdfembeddedfont"
+      ],
+      "line": 353,
+      "reason": "the count only cell does not describe PdfEmbeddedFont, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 17 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.pdf.writer.rectwrapper"
+      ],
+      "line": 356,
+      "reason": "the count only cell does not describe RectWrapper, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.cliptype"
+      ],
+      "line": 364,
+      "reason": "the boilerplate label cell does not describe ClipType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.clipperbase"
+      ],
+      "line": 366,
+      "reason": "the count only cell does not describe ClipperBase, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 35 methods and 6 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.direction"
+      ],
+      "line": 368,
+      "reason": "the boilerplate label cell does not describe Direction, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.doublepoint"
+      ],
+      "line": 369,
+      "reason": "the count only cell does not describe DoublePoint, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.edgeside"
+      ],
+      "line": 371,
+      "reason": "the boilerplate label cell does not describe EdgeSide, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.fonts.embeddedtype42"
+      ],
+      "line": 372,
+      "reason": "the count only cell does not describe EmbeddedType42, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.endtype"
+      ],
+      "line": 373,
+      "reason": "the boilerplate label cell does not describe EndType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.font_cache.fontcache"
+      ],
+      "line": 376,
+      "reason": "the count only cell does not describe FontCache, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 methods."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.font_cache.fontmetrics"
+      ],
+      "line": 377,
+      "reason": "the count only cell does not describe FontMetrics, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.font_cache.fontrecord"
+      ],
+      "line": 378,
+      "reason": "the count only cell does not describe FontRecord, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.ttf_outline.glyphpoint"
+      ],
+      "line": 381,
+      "reason": "the count only cell does not describe GlyphPoint, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.imagesaveoptions"
+      ],
+      "line": 384,
+      "reason": "the count only cell does not describe ImageSaveOptions, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 5 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.intpoint"
+      ],
+      "line": 385,
+      "reason": "the count only cell does not describe IntPoint, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.intrect"
+      ],
+      "line": 386,
+      "reason": "the count only cell does not describe IntRect, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.intersectnode"
+      ],
+      "line": 387,
+      "reason": "the count only cell does not describe IntersectNode, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.join"
+      ],
+      "line": 388,
+      "reason": "the count only cell does not describe Join, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.jointype"
+      ],
+      "line": 389,
+      "reason": "the boilerplate label cell does not describe JoinType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.localminima"
+      ],
+      "line": 390,
+      "reason": "the count only cell does not describe LocalMinima, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.outpt"
+      ],
+      "line": 393,
+      "reason": "the count only cell does not describe OutPt, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.outrec"
+      ],
+      "line": 394,
+      "reason": "the count only cell does not describe OutRec, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.pdfsaveoptions"
+      ],
+      "line": 395,
+      "reason": "the count only cell does not describe PdfSaveOptions, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.polyfilltype"
+      ],
+      "line": 396,
+      "reason": "the boilerplate label cell does not describe PolyFillType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.polynode"
+      ],
+      "line": 397,
+      "reason": "the count only cell does not describe PolyNode, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 methods and 8 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.polytree"
+      ],
+      "line": 399,
+      "reason": "the count only cell does not describe PolyTree, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 methods and 10 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.polytype"
+      ],
+      "line": 400,
+      "reason": "the boilerplate label cell does not describe PolyType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the Page PYTHON API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psarray"
+      ],
+      "line": 401,
+      "reason": "the count only cell does not describe PsArray, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psdict"
+      ],
+      "line": 404,
+      "reason": "the count only cell does not describe PsDict, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psfile"
+      ],
+      "line": 407,
+      "reason": "the count only cell does not describe PsFile, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psfontid"
+      ],
+      "line": 408,
+      "reason": "the count only cell does not describe PsFontId, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psgstate"
+      ],
+      "line": 409,
+      "reason": "the count only cell does not describe PsGState, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.psioerror"
+      ],
+      "line": 410,
+      "reason": "the count only cell does not describe PsIOError, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.psinvalidaccess"
+      ],
+      "line": 415,
+      "reason": "the count only cell does not describe PsInvalidAccess, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.pslimitcheck"
+      ],
+      "line": 416,
+      "reason": "the count only cell does not describe PsLimitCheck, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psmark"
+      ],
+      "line": 417,
+      "reason": "the count only cell does not describe PsMark, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psname"
+      ],
+      "line": 418,
+      "reason": "the count only cell does not describe PsName, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psoperator"
+      ],
+      "line": 419,
+      "reason": "the count only cell does not describe PsOperator, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.pspattern"
+      ],
+      "line": 422,
+      "reason": "the count only cell does not describe PsPattern, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psprocedure"
+      ],
+      "line": 423,
+      "reason": "the count only cell does not describe PsProcedure, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.psrangeerror"
+      ],
+      "line": 425,
+      "reason": "the count only cell does not describe PsRangeError, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.pssave"
+      ],
+      "line": 426,
+      "reason": "the count only cell does not describe PsSave, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 property."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.vm.pssavestate"
+      ],
+      "line": 427,
+      "reason": "the count only cell does not describe PsSaveState, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 4 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.objects.psstring"
+      ],
+      "line": 429,
+      "reason": "the count only cell does not describe PsString, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.pssyntaxerror"
+      ],
+      "line": 430,
+      "reason": "the count only cell does not describe PsSyntaxError, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.pstypeerror"
+      ],
+      "line": 433,
+      "reason": "the count only cell does not describe PsTypeError, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.errors.psundefinederror"
+      ],
+      "line": 434,
+      "reason": "the count only cell does not describe PsUndefinedError, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.scanbeam"
+      ],
+      "line": 435,
+      "reason": "the count only cell does not describe Scanbeam, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 2 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.clipper.tedge"
+      ],
+      "line": 436,
+      "reason": "the count only cell does not describe TEdge, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 1 method and 18 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.ps.type1_parser.type1metrics"
+      ],
+      "line": 438,
+      "reason": "the count only cell does not describe Type1Metrics, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 7 properties."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:aspose.page.xps.images.xpsimagestore"
+      ],
+      "line": 455,
+      "reason": "the count only cell does not describe XpsImageStore, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class with 3 methods."
+    }
+  ]
+}
