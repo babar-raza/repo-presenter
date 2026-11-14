@@ -52,21 +52,211 @@
  ```
  
  ## Key Capabilities
-@@ -350,7 +349,7 @@
+@@ -285,39 +284,39 @@
+ 
+ | Class | Description |
+ |---|---|
+-| `AxialShading` | Class with 5 properties. |
+-| `CieBasedColorSpace` | Class with 3 properties. |
++| `AxialShading` | Class that declares the fields color_space, coords, domain, function and extend. |
++| `CieBasedColorSpace` | Class that declares the fields icc_profile, components and ranges. |
+ | `ClipCommand` | Set the current clipping path. |
+-| `ColorSpacePaint` | Class with 2 properties. |
+-| `DeviceColorSpace` | Class with 1 property. |
+-| `DeviceNColorSpace` | Class with 3 properties. |
++| `ColorSpacePaint` | Class that declares the fields space_id and components. |
++| `DeviceColorSpace` | Class that declares the field name. |
++| `DeviceNColorSpace` | Class that declares the fields names, alternate and tint. |
+ | `ExponentialFunction` | ExponentialFunction.evaluate() computes function values for given inputs based on the defined domain, range, and coefficients. |
+ | `ImageCommand` | Render an image resource with a transform. |
+-| `IndexedColorSpace` | Class with 3 properties. |
++| `IndexedColorSpace` | Class that declares the fields base, hival and lookup. |
+ | `Matrix` | Affine transform matrix (a, b, c, d, e, f). |
+ | `Paint` | Fill/stroke paint descriptor. |
+ | `Path` | A sequence of path segments. |
+ | `PathCommand` | Render a path with optional stroke/fill. |
+ | `PathSegment` | A path segment with a kind and control points. |
+-| `PatternColorSpace` | Class with 1 property. |
+-| `PatternPaint` | Class with 3 properties. |
++| `PatternColorSpace` | Class that declares the field base. |
++| `PatternPaint` | Class that declares the fields pattern_id, base_space_id and base_components. |
+ | `Point` | 2D point in the render model. |
+-| `RadialShading` | Class with 5 properties. |
++| `RadialShading` | Class that declares the fields color_space, coords, domain, function and extend. |
+ | `Rect` | Axis-aligned rectangle with min/max coordinates. |
+ | `RenderDocument` | A collection of render pages. |
+ | `RenderImageResource` | Image payload used by raster backends. |
+ | `RenderModelBuilder` | Build render documents incrementally. |
+ | `RenderPage` | A single renderable page with commands. |
+ | `RenderResources` | Shared render resources for a document. |
+-| `SampledFunction` | Class with 1 method and 8 properties. |
+-| `SeparationColorSpace` | Class with 3 properties. |
+-| `ShadingPattern` | Class with 2 properties. |
++| `SampledFunction` | Class that declares the method evaluate and fields including domain, range, size, bits_per_sample, order and encode. |
++| `SeparationColorSpace` | Class that declares the fields name, alternate and tint. |
++| `ShadingPattern` | Class that declares the fields shading and matrix. |
+ | `StateRestoreCommand` | Restore the previous graphics state. |
+ | `StateSaveCommand` | Save the current graphics state. |
+-| `StitchingFunction` | Class with 1 method and 5 properties. |
++| `StitchingFunction` | Class that declares the method evaluate and the fields domain, range, functions, bounds and encode. |
+ | `StrokeStyle` | Stroke style settings for path rendering. |
+ | `TextCommand` | Render text using a font reference and transform. |
+-| `TilingPattern` | Class with 7 properties. |
++| `TilingPattern` | Class that declares fields including paint_type, tiling_type, bbox, x_step, y_step and matrix. |
+ 
+ ---
+ 
+@@ -328,8 +327,8 @@
+ | `DefaultRasterWriter` | The DefaultRasterWriter.write(document, options) method returns the rendered document as a byte array. |
+ | `RasterRenderer` | Render a RenderDocument to a raster surface. |
+ | `RasterSurface` | In-memory RGBA pixel surface. |
+-| `RasterWriter` | Class with 1 method. |
+-| `RenderModelRasterWriter` | Class with 1 method. |
++| `RasterWriter` | Class that inherits from Protocol and declares the method write. |
++| `RenderModelRasterWriter` | Class that declares the method write. |
+ | `SkiaRasterWriter` | Rasterize a RenderDocument using Skia (requires skia-python). |
+ 
+ ---
+@@ -350,10 +349,10 @@
  | Class | Description |
  |---|---|
  | `ImageResource` | Image resource payload for PDF XObject embedding. |
 -| `PdfEmbeddedFont` | Class with 17 properties. |
-+| `PdfEmbeddedFont` | Class with 19 properties. |
++| `PdfEmbeddedFont` | Class that declares fields including base_name, subset_name, subtype, encoding, symbolic and first_char. |
  | `PdfMetadata` | PDF metadata fields for the document info dictionary. |
  | `PdfWriter` | Serialize a render document into PDF 1.4 bytes. |
- | `RectWrapper` | Class with 6 properties. |
-@@ -381,7 +380,7 @@
- | `GlyphPoint` | Class with 3 properties. |
+-| `RectWrapper` | Class with 6 properties. |
++| `RectWrapper` | Class that declares the properties x_max, x_min, y_max and y_min. |
+ 
+ ---
+ 
+@@ -363,79 +362,79 @@
+ |---|---|
+ | `ClipType` | Class in the Page PYTHON API. |
+ | `Clipper` | The Clipper class offers methods such as execute() and add_edge_to_sel() to perform polygon clipping and edge management. |
+-| `ClipperBase` | Class with 35 methods and 6 properties. |
++| `ClipperBase` | Class that declares methods including add_bounds_to_lml, add_path, add_paths, all_horizontal, ascend_to_max and clear and the fields minima_list, current_lm, edges, use_full_range, has_open_paths and preserve_collinear. |
+ | `ClipperException` | Class extending Exception. |
+ | `Direction` | Class in the Page PYTHON API. |
+-| `DoublePoint` | Class with 2 properties. |
++| `DoublePoint` | Class that declares the fields x and y. |
+ | `DscMetadata` | Container for DSC metadata extracted from PS/EPS comments. |
+ | `EdgeSide` | Class in the Page PYTHON API. |
+-| `EmbeddedType42` | Class with 3 properties. |
++| `EmbeddedType42` | Class that declares the fields data, units_per_em and code_widths. |
+ | `EndType` | Class in the Page PYTHON API. |
+ | `ExecutionContext` | Holds interpreter stacks, dictionaries, and metadata for execution. |
+ | `FilterResult` | Result of decoding a filter chain. |
+-| `FontCache` | Class with 4 methods. |
+-| `FontMetrics` | Class with 2 properties. |
+-| `FontRecord` | Class with 4 properties. |
++| `FontCache` | Class that declares the methods find_font, load and metrics_for. |
++| `FontMetrics` | Class that declares the fields units_per_em and code_widths. |
++| `FontRecord` | Class that declares the fields name, style, path and is_monospace. |
+ | `FontResolver` | Resolve fonts from names or PostScript dictionaries. |
+ | `FontResource` | Represents a resolved font resource. |
+-| `GlyphPoint` | Class with 3 properties. |
++| `GlyphPoint` | Class that declares the fields x, y and on_curve. |
  | `GraphicsState` | Tracks current graphics state parameters. |
  | `ImageInfo` | Decoded raster image data. |
 -| `ImageSaveOptions` | Class with 5 properties. |
-+| `ImageSaveOptions` | Class with 6 properties. |
- | `IntPoint` | Class with 2 properties. |
- | `IntRect` | Class with 4 properties. |
- | `IntersectNode` | Class with 1 method and 4 properties. |
+-| `IntPoint` | Class with 2 properties. |
+-| `IntRect` | Class with 4 properties. |
+-| `IntersectNode` | Class with 1 method and 4 properties. |
+-| `Join` | Class with 1 method and 3 properties. |
++| `ImageSaveOptions` | Class that declares the fields format, dpi, raster_writer, additional_fonts_folder, opaque_background and font_resolver. |
++| `IntPoint` | Class that declares the fields x and y. |
++| `IntRect` | Class that declares the fields left, top, right and bottom. |
++| `IntersectNode` | Class that declares the fields edge1, edge2, pt and next. |
++| `Join` | Class that declares the fields out_pt1, out_pt2 and off_pt. |
+ | `JoinType` | Class in the Page PYTHON API. |
+-| `LocalMinima` | Class with 1 method and 4 properties. |
++| `LocalMinima` | Class that declares the fields y, left_bound, right_bound and next. |
+ | `OperatorEntry` | Descriptor for a registered PostScript operator. |
+ | `OperatorRegistry` | Register and resolve PostScript operator implementations. |
+-| `OutPt` | Class with 1 method and 4 properties. |
+-| `OutRec` | Class with 1 method and 7 properties. |
+-| `PdfSaveOptions` | Class with 2 properties. |
++| `OutPt` | Class that declares the fields idx, pt, next and prev. |
++| `OutRec` | Class that declares fields including idx, is_hole, is_open, first_left, pts and bottom_pt. |
++| `PdfSaveOptions` | Class that declares the fields no_compression and additional_fonts_folder. |
+ | `PolyFillType` | Class in the Page PYTHON API. |
+-| `PolyNode` | Class with 2 methods and 8 properties. |
++| `PolyNode` | Class that declares the method add_child and the properties child_count, contour and is_hole. |
+ | `PolyOffsetBuilder` | PolyOffsetBuilder.add_point(pt) adds a vertex to the polygon before computing offset geometry, and build() finalizes the construction. |
+-| `PolyTree` | Class with 4 methods and 10 properties. |
++| `PolyTree` | Class that inherits from PolyNode and declares the methods clear and get_first and the property total. |
+ | `PolyType` | Class in the Page PYTHON API. |
+-| `PsArray` | Class with 1 property. |
++| `PsArray` | Class that declares the field items. |
+ | `PsCanvas` | Canvas that appends PostScript operators to a page. |
+ | `PsConversionPipeline` | Convert PS/EPS byte streams into render model documents. |
+-| `PsDict` | Class with 1 property. |
++| `PsDict` | Class that declares the field items. |
+ | `PsDocument` | Represents a loaded or editable PS/EPS document. |
+ | `PsError` | Base PostScript error. |
+-| `PsFile` | Class with 3 properties. |
+-| `PsFontId` | Class with 1 property. |
+-| `PsGState` | Class with 1 property. |
+-| `PsIOError` | Class with 1 method and 2 properties. |
++| `PsFile` | Class that declares the fields name, mode and data. |
++| `PsFontId` | Class that declares the field id. |
++| `PsGState` | Class that declares the field state. |
++| `PsIOError` | Class that inherits from PsError. |
+ | `PsImage` | Raster image container for embedding in PS/EPS. |
+ | `PsImageResource` | Represents a decoded image resource. |
+ | `PsImageStore` | Store image resources by id. |
+ | `PsInterpreter` | Execute PostScript/EPS objects using a registry of operators. |
+-| `PsInvalidAccess` | Class with 1 method and 2 properties. |
+-| `PsLimitCheck` | Class with 1 method and 2 properties. |
+-| `PsMark` | Class with 1 property. |
+-| `PsName` | Class with 2 properties. |
+-| `PsOperator` | Class with 1 property. |
++| `PsInvalidAccess` | Class that inherits from PsError. |
++| `PsLimitCheck` | Class that inherits from PsError. |
++| `PsMark` | Class that declares the field kind. |
++| `PsName` | Class that declares the fields value and literal. |
++| `PsOperator` | Class that declares the field name. |
+ | `PsPage` | Editable PS/EPS page. |
+ | `PsParser` | Parse PostScript/EPS tokens into language objects. |
+-| `PsPattern` | Class with 2 properties. |
+-| `PsProcedure` | Class with 1 property. |
++| `PsPattern` | Class that declares the fields pattern_id and pattern. |
++| `PsProcedure` | Class that declares the field items. |
+ | `PsQuit` | Internal non-error signal used by PostScript `quit`. |
+-| `PsRangeError` | Class with 1 method and 2 properties. |
+-| `PsSave` | Class with 1 property. |
+-| `PsSaveState` | Class with 4 properties. |
++| `PsRangeError` | Class that inherits from PsError. |
++| `PsSave` | Class that declares the field state. |
++| `PsSaveState` | Class that declares the fields operand_stack, execution_stack, dictionary_stack and graphics_state_stack. |
+ | `PsStack` | Simple stack implementation for PostScript execution. |
+-| `PsString` | Class with 3 properties. |
+-| `PsSyntaxError` | Class with 1 method and 2 properties. |
++| `PsString` | Class that declares the fields value, remaining_filter and filter_params. |
++| `PsSyntaxError` | Class that inherits from PsError. |
+ | `PsToken` | Represents a token from a PostScript/EPS input stream. |
+ | `PsTokenizer` | Tokenize PostScript/EPS bytes into language tokens. |
+-| `PsTypeError` | Class with 1 method and 2 properties. |
+-| `PsUndefinedError` | Class with 1 method and 2 properties. |
+-| `Scanbeam` | Class with 1 method and 2 properties. |
+-| `TEdge` | Class with 1 method and 18 properties. |
++| `PsTypeError` | Class that inherits from PsError. |
++| `PsUndefinedError` | Class that inherits from PsError. |
++| `Scanbeam` | Class that declares the fields y and next. |
++| `TEdge` | Class that declares fields including bot, curr, top, delta, dx and poly_typ. |
+ | `TrueTypeFont` | TrueTypeFont offers low‑level glyph metrics such as advance width, vertical advance, and outline points for precise text layout. |
+-| `Type1Metrics` | Class with 7 properties. |
++| `Type1Metrics` | Class that declares fields including font_name, units_per_em, glyph_widths, code_widths, encoding and font_bbox. |
+ 
+ ---
+ 
+@@ -452,7 +451,7 @@
+ | `XpsGlyphs` | XPS glyphs element. |
+ | `XpsImage` | XPS image element. |
+ | `XpsImageResource` | Decoded image resource. |
+-| `XpsImageStore` | Class with 3 methods. |
++| `XpsImageStore` | Class that declares the methods get and register. |
+ | `XpsPackage` | Represents an XPS package. |
+ | `XpsParser` | Parse XPS package relationships to locate pages. |
+ | `XpsPath` | XPS path element. |

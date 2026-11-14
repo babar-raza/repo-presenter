@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 3,
+    "edits": 61,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "30d6026119d74b98025cb34b45fc08313831f1f5b89131cbe90124e7acb0c264",
+  "corrected_sha256": "c1ebcbdcca1c001f1a2a3afea5991896679aadff558da9d303a8095cb1c8ef6f",
   "edits": [
     {
       "detector": "glance_layout",
@@ -27,6 +27,334 @@
     },
     {
       "detector": "type_description",
+      "end": 10467,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.axialshading",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.AxialShading"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 288,
+      "original": "Class with 5 properties.",
+      "rationale": "line 288: the count only cell 'Class with 5 properties.' does not describe AxialShading and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields color_space, coords, domain, function and extend.",
+      "start": 10443
+    },
+    {
+      "detector": "type_description",
+      "end": 10519,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.ciebasedcolorspace",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.CieBasedColorSpace"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 289,
+      "original": "Class with 3 properties.",
+      "rationale": "line 289: the count only cell 'Class with 3 properties.' does not describe CieBasedColorSpace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields icc_profile, components and ranges.",
+      "start": 10495
+    },
+    {
+      "detector": "type_description",
+      "end": 10619,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.colorspacepaint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.ColorSpacePaint"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 291,
+      "original": "Class with 2 properties.",
+      "rationale": "line 291: the count only cell 'Class with 2 properties.' does not describe ColorSpacePaint and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields space_id and components.",
+      "start": 10595
+    },
+    {
+      "detector": "type_description",
+      "end": 10667,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.devicecolorspace",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.DeviceColorSpace"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 292,
+      "original": "Class with 1 property.",
+      "rationale": "line 292: the count only cell 'Class with 1 property.' does not describe DeviceColorSpace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field name.",
+      "start": 10645
+    },
+    {
+      "detector": "type_description",
+      "end": 10718,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.devicencolorspace",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.DeviceNColorSpace"
+        }
+      ],
+      "index": 5,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 293,
+      "original": "Class with 3 properties.",
+      "rationale": "line 293: the count only cell 'Class with 3 properties.' does not describe DeviceNColorSpace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields names, alternate and tint.",
+      "start": 10694
+    },
+    {
+      "detector": "type_description",
+      "end": 10988,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.indexedcolorspace",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.IndexedColorSpace"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 296,
+      "original": "Class with 3 properties.",
+      "rationale": "line 296: the count only cell 'Class with 3 properties.' does not describe IndexedColorSpace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields base, hival and lookup.",
+      "start": 10964
+    },
+    {
+      "detector": "type_description",
+      "end": 11310,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.patterncolorspace",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.PatternColorSpace"
+        }
+      ],
+      "index": 7,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 302,
+      "original": "Class with 1 property.",
+      "rationale": "line 302: the count only cell 'Class with 1 property.' does not describe PatternColorSpace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field base.",
+      "start": 11288
+    },
+    {
+      "detector": "type_description",
+      "end": 11356,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.patternpaint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.PatternPaint"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 303,
+      "original": "Class with 3 properties.",
+      "rationale": "line 303: the count only cell 'Class with 3 properties.' does not describe PatternPaint and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields pattern_id, base_space_id and base_components.",
+      "start": 11332
+    },
+    {
+      "detector": "type_description",
+      "end": 11447,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.radialshading",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.RadialShading"
+        }
+      ],
+      "index": 9,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 305,
+      "original": "Class with 5 properties.",
+      "rationale": "line 305: the count only cell 'Class with 5 properties.' does not describe RadialShading and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields color_space, coords, domain, function and extend.",
+      "start": 11423
+    },
+    {
+      "detector": "type_description",
+      "end": 11879,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.sampledfunction",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.SampledFunction"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.sampledfunction.evaluate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.SampledFunction.evaluate"
+        }
+      ],
+      "index": 10,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 312,
+      "original": "Class with 1 method and 8 properties.",
+      "rationale": "line 312: the count only cell 'Class with 1 method and 8 properties.' does not describe SampledFunction and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method evaluate and fields including domain, range, size, bits_per_sample, order and encode.",
+      "start": 11842
+    },
+    {
+      "detector": "type_description",
+      "end": 11933,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.separationcolorspace",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.SeparationColorSpace"
+        }
+      ],
+      "index": 11,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 313,
+      "original": "Class with 3 properties.",
+      "rationale": "line 313: the count only cell 'Class with 3 properties.' does not describe SeparationColorSpace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields name, alternate and tint.",
+      "start": 11909
+    },
+    {
+      "detector": "type_description",
+      "end": 11981,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.shadingpattern",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.ShadingPattern"
+        }
+      ],
+      "index": 12,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 314,
+      "original": "Class with 2 properties.",
+      "rationale": "line 314: the count only cell 'Class with 2 properties.' does not describe ShadingPattern and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields shading and matrix.",
+      "start": 11957
+    },
+    {
+      "detector": "type_description",
+      "end": 12168,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.stitchingfunction",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.StitchingFunction"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.stitchingfunction.evaluate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.StitchingFunction.evaluate"
+        }
+      ],
+      "index": 13,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 317,
+      "original": "Class with 1 method and 5 properties.",
+      "rationale": "line 317: the count only cell 'Class with 1 method and 5 properties.' does not describe StitchingFunction and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method evaluate and the fields domain, range, functions, bounds and encode.",
+      "start": 12131
+    },
+    {
+      "detector": "type_description",
+      "end": 12347,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.common.color_resources.tilingpattern",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.common.color_resources.TilingPattern"
+        }
+      ],
+      "index": 14,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 320,
+      "original": "Class with 7 properties.",
+      "rationale": "line 320: the count only cell 'Class with 7 properties.' does not describe TilingPattern and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares fields including paint_type, tiling_type, bbox, x_step, y_step and matrix.",
+      "start": 12323
+    },
+    {
+      "detector": "type_description",
+      "end": 12691,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.image.raster_writer.rasterwriter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.image.raster_writer.RasterWriter"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.image.raster_writer.rasterwriter.write",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.image.raster_writer.RasterWriter.write"
+        }
+      ],
+      "index": 15,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 331,
+      "original": "Class with 1 method.",
+      "rationale": "line 331: the count only cell 'Class with 1 method.' does not describe RasterWriter and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from Protocol and declares the method write.",
+      "start": 12671
+    },
+    {
+      "detector": "type_description",
+      "end": 12744,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.image.raster_writer.rendermodelrasterwriter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.image.raster_writer.RenderModelRasterWriter"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.image.raster_writer.rendermodelrasterwriter.write",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.image.raster_writer.RenderModelRasterWriter.write"
+        }
+      ],
+      "index": 16,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 332,
+      "original": "Class with 1 method.",
+      "rationale": "line 332: the count only cell 'Class with 1 method.' does not describe RenderModelRasterWriter and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method write.",
+      "start": 12724
+    },
+    {
+      "detector": "type_description",
       "end": 13237,
       "evidence": [
         {
@@ -36,13 +364,279 @@
           "value": "aspose.page.pdf.fonts.PdfEmbeddedFont"
         }
       ],
-      "index": 1,
+      "index": 17,
       "kind": "FALSE_CLAIM_FIX",
       "line": 353,
       "original": "Class with 17 properties.",
-      "rationale": "line 353: the count cell 'Class with 17 properties.' miscounts the own public members of PdfEmbeddedFont (method=0,dunder=0,init=0,property=0,field=19,inherits=0); the true count replaces it",
-      "replacement": "Class with 19 properties.",
+      "rationale": "line 353: the count only cell 'Class with 17 properties.' does not describe PdfEmbeddedFont and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares fields including base_name, subset_name, subtype, encoding, symbolic and first_char.",
       "start": 13212
+    },
+    {
+      "detector": "type_description",
+      "end": 13422,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.pdf.writer.rectwrapper",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.pdf.writer.RectWrapper"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.pdf.writer.rectwrapper.x_max",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.pdf.writer.RectWrapper.x_max"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.pdf.writer.rectwrapper.x_min",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.pdf.writer.RectWrapper.x_min"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.pdf.writer.rectwrapper.y_max",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.pdf.writer.RectWrapper.y_max"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.pdf.writer.rectwrapper.y_min",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.pdf.writer.RectWrapper.y_min"
+        }
+      ],
+      "index": 18,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 356,
+      "original": "Class with 6 properties.",
+      "rationale": "line 356: the count only cell 'Class with 6 properties.' does not describe RectWrapper and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the properties x_max, x_min, y_max and y_min.",
+      "start": 13398
+    },
+    {
+      "detector": "type_description",
+      "end": 13715,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.add_bounds_to_lml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.add_bounds_to_lml"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.add_path",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.add_path"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.add_paths",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.add_paths"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.all_horizontal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.all_horizontal"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.ascend_to_max",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.ascend_to_max"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.clear"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.descend_to_min",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.descend_to_min"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.do_minima_lml",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.do_minima_lml"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.get_bounds",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.get_bounds"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.get_last_horz",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.get_last_horz"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.init_edge",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.init_edge"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.clipperbase.init_edge2",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.ClipperBase.init_edge2"
+        }
+      ],
+      "index": 19,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 366,
+      "original": "Class with 35 methods and 6 properties.",
+      "rationale": "line 366: the count only cell 'Class with 35 methods and 6 properties.' does not describe ClipperBase and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including add_bounds_to_lml, add_path, add_paths, all_horizontal, ascend_to_max and clear and the fields minima_list, current_lm, edges, use_full_range, has_open_paths and preserve_collinear.",
+      "start": 13676
+    },
+    {
+      "detector": "type_description",
+      "end": 13860,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.doublepoint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.DoublePoint"
+        }
+      ],
+      "index": 20,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 369,
+      "original": "Class with 2 properties.",
+      "rationale": "line 369: the count only cell 'Class with 2 properties.' does not describe DoublePoint and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields x and y.",
+      "start": 13836
+    },
+    {
+      "detector": "type_description",
+      "end": 14034,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.fonts.embeddedtype42",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.fonts.EmbeddedType42"
+        }
+      ],
+      "index": 21,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 372,
+      "original": "Class with 3 properties.",
+      "rationale": "line 372: the count only cell 'Class with 3 properties.' does not describe EmbeddedType42 and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields data, units_per_em and code_widths.",
+      "start": 14010
+    },
+    {
+      "detector": "type_description",
+      "end": 14269,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.font_cache.fontcache",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.font_cache.FontCache"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.font_cache.fontcache.find_font",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.font_cache.FontCache.find_font"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.font_cache.fontcache.load",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.font_cache.FontCache.load"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.font_cache.fontcache.metrics_for",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.font_cache.FontCache.metrics_for"
+        }
+      ],
+      "index": 22,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 376,
+      "original": "Class with 4 methods.",
+      "rationale": "line 376: the count only cell 'Class with 4 methods.' does not describe FontCache and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods find_font, load and metrics_for.",
+      "start": 14248
+    },
+    {
+      "detector": "type_description",
+      "end": 14314,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.font_cache.fontmetrics",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.font_cache.FontMetrics"
+        }
+      ],
+      "index": 23,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 377,
+      "original": "Class with 2 properties.",
+      "rationale": "line 377: the count only cell 'Class with 2 properties.' does not describe FontMetrics and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields units_per_em and code_widths.",
+      "start": 14290
+    },
+    {
+      "detector": "type_description",
+      "end": 14358,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.font_cache.fontrecord",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.font_cache.FontRecord"
+        }
+      ],
+      "index": 24,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 378,
+      "original": "Class with 4 properties.",
+      "rationale": "line 378: the count only cell 'Class with 4 properties.' does not describe FontRecord and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields name, style, path and is_monospace.",
+      "start": 14334
+    },
+    {
+      "detector": "type_description",
+      "end": 14534,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.ttf_outline.glyphpoint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.ttf_outline.GlyphPoint"
+        }
+      ],
+      "index": 25,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 381,
+      "original": "Class with 3 properties.",
+      "rationale": "line 381: the count only cell 'Class with 3 properties.' does not describe GlyphPoint and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields x, y and on_curve.",
+      "start": 14510
     },
     {
       "detector": "type_description",
@@ -55,13 +649,713 @@
           "value": "aspose.page.ps.ImageSaveOptions"
         }
       ],
-      "index": 2,
+      "index": 26,
       "kind": "FALSE_CLAIM_FIX",
       "line": 384,
       "original": "Class with 5 properties.",
-      "rationale": "line 384: the count cell 'Class with 5 properties.' miscounts the own public members of ImageSaveOptions (method=0,dunder=0,init=0,property=0,field=6,inherits=0); the true count replaces it",
-      "replacement": "Class with 6 properties.",
+      "rationale": "line 384: the count only cell 'Class with 5 properties.' does not describe ImageSaveOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields format, dpi, raster_writer, additional_fonts_folder, opaque_background and font_resolver.",
       "start": 14669
+    },
+    {
+      "detector": "type_description",
+      "end": 14735,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.intpoint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.IntPoint"
+        }
+      ],
+      "index": 27,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 385,
+      "original": "Class with 2 properties.",
+      "rationale": "line 385: the count only cell 'Class with 2 properties.' does not describe IntPoint and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields x and y.",
+      "start": 14711
+    },
+    {
+      "detector": "type_description",
+      "end": 14776,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.intrect",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.IntRect"
+        }
+      ],
+      "index": 28,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 386,
+      "original": "Class with 4 properties.",
+      "rationale": "line 386: the count only cell 'Class with 4 properties.' does not describe IntRect and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields left, top, right and bottom.",
+      "start": 14752
+    },
+    {
+      "detector": "type_description",
+      "end": 14836,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.intersectnode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.IntersectNode"
+        }
+      ],
+      "index": 29,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 387,
+      "original": "Class with 1 method and 4 properties.",
+      "rationale": "line 387: the count only cell 'Class with 1 method and 4 properties.' does not describe IntersectNode and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields edge1, edge2, pt and next.",
+      "start": 14799
+    },
+    {
+      "detector": "type_description",
+      "end": 14887,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.join",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.Join"
+        }
+      ],
+      "index": 30,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 388,
+      "original": "Class with 1 method and 3 properties.",
+      "rationale": "line 388: the count only cell 'Class with 1 method and 3 properties.' does not describe Join and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields out_pt1, out_pt2 and off_pt.",
+      "start": 14850
+    },
+    {
+      "detector": "type_description",
+      "end": 14992,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.localminima",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.LocalMinima"
+        }
+      ],
+      "index": 31,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 390,
+      "original": "Class with 1 method and 4 properties.",
+      "rationale": "line 390: the count only cell 'Class with 1 method and 4 properties.' does not describe LocalMinima and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields y, left_bound, right_bound and next.",
+      "start": 14955
+    },
+    {
+      "detector": "type_description",
+      "end": 15198,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.outpt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.OutPt"
+        }
+      ],
+      "index": 32,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 393,
+      "original": "Class with 1 method and 4 properties.",
+      "rationale": "line 393: the count only cell 'Class with 1 method and 4 properties.' does not describe OutPt and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields idx, pt, next and prev.",
+      "start": 15161
+    },
+    {
+      "detector": "type_description",
+      "end": 15251,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.outrec",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.OutRec"
+        }
+      ],
+      "index": 33,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 394,
+      "original": "Class with 1 method and 7 properties.",
+      "rationale": "line 394: the count only cell 'Class with 1 method and 7 properties.' does not describe OutRec and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares fields including idx, is_hole, is_open, first_left, pts and bottom_pt.",
+      "start": 15214
+    },
+    {
+      "detector": "type_description",
+      "end": 15299,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.pdfsaveoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.PdfSaveOptions"
+        }
+      ],
+      "index": 34,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 395,
+      "original": "Class with 2 properties.",
+      "rationale": "line 395: the count only cell 'Class with 2 properties.' does not describe PdfSaveOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields no_compression and additional_fonts_folder.",
+      "start": 15275
+    },
+    {
+      "detector": "type_description",
+      "end": 15406,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polynode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyNode"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polynode.add_child",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyNode.add_child"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polynode.child_count",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyNode.child_count"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polynode.contour",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyNode.contour"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polynode.is_hole",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyNode.is_hole"
+        }
+      ],
+      "index": 35,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 397,
+      "original": "Class with 2 methods and 8 properties.",
+      "rationale": "line 397: the count only cell 'Class with 2 methods and 8 properties.' does not describe PolyNode and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method add_child and the properties child_count, contour and is_hole.",
+      "start": 15368
+    },
+    {
+      "detector": "type_description",
+      "end": 15624,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polytree",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyTree"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polytree.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyTree.clear"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polytree.get_first",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyTree.get_first"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.polytree.total",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.PolyTree.total"
+        }
+      ],
+      "index": 36,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 399,
+      "original": "Class with 4 methods and 10 properties.",
+      "rationale": "line 399: the count only cell 'Class with 4 methods and 10 properties.' does not describe PolyTree and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PolyNode and declares the methods clear and get_first and the property total.",
+      "start": 15585
+    },
+    {
+      "detector": "type_description",
+      "end": 15710,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psarray",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsArray"
+        }
+      ],
+      "index": 37,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 401,
+      "original": "Class with 1 property.",
+      "rationale": "line 401: the count only cell 'Class with 1 property.' does not describe PsArray and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field items.",
+      "start": 15688
+    },
+    {
+      "detector": "type_description",
+      "end": 15903,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psdict",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsDict"
+        }
+      ],
+      "index": 38,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 404,
+      "original": "Class with 1 property.",
+      "rationale": "line 404: the count only cell 'Class with 1 property.' does not describe PsDict and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field items.",
+      "start": 15881
+    },
+    {
+      "detector": "type_description",
+      "end": 16050,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psfile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsFile"
+        }
+      ],
+      "index": 39,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 407,
+      "original": "Class with 3 properties.",
+      "rationale": "line 407: the count only cell 'Class with 3 properties.' does not describe PsFile and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields name, mode and data.",
+      "start": 16026
+    },
+    {
+      "detector": "type_description",
+      "end": 16090,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psfontid",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsFontId"
+        }
+      ],
+      "index": 40,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 408,
+      "original": "Class with 1 property.",
+      "rationale": "line 408: the count only cell 'Class with 1 property.' does not describe PsFontId and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field id.",
+      "start": 16068
+    },
+    {
+      "detector": "type_description",
+      "end": 16130,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psgstate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsGState"
+        }
+      ],
+      "index": 41,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 409,
+      "original": "Class with 1 property.",
+      "rationale": "line 409: the count only cell 'Class with 1 property.' does not describe PsGState and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field state.",
+      "start": 16108
+    },
+    {
+      "detector": "type_description",
+      "end": 16186,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.psioerror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsIOError"
+        }
+      ],
+      "index": 42,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 410,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 410: the count only cell 'Class with 1 method and 2 properties.' does not describe PsIOError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 16149
+    },
+    {
+      "detector": "type_description",
+      "end": 16507,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.psinvalidaccess",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsInvalidAccess"
+        }
+      ],
+      "index": 43,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 415,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 415: the count only cell 'Class with 1 method and 2 properties.' does not describe PsInvalidAccess and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 16470
+    },
+    {
+      "detector": "type_description",
+      "end": 16566,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.pslimitcheck",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsLimitCheck"
+        }
+      ],
+      "index": 44,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 416,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 416: the count only cell 'Class with 1 method and 2 properties.' does not describe PsLimitCheck and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 16529
+    },
+    {
+      "detector": "type_description",
+      "end": 16604,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psmark",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsMark"
+        }
+      ],
+      "index": 45,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 417,
+      "original": "Class with 1 property.",
+      "rationale": "line 417: the count only cell 'Class with 1 property.' does not describe PsMark and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field kind.",
+      "start": 16582
+    },
+    {
+      "detector": "type_description",
+      "end": 16644,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psname",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsName"
+        }
+      ],
+      "index": 46,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 418,
+      "original": "Class with 2 properties.",
+      "rationale": "line 418: the count only cell 'Class with 2 properties.' does not describe PsName and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields value and literal.",
+      "start": 16620
+    },
+    {
+      "detector": "type_description",
+      "end": 16686,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psoperator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsOperator"
+        }
+      ],
+      "index": 47,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 419,
+      "original": "Class with 1 property.",
+      "rationale": "line 419: the count only cell 'Class with 1 property.' does not describe PsOperator and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field name.",
+      "start": 16664
+    },
+    {
+      "detector": "type_description",
+      "end": 16834,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.pspattern",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsPattern"
+        }
+      ],
+      "index": 48,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 422,
+      "original": "Class with 2 properties.",
+      "rationale": "line 422: the count only cell 'Class with 2 properties.' does not describe PsPattern and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields pattern_id and pattern.",
+      "start": 16810
+    },
+    {
+      "detector": "type_description",
+      "end": 16877,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psprocedure",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsProcedure"
+        }
+      ],
+      "index": 49,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 423,
+      "original": "Class with 1 property.",
+      "rationale": "line 423: the count only cell 'Class with 1 property.' does not describe PsProcedure and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field items.",
+      "start": 16855
+    },
+    {
+      "detector": "type_description",
+      "end": 17004,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.psrangeerror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsRangeError"
+        }
+      ],
+      "index": 50,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 425,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 425: the count only cell 'Class with 1 method and 2 properties.' does not describe PsRangeError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 16967
+    },
+    {
+      "detector": "type_description",
+      "end": 17042,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.pssave",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsSave"
+        }
+      ],
+      "index": 51,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 426,
+      "original": "Class with 1 property.",
+      "rationale": "line 426: the count only cell 'Class with 1 property.' does not describe PsSave and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the field state.",
+      "start": 17020
+    },
+    {
+      "detector": "type_description",
+      "end": 17087,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.vm.pssavestate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.vm.PsSaveState"
+        }
+      ],
+      "index": 52,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 427,
+      "original": "Class with 4 properties.",
+      "rationale": "line 427: the count only cell 'Class with 4 properties.' does not describe PsSaveState and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields operand_stack, execution_stack, dictionary_stack and graphics_state_stack.",
+      "start": 17063
+    },
+    {
+      "detector": "type_description",
+      "end": 17199,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.objects.psstring",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.objects.PsString"
+        }
+      ],
+      "index": 53,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 429,
+      "original": "Class with 3 properties.",
+      "rationale": "line 429: the count only cell 'Class with 3 properties.' does not describe PsString and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields value, remaining_filter and filter_params.",
+      "start": 17175
+    },
+    {
+      "detector": "type_description",
+      "end": 17259,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.pssyntaxerror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsSyntaxError"
+        }
+      ],
+      "index": 54,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 430,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 430: the count only cell 'Class with 1 method and 2 properties.' does not describe PsSyntaxError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 17222
+    },
+    {
+      "detector": "type_description",
+      "end": 17460,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.pstypeerror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsTypeError"
+        }
+      ],
+      "index": 55,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 433,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 433: the count only cell 'Class with 1 method and 2 properties.' does not describe PsTypeError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 17423
+    },
+    {
+      "detector": "type_description",
+      "end": 17523,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.errors.psundefinederror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.errors.PsUndefinedError"
+        }
+      ],
+      "index": 56,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 434,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 434: the count only cell 'Class with 1 method and 2 properties.' does not describe PsUndefinedError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from PsError.",
+      "start": 17486
+    },
+    {
+      "detector": "type_description",
+      "end": 17578,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.scanbeam",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.Scanbeam"
+        }
+      ],
+      "index": 57,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 435,
+      "original": "Class with 1 method and 2 properties.",
+      "rationale": "line 435: the count only cell 'Class with 1 method and 2 properties.' does not describe Scanbeam and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the fields y and next.",
+      "start": 17541
+    },
+    {
+      "detector": "type_description",
+      "end": 17631,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.clipper.tedge",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.clipper.TEdge"
+        }
+      ],
+      "index": 58,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 436,
+      "original": "Class with 1 method and 18 properties.",
+      "rationale": "line 436: the count only cell 'Class with 1 method and 18 properties.' does not describe TEdge and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares fields including bot, curr, top, delta, dx and poly_typ.",
+      "start": 17593
+    },
+    {
+      "detector": "type_description",
+      "end": 17827,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.ps.type1_parser.type1metrics",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.ps.type1_parser.Type1Metrics"
+        }
+      ],
+      "index": 59,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 438,
+      "original": "Class with 7 properties.",
+      "rationale": "line 438: the count only cell 'Class with 7 properties.' does not describe Type1Metrics and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares fields including font_name, units_per_em, glyph_widths, code_widths, encoding and font_bbox.",
+      "start": 17803
+    },
+    {
+      "detector": "type_description",
+      "end": 18393,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.page.xps.images.xpsimagestore",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.xps.images.XpsImageStore"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.xps.images.xpsimagestore.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.xps.images.XpsImageStore.get"
+        },
+        {
+          "fact_id": "public_symbol:aspose.page.xps.images.xpsimagestore.register",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.page.xps.images.XpsImageStore.register"
+        }
+      ],
+      "index": 60,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 455,
+      "original": "Class with 3 methods.",
+      "rationale": "line 455: the count only cell 'Class with 3 methods.' does not describe XpsImageStore and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods get and register.",
+      "start": 18372
     }
   ],
   "lane": "L",
@@ -78,7 +1372,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 2
+    "FALSE_CLAIM_FIX": 60
   },
   "unapplied": [
     {
@@ -114,221 +1408,12 @@
       "defect": false,
       "detector": "type_description",
       "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.axialshading"
-      ],
-      "line": 288,
-      "reason": "the count only cell does not describe AxialShading, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.ciebasedcolorspace"
-      ],
-      "line": 289,
-      "reason": "the count only cell does not describe CieBasedColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.colorspacepaint"
-      ],
-      "line": 291,
-      "reason": "the count only cell does not describe ColorSpacePaint, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.devicecolorspace"
-      ],
-      "line": 292,
-      "reason": "the count only cell does not describe DeviceColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.devicencolorspace"
-      ],
-      "line": 293,
-      "reason": "the count only cell does not describe DeviceNColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.indexedcolorspace"
-      ],
-      "line": 296,
-      "reason": "the count only cell does not describe IndexedColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.patterncolorspace"
-      ],
-      "line": 302,
-      "reason": "the count only cell does not describe PatternColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.patternpaint"
-      ],
-      "line": 303,
-      "reason": "the count only cell does not describe PatternPaint, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.radialshading"
-      ],
-      "line": 305,
-      "reason": "the count only cell does not describe RadialShading, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.sampledfunction"
-      ],
-      "line": 312,
-      "reason": "the count only cell does not describe SampledFunction, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 8 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.separationcolorspace"
-      ],
-      "line": 313,
-      "reason": "the count only cell does not describe SeparationColorSpace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.shadingpattern"
-      ],
-      "line": 314,
-      "reason": "the count only cell does not describe ShadingPattern, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.stitchingfunction"
-      ],
-      "line": 317,
-      "reason": "the count only cell does not describe StitchingFunction, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 5 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.common.color_resources.tilingpattern"
-      ],
-      "line": 320,
-      "reason": "the count only cell does not describe TilingPattern, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.image.raster_writer.rasterwriter"
-      ],
-      "line": 331,
-      "reason": "the count only cell does not describe RasterWriter, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.image.raster_writer.rendermodelrasterwriter"
-      ],
-      "line": 332,
-      "reason": "the count only cell does not describe RenderModelRasterWriter, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.pdf.fonts.pdfembeddedfont"
-      ],
-      "line": 353,
-      "reason": "the count only cell does not describe PdfEmbeddedFont, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.pdf.writer.rectwrapper"
-      ],
-      "line": 356,
-      "reason": "the count only cell does not describe RectWrapper, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
         "public_symbol:aspose.page.ps.clipper.cliptype"
       ],
       "line": 364,
       "reason": "the boilerplate label cell does not describe ClipType, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Class in the Page PYTHON API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.clipperbase"
-      ],
-      "line": 366,
-      "reason": "the count only cell does not describe ClipperBase, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 35 methods and 6 properties."
     },
     {
       "defect": false,
@@ -345,34 +1430,12 @@
       "defect": false,
       "detector": "type_description",
       "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.doublepoint"
-      ],
-      "line": 369,
-      "reason": "the count only cell does not describe DoublePoint, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
         "public_symbol:aspose.page.ps.clipper.edgeside"
       ],
       "line": 371,
       "reason": "the boilerplate label cell does not describe EdgeSide, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Class in the Page PYTHON API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.fonts.embeddedtype42"
-      ],
-      "line": 372,
-      "reason": "the count only cell does not describe EmbeddedType42, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
     },
     {
       "defect": false,
@@ -389,155 +1452,12 @@
       "defect": false,
       "detector": "type_description",
       "fact_ids": [
-        "public_symbol:aspose.page.ps.font_cache.fontcache"
-      ],
-      "line": 376,
-      "reason": "the count only cell does not describe FontCache, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 methods."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.font_cache.fontmetrics"
-      ],
-      "line": 377,
-      "reason": "the count only cell does not describe FontMetrics, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.font_cache.fontrecord"
-      ],
-      "line": 378,
-      "reason": "the count only cell does not describe FontRecord, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.ttf_outline.glyphpoint"
-      ],
-      "line": 381,
-      "reason": "the count only cell does not describe GlyphPoint, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.imagesaveoptions"
-      ],
-      "line": 384,
-      "reason": "the count only cell does not describe ImageSaveOptions, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.intpoint"
-      ],
-      "line": 385,
-      "reason": "the count only cell does not describe IntPoint, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.intrect"
-      ],
-      "line": 386,
-      "reason": "the count only cell does not describe IntRect, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.intersectnode"
-      ],
-      "line": 387,
-      "reason": "the count only cell does not describe IntersectNode, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.join"
-      ],
-      "line": 388,
-      "reason": "the count only cell does not describe Join, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
         "public_symbol:aspose.page.ps.clipper.jointype"
       ],
       "line": 389,
       "reason": "the boilerplate label cell does not describe JoinType, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Class in the Page PYTHON API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.localminima"
-      ],
-      "line": 390,
-      "reason": "the count only cell does not describe LocalMinima, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.outpt"
-      ],
-      "line": 393,
-      "reason": "the count only cell does not describe OutPt, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.outrec"
-      ],
-      "line": 394,
-      "reason": "the count only cell does not describe OutRec, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.pdfsaveoptions"
-      ],
-      "line": 395,
-      "reason": "the count only cell does not describe PdfSaveOptions, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
     },
     {
       "defect": false,
@@ -554,298 +1474,12 @@
       "defect": false,
       "detector": "type_description",
       "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.polynode"
-      ],
-      "line": 397,
-      "reason": "the count only cell does not describe PolyNode, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 methods and 8 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.polytree"
-      ],
-      "line": 399,
-      "reason": "the count only cell does not describe PolyTree, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 methods and 10 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
         "public_symbol:aspose.page.ps.clipper.polytype"
       ],
       "line": 400,
       "reason": "the boilerplate label cell does not describe PolyType, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Class in the Page PYTHON API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psarray"
-      ],
-      "line": 401,
-      "reason": "the count only cell does not describe PsArray, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psdict"
-      ],
-      "line": 404,
-      "reason": "the count only cell does not describe PsDict, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psfile"
-      ],
-      "line": 407,
-      "reason": "the count only cell does not describe PsFile, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psfontid"
-      ],
-      "line": 408,
-      "reason": "the count only cell does not describe PsFontId, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psgstate"
-      ],
-      "line": 409,
-      "reason": "the count only cell does not describe PsGState, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.psioerror"
-      ],
-      "line": 410,
-      "reason": "the count only cell does not describe PsIOError, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.psinvalidaccess"
-      ],
-      "line": 415,
-      "reason": "the count only cell does not describe PsInvalidAccess, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.pslimitcheck"
-      ],
-      "line": 416,
-      "reason": "the count only cell does not describe PsLimitCheck, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psmark"
-      ],
-      "line": 417,
-      "reason": "the count only cell does not describe PsMark, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psname"
-      ],
-      "line": 418,
-      "reason": "the count only cell does not describe PsName, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psoperator"
-      ],
-      "line": 419,
-      "reason": "the count only cell does not describe PsOperator, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.pspattern"
-      ],
-      "line": 422,
-      "reason": "the count only cell does not describe PsPattern, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psprocedure"
-      ],
-      "line": 423,
-      "reason": "the count only cell does not describe PsProcedure, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.psrangeerror"
-      ],
-      "line": 425,
-      "reason": "the count only cell does not describe PsRangeError, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.pssave"
-      ],
-      "line": 426,
-      "reason": "the count only cell does not describe PsSave, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.vm.pssavestate"
-      ],
-      "line": 427,
-      "reason": "the count only cell does not describe PsSaveState, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.objects.psstring"
-      ],
-      "line": 429,
-      "reason": "the count only cell does not describe PsString, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.pssyntaxerror"
-      ],
-      "line": 430,
-      "reason": "the count only cell does not describe PsSyntaxError, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.pstypeerror"
-      ],
-      "line": 433,
-      "reason": "the count only cell does not describe PsTypeError, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.errors.psundefinederror"
-      ],
-      "line": 434,
-      "reason": "the count only cell does not describe PsUndefinedError, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.scanbeam"
-      ],
-      "line": 435,
-      "reason": "the count only cell does not describe Scanbeam, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.clipper.tedge"
-      ],
-      "line": 436,
-      "reason": "the count only cell does not describe TEdge, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method and 18 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.ps.type1_parser.type1metrics"
-      ],
-      "line": 438,
-      "reason": "the count only cell does not describe Type1Metrics, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.page.xps.images.xpsimagestore"
-      ],
-      "line": 455,
-      "reason": "the count only cell does not describe XpsImageStore, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 methods."
     }
   ]
 }
