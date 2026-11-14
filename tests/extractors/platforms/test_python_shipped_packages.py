@@ -4,7 +4,7 @@ M9 round 43559491132, Words Python Lane L control ab8a03 (seal at 2d2efee2): "Th
 public types" counted the 9 classes of ``ApiExamples/``, a tree package the wheel never contains --
 ``pyproject.toml`` ``[tool.hatch.build.targets.wheel] packages = ["aspose"]`` ships 189.
 
-The fixtures (``tests/fixtures/shipped_packages/*.json``) are real: each repository's root build
+The fixtures (``tests/fixtures/shipped_packages/*.json.gz``) are real: each repository's root build
 manifests verbatim, its tracked ``.py`` paths, and the class/enum/module ``public_symbol`` and
 ``import_path`` facts of its seal at that revision. Words Python is the positive case; the other five
 Python repositories of the portfolio are the negative controls (every package-list shape the
@@ -14,6 +14,7 @@ portfolio uses: setuptools list, setuptools find with include/exclude, a literal
 
 from __future__ import annotations
 
+import gzip
 import json
 from pathlib import Path
 
@@ -31,7 +32,7 @@ FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "shipped_packages"
 
 
 def _load(name: str) -> dict:
-    return json.loads((FIXTURES / f"{name}.json").read_text(encoding="utf-8"))
+    return json.loads(gzip.decompress((FIXTURES / f"{name}.json.gz").read_bytes()))
 
 
 def _facts(case: dict) -> FactsDocument:

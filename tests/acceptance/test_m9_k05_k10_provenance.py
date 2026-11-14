@@ -2,7 +2,7 @@
 known-false list only when its provenance verifies it (``run_m9_auditor.class_provenance``).
 
 Every line below is verbatim from a control of M9 round 43559491132 (its seal at the audited revision);
-the Words Python facts are the real sealed surface (``tests/fixtures/shipped_packages/words_python.json``)
+the Words Python facts are the real sealed surface (``tests/fixtures/shipped_packages/words_python.json.gz``)
 narrowed by the build's package list, the other counts are the sealed facts' numbers. Negative controls:
 the very same lines as sealed before the fixes (198, "Aspose.Words — Enterprise Edition", the Cells C++
 duplicated name), a count of a kind no fact counts, a wrong number, and a registered K05 row.
@@ -10,6 +10,7 @@ duplicated name), a count of a kind no fact counts, a wrong number, and a regist
 
 from __future__ import annotations
 
+import gzip
 import importlib.util
 import json
 from pathlib import Path
@@ -43,7 +44,7 @@ def _words_python() -> FactsDocument:
     """The sealed Words Python surface at 2d2efee2, narrowed as re-certification now narrows it."""
     from repo_presenter.recertify import SourceSnapshot, shipped_facts
 
-    case = json.loads((REPO / "tests" / "fixtures" / "shipped_packages" / "words_python.json").read_text(encoding="utf-8"))
+    case = json.loads(gzip.decompress((REPO / "tests" / "fixtures" / "shipped_packages" / "words_python.json.gz").read_bytes()))
     facts = tuple(
         Fact(r["id"], r["kind"], r["value"], tuple(Evidence(p, r["detail"]) for p in r["paths"]),
              polarity=r["polarity"], attributes={"symbol_kind": r["symbol_kind"]} if r["kind"] == "public_symbol" else None)
