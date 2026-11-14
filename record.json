@@ -1,0 +1,203 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T21:47:33+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|scope_limitations",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "43640972670",
+   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+   "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T21:47:33+00:00",
+  "classes": {
+   "llm:factuality|authored_unit|scope_limitations": {
+    "example": "- Saving to any format other than `.xlsx` throws `Aspose.Cells_FOSS.UnsupportedFeatureException`.",
+    "findings": 2,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "scope_limitations.limitation:1",
+     "scope_limitations.limitation:2"
+    ],
+    "rule": "llm:factuality",
+    "scope": "528854d7e629f90456fbd99955ecca5523e82eff9637b4a2ca8e529ce9cf983c",
+    "scope_paths": [
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "These limitations don't apply to [full-featured Aspose.Cells for Cpp \u2014 Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds broader spreadsheet format coverage \u2014 legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "009d360af90c6900e8fd6e9adb36a5a22469a6cb73eb2b877b2576a49e0f81d1",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   }
+  },
+  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 84c5d935a8db: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "F01",
+    "message": "Saving to any format other than `.xlsx` throws `Aspose.Cells_FOSS.UnsupportedFeatureException`.",
+    "origin": {
+     "id": "scope_limitations.limitation:1",
+     "kind": "authored_unit"
+    },
+    "quote": "- Saving to any format other than `.xlsx` throws `Aspose.Cells_FOSS.UnsupportedFeatureException`.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|authored_unit|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "`Aspose.Cells_FOSS.UnsupportedFeatureException` is defined but never thrown by any library code.",
+    "origin": {
+     "id": "scope_limitations.limitation:2",
+     "kind": "authored_unit"
+    },
+    "quote": "- `Aspose.Cells_FOSS.UnsupportedFeatureException` is defined but never thrown by any library code.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|authored_unit|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "It adds broader spreadsheet format coverage \u2014 legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.Cells for Cpp \u2014 Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds broader spreadsheet format coverage \u2014 legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-02",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-02 still fails on this revision, which is the defect: install_command:cmake: the README prints 'cmake --build build', the source build of a project whose build no run proved (no build exited 0: failed); remove the command or state only what the repository documents",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "F17+F18+F19+F20+F21+F22+F23",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: unit limitation:1 is not the finding's own unit; a targeted repair may not rewrite unrelated units; revised_output: revised_output: unit limitation:2 is not the finding's own unit; a targeted repair may not rewrite unrelated units; revised_output: revised_output: unit limitation:3 is not the finding's own unit; a targeted repair may not rewrite unrelated units; revised_output: revised_output: unit limitation:",
+    "section_id": "scope_limitations",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "scope_limitations",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15",
+    "outcome": "repaired",
+    "reason": "api_reference: repaired (the causing section was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding); api_reference#types-1: repaired",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "scope_limitations",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F16",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S4"
+   }
+  ],
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+  "run_id": "43640972670",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43640972670",
+  "schema_version": 1,
+  "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+ },
+ "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
+ "schema_version": 1
+}
