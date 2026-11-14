@@ -1,0 +1,219 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T21:49:04+00:00",
+   "classes": [
+    "BC-14|unresolved|the_readme_claims_dae",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|authored_unit|stub_format"
+   ],
+   "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "43640968696",
+   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+   "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T21:49:04+00:00",
+  "classes": {
+   "BC-14|unresolved|the_readme_claims_dae": {
+    "example": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-14",
+    "scope": "09122d49e78072a35fbb304c6d48c9441a3c0b1752e67d43f5374d5788b054b5",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "the_readme_claims_dae",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:060.table holds api_identifiers 'FbxExporter.save()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:060.table"
+    ],
+    "rule": "BC-17",
+    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   "claim_contradiction|authored_unit|stub_format": {
+    "example": "| `ColladaPlugin` | ColladaPlugin class provides factory methods to create load options, save options, exporters, importers, file formats, and format detectors for COLLADA. |",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "4f4f72b4090eba84b132d55b8ecd8aa55773c9936926e46267423d6da4f9b98d",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   }
+  },
+  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 84c5d935a8db: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "claim_contradiction",
+    "message": "line 549 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin",
+     "kind": "authored_unit"
+    },
+    "quote": "| `ColladaPlugin` | ColladaPlugin class provides factory methods to create load options, save options, exporters, importers, file formats, and format detectors for COLLADA. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|authored_unit|stub_format",
+    "source": "review",
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   },
+   {
+    "label": "BC-14",
+    "message": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_claims_dae",
+    "source": "validation",
+    "sub_rule": "the_readme_claims_dae",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:060.table holds api_identifiers 'FbxExporter.save()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:060.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-18",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:1",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "opening",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:060.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:2",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "section_id": "scope_limitations",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "scope_limitations",
+    "stage": "S6"
+   }
+  ],
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+  "run_id": "43640968696",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43640968696",
+  "schema_version": 1,
+  "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+ },
+ "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
+ "schema_version": 1
+}
