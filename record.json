@@ -1,0 +1,113 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T07:40:39+00:00",
+   "classes": [
+    "lane_l_unrepaired_defect|lane_l_correction|failing_example",
+    "lane_l_unrepaired_defect|lane_l_correction|format_overclaim"
+   ],
+   "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "43569986884",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "e17fd7b03e83a5fc9aaee3545ec6e285446952cec98095b3e77b42c682e265d0"
+  }
+ ],
+ "lane": "L",
+ "latest": {
+  "at": "2026-11-14T07:40:39+00:00",
+  "classes": {
+   "lane_l_unrepaired_defect|lane_l_correction|failing_example": {
+    "example": "from aspose.page.mcp import create_server",
+    "findings": 1,
+    "origin_kind": "lane_l_correction",
+    "origins": [
+     "failing_example"
+    ],
+    "rule": "lane_l_unrepaired_defect",
+    "scope": "6a2fb40e8affb7f37bce587bfb52b383899a74b76c4b5447c94edcf79623c361",
+    "scope_paths": [
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/correction"
+    ],
+    "sub_rule": "failing_example",
+    "upstream": "maintainer_example"
+   },
+   "lane_l_unrepaired_defect|lane_l_correction|format_overclaim": {
+    "example": "o1[\"PDF documents\"]",
+    "findings": 1,
+    "origin_kind": "lane_l_correction",
+    "origins": [
+     "format_overclaim"
+    ],
+    "rule": "lane_l_unrepaired_defect",
+    "scope": "6a2fb40e8affb7f37bce587bfb52b383899a74b76c4b5447c94edcf79623c361",
+    "scope_paths": [
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/correction"
+    ],
+    "sub_rule": "format_overclaim",
+    "upstream": ""
+   }
+  },
+  "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set e17fd7b03e83: PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'PDF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 265-270: example 8: FAILED; ImportError; ran against the repository source tree; the package would not build); Lane L left 2 defect(s) it may not repair (format_overclaim line 55: the README marks 'PDF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; failing_exampl",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "lane_l_unrepaired_defect",
+    "message": "format_overclaim found a defect at line 55 that no deterministic edit can repair: the README marks 'PDF' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+    "origin": {
+     "id": "format_overclaim",
+     "kind": "lane_l_correction"
+    },
+    "quote": "o1[\"PDF documents\"]",
+    "rule": "lane_l_unrepaired_defect",
+    "section_id": "",
+    "signature": "lane_l_unrepaired_defect|lane_l_correction|format_overclaim",
+    "source": "review",
+    "sub_rule": "format_overclaim",
+    "upstream": ""
+   },
+   {
+    "label": "lane_l_unrepaired_defect",
+    "message": "failing_example found a defect at line 265 that no deterministic edit can repair: the example verifier recorded a failure for the example on lines 265-270: example 8: FAILED; ImportError; ran against the repository source tree; the package would not build",
+    "origin": {
+     "id": "failing_example",
+     "kind": "lane_l_correction"
+    },
+    "quote": "from aspose.page.mcp import create_server",
+    "rule": "lane_l_unrepaired_defect",
+    "section_id": "",
+    "signature": "lane_l_unrepaired_defect|lane_l_correction|failing_example",
+    "source": "review",
+    "sub_rule": "failing_example",
+    "upstream": "maintainer_example"
+   }
+  ],
+  "lane": "L",
+  "main_sha": "ff570fa517d09ded373b2062090a2cbb1a634b2b",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+  "run_id": "43569986884",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43569986884",
+  "schema_version": 1,
+  "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+  "version_set": "e17fd7b03e83a5fc9aaee3545ec6e285446952cec98095b3e77b42c682e265d0"
+ },
+ "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
+ "schema_version": 1
+}
