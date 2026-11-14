@@ -1106,4 +1106,17 @@ items:
       - "audit 2026-11-14: 26 hosted Lane R runs over 13 cells and 18 latest seals; 193 hosted and 245 seal findings classified; baseline certified Lane R 2"
     next_action: "owner discussion of options O1-O8 (section 7)"
     updated: "2026-11-14"
-
+  - id: BL-084
+    title: "Failure classification as a governed pipeline stage: every present run's blocking findings and repairs classified at the source, recorded on the cell's durable failure ref, aggregated (Pareto), and read by the planner to stop paying for known failures"
+    type: requirement
+    source: "owner 2026-11-13: \"Lane R is not progressing at all. Every failure must be categorised and reviewed deeply to find appropriate solution and that solution must be integrated to pipeline for repeatability.\""
+    priority: P0
+    status: active
+    depends_on: []
+    implementation_path: "src/repo_presenter/failures.py (classify: rule|origin|sub-rule; local record, publish to refs/repository-presenter-state/failures/<owner>__<name>[@lane-l] via GitJsonRef; pareto; backfill from gh run logs; planner hold predicate) + present.py (keep_blocking before each PresentFailure, write_local_record after every run) + present.yml present job step 'Classify this run's failures' (always()) + supervisor-tick.yml '### Failure classes' + scripts/select_scheduled_cohort.py (known_failure skip, render_summary Pareto)"
+    acceptance: "a hosted present run of each lane writes its record to the cell's failure ref and a class table to the job summary; the supervisor tick and the cohort plan print the Pareto; a cell whose last failure is entirely in classes with unchanged code scope (same upstream) is skipped 'held: last failure in classes X, Y; waiting for a fix'; the backfilled records of the dispatched runs since 2026-11-12 are on the refs; tests/test_failures.py green; R10 gate OK"
+    evidence:
+      - "2026-11-14: PYTHONPATH=src python -m pytest -q tests/test_failures.py -> 29 passed (real log excerpts of runs 43520977467, 43520974296, 43516334907, 43525320899, 43473790998, 43513037866, 43473803090)"
+      - "2026-11-14: PYTHONPATH=src python -m repo_presenter.failures backfill --repo babar-raza/repo-presenter --since 2026-11-12 (dry run, logs of 26 dispatched runs) -> 31 lane records, 13 failing of 15 cells, 19 classes; Pareto in the DECISION_LOG entry for BL-084; records, latest-per-cell Pareto and Lane R per-run audit table in evidence/build/BL-084/"
+    next_action: "supervisor: push the backfilled records (same command with --remote https://github.com/babar-raza/repo-presenter.git; this worker was told not to push), merge the branch, then confirm on the first hosted present run that the failure ref and job-summary table appear and that the next planner fire prints the Pareto; work the top classes in order (claim_contradiction member_kind/never_thrown/stub_format, BC-18 false_claim) through the readme/* worker"
+    updated: "2026-11-14"

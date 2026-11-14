@@ -17,7 +17,12 @@ when it is:
   re-run would repeat the same run on unchanged inputs;
 * marked for diagnosis: it failed ``max_failures`` consecutive times on the current code (a
   changed upstream revision does not reset this; only a code change does). R36(b): the class is
-  diagnosed and fixed once, locally, before another hosted run is spent on it.
+  diagnosed and fixed once, locally, before another hosted run is spent on it;
+* held on a known failure (BL-084): the code changed since its last attempt, but not the code of
+  any class that attempt failed in (its failure record, ``repo_presenter.failures``, on the cell's
+  failure ref; every class's recorded code scope still hashes the same), on the same upstream
+  revision -- ``idempotent`` only catches a byte-identical code fingerprint, so every unrelated
+  commit re-dispatched every failed cell and paid again for a failure nothing had fixed.
 
 Attempts are the ``settle`` entries of the durable provider-spend ledger
 (``core.llm.budget.LEDGER_REF``), which every hosted ``present`` job writes on success or failure;
@@ -189,6 +194,7 @@ def plan_cohort(
     max_cells: int = MAX_CELLS,
     max_failures: int = MAX_CONSECUTIVE_FAILURES,
     epoch: Any = None,
+    known: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """The fire's plan (pure but for ``head``, which is only asked when a decision needs it):
     ``runs`` to dispatch, every ``skipped`` cell with its category and reason, the ``diagnose``
@@ -207,6 +213,7 @@ def plan_cohort(
     certified = {lane: 0 for lane in LANES}
     skipped: list[dict[str, Any]] = []
     diagnose: list[dict[str, Any]] = []
+    held_known: list[dict[str, Any]] = []
     needs: dict[str, dict[str, tuple[int, str]]] = {}
     notes: list[str] = []
 
@@ -279,6 +286,22 @@ def plan_cohort(
                         continue
                     reason = "upstream moved since the last attempt"
                 else:
+                    hold = (known or {}).get((repository, lane))
+                    last_run = str(last.get("run_url") or "").rstrip("/").rsplit("/", 1)[-1]
+                    if hold and hold.get("classes") and str(hold.get("run_id") or "") == last_run:
+                        current = head_of(repository)
+                        recorded = str(hold.get("source_revision") or last["source_revision"] or "")
+                        if current is None or not recorded or current == recorded:
+                            classes = ", ".join(hold["classes"])
+                            held_known.append(
+                                {"repository": repository, "lane": lane, "classes": list(hold["classes"]),
+                                 "last_run": last.get("run_url", "")}
+                            )
+                            skip(
+                                repository, lane, "known_failure",
+                                f"held: last failure in classes {classes}; waiting for a fix",
+                            )
+                            continue
                     reason = "code changed since the last attempt"
                 priority = PRIORITY_NEEDS_REPAIR if needs_repair else PRIORITY_RETRY
             elif needs_repair:
@@ -330,6 +353,7 @@ def plan_cohort(
         "runs": runs,
         "skipped": skipped,
         "diagnose": diagnose,
+        "known_failure": held_known,
         "queued": queued,
         "certified": certified,
         "notes": notes,
@@ -337,6 +361,9 @@ def plan_cohort(
         "code": code,
         "planned_at": now.isoformat(timespec="seconds"),
     }
+
+
+_SIG_PIPE = " \\| "
 
 
 def render_summary(plan: dict[str, Any], budget_lines: list[str] | None = None,
@@ -393,6 +420,26 @@ def render_summary(plan: dict[str, Any], budget_lines: list[str] | None = None,
             lines += [f"### {title} ({len(items)})", ""]
             lines += [f"- {i['repository']} Lane {i['lane']}: {i.get('reason') or i.get('consecutive_failures')}" for i in items]
             lines.append("")
+    held_known = plan.get("known_failure") or []
+    if held_known:
+        lines += [f"### Held on a known failure ({len(held_known)})", ""]
+        lines += [
+            f"- {i['repository']} Lane {i['lane']}: held: last failure in classes "
+            f"{', '.join(i['classes'])}; waiting for a fix"
+            for i in held_known
+        ]
+        lines.append("")
+    pareto_rows = plan.get("failure_pareto") or []
+    if pareto_rows or plan.get("failure_pareto_note"):
+        lines += ["### Failure classes (latest record per cell)", ""]
+        if plan.get("failure_pareto_note"):
+            lines += [f"- {plan['failure_pareto_note']}", ""]
+        if pareto_rows:
+            lines += ["| class | cells | findings | new |", "|---|---|---|---|"]
+            for row in pareto_rows:
+                shown = str(row["signature"]).replace("|", _SIG_PIPE)
+                lines.append(f"| {shown} | {row['cells']} | {row['findings']} | {'yes' if row.get('new') else ''} |")
+            lines.append("")
     skipped = plan.get("skipped") or []
     if skipped:
         lines += [f"### Skipped ({len(skipped)})", "", "| repository | lane | category | reason |", "|---|---|---|---|"]
@@ -424,7 +471,8 @@ def build_plan(
         epoch = json.loads((REPO_ROOT / "data" / "provider_budget.json").read_text("utf-8")).get("epoch")
     except (OSError, ValueError):
         pass
-    return plan_cohort(
+    known, pareto_rows, note = failure_classes(remote, token)
+    plan = plan_cohort(
         entries=entries,
         authorized_repos=set(entries) if authorized_repos is None else authorized_repos,
         certifications=certifications,
@@ -433,7 +481,32 @@ def build_plan(
         code=code_fingerprint(REPO_ROOT),
         max_cells=max_cells,
         epoch=epoch,
+        known=known,
     )
+    plan["failure_pareto"] = pareto_rows
+    if note:
+        plan["failure_pareto_note"] = note
+    return plan
+
+
+def failure_classes(
+    remote: str, token: str | None, *, limit: int = 8
+) -> tuple[dict[tuple[str, str], dict[str, Any]], list[dict[str, Any]], str]:
+    """BL-084: the cells held on a known failure and the short Pareto, from every cell's failure
+    ref. An unreadable namespace holds nothing (the cheaper error is a re-run, never a cell held on
+    evidence that could not be read) and says so in the summary."""
+    from repo_presenter.failures import known_failures, pareto, read_cells, scope_fingerprint
+
+    try:
+        documents = read_cells(remote=remote, token=token)
+    except Exception as exc:  # noqa: BLE001
+        return {}, [], f"failure records not readable ({type(exc).__name__}: {str(exc)[:200]}); nothing held"
+    known = known_failures(documents, lambda paths: scope_fingerprint(paths, REPO_ROOT, "HEAD"))
+    rows = [
+        {"signature": row["signature"], "cells": len(row["cells"]), "findings": row["findings"], "new": row["new"]}
+        for row in pareto(documents)["classes"][:limit]
+    ]
+    return known, rows, "" if documents else "no failure records yet"
 
 
 def main(argv: list[str] | None = None) -> int:
