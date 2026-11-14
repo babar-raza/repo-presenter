@@ -266,7 +266,7 @@
  
  - `ImageFormat` — enum of the 14 detectable formats, plus `Unknown` for anything unmatched.
  - `ImageInfo` — immutable result of a probe: `Format`, and the nullable `Width`, `Height`,
-@@ -247,42 +190,56 @@
+@@ -247,42 +190,45 @@
  
  ## Documentation & Resources
  
@@ -279,9 +279,9 @@
 -- Found a bug or have a feature request?
 -  [Open an issue](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/issues)
 -  on GitHub.
-+- **[Getting started guide](https://docs.aspose.org/imaging/net/)** — The getting started guide walks through installation and a first probe step by step.
-+- **[How-to guides & FAQ](https://kb.aspose.org/imaging/net/)** — The how-to guides and FAQ provide task-focused answers for common format-detection questions.
-+- **[Full API reference](https://reference.aspose.org/imaging/net/)** — The full API reference offers the complete browsable reference for `ImageFormat`, `ImageInfo`, and `ImageProbe`. It covers all 3 public types; the [API Reference](#api-reference) section above covers the essentials.
++- **[Getting started guide](https://docs.aspose.org/imaging/net/)** — installation and a first probe, walked through step by step.
++- **[How-to guides & FAQ](https://kb.aspose.org/imaging/net/)** — task-focused answers for common format-detection questions.
++- **[Full API reference](https://reference.aspose.org/imaging/net/)** — the complete browsable reference for `ImageFormat`, `ImageInfo`, and `ImageProbe`. It covers all 3 public types; the [API Reference](#api-reference) section above covers the essentials.
 +- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET/issues).
  
  ## Scope and Limitations
@@ -308,23 +308,17 @@
 -These limitations apply only to Aspose.Imaging FOSS — they don't carry over to
 -[Aspose.Imaging for .NET — Enterprise Edition](https://products.aspose.com/imaging/net/), which
 -adds full decoding, editing, rendering, and conversion across a much broader format range.
-+Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata via the `Aspose.Imaging.Foss` namespace; it targets netstandard2.0 and net8.0.
++`Probe` never throws on malformed or truncated input — if a file matches a format's signature but its header can't be fully parsed, you get back an `ImageInfo` with just the `Format` set rather than an exception.
 +
-+- Detection and metadata only: `ImageProbe` identifies a format and reads its header fields; it never decodes pixel data, so there is no rendering, editing, or format-conversion capability anywhere in the library.
-+- Frame count reflects only what the container itself records: it is a real, computed count for GIF, ICO, TIFF, and bundled multi-page DJVU (DJVM); every other supported format reports a fixed 1 for a successfully parsed header, since none of their headers carry a genuine frame or page count.
-+- Non-placeable WMF is detected but not dimensioned: the classic (non-placeable) WMF header carries no bounding rectangle, so Probe returns a format-only `ImageInfo` for it; only the placeable WMF header yields Width/Height.
-+- DICOM parsing stops at the first undefined-length element: a sequence or encapsulated pixel-data element with an undefined length ends the walk rather than being parsed.
-+- CDR support is planned but not yet implemented: no `CdrFormatHandler` exists in the current source tree.
-+
-+`Probe` never throws on malformed or truncated input — if a file matches a format's signature
-+but its header can't be fully parsed, you get back an `ImageInfo` with just the `Format` set
-+rather than an exception.
++- **Detection and metadata only.** `ImageProbe` identifies a format and reads its header fields; it never decodes pixel data, so there is no rendering, editing, or format-conversion capability anywhere in the library.
++- **Frame count reflects only what the container itself records.** It is a real, computed count for GIF, ICO, TIFF, and bundled multi-page DJVU (DJVM); every other supported format reports a fixed `1` for a successfully parsed header, since none of their headers carry a genuine frame or page count. An indirect (multi-file) DJVM document, or a truncated bundled one, reports `FrameCount` as `null`, since its pages can't all be seen from the one file.
++- **Non-placeable WMF is detected but not dimensioned.** The classic (non-placeable) WMF header carries no bounding rectangle, so `Probe` returns a format-only `ImageInfo` for it; only the placeable WMF header (identified by its own magic number) yields `Width`/`Height`. Placeable-WMF dimensions assume a conventional 96 DPI target, since the header only stores units-per-inch bounds.
++- **DICOM parsing stops at the first undefined-length element.** A sequence or encapsulated pixel-data element with an undefined length ends the walk rather than being parsed, since `Rows`/`Columns`/`BitsAllocated` always precede such elements in a conformant file.
++- **CDR support is planned but not yet implemented** — no `CdrFormatHandler` exists in the current source tree.
 +
 +These limitations don't apply to [full-featured Aspose.Imaging for .NET — Enterprise Edition](https://products.aspose.com/imaging/net/). It adds full decoding, editing, rendering, and conversion across a much broader format range.
  
  ## Development and Testing
-+
-+Aspose.Imaging FOSS for .NET targets netstandard2.0 and net8.0 and is built using the .NET CLI. The test project, located under tests/`Aspose.Imaging.Foss.Tests`, targets net9.0 and uses the xUnit test framework with test host and adapter packages, along with a code-coverage collection package. These test packages apply only to the test project and are not referenced by the main library. The repository includes a pull request workflow that validates new formats by implementing IFormatHandler and registering them in `ImageProbe`.
 +
 +The suite covers 3 test files under `tests/`. The [ci workflow](.github/workflows/ci.yml) runs on Ubuntu and Windows. Releases run through the [release workflow](.github/workflows/release.yml).
 +
@@ -340,21 +334,30 @@
 +<ProjectReference Include="..\Aspose.Imaging-FOSS-for-.NET\src\Aspose.Imaging.Foss\Aspose.Imaging.Foss.csproj" />
 +```
 +
-+The library builds from
-+`src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj`, which declares zero `<PackageReference>`
-+entries — every format's header parsing is implemented natively within the library.
++The library builds from `src/Aspose.Imaging.Foss/Aspose.Imaging.Foss.csproj`, which declares zero `<PackageReference>` entries — every format's header parsing is implemented natively within the library.
 +
-+- `Microsoft.NET.Test.Sdk` 17.12.0, `xunit` 2.9.2, and `xunit.runner.visualstudio` 2.8.2 — the
-+  xUnit test host and adapter used only by the test project.
++- `Microsoft.NET.Test.Sdk` 17.12.0, `xunit` 2.9.2, and `xunit.runner.visualstudio` 2.8.2 — the xUnit test host and adapter used only by the test project.
 +- `coverlet.collector` 6.0.2 — code-coverage collection for the test suite.
 +
-+None of these are referenced by the main library project; they apply only to
-+`tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj` and are never shipped with
-+the library.
++None of these are referenced by the main library project; they apply only to `tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj` and are never shipped with the library.
  
  Run the test suite from the repository root:
  
-@@ -301,6 +258,4 @@
+@@ -290,17 +236,10 @@
+ dotnet test tests/Aspose.Imaging.Foss.Tests/Aspose.Imaging.Foss.Tests.csproj
+ ```
+ 
+-The test project targets `net9.0` and references the library via a plain `ProjectReference` —
+-no packaged dependency is required to build or test the library itself. A tagged
+-`v<major>.<minor>.<patch>` push runs [`.github/workflows/release.yml`](.github/workflows/release.yml),
+-which builds and publishes the package.
+-
+-Adding a new format means implementing `IFormatHandler` (signature match + header parse) under
+-`src/Aspose.Imaging.Foss/Formats` and registering it in `ImageProbe`. Pull requests for new
+-formats or wider tag/chunk coverage on existing ones are welcome.
++The test project targets `net9.0` and references the library via a plain `ProjectReference` — no packaged dependency is required to build or test the library itself. A tagged `v<major>.<minor>.<patch>` push runs [`.github/workflows/release.yml`](.github/workflows/release.yml), which builds and publishes the package.
++
++Adding a new format means implementing `IFormatHandler` (signature match + header parse) under `src/Aspose.Imaging.Foss/Formats` and registering it in `ImageProbe`. Pull requests for new formats or wider tag/chunk coverage on existing ones are welcome.
  
  ## License
  
