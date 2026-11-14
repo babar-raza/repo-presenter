@@ -207,3 +207,117 @@ def test_a_control_that_does_not_recertify_is_reported_and_left_out_of_the_false
     recert[("o/c0", "R")] = ("r", True)  # the same flag on a re-certifying control counts against the auditor
     doc = writer.build_records_document("1", case_index, manifest, findings, recert)
     assert doc["gates"]["false_flag_rate"]["matched"] == 1 and doc["gates"]["controls_not_recertified"] == []
+
+
+# --- BL-013 round 2 (hosted round 43559491132): derivation, the audit-scope note, evidenced statuses --------
+
+
+def _facts(*facts):
+    from repo_presenter.core.facts import FactsDocument
+
+    return FactsDocument(repository="o/r", source_revision="a" * 40, facts=tuple(facts))
+
+
+def _fact(fid: str, value: str, polarity: str = "SUPPORTED", kind: str = "package"):
+    from repo_presenter.core.facts import Evidence, Fact
+
+    return Fact(id=fid, kind=kind, value=value, evidence=(Evidence("pyproject.toml"),), polarity=polarity)
+
+
+def _lane_l(origins: dict[int, dict]) -> "auditor.Rederived":
+    return auditor.Rederived(LIVE, tuple(origins.get(n, {"source": "maintainer"})
+                                         for n in range(1, len(LIVE.splitlines()) + 1)))
+
+
+def test_a_lane_l_seed_no_correction_writes_is_flagged_and_a_reproduced_line_is_judged_not_trusted():
+    seeded = seed_defect("c", LIVE, "inject_unsupported_claim").seeded_readme  # onto the "# Title" line
+    edit = {"source": "edit", "detector": "stale_package_version", "fact_ids": ("package:v",)}
+    derived = auditor.derivation("L", seeded, _facts(_fact("package:v", "widget-pkg")), _lane_l({3: edit, 4: edit}))
+    assert derived.underived == frozenset({1}) and {3, 4} <= derived.derivable
+    assert derived.clearable == frozenset({3})  # an engine edit from a SUPPORTED fact
+    assert derived.kept[4] == "K05 type count"  # "190 public types": a known-false class
+    assert derived.kept[10] == "maintainer text, not derived from a fact"
+    rows = [dict(_flag(3, "c"), located=True), dict(_flag(4, "c"), located=True), dict(_flag(1, "c"), located=True)]
+    out = auditor.apply_derivation("c", seeded, rows, derived)
+    assert [(r["line"], r["verdict"], r["source"]) for r in out] == [
+        (3, "supported", "llm"), (4, "unverifiable", "llm"), (1, "unverifiable", "llm"),
+        (1, "unverifiable", "deterministic")]
+    assert out[0]["cleared_by"] == "derivation" and out[1]["kept_because"] == "K05 type count"
+    assert auditor.apply_derivation("c", seeded, rows, None) == rows  # no re-derivation: nothing changes
+
+
+def test_no_clearance_for_a_known_false_detector_an_unsupported_fact_a_locator_only_edit_or_a_register_row():
+    facts = _facts(_fact("package:v", "widget-pkg"), _fact("package:x", "other-pkg", polarity="CONTRADICTED"))
+    for origin, why in (
+        ({"source": "edit", "detector": "enterprise_edition_naming", "fact_ids": ("package:v",)}, "K10 Enterprise Edition naming"),
+        ({"source": "edit", "detector": "d", "fact_ids": ("package:x",)}, "edit cites a fact that is not SUPPORTED"),
+        ({"source": "edit", "detector": "glance_layout", "fact_ids": ()}, "edit cites no fact (locator only)"),
+    ):
+        assert auditor.derivation("L", LIVE, facts, _lane_l({3: origin})).kept[3] == why
+    register = [{"repository": "o/r", "status": "OPEN", "quote": "reads and writes widget files"}]
+    edit = {"source": "edit", "detector": "d", "fact_ids": ("package:v",)}
+    assert auditor.derivation("L", LIVE, facts, _lane_l({3: edit}), repository="o/r",
+                              register=register).kept[3] == "findings register"
+    assert auditor.keep_reason("R", "- `Widget.Save`: Gets or sets the path.", {"source": "renderer"},
+                               _facts(_fact("public_symbol:s", "Widget.Save", kind="public_symbol"))) == "K03 accessor wording"
+
+
+def test_lane_r_clears_only_a_renderer_line_that_states_supported_facts():
+    sym = _fact("public_symbol:w", "pkg.Widget", kind="public_symbol")
+    bad = _fact("public_symbol:v", "pkg.Gadget", polarity="CONTRADICTED", kind="public_symbol")
+    renderer = {"source": "renderer"}
+    assert auditor.keep_reason("R", "| `Widget` | The main widget object. |", renderer, _facts(sym)) is None
+    assert auditor.keep_reason("R", "| `Gadget` | A gadget. |", renderer, _facts(sym, bad)) == \
+        "the line carries a fact that is not SUPPORTED"
+    assert auditor.keep_reason("R", "Plain words.", renderer, _facts(sym)) == "no fact value in the line"
+    assert auditor.keep_reason("R", "| `Widget` | The main widget object. |", {"source": "authored"}, _facts(sym)) == \
+        "authored unit text"
+
+
+def test_lane_r_compares_only_the_lines_the_renderer_prints_never_an_authored_line():
+    from repo_presenter.core.facts import FactsDocument
+
+    facts = FactsDocument(repository="o/r", source_revision="a" * 40, facts=())
+    authored_edit = LIVE.replace("reads and writes widget files", "reads, writes and repairs widget files")
+    derived = auditor.derivation("R", authored_edit, facts, LIVE)
+    assert derived.underived == frozenset() and 3 not in derived.derivable  # prose stays the model's
+    title = seed_defect("c", LIVE, "add_promotional_filler").seeded_readme
+    assert auditor.derivation("R", title, facts, LIVE).underived == frozenset({1})  # the renderer's title line
+
+
+def test_a_failed_rederivation_is_no_derivation(tmp_path):
+    seal = SimpleNamespace(bundle=str(tmp_path), lane="L", repository="o/r", revision="r")
+    assert auditor.case_derivation(seal, LIVE, tmp_path, fetch=lambda *a: SimpleNamespace(tree_paths=())) is None
+
+
+def test_the_audit_packet_tells_the_model_headings_are_shown_and_production_packets_do_not():
+    from repo_presenter.core.facts import FactsDocument
+    from repo_presenter.readme.review.sectionwise import AUDIT_SCOPE_NOTE, unit_packet
+
+    facts = FactsDocument(repository="o/r", source_revision="a" * 40, facts=())
+    units = plan_units(LIVE, rendered=False, headings=True)
+    common = dict(units=units, repository="o/r", candidate_readme=LIVE, original_readme=LIVE, facts=facts,
+                  plan={"sections": []})
+    assert "audit_scope" not in unit_packet(units[0], **common)["review_scope"]
+    assert unit_packet(units[0], **common, audit=True)["review_scope"]["audit_scope"] == AUDIT_SCOPE_NOTE
+
+
+def test_a_structure_fix_citing_the_readme_text_still_derives_the_lane_l_lines(tmp_path):
+    from repo_presenter.core.facts import FactsDocument
+
+    facts = FactsDocument(repository="o/r", source_revision="a" * 40, facts=())
+    corrected = LIVE.replace("190 public types", "191 public types")
+    record = {"stability": {"deterministic": True, "provider_calls": 0}, "edits": [
+        {"evidence": [{"fact_id": None, "status": "README_TEXT", "kind": "readme_structure"}]},
+        {"evidence": [{"fact_id": "count:public_types", "status": "SUPPORTED"}]}]}
+    (tmp_path / "corrections.json").write_text(json.dumps(record), encoding="utf-8")
+    assert writer.derived_lines("L", corrected, facts, tmp_path, LIVE) == frozenset({4})
+    record["edits"][0]["evidence"][0]["status"] = "ABSENT"
+    (tmp_path / "corrections.json").write_text(json.dumps(record), encoding="utf-8")
+    assert writer.derived_lines("L", corrected, facts, tmp_path, LIVE) == frozenset()
+
+
+def test_the_writer_refutes_only_derived_lines_the_auditor_clearance_accepts():
+    assert writer._narrowed(frozenset({3, 4}), lambda seal, text, case: frozenset({3}), None, LIVE) == frozenset({3})
+    assert writer._narrowed(frozenset({3, 4}), lambda seal, text, case: None, None, LIVE) == frozenset()  # fail closed
+    assert writer._narrowed(frozenset({3, 4}), None, None, LIVE) == frozenset({3, 4})
