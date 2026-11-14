@@ -5,7 +5,7 @@
   "provider_repository_id": 1193857039,
   "registry_revision": null,
   "active_transaction_id": "288d94ab3b0446949dcc21c10e246b1e",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set a6b436407f14: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `directory_entry.is_root` a field ('directory_entry class represents an entry in the directory of a Compound File Binary document and provides child_id, clsid, color_flag, creation_time, directory_entry_name_length, is_root, is_storage, and is_stream fields.'), but the facts record it as a method; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `directory_entry.is_storage` a field ('directory_entry class represents an entry in the directory of a Compound File Binary document and provides child_id, clsid, color_flag, creation_time, directory_entry_name_length, is_root, is_storage, and is_stream fields.'), but the facts record it as a method; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `directory_entry.is_stream` a field ('directory_entry class represents an entry in the directory of a Compound File Binary document and provides child_id, clsid, color_flag, creation_time, directory_entry_name_length, is_root, is_storage, and is_stream fields.'), but the facts record it as a method; call it by its kind)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-13T22:54:00.155002+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-14T01:19:21.755413+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 3
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 45,
+  "state_version": 46,
   "recent_trigger_dedup_keys": {
     "run:41142584634:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "514b58ce797e43c6a9b869fd29c1f89d",
     "run:41162828042:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "226c60d984d249daa139b9eb59dcd7b9",
@@ -52,5 +52,5 @@
     "run:42698666619:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "303b7a678ec145b39784418a45f10843",
     "run:42710186616:aspose-email-foss/Aspose.Email-FOSS-for-Cpp": "288d94ab3b0446949dcc21c10e246b1e"
   },
-  "recovery_count": 2
+  "recovery_count": 3
 }
