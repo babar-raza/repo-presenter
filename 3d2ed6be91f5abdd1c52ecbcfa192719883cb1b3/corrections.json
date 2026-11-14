@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 2,
+    "edits": 32,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "c9b887c6424e253cb7900de43bf23243e6a5d54c25adb4e1a83db9024f527a8a",
+  "corrected_sha256": "d3d8d7757a52b84384327b97b544a11d157f74ad9fa5e84ee2d06433d92b60e3",
   "edits": [
     {
       "detector": "glance_layout",
@@ -26,6 +26,1416 @@
       "start": 1806
     },
     {
+      "detector": "type_description",
+      "end": 8894,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.add"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.addall",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.addAll"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.contains",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.contains"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.containsall",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.containsAll"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.empty",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.empty"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.get"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.indexof",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.indexOf"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.isempty",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.isEmpty"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.iterator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.iterator"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.lastindexof",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.lastIndexOf"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.arraylistadapter.listiterator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ArrayListAdapter.listIterator"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 249,
+      "original": "Class with 23 methods and 1 property.",
+      "rationale": "line 249: the count only cell 'Class with 23 methods and 1 property.' does not describe ArrayListAdapter and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including add, addAll, clear, contains, containsAll and get and the member empty.",
+      "start": 8857
+    },
+    {
+      "detector": "type_description",
+      "end": 11701,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.close",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.close"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.createdummyfilesystem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.createDummyFileSystem"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.createlocalfilesystem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.createLocalFileSystem"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.creatememoryfilesystem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.createMemoryFileSystem"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.createzipfilesystem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.createZipFileSystem"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.readfile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.readFile"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.dummyfilesystem.writefile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.DummyFileSystem.writeFile"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 279,
+      "original": "Class with 8 methods.",
+      "rationale": "line 279: the count only cell 'Class with 8 methods.' does not describe DummyFileSystem and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including close, createDummyFileSystem, createLocalFileSystem, createMemoryFileSystem, createZipFileSystem and readFile.",
+      "start": 11680
+    },
+    {
+      "detector": "type_description",
+      "end": 12715,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.add"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.compareto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.compareTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.copyfrom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.copyFrom"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.create",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.create"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.equals",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.equals"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.fvector2",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.FVector2"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.hashcode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.hashCode"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.mul",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.mul"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.op_eq",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.op_eq"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.op_ne",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.op_ne"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fvector2.sub",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FVector2.sub"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 288,
+      "original": "Class with 17 methods.",
+      "rationale": "line 288: the count only cell 'Class with 17 methods.' does not describe FVector2 and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including add, clone, compareTo, copyFrom, create and equals.",
+      "start": 12693
+    },
+    {
+      "detector": "type_description",
+      "end": 13057,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.amf",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.AMF"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.ase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.ASE"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.aspose3d_web",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.ASPOSE3D_WEB"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.blender",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.BLENDER"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.candetect",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.canDetect"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.canexport",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.canExport"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.canimport",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.canImport"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.collada",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.COLLADA"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.contenttype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.contentType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.createloadoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.createLoadOptions"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.createsaveoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.createSaveOptions"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.fileformat.detect",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.FileFormat.detect"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 293,
+      "original": "Class with 17 methods and 59 properties.",
+      "rationale": "line 293: the count only cell 'Class with 17 methods and 59 properties.' does not describe FileFormat and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including canDetect, createLoadOptions, createSaveOptions, detect, getCanExport and getCanImport and members including AMF, ASE, ASPOSE3D_WEB, BLENDER, canExport and canImport.",
+      "start": 13017
+    },
+    {
+      "detector": "type_description",
+      "end": 17590,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.count",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.count"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.degree",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.degree"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.divisions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.divisions"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.getcount",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getCount"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.getdegree",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getDegree"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.getdivisions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getDivisions"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.getknotvectors",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getKnotVectors"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.getmultiplicity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getMultiplicity"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.getorder",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getOrder"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.gettype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.getType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.knotvectors",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.knotVectors"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.nurbsdirection.multiplicity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.NurbsDirection.multiplicity"
+        }
+      ],
+      "index": 5,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 338,
+      "original": "Class with 12 methods and 7 properties.",
+      "rationale": "line 338: the count only cell 'Class with 12 methods and 7 properties.' does not describe NurbsDirection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including getCount, getDegree, getDivisions, getKnotVectors, getMultiplicity and getOrder and members including count, degree, divisions, knotVectors, multiplicity and order.",
+      "start": 17551
+    },
+    {
+      "detector": "type_description",
+      "end": 18874,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.plysaveoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.PlySaveOptions"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.plysaveoptions.plysaveoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.PlySaveOptions.PlySaveOptions"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 351,
+      "original": "Class with 17 methods and 7 properties.",
+      "rationale": "line 351: the count only cell 'Class with 17 methods and 7 properties.' does not describe PlySaveOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from SaveOptions and declares a public no-argument constructor.",
+      "start": 18835
+    },
+    {
+      "detector": "type_description",
+      "end": 20264,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderparameters",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderParameters"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderparameters.renderparameters",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderParameters.RenderParameters"
+        }
+      ],
+      "index": 7,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 366,
+      "original": "Class with 1 method.",
+      "rationale": "line 366: the count only cell 'Class with 1 method.' does not describe RenderParameters and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares a public no-argument constructor.",
+      "start": 20244
+    },
+    {
+      "detector": "type_description",
+      "end": 20312,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderqueuegroupid",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderQueueGroupId"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderqueuegroupid.renderqueuegroupid",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderQueueGroupId.RenderQueueGroupId"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 367,
+      "original": "Class with 1 method.",
+      "rationale": "line 367: the count only cell 'Class with 1 method.' does not describe RenderQueueGroupId and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares a public no-argument constructor.",
+      "start": 20292
+    },
+    {
+      "detector": "type_description",
+      "end": 20356,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderresource",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderResource"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderresource.renderresource",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderResource.RenderResource"
+        }
+      ],
+      "index": 9,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 368,
+      "original": "Class with 1 method.",
+      "rationale": "line 368: the count only cell 'Class with 1 method.' does not describe RenderResource and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares a public no-argument constructor.",
+      "start": 20336
+    },
+    {
+      "detector": "type_description",
+      "end": 20524,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderstate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderState"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderstate.renderstate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RenderState.RenderState"
+        }
+      ],
+      "index": 10,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 370,
+      "original": "Class with 1 method.",
+      "rationale": "line 370: the count only cell 'Class with 1 method.' does not describe RenderState and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares a public no-argument constructor.",
+      "start": 20504
+    },
+    {
+      "detector": "type_description",
+      "end": 20562,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Renderer"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.renderer.renderer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Renderer.Renderer"
+        }
+      ],
+      "index": 11,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 371,
+      "original": "Class with 1 method.",
+      "rationale": "line 371: the count only cell 'Class with 1 method.' does not describe Renderer and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares a public no-argument constructor.",
+      "start": 20542
+    },
+    {
+      "detector": "type_description",
+      "end": 20609,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.rendererexception",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RendererException"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.rendererexception.rendererexception",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.RendererException.RendererException"
+        }
+      ],
+      "index": 12,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 372,
+      "original": "Class with 1 method.",
+      "rationale": "line 372: the count only cell 'Class with 1 method.' does not describe RendererException and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares a public no-argument constructor.",
+      "start": 20589
+    },
+    {
+      "detector": "type_description",
+      "end": 21560,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.shaderprogram",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ShaderProgram"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.shaderprogram.close",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.ShaderProgram.close"
+        }
+      ],
+      "index": 13,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 382,
+      "original": "Class with 1 method.",
+      "rationale": "line 382: the count only cell 'Class with 1 method.' does not describe ShaderProgram and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the method close.",
+      "start": 21540
+    },
+    {
+      "detector": "type_description",
+      "end": 22224,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.close",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.close"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.copyto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.copyTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.flush",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.flush"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.getinputstream",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.getInputStream"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.getlength",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.getLength"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.getoutputstream",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.getOutputStream"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.inputstream",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.inputStream"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.length",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.length"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.outputstream",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.outputStream"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.read",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.read"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.readbyte",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.readByte"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.stream.seek",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Stream.seek"
+        }
+      ],
+      "index": 14,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 391,
+      "original": "Created by lexchou on 12/14/2016.",
+      "rationale": "line 391: the doc bookkeeping cell 'Created by lexchou on 12/14/2016.' does not describe Stream and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Declares methods including close, copyTo, flush, getInputStream, getLength and getOutputStream and the members inputStream, length, outputStream, SEEK_CURRENT, SEEK_END and SEEK_SET.",
+      "start": 22191
+    },
+    {
+      "detector": "type_description",
+      "end": 23516,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.add"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.anglebetween",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.angleBetween"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.compareto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.compareTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.copyfrom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.copyFrom"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.cos",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.cos"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.create",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.create"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.cross",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.cross"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.div",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.div"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.dot",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.dot"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.equals",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.equals"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vector3.get",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.Vector3.get"
+        }
+      ],
+      "index": 15,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 409,
+      "original": "Class with 40 methods and 7 properties.",
+      "rationale": "line 409: the count only cell 'Class with 40 methods and 7 properties.' does not describe Vector3 and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including add, angleBetween, clone, compareTo, copyFrom and cos and members including length, length2, one, unitX, unitY and unitZ.",
+      "start": 23477
+    },
+    {
+      "detector": "type_description",
+      "end": 24251,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate.copyto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate.copyTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate.data",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate.data"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate.getdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate.getData"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementdoublestemplate.setdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementDoublesTemplate.setData"
+        }
+      ],
+      "index": 16,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 416,
+      "original": "Class with 17 methods and 6 properties.",
+      "rationale": "line 416: the count only cell 'Class with 17 methods and 6 properties.' does not describe VertexElementDoublesTemplate and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data.",
+      "start": 24212
+    },
+    {
+      "detector": "type_description",
+      "end": 24323,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementedgecrease",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementEdgeCrease"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementedgecrease.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementEdgeCrease.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementedgecrease.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementEdgeCrease.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementedgecrease.vertexelementedgecrease",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementEdgeCrease.VertexElementEdgeCrease"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementedgecrease.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementEdgeCrease.vertexElementType"
+        }
+      ],
+      "index": 17,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 417,
+      "original": "Class with 18 methods and 6 properties.",
+      "rationale": "line 417: the count only cell 'Class with 18 methods and 6 properties.' does not describe VertexElementEdgeCrease and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElementDoublesTemplate and declares the methods clear and getVertexElementType and the member vertexElementType.",
+      "start": 24284
+    },
+    {
+      "detector": "type_description",
+      "end": 24392,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector.copyto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector.copyTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector.data",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector.data"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector.getdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector.getData"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementfvector.setdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementFVector.setData"
+        }
+      ],
+      "index": 18,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 418,
+      "original": "Class with 19 methods and 6 properties.",
+      "rationale": "line 418: the count only cell 'Class with 19 methods and 6 properties.' does not describe VertexElementFVector and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data.",
+      "start": 24353
+    },
+    {
+      "detector": "type_description",
+      "end": 24455,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementhole",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementHole"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementhole.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementHole.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementhole.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementHole.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementhole.vertexelementhole",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementHole.VertexElementHole"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementhole.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementHole.vertexElementType"
+        }
+      ],
+      "index": 19,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 419,
+      "original": "Class with 3 methods and 1 property.",
+      "rationale": "line 419: the count only cell 'Class with 3 methods and 1 property.' does not describe VertexElementHole and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the methods clear and getVertexElementType and the member vertexElementType.",
+      "start": 24419
+    },
+    {
+      "detector": "type_description",
+      "end": 24529,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate.copyto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate.copyTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate.data",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate.data"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate.getdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate.getData"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementintstemplate.setdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementIntsTemplate.setData"
+        }
+      ],
+      "index": 20,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 420,
+      "original": "Class with 17 methods and 6 properties.",
+      "rationale": "line 420: the count only cell 'Class with 17 methods and 6 properties.' does not describe VertexElementIntsTemplate and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data.",
+      "start": 24490
+    },
+    {
+      "detector": "type_description",
+      "end": 24924,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementpolygongroup",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementPolygonGroup"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementpolygongroup.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementPolygonGroup.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementpolygongroup.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementPolygonGroup.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementpolygongroup.vertexelementpolygongroup",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementPolygonGroup.VertexElementPolygonGroup"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementpolygongroup.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementPolygonGroup.vertexElementType"
+        }
+      ],
+      "index": 21,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 423,
+      "original": "Class with 18 methods and 6 properties.",
+      "rationale": "line 423: the count only cell 'Class with 18 methods and 6 properties.' does not describe VertexElementPolygonGroup and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElementIntsTemplate and declares the methods clear and getVertexElementType and the member vertexElementType.",
+      "start": 24885
+    },
+    {
+      "detector": "type_description",
+      "end": 25000,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementsmoothinggroup",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSmoothingGroup"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementsmoothinggroup.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSmoothingGroup.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementsmoothinggroup.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSmoothingGroup.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementsmoothinggroup.vertexelementsmoothinggroup",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSmoothingGroup.VertexElementSmoothingGroup"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementsmoothinggroup.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSmoothingGroup.vertexElementType"
+        }
+      ],
+      "index": 22,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 424,
+      "original": "Class with 18 methods and 6 properties.",
+      "rationale": "line 424: the count only cell 'Class with 18 methods and 6 properties.' does not describe VertexElementSmoothingGroup and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElementIntsTemplate and declares the methods clear and getVertexElementType and the member vertexElementType.",
+      "start": 24961
+    },
+    {
+      "detector": "type_description",
+      "end": 25070,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementspecular",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSpecular"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementspecular.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSpecular.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementspecular.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSpecular.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementspecular.vertexelementspecular",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSpecular.VertexElementSpecular"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementspecular.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementSpecular.vertexElementType"
+        }
+      ],
+      "index": 23,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 425,
+      "original": "Class with 20 methods and 6 properties.",
+      "rationale": "line 425: the count only cell 'Class with 20 methods and 6 properties.' does not describe VertexElementSpecular and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElementFVector and declares the methods clear and getVertexElementType and the member vertexElementType.",
+      "start": 25031
+    },
+    {
+      "detector": "type_description",
+      "end": 25739,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4.copyto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4.copyTo"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4.data",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4.data"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4.getdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4.getData"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvector4.setdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVector4.setData"
+        }
+      ],
+      "index": 24,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 430,
+      "original": "Class with 17 methods and 6 properties.",
+      "rationale": "line 430: the count only cell 'Class with 17 methods and 6 properties.' does not describe VertexElementVector4 and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data.",
+      "start": 25700
+    },
+    {
+      "detector": "type_description",
+      "end": 25812,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexColor"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcolor.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexColor.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcolor.clone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexColor.clone"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcolor.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexColor.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcolor.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexColor.vertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcolor.vertexelementvertexcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexColor.VertexElementVertexColor"
+        }
+      ],
+      "index": 25,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 431,
+      "original": "Class with 21 methods and 6 properties.",
+      "rationale": "line 431: the count only cell 'Class with 21 methods and 6 properties.' does not describe VertexElementVertexColor and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElementFVector and declares the methods clear, clone and getVertexElementType and the member vertexElementType.",
+      "start": 25773
+    },
+    {
+      "detector": "type_description",
+      "end": 25886,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcrease",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexCrease"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcrease.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexCrease.clear"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcrease.getvertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexCrease.getVertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcrease.vertexelementtype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexCrease.vertexElementType"
+        },
+        {
+          "fact_id": "public_symbol:com.aspose.threed.vertexelementvertexcrease.vertexelementvertexcrease",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.VertexElementVertexCrease.VertexElementVertexCrease"
+        }
+      ],
+      "index": 26,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 432,
+      "original": "Class with 18 methods and 6 properties.",
+      "rationale": "line 432: the count only cell 'Class with 18 methods and 6 properties.' does not describe VertexElementVertexCrease and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from VertexElementDoublesTemplate and declares the methods clear and getVertexElementType and the member vertexElementType.",
+      "start": 25847
+    },
+    {
+      "detector": "type_description",
+      "end": 29503,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.cubeface",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.CubeFace"
+        }
+      ],
+      "index": 27,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 485,
+      "original": "Enum with 6 members.",
+      "rationale": "line 485: the count only cell 'Enum with 6 members.' does not describe CubeFace and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates NEGATIVEX, NEGATIVEY, NEGATIVEZ, POSITIVEX, POSITIVEY and POSITIVEZ.",
+      "start": 29483
+    },
+    {
+      "detector": "type_description",
+      "end": 29950,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.indexdatatype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.IndexDataType"
+        }
+      ],
+      "index": 28,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 492,
+      "original": "Enum with 2 members.",
+      "rationale": "line 492: the count only cell 'Enum with 2 members.' does not describe IndexDataType and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates INT16 and INT32.",
+      "start": 29930
+    },
+    {
+      "detector": "type_description",
+      "end": 30797,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.presetshaders",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.PresetShaders"
+        }
+      ],
+      "index": 29,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 503,
+      "original": "Enum with 2 members.",
+      "rationale": "line 503: the count only cell 'Enum with 2 members.' does not describe PresetShaders and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates CUSTOMIZED and DEFAULT.",
+      "start": 30777
+    },
+    {
+      "detector": "type_description",
+      "end": 31575,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:com.aspose.threed.texturetype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "com.aspose.threed.TextureType"
+        }
+      ],
+      "index": 30,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 513,
+      "original": "Enum with 5 members.",
+      "rationale": "line 513: the count only cell 'Enum with 5 members.' does not describe TextureType and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Enumerates ARRAY2D, CUBE_MAP, TEXTURE1D, TEXTURE2D and TEXTURE3D.",
+      "start": 31555
+    },
+    {
       "detector": "enterprise_edition_naming",
       "end": 39040,
       "evidence": [
@@ -36,7 +1446,7 @@
           "value": "https://products.aspose.com/3d/java/"
         }
       ],
-      "index": 1,
+      "index": 31,
       "kind": "FALSE_CLAIM_FIX",
       "line": 634,
       "original": "the commercial Aspose.3D for Java",
@@ -59,7 +1469,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 1
+    "FALSE_CLAIM_FIX": 31
   },
   "unapplied": [
     {
@@ -77,298 +1487,12 @@
       "defect": false,
       "detector": "type_description",
       "fact_ids": [
-        "public_symbol:com.aspose.threed.arraylistadapter"
-      ],
-      "line": 249,
-      "reason": "the count only cell does not describe ArrayListAdapter, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 23 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.dummyfilesystem"
-      ],
-      "line": 279,
-      "reason": "the count only cell does not describe DummyFileSystem, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 8 methods."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.fvector2"
-      ],
-      "line": 288,
-      "reason": "the count only cell does not describe FVector2, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 methods."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.fileformat"
-      ],
-      "line": 293,
-      "reason": "the count only cell does not describe FileFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 methods and 59 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.nurbsdirection"
-      ],
-      "line": 338,
-      "reason": "the count only cell does not describe NurbsDirection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 12 methods and 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.plysaveoptions"
-      ],
-      "line": 351,
-      "reason": "the count only cell does not describe PlySaveOptions, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 methods and 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.renderparameters"
-      ],
-      "line": 366,
-      "reason": "the count only cell does not describe RenderParameters, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.renderqueuegroupid"
-      ],
-      "line": 367,
-      "reason": "the count only cell does not describe RenderQueueGroupId, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.renderresource"
-      ],
-      "line": 368,
-      "reason": "the count only cell does not describe RenderResource, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.renderstate"
-      ],
-      "line": 370,
-      "reason": "the count only cell does not describe RenderState, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.renderer"
-      ],
-      "line": 371,
-      "reason": "the count only cell does not describe Renderer, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.rendererexception"
-      ],
-      "line": 372,
-      "reason": "the count only cell does not describe RendererException, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.shaderprogram"
-      ],
-      "line": 382,
-      "reason": "the count only cell does not describe ShaderProgram, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 method."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
         "public_symbol:com.aspose.threed.shadersource"
       ],
       "line": 383,
       "reason": "the boilerplate label cell does not describe ShaderSource, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Class in the 3D JAVA API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.stream"
-      ],
-      "line": 391,
-      "reason": "the doc bookkeeping cell does not describe Stream, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Created by lexchou on 12/14/2016."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vector3"
-      ],
-      "line": 409,
-      "reason": "the count only cell does not describe Vector3, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 40 methods and 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementdoublestemplate"
-      ],
-      "line": 416,
-      "reason": "the count only cell does not describe VertexElementDoublesTemplate, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementedgecrease"
-      ],
-      "line": 417,
-      "reason": "the count only cell does not describe VertexElementEdgeCrease, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 18 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementfvector"
-      ],
-      "line": 418,
-      "reason": "the count only cell does not describe VertexElementFVector, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 19 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementhole"
-      ],
-      "line": 419,
-      "reason": "the count only cell does not describe VertexElementHole, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementintstemplate"
-      ],
-      "line": 420,
-      "reason": "the count only cell does not describe VertexElementIntsTemplate, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementpolygongroup"
-      ],
-      "line": 423,
-      "reason": "the count only cell does not describe VertexElementPolygonGroup, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 18 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementsmoothinggroup"
-      ],
-      "line": 424,
-      "reason": "the count only cell does not describe VertexElementSmoothingGroup, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 18 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementspecular"
-      ],
-      "line": 425,
-      "reason": "the count only cell does not describe VertexElementSpecular, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 20 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementvector4"
-      ],
-      "line": 430,
-      "reason": "the count only cell does not describe VertexElementVector4, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 17 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementvertexcolor"
-      ],
-      "line": 431,
-      "reason": "the count only cell does not describe VertexElementVertexColor, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 21 methods and 6 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.vertexelementvertexcrease"
-      ],
-      "line": 432,
-      "reason": "the count only cell does not describe VertexElementVertexCrease, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 18 methods and 6 properties."
     },
     {
       "defect": false,
@@ -479,50 +1603,6 @@
       "reason": "the boilerplate label cell does not describe IVertexBuffer, and the source has no doc comment that does; only authored prose can (Lane R)",
       "report_only_reason": "NO_DOC_COMMENT",
       "text": "Interface in the 3D JAVA API."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.cubeface"
-      ],
-      "line": 485,
-      "reason": "the count only cell does not describe CubeFace, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 6 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.indexdatatype"
-      ],
-      "line": 492,
-      "reason": "the count only cell does not describe IndexDataType, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 2 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.presetshaders"
-      ],
-      "line": 503,
-      "reason": "the count only cell does not describe PresetShaders, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 2 members."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:com.aspose.threed.texturetype"
-      ],
-      "line": 513,
-      "reason": "the count only cell does not describe TextureType, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Enum with 5 members."
     }
   ]
 }

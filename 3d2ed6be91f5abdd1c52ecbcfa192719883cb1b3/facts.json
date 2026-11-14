@@ -3578,6 +3578,7 @@
     {
       "attributes": {
         "docstring": "Defines whether the texture contains the alpha channel.",
+        "enum_values": "NONE,PIXEL_ALPHA,FIXED_VALUE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -4568,6 +4569,7 @@
     {
       "attributes": {
         "docstring": "Camera aperture modes.",
+        "enum_values": "HORIZ_AND_VERT,HORIZONTAL,VERTICAL,FOCAL_LENGTH",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -6237,6 +6239,7 @@
     },
     {
       "attributes": {
+        "enum_values": "X_AXIS,Y_AXIS,Z_AXIS,NEGATIVE_X_AXIS,NEGATIVE_Y_AXIS,NEGATIVE_Z_AXIS",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -6423,6 +6426,7 @@
     {
       "attributes": {
         "docstring": "Animation binding point.",
+        "enum_values": "Center,Pivot,Origin,GeometryCenter",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -6440,6 +6444,7 @@
     {
       "attributes": {
         "docstring": "Blend factor specify pixel arithmetic.",
+        "enum_values": "ZERO,ONE,SRC_COLOR,ONE_MINUS_SRC_COLOR,DST_COLOR,ONE_MINUS_DST_COLOR,SRC_ALPHA,ONE_MINUS_SRC_ALPHA,DST_ALPHA,ONE_MINUS_DST_ALPHA,CONSTANT_COLOR,ONE_MINUS_CONSTANT_COLOR,CONSTANT_ALPHA,ONE_MINUS_CONSTANT_ALPHA,SRC_ALPHA_SATURATE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -6969,6 +6974,7 @@
     {
       "attributes": {
         "docstring": "A bone's link mode refers to the way in which a bone is connected or linked to its parent bone within a hierarchical structure.",
+        "enum_values": "NORMALIZE,ADDITIVE,TOTAL_ONE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -7419,6 +7425,7 @@
     {
       "attributes": {
         "docstring": "Mesh's Boolean operation",
+        "enum_values": "ADD,SUB,INTERSECT",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -8812,6 +8819,7 @@
     {
       "attributes": {
         "docstring": "The extent of the bounding box.",
+        "enum_values": "NULL,FINITE,INFINITE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -13244,6 +13252,7 @@
     },
     {
       "attributes": {
+        "enum_values": "Components,Matrix",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -13261,6 +13270,7 @@
     {
       "attributes": {
         "docstring": "The compare function used in depth/stencil testing.",
+        "enum_values": "NEVER,LESS,EQUAL,L_EQUAL,GREATER,NOT_EQUAL,G_EQUAL,ALWAYS",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -13278,6 +13288,7 @@
     {
       "attributes": {
         "docstring": "The order to compose transform matrix.",
+        "enum_values": "APPEND,PREPEND",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -13829,6 +13840,7 @@
     },
     {
       "attributes": {
+        "enum_values": "RIGHT_HANDED,LEFT_HANDED",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -14666,6 +14678,7 @@
     },
     {
       "attributes": {
+        "enum_values": "POSITIVEX,NEGATIVEX,POSITIVEY,NEGATIVEY,POSITIVEZ,NEGATIVEZ",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -15252,6 +15265,7 @@
     {
       "attributes": {
         "docstring": "The dimension of the curves.",
+        "enum_values": "TWO_DIMENSIONAL,THREE_DIMENSIONAL",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -19058,6 +19072,7 @@
     {
       "attributes": {
         "docstring": "Compression level for Draco format.",
+        "enum_values": "NO_COMPRESSION,FAST,STANDARD,OPTIMAL",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -23664,6 +23679,7 @@
     {
       "attributes": {
         "docstring": "Extrapolation type.",
+        "enum_values": "CONSTANT,GRADIENT,CYCLE,CYCLE_RELATIVE,OSCILLATE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -24898,6 +24914,7 @@
     },
     {
       "attributes": {
+        "enum_values": "BINARY,ASCII",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -27583,6 +27600,7 @@
     {
       "attributes": {
         "docstring": "Define front- and back-facing polygons.",
+        "enum_values": "CLOCKWISE,COUNTER_CLOCKWISE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -30287,6 +30305,7 @@
     {
       "attributes": {
         "docstring": "How glTF exporter will embed the textures during the exporting.",
+        "enum_values": "NO_CHANGE,JPEG,PNG",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -36148,6 +36167,7 @@
     },
     {
       "attributes": {
+        "enum_values": "INT32,INT16",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -36199,6 +36219,7 @@
     },
     {
       "attributes": {
+        "enum_values": "CONSTANT,LINEAR,BEZIER,B_SPLINE,CARDINAL_SPLINE,TCB_SPLINE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -39885,6 +39906,7 @@
     },
     {
       "attributes": {
+        "enum_values": "DIRECTIONAL,POINT,SPOT,AREA,ENVIRONMENT",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -42592,6 +42614,7 @@
     },
     {
       "attributes": {
+        "enum_values": "CONTROL_POINT,POLYGON,POLYGON_VERTEX,ALL_SAME",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -49208,6 +49231,7 @@
     {
       "attributes": {
         "docstring": "NURBS types.",
+        "enum_values": "OPEN,CLOSED,PERIODIC",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -51256,6 +51280,7 @@
     {
       "attributes": {
         "docstring": "The direction of a patch.",
+        "enum_values": "U,V",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -51273,6 +51298,7 @@
     {
       "attributes": {
         "docstring": "The type of patch direction.",
+        "enum_values": "U,V",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -53148,6 +53174,7 @@
     {
       "attributes": {
         "docstring": "LightingScheme specifies the lighting to apply to 3D artwork.",
+        "enum_values": "ARTWORK,NONE,WHITE,DAY,NIGHT,HARD,PRIMARY,BLUE,RED,CUBE,CAD,HEADLAMP",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -53558,6 +53585,7 @@
     {
       "attributes": {
         "docstring": "Render mode specifies the style in which the 3D artwork is rendered.",
+        "enum_values": "SOLID,SOLID_WIREFRAME,TRANSPARENT,TRANSPARENT_WIREFRAME,BOUNDING_BOX,TRANSPARENT_BOUNDING_BOX,TRANSPARENT_BOUNDING_BOX_OUTLINE,WIREFRAME,SHADED_WIREFRAME,HIDDEN_WIREFRAME,VERTICES,SHADED_VERTICES,ILLUSTRATION,SOLID_OUTLINE,SHADED_ILLUSTRATION",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -57195,6 +57223,7 @@
     {
       "attributes": {
         "docstring": "The polygon rasterization mode.",
+        "enum_values": "POINT,LINE,FILL",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -57541,6 +57570,7 @@
     {
       "attributes": {
         "docstring": "Pose type.",
+        "enum_values": "BIND_POSE,SNAPSHOT",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -57557,6 +57587,7 @@
     },
     {
       "attributes": {
+        "enum_values": "DEFAULT,CUSTOMIZED",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -58550,6 +58581,7 @@
     {
       "attributes": {
         "docstring": "Camera's projection types.",
+        "enum_values": "PERSPECTIVE,ORTHOGRAPHIC",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -61837,6 +61869,7 @@
     },
     {
       "attributes": {
+        "enum_values": "DIRECT,INDEX_TO_DIRECT,INDEX",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -63599,6 +63632,7 @@
     {
       "attributes": {
         "docstring": "The frustum's rotation mode",
+        "enum_values": "FIXED_TARGET,FIXED_DIRECTION",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -63616,6 +63650,7 @@
     {
       "attributes": {
         "docstring": "The order controls which rx ry rz are applied in the transformation matrix.",
+        "enum_values": "XYZ,XZY,YZX,YXZ,ZXY,ZYX",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -68884,6 +68919,7 @@
     {
       "attributes": {
         "docstring": "The type of skeleton.",
+        "enum_values": "LINEAR,RIGID",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -70368,6 +70404,7 @@
     {
       "attributes": {
         "docstring": "Share vertex/control point data between sub-meshes or each sub-mesh has its own compacted data.",
+        "enum_values": "CLONE_DATA,COMPACT_DATA",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -70385,6 +70422,7 @@
     {
       "attributes": {
         "docstring": "Interpolation step mode.",
+        "enum_values": "PREVIOUS_VALUE,NEXT_VALUE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -73672,6 +73710,7 @@
     {
       "attributes": {
         "docstring": "Filter options during texture sampling.",
+        "enum_values": "NONE,POINT,LINEAR,ANISOTROPIC",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -73688,6 +73727,7 @@
     },
     {
       "attributes": {
+        "enum_values": "AMBIENT,DIFFUSE,EMISSIVE,NORMAL,SPECULAR,BUMP,REFLECTION,TRANSPARENCY,GLOW",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -73793,6 +73833,7 @@
     },
     {
       "attributes": {
+        "enum_values": "TEXTURE1D,TEXTURE2D,TEXTURE3D,CUBE_MAP,ARRAY2D",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -87542,6 +87583,7 @@
     },
     {
       "attributes": {
+        "enum_values": "BINORMAL,NORMAL,TANGENT,MATERIAL,POLYGON_GROUP,UV,VERTEX_COLOR,SMOOTHING_GROUP,VERTEX_CREASE,EDGE_CREASE,USER_DATA,VISIBILITY,SPECULAR,WEIGHT,HOLE",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -90353,6 +90395,7 @@
     {
       "attributes": {
         "docstring": "Vertex field's data type.",
+        "enum_values": "Float,FVector2,FVector3,FVector4,Double,Vector2,Vector3,Vector4,Int8,ByteVector4,Int16,Int32,Int64",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -90370,6 +90413,7 @@
     {
       "attributes": {
         "docstring": "The semantic of the vertex field.",
+        "enum_values": "POSITION,BINORMAL,NORMAL,TANGENT,UV,VERTEX_COLOR,VERTEX_CREASE,EDGE_CREASE,USER_DATA,VISIBILITY,SPECULAR,WEIGHT,MORPH_POSITION,MORPH_NORMAL",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,
@@ -90631,6 +90675,7 @@
     {
       "attributes": {
         "docstring": "Texture's wrap mode.",
+        "enum_values": "Wrap,Clamp,Mirror,MirrorOnce,Border",
         "symbol_kind": "enum"
       },
       "confidence": 1.0,

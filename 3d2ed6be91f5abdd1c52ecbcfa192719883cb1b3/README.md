@@ -245,7 +245,7 @@ detail following for the classes used most often.
 | `AnimationClip` | AnimationClip.AnimationClip creates a new animation clip with an empty name. |
 | `AnimationNode` | Animation node. |
 | `ArbitraryProfile` | This class allows you to construct a 2D profile directly from arbitrary curve. |
-| `ArrayListAdapter` | Class with 23 methods and 1 property. |
+| `ArrayListAdapter` | Class that declares methods including add, addAll, clear, contains, containsAll and get and the member empty. |
 | `AssetInfo` | AssetInfo.AssetInfo creates a new AssetInfo instance with default values. |
 | `AxisSystem` | AxisSystem enables conversion between coordinate systems; its transformTo method returns a Matrix4 that maps the current system to a target AxisSystem. |
 | `Bone` | A bone defines the subset of the geometry's control point, and defined blend weight for each control point. |
@@ -275,7 +275,7 @@ detail following for the classes used most often.
 | `DracoFormat` | Google Draco format Example: The following code shows how to encode and decode a Mesh to/from byte array: Mesh mesh = (new Sphere()).toMesh(); //encode mesh. |
 | `DracoSaveOptions` | Options for Draco compression. |
 | `DrawOperation` | DrawOperation enum provides rendering primitives such as POINTS, LINES, TRIANGLES, and others for low‑level drawing commands. |
-| `DummyFileSystem` | Class with 8 methods. |
+| `DummyFileSystem` | Class that declares methods including close, createDummyFileSystem, createLocalFileSystem, createMemoryFileSystem, createZipFileSystem and readFile. |
 | `Ellipse` | An Ellipse defines a set of points that form the shape of ellipse. |
 | `EllipseShape` | IFC compatible ellipse profile, which can be used to construct a mesh through LinearExtrusion. |
 | `EndPoint` | The end point to trim the curve, can be a parameter value or a Cartesian point. |
@@ -284,12 +284,12 @@ detail following for the classes used most often.
 | `ExportException` | ExportException can be constructed with a message or with a message and a cause to represent errors during export operations. |
 | `Extrapolation` | Extrapolation defines how to do when sampled value is out of the range which defined by the first and last key-frames. |
 | `FMatrix4` | FMatrix4 provides a full 4×4 matrix implementation with methods to concatenate, transpose, invert, and multiply matrices or vectors for 3D transformations. |
-| `FVector2` | Class with 17 methods. |
+| `FVector2` | Class that declares methods including add, clone, compareTo, copyFrom, create and equals. |
 | `FVector3` | FVector3.FVector3 creates a vector with all components set to zero. |
 | `FVector4` | FVector4.FVector4 creates a vector with all components initialized to zero. |
 | `FbxLoadOptions` | Load options for FBX format. |
 | `FbxSaveOptions` | Save options for FBX format. |
-| `FileFormat` | Class with 17 methods and 59 properties. |
+| `FileFormat` | Class that declares methods including canDetect, createLoadOptions, createSaveOptions, detect, getCanExport and getCanImport and members including AMF, ASE, ASPOSE3D_WEB, BLENDER, canExport and canImport. |
 | `FileFormatType` | FileFormatType.getExtension() returns the associated file extension string. |
 | `FileStream` | File stream for reading and writing files. |
 | `FileSystem` | File system encapsulation. |
@@ -334,7 +334,7 @@ detail following for the classes used most often.
 | `Node` | Node represents a scene‑graph element; you can create child nodes, assign an Entity, and control visibility via getVisible/setVisible. |
 | `NotImplementedException` | Exception thrown when a feature is not implemented. |
 | `NurbsCurve` | NURBS curve is a curve represented by NURBS(Non-uniform rational basis spline), A NURBS curve is defined by its getOrder(), a set of weighted Geometry.getControlPoints() and a getKnotVectors() The w. |
-| `NurbsDirection` | Class with 12 methods and 7 properties. |
+| `NurbsDirection` | Class that declares methods including getCount, getDegree, getDivisions, getKnotVectors, getMultiplicity and getOrder and members including count, degree, divisions, knotVectors, multiplicity and order. |
 | `ObjLoadOptions` | ObjLoadOptions lets developers control OBJ import behavior, including flipping the coordinate system, scaling the model, and enabling or disabling material loading. |
 | `ObjSaveOptions` | ObjSaveOptions provides options for exporting OBJ files, including unit scaling, point‑cloud export, material handling, and coordinate system flipping. |
 | `ObjectProperty` | Concrete property implementation for Object values. |
@@ -347,7 +347,7 @@ detail following for the classes used most often.
 | `PhongMaterial` | Material for blinn-phong shading model. |
 | `Plane` | Parameterized plane. |
 | `PlyLoadOptions` | PlyLoadOptions and PlySaveOptions give developers the ability to import and export PLY point‑cloud files with configurable encoding and file‑system handling. |
-| `PlySaveOptions` | Class with 17 methods and 7 properties. |
+| `PlySaveOptions` | Class that inherits from SaveOptions and declares a public no-argument constructor. |
 | `PointCloud` | A point cloud represents a collection of points in 3D space. |
 | `PolygonModifier` | Polygon modifier utilities. |
 | `Pose` | The pose is used to store transformation matrix when the geometry is skinned. |
@@ -362,13 +362,13 @@ detail following for the classes used most often.
 | `RectangularTorus` | Parameterized rectangular torus. |
 | `RelativeRectangle` | Relative rectangle The formula between relative component to absolute value is: Scale * (Reference Width) + offset So if we want it to represent an absolute value, leave all scale fields zero, and use offset fields instead. |
 | `RenderFactory` | RenderFactory supplies factory methods to create render textures, descriptor sets, shader programs, pipelines and other low‑level rendering resources. |
-| `RenderParameters` | Class with 1 method. |
-| `RenderQueueGroupId` | Class with 1 method. |
-| `RenderResource` | Class with 1 method. |
+| `RenderParameters` | Class that declares a public no-argument constructor. |
+| `RenderQueueGroupId` | Class that declares a public no-argument constructor. |
+| `RenderResource` | Class that declares a public no-argument constructor. |
 | `RenderStage` | RenderStage provides a default constructor to create a new rendering stage for custom rendering pipelines. |
-| `RenderState` | Class with 1 method. |
-| `Renderer` | Class with 1 method. |
-| `RendererException` | Class with 1 method. |
+| `RenderState` | Class that declares a public no-argument constructor. |
+| `Renderer` | Class that declares a public no-argument constructor. |
+| `RendererException` | Class that declares a public no-argument constructor. |
 | `RendererVariableManager` | RendererVariableManager provides a container for variables that influence rendering behavior. |
 | `RevolvedAreaSolid` | This class represents a solid model by revolving a cross section provided by a profile about an axis. |
 | `RvmLoadOptions` | Load options for AVEVA Plant Design Management System's RVM file. |
@@ -378,7 +378,7 @@ detail following for the classes used most often.
 | `SceneObject` | SceneObject extends A3DObject, adding a reference to its parent Scene and exposing scene‑level properties. |
 | `Segment` | Segment of CompositeCurve. |
 | `ShaderMaterial` | A shader material that allows describing the material by external rendering engine or shader language. |
-| `ShaderProgram` | Class with 1 method. |
+| `ShaderProgram` | Class that declares the method close. |
 | `ShaderSource` | Class in the 3D JAVA API. |
 | `ShaderTechnique` | A shader technique represents a concrete rendering implementation. |
 | `Shape` | The shape describes the deformation on a set of control points, which is similar to the cluster deformer in Maya. |
@@ -387,7 +387,7 @@ detail following for the classes used most often.
 | `Sphere` | Parameterized sphere. |
 | `StlLoadOptions` | Load options for STL. |
 | `StlSaveOptions` | Save options for STL. |
-| `Stream` | Created by lexchou on 12/14/2016. |
+| `Stream` | Declares methods including close, copyTo, flush, getInputStream, getLength and getOutputStream and the members inputStream, length, outputStream, SEEK_CURRENT, SEEK_END and SEEK_SET. |
 | `Structs` | Base class of struct array. |
 | `TShape` | IFC compatible T-shape defined by parameters. |
 | `Texture` | This class defines the texture from an external file. |
@@ -405,30 +405,30 @@ detail following for the classes used most often.
 | `UShape` | IFC compatible U-shape defined by parameters. |
 | `UsdSaveOptions` | Options for USD saving. |
 | `Vector2` | Vector2 and Vector3 classes provide basic vector math operations such as scalar (·), cross (×), normalization, and length calculation. |
-| `Vector3` | Class with 40 methods and 7 properties. |
+| `Vector3` | Class that declares methods including add, angleBetween, clone, compareTo, copyFrom and cos and members including length, length2, one, unitX, unitY and unitZ. |
 | `Vector4` | Vector4.Vector4 initializes a vector with the specified x, y, z, and w component values. |
 | `Version` | Version.Version(major:int, minor:int) creates a version with specified major and minor numbers. |
 | `Vertex` | Vertex reference, used to access the raw vertex in TriMesh. |
 | `VertexDeclaration` | VertexDeclaration.addField(dataType, semantic, index, alias) creates a new VertexField describing a vertex attribute layout. |
 | `VertexElement` | Base class for all vertex element types. |
 | `VertexElementBinormal` | VertexElementBinormal.VertexElementBinormal creates a binormal vertex element with specified mapping and reference modes. |
-| `VertexElementDoublesTemplate` | Class with 17 methods and 6 properties. |
-| `VertexElementEdgeCrease` | Class with 18 methods and 6 properties. |
-| `VertexElementFVector` | Class with 19 methods and 6 properties. |
-| `VertexElementHole` | Class with 3 methods and 1 property. |
-| `VertexElementIntsTemplate` | Class with 17 methods and 6 properties. |
+| `VertexElementDoublesTemplate` | Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data. |
+| `VertexElementEdgeCrease` | Class that inherits from VertexElementDoublesTemplate and declares the methods clear and getVertexElementType and the member vertexElementType. |
+| `VertexElementFVector` | Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data. |
+| `VertexElementHole` | Class that declares the methods clear and getVertexElementType and the member vertexElementType. |
+| `VertexElementIntsTemplate` | Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data. |
 | `VertexElementMaterial` | VertexElementMaterial.VertexElementMaterial creates a material vertex element using the given mapping and reference modes. |
 | `VertexElementNormal` | VertexElementNormal.clone(withData, withIndices) creates a deep copy of a normal element, optionally preserving its data and index buffers. |
-| `VertexElementPolygonGroup` | Class with 18 methods and 6 properties. |
-| `VertexElementSmoothingGroup` | Class with 18 methods and 6 properties. |
-| `VertexElementSpecular` | Class with 20 methods and 6 properties. |
+| `VertexElementPolygonGroup` | Class that inherits from VertexElementIntsTemplate and declares the methods clear and getVertexElementType and the member vertexElementType. |
+| `VertexElementSmoothingGroup` | Class that inherits from VertexElementIntsTemplate and declares the methods clear and getVertexElementType and the member vertexElementType. |
+| `VertexElementSpecular` | Class that inherits from VertexElementFVector and declares the methods clear and getVertexElementType and the member vertexElementType. |
 | `VertexElementTangent` | VertexElementTangent.VertexElementTangent creates a tangent vertex element using the given mappingMode and referenceMode. |
 | `VertexElementTemplate` | VertexElementTemplate.getData() returns the generic list of stored values, allowing custom templated vertex attributes to be inspected or modified. |
 | `VertexElementUV` | VertexElementUV.addData(data) appends a new UV coordinate to the element's data collection. |
 | `VertexElementUserData` | VertexElementUserData.clone(withData, withIndices) returns a generic VertexElement that carries an arbitrary Object payload. |
-| `VertexElementVector4` | Class with 17 methods and 6 properties. |
-| `VertexElementVertexColor` | Class with 21 methods and 6 properties. |
-| `VertexElementVertexCrease` | Class with 18 methods and 6 properties. |
+| `VertexElementVector4` | Class that inherits from VertexElement and declares the methods clear, clone, copyTo, getData and setData and the member data. |
+| `VertexElementVertexColor` | Class that inherits from VertexElementFVector and declares the methods clear, clone and getVertexElementType and the member vertexElementType. |
+| `VertexElementVertexCrease` | Class that inherits from VertexElementDoublesTemplate and declares the methods clear and getVertexElementType and the member vertexElementType. |
 | `VertexElementVisibility` | VertexElementVisibility.clear() removes any stored visibility flags, resetting the element to its default state. |
 | `VertexElementWeight` | VertexElementWeight.setData(List) assigns weight values to vertices for skinning operations. |
 | `VertexField` | VertexField definitions allow developers to describe custom vertex buffer layouts by specifying data type, semantic, offset and size. |
@@ -481,14 +481,14 @@ detail following for the classes used most often.
 | `CompareFunction` | The compare function used in depth/stencil testing. |
 | `ComposeOrder` | The order to compose transform matrix. |
 | `CoordinateSystem` | CoordinateSystem.RIGHT_HANDED represents a right‑handed coordinate system orientation. |
-| `CubeFace` | Enum with 6 members. |
+| `CubeFace` | Enumerates NEGATIVEX, NEGATIVEY, NEGATIVEZ, POSITIVEX, POSITIVEY and POSITIVEZ. |
 | `CurveDimension` | The dimension of the curves. |
 | `DracoCompressionLevel` | Compression level for Draco format. |
 | `ExtrapolationType` | Extrapolation type. |
 | `FileContentType` | FileContentType.BINARY represents a binary file content type. |
 | `FrontFace` | Define front- and back-facing polygons. |
 | `GltfEmbeddedImageFormat` | How glTF exporter will embed the textures during the exporting. |
-| `IndexDataType` | Enum with 2 members. |
+| `IndexDataType` | Enumerates INT16 and INT32. |
 | `Interpolation` | The Interpolation enum defines the supported interpolation curves for key‑frame animation, including CONSTANT, LINEAR, BEZIER, B_SPLINE, CARDINAL_SPLINE, and TCB_SPLINE. |
 | `LightType` | LightType enum defines the supported categories of lights: DIRECTIONAL, POINT, SPOT, AREA, and ENVIRONMENT. |
 | `MappingMode` | MappingMode.CONTROL_POINT represents mapping values per control point. |
@@ -499,7 +499,7 @@ detail following for the classes used most often.
 | `PdfRenderMode` | Render mode specifies the style in which the 3D artwork is rendered. |
 | `PolygonMode` | The polygon rasterization mode. |
 | `PoseType` | Pose type. |
-| `PresetShaders` | Enum with 2 members. |
+| `PresetShaders` | Enumerates CUSTOMIZED and DEFAULT. |
 | `ProjectionType` | Camera's projection types. |
 | `ReferenceMode` | ReferenceMode enum defines how vertex attributes reference data, supporting DIRECT, INDEX_TO_DIRECT, and INDEX modes. |
 | `RotationMode` | The frustum's rotation mode /. |
@@ -509,7 +509,7 @@ detail following for the classes used most often.
 | `StepMode` | Interpolation step mode. |
 | `TextureFilter` | Filter options during texture sampling. |
 | `TextureMapping` | TextureMapping enum enumerates material texture slots such as DIFFUSE, NORMAL, SPECULAR, BUMP, and others. |
-| `TextureType` | Enum with 5 members. |
+| `TextureType` | Enumerates ARRAY2D, CUBE_MAP, TEXTURE1D, TEXTURE2D and TEXTURE3D. |
 | `VertexElementType` | VertexElementType enum defines the set of supported vertex element categories such as NORMAL, TANGENT, UV, and MATERIAL. |
 | `VertexFieldDataType` | Vertex field's data type. |
 | `VertexFieldSemantic` | The semantic of the vertex field. |
