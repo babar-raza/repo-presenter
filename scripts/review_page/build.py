@@ -97,19 +97,44 @@ def _shrink(raw: bytes) -> str | None:
     return "data:image/webp;base64," + base64.b64encode(buffer.getvalue()).decode()
 
 
+_ACTIONS_BADGE = re.compile(
+    r"^https://github\.com/([^/]+)/([^/]+)/actions/workflows/([^/?#]+)/badge\.svg(?:\?(.*))?$")
+
+
+def _badge_mirror(url: str) -> str | None:
+    """The same workflow's status as shields.io renders it: github.com's own badge endpoint is not
+    reachable from every build environment, and an unfetched image shows only its alt text on the page
+    (owner feedback 2026-11-14: "build status icon is broken"). The README keeps its own URL."""
+    match = _ACTIONS_BADGE.match(url)
+    if not match:
+        return None
+    owner, name, workflow, query = match.groups()
+    branch = urllib.parse.parse_qs(query or "").get("branch", [None])[0]
+    mirror = f"https://img.shields.io/github/actions/workflow/status/{owner}/{name}/{workflow}"
+    return mirror + (f"?branch={urllib.parse.quote(branch)}" if branch else "")
+
+
+def _download(url: str) -> tuple[str, bytes] | None:
+    try:
+        request = urllib.request.Request(url, headers={"User-Agent": "readme-review-preview"})
+        with urllib.request.urlopen(request, timeout=20) as response:
+            return (response.headers.get("Content-Type") or "").split(";")[0], response.read()
+    except Exception:  # noqa: BLE001 -- an unreachable image keeps its alt text on the page
+        return None
+
+
 def _fetch(item: tuple[str, str, str]) -> tuple[str, str, str | None]:
     repository, revision, src = item
     if src.startswith("data:"):
         return repository, src, None
     url = src if src.startswith("http") else urllib.parse.urljoin(
         f"https://raw.githubusercontent.com/{repository}/{revision}/", src)
-    try:
-        request = urllib.request.Request(url, headers={"User-Agent": "readme-review-preview"})
-        with urllib.request.urlopen(request, timeout=20) as response:
-            kind = (response.headers.get("Content-Type") or "").split(";")[0]
-            raw = response.read()
-    except Exception:  # noqa: BLE001 -- an unreachable image keeps its alt text on the page
+    got = _download(url)
+    if (got is None or not got[0].startswith("image/")) and (mirror := _badge_mirror(url)):
+        got = _download(mirror)
+    if got is None:
         return repository, src, None
+    kind, raw = got
     if not kind.startswith("image/"):
         return repository, src, None
     if kind != "image/svg+xml" and len(raw) > REENCODE_OVER:
