@@ -441,7 +441,23 @@ def planning_schema(
     investigation: Mapping[str, Any],
     dispositions: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """The planning schema specialised for this repository."""
+    """The planning schema specialised for this repository, bounded so a reply fits the job's
+    ``max_output_tokens`` (``output_bounds.bound_planning_reply``, BL-097)."""
+    from repo_presenter.readme.composition.output_bounds import bound_planning_reply
+
+    return bound_planning_reply(
+        _specialised_schema(manifest, facts, investigation, dispositions),
+        manifest.manifest.sampling.max_output_tokens,
+    )
+
+
+def _specialised_schema(
+    manifest: LoadedManifest,
+    facts: FactsDocument,
+    investigation: Mapping[str, Any],
+    dispositions: Mapping[str, Any],
+) -> dict[str, Any]:
+    """The planning schema specialised for this repository (its ids, examples, formats)."""
     schema = copy.deepcopy(manifest.manifest.output.schema_)
     refuted = register_refuted_example_ids(facts)
     verified = sorted(
