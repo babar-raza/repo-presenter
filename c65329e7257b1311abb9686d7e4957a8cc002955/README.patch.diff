@@ -548,26 +548,23 @@
  
  | Enumeration | Description |
  |---|---|
-@@ -484,33 +490,53 @@
+@@ -484,33 +490,59 @@
  
  ## Documentation & Resources
  
 -- **[Getting started guide](https://docs.aspose.org/cells/java/)** — Java documentation for Aspose.Cells FOSS: workbook creation, cell operations, styling, and data validation.
 -- **[How-to guides & FAQ](https://kb.aspose.org/cells/java/)** — Java knowledge base for Aspose.Cells FOSS: how-to articles, FAQ, and troubleshooting guides.
--- **[Full API reference](https://reference.aspose.org/cells/java/)** — the complete, browsable reference for all 183 public types (the [API reference](#api-reference) section above covers the essentials).
--- **[Contributor guide](Agents.md)** — repository conventions to follow when changing supported behavior.
--- **[Publishing guide](PUBLISHING.md)** — how releases are built and published to Maven Central.
++- **[Getting started guide](https://docs.aspose.org/cells/java/)** — Java documentation for Aspose.Cells FOSS for Java: workbook creation, cell operations, styling, and data validation.
++- **[How-to guides & FAQ](https://kb.aspose.org/cells/java/)** — Java knowledge base for Aspose.Cells FOSS for Java: how-to articles, FAQ, and troubleshooting guides.
+ - **[Full API reference](https://reference.aspose.org/cells/java/)** — the complete, browsable reference for all 183 public types (the [API reference](#api-reference) section above covers the essentials).
+ - **[Contributor guide](Agents.md)** — repository conventions to follow when changing supported behavior.
+ - **[Publishing guide](PUBLISHING.md)** — how releases are built and published to Maven Central.
 -- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Java/issues) on GitHub.
-+- **[Getting started guide](https://docs.aspose.org/cells/java/)** — The getting started guide covers Java documentation for Aspose.Cells FOSS for Java: workbook creation, cell operations, styling, and data validation.
-+- **[How-to guides & FAQ](https://kb.aspose.org/cells/java/)** — The how-to guides and FAQ provide Java knowledge base content for Aspose.Cells FOSS for Java, including how-to articles, frequently asked questions, and troubleshooting guidance.
-+- **[Full API reference](https://reference.aspose.org/cells/java/)** — The full API reference offers a complete, browsable reference for all 183 public types in Aspose.Cells FOSS for Java. It covers all 183 public types; the [API Reference](#api-reference) section above covers the essentials.
-+- **[Contributor guide](Agents.md)** — The contributor guide outlines repository conventions to follow when changing supported behavior in Aspose.Cells FOSS for Java.
-+- **[Publishing guide](PUBLISHING.md)** — The publishing guide describes how releases are built and published to Maven Central for Aspose.Cells FOSS for Java.
 +- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Java/issues).
  
  ## Scope and Limitations
  
--- Saving is currently limited to `.xlsx`.
+ - Saving is currently limited to `.xlsx`.
 -- ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot
 -  be created programmatically; charts of these types loaded from an existing workbook are
 -  preserved verbatim across load and save.
@@ -583,33 +580,38 @@
 -[Aspose.Cells for Java — Enterprise Edition](https://products.aspose.com/cells/java/), which adds
 -additional spreadsheet save formats beyond `.xlsx`, a full formula calculation engine, ChartEx
 -chart type creation, and dedicated enterprise support.
-+Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format, supporting workbook creation, data manipulation, and formula storage for round-trip preservation.
-+
-+- Saving is currently limited to .xlsx, and `ChartEx` types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot be created programmatically; charts of these types loaded from an existing workbook are preserved verbatim across load and save.
-+- Formulas are stored and round-tripped, but the library is not a full spreadsheet calculation engine, and a handful of public XML-mapper classes are unimplemented skeleton code carried over from an early scaffold.
++- ChartEx types (Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel, and Map) cannot be created programmatically; charts of these types loaded from an existing workbook are preserved verbatim across load and save.
++- Formulas are stored and round-tripped, but the library is not a full spreadsheet calculation engine.
++- A handful of public XML-mapper classes are unimplemented skeleton code carried over from an early scaffold — their own class-level Javadoc discloses this, and the library's real save/load path never calls them.
 +- Some APIs exist mainly to preserve OOXML metadata and package fidelity rather than to provide full Excel feature parity.
++
++<details>
++<summary>View Other Unimplemented Members</summary>
++
++- `SharedStringTableXmlMapper`: `read` and `write` throw UnsupportedOperationException.
++- `StylesheetXmlMapper`: `read` and `write` throw UnsupportedOperationException.
++- `WorkbookXmlMapper`: `read` and `write` throw UnsupportedOperationException.
++- `FormulaException` is declared but unused by the library's own code.
++- `MissingPartException` is declared but unused by the library's own code.
++- `PackageStructureException` is declared but unused by the library's own code.
++- `RelationshipResolutionException` is declared but unused by the library's own code.
++
++</details>
 +
 +These limitations don't apply to [full-featured Aspose.Cells for Java — Enterprise Edition](https://products.aspose.com/cells/java/). It adds additional spreadsheet save formats beyond .xlsx, a full formula calculation engine, ChartEx chart type creation, and dedicated enterprise support.
  
  ## Development and Testing
 +
-+The project requires JDK 17 or later and Maven as the build tool. It depends on Apache POI only in test scope and never at runtime. The test suite is located under src/test/java/org/aspose/`cells_foss`/ and includes scenario-driven integration tests for workbook behavior and XLSX round-tripping, as well as fast, focused unit tests for individual API classes without XLSX I/O.
-+
 +The suite covers 23 test files under `src/test/`. Releases run through the [maven-central-release workflow](.github/workflows/maven-central-release.yml).
 +
 +The library targets Java 17 and depends on Apache POI only in `test` scope, never at runtime.
 +
-+No required third-party package dependencies. The published `aspose-cells-foss` package builds
-+from `pom.xml`, which declares no dependencies outside `test` scope.
++No required third-party package dependencies. The published `aspose-cells-foss` package builds from `pom.xml`, which declares no dependencies outside `test` scope.
 +
-+- `org.junit.jupiter:junit-jupiter` 5.10.2 — test runner used by the Maven `test` phase; not
-+  needed to use the published library.
-+- `org.apache.poi:poi-ooxml` 5.3.0 — used across the test suite as an independent XLSX
-+  implementation for round-trip and compatibility verification; not needed to use the published
-+  library.
++- `org.junit.jupiter:junit-jupiter` 5.10.2 — test runner used by the Maven `test` phase; not needed to use the published library.
++- `org.apache.poi:poi-ooxml` 5.3.0 — used across the test suite as an independent XLSX implementation for round-trip and compatibility verification; not needed to use the published library.
 +
-+The public API lives under `src/main/java/org/aspose/cells_foss/`, with integration tests,
-+unit tests, and generated Javadoc alongside it at the repository root:
++The public API lives under `src/main/java/org/aspose/cells_foss/`, with integration tests, unit tests, and generated Javadoc alongside it at the repository root:
 +
 +```
 +├── src/main/java/org/aspose/cells_foss/  # Public API: Workbook, Worksheet, Cell, Style, collections, enums, load/save options
@@ -624,15 +626,19 @@
  
  Requires JDK 17+ and Maven as the build tool. Run the test suite:
  
-@@ -523,7 +549,6 @@
+@@ -523,15 +555,10 @@
  ```bash
  mvn compile
  mvn clean package
 -mvn javadoc:javadoc   # generates docs/apidocs/index.html
- ```
- 
- Releases publish to Maven Central via
-@@ -532,6 +557,4 @@
+-```
+-
+-Releases publish to Maven Central via
+-[`maven-central-release.yml`](.github/workflows/maven-central-release.yml) — see
+-[`PUBLISHING.md`](PUBLISHING.md) for the full release process.
++```
++
++Releases publish to Maven Central via [`maven-central-release.yml`](.github/workflows/maven-central-release.yml) — see [`PUBLISHING.md`](PUBLISHING.md) for the full release process.
  
  ## License
  
