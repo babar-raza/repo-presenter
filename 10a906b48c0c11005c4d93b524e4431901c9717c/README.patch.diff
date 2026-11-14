@@ -12,7 +12,7 @@
  
  Aspose.Email FOSS for Python is a free, open-source, MIT-licensed, pure-Python library for
  deterministic Compound File Binary (CFB) and Outlook `.msg` message processing — no Microsoft
-@@ -28,32 +30,41 @@
+@@ -28,32 +30,51 @@
  ## At a Glance
  
  ```mermaid
@@ -36,13 +36,23 @@
 -    c5["Import a Python EmailMessage into a MapiMessage (from_email_message)"]
 +    c1["Read MSG and CFB files"]
 +    c2["Write MSG and CFB<br/>files"]
-+    c3["Convert between MSG<br/>and EML"]
-+    c4["Create and edit<br/>messages"]
-+    c5["Low-level CFB access"]
-+    c6["Low-level MSG access"]
-+    c1 ~~~ c4
-+    c2 ~~~ c5
-+    c3 ~~~ c6
++    subgraph cg1["Msg / Mapi Message"]
++      direction TB
++      c3["Convert between MSG<br/>and EML"]
++      c4["Create and edit<br/>messages"]
++    end
++    subgraph cg2["Cfb"]
++      direction TB
++      c5["Low-level CFB access"]
++    end
++    subgraph cg3["Msg"]
++      direction TB
++      c6["Low-level MSG access"]
++    end
++    c1 ~~~ cg1
++    c2 ~~~ cg1
++    cg1 ~~~ cg2
++    cg2 ~~~ cg3
    end
    subgraph Outputs["Outputs"]
      direction TB
@@ -67,7 +77,7 @@
  
  The following features are grouped by processing layer, from low-level CFB and MSG access up
  through the high-level `MapiMessage` API and its `EmailMessage` bridge. Together they cover the
-@@ -64,47 +75,49 @@
+@@ -64,47 +85,49 @@
    directory tree (`iter_storages()`, `iter_streams()`, `iter_tree()`, `resolve_path()`).
  - Build and write CFB containers with `CFBStorage`, `CFBStream`, `CFBDocument`, and `CFBWriter`
    (`CFBWriter.to_bytes()` / `write_file()`).
@@ -111,7 +121,7 @@
 +python -c "import aspose.email_foss"
 +```
 +
-+The package declares `requires-python` as `>=3.10`.
++Requires Python 3.10 or later.
  
  ## Dependencies
  
@@ -125,7 +135,7 @@
 -- Requires Python 3.10 or later, per `pyproject.toml`'s `requires-python` constraint.
 -- Ships as pure Python source with no compiled extensions to build and no native/system
 -  libraries to install.
-+- Requires Python 3.10 or later (`requires-python=">=3.10"` in `pyproject.toml`).
++- Requires Python 3.10 or later.
  
  ## Quick Start
  
@@ -134,7 +144,7 @@
  
  ```python
  from aspose.email_foss import msg
-@@ -113,7 +126,7 @@
+@@ -113,7 +136,7 @@
      print(message.subject)
  ```
  
@@ -143,7 +153,7 @@
  
  ```python
  from aspose.email_foss import msg
-@@ -133,10 +146,9 @@
+@@ -133,10 +156,9 @@
  
  ## Additional Examples
  
@@ -157,7 +167,7 @@
  
  ```python
  from aspose.email_foss import msg
-@@ -151,7 +163,7 @@
+@@ -151,7 +173,7 @@
  <details>
  <summary>View Additional Examples</summary>
  
@@ -166,7 +176,7 @@
  
  ```python
  from email import policy
-@@ -166,29 +178,7 @@
+@@ -166,29 +188,7 @@
  message.save("message.msg")
  ```
  
@@ -197,7 +207,7 @@
  
  ```python
  from aspose.email_foss.cfb import CFBDocument, CFBReader, CFBStorage, CFBStream, CFBWriter, ROOT_ENTRY_NAME
-@@ -202,24 +192,43 @@
+@@ -202,24 +202,43 @@
  print(reader.get_stream_data(entry.stream_id))
  ```
  
@@ -251,7 +261,7 @@
  | `CFBDocument` | Mutable Compound File Binary (CFB) document description. |
  | `CFBError` | Raised for malformed or unsupported Compound File Binary (CFB) content. |
  | `CFBReader` | Reusable reader for Compound File Binary (CFB) containers. |
-@@ -228,26 +237,10 @@
+@@ -228,26 +247,10 @@
  | `CFBWriter` | Deterministic serializer for Compound File Binary (CFB) containers. |
  | `DirectoryEntry` | Fixed-size directory record for one storage/stream object and its tree links. |
  | `Header` | Header record at file offset 0 defining Compound File Binary (CFB) geometry and allocation chain entry points. |
@@ -278,7 +288,7 @@
  | `MapiRecipient` | Mutable recipient object. |
  | `MsgDocument` | Mutable MSG document model that can be serialized through the CFB writer. |
  | `MsgError` | Raised for malformed or unsupported MSG structures. |
-@@ -259,20 +252,55 @@
+@@ -259,20 +262,55 @@
  | `PropertyStreamHeaderSubobject` | Property stream header used in recipient and attachment storages, containing only reserved bytes. |
  | `PropertyStreamHeaderTopLevel` | Top-level property stream header containing next-id counters and counts for recipients and attachments. |
  | `StorageLayout` | Naming and containment rules for recipient, attachment, embedded message, and nameid storages. |
@@ -338,7 +348,7 @@
  
  - `MapiMessage`
    - `create(subject, body, unicode_strings) -> "MapiMessage"`
-@@ -293,16 +321,19 @@
+@@ -293,16 +331,19 @@
    - `to_msg_document() -> MsgDocument`
    - properties: `subject`, `body`, `body_html`, `message_class`, `unicode_strings`, `properties`,
      `recipients`, `attachments`, `validation_issues`
@@ -360,7 +370,7 @@
  
  - `MsgReader`
    - `from_file(path, strict) -> "MsgReader"`
-@@ -310,17 +341,20 @@
+@@ -310,17 +351,20 @@
    - `parse_message_property_stream(storage_stream_id)` / `parse_subobject_property_stream(storage_stream_id)`
    - `parse_top_level_property_stream(data)` (classmethod) / `parse_subobject_property_stream_data(data)` (classmethod)
    - properties: `cfb_reader`, `storage_layout`, `strict`, `validation_issues`
@@ -383,7 +393,7 @@
  
  - `CFBReader`
    - `from_file(path) -> "CFBReader"` / `CFBReader(data)` (constructs directly from `bytes`)
-@@ -329,61 +363,65 @@
+@@ -329,61 +373,65 @@
    - `find_child_by_name(storage_stream_id, name)`, `resolve_path(names, start_stream_id)`
    - properties: `header`, `difat`, `fat`, `mini_fat`, `directory_entries`, `root_entry`, `data_size`,
      `major_version`, `sector_size`, `mini_sector_size`, `file_size`
@@ -478,7 +488,7 @@
  
  Install the package in editable mode and run the test suite:
  
-@@ -391,8 +429,6 @@
+@@ -391,8 +439,6 @@
  pip install -e .
  python -m unittest discover -s tests -v
  ```
@@ -487,7 +497,7 @@
  
  ```bash
  python -m build
-@@ -406,6 +442,4 @@
+@@ -406,6 +452,4 @@
  
  ## License
  

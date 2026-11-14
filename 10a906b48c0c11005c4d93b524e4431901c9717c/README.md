@@ -40,13 +40,23 @@ flowchart TB
     direction TB
     c1["Read MSG and CFB files"]
     c2["Write MSG and CFB<br/>files"]
-    c3["Convert between MSG<br/>and EML"]
-    c4["Create and edit<br/>messages"]
-    c5["Low-level CFB access"]
-    c6["Low-level MSG access"]
-    c1 ~~~ c4
-    c2 ~~~ c5
-    c3 ~~~ c6
+    subgraph cg1["Msg / Mapi Message"]
+      direction TB
+      c3["Convert between MSG<br/>and EML"]
+      c4["Create and edit<br/>messages"]
+    end
+    subgraph cg2["Cfb"]
+      direction TB
+      c5["Low-level CFB access"]
+    end
+    subgraph cg3["Msg"]
+      direction TB
+      c6["Low-level MSG access"]
+    end
+    c1 ~~~ cg1
+    c2 ~~~ cg1
+    cg1 ~~~ cg2
+    cg2 ~~~ cg3
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -103,7 +113,7 @@ Verify the install:
 python -c "import aspose.email_foss"
 ```
 
-The package declares `requires-python` as `>=3.10`.
+Requires Python 3.10 or later.
 
 ## Dependencies
 
@@ -113,7 +123,7 @@ No required third-party package dependencies; in `pyproject.toml`, no `project.d
 
 ### Native and System Requirements
 
-- Requires Python 3.10 or later (`requires-python=">=3.10"` in `pyproject.toml`).
+- Requires Python 3.10 or later.
 
 ## Quick Start
 
