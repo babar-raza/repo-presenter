@@ -457,6 +457,17 @@ def verify_net_examples(
             added = f"; usings supplied: {', '.join(supplied)}" if supplied else ""
             outcome = "EXECUTED"
             detail = f"compiled against {project.name}; SDK {version}{added}"
+            # BL-061 (K01): compiling proves the calls exist; running proves they do what the
+            # example shows (3D .NET Quick Start: Save(path, FileFormat.FBX7400Binary) compiles
+            # and throws NotImplementedException, FileFormat.cs:66,83,347-350 @52b0f00ebf28).
+            ran = execute(
+                [dotnet, "run", "--no-build", "--no-restore"],
+                workspace=run_dir,
+                timeout_seconds=NET.example_timeout_seconds,
+                extra_environment=profile_environment(run_dir),
+            )
+            outcome, how = classify_net_run(ran, NET.example_timeout_seconds)
+            detail = _scrub(f"{detail}; {how}", *machine)
         else:
             detail = _first_error(result.stdout, result.stderr, *machine)
             # A build that failed on restore, the SDK or the harness named no compiler diagnostic,
@@ -482,6 +493,38 @@ def verify_net_examples(
             )
         )
     return receipts
+
+
+#: The CLR's report of an exception nothing caught: ``Unhandled exception. <type>: <message>``.
+_UNHANDLED = re.compile(r"Unhandled exception\.\s+([\w.`]+)(?::\s*(.*))?")
+#: Exceptions an example throws when the input it opens is not there: it may be right about the
+#: API and need a file the repository does not provide (the Python verifier's NEEDS_INPUT rule).
+_INPUT_EXCEPTIONS = frozenset(
+    {
+        "System.IO.FileNotFoundException",
+        "System.IO.DirectoryNotFoundException",
+        "System.UnauthorizedAccessException",
+    }
+)
+
+
+def classify_net_run(result: ExecutionResult, timeout_seconds: float) -> tuple[str, str]:
+    """``(outcome, detail)`` for one ``dotnet run`` of a compiled example (BL-061): exit 0 ran; a
+    missing input is NEEDS_INPUT; any other unhandled exception is FAILED -- the API compiled but
+    does not do what the example shows; a run that did not finish is TIMED_OUT (never a
+    contradiction)."""
+    if result.timed_out:
+        return "TIMED_OUT", f"compiled, but the run did not exit within {timeout_seconds:g}s"
+    if result.return_code == 0:
+        return "EXECUTED", "ran (exit 0)"
+    found = _UNHANDLED.search((result.stderr or "") + "\n" + (result.stdout or ""))
+    if found is None:
+        return "FAILED", f"ran and exited {result.return_code}"
+    exception = found.group(1)
+    if exception in _INPUT_EXCEPTIONS:
+        return "NEEDS_INPUT", f"{exception}: the example opens an input the repository does not provide"
+    message = (found.group(2) or "").strip()[:200]
+    return "FAILED", f"ran and threw {exception}" + (f": {message}" if message else "")
 
 
 def _first_error(stdout: str, stderr: str, *bases: Path) -> str:

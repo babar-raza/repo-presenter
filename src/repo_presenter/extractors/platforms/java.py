@@ -18,7 +18,7 @@ CONTRADICTED.
 from __future__ import annotations
 
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any, Final
 from xml.etree import ElementTree
@@ -360,6 +360,53 @@ def _inline_tag_text(tag: str, raw: str) -> str:
     return argument
 
 
+_JAVA_COMMENT = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
+_JAVA_STRING = re.compile(r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'')
+_JAVA_ANNOTATION = re.compile(r"@\w+(?:\.\w+)*(?:\s*\([^()]*\))?")
+_JAVA_CONSTANT = re.compile(r"^\s*([A-Za-z_$][\w$]*)\s*$")
+
+
+def java_enum_constants(source: str, name: str) -> tuple[str, ...]:
+    """The constants of ``enum <name>`` in one Java file, in declaration order: the comma-separated
+    entries before the first top-level ``;`` (or the closing brace) of the enum body. An entry's
+    argument list and class body are skipped by bracket depth; comments, strings and annotations
+    are removed first. Empty when the declaration is not found or an entry cannot be read."""
+    text = _JAVA_ANNOTATION.sub(" ", _JAVA_STRING.sub('""', _JAVA_COMMENT.sub(" ", source)))
+    declared = re.search(r"\benum\s+" + re.escape(name) + r"\b[^{;]*\{", text)
+    if declared is None:
+        return ()
+    entries: list[str] = []
+    current: list[str] = []
+    depth = 0
+    closed = False
+    for char in text[declared.end() :]:
+        if depth == 0 and char in ",;}":
+            entries.append("".join(current))
+            current = []
+            if char != ",":
+                closed = True
+                break
+            continue
+        if char in "({":
+            depth += 1
+        elif char in ")}":
+            depth -= 1
+        elif depth == 0:
+            current.append(char)
+    if not closed:
+        return ()
+    names: list[str] = []
+    for entry in entries:
+        if not entry.strip():
+            continue
+        match = _JAVA_CONSTANT.match(entry)
+        if match is None:
+            return ()
+        if match.group(1) not in names:
+            names.append(match.group(1))
+    return tuple(names)
+
+
 class JavaPlugin:
     """What the facts stage asks of Java."""
 
@@ -513,6 +560,44 @@ class JavaPlugin:
                 )
             )
         return with_enum_members(facts, symbols)
+
+    def member_count_facts(self, document: Any, sources: Mapping[str, str]) -> tuple[Any, int]:
+        """``(document, changed)``: re-certification's view of a facts document sealed before the
+        surface recorded Java enum constants as ``enum_member`` facts (BL-006, extractor since
+        cffbdbd): every SUPPORTED enum fact with no ``enum_member`` fact gains an ``enum_values``
+        attribute, read from the enum declaration at its evidence path in ``sources`` (the pinned
+        revision's ``.java`` files). Adds an attribute, never a fact; an enum whose file or
+        declaration cannot be read stays as it is."""
+        owners = {
+            str((fact.attributes or {}).get("enum", ""))
+            for fact in document.facts
+            if fact.kind == "enum_member"
+        }
+        facts, changed = [], 0
+        for fact in document.facts:
+            attributes = fact.attributes or {}
+            if (
+                fact.kind == "public_symbol"
+                and fact.polarity == "SUPPORTED"
+                and attributes.get("symbol_kind") == "enum"
+                and "enum_values" not in attributes
+                and fact.value not in owners
+                and fact.evidence
+                and fact.evidence[0].path in sources
+            ):
+                values = java_enum_constants(sources[fact.evidence[0].path], fact.value.rsplit(".", 1)[-1])
+                if values:
+                    fact = Fact(
+                        fact.id, fact.kind, fact.value, fact.evidence, fact.polarity,
+                        fact.confidence, {**attributes, "enum_values": ",".join(values)},
+                    )
+                    changed += 1
+            facts.append(fact)
+        if not changed:
+            return document, 0
+        return type(document)(
+            document.repository, document.source_revision, tuple(facts), document.schema_version
+        ), changed
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the install claim against Maven Central; the fact keeps its ID, gains evidence.

@@ -134,6 +134,9 @@ class SourceSnapshot:
     #: The ``.py`` sources at the pinned revision when the root has a Python build manifest: what a
     #: sealed facts document's class facts are re-read from (BL-098, ``shipped_facts``).
     sources: Mapping[str, str] = field(default_factory=dict)
+    #: The repository's tag names (``git ls-remote --tags --refs``): the releases a dead
+    #: release-notes link is repaired to (BL-010, ``dead_link`` version 2). Empty: not read.
+    release_tags: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -241,8 +244,35 @@ def fetch_source(
             if done.returncode == 0:
                 manifests[name] = done.stdout
     sources = _python_sources(git_dir, revision, paths) if manifests else {}
+    if not sources and any(p.rsplit("/", 1)[-1] in _JAVA_MANIFESTS for p in paths):
+        # BL-006: a Java seal's enum facts are re-read from the pinned declarations
+        # (``JavaPlugin.member_count_facts``), the same bounded read as the Python sources.
+        sources = _python_sources(git_dir, revision, paths, suffix=".java")
     shutil.rmtree(git_dir, ignore_errors=True)
-    return SourceSnapshot(tree_paths=paths, readme=readme, manifests=manifests, sources=sources)
+    return SourceSnapshot(
+        tree_paths=paths,
+        readme=readme,
+        manifests=manifests,
+        sources=sources,
+        release_tags=remote_release_tags(url, env),
+    )
+
+
+def remote_release_tags(url: str, env: Mapping[str, str] | None = None) -> tuple[str, ...]:
+    """The tag names ``url`` publishes, sorted (``git ls-remote --tags --refs``; read-only, no
+    object is fetched); empty when the remote cannot be read."""
+    try:
+        done = run_git(["ls-remote", "--tags", "--refs", url], env=dict(env or {}))
+    except Exception:  # noqa: BLE001 -- no tags read is "not read", never a failure
+        return ()
+    if getattr(done, "returncode", 1) != 0 or not isinstance(getattr(done, "stdout", None), str):
+        return ()
+    tags = {
+        line.split("refs/tags/", 1)[1].strip()
+        for line in done.stdout.splitlines()
+        if "refs/tags/" in line
+    }
+    return tuple(sorted(t for t in tags if t))
 
 
 #: Bounds on the Python sources a snapshot reads (one ``cat-file --batch`` of the tracked ``.py``).
@@ -250,11 +280,17 @@ _MAX_SOURCE_FILES = 5000
 _MAX_SOURCE_BYTES = 64 * 1024 * 1024
 
 
-def _python_sources(git_dir: Path, revision: str, paths: Sequence[str]) -> dict[str, str]:
-    """Every tracked ``.py`` file's text at ``revision`` (empty when over the bounds)."""
+#: A Java build manifest anywhere in the tree: its ``.java`` sources are read for BL-006.
+_JAVA_MANIFESTS = frozenset({"pom.xml", "build.gradle", "build.gradle.kts"})
+
+
+def _python_sources(
+    git_dir: Path, revision: str, paths: Sequence[str], suffix: str = ".py"
+) -> dict[str, str]:
+    """Every tracked ``suffix`` (``.py``) file's text at ``revision`` (empty when over the bounds)."""
     import subprocess
 
-    wanted = [p for p in paths if p.endswith(".py")]
+    wanted = [p for p in paths if p.endswith(suffix)]
     if not wanted or len(wanted) > _MAX_SOURCE_FILES:
         return {}
     done = subprocess.run(
@@ -577,6 +613,7 @@ def _rerun_lane_l(
         readme=original,
         tree_paths=tuple(source.tree_paths),
         readme_path=str(sealed_corrections.get("readme_path") or "README.md"),
+        release_tags=tuple(getattr(source, "release_tags", ()) or ()),
     )
     result = correct(ctx)
     deterministic, idempotent = is_stable(ctx, result)

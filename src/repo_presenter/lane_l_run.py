@@ -171,6 +171,29 @@ def preflight_lane_l(
     )
 
 
+def _dead_release_link(document: FactsDocument) -> bool:
+    """Whether a CONTRADICTED link target looks like release notes (the only use of the tags)."""
+    from repo_presenter.readme.correction.detectors.dead_link import _RELEASE_NOTES
+
+    return any(
+        fact.polarity == "CONTRADICTED" and _RELEASE_NOTES.search(fact.value)
+        for fact in document.by_kind("link_target")
+    )
+
+
+def _release_tags(repository: str) -> tuple[str, ...]:
+    """``recertify.remote_release_tags`` of the repository's GitHub remote (read-only)."""
+    from repo_presenter.core.git_safety.clone import _github_read_auth_env
+    from repo_presenter.recertify import remote_release_tags
+
+    url = f"https://github.com/{repository}.git"
+    try:
+        env = _github_read_auth_env(url, None)
+    except Exception:  # noqa: BLE001 -- no credentials: an anonymous read
+        env = {}
+    return remote_release_tags(url, env)
+
+
 def run_lane_l(
     repository: str,
     ecosystem: str,
@@ -215,6 +238,9 @@ def run_lane_l(
         readme=original,
         tree_paths=tuple(tree_paths_of(clone_path)),
         readme_path=readme_path,
+        # BL-010: the repository's release tags, read the same way re-certification reads them,
+        # so a dead release-notes link is repaired to its Releases page in both paths.
+        release_tags=_release_tags(repository) if _dead_release_link(document) else (),
     )
     result = correct(ctx)
     deterministic, idempotent = is_stable(ctx, result)

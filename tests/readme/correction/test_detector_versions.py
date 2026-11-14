@@ -28,8 +28,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "606536ac28df7e7d520a363c931701b3dd459d204cec700267a421dc15573079",
     ),
     "dead_link.py": (
-        ("1",),
-        "d480a78c7be3887f66fac0c341ef91ba90edeb240bac3e603b3a0393c4b648d1",
+        ("2",),
+        "bd9225ca74b2864a4c2a6e4a78f7bd741b26ea5c9b2a83f3b7d9387e5550ceff",
     ),
     "enterprise_edition.py": (
         ("4",),
@@ -48,8 +48,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "84730a9041b74da6f35270ce2aa9e814490eac8417a8847eccb44676f2b4861e",
     ),
     "glance_layout.py": (
-        ("1",),
-        "ea2956b8beed9d4f9f1bb3af15ffd3cdb02f9ab83d62f6a1f7a1d68a51f80fe7",
+        ("2",),
+        "7904907aecb6e1a0657ec660feb1d12da25458daccc91e07d8f360a381e86b6c",
     ),
     "listed_type_count.py": (
         ("2",),
@@ -72,8 +72,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
     ),
     "type_description.py": (
-        ("3",),
-        "e70fd19d1b727f45fee58ffe5491ae62fa9ea6e775925f2c5bb53d0bd5a47906",
+        ("4",),
+        "547d522ab9348e6a62bdc2a0aa5987947e5490060a9856f0712fcdb0bf6ff89f",
     ),
     "versioned_link_target.py": (
         ("1",),
