@@ -6510,3 +6510,50 @@ reported 7/27 false flags where the writer judged 0/20, because 7 stale Lane R s
 PDF Go, PDF Python, PDF .NET (a); 3D .NET, 3D Python, Cells .NET (c).
 
 Backlog: BL-075, BL-086, BL-100, BL-101, BL-110, BL-111
+
+## 2026-11-14 — Phase-3 owner feedback fixed at the class (R41): API descriptions, release-notes link, At a Glance, examples
+
+**Classes and decisions.**
+1. **Label-only API descriptions** (feedback 536baa63f4: "Class with 1 method.", "Interface in the 3D JAVA API.", "Enum
+   with 2 members.", "Created by lexchou on 12/14/2016."). `type_description` v4 replaces such a cell, when no usable doc
+   comment exists, with what the facts state: kind, nearest bases (declared, or the file an inherited member's evidence
+   points at), member names by recorded kind ("methods including ...", "members" when the kind is not recorded),
+   Python `fields`, or enum values (`enum_member` facts, else `enum_values` read by re-certification from the pinned
+   Java declaration, BL-006). Never purpose text; the row stays (R14). Rejected on measurement: "declares no public
+   members" for a type with no member facts (1,300+ such types do have members recorded elsewhere). Lane R uses the
+   same describer: renderer v40 passes over a label-only docstring/authored sentence and replaces the "Public class."
+   fallback; a kept maintainers' table prints the same cells through `surface_claims.kept_unit_form` (the one printed
+   form BC-05 and the reviewer judge), so the two lanes print the same row.
+   R42: aspose.org's published 3D Java README (live README.md:366,391,460,503) prints the same filler, and
+   `readme_refresh_checks.py` `check_no_generic_class_description` only flags it non-blocking — improved on.
+2. **Dead release-notes link** (feedback a922e11316). `dead_link` v2: when `git ls-remote --tags` lists release tags,
+   the dead target becomes `https://github.com/<repo>/releases` (or `/releases/tag/<tag>` when the link names a tagged
+   version); the words are kept; with no tags it unlinks as before. Report-only (no-publish) run over the 29 Lane L
+   live READMEs: 2 hits (Cells Python, Cells .NET), both true, 0 false positives. R42: aspose.org's live Cells Python
+   README.md:164 still links the dead `RELEASE_NOTES.md` — improved on.
+3. **At a Glance** (feedback d820dad695). (a) `estimated_width` counts drawn `-->` edges, bare or inline-declared: six
+   sealed Lane R `flowchart LR` diagrams measure 819–1578 px, which v1 reported as 252–511. (b) Lane R capabilities
+   that cite exactly one namespace below the product root sit in a sub-group with that heading, sub-groups stacked top
+   to bottom; every capability kept; fewer than two named groups keep the flat group. Cells Java (the feedback cell)
+   cites a single namespace, so no verified category exists there; Lane L diagrams carry no per-node facts (BL-135).
+   aspose.org has no grouping (its checks only pin canonical subgraph ids) — our own design.
+4. **Examples run, not only compile** (BL-061). `.NET` runs `dotnet run --no-build`, Java `java -cp` after a clean
+   compile: an unhandled exception is FAILED (CONTRADICTED), a missing input NEEDS_INPUT, a timeout TIMED_OUT. Proven
+   locally for Java with the real JDK; .NET by unit test (no SDK on this machine). Verdicts change only on hosted facts
+   re-runs (BL-131). Not landed, with reasons: withholding Lane L's genuinely CONTRADICTED examples needs a new block
+   withhold correction kind (R27; BL-133), and 18 of the 28 are stale receipts of the verifier fixed in d8bbcab;
+   withholding Lane R's 11 unverified retained fragments fails BC-17 parity on four RECERTIFIED seals (R10), so they
+   are to be chain-verified instead (BL-134).
+
+**Evidence (zero provider calls).** `recertify --all --json --remote origin`: before L 28/28, R 6/18; after L 29/29
+(the Page Python Lane L seal arrived on the state remote between runs), R 6/18, the same failing checks per Lane R
+seal. R10 gate `--base-baseline origin/main`: OK, 47 seals. Changed seals: Lane L 3D Java, 3D Python, Cells .NET,
+Cells Python, Cells Rust, Cells TypeScript, PDF Python, Words Python, Page Python; Lane R Email Python (grouped diagram).
+Label rows in the 10 audited seal READMEs 393 -> 203 (type-backed rows over all seals 276 -> 26; the rest name types
+the public-surface facts do not record, BL-130). printed_example_audit unchanged by re-certification: L 28 CONTRADICTED
+/ 64 UNRESOLVED, R 11 UNRESOLVED before; after, with the new Page Python seal, L 29 / 66, R 11.
+
+**Does not decide.** Publication: the changed seals reach the state remote only through the hosted `recertify
+--write` (BL-137, R37/R41); the items stay active until that run.
+
+Backlog: BL-005, BL-006, BL-007, BL-008, BL-010, BL-059, BL-061, BL-130, BL-131, BL-132, BL-133, BL-134, BL-135, BL-136, BL-137

@@ -471,6 +471,12 @@ def verify_java_examples(
             added = f"; imports supplied: {', '.join(names)}" if names else ""
             outcome = "EXECUTED"
             detail = f"compiled against the product's own classes; javac {version}{added}"
+            ran = run_java_example(
+                javac, classes, run_dir, name, source, timeout_seconds
+            )
+            if ran is not None:
+                outcome, how = ran
+                detail = _scrub(f"{detail}; {how}", run_dir, source_root)
         else:
             unbound = unbound_variables(result.stdout + "\n" + result.stderr)
             if unbound:
@@ -498,6 +504,64 @@ def verify_java_examples(
             )
         )
     return receipts
+
+
+#: The uncaught exception a JVM reports for ``main``: ``Exception in thread "main" <class>[: ...]``.
+_UNCAUGHT = re.compile(r'Exception in thread "main" ([\w.$]+)(?::\s*(.*))?')
+#: Exceptions an example raises when the input it opens is not there: the example may be right
+#: about the API and simply need a file the repository does not provide (the Python verifier's
+#: NEEDS_INPUT rule), so they are never a contradiction.
+_INPUT_EXCEPTIONS = frozenset(
+    {
+        "java.io.FileNotFoundException",
+        "java.nio.file.NoSuchFileException",
+        "java.nio.file.AccessDeniedException",
+        "java.nio.file.NotDirectoryException",
+    }
+)
+_MAIN = re.compile(r"\bstatic\s+void\s+main\s*\(")
+
+
+def classify_java_run(result: ExecutionResult, timeout_seconds: float) -> tuple[str, str]:
+    """``(outcome, detail)`` for one run of a compiled example (BL-061): exit 0 ran; a missing
+    input is NEEDS_INPUT; any other uncaught exception is FAILED -- the API compiled but does not
+    do what the example shows (3D .NET Quick Start's ``NotImplementedException`` is this class)."""
+    if result.timed_out:
+        return "TIMED_OUT", f"compiled, but the run did not exit within {timeout_seconds:g}s"
+    if result.return_code == 0:
+        return "EXECUTED", "ran (exit 0)"
+    found = _UNCAUGHT.search(result.stderr or "")
+    if found is None:
+        return "FAILED", f"ran and exited {result.return_code}"
+    exception = found.group(1)
+    if exception in _INPUT_EXCEPTIONS:
+        return "NEEDS_INPUT", f"{exception}: the example opens an input the repository does not provide"
+    message = (found.group(2) or "").strip()[:200]
+    return "FAILED", f"ran and threw {exception}" + (f": {message}" if message else "")
+
+
+def run_java_example(
+    javac: str, classes: Path, run_dir: Path, name: str, source: str, timeout_seconds: float
+) -> tuple[str, str] | None:
+    """Run a compiled example's ``main`` (``java -cp <product classes>:out <class>``, in its own
+    run directory, under the same bounded, secret-free execution), or ``None`` when the unit has
+    no ``main`` or no ``java`` launcher sits beside ``javac`` -- then the compile alone stands, as
+    before. Compiling proves the calls exist; running proves they do what the example shows."""
+    import os
+
+    if _MAIN.search(source) is None:
+        return None
+    launcher = Path(javac).with_name("java.exe" if javac.lower().endswith(".exe") else "java")
+    if not launcher.exists():
+        return None
+    main = name.removesuffix(".java")  # compilation_unit strips any package declaration
+    result = execute(
+        [str(launcher), "-cp", f"{classes.resolve()}{os.pathsep}out", main],
+        workspace=run_dir,
+        timeout_seconds=timeout_seconds,
+        extra_environment=_environment(javac, run_dir),
+    )
+    return classify_java_run(result, timeout_seconds)
 
 
 def _first_error(stdout: str, stderr: str, run_dir: Path, source_root: Path) -> str:

@@ -620,6 +620,13 @@ def kept_unit_form(
             return text
     if unit_id.endswith(".table"):
         text = kept_table_form(text, facts)
+        # BL-005 (owner feedback 536baa63f4): a kept API table's cell that is only a count, a label
+        # or bookkeeping ("Class in the Cells TYPESCRIPT API.") prints the type's doc comment or its
+        # fact-true description instead -- the Lane L correction's own replacement, so both lanes
+        # print the same row; the row and its name cell stay (R14).
+        from repo_presenter.readme.correction.detectors.type_description import fact_true_label_cells
+
+        text = fact_true_label_cells(text, facts)
     if not unit_id.endswith(".code_block"):
         # A dead link target is printed as its label (``without_contradicted_links``); fenced code
         # carries no rendered link and is never edited.

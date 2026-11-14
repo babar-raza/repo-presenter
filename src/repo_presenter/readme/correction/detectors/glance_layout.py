@@ -23,6 +23,10 @@ no-change candidate too -- Cells Java, the candidate the feedback was given on, 
 though, the defect R21 lets a run carry residual content defects on: ``lane_l_review.
 net_improvement`` needs a content edit for that (``LAYOUT_ONLY_DETECTORS``), so a redrawn diagram
 never certifies a README that still states something a verified fact contradicts.
+
+Version 2 (BL-007 / owner feedback d820dad695, 2026-11-14): ``glance.estimated_width`` now counts
+drawn ``-->`` edges as ranks, so a ``flowchart LR`` diagram whose groups are chained side by side
+is measured as wide as it draws (version 1 measured only its widest group and left it unredrawn).
 """
 
 from __future__ import annotations

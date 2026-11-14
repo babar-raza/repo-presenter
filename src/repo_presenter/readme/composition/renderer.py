@@ -105,7 +105,13 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # O8): Scope and Limitations never prints a license clause (source_topics.without_license_
 # statement); a kept retained-example heading prints in title case and a kept paragraph whose
 # colon introduces nothing printed after it ends with a full stop (formatting only).
-RENDERER_VERSION = "39"
+# 40 (2026-11-14, BL-005 / owner feedback 536baa63f4): no Core API row and no kept maintainers' API table
+# cell prints a count, a label or file-header bookkeeping ("Class with 1 method.", "Interface in the
+# 3D JAVA API.", "Created by lexchou on 12/14/2016."): the doc comment, else the fact-true description
+# of the type's kind, bases, members or values (type_description.TypeDescriber), shared with Lane L.
+# BL-059 (owner feedback d820dad695): At a Glance capabilities citing one namespace below the product
+# root sit in a sub-group of that heading, the groups stacked top to bottom (capability_categories).
+RENDERER_VERSION = "40"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
@@ -1018,9 +1024,22 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
             if not form:
                 continue
             described = _described(context, fact, form)
+            if _label_only(described):
+                continue  # "Class with 1 method." is not a description (BL-005)
             if not _row_refused(context, fact, described):
                 return described
     return _described(context, fact, "")
+
+
+def _label_only(description: str) -> bool:
+    """Whether a Core API row description is only a count, a label or file-header bookkeeping
+    (``type_description.cell_shape``: "Class with 1 method.", "Interface in the 3D JAVA API.",
+    "Created by lexchou on 12/14/2016."): owner feedback 536baa63f4 names each a wrong
+    description, so the renderer passes it over for the fact-true one, exactly as the Lane L
+    correction replaces it (one classifier for both lanes)."""
+    from repo_presenter.readme.correction.detectors.type_description import NON_DESCRIPTIVE, cell_shape
+
+    return cell_shape(description) in NON_DESCRIPTIVE
 
 
 _SYMBOL_WORDING = re.compile(
@@ -1086,6 +1105,12 @@ def _described(context: RenderContext, fact: Fact, text: str) -> str:
     if not text and attributes.get("signature"):
         signature = attributes["signature"].replace("|", "/").replace("`", "")
         return f"Defined as `{signature}`."
+    if not text:
+        # BL-005: what the facts state about the type (kind, bases, member names, values), never
+        # the label "Public class." -- the shared fact-true description of both lanes.
+        from repo_presenter.readme.correction.detectors.type_description import describer_for
+
+        text = describer_for(context.facts).describe(fact)[0]
     if not text:
         text = f"Public {attributes.get('symbol_kind', 'symbol')}."
     described = _kind_true(context, fact, context.canonical(text.replace("|", "/").replace("`", "")))
@@ -1594,7 +1619,66 @@ def _at_a_glance(context: RenderContext) -> list[str]:
         starting_points=(f"An existing {_or_list(inputs)} file",) if inputs else (),
         capability_titles=titles,
         outputs=(f"{_or_list(outputs)} file",) if outputs else (),
+        capability_groups=capability_categories(context.plan, context.facts),
     )
+
+
+def capability_categories(plan: dict[str, Any], facts: FactsDocument) -> list[str]:
+    """One verified category per At a Glance capability title, ``""`` for none (BL-059): the
+    namespace of the API the capability cites, below the product's own root namespace.
+
+    A capability's namespaces are those of the SUPPORTED public symbols its plan entry cites (a
+    type's or a member's enclosing namespace, a module itself); a namespace that encloses another
+    of them is dropped as the coarser one. Exactly one left, strictly inside the root every type
+    namespace shares, is its category, headed by the rest of its dotted name ("Shading",
+    "Workbook Properties"); a capability citing only the root, or two separate namespaces, has
+    none -- a category is never guessed. Empty when the titles and the plan's capabilities do
+    not line up one to one."""
+    glance = plan.get("at_a_glance") or {}
+    titles = list(glance.get("capability_titles", []))
+    capabilities = list(plan.get("core_capabilities", []))
+    if not titles or len(titles) != len(capabilities):
+        return []
+    by_id = {fact.id: fact for fact in facts.facts}
+    symbols = [f for f in facts.by_kind("public_symbol") if f.polarity == "SUPPORTED"]
+    kinds = {f.value: (f.attributes or {}).get("symbol_kind") for f in symbols}
+    type_namespaces = {
+        f.value.rpartition(".")[0]
+        for f in symbols
+        if kinds[f.value] in {"class", "enum", "interface", "struct", "trait"} and "." in f.value
+    }
+    if not type_namespaces:
+        return []
+    root = ".".join(
+        part[0] for part in zip(*(ns.split(".") for ns in type_namespaces)) if len(set(part)) == 1
+    )
+    categories: list[str] = []
+    for capability in capabilities:
+        spaces: set[str] = set()
+        for fact_id in capability.get("fact_ids", []):
+            fact = by_id.get(fact_id)
+            if fact is None or fact.kind != "public_symbol" or fact.polarity != "SUPPORTED":
+                continue
+            kind = kinds.get(fact.value)
+            if kind == "module":
+                spaces.add(fact.value)
+            elif kind in {"class", "enum", "interface", "struct", "trait"}:
+                spaces.add(fact.value.rpartition(".")[0])
+            else:
+                owner = fact.value.rpartition(".")[0]
+                spaces.add(owner.rpartition(".")[0] if kinds.get(owner) not in {None, "module"} else owner)
+        spaces.discard("")
+        finest = {s for s in spaces if not any(o != s and o.startswith(s + ".") for o in spaces)}
+        if len(finest) != 1:
+            categories.append("")
+            continue
+        space = finest.pop()
+        if not root or not space.startswith(root + "."):
+            categories.append("")
+            continue
+        rest = space[len(root) + 1 :]
+        categories.append(" / ".join(" ".join(w.capitalize() if w.islower() else w for w in part.split("_")) for part in rest.split(".")))
+    return categories
 
 
 def _example_entry(context: RenderContext, sid: str, example_id: str) -> list[str]:
