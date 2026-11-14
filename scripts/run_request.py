@@ -9,6 +9,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "recertify"}
     {"job": "cohort"}
     {"job": "issues"}
+    {"job": "count"}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -85,7 +86,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write")
-JOBS = {"present", "mint", "recertify", "cohort", "issues", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -305,6 +306,12 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("an issues request takes no other field (its targets are data/issue_pilot.json)")
         return {"job": "issues", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "count":
+        # BL-111: the official delivered count (ops/checks/portfolio_delivery_count.py) run hosted, where
+        # each acceptance record's attestation can be verified (attestations: read); read-only, no secret.
+        if set(request) != {"job"}:
+            raise RequestError("a count request takes no other field (it counts the whole portfolio)")
+        return {"job": "count", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
     allowed_keys = {"job", "repository", "ecosystem", "lane"}
