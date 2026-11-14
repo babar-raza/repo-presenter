@@ -48,6 +48,22 @@ auto-fixed:
   construction (``model.Edit.__post_init__``), so a multi-line rewrap is out of scope for this
   edit kind regardless.
 
+Version 4 (BL-070, M9 round 43559491132; both cases are aspose.org's own published READMEs, R42):
+
+* a "commercial ..." phrase that directly follows a link already naming the product (Cells C++ at
+  9f852d0f, lines 566-567: "[Aspose.Cells for C++ — Enterprise Edition](…), the commercial product
+  line this FOSS edition's API is modeled on") is an appositive of a correctly named product, not a
+  substitute for its name: it is left as aspose.org published it (no edit, no finding). Version 3
+  rewrote it to "…, the Aspose.Cells for C++ — Enterprise Edition line this FOSS edition's API is
+  modeled on", repeating the name and breaking the sentence;
+* a matched name without its platform, at a platform-level enterprise target (Words Python at
+  2d2efee2, line 625: "the commercial Aspose.Words" hard-wrapped before "API"), takes the full name
+  the README itself gives the Enterprise Edition ("Aspose.Words for Python — Enterprise Edition",
+  line 630), else the one platform-qualified commercial name its prose agrees on, else the H1
+  name -- aspose.org's anchor contract (``skills/readme-refresh.md``: platform relationship ->
+  "Aspose.{Family} for {public_platform} — Enterprise Edition"). Version 3 wrote "Aspose.Words —
+  Enterprise Edition", a name the repository never uses. With no such full name it is reported.
+
 Anything not fixed is reported as a finding instead (never silently dropped), with the exact
 matched text and why it was not guessed.
 
@@ -94,6 +110,56 @@ _SUSPECT = re.compile(
 )
 
 
+#: A markdown link whose text names an Aspose product, closing the text before a match (an optional
+#: comma, dash or "the" between them): the phrase that follows is that link's appositive.
+_NAMED_LINK_BEFORE = re.compile(
+    r"\[[^\]]*\bAspose\.[^\]]*\]\([^)\s]+\)\s*[,;:—–-]?\s*(?:the\s*)?$", re.IGNORECASE
+)
+#: "Aspose.X for Y — Enterprise Edition" as the README itself writes it (link text or prose).
+_FULL_EE_NAME = re.compile(r"(Aspose\.[A-Za-z0-9+#]+\s+for\s+[A-Za-z0-9.+#]+)\s*[—–-]+\s*Enterprise\s+Edition")
+
+
+def _follows_named_link(ctx: Context, line, start: int) -> bool:
+    """Whether the text before ``start`` on ``line`` -- with the previous prose line of the same
+    paragraph when the match opens the line -- ends with a link already naming the product."""
+    before = line.text[:start]
+    if not before.strip():
+        index = ctx.lines.index(line)
+        previous = ctx.lines[index - 1] if index > 0 else None
+        if previous is not None and not previous.in_fence and previous.text.strip():
+            before = previous.text + " " + before
+    return bool(_NAMED_LINK_BEFORE.search(before))
+
+
+def _full_names(ctx: Context) -> list[str]:
+    """The platform-qualified Enterprise Edition names the README itself writes, first-seen order."""
+    names: dict[str, str] = {}
+    for line in ctx.lines:
+        if line.in_fence:
+            continue
+        for match in _FULL_EE_NAME.finditer(line.text):
+            names.setdefault(_normalized(match.group(1)), " ".join(match.group(1).split()))
+    return list(names.values())
+
+
+def _platform_name(ctx: Context, name: str, enterprise, sole_product: str | None) -> str | None:
+    """``name`` as the Enterprise Edition is named at the target's level: unchanged when it already
+    carries its platform or the target is family-level; else the README's own full name for it
+    (``_full_names``), the prose's one platform-qualified name, or the H1 name -- whichever starts
+    with ``name`` + " for "; ``None`` when none does (reported, never guessed)."""
+    if " for " in f" {_normalized(name)} " or (enterprise.attributes or {}).get("level") == "family":
+        return name
+    prefix = _normalized(name) + " for "
+    candidates = [*_full_names(ctx), *([sole_product] if sole_product else [])]
+    h1 = _commercial_name_from_h1(ctx, enterprise)
+    if h1:
+        candidates.append(h1)
+    for candidate in candidates:
+        if _normalized(candidate).startswith(prefix):
+            return candidate
+    return None
+
+
 def _overlaps(start: int, end: int, spans: list[tuple[int, int]]) -> bool:
     return any(start < s_end and end > s_start for s_start, s_end in spans)
 
@@ -137,7 +203,8 @@ def _commercial_name_from_h1(ctx: Context, enterprise) -> str | None:
             continue
         match = _H1_LINE.match(line.text)
         if match is not None:
-            name = match.group(1).strip().replace(" FOSS", "")
+            # v4: "Aspose.PSD.FOSS for .NET" (PSD .NET's H1) spells the edition with a dot
+            name = re.sub(r"[ .]FOSS\b", "", match.group(1).strip())
             if (enterprise.attributes or {}).get("level") == "family":
                 name = name.split(" for ", 1)[0]
             return name
@@ -158,26 +225,54 @@ def enterprise_edition_naming(ctx: Context) -> DetectorResult:
     for line in ctx.lines:
         if line.in_fence:
             continue
-        claimed: list[tuple[int, int, str]] = []  # (start, end, replacement) within the line
+        claimed: list[tuple[int, int, str | None]] = []  # (start, end, replacement) within the line
+        appositives: list[tuple[int, int]] = []  # v4: after a link already naming the product
+
+        def full(name: str) -> str | None:
+            return name if enterprise is None else _platform_name(ctx, name, enterprise, sole_product)
+
         for match in _LINK_RULE.finditer(line.text):
             label, url = match.group(1), match.group(2)
-            claimed.append((match.start(), match.end(), f"[{label} — Enterprise Edition]({url})"))
+            named = full(label)
+            claimed.append((match.start(), match.end(),
+                            None if named is None else f"[{named} — Enterprise Edition]({url})"))
         occupied = [(s, e) for s, e, _ in claimed]
         for match in _BARE_RULE.finditer(line.text):
             if _overlaps(match.start(), match.end(), occupied):
                 continue
-            claimed.append((match.start(), match.end(), f"{match.group(1)} — Enterprise Edition"))
-        occupied = [(s, e) for s, e, _ in claimed]
-        if sole_product is not None and enterprise is not None:
-            for match in _BARE_PRODUCT.finditer(line.text):
-                if _overlaps(match.start(), match.end(), occupied):
-                    continue
+            if _follows_named_link(ctx, line, match.start()):
+                appositives.append((match.start(), match.end()))
+                continue
+            named = full(match.group(1))
+            claimed.append((match.start(), match.end(),
+                            None if named is None else f"{named} — Enterprise Edition"))
+        occupied = [(s, e) for s, e, _ in claimed] + appositives
+        for match in _BARE_PRODUCT.finditer(line.text):
+            if _overlaps(match.start(), match.end(), occupied):
+                continue
+            if _follows_named_link(ctx, line, match.start()):
+                appositives.append((match.start(), match.end()))
+                continue
+            if sole_product is not None and enterprise is not None:
+                named = full(sole_product)
                 claimed.append(
-                    (match.start(), match.end(), f"{sole_product} — Enterprise Edition")
+                    (match.start(), match.end(), None if named is None else f"{named} — Enterprise Edition")
                 )
-        occupied = [(s, e) for s, e, _ in claimed]
+        occupied = [(s, e) for s, e, _ in claimed] + appositives
         for start, end, replacement in claimed:
             original = line.text[start:end]
+            if replacement is None:
+                findings.append(
+                    Finding(
+                        DETECTOR,
+                        line.number,
+                        original,
+                        f"names the aspose.com product with a substitute for its proper name ({original!r}); "
+                        "the fix is not applied because the README gives no platform-qualified name "
+                        "for it at a platform-level Enterprise Edition target",
+                    )
+                )
+                continue
             if enterprise is None or len(original) > MAX_SPAN:
                 findings.append(
                     Finding(
