@@ -8986,6 +8986,7 @@
         "defined_at": "email_foss.cfb.writer.CFBDocument",
         "docstring": "Mutable Compound File Binary (CFB) document description.",
         "fields": "root, major_version, minor_version, transaction_signature_number",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=4,inherits=0",
         "public_paths": "email_foss.cfb.writer.CFBDocument",
         "signature": "class CFBDocument",
         "symbol_kind": "class"
@@ -9050,6 +9051,7 @@
       "attributes": {
         "defined_at": "email_foss.cfb.reader.CFBError",
         "docstring": "Raised for malformed or unsupported Compound File Binary (CFB) content.",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "email_foss.cfb.reader.CFBError",
         "signature": "class CFBError(Exception)",
         "symbol_kind": "class"
@@ -9076,6 +9078,7 @@
         "docstring": "Reusable reader for Compound File Binary (CFB) containers.",
         "docstring_full": "Reusable reader for Compound File Binary (CFB) containers. Notes: - This class does not print directly. Use iterator and property APIs. - Stream data is materialized lazily on first `get_stream_data` access.",
         "fields": "header, difat, fat, mini_fat, directory_entries, root_entry, mini_stream, stream_data",
+        "member_counts": "method=10,dunder=3,init=1,property=8,field=8,inherits=0",
         "public_paths": "email_foss.cfb.reader.CFBReader",
         "signature": "class CFBReader",
         "symbol_kind": "class"
@@ -9470,6 +9473,7 @@
         "defined_at": "email_foss.cfb.writer.CFBStorage",
         "docstring": "Mutable storage node used by the CFB writer.",
         "fields": "name, clsid, state_bits, creation_time, modified_time, children",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=6,inherits=0",
         "public_paths": "email_foss.cfb.writer.CFBStorage",
         "signature": "class CFBStorage",
         "symbol_kind": "class"
@@ -9535,6 +9539,7 @@
         "defined_at": "email_foss.cfb.writer.CFBStream",
         "docstring": "Mutable stream node used by the CFB writer.",
         "fields": "name, data, clsid, state_bits, creation_time, modified_time",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=6,inherits=0",
         "public_paths": "email_foss.cfb.writer.CFBStream",
         "signature": "class CFBStream",
         "symbol_kind": "class"
@@ -9559,6 +9564,7 @@
       "attributes": {
         "defined_at": "email_foss.cfb.writer.CFBWriter",
         "docstring": "Deterministic serializer for Compound File Binary (CFB) containers.",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "email_foss.cfb.writer.CFBWriter",
         "signature": "class CFBWriter",
         "symbol_kind": "class"
@@ -9675,6 +9681,7 @@
         "defined_at": "email_foss.cfb.reader.DirectoryEntry",
         "docstring": "Fixed-size directory record for one storage/stream object and its tree links.",
         "fields": "stream_id, name, directory_entry_name_length, object_type, color_flag, left_sibling_id, right_sibling_id, child_id, clsid, state_bits, creation_time, modified_time, starting_sector_location, stream_size",
+        "member_counts": "method=3,dunder=0,init=0,property=0,field=14,inherits=0",
         "public_paths": "email_foss.cfb.reader.DirectoryEntry",
         "signature": "class DirectoryEntry",
         "symbol_kind": "class"
@@ -9802,6 +9809,7 @@
         "defined_at": "email_foss.cfb.reader.Header",
         "docstring": "Header record at file offset 0 defining Compound File Binary (CFB) geometry and allocation chain entry points.",
         "fields": "header_signature, header_clsid, minor_version, major_version, byte_order, sector_shift, mini_sector_shift, reserved, number_of_directory_sectors, number_of_fat_sectors, first_directory_sector_location, transaction_signature_number, mini_stream_cutoff_size, first_mini_fat_sector_location, number_of_mini_fat_sectors, first_difat_sector_location, number_of_difat_sectors, difat",
+        "member_counts": "method=0,dunder=0,init=0,property=2,field=18,inherits=0",
         "public_paths": "email_foss.cfb.reader.Header",
         "signature": "class Header",
         "symbol_kind": "class"
@@ -10286,6 +10294,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=5,dunder=0,init=1,property=0,field=0,inherits=0",
         "signature": "class MapiPropertyCollection",
         "symbol_kind": "class"
       },
@@ -10401,6 +10410,7 @@
         "defined_at": "email_foss.msg.mapi_message.MapiAttachment",
         "docstring": "Mutable attachment object.",
         "fields": "filename, data, mime_type, content_id, attach_method, storage_id, embedded_message, custom_storage, properties, extra_streams, header_reserved_0",
+        "member_counts": "method=3,dunder=0,init=0,property=4,field=11,inherits=0",
         "public_paths": "email_foss.msg.mapi_message.MapiAttachment, email_foss.msg.MutableMapiAttachment",
         "signature": "class MapiAttachment",
         "symbol_kind": "class"
@@ -10574,6 +10584,7 @@
         "defined_at": "email_foss.msg.mapi_message.MapiMessage",
         "docstring": "Mutable high-level MSG object with MSG and EmailMessage conversion support.",
         "fields": "unicode_strings, properties, recipients, attachments, extra_streams, extra_storages, nameid_mapping, major_version, minor_version, transaction_signature_number, header_reserved_0, header_reserved_1, emit_store_support_mask, emit_compatibility_defaults, preserve_declared_header_counts, declared_next_recipient_id, declared_next_attachment_id, declared_recipient_count, declared_attachment_count",
+        "member_counts": "method=22,dunder=3,init=0,property=6,field=19,inherits=0",
         "public_paths": "email_foss.msg.mapi_message.MapiMessage",
         "signature": "class MapiMessage",
         "symbol_kind": "class"
@@ -11164,6 +11175,7 @@
         "defined_at": "email_foss.msg.mapi_message.MapiNamedProperty",
         "docstring": "Identifier for a named MAPI property.",
         "fields": "property_set, kind, name, lid, property_id",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=5,inherits=0",
         "public_paths": "email_foss.msg.mapi_message.MapiNamedProperty",
         "signature": "class MapiNamedProperty",
         "symbol_kind": "class"
@@ -11229,6 +11241,7 @@
         "defined_at": "email_foss.msg.mapi_message.MapiProperty",
         "docstring": "Logical MAPI property with optional named-property identity.",
         "fields": "property_id, property_type, value, flags, named, raw_inline_value, raw_size_value, raw_reserved_value, raw_direct_stream, raw_indexed_streams, preserve_raw",
+        "member_counts": "method=2,dunder=0,init=0,property=1,field=11,inherits=0",
         "public_paths": "email_foss.msg.mapi_message.MapiProperty",
         "signature": "class MapiProperty",
         "symbol_kind": "class"
@@ -11315,6 +11328,7 @@
         "defined_at": "email_foss.msg.mapi_message.MapiRecipient",
         "docstring": "Mutable recipient object.",
         "fields": "display_name, email_address, recipient_type, address_type, storage_id, properties, extra_streams, extra_storages, header_reserved_0",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=9,inherits=0",
         "public_paths": "email_foss.msg.mapi_message.MapiRecipient",
         "signature": "class MapiRecipient",
         "symbol_kind": "class"
@@ -11408,6 +11422,7 @@
         "defined_at": "email_foss.msg.writer.MsgDocument",
         "docstring": "Mutable MSG document model that can be serialized through the CFB writer.",
         "fields": "root, major_version, minor_version, transaction_signature_number, strict",
+        "member_counts": "method=3,dunder=0,init=0,property=0,field=5,inherits=0",
         "public_paths": "email_foss.msg.writer.MsgDocument",
         "signature": "class MsgDocument",
         "symbol_kind": "class"
@@ -11492,6 +11507,7 @@
       "attributes": {
         "defined_at": "email_foss.msg.reader.MsgError",
         "docstring": "Raised for malformed or unsupported MSG structures.",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "email_foss.msg.reader.MsgError",
         "signature": "class MsgError(Exception)",
         "symbol_kind": "class"
@@ -11516,6 +11532,7 @@
       "attributes": {
         "defined_at": "email_foss.msg.reader.MsgReader",
         "docstring": "Normative top-level MSG containment and stream requirements for container traversal.",
+        "member_counts": "method=9,dunder=3,init=1,property=4,field=0,inherits=0",
         "public_paths": "email_foss.msg.reader.MsgReader",
         "signature": "class MsgReader",
         "symbol_kind": "class"
@@ -11806,6 +11823,7 @@
         "defined_at": "email_foss.msg.writer.MsgStorage",
         "docstring": "Mutable MSG storage node with role classification and parsed property-stream metadata.",
         "fields": "name, role, clsid, state_bits, creation_time, modified_time, streams, storages, property_header_kind, property_stream_header, fixed_length_properties, property_stream_parse_error",
+        "member_counts": "method=6,dunder=0,init=0,property=0,field=12,inherits=0",
         "public_paths": "email_foss.msg.writer.MsgStorage",
         "signature": "class MsgStorage",
         "symbol_kind": "class"
@@ -11951,6 +11969,7 @@
         "defined_at": "email_foss.msg.writer.MsgStream",
         "docstring": "Mutable MSG stream node with raw bytes and CFB metadata.",
         "fields": "name, data, clsid, state_bits, creation_time, modified_time",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=6,inherits=0",
         "public_paths": "email_foss.msg.writer.MsgStream",
         "signature": "class MsgStream",
         "symbol_kind": "class"
@@ -11975,6 +11994,7 @@
       "attributes": {
         "defined_at": "email_foss.msg.writer.MsgWriter",
         "docstring": "Serializer that writes a MsgDocument into a CFB-backed .msg payload.",
+        "member_counts": "method=2,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "email_foss.msg.writer.MsgWriter",
         "signature": "class MsgWriter",
         "symbol_kind": "class"
@@ -12200,6 +12220,7 @@
         "defined_at": "email_foss.msg.types.PropertyEntryFixedLength",
         "docstring": "Fixed-length property stream entry containing property tag, flags, and inline 8-byte value payload.",
         "fields": "property_tag, flags, value",
+        "member_counts": "method=3,dunder=0,init=0,property=0,field=3,inherits=0",
         "public_paths": "email_foss.msg.types.PropertyEntryFixedLength",
         "signature": "class PropertyEntryFixedLength",
         "symbol_kind": "class"
@@ -12311,6 +12332,7 @@
         "defined_at": "email_foss.msg.types.PropertyStreamHeaderSubobject",
         "docstring": "Property stream header used in recipient and attachment storages, containing only reserved bytes.",
         "fields": "reserved_0",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=1,inherits=0",
         "public_paths": "email_foss.msg.types.PropertyStreamHeaderSubobject",
         "signature": "class PropertyStreamHeaderSubobject",
         "symbol_kind": "class"
@@ -12336,6 +12358,7 @@
         "defined_at": "email_foss.msg.types.PropertyStreamHeaderTopLevel",
         "docstring": "Top-level property stream header containing next-id counters and counts for recipients and attachments.",
         "fields": "reserved_0, next_recipient_id, next_attachment_id, recipient_count, attachment_count, reserved_1",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=6,inherits=0",
         "public_paths": "email_foss.msg.types.PropertyStreamHeaderTopLevel",
         "signature": "class PropertyStreamHeaderTopLevel",
         "symbol_kind": "class"
@@ -12515,6 +12538,7 @@
         "defined_at": "email_foss.msg.reader.StorageLayout",
         "docstring": "Naming and containment rules for recipient, attachment, embedded message, and nameid storages.",
         "fields": "recipient_storages, attachment_storages, named_property_mapping_storage, top_level_property_stream",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=4,inherits=0",
         "public_paths": "email_foss.msg.reader.StorageLayout",
         "signature": "class StorageLayout",
         "symbol_kind": "class"
