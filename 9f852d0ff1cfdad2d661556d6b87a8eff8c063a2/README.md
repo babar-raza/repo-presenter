@@ -558,7 +558,7 @@ To keep this edition free, this library implements a focused subset of Excel spr
 For workflows that need broader spreadsheet format coverage — legacy XLS/XLSB, CSV, ODS, PDF
 rendering, or full-fidelity conditional-formatting and AutoFilter round-tripping — see
 [Aspose.Cells for C++ — Enterprise Edition](https://products.aspose.com/cells/cpp/), the
-Aspose.Cells for C++ — Enterprise Edition line this FOSS edition's API is modeled on, with the wider format matrix and
+commercial product line this FOSS edition's API is modeled on, with the wider format matrix and
 rule coverage included.
 
 ## Development and Testing

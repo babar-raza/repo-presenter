@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 12,
+    "edits": 11,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "51ed99cc8ec13d506a07af144b2b90d0773aa1639b979444aa23c1ed39543ad4",
+  "corrected_sha256": "295efbed328c503284ad0bf410db46c266955b0f5569e5ffd120d53caf4a633b",
   "edits": [
     {
       "detector": "glance_layout",
@@ -634,25 +634,6 @@
       "rationale": "line 447 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
       "replacement": "",
       "start": 23636
-    },
-    {
-      "detector": "enterprise_edition_naming",
-      "end": 31815,
-      "evidence": [
-        {
-          "fact_id": "link_target:product.enterprise",
-          "kind": "link_target",
-          "status": "SUPPORTED",
-          "value": "https://products.aspose.com/cells/cpp/"
-        }
-      ],
-      "index": 11,
-      "kind": "FALSE_CLAIM_FIX",
-      "line": 567,
-      "original": "commercial product",
-      "rationale": "line 567 names the aspose.com product with a substitute for its proper name ('commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
-      "replacement": "Aspose.Cells for C++ — Enterprise Edition",
-      "start": 31797
     }
   ],
   "lane": "L",
@@ -669,7 +650,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 3,
+    "FALSE_CLAIM_FIX": 2,
     "TABLE_ROW_REMOVAL": 8
   },
   "unapplied": [
