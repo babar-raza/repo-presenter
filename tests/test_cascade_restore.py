@@ -6,6 +6,8 @@ Real cascade over the fixture ``tests/test_cascade.py`` defines, through a fake 
 replies; the model review is replaced by a recorder, so these tests make no provider call.
 """
 
+# Re-verified under R43(2)/(3) (BL-102/BL-103: deterministic sections, Lane R policy) -- TC-019c.
+
 from __future__ import annotations
 
 import json
