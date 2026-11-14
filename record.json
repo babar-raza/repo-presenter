@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 2e1cacfdb7dc: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-08, BC-17; nothing sealed",
+    "classification": "transient",
+    "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit summary: text contains HTML ('<'): <name>",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-09T22:25:28.790431+00:00",
+    "occurred_at": "2026-11-14T08:03:41.346063+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 22,
+  "state_version": 23,
   "recent_trigger_dedup_keys": {
     "run:41146995071:aspose-pdf-foss/Aspose-PDF-FOSS-for-Go": "b1c88f87aee44a0cb4410dab0f8a811e",
     "run:41306496413:aspose-pdf-foss/Aspose-PDF-FOSS-for-Go": "9f28c15321a44624a512915e97eead2e",
