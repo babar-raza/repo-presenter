@@ -207,3 +207,61 @@ def test_a_control_that_does_not_recertify_is_reported_and_left_out_of_the_false
     recert[("o/c0", "R")] = ("r", True)  # the same flag on a re-certifying control counts against the auditor
     doc = writer.build_records_document("1", case_index, manifest, findings, recert)
     assert doc["gates"]["false_flag_rate"]["matched"] == 1 and doc["gates"]["controls_not_recertified"] == []
+
+
+# --- BL-013 round 2 (hosted round 43559491132): derivation, the audit-scope note, evidenced statuses --------
+
+
+def test_a_deterministic_owned_line_the_rederivation_reproduces_clears_a_model_flag_and_one_it_does_not_is_flagged():
+    seeded = seed_defect("c", LIVE, "inject_unsupported_claim").seeded_readme  # onto the "# Title" line
+    derived = auditor.derivation("L", seeded, None, LIVE)  # Lane L: every line is the engine's or the live one
+    assert derived.underived == frozenset({1}) and 4 in derived.derivable
+    rows = [dict(_flag(4, "c"), located=True), dict(_flag(1, "c"), located=True)]
+    out = auditor.apply_derivation("c", seeded, rows, derived)
+    assert [(r["line"], r["verdict"], r["source"]) for r in out] == [
+        (4, "supported", "llm"), (1, "unverifiable", "llm"), (1, "unverifiable", "deterministic")]
+    assert out[0]["cleared_by"] == "derivation"
+    assert auditor.apply_derivation("c", seeded, rows, None) == rows  # no re-derivation: nothing changes
+
+
+def test_lane_r_compares_only_the_lines_the_renderer_prints_never_an_authored_line():
+    from repo_presenter.core.facts import FactsDocument
+
+    facts = FactsDocument(repository="o/r", source_revision="a" * 40, facts=())
+    authored_edit = LIVE.replace("reads and writes widget files", "reads, writes and repairs widget files")
+    derived = auditor.derivation("R", authored_edit, facts, LIVE)
+    assert derived.underived == frozenset() and 3 not in derived.derivable  # prose stays the model's
+    title = seed_defect("c", LIVE, "add_promotional_filler").seeded_readme
+    assert auditor.derivation("R", title, facts, LIVE).underived == frozenset({1})  # the renderer's title line
+
+
+def test_a_failed_rederivation_is_no_derivation(tmp_path):
+    seal = SimpleNamespace(bundle=str(tmp_path), lane="L", repository="o/r", revision="r")
+    assert auditor.case_derivation(seal, LIVE, tmp_path, fetch=lambda *a: SimpleNamespace(tree_paths=())) is None
+
+
+def test_the_audit_packet_tells_the_model_headings_are_shown_and_production_packets_do_not():
+    from repo_presenter.core.facts import FactsDocument
+    from repo_presenter.readme.review.sectionwise import AUDIT_SCOPE_NOTE, unit_packet
+
+    facts = FactsDocument(repository="o/r", source_revision="a" * 40, facts=())
+    units = plan_units(LIVE, rendered=False, headings=True)
+    common = dict(units=units, repository="o/r", candidate_readme=LIVE, original_readme=LIVE, facts=facts,
+                  plan={"sections": []})
+    assert "audit_scope" not in unit_packet(units[0], **common)["review_scope"]
+    assert unit_packet(units[0], **common, audit=True)["review_scope"]["audit_scope"] == AUDIT_SCOPE_NOTE
+
+
+def test_a_structure_fix_citing_the_readme_text_still_derives_the_lane_l_lines(tmp_path):
+    from repo_presenter.core.facts import FactsDocument
+
+    facts = FactsDocument(repository="o/r", source_revision="a" * 40, facts=())
+    corrected = LIVE.replace("190 public types", "191 public types")
+    record = {"stability": {"deterministic": True, "provider_calls": 0}, "edits": [
+        {"evidence": [{"fact_id": None, "status": "README_TEXT", "kind": "readme_structure"}]},
+        {"evidence": [{"fact_id": "count:public_types", "status": "SUPPORTED"}]}]}
+    (tmp_path / "corrections.json").write_text(json.dumps(record), encoding="utf-8")
+    assert writer.derived_lines("L", corrected, facts, tmp_path, LIVE) == frozenset({4})
+    record["edits"][0]["evidence"][0]["status"] = "ABSENT"
+    (tmp_path / "corrections.json").write_text(json.dumps(record), encoding="utf-8")
+    assert writer.derived_lines("L", corrected, facts, tmp_path, LIVE) == frozenset()

@@ -58,6 +58,13 @@ SCHEMA = "acceptance-records/1"
 SEEDED_RECALL_MIN = 0.90
 FALSE_FLAG_RATE_MAX = 0.10
 VERDICTS = frozenset({"supported", "false", "unverifiable"})
+#: The evidence statuses of a zero-call Lane L correction (``readme.correction.report.edit_record``):
+#: a SUPPORTED fact, or a locator into the pinned inputs themselves -- the live README's own line
+#: (``README_TEXT``: a structure fix such as the At a Glance layout) or a tracked path of the pinned tree
+#: (``TREE_PATH``). Hosted round 43559491132: requiring SUPPORTED alone left no line derived on any Lane L
+#: seal carrying a ``glance_layout`` DIAGRAM_FIX (README_TEXT evidence), so the flags on its evidenced
+#: count, name and version corrections stayed unadjudicated. An ABSENT or CONTRADICTED fact derives nothing.
+EVIDENCED_STATUSES = frozenset({"SUPPORTED", "README_TEXT", "TREE_PATH"})
 
 #: (repository, lane) -> (revision, certified): what ``repo_presenter.recertify`` says about the
 #: latest seal under current code. Injected so tests and the dry run never touch the network.
@@ -155,7 +162,7 @@ def derived_lines(lane: str, sealed: str, facts: Any, bundle: Path | None = None
     edits = record.get("edits") or []
     evidenced = all(
         isinstance(edit, Mapping) and edit.get("evidence")
-        and all(isinstance(e, Mapping) and e.get("status") == "SUPPORTED" for e in edit["evidence"])
+        and all(isinstance(e, Mapping) and e.get("status") in EVIDENCED_STATUSES for e in edit["evidence"])
         for edit in edits
     )
     if not edits or not evidenced or stability.get("deterministic") is not True or stability.get("provider_calls") != 0:
