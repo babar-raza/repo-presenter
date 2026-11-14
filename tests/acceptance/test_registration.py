@@ -391,8 +391,11 @@ def test_real_build_reports_the_honest_zero_call_floor() -> None:
     # 77 -> 76 (2026-11-13, BL-063..BL-065 baseline rewrite): Cells C++ and HTML Python Lane L are
     # NEEDS_REPAIR on the justified K05 listed-count defect (-2); Cells Go Lane R's newer seal
     # re-certifies (+1). Verified on the tree merged with main after PR #66 (baseline per-seal union). 76 -> 78 (2026-11-13, BL-065
-    # listed-count correction): the Cells C++ and HTML Python Lane L seals re-certify again.
-    assert registration.shortfall.clean_twin_achieved == 78
+    # listed-count correction): the Cells C++ and HTML Python Lane L seals re-certify again. 78 -> 85
+    # (2026-11-14, BL-013/BL-065/BL-070 --write-baseline): the baseline moves to the current seal commits;
+    # 3D .NET L and the newer Cells Java, Cells Rust, Email .NET, Email Python and Imaging .NET Lane R seals
+    # re-certify, and Cells Go Lane L is recorded for the first time (+7).
+    assert registration.shortfall.clean_twin_achieved == 85
     assert registration.shortfall.clean_twin_shortfall == 0
 
     assert len(registration.labelled_cases) == 113

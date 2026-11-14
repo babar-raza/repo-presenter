@@ -21,7 +21,7 @@ from __future__ import annotations
 import ast
 import json
 import tomllib
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from configparser import ConfigParser
 from pathlib import Path
 from typing import Any
@@ -300,6 +300,232 @@ def package_directories(tree_paths: list[str]) -> list[str]:
     return [dotted for dotted, _ in package_locations(tree_paths)]
 
 
+# --- the packages the build ships (BL-065, Python variant) ------------------------------------
+#
+# M9 round 43559491132 (Words Python Lane L, seal at 2d2efee2): "The library ships 198 public types"
+# counted 9 classes of `ApiExamples/`, a tree package the wheel never contains -- pyproject.toml:66-67
+# `[tool.hatch.build.targets.wheel] packages = ["aspose"]` ships 189. The tree proves a package
+# directory exists; only the build manifest says which ones a user installs. ``shipped_path_filter``
+# reads that list from the root manifest (pyproject.toml, else setup.cfg, else a literal setup.py
+# call) and answers, per repository path, whether the build ships it. It only ever NARROWS the tree
+# discovery (``package_locations``): a manifest that declares nothing, or names nothing the tree
+# holds, leaves every package as before (fail open: never an empty surface from a misread manifest).
+
+
+def _pattern_match(name: str, patterns: Sequence[str]) -> bool:
+    from fnmatch import fnmatchcase
+
+    return any(fnmatchcase(name, pattern) for pattern in patterns)
+
+
+def _string_list(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [part.strip() for part in value.replace(",", "\n").splitlines() if part.strip()]
+    if isinstance(value, list):
+        return [item.strip() for item in value if isinstance(item, str) and item.strip()]
+    return []
+
+
+def _found_package_dirs(
+    tree_paths: Sequence[str], where: Sequence[str], include: Sequence[str],
+    exclude: Sequence[str], namespaces: bool,
+) -> set[str]:
+    """setuptools ``find_packages`` / ``find_namespace_packages`` over the tree: the repository-relative
+    directories of every package under ``where`` whose dotted name matches ``include`` and no
+    ``exclude`` (fnmatch, as setuptools). A classic find needs an ``__init__.py`` in the directory
+    and in each parent below ``where``; a namespace find takes every directory holding a module."""
+    in_tree = set(tree_paths)
+    found: set[str] = set()
+    for base in where or ["."]:
+        base = base.strip().strip("/")
+        prefix = "" if base in ("", ".") else base + "/"
+        for path in tree_paths:
+            if not path.endswith(".py") or not path.startswith(prefix):
+                continue
+            parts = path[len(prefix):].split("/")[:-1]
+            if not parts or not all(part.isidentifier() for part in parts):
+                continue
+            for depth in range(1, len(parts) + 1):
+                directory = parts[:depth]
+                if not namespaces and f"{prefix}{'/'.join(directory)}/__init__.py" not in in_tree:
+                    break
+                dotted = ".".join(directory)
+                if _pattern_match(dotted, include or ["*"]) and not _pattern_match(dotted, exclude):
+                    found.add(prefix + "/".join(directory))
+    return found
+
+
+def _listed_package_dirs(dotted_names: Sequence[str], package_dir: Any) -> set[str]:
+    """setuptools ``packages = [...]`` (dotted names) to directories through ``package-dir``."""
+    mapping = package_dir if isinstance(package_dir, dict) else {}
+    roots: set[str] = set()
+    for dotted in dotted_names:
+        top, _, rest = dotted.partition(".")
+        if top in mapping and isinstance(mapping[top], str):
+            base = mapping[top].strip("/")
+            directory = "/".join(filter(None, [base, *rest.split(".")])) if rest else base
+        else:
+            base = str(mapping.get("", "") or "").strip("/").strip(".")
+            directory = "/".join(filter(None, [base, *dotted.split(".")]))
+        roots.add(directory)
+    return roots
+
+
+def _setup_py_find(text: str) -> dict[str, Any] | None:
+    """A literal ``setup(packages=find_packages(...)|find_namespace_packages(...)|[...])`` call, read
+    through the AST (never executed); ``None`` when the keyword is absent or not literal."""
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return None
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        name = node.func.id if isinstance(node.func, ast.Name) else getattr(node.func, "attr", "")
+        if name != "setup":
+            continue
+        for keyword in node.keywords:
+            if keyword.arg != "packages":
+                continue
+            value = keyword.value
+            try:
+                if isinstance(value, ast.Call):
+                    finder = value.func.id if isinstance(value.func, ast.Name) else getattr(value.func, "attr", "")
+                    if finder not in ("find_packages", "find_namespace_packages"):
+                        return None
+                    args = {k.arg: ast.literal_eval(k.value) for k in value.keywords if k.arg}
+                    if value.args:
+                        args.setdefault("where", ast.literal_eval(value.args[0]))
+                    return {"find": {**args, "namespaces": finder == "find_namespace_packages"}}
+                return {"list": ast.literal_eval(value)}
+            except (ValueError, TypeError, SyntaxError):
+                return None
+    return None
+
+
+def shipped_package_roots(
+    manifests: Mapping[str, str], tree_paths: Sequence[str]
+) -> tuple[str, frozenset[str], bool] | None:
+    """``(manifest clause, shipped package directories, subtrees)`` the root build manifest declares:
+    ``subtrees`` true when each directory ships with everything below it (a hatch/poetry/setuptools
+    list), false when the set names every shipped package directory (a setuptools find). ``None``
+    when no manifest declares its packages, or none of the declared directories is in the tree."""
+    in_tree_dirs = {path.rsplit("/", 1)[0] for path in tree_paths if "/" in path}
+    declared: tuple[str, set[str], bool] | None = None
+    pyproject = manifests.get("pyproject.toml")
+    if pyproject:
+        try:
+            data = tomllib.loads(pyproject)
+        except tomllib.TOMLDecodeError:
+            data = {}
+        tool = data.get("tool", {}) if isinstance(data.get("tool"), dict) else {}
+        hatch = (tool.get("hatch") or {}).get("build") or {}
+        wheel = ((hatch.get("targets") or {}).get("wheel") or {}) if isinstance(hatch, dict) else {}
+        setuptools_cfg = tool.get("setuptools") or {}
+        poetry = tool.get("poetry") or {}
+        if isinstance(wheel, dict) and _string_list(wheel.get("packages")):
+            declared = ("tool.hatch.build.targets.wheel.packages",
+                        {p.strip("/") for p in _string_list(wheel.get("packages"))}, True)
+        elif isinstance(hatch, dict) and _string_list(hatch.get("packages")):
+            declared = ("tool.hatch.build.packages", {p.strip("/") for p in _string_list(hatch.get("packages"))}, True)
+        elif isinstance(setuptools_cfg, dict) and "packages" in setuptools_cfg:
+            packages = setuptools_cfg.get("packages")
+            if isinstance(packages, list):
+                declared = ("tool.setuptools.packages",
+                            _listed_package_dirs(_string_list(packages), setuptools_cfg.get("package-dir")), True)
+            elif isinstance(packages, dict) and isinstance(packages.get("find"), dict):
+                find = packages["find"]
+                declared = ("tool.setuptools.packages.find", _found_package_dirs(
+                    tree_paths, _string_list(find.get("where")) or ["."], _string_list(find.get("include")),
+                    _string_list(find.get("exclude")), bool(find.get("namespaces", True))), False)
+        elif isinstance(poetry, dict) and isinstance(poetry.get("packages"), list):
+            roots = set()
+            for item in poetry["packages"]:
+                if isinstance(item, dict) and isinstance(item.get("include"), str):
+                    base = str(item.get("from") or "").strip("/")
+                    roots.add("/".join(filter(None, [base, item["include"].strip("/")])))
+            if roots:
+                declared = ("tool.poetry.packages", roots, True)
+    if declared is None and manifests.get("setup.cfg"):
+        parser = ConfigParser()
+        try:
+            parser.read_string(manifests["setup.cfg"])
+        except Exception:  # noqa: BLE001 -- an unreadable setup.cfg declares nothing
+            parser = ConfigParser()
+        if parser.has_option("options", "packages"):
+            raw = parser.get("options", "packages").strip()
+            package_dir = {}
+            if parser.has_option("options", "package_dir"):
+                for line in _string_list(parser.get("options", "package_dir")):
+                    key, _, value = line.partition("=")
+                    package_dir[key.strip()] = value.strip()
+            if raw.startswith(("find:", "find_namespace:")):
+                section = "options.packages.find"
+                get = (lambda key: _string_list(parser.get(section, key)) if parser.has_option(section, key) else [])
+                declared = ("setup.cfg options.packages", _found_package_dirs(
+                    tree_paths, get("where") or [str(package_dir.get("", ".") or ".")], get("include"),
+                    get("exclude"), raw.startswith("find_namespace:")), False)
+            else:
+                declared = ("setup.cfg options.packages", _listed_package_dirs(_string_list(raw), package_dir), True)
+    if declared is None and manifests.get("setup.py"):
+        call = _setup_py_find(manifests["setup.py"])
+        if call and "find" in call:
+            find = call["find"]
+            declared = ("setup.py packages", _found_package_dirs(
+                tree_paths, _string_list(find.get("where")) or ["."], _string_list(find.get("include")),
+                _string_list(find.get("exclude")), bool(find.get("namespaces"))), False)
+        elif call and isinstance(call.get("list"), list):
+            declared = ("setup.py packages", _listed_package_dirs(_string_list(call["list"]), {}), True)
+    if declared is None:
+        return None
+    clause, directories, subtrees = declared
+    present = {d for d in directories if d and (d in in_tree_dirs or any(t.startswith(d + "/") for t in in_tree_dirs))}
+    return (clause, frozenset(present), subtrees) if present else None
+
+
+def shipped_path_filter(manifests: Mapping[str, str], tree_paths: Sequence[str]):
+    """``(clause, ships)``: whether the build ships a repository path (a ``.py`` module is shipped
+    when its directory is a shipped package; any other path is not judged and passes), or ``None``
+    when the manifest declares no package list (see ``shipped_package_roots``)."""
+    roots = shipped_package_roots(manifests, tree_paths)
+    if roots is None:
+        return None
+    clause, directories, subtrees = roots
+
+    def ships(path: str) -> bool:
+        if not path.endswith(".py"):
+            return True
+        directory = path.rsplit("/", 1)[0] if "/" in path else ""
+        if subtrees:
+            return any(directory == d or directory.startswith(d + "/") for d in directories)
+        return directory in directories
+
+    return clause, ships
+
+
+def read_root_manifests(root: Path) -> dict[str, str]:
+    """The root build manifests' text (``MANIFEST_NAMES``) present in a checkout."""
+    found: dict[str, str] = {}
+    for name in MANIFEST_NAMES:
+        path = root / name
+        if path.is_file():
+            found[name] = path.read_text(encoding="utf-8", errors="replace")
+    return found
+
+
+def fact_paths(fact: Fact) -> list[str]:
+    """The repository source paths a fact's evidence names (URLs and non-paths excluded)."""
+    return [e.path for e in fact.evidence if e.path and "://" not in e.path]
+
+
+def unshipped_fact(fact: Fact, ships) -> bool:
+    """A ``public_symbol`` / ``import_path`` fact every source path of which the build does not ship."""
+    if fact.kind not in ("public_symbol", "import_path"):
+        return False
+    paths = [p for p in fact_paths(fact) if p.endswith(".py")]
+    return bool(paths) and not any(ships(p) for p in paths)
+
+
 class PythonPlugin:
     """Python packages: manifest facts and the import paths the tree proves."""
 
@@ -316,7 +542,16 @@ class PythonPlugin:
 
     def surface_facts(self, root: Path, tree_paths: list[str]) -> list[Fact]:
         package_dirs = [directory for _, directory in package_locations(tree_paths)]
-        return public_symbol_facts(inspect_public_surface(root, package_dirs))
+        facts = public_symbol_facts(inspect_public_surface(root, package_dirs))
+        shipped = self.shipped_path_filter(read_root_manifests(root), tree_paths)
+        if shipped is None:
+            return facts
+        return [fact for fact in facts if not unshipped_fact(fact, shipped[1])]
+
+    def shipped_path_filter(self, manifests: Mapping[str, str], tree_paths: Sequence[str]):
+        """The build's package list as a path predicate (``shipped_path_filter``); also used by
+        re-certification over a sealed facts document (``recertify.shipped_facts``)."""
+        return shipped_path_filter(manifests, tree_paths)
 
     def registry_facts(self, facts: Sequence[Fact]) -> tuple[list[Fact], list[ProbeRecord]]:
         """Resolve the pip install claim against PyPI; the fact keeps its ID and gains evidence.
@@ -484,8 +719,11 @@ class PythonPlugin:
             if declared
             else package_locations(tree_paths)
         )
+        shipped = None if declared else shipped_path_filter(read_root_manifests(root), tree_paths)
         for dotted, directory in locations:
             evidence_path = sources["declared_packages"] if declared else f"{directory}/__init__.py"
+            if shipped is not None and not shipped[1](evidence_path):
+                continue  # a tree package the build does not ship (BL-065)
             facts.append(
                 Fact(
                     fact_id("import_path", dotted),

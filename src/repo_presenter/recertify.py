@@ -128,6 +128,9 @@ class SourceSnapshot:
 
     tree_paths: tuple[str, ...]
     readme: bytes | None
+    #: The root build manifests' text (``pyproject.toml``, ``setup.cfg``, ``setup.py``) at the pinned
+    #: revision: which tree packages the build ships (BL-065, ``shipped_facts``).
+    manifests: Mapping[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -228,8 +231,61 @@ def fetch_source(
         )
         if shown.returncode == 0:
             readme = shown.stdout
+    manifests: dict[str, str] = {}
+    for name in _BUILD_MANIFESTS:
+        if name in paths:
+            done = run_git(["--git-dir", str(git_dir), "cat-file", "blob", f"{revision}:{name}"])
+            if done.returncode == 0:
+                manifests[name] = done.stdout
     shutil.rmtree(git_dir, ignore_errors=True)
-    return SourceSnapshot(tree_paths=paths, readme=readme)
+    return SourceSnapshot(tree_paths=paths, readme=readme, manifests=manifests)
+
+
+#: Root build manifests a platform plugin may read the shipped package list from (BL-065).
+_BUILD_MANIFESTS = ("pyproject.toml", "setup.cfg", "setup.py")
+
+
+def shipped_facts(document: FactsDocument, ecosystem: str, source: SourceSnapshot) -> tuple[FactsDocument, str | None]:
+    """``document`` without the surface facts of tree packages the build does not ship, and the
+    manifest clause that decided it (``None``: nothing dropped). BL-065, M9 round 43559491132: the
+    Words Python seal counted 198 public types, 9 of them in ``ApiExamples/``, which
+    ``pyproject.toml`` (``[tool.hatch.build.targets.wheel] packages = ["aspose"]``) never ships.
+    The platform plugin's ``shipped_path_filter`` (the same predicate its extractor now applies)
+    reads the pinned revision's manifest; a plugin without one, or a manifest that declares no
+    package list, changes nothing. Pure, zero calls; only ever removes facts."""
+    if not source.manifests:
+        return document, None
+    from repo_presenter.extractors.platforms.registry import plugin_for
+
+    try:
+        plugin = plugin_for(ecosystem)
+    except Exception:  # noqa: BLE001 -- an unknown ecosystem has no package list to honour
+        return document, None
+    shipped_filter = getattr(plugin, "shipped_path_filter", None)
+    if shipped_filter is None:
+        return document, None
+    shipped = shipped_filter(source.manifests, source.tree_paths)
+    if shipped is None:
+        return document, None
+    clause, ships = shipped
+    from dataclasses import replace
+
+    from repo_presenter.extractors.platforms.python import unshipped_fact
+
+    kept = tuple(fact for fact in document.facts if not unshipped_fact(fact, ships))
+    if len(kept) == len(document.facts):
+        return document, None
+    return replace(document, facts=kept), clause
+
+
+def _bundle_facts(bundle: Path, entry: Any, source: SourceSnapshot) -> FactsDocument:
+    return shipped_facts(read_facts(bundle / "facts.json"), str(getattr(entry, "ecosystem", "")), source)[0]
+
+
+def _facts_artifact(bundle: Path, entry: Any, source: SourceSnapshot) -> dict[str, bytes]:
+    """``{"facts.json": ...}`` when ``shipped_facts`` changes the sealed facts, else nothing."""
+    document, clause = shipped_facts(read_facts(bundle / "facts.json"), str(getattr(entry, "ecosystem", "")), source)
+    return {} if clause is None else {"facts.json": document.to_json().encode("utf-8")}
 
 
 # --- the deterministic re-run, per lane --------------------------------------------------------
@@ -297,7 +353,7 @@ def _rerun_lane_r(
         vacated_sections,
     )
 
-    document = read_facts(bundle / "facts.json")
+    document = _bundle_facts(bundle, entry, source)
     units_name = (
         "content_units.coherent.json"
         if (bundle / "content_units.coherent.json").is_file()
@@ -368,7 +424,7 @@ def _evaluate_lane_r(
     )
     from repo_presenter.readme.validation.failures import Candidate
 
-    document = read_facts(bundle / "facts.json")
+    document = _bundle_facts(bundle, entry, source)
     plan = _load_json(bundle, "plan.json")
     units_name = (
         "content_units.coherent.json"
@@ -427,6 +483,7 @@ def _evaluate_lane_r(
         "README.md": readme.encode("utf-8"),
         "README.patch.diff": render_patch(original, readme).encode("utf-8"),
         "validation.json": _canonical_json(validation),
+        **_facts_artifact(bundle, entry, source),
     }
     return failing, details, artifacts
 
@@ -446,7 +503,7 @@ def _rerun_lane_l(
         corrections_document,
     )
 
-    document: FactsDocument = read_facts(bundle / "facts.json")
+    document: FactsDocument = _bundle_facts(bundle, entry, source)
     original_bytes = (bundle / "README.original.md").read_bytes()
     original = original_bytes.decode("utf-8")
     sealed_corrections = _load_json(bundle, "corrections.json")
@@ -494,6 +551,7 @@ def _rerun_lane_l(
             )
         ),
         "holdouts.json": canonical_json(holdouts),
+        **_facts_artifact(bundle, entry, source),
     }
     return failing, details, artifacts
 
@@ -572,7 +630,7 @@ def recertify_bundle(
 
 def recertified_dependencies(
     sealed: Mapping[str, Any], lane: str, prompts: Any, facts: FactsDocument,
-    original_readme: bytes | None,
+    original_readme: bytes | None, *, facts_changed: bool = False,
 ) -> dict[str, Any]:
     """The current version set's dependencies record for a re-certified seal: every mechanism
     key as current code would write it, the per-repository inputs (``source``, ``facts``) and the
@@ -585,7 +643,8 @@ def recertified_dependencies(
         original_readme=original_readme,
     )
     current["source"] = sealed.get("source", current["source"])
-    current["facts"] = sealed.get("facts", current["facts"])
+    if not facts_changed:  # a narrowed surface (BL-065) records the facts the seal now holds
+        current["facts"] = sealed.get("facts", current["facts"])
     sealed_env = sealed.get("environment")
     if isinstance(sealed_env, Mapping) and isinstance(current.get("environment"), dict):
         current["environment"] = {**dict(sealed_env), **current["environment"]}
@@ -609,6 +668,12 @@ def write_recertified(
     manifest = json.loads((bundle / BUNDLE_MANIFEST_NAME).read_text(encoding="utf-8"))
     sealed_deps = _load_json(bundle, DEPENDENCIES_FILENAME)
     facts = read_facts(bundle / "facts.json")
+    facts_changed = "facts.json" in rec.artifacts
+    if facts_changed:  # BL-065: the sealed surface narrowed to the packages the build ships
+        with tempfile.TemporaryDirectory(prefix="recertify-facts-") as scratch:
+            narrowed = Path(scratch) / "facts.json"
+            narrowed.write_bytes(rec.artifacts["facts.json"])
+            facts = read_facts(narrowed)
     original = (bundle / "README.original.md").read_bytes() if rec.lane == LANE_L else None
     staged: dict[str, bytes] = {
         name: (bundle / name).read_bytes() for name in manifest.get("files", {})
@@ -617,11 +682,13 @@ def write_recertified(
     for name in (
         "README.md", "README.patch.diff", "corrections.json", "holdouts.json",
         "dispositions.json", "restored_units.json", "cited_units.json",
-        "content_units.json", "content_units.coherent.json",
+        "content_units.json", "content_units.coherent.json", "facts.json",
     ):
         if name in rec.artifacts:
             staged[name] = rec.artifacts[name]
-    dependencies = recertified_dependencies(sealed_deps, rec.lane, prompts, facts, original)
+    dependencies = recertified_dependencies(
+        sealed_deps, rec.lane, prompts, facts, original, facts_changed=facts_changed
+    )
     staged[DEPENDENCIES_FILENAME] = _canonical_json(dependencies)
     current_set = fingerprint(dependencies, rec.lane)
     origin = {
@@ -1147,7 +1214,8 @@ def _write_mode(args: Any, token: str | None, lanes: Sequence[str]) -> int:
         )
         _print_table(results)
         for rec in results:
-            repaired = "restored_units.json" in rec.artifacts
+            # a narrowed surface (BL-065, ``shipped_facts``) is written even under the current version set
+            repaired = "restored_units.json" in rec.artifacts or "facts.json" in rec.artifacts
             if not rec.recertified or (rec.sealed_by_current and not repaired):
                 continue
             latest = history[(rec.repository, rec.lane)][-1]

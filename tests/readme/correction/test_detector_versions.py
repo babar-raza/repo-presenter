@@ -32,8 +32,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "d480a78c7be3887f66fac0c341ef91ba90edeb240bac3e603b3a0393c4b648d1",
     ),
     "enterprise_edition.py": (
-        ("3",),
-        "3188e0ca8c12f622b766aa43559f441880e041f7a150a38da18d2d08e4f88bcc",
+        ("4",),
+        "fbc8cba10d645350143afc78a08f2957be9488e67f8584efa1ba699e3bb59642",
     ),
     "examples.py": (
         ("1",),
