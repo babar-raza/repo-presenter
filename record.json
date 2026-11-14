@@ -39,12 +39,51 @@
    "run_id": "43631637483",
    "source_revision": "034594822f58194a9ae937237090a60161f57055",
    "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  },
+  {
+   "at": "2026-11-14T23:46:08+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is",
+    "BC-07|unresolved|heading_q_is_not",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "live_readme_loss|inherited_unit|code_block"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 12,
+   "outcome": "failure",
+   "run_id": "43652850518",
+   "source_revision": "034594822f58194a9ae937237090a60161f57055",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T19:34:49+00:00",
+  "at": "2026-11-14T23:46:08+00:00",
   "classes": {
+   "BC-04|unresolved|code_span_q_is": {
+    "example": "code span 'docs/superpowers' is not a fact value",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-04",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
    "BC-07|unresolved|heading_q_is_not": {
     "example": "heading '#### Complex-text Shaping (Embedded OpenType Fonts)' is not a shell heading in title case",
     "findings": 5,
@@ -53,7 +92,7 @@
      "-"
     ],
     "rule": "BC-07",
-    "scope": "09122d49e78072a35fbb304c6d48c9441a3c0b1752e67d43f5374d5788b054b5",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -81,7 +120,7 @@
      "inherited_unit:525.code_block"
     ],
     "rule": "disposition_coverage",
-    "scope": "71f196d94438c4d0d2dfb45515202843104b6e10689db0c10fcb5b62bd7e9ff5",
+    "scope": "dc0e260fc3d2fd79c4512866f8a89326c3cfe80727f80de410780d001f6182b3",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -102,7 +141,7 @@
      "inherited_unit:015.code_block"
     ],
     "rule": "live_readme_loss",
-    "scope": "71f196d94438c4d0d2dfb45515202843104b6e10689db0c10fcb5b62bd7e9ff5",
+    "scope": "dc0e260fc3d2fd79c4512866f8a89326c3cfe80727f80de410780d001f6182b3",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -116,12 +155,12 @@
     "upstream": ""
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 84c5d935a8db: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:308.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:456.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:517.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:519.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds i",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:308.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:456.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:517.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:519.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds i",
    "kind": "PresentFailure",
    "transient": false
   },
@@ -217,6 +256,21 @@
     "upstream": ""
    },
    {
+    "label": "BC-04",
+    "message": "code span 'docs/superpowers' is not a fact value",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-04",
+    "section_id": "",
+    "signature": "BC-04|unresolved|code_span_q_is",
+    "source": "validation",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
+   {
     "label": "BC-07",
     "message": "heading '#### Complex-text Shaping (Embedded OpenType Fonts)' is not a shell heading in title case",
     "origin": {
@@ -293,7 +347,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -307,11 +361,11 @@
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "43631637483",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631637483",
+  "run_id": "43652850518",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43652850518",
   "schema_version": 1,
   "source_revision": "034594822f58194a9ae937237090a60161f57055",
-  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
  "schema_version": 1
