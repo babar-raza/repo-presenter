@@ -171,13 +171,10 @@ def _validate_audit(job: str, request: dict[str, Any], context: AuditContext | N
     if job == "audit-seed":
         if set(request) != {"job"}:
             raise RequestError("an audit-seed request takes no other field (its salt is its own run id)")
-        still_open = open_seed_batches(context.heads)
-        if still_open:
-            first = still_open[0]
-            raise RequestError(
-                f"seed batch run {first} is still open ({SEED_BRANCH_PREFIX}{first} has no "
-                f"acceptance-record/run-{first}-* branch): one open seed batch at a time; score and write it first"
-            )
+        # One open seed batch at a time still holds: audit-seed.yml's own gate (run_m9_seeder.py --gate)
+        # RESUMES an open batch instead of seeding a new one. Refusing the request here left a batch whose
+        # audit had failed (no open provider batch, 2026-11-14 run 43620199171) waiting on a cron that
+        # does not fire reliably (R37), so the request now reaches the gate, which finishes the open batch.
         return blank
     allowed = {"job", "seed_run_id", "findings_path", "findings_ref"}
     if job == "acceptance-write":

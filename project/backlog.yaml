@@ -1636,3 +1636,17 @@ items:
     evidence: []
     next_action: "after merge"
     updated: "2026-11-14"
+
+  - id: BL-141
+    title: "Review page: GitHub Actions build/CI badges showed as broken icons (owner feedback 24f3fd9414, 31596948d1, 3dfdf91c43)"
+    type: feedback
+    source: "owner review-page feedback 2026-11-14 (Cells Rust R, Imaging .NET R, Email Python R)"
+    priority: P1
+    status: active
+    implementation_path: "scripts/review_page/build.py: when github.com's badge endpoint cannot be fetched (403 from this build environment), embed the same workflow's status from img.shields.io; README URLs unchanged"
+    acceptance: "every GitHub Actions badge in every candidate on the review page renders as an image; verified on the rebuilt page"
+    evidence:
+      - "root cause: the badges are valid (ci.yml exists in all three; shields.io: Cells Rust failing, Imaging .NET passing, Email Python passing); the page builder could not fetch github.com badge.svg (HTTP 403), so the page showed alt text"
+    next_action: "rebuild and republish the page; confirm every badge renders"
+    updated: "2026-11-14"
+
