@@ -6461,3 +6461,18 @@ Backlog: BL-099
 × 6, within the total caps. The root causes are tracked as BL-100.
 
 Backlog: BL-100
+
+## 2026-11-14 — R43: owner decisions on Lane R throughput
+
+**Owner answers to the plan:**
+1. Stop rule: a rolling window of 12 runs.
+2. Deterministic sections: Development & Testing, Documentation & Resources, and Scope & Limitations. Approved as an
+   R27 exception.
+3. Inherit-and-correct, for repositories that have an aspose.org-published README. The owner's observation is recorded
+   verbatim in R43: in the long run the lanes must stay separate and be evaluated live.
+4. API rows: fall back to the renderer's row on failure only, not render-all.
+
+**Recorded in.** RULINGS R43 (checklist item 15), CLAUDE.md, AGENTS.md (R1–R43) and the consolidated goals. The rulings
+test now requires R43.
+
+Backlog: BL-101, BL-102, BL-103, BL-104
