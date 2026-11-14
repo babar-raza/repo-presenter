@@ -12,11 +12,23 @@
    "run_id": "43640966556",
    "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
    "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  },
+  {
+   "at": "2026-11-14T22:27:36+00:00",
+   "classes": [
+    "BC-18|inherited_unit|false_claim"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43647237245",
+   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T21:32:12+00:00",
+  "at": "2026-11-14T22:27:36+00:00",
   "classes": {
    "BC-18|inherited_unit|false_claim": {
     "example": "scene.Save(\"output.obj\", FileFormat.WavefrontOBJ);",
@@ -26,7 +38,7 @@
      "inherited_unit:028.code_block"
     ],
     "rule": "BC-18",
-    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -39,36 +51,14 @@
     ],
     "sub_rule": "false_claim",
     "upstream": ""
-   },
-   "BC-18|inherited_unit|misleading_claim": {
-    "example": "**[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:059.list"
-    ],
-    "rule": "BC-18",
-    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "misleading_claim",
-    "upstream": ""
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 84c5d935a8db: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
@@ -87,44 +77,13 @@
     "source": "validation",
     "sub_rule": "false_claim",
     "upstream": ""
-   },
-   {
-    "label": "BC-18",
-    "message": "open finding (confirmed misleading claim: **[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release) still printed: The README text '**[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release' is false (confirmed misleading claim: **[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release). Correct it: The only released package and the csproj version are 26.1.0; the 26.2.0 notes describe an unreleased version (and state Target Fr",
-    "origin": {
-     "id": "inherited_unit:059.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "**[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release",
-    "rule": "BC-18",
-    "section_id": "documentation_resources",
-    "signature": "BC-18|inherited_unit|misleading_claim",
-    "source": "validation",
-    "sub_rule": "misleading_claim",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "development_testing",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-18",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
    {
     "facts_defects": [],
     "label": "BC-18",
@@ -132,38 +91,14 @@
     "reason": "plan-level drop of workflow:example:007 (blanked by the repair)",
     "section_id": "additional_examples",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-18",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-18 still fails on this revision, which is the defect: open finding (confirmed misleading claim: **[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release) still printed: The README text '**[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this release' is false (confirmed misleading claim: **[Release 26.2.0 notes](docs/release-26.2.0.md)** \u2014 change log for this releas",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
-    "section_id": null,
-    "stage": "S4"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
-  "run_id": "43640966556",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43640966556",
+  "run_id": "43647237245",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43647237245",
   "schema_version": 1,
   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
-  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
  "schema_version": 1
