@@ -13,21 +13,35 @@
    "run_id": "43640968696",
    "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
    "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  },
+  {
+   "at": "2026-11-14T22:36:37+00:00",
+   "classes": [
+    "BC-14|unresolved|the_readme_claims_dae",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|authored_unit|stub_format"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 7,
+   "outcome": "failure",
+   "run_id": "43647239376",
+   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T21:49:04+00:00",
+  "at": "2026-11-14T22:36:37+00:00",
   "classes": {
    "BC-14|unresolved|the_readme_claims_dae": {
     "example": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
-    "findings": 1,
+    "findings": 3,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "BC-14",
-    "scope": "09122d49e78072a35fbb304c6d48c9441a3c0b1752e67d43f5374d5788b054b5",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -51,7 +65,7 @@
      "inherited_unit:060.table"
     ],
     "rule": "BC-17",
-    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -66,14 +80,16 @@
     "upstream": ""
    },
    "claim_contradiction|authored_unit|stub_format": {
-    "example": "| `ColladaPlugin` | ColladaPlugin class provides factory methods to create load options, save options, exporters, importers, file formats, and format detectors for COLLADA. |",
-    "findings": 1,
+    "example": "Aspose.3D FOSS for Python reads and writes 3D scenes in `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` formats. It constructs scenes using `Scene`, creates entities such as `Mesh`, and manages transforms, materials, and animation clips through its public API.",
+    "findings": 3,
     "origin_kind": "authored_unit",
     "origins": [
+     "opening.opening",
+     "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaexporter.colladaexporter",
      "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin"
     ],
     "rule": "claim_contradiction",
-    "scope": "4f4f72b4090eba84b132d55b8ecd8aa55773c9936926e46267423d6da4f9b98d",
+    "scope": "9adafd0ce74b1823d529fa71833c10567f3adec83dc89e93acc55c7572c04274",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -89,19 +105,49 @@
     "upstream": "source_stub"
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 84c5d935a8db: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "claim_contradiction",
-    "message": "line 549 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "message": "line 6 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "origin": {
+     "id": "opening.opening",
+     "kind": "authored_unit"
+    },
+    "quote": "Aspose.3D FOSS for Python reads and writes 3D scenes in `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` formats. It constructs scenes using `Scene`, creates entities such as `Mesh`, and manages transforms, materials, and animation clips through its public API.",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|authored_unit|stub_format",
+    "source": "review",
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 551 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaexporter.colladaexporter",
+     "kind": "authored_unit"
+    },
+    "quote": "| `ColladaExporter` | ColladaExporter class provides methods to export scenes to COLLADA format and to check format support, where export raises TypeError conditionally. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|authored_unit|stub_format",
+    "source": "review",
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 555 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
     "origin": {
      "id": "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin",
      "kind": "authored_unit"
@@ -113,6 +159,36 @@
     "source": "review",
     "sub_rule": "stub_format",
     "upstream": "source_stub"
+   },
+   {
+    "label": "BC-14",
+    "message": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "",
+    "signature": "BC-14|unresolved|the_readme_claims_dae",
+    "source": "validation",
+    "sub_rule": "the_readme_claims_dae",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_claims_dae",
+    "source": "validation",
+    "sub_rule": "the_readme_claims_dae",
+    "upstream": ""
    },
    {
     "label": "BC-14",
@@ -146,21 +222,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-18",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:1",
+    "label": "claim_contradiction:3",
     "outcome": "repaired",
     "reason": "",
     "section_id": "opening",
@@ -176,14 +244,6 @@
    },
    {
     "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:2",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
-    "section_id": "scope_limitations",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
     "label": "BC-14",
     "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
@@ -192,27 +252,19 @@
    },
    {
     "facts_defects": [],
-    "label": "claim_contradiction:0",
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "scope_limitations",
     "stage": "S6"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
-  "run_id": "43640968696",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43640968696",
+  "run_id": "43647239376",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43647239376",
   "schema_version": 1,
   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
-  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
  "schema_version": 1
