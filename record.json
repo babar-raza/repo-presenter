@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set f39787980017: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Layers` as a property of `Image` ('The Image class provides the Load and Save methods to read and write image files, and exposes properties such as Width, Height, Bounds, and Layers for inspection and modification, as demonstrated when loading a PSD file and accessing its layers and resources.'), but `Aspose.PSD.Image` has no such member; `Layers` is a member of `PsdImage`)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-14T05:48:52.682483+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43562554980",
     "acquired_at": "2026-11-14T05:40:23.007819+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 25,
+  "state_version": 26,
   "recent_trigger_dedup_keys": {
     "run:41290980069:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "420a41ac7b7b4ee8a4282def04b3cee9",
     "run:41294881468:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "a46cdcf117be4c239142b216c9a17ef6",
