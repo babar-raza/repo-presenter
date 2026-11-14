@@ -5,7 +5,7 @@
   "provider_repository_id": 1159931799,
   "registry_revision": null,
   "active_transaction_id": "60b41de25d87473ab67d4c383d254452",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set f39787980017: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.words.revisiontype: identifiers that are not accepted fact values: FormatChange, StyleDefinitionChange",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-14T06:10:44.654408+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43563712540",
     "acquired_at": "2026-11-14T05:57:22.043786+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "09a2e17d482c43cfa0b20af58d0330c0",
+    "transition_id": "3eb967facba7495b9bffc4e4b82eb25a",
     "transaction_id": "60b41de25d87473ab67d4c383d254452",
     "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-13T13:21:07.660442+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-14T06:10:44.336172+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-words-foss/Aspose.Words-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-words-foss__Aspose.Words-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 56,
+  "state_version": 57,
   "recent_trigger_dedup_keys": {
     "run:41121235240:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "371aa95f80574c74828e7d250840db93",
     "run:41125275923:aspose-words-foss/Aspose.Words-FOSS-for-.NET": "d43f7964ae9940cbadd859e7dcc3bb37",
