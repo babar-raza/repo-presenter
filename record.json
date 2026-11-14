@@ -11,11 +11,23 @@
    "run_id": "43569986884",
    "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
    "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  },
+  {
+   "at": "2026-11-14T16:18:13+00:00",
+   "classes": [
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43613420307",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T07:40:39+00:00",
+  "at": "2026-11-14T16:18:13+00:00",
   "classes": {
    "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
     "example": "The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to `RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` / `RenderDocument` mod",
@@ -25,7 +37,7 @@
      "api_reference.intro"
     ],
     "rule": "duplicate_paragraph",
-    "scope": "ac497ef5e1e89d5fd1f7f75933384b2c366380c7d253094a9353af62be2e97f5",
+    "scope": "2c5ae42208e2b5e05b0ba612817d95168e9a5f3f6f528b38fc73fc1d44fb80c2",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -38,7 +50,7 @@
     "upstream": ""
    }
   },
-  "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+  "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -65,13 +77,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "ff570fa517d09ded373b2062090a2cbb1a634b2b",
+  "main_sha": "0bae77b5104d52709ef9dfcdf9137eadbd557f96",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F04",
+    "label": "F03",
     "outcome": "repaired",
     "reason": "",
     "section_id": "development_testing",
@@ -87,24 +99,16 @@
    },
    {
     "facts_defects": [],
-    "label": "F02+F03",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "scope_limitations",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01",
+    "label": "F01+F02",
     "outcome": "repaired",
     "reason": "",
-    "section_id": "opening",
+    "section_id": "scope_limitations",
     "stage": "S6"
    }
   ],
   "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-  "run_id": "43569986884",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43569986884",
+  "run_id": "43613420307",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43613420307",
   "schema_version": 1,
   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
