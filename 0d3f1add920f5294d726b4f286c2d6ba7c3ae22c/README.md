@@ -899,7 +899,7 @@ The primary entry point is `Document`, loaded from a file, stream, or created em
 - `ChartLegend` — `LegendEntries -> ChartLegendEntryCollection`, `Position: LegendPosition`, `Font -> Font`
 - `ChartDataLabel` — `ShowValue`, `ShowCategoryName`, `ShowPercentage`, `Position`, `ClearFormat()`
 
-The full surface totals 618 public types across the Core API, interfaces, and enumerations. See the [full API reference](#documentation--resources) below for every type.
+The full surface totals 615 public types across the Core API, interfaces, and enumerations. See the [full API reference](#documentation--resources) below for every type.
 
 </details>
 
@@ -940,7 +940,7 @@ That is also why the source is worth a read. This is production code, not a demo
 
 - **[Getting started guide](https://docs.aspose.org/words/net/)** — installation, walkthroughs, and feature guides for this library.
 - **[How-to guides & FAQ](https://kb.aspose.org/words/net/)** — task-focused answers for common Word-document-processing questions.
-- **[Full API reference](https://reference.aspose.org/words/net/)** — the complete, browsable reference for all 618 public types (the [API reference](#api-reference) section above covers the essentials).
+- **[Full API reference](https://reference.aspose.org/words/net/)** — the complete, browsable reference for all 617 public types (the [API reference](#api-reference) section above covers the essentials).
 - **[Agent and contributor guide](AGENTS.md)** — usage recipes for AI coding assistants, plus build, test, and code-style conventions for anyone changing this repository.
 - The public API matches [Aspose.Words for .NET — Enterprise Edition](https://docs.aspose.com/words/net/), so its official documentation and thousands of examples largely apply here too, within this edition's supported feature set.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-words-foss/Aspose.Words-FOSS-for-.NET/issues) on GitHub — pull requests are welcome too; for anything non-trivial, open an issue first so the approach can be discussed.

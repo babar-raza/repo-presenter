@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 8,
+    "edits": 6,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "28d0d4eb6a67a5bc781a1c1d1f26b94bff8d6137d7cca976dee2908f94dac929",
+  "corrected_sha256": "6551221c5bec70bbb3964a6574c3c52adf8e1d35373780b3d0d8b60ae581c51c",
   "edits": [
     {
       "detector": "glance_layout",
@@ -83,67 +83,6 @@
       "start": 6987
     },
     {
-      "detector": "stale_type_count",
-      "end": 65959,
-      "evidence": [
-        {
-          "fact_id": "public_symbol:aspose",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.accept",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Accept"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.clone",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Clone"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.customnodeid",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.CustomNodeId"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.document",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Document"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.font",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Font"
-        }
-      ],
-      "index": 4,
-      "kind": "FALSE_CLAIM_FIX",
-      "line": 901,
-      "original": "615",
-      "rationale": "line 901 states '615 public types'; the facts record 618 public types (407 classes), so a count of 615 is refuted and is replaced by the computed 618",
-      "replacement": "618",
-      "start": 65956
-    },
-    {
       "detector": "enterprise_edition_naming",
       "end": 67253,
       "evidence": [
@@ -154,74 +93,13 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 5,
+      "index": 4,
       "kind": "FALSE_CLAIM_FIX",
       "line": 915,
       "original": "the commercial [Aspose.Words for .NET](https://products.aspose.com/words/net/)",
       "rationale": "line 915 names the aspose.com product with a substitute for its proper name ('the commercial [Aspose.Words for .NET](https://products.aspose.com/words/net/)'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
       "replacement": "[Aspose.Words for .NET — Enterprise Edition](https://products.aspose.com/words/net/)",
       "start": 67175
-    },
-    {
-      "detector": "stale_type_count",
-      "end": 70058,
-      "evidence": [
-        {
-          "fact_id": "public_symbol:aspose",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.accept",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Accept"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.clone",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Clone"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.customnodeid",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.CustomNodeId"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.document",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Document"
-        },
-        {
-          "fact_id": "public_symbol:aspose.words.absolutepositiontab.font",
-          "kind": "public_symbol",
-          "status": "SUPPORTED",
-          "value": "Aspose.Words.AbsolutePositionTab.Font"
-        }
-      ],
-      "index": 6,
-      "kind": "FALSE_CLAIM_FIX",
-      "line": 942,
-      "original": "617",
-      "rationale": "line 942 states '617 public types'; the facts record 618 public types (407 classes), so a count of 617 is refuted and is replaced by the computed 618",
-      "replacement": "618",
-      "start": 70055
     },
     {
       "detector": "enterprise_edition_naming",
@@ -234,7 +112,7 @@
           "value": "https://products.aspose.com/words/net/"
         }
       ],
-      "index": 7,
+      "index": 5,
       "kind": "FALSE_CLAIM_FIX",
       "line": 944,
       "original": "the commercial [Aspose.Words for .NET](https://docs.aspose.com/words/net/)",
@@ -257,21 +135,9 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 7
+    "FALSE_CLAIM_FIX": 5
   },
   "unapplied": [
-    {
-      "defect": false,
-      "detector": "report_gaps",
-      "fact_ids": [
-        "public_symbol:aspose.words.documentpositionmovement",
-        "public_symbol:aspose.words.inodecollection",
-        "public_symbol:aspose.words.nodeenumerator"
-      ],
-      "line": 0,
-      "reason": "3 of 618 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.words.documentpositionmovement, public_symbol:aspose.words.inodecollection, public_symbol:aspose.words.nodeenumerator",
-      "text": ""
-    },
     {
       "defect": false,
       "detector": "report_gaps",
