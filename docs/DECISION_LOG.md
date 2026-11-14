@@ -6476,3 +6476,37 @@ Backlog: BL-100
 test now requires R43.
 
 Backlog: BL-101, BL-102, BL-103, BL-104
+
+## 2026-11-14 — Engine fixes: planner priority, rolling stop rule, p90 reservations, STOPPED alert, tick health, M9 controls
+
+**Facts.** The independent Lane R investigations found the engine spending its slots on the wrong cells: PDF Python
+was held on a `presentation_planning` truncation that BL-097 had fixed (the job-error scope did not include
+`readme/composition`); four PDF cells ranked "(d) retry" because their `OutputRejectedError` was classified
+`unknown:model_output_was_rejected`; any composition commit counted as a fix for an authored-unit class; a Lane L
+"(a)" carried its Lane R "(d)" into the batch; first attempts ranked ahead of re-runs although, since 02:09Z,
+re-runs sealed 4 of 10 and first attempts 0 of 15. The R25 stop rule stopped the loop for 5h+ on one zero-seal
+batch and nothing reported it. `supervisor-tick` was cancelled at its 10-minute ceiling (runs 43566771426,
+43603607740) while the delivery count was still running (9m20s in the last success). M9 round 43593733280's scorer
+reported 7/27 false flags where the writer judged 0/20, because 7 stale Lane R seals held control slots.
+
+**Decisions (supervisor, owner-delegated; R43(1) for the stop rule).**
+1. Failure-class scopes are read under the current tables and hashed at the run's commit (fixes apply to records
+   already written); job errors include `readme/composition`; a wrapped `OutputRejectedError` is parsed into its
+   stage and last rejection and is scoped (still transient: never held or capped); the authored-unit scope is the
+   authoring modules and the section-authoring prompt only.
+2. The planner ranks each lane-cell on its own, puts the lagging lane first while the other has reached 25 (Lane R
+   6, Lane L 29), and orders (a) fix landed, (c) NEEDS_REPAIR re-run, (b) never attempted, (d) retry.
+3. The stop rule compares the last 12 settled hosted runs with the previous 12 (owner multiplier key unchanged).
+   On the real ledger it would also have fired from 06:48Z on (last 12: 408 calls/seal; previous 12: 106.3), so it
+   will fire again when e2-010 is spent unless the next cohort seals.
+4. A cell's reservation is the measured p90 of settled lane-cells (55 calls, 2.73M tokens), bounded by what the
+   batch has left; e2-010 funds 4 whole cells instead of 6 under-funded ones.
+5. The tick bounds the count, shows its headline, adds a Budget section and fails loudly (`::error::`) when STOPPED;
+   a `count` run request gives the official delivered count hosted with attestations read.
+6. M9 control slots go only to RECERTIFIED seals; the scorer prints the not-recertified split beside the raw
+   figure (thresholds unchanged). Replay of 43593733280: raw 7/27, recertified controls 0/20.
+
+**Evidence.** Branch `phase1-engine`; TC-012 and TC-015 re-verified ACCEPTED; live read-only gate after the change:
+PDF Go, PDF Python, PDF .NET (a); 3D .NET, 3D Python, Cells .NET (c).
+
+Backlog: BL-075, BL-086, BL-100, BL-101, BL-110, BL-111
