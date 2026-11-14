@@ -1085,14 +1085,16 @@ items:
     type: defect
     source: "hosted present runs 43516323114 (Cells C++ F01-F03 repair refused, units[2].text changed to empty), 43513034263 (3D Python .dae repair refused, units[0].text identical value), 43516330798 (Cells Python BC-18 repair refused, units[1].text changed to empty; BC-05 x2 license in Scope and Limitations; BC-07 x2 inherited_unit:023.heading title case and inherited_unit:008.paragraph trailing colon)"
     priority: P0
-    status: open
+    status: active
     depends_on: [BL-081, BL-082]
-    implementation_path: "repair/loop.py + repair/targeted.py: a targeted S6 change whose after is empty is a request to drop a slot, which the plan owns -> route to _escalate_to_plan instead of refusing; the claimed-path refusal needs the re-run's call store to explain; Cells Python BC-05/BC-07 through the existing S4 dispositions once the re-run shows which unit prints them"
-    acceptance: "hosted re-runs of the three cells record no 'identical value there' refusal for a blank-text change, and Cells Python passes BC-05/BC-07; R10 gate OK"
+    implementation_path: "supervisor decision 2026-11-14 (owner-delegated), audit O7: repair/targeted.py blanked_slots (a changes[] entry taking units[N].text to '' while the revision still holds the unit) and plan_without_slots (drop the plan item that gives the slot: material_limitations / core_capabilities / additional_example_ids / api_hubs / links, with a plan deviations record); repair/loop.py _repair_task routes the refused blank reply to _drop_slots_at_plan (no provider call: plan_checks judge the revised plan, the trimmed section output is stored for the re-planned task when its slots line up; a slot carrying an inherited unit SUPERSEDE/REWRITE/CORRECT into the section is refused with that reason, R14). The Cells Python BC-05/BC-07 part moved to BL-089 (O8)"
+    acceptance: "hosted re-runs of Cells C++ and Cells Python record a plan-level drop (repairs.json changes on material_limitations / additional_example_ids) instead of an 'identical value there' refusal for a blank-text change; R10 gate OK; R41 re-verification"
     evidence:
       - "2026-11-13: the five refusals and four Cells Python findings quoted from the logs in the DECISION_LOG entry for BL-081/BL-082"
-    next_action: "after the BL-081/BL-082 re-runs; artifacts were unreadable through the proxy, so the call store is needed for the claimed-path case"
-    updated: "2026-11-13"
+      - "2026-11-14: tests/readme/repair/test_blanked_slot_plan_drop_bl083.py (7) from the logged shapes of 43516323114 (Cells C++ units[2]/units[3] of scope_limitations to '') and 43516330798 (Cells Python units[1] 'Apply bold red font styling to a cell.' to ''), with negative controls (a non-blank claimed rewrite; a slot the plan does not own; a slot carrying an inherited unit)"
+      - "2026-11-14: 3D Python .dae (43513034263, 43529879702) does NOT reproduce as a blank: the ledger claims units[0].text changed to a NON-empty rewrite the revision does not hold; that shape keeps its refusal (the claimed-path case stays open)"
+    next_action: "hosted re-run of Cells C++ and Cells Python under the fixed code is the closing evidence; the 3D Python claimed-path (non-blank) refusal stays open and needs the re-run's call store"
+    updated: "2026-11-14"
 
   - id: BL-085
     title: "Lane R not progressing: manual audit of every Lane R failure, on record as the baseline to measure against"
@@ -1162,4 +1164,46 @@ items:
       - "2026-11-14: tests/test_cohort_order_bl086.py (9, real backfilled records of runs 43473790998..43529879702 and real-shaped settle entries) pass; negative control (rank (a) moved last, cap raised to 99) fails 7 of 9"
       - "2026-11-14: on o2-planner (BL-084 merged, BL-086 and the R42 upstream tag applied): full suite (6435 collected, 1 deselected) green; ops/gatecli.py validate OK, no STALE receipt; ops/checks/backlog_check.py OK; recertify --gate --remote origin --base-baseline <origin/main data/recertification_baseline.json> OK (45 seals checked; Lane R 6 RECERTIFIED / 12 NEEDS_REPAIR, Lane L 27 RECERTIFIED)"
     next_action: "supervisor merges after the BL-084 records are on the refs (without them every cell with two hosted failures in a row is capped for want of a record: by design, it cannot show a scope change); then read the first hosted planner fire's 'Ran' table"
+  - id: BL-087
+    title: "Audit O3 (S1): the findings register binds at authoring; Core API rows never print analysis wording or a register quote"
+    type: defect
+    source: "supervisor decision 2026-11-14 (owner-delegated), audit O3 (docs/investigations/2026-11-13-lane-r-not-progressing.md S1, P1, P3)"
+    priority: P0
+    status: active
+    depends_on: [BL-085]
+    implementation_path: "P1: readme/composition/renderer.py _symbol_description / without_symbol_wording / _row_refused (RENDERER_VERSION 39): a Core API row prints its substance without the 'X is a public symbol' lead, else the fact-true fallback, and never a register quote. P3: readme/composition/authoring.py register_records (the repository's Lane R register rows, each with its truth, into the packet's do_not_claim) and register_errors in unit_checks (authoring job, coherence and repairs; BC-04's re-judgement passes register=False because BC-18 judges the same rows); prompts/section_authoring.yaml v21 describes the records. Request hashes change (accepted: the next run of a cell re-calls)"
+    acceptance: "zero-call recertify of every Lane R seal shows no INTERNAL_WORDING_TYPE_ROW and no new finding; a hosted Lane R run shows no authored unit printing a register quote (BC-18 on an authored unit) for a cell whose register rows reached the packet; R10 gate OK; R41 re-verification"
+    evidence:
+      - "2026-11-14: tests/readme/composition/test_type_row_refusal_bl087.py (5) and test_register_at_authoring_bl087.py (4), real HTML Python / 3D .NET / Email .NET rows, with negative controls"
+      - "2026-11-14: zero-call recertify --all --remote origin (read-only), origin/main -> branch: Lane R certified 6 -> 6, Lane L 27 -> 27, no seal changes outcome; seal findings 68 gone (3D .NET 55, Words .NET 13), 0 new; measure.py vs baseline: INTERNAL_WORDING_TYPE_ROW 89 -> 0, REGISTER_ROW_REPRINTED 112 -> 92; recertify --gate --base-baseline <origin/main baseline>: OK (45 seals checked)"
+      - "2026-11-14: O6 report-only run of register_errors: 1,250 authored units of the 18 sealed Lane R candidates -> 37 hits, all 37 confirmed printed by BC-18 (0 false positives); 1,386 live-README units -> 56 hits, 2 differ from the register quote only in code-span ticks (strict false-positive rate 2/93 = 2.2%, under the 5% bar)"
+    next_action: "supervisor merges; the next hosted Lane R run of HTML Python, Note Python or Cells .NET (cells with authored register rows) is the closing evidence"
+    updated: "2026-11-14"
+  - id: BL-088
+    title: "Audit O4 (S4): a maintainer unit with no printable form is omitted citing its findings-register row; P2 kept-unit citation adopted on top"
+    type: defect
+    source: "supervisor decision 2026-11-14 (owner-delegated), audit O4 and O3 P2 (docs/investigations/2026-11-13-lane-r-not-progressing.md S4; hosted run 43529876835, 3D .NET 024/028.code_block)"
+    priority: P0
+    status: active
+    depends_on: [BL-081, BL-085]
+    implementation_path: "readme/reconciliation/dispositions.py _fold_register_omitted_units (S4 normalize, zero calls: an example block whose example is register-refuted, with its lead-in, becomes OMIT_UNSUPPORTED citing the OPEN register rows, rationale must_correct.REGISTER_OMITTED_RATIONALE); every reader accepts it by that marker plus a cited row: parity_gate.disposition_is_non_loss (BC-17), live_readme_loss (accounting disposition), disposition_coverage (nothing kept), dispositions._omission_gap (S4 audit). P2: _fold_register_kept_units cites the row for a unit kept as written, excluding example blocks and Scope and Limitations units; parity_gate.section_account measures a withheld kept unit by its withheld form. The register row is the R14 recorded decision"
+    acceptance: "a hosted re-run of 3D .NET Lane R shows no KEPT_EXAMPLE_BLOCK_UNPRINTABLE and no live_readme_loss on 024/028; zero-call fold replay over all 18 Lane R seals shows no new finding; R10 gate OK; R41 re-verification"
+    evidence:
+      - "2026-11-14: tests/readme/reconciliation/test_register_omitted_units_bl088.py (3, real 3D .NET units and register rows, negative controls) and test_register_kept_units_bl088.py (2, real HTML Python 080.list)"
+      - "2026-11-14: zero-call fold replay of all 18 latest Lane R seals (stored dispositions + the folds, then recertify's own _evaluate_lane_r): O4 alone changes no finding; P2 unrestricted on top raised 3 new findings (3D .NET 061.list disposition_coverage; PSD .NET 033 and Words .NET 083 BC-17 section_coverage); after the parity withheld-form fix and the two exclusions: 0 new findings, 27 findings removed (3D .NET 13, 3D Python 6, Note Python 4, Cells .NET/C++/TypeScript and HTML 1 each); no seal outcome changes"
+    next_action: "supervisor merges; hosted re-run of 3D .NET Lane R is the closing evidence (the folds act at S4 normalize, so read-only recertify of stored dispositions does not show them)"
+    updated: "2026-11-14"
+  - id: BL-089
+    title: "Audit O8: Scope never states the license (packet rule + deterministic clause strip); kept maintainer text gets formatting-only correction"
+    type: defect
+    source: "supervisor decision 2026-11-14 (owner-delegated), audit O8 (hosted runs 43516330798 Cells Python, 43520974296 Cells TypeScript; the license-in-Scope check stays, from the owner's 3D .NET feedback)"
+    priority: P0
+    status: active
+    depends_on: [BL-085]
+    implementation_path: "(a) readme/composition/authoring.py _OBJECTIVES['scope_limitations'] (never state the license); readme/composition/source_topics.py without_license_statement, applied by renderer.py to every Scope and Limitations unit (a pure license sentence goes, a clause goes from a sentence that says other things); BC-05 section_fit unchanged. (b) readme/composition/retained_examples.py kept_heading_form (a kept retained-example heading in title case); readme/composition/placement.py colon_closed_form (a placed kept paragraph whose closing colon introduces nothing printed after it ends with a full stop); independent_reviewer._kept_text_printed reads the same form. Formatting only, derivable from the stored inputs, never a content change"
+    acceptance: "hosted re-runs of Cells Python and Cells TypeScript Lane R show no SECTION_FIT_LICENSE_IN_SCOPE and no KEPT_TEXT_FORMATTING; zero-call recertify shows no new finding; R10 gate OK; R41 re-verification"
+    evidence:
+      - "2026-11-14: tests/readme/composition/test_scope_and_kept_formatting_bl089.py (9): the three real license sentences (Cells Python, Cells TypeScript, sealed 3D .NET), the real Cells Python 023.heading and 008.paragraph, each with negative controls"
+      - "2026-11-14: zero-call recertify --all: SECTION_FIT_LICENSE_IN_SCOPE on seals 1 -> 0 (3D .NET 'This project is licensed under the MIT License, as stated in the LICENSE file.' no longer printed); no new finding"
+    next_action: "supervisor merges; hosted re-run of Cells Python and Cells TypeScript is the closing evidence"
     updated: "2026-11-14"

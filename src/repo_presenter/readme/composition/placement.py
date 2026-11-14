@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Literal
 from urllib.parse import unquote
 
@@ -511,6 +511,8 @@ def placements(
     api_listings = api_listing_units(facts)
     shown: Destinations | None = None
     result: list[Placement] = []
+    #: Placed paragraphs whose closing colon introduces nothing printed after them (BL-089).
+    dangling: set[str] = set()
     for entry in dispositions.get("dispositions", []):
         unit_id = str(entry.get("unit_id", ""))
         destination = entry.get("destination_section")
@@ -638,10 +640,44 @@ def placements(
         outcome: Outcome = "overlap" if overlap else "placed"
         if outcome == "placed" and not unit_id.endswith(".code_block"):
             text = resolve_intra_document_anchors(text, planned_slugs)
+        if outcome == "placed" and _introduces_nothing_rendered(
+            unit_id,
+            text,
+            destination,
+            by_ordinal=by_ordinal,
+            by_id=by_id,
+            ecosystem=ecosystem,
+            example_sections=example_sections,
+            example_ordinals=example_ordinals,
+        ):
+            dangling.add(unit_id)
         result.append(
             Placement(unit_id, destination, text, outcome, overlap, also, attributed)
         )
-    return _drop_orphaned_lead_ins(result)
+    return [
+        replace(decision, text=colon_closed_form(decision.text))
+        if decision.outcome == "placed" and decision.unit_id in dangling
+        else decision
+        for decision in _drop_orphaned_lead_ins(result)
+    ]
+
+
+def colon_closed_form(text: str) -> str:
+    """A kept paragraph whose closing colon introduces nothing printed after it, ending with a
+    full stop instead ("Install the package from PyPI:" -> "Install the package from PyPI.").
+    A formatting-only edit: no word changes; every other text is returned as given.
+
+    Decision (BL-089, supervisor 2026-11-14, audit O8b): auto-correct, never block, a maintainers'
+    lead-in whose block the README prints elsewhere (here: the Installation section prints the
+    verified install command itself). Measured: hosted Lane R run 43516330798 (Aspose.Cells-FOSS-
+    for-Python ``008.paragraph`` "Install the package from PyPI:" failed BC-07 "ends with a colon
+    but nothing follows it before the next heading", and its repair moved it into quick_start,
+    where nothing followed it either). The published README prints that lead-in directly above
+    its own command, so a colon with nothing after it is ours to close, not the maintainers'."""
+    stripped = text.rstrip()
+    if not stripped.endswith(":") or stripped.endswith("::"):
+        return text
+    return stripped[:-1].rstrip() + "." + text[len(stripped) :]
 
 
 def placed_texts(decisions: list[Placement]) -> dict[str, list[str]]:

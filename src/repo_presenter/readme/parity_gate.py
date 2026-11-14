@@ -497,6 +497,12 @@ def disposition_is_non_loss(
     if disposition in NON_LOSS_ALWAYS:
         return True
     if disposition == "OMIT_UNSUPPORTED":
+        from repo_presenter.readme.validation.must_correct import is_register_omission
+
+        if is_register_omission(row):
+            # Omitted on the findings register's confirmed row (audit O4, BL-088): the row is the
+            # recorded R14 decision, as a CONTRADICTED fact is for any other omission.
+            return True
         cited = [facts.get(str(fid)) for fid in row.get("fact_ids") or ()]
         if any(f is not None and f.get("polarity") == "CONTRADICTED" for f in cited):
             return True
@@ -706,9 +712,19 @@ class Accounting:
                 continue
             if disposition_is_non_loss(row, self.facts):
                 continue
-            carried = audit.coverage(
-                str(self.units[unit_id].get("value") or ""), self.candidate.readme
+            # A kept unit citing OPEN register rows prints its withheld form (without exactly the
+            # refuted sentence, row or item: ``must_correct.withheld_form``); that form is what
+            # the section carries (BL-088: PSD .NET 033.paragraph, Words .NET 083.list).
+            from repo_presenter.readme.validation.must_correct import (
+                cited_finding_quotes,
+                withheld_form,
             )
+
+            text = str(self.units[unit_id].get("value") or "")
+            quotes = cited_finding_quotes(row.get("fact_ids") or (), None)
+            if quotes:
+                text = withheld_form(unit_id, text, quotes)
+            carried = audit.coverage(text, self.candidate.readme)
             if (
                 str(row.get("disposition")) in _PLACING_OR_SUPERSEDED
                 and carried >= audit.PARTIAL

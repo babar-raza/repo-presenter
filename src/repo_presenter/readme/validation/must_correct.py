@@ -34,8 +34,9 @@ OPEN rows of the repository being judged that carry a quote -- the rows this che
 from __future__ import annotations
 
 import re
-from collections.abc import Collection, Iterable
+from collections.abc import Collection, Iterable, Mapping
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.readme.validation.failures import Candidate, Failure
 from repo_presenter.readme.validation.text import section_texts
@@ -56,6 +57,24 @@ from repo_presenter.readme_findings import (
 
 def _squash(text: str) -> str:
     return " ".join(text.split())
+
+
+#: The rationale ``reconciliation.dispositions._fold_register_omitted_units`` writes on an
+#: inherited unit it omits citing the findings register rows that refute it (audit O4, BL-088).
+#: The register row is the recorded R14 decision; BC-17 (``parity_gate.disposition_is_non_loss``),
+#: live_readme_loss (an accounting disposition with a cited row) and S4's own coverage self-audit
+#: (``_omission_gap``) all read this marker plus the citation, so they cannot disagree.
+REGISTER_OMITTED_RATIONALE = "Omitted citing the findings register, which confirms it false: "
+
+
+def is_register_omission(entry: Mapping[str, Any], path: Path | None = None) -> bool:
+    """Whether a disposition is an omission on the findings register's evidence: OMIT_UNSUPPORTED,
+    the fold's own rationale, and at least one cited OPEN register row that carries a quote."""
+    return (
+        entry.get("disposition") == "OMIT_UNSUPPORTED"
+        and str(entry.get("rationale") or "").startswith(REGISTER_OMITTED_RATIONALE)
+        and bool(cited_finding_quotes(entry.get("fact_ids") or (), None, path))
+    )
 
 
 def open_finding_citations(
