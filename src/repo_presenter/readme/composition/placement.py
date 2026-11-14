@@ -401,6 +401,36 @@ def api_listing_units(facts: FactsDocument) -> frozenset[str]:
     return frozenset(found)
 
 
+_TYPE_ROW_LEAD = re.compile(r"^\|\s*`[A-Za-z_][\w.:<>]*`\s*\|")
+
+
+def _row_cells(row: str) -> tuple[str, ...]:
+    return tuple(" ".join(cell.split()) for cell in row.strip().strip("|").split("|"))
+
+
+def is_type_table(text: str) -> bool:
+    """Whether ``text`` is a type table: a header, a separator and body rows that each lead with
+    one bare type name in a code span (``| `Workbook` | Represents a workbook. |``)."""
+    rows = [line for line in text.splitlines() if line.strip()]
+    return len(rows) >= 3 and all(_TYPE_ROW_LEAD.match(row.strip()) for row in rows[2:])
+
+
+def rows_not_rendered(text: str, rendered: str) -> str:
+    """``text`` (a table) without the body rows ``rendered`` prints cell for cell; ``text``
+    unchanged when it prints none, an empty string when it prints every one."""
+    lines = [line for line in text.splitlines() if line.strip()]
+    if len(lines) < 3:
+        return text
+    printed = {_row_cells(line) for line in rendered.splitlines() if line.lstrip().startswith("|")}
+    body = lines[2:]
+    kept = [row for row in body if _row_cells(row) not in printed]
+    if len(kept) == len(body):
+        return text
+    if not kept:
+        return ""
+    return "\n".join([*lines[:2], *kept])
+
+
 def _table_owes_its_rows(unit_id: str, destination: str, *, text_known: bool) -> bool:
     """A kept table destined for Scope and Limitations is printed, never dropped on a shared
     fact."""
@@ -590,6 +620,25 @@ def placements(
         text = kept_unit_form(
             unit_id, withheld_rows_form(unit_id, text, false_quotes), facts, false_quotes
         )
+        if (
+            destinations is not None
+            and destination == "api_reference"
+            and unit_id.endswith(".table")
+            and is_type_table(text)
+        ):
+            # P4 (2026-11-14): the maintainers' own Core API type table, kept in the API
+            # Reference, prints only the rows the rendered Core API table does not already print
+            # word for word (Cells C++ seal 9f852d0f ``044.table``: 153 of its 157 surface rows
+            # are the rendered rows, a duplicate table under "is listed below").
+            if shown is None:
+                shown = destinations()
+            remainder = rows_not_rendered(text, shown.text("api_reference"))
+            if not remainder:
+                result.append(
+                    Placement(unit_id, destination, text, "overlap", (unit_id,), (), attributed)
+                )
+                continue
+            text = remainder
         also: tuple[str, ...] = ()
         topical = False
         if destinations is not None:

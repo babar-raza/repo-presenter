@@ -56,6 +56,7 @@ from repo_presenter.core.examples import (
 from repo_presenter.core.facts import (
     Evidence,
     Fact,
+    FactsDocument,
     fact_id,
 )
 from repo_presenter.core.package_registry import install_verdict
@@ -85,6 +86,38 @@ _FLOOR_FIELDS: dict[str, str] = {
     "setup.cfg": "python_requires",
     "setup.py": "python_requires",
 }
+_FLOOR_FACT_ID = "package:python_requires"
+
+
+def floor_field_for(path: str) -> str:
+    """The key the manifest at ``path`` declares the Python floor with, by its file name (a
+    ``pyproject.toml`` in a sub-directory still says ``requires-python``)."""
+    return _FLOOR_FIELDS.get(path.replace("\\", "/").rsplit("/", 1)[-1], "python_requires")
+
+
+def corrected_floor_declaration(document: FactsDocument) -> tuple[FactsDocument, bool]:
+    """``document`` with the ``package:python_requires`` fact naming the key its own manifest
+    declares (P3, 2026-11-14): the evidence detail and ``floor_declaration`` attribute say
+    ``requires-python`` for a ``pyproject.toml``. Facts sealed before the attribute existed carry
+    "python_requires declared" against ``pyproject.toml`` (HTML Python), and every reader of the
+    fact took the key from there. Pure, zero calls; ``False``: nothing changed."""
+    from dataclasses import replace
+
+    changed = False
+    kept: list[Fact] = []
+    for fact in document.facts:
+        if fact.id == _FLOOR_FACT_ID and fact.evidence:
+            field = floor_field_for(fact.evidence[0].path)
+            evidence = (
+                replace(fact.evidence[0], detail=f"{field} declared"),
+                *fact.evidence[1:],
+            )
+            attributes = {**(fact.attributes or {}), "floor_declaration": field}
+            if evidence != fact.evidence or attributes != (fact.attributes or {}):
+                fact = replace(fact, evidence=evidence, attributes=attributes)
+                changed = True
+        kept.append(fact)
+    return (replace(document, facts=tuple(kept)) if changed else document), changed
 
 
 def _requirement_fact(identifier: str, requirement: str, path: str, detail: str) -> Fact:
@@ -678,7 +711,7 @@ class PythonPlugin:
         # setuptools' `python_requires` in setup.cfg/setup.py. The renderer cites this attribute,
         # so a pyproject-only repository is never said to declare `python_requires` (real Lane R
         # false claims: Cells, Email and HTML Python).
-        floor_field = _FLOOR_FIELDS.get(sources.get("requires_python", ""), "python_requires")
+        floor_field = floor_field_for(sources.get("requires_python", ""))
         add(
             "package",
             "python_requires",

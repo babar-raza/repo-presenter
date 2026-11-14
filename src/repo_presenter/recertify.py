@@ -241,6 +241,10 @@ def fetch_source(
             if done.returncode == 0:
                 manifests[name] = done.stdout
     sources = _python_sources(git_dir, revision, paths) if manifests else {}
+    if any(p.endswith(".csproj") for p in paths):
+        # P5 (BL-065, C# variant): the type facts' own files, re-read under today's visibility
+        # rules (``net.current_public_types``).
+        sources = {**sources, **_python_sources(git_dir, revision, paths, suffix=".cs")}
     shutil.rmtree(git_dir, ignore_errors=True)
     return SourceSnapshot(tree_paths=paths, readme=readme, manifests=manifests, sources=sources)
 
@@ -250,11 +254,13 @@ _MAX_SOURCE_FILES = 5000
 _MAX_SOURCE_BYTES = 64 * 1024 * 1024
 
 
-def _python_sources(git_dir: Path, revision: str, paths: Sequence[str]) -> dict[str, str]:
-    """Every tracked ``.py`` file's text at ``revision`` (empty when over the bounds)."""
+def _python_sources(
+    git_dir: Path, revision: str, paths: Sequence[str], *, suffix: str = ".py"
+) -> dict[str, str]:
+    """Every tracked ``suffix`` file's text at ``revision`` (empty when over the bounds)."""
     import subprocess
 
-    wanted = [p for p in paths if p.endswith(".py")]
+    wanted = [p for p in paths if p.endswith(suffix)]
     if not wanted or len(wanted) > _MAX_SOURCE_FILES:
         return {}
     done = subprocess.run(
@@ -314,12 +320,57 @@ def shipped_facts(document: FactsDocument, ecosystem: str, source: SourceSnapsho
     return replace(document, facts=kept), clause
 
 
+def corrected_facts(document: FactsDocument) -> tuple[FactsDocument, str]:
+    """The sealed facts under the fact derivations current extraction applies (P3, 2026-11-14),
+    with zero calls: a format fact its own example receipt refutes is not SUPPORTED
+    (``formats.demote_failed_receipt_formats``), and the Python floor names the key its manifest
+    declares (``python.corrected_floor_declaration``). Returns the facts and what changed ("" when
+    nothing did)."""
+    from dataclasses import replace
+
+    from repo_presenter.extractors.platforms.python import corrected_floor_declaration
+    from repo_presenter.readme.evidence.facts.formats import demote_failed_receipt_formats
+
+    notes: list[str] = []
+    demoted = demote_failed_receipt_formats(document.facts)
+    changed = [a.id for a, b in zip(document.facts, demoted, strict=True) if a != b]
+    if changed:
+        document = replace(document, facts=tuple(demoted))
+        notes.append(f"UNRESOLVED by their own failed example receipt: {', '.join(changed)}")
+    document, floor = corrected_floor_declaration(document)
+    if floor:
+        notes.append("package:python_requires names the key its manifest declares")
+    return document, "; ".join(notes)
+
+
 def current_surface(document: FactsDocument, ecosystem: str, source: SourceSnapshot) -> tuple[FactsDocument, str | None]:
     """``shipped_facts``, then the class facts' ``member_counts`` read from the pinned sources where
     the sealed facts predate them (BL-098: the extractor now records each Python class's own public
     methods, properties and annotated fields; a sealed "Class with 11 properties." cell is held to
-    them). Pure, zero calls; adds an attribute, never a fact; ``None``: nothing changed."""
+    them). Pure, zero calls; adds an attribute, never a fact; ``None``: nothing changed.
+
+    Also (P3/P5, 2026-11-14) the fact derivations of ``corrected_facts`` and, for a plugin with
+    ``current_type_facts`` (.NET), the sealed type facts today's visibility rules no longer find
+    public, re-read from the pinned sources (only removes). Memoised per snapshot: a bundle's
+    facts are re-derived several times in one re-run."""
+    key = (_sha256(document.to_json().encode("utf-8")), ecosystem, id(source))
+    cached = _SURFACE_CACHE.get(key)
+    if cached is not None and cached[0] is source:
+        return cached[1], cached[2]
+    result = _current_surface(document, ecosystem, source)
+    _SURFACE_CACHE.clear()
+    _SURFACE_CACHE[key] = (source, *result)
+    return result
+
+
+_SURFACE_CACHE: dict[tuple[Any, ...], tuple[Any, FactsDocument, str | None]] = {}
+
+
+def _current_surface(document: FactsDocument, ecosystem: str, source: SourceSnapshot) -> tuple[FactsDocument, str | None]:
     narrowed, clause = shipped_facts(document, ecosystem, source)
+    narrowed, corrected = corrected_facts(narrowed)
+    if corrected:
+        clause = "; ".join(filter(None, [clause, corrected]))
     if not source.sources:
         return narrowed, clause
     from repo_presenter.extractors.platforms.registry import plugin_for
@@ -328,6 +379,13 @@ def current_surface(document: FactsDocument, ecosystem: str, source: SourceSnaps
         plugin = plugin_for(ecosystem)
     except Exception:  # noqa: BLE001
         return narrowed, clause
+    typed = getattr(plugin, "current_type_facts", None)
+    if typed is not None:
+        narrowed, gone = typed(narrowed, source.sources)
+        if gone:
+            clause = "; ".join(
+                filter(None, [clause, f"not public under today's rules: {', '.join(gone)}"])
+            )
     counted = getattr(plugin, "member_count_facts", None)
     if counted is None:
         return narrowed, clause
@@ -388,6 +446,51 @@ def _model_accept(review):
     return True
 
 
+def current_dispositions(
+    dispositions: Mapping[str, Any], document: FactsDocument, plan: Mapping[str, Any]
+) -> dict[str, Any]:
+    """The sealed dispositions under the reconciliation folds current code applies at S4, with
+    zero calls (P2/P4, 2026-11-14): every seal older than a fold is judged as the fold would have
+    left it, never by its stale disposition.
+
+    * the three findings-register folds (BL-088: a kept unit that prints an OPEN register quote
+      cites the row and prints withheld; a refuted example block is omitted citing it; a
+      register-backed correction is kept as written), with the sealed ``plan`` so a Scope and
+      Limitations unit no planned limitation covers is withheld too;
+    * section fit (BL-004): a kept list of resource links filed under Scope and Limitations or Key
+      Capabilities is carried by Documentation and Resources (its links rendered from link
+      facts, ``current_plan``), and a license paragraph by the License section.
+
+    Pure: returns a new document, never edits ``dispositions``."""
+    import copy
+
+    from repo_presenter.readme.reconciliation import dispositions as folds
+
+    folded = copy.deepcopy(dict(dispositions))
+    folds._fold_register_corrections(folded, document)
+    folds._fold_register_kept_units(folded, document, plan=plan)
+    folds._fold_register_omitted_units(folded, document)
+    folds.fit_sealed_sections(folded, document)
+    return folded
+
+
+def current_plan(
+    plan: Mapping[str, Any], document: FactsDocument, dispositions: Mapping[str, Any]
+) -> dict[str, Any]:
+    """The sealed plan with the link backstop current planning applies (``planning.
+    missing_kept_list_links``): every link a resource-links list kept in Documentation and
+    Resources carries is one of that section's own link lines. Pure; zero calls."""
+    import copy
+
+    from repo_presenter.readme.composition.planning import missing_kept_list_links
+
+    updated = copy.deepcopy(dict(plan))
+    missing = missing_kept_list_links(updated, document, dict(dispositions))
+    if missing:
+        updated["links"] = [*updated.get("links", []), *missing]
+    return updated
+
+
 def _rerun_lane_r(
     bundle: Path, entry: Any, source: SourceSnapshot, *, restore: bool = False
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
@@ -399,8 +502,33 @@ def _rerun_lane_r(
     the restored ``dispositions.json`` and the list of restored units ride along in the artifacts.
     A restore that does not clear every blocking check still returns the checks it leaves failing:
     the verdict is the validators', never this loop's."""
-    dispositions = _load_json(bundle, "dispositions.json")
-    failing, details, artifacts = _evaluate_lane_r(bundle, entry, source, dispositions)
+    sealed_dispositions = _load_json(bundle, "dispositions.json")
+    sealed_plan = _load_json(bundle, "plan.json")
+    document = _bundle_facts(bundle, entry, source)
+    dispositions = current_dispositions(sealed_dispositions, document, sealed_plan)
+    plan = current_plan(sealed_plan, document, dispositions)
+    units_name = (
+        "content_units.coherent.json"
+        if (bundle / "content_units.coherent.json").is_file()
+        else "content_units.json"
+    )
+    sealed_units = _load_json(bundle, units_name)
+    current = current_units(sealed_units, document)
+    units_override: Mapping[str, Any] | None = current if current != sealed_units else None
+    failing, details, artifacts = _evaluate_lane_r(
+        bundle, entry, source, dispositions, units_override, plan_override=plan
+    )
+
+    def carry(artifacts: dict[str, bytes]) -> dict[str, bytes]:
+        if dispositions != sealed_dispositions:
+            artifacts["dispositions.json"] = _canonical_json(dispositions)
+        if plan != sealed_plan:
+            artifacts["plan.json"] = _canonical_json(plan)
+        if units_override is not None:
+            artifacts[units_name] = _canonical_json(units_override)
+        return artifacts
+
+    artifacts = carry(artifacts)
     if not restore or not failing:
         return failing, details, artifacts
     from repo_presenter.readme.reconciliation.destinations import holdable_sections
@@ -412,27 +540,21 @@ def _rerun_lane_r(
         vacated_sections,
     )
 
-    document = _bundle_facts(bundle, entry, source)
-    units_name = (
-        "content_units.coherent.json"
-        if (bundle / "content_units.coherent.json").is_file()
-        else "content_units.json"
-    )
-    units_override: Mapping[str, Any] | None = None
     owed = owed_citations(details)
     if owed:
         # BC-04: a superseded unit the section's authored units must cite. The substance is carried
         # (BC-05 does not name it), so the authored unit that restates it cites it; kept only when
         # the re-judged candidate no longer owes any of them.
-        cited_units, cited = cite_owed_units(_load_json(bundle, units_name), document, owed)
+        cited_units, cited = cite_owed_units(
+            dict(units_override) if units_override is not None else sealed_units, document, owed
+        )
         if cited:
             c_failing, c_details, c_artifacts = _evaluate_lane_r(
-                bundle, entry, source, dispositions, cited_units
+                bundle, entry, source, dispositions, cited_units, plan_override=plan
             )
             if len(owed_citations(c_details)) < len(owed):
                 units_override = cited_units
-                failing, details, artifacts = c_failing, c_details, c_artifacts
-                artifacts[units_name] = _canonical_json(cited_units)
+                failing, details, artifacts = c_failing, c_details, carry(c_artifacts)
                 artifacts["cited_units.json"] = _canonical_json({"cited": cited})
                 if not failing:
                     return failing, details, artifacts
@@ -453,16 +575,35 @@ def _rerun_lane_r(
         restored.extend(changes)
         failing, details, artifacts = _evaluate_lane_r(
             bundle, entry, source, dispositions, units_override,
-            restored_out=vacated_sections(restored),
+            restored_out=vacated_sections(restored), plan_override=plan,
         )
-        if units_override is not None:
-            artifacts[units_name] = _canonical_json(units_override)
+        artifacts = carry(artifacts)
         if not failing:
             break
     if restored:
         artifacts["dispositions.json"] = _canonical_json(dispositions)
         artifacts["restored_units.json"] = _canonical_json({"restored": restored})
     return failing, details, artifacts
+
+
+def current_units(units: Mapping[str, Any], document: FactsDocument) -> dict[str, Any]:
+    """The sealed content units without the Core API rows and member hubs of public types the
+    current facts no longer carry (P5, BL-065: a type ``current_type_facts`` finds not public).
+    The renderer prints no row for such a type; its authored unit would cite an unknown fact.
+    Pure, zero calls; only removes."""
+    known = {fact.id for fact in document.facts}
+    kept = [
+        unit
+        for unit in units.get("units", [])
+        if not (
+            isinstance(unit, Mapping)
+            and str(unit.get("slot", "")).startswith(("type:", "hub:"))
+            and str(unit.get("slot")).split(":", 1)[1] not in known
+        )
+    ]
+    if len(kept) == len(units.get("units", [])):
+        return dict(units)
+    return {**units, "units": kept}
 
 
 def _evaluate_lane_r(
@@ -473,6 +614,7 @@ def _evaluate_lane_r(
     units_override: Mapping[str, Any] | None = None,
     *,
     restored_out: Mapping[str, Any] | None = None,
+    plan_override: Mapping[str, Any] | None = None,
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
     from repo_presenter.readme.composition.authoring import authoring_tasks
     from repo_presenter.readme.composition.renderer import render_patch, render_readme
@@ -484,7 +626,7 @@ def _evaluate_lane_r(
     from repo_presenter.readme.validation.failures import Candidate
 
     document = _bundle_facts(bundle, entry, source)
-    plan = _load_json(bundle, "plan.json")
+    plan = dict(plan_override) if plan_override is not None else _load_json(bundle, "plan.json")
     units_name = (
         "content_units.coherent.json"
         if (bundle / "content_units.coherent.json").is_file()
@@ -740,7 +882,7 @@ def write_recertified(
     staged.pop(RECERTIFICATION_FILENAME, None)
     for name in (
         "README.md", "README.patch.diff", "corrections.json", "holdouts.json",
-        "dispositions.json", "restored_units.json", "cited_units.json",
+        "dispositions.json", "plan.json", "restored_units.json", "cited_units.json",
         "content_units.json", "content_units.coherent.json", "facts.json",
     ):
         if name in rec.artifacts:

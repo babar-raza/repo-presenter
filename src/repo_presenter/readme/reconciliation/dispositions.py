@@ -1235,6 +1235,16 @@ def _fit_resource_and_license_units(
         entry["rationale"] = (LICENSE_FIT_RATIONALE + reason)[:_RATIONALE_LIMIT].strip()
 
 
+def fit_sealed_sections(output: dict[str, Any], facts: FactsDocument) -> None:
+    """The section-fit folds of :func:`normalize` a sealed disposition document is held to by
+    zero-call re-certification (P4, 2026-11-14), in place: the resource-links list and license
+    paragraph fit (:func:`_fit_resource_and_license_units`, BL-004). Measured: 3D .NET, Cells C++
+    and Words .NET seals predate BL-004 and print docs.aspose.org/kb/reference links under Scope
+    and Limitations (BC-05 section fit)."""
+    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    _fit_resource_and_license_units(output, facts, units, coverage_context(facts))
+
+
 _PROSE_PRINTED_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
 _OTHER_EDITION = re.compile(r"\b([A-Z][A-Za-z]+) Edition\b")
 _INLINE_CODE = re.compile(r"`[^`\n]*`")
@@ -2048,7 +2058,9 @@ _KEPT_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_AT
 _REGISTER_KEPT_EXCLUDED = frozenset({"scope_limitations"})
 
 
-def _fold_register_kept_units(output: dict[str, Any], facts: FactsDocument) -> None:
+def _fold_register_kept_units(
+    output: dict[str, Any], facts: FactsDocument, plan: Mapping[str, Any] | None = None
+) -> None:
     """Every inherited unit kept as written whose text prints an OPEN findings-register quote cites
     that register row, in place, so the unit prints without exactly the false line, sentence, row
     or item (``must_correct.withheld_form``, applied by ``placement`` and honoured by BC-05, BC-17,
@@ -2068,7 +2080,12 @@ def _fold_register_kept_units(output: dict[str, Any], facts: FactsDocument) -> N
     112 register quotes they print come from inherited units kept as written; on hosted run
     43525324808 (HTML Python ``080.list``) the targeted repair returned the unit unchanged twice.
     The register row is the evidence (R36 (a)(2): omit the claim citing what contradicts it); the
-    rest of the maintainers' unit is kept (R14)."""
+    rest of the maintainers' unit is kept (R14).
+
+    ``plan`` (the zero-call re-certification of a sealed candidate, P2 2026-11-14, which has one):
+    a unit kept in Scope and Limitations is withheld too when no planned limitation covers it
+    (``_scope_unit_uncovered``), since then placement prints its remainder rather than dropping
+    it as overlap. Without a plan (S4, before planning) the exclusion stands."""
     from repo_presenter.readme.validation.must_correct import (
         omission_holds,
         open_finding_citations,
@@ -2084,30 +2101,57 @@ def _fold_register_kept_units(output: dict[str, Any], facts: FactsDocument) -> N
         # Scope and Limitations re-authors such claims from the facts (the authoring packet now
         # carries the register row, BL-087): a withheld kept list there is covered by the plan's
         # own limitations and dropped as overlap, so it is left to BC-18 and the repair.
-        and entry.get("destination_section") not in _REGISTER_KEPT_EXCLUDED
+        and (
+            entry.get("destination_section") not in _REGISTER_KEPT_EXCLUDED
+            or _scope_unit_uncovered(entry, plan)
+        )
     ]
     if not entries:
         return
     rows = open_finding_citations(facts.repository)
     if not rows:
         return
+    from repo_presenter.readme.validation.surface_claims import kept_unit_form
+
     units = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
     for entry in entries:
         unit_id = str(entry.get("unit_id", ""))
         text = units.get(unit_id, "")
+        # A register row quotes the README as printed: a kept paragraph prints the facts' type
+        # count, not the maintainers' stale one (``kept_unit_form``; Cells C++ ``041.paragraph``).
+        printed = kept_unit_form(unit_id, text, facts) if unit_id.endswith(".paragraph") else text
         squashed = " ".join(text.split())
+        printed_squashed = " ".join(printed.split())
         cited = [str(fid) for fid in entry.get("fact_ids") or []]
         ids = [
             cid
             for cid, row in rows.items()
-            if cid not in cited and " ".join(row.quote.split()) in squashed
+            if cid not in cited
+            and (
+                " ".join(row.quote.split()) in squashed
+                or " ".join(row.quote.split()) in printed_squashed
+            )
         ]
         if not ids:
             continue
         quotes = [rows[c].quote for c in (*ids, *(c for c in cited if c in rows))]
-        if not omission_holds(unit_id, text, quotes):
+        if not (omission_holds(unit_id, text, quotes) or omission_holds(unit_id, printed, quotes)):
             continue
         entry["fact_ids"] = [*cited, *ids]
+
+
+def _scope_unit_uncovered(entry: Mapping[str, Any], plan: Mapping[str, Any] | None) -> bool:
+    """Whether a unit kept in Scope and Limitations rests on nothing the plan's own limitations
+    cite, so placement prints it (withheld) instead of dropping it as overlap; ``False`` without a
+    plan."""
+    if plan is None or entry.get("destination_section") != "scope_limitations":
+        return False
+    from repo_presenter.readme.composition.placement import planned_fact_ids
+
+    planned = planned_fact_ids(dict(plan), "scope_limitations")
+    unit_id = str(entry.get("unit_id", ""))
+    cited = {str(fact_id) for fact_id in entry.get("fact_ids") or []}
+    return unit_id not in planned and not (cited & planned)
 
 
 #: Dispositions that already withhold a unit: the register fold leaves them alone.

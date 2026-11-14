@@ -180,8 +180,61 @@ def format_facts(
                 else None,
             )
         )
+    facts = demote_failed_receipt_formats(facts)
     facts.extend(_htm_alias_facts(facts, evidence))
     return facts
+
+
+#: An example receipt recorded on a format fact (``example <n>: <outcome>; <detail>``).
+_RECEIPT = re.compile(r"^example \d+: (?P<outcome>[A-Z_]+)(?:; (?P<detail>.*))?$", re.DOTALL)
+_STAGED_EXECUTED = re.compile(r"^staged as .+: EXECUTED$")
+#: A receipt that shows the direction itself failing: the example failed, or raised that the
+#: direction is not implemented or wrote the wrong type (3D Python ``format:output.obj``: "example
+#: 8: FAILED; TypeError", ObjExporter writing ``str`` into a ``wb`` stream).
+_REFUTING_DETAIL = re.compile(r"\b(?:NotImplemented(?:Error|Exception)?|TypeError)\b")
+
+
+def _refuted_by_own_receipt(fact: Fact) -> bool:
+    """Whether a format fact's own example receipt refutes it, with no executed one beside it."""
+    refuted = executed = False
+    for evidence in fact.evidence:
+        detail = evidence.detail or ""
+        if _STAGED_EXECUTED.match(detail):
+            executed = True
+            continue
+        match = _RECEIPT.match(detail)
+        if match is None:
+            continue
+        if match.group("outcome") == "EXECUTED":
+            executed = True
+        elif match.group("outcome") == "FAILED" or _REFUTING_DETAIL.search(
+            match.group("detail") or ""
+        ):
+            refuted = True
+    return refuted and not executed
+
+
+def demote_failed_receipt_formats(facts: Sequence[Fact]) -> list[Fact]:
+    """``facts`` with every SUPPORTED ``format:input.*``/``format:output.*`` fact whose own example
+    receipt is FAILED (or records NotImplemented / TypeError) and that no example executed made
+    UNRESOLVED (P3, 2026-11-14): a static declaration plus a registered importer/exporter do not
+    outweigh the measured run of that very direction. Measured: 3D Python ``format:output.obj``
+    (SUPPORTED by declaration and registration while example 8 failed with TypeError) under the
+    register row "It exports scenes to `.3mf`, `.dae`, `.glb`, `.gltf`, `.obj`, and `.stl`".
+    Pure; applied by ``format_facts`` and, zero-call, to sealed facts by re-certification."""
+    from dataclasses import replace
+
+    result: list[Fact] = []
+    for fact in facts:
+        if (
+            fact.kind == "format"
+            and fact.polarity == "SUPPORTED"
+            and fact.id.startswith(("format:input.", "format:output."))
+            and _refuted_by_own_receipt(fact)
+        ):
+            fact = replace(fact, polarity="UNRESOLVED", confidence=0.5)
+        result.append(fact)
+    return result
 
 
 #: An enum whose name says which way its members go (``SaveFormat`` members are formats the API

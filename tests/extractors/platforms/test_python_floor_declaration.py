@@ -107,11 +107,10 @@ def test_the_rendered_floor_no_longer_prints_the_register_quotes(
     floor = _floor(tmp_path, ["pyproject.toml"])
     context = _context(repository, floor)
     rendered = "\n".join([*_installation(context), *_dependencies(context)])
-    assert "The package declares `requires-python` as `>=3.10`." in rendered
-    assert (
-        '- Requires Python 3.10 or later (`requires-python=">=3.10"` in `pyproject.toml`).'
-        in rendered
-    )
+    # P3 (2026-11-14): the floor as aspose.org's published READMEs state it, no manifest key.
+    assert "Requires Python 3.10 or later." in rendered.splitlines()
+    assert "- Requires Python 3.10 or later." in rendered.splitlines()
+    assert "python_requires" not in rendered and "requires-python" not in rendered
     quotes = _open_quotes(repository)
     assert quotes, "the register rows this fix corrects are expected to be open"
     for quote in quotes:
@@ -119,7 +118,7 @@ def test_the_rendered_floor_no_longer_prints_the_register_quotes(
 
 
 def test_a_stored_floor_without_the_attribute_keeps_the_ecosystem_name() -> None:
-    """A fact sealed before the attribute existed re-renders to its own bytes."""
+    """A fact sealed before the attribute existed still renders (P3: in aspose.org's words)."""
     stored = Fact(
         "package:python_requires",
         "package",
@@ -127,4 +126,5 @@ def test_a_stored_floor_without_the_attribute_keeps_the_ecosystem_name() -> None
         (Evidence("setup.py", "python_requires declared"),),
     )
     lines = _installation(_context(REGISTER_REPOSITORIES[0], stored))
-    assert "The package declares `python_requires` as `>=3.9`." in lines
+    # P3: the Installation sentence names no key at all; the setup.py floor bullet keeps its own.
+    assert "Requires Python 3.9 or later." in lines

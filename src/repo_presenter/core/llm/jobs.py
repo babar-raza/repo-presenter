@@ -231,9 +231,11 @@ class CallStore:
         attempt: int,
         job: str,
         changes: Sequence[Mapping[str, Any]],
+        *,
+        notes: Sequence[Mapping[str, Any]] | None = None,
     ) -> Path:
         """Keep, beside the store, what a job's last-resort ``recover`` changed in the reply it
-        accepted."""
+        accepted, and the ``notes`` it left for the record (each API-row fallback, R43(4))."""
         self.directory.mkdir(parents=True, exist_ok=True)
         path = self.directory / f"{request_sha256[:12]}.repaired-{attempt}.json"
         payload = {
@@ -244,6 +246,8 @@ class CallStore:
             "request_sha256": request_sha256,
             "changes": [dict(change) for change in changes],
         }
+        if notes:
+            payload["notes"] = [dict(note) for note in notes]
         text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
         path.write_bytes(text.encode("utf-8"))
         return path
@@ -765,13 +769,17 @@ def run_job(
                     corrected = recover(raw) if isinstance(raw, dict) else None
                     if corrected is None:
                         continue
+                    # What a recovery wants on the record beside its changes (the API-row
+                    # fallback, R43(4)): never part of the reply judged or stored.
+                    notes = corrected.pop(RECOVERY_NOTES_KEY, None)
                     fixed, fixed_rejection = _parse(
                         manifest, json.dumps(corrected), facts, checks, None
                     )
                     if fixed is not None:
                         store.put(request_sha256, job, reply.model, fixed)
                         store.record_repairs(
-                            request_sha256, ask, job, repair_changes(before, corrected)
+                            request_sha256, ask, job, repair_changes(before, corrected),
+                            notes=notes if isinstance(notes, list) else None,
                         )
                         return JobResult(
                             job,
@@ -818,6 +826,11 @@ def _narrowing(
         merge=lambda merged, narrowed, units: _add_narrowed_units(narrowed, merged, units),
     )
 
+
+#: The key a ``recover`` may leave on its corrected reply for the repair record only
+#: (``readme.composition.authoring_retry.RECOVERY_NOTES_KEY``; duplicated, not imported, so this
+#: module stays free of the README stages).
+RECOVERY_NOTES_KEY = "_recovery_notes"
 
 _CHANGE_VALUE_LIMIT = 2000  # characters of a replaced value kept in a repair record
 
