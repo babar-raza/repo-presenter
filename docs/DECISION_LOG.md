@@ -6175,3 +6175,126 @@ fixes, each with a regression test from the real logged or sealed data and negat
 | License sentences in Scope | No: our authored text. | The published READMEs state the license only in the License section and its badge. | Adopted: the packet rule plus the clause strip. |
 
 Backlog: BL-083, BL-087, BL-088, BL-089
+
+## 2026-11-14: BL-065 (Python package list), BL-070 (enterprise_edition_naming v4) and K05/K10 by provenance (BL-013)
+
+**Why.** After the corrected auditor (B') the zero-call replay of round 43559491132 stood at recall 19/19 = 1.000 and
+false-flag 5/22 = 0.227. Two of the five flagged controls carried defects the pipeline itself wrote (Words Python
+ab8a03: "198 public types", "Aspose.Words — Enterprise Edition"; Cells C++ 802069: the duplicated name on line
+561); the other three were model flags on true lines of the K05/K10 known-false classes. Each class was fixed at the
+producer and globally (R41); the auditor was not loosened: K05/K10 lines now clear only when their provenance
+verifies them.
+
+**Fixes (existing components only).**
+- **BL-065, Python variant: the public surface honours the build's package list.**
+  - `extractors/platforms/python.py` `shipped_path_filter` reads the package list from the root manifest. It covers
+    hatch wheel/build `packages`, the setuptools list, setuptools `find` (`where`/`include`/`exclude`/`namespaces`),
+    poetry `packages`, setup.cfg `options.packages` and a literal `setup.py` `packages=find_packages(...)`.
+  - It only narrows tree discovery. It fails open when the manifest declares nothing, or names nothing in the tree.
+  - `surface_facts` and the `import_path` facts honour it.
+  - `recertify.shipped_facts` applies the same predicate to every sealed facts document, from the pinned revision's
+    manifests (`fetch_source` now reads them). The Lane L `stale_type_count`/`listed_type_count`, rule (h), the
+    Lane R renderer counts and the M9 auditor's re-derivation therefore all count the shipped surface.
+  - A narrowed `facts.json` rides along in the re-certified seal, with `dependencies.facts` recomputed. It is
+    written even under the current version set. The original seal stays in the ref history (R10).
+  - Words Python at 2d2efee2: `pyproject.toml:66-67` `[tool.hatch.build.targets.wheel] packages = ["aspose"]`. The
+    count goes 198 → 189 (the 9 `ApiExamples/` classes are dropped).
+  - The class across the portfolio (every seal revision, every ecosystem):
+    - Type facts outside a product root exist only in Words Python and PSD Python. PSD Python has 13 test classes
+      under `src/aspose_psd_foss_test/`, no build manifest to honour, and no seal of it states a count.
+    - .NET, Java, C++, Go, Rust and TypeScript facts hold no test, sample or example types.
+    - The other seven Python builds keep every type.
+- **BL-070: `enterprise_edition_naming` v4.**
+  - (a) A "commercial …" phrase directly after a link that already names the product is that link's appositive. It
+    is left as published: no edit and no finding.
+  - (b) A name without its platform, at a platform-level target, takes the README's own full Enterprise Edition name.
+    Failing that it takes the prose's platform-qualified name, then the H1 name (with " FOSS" or ".FOSS" removed).
+    With none of these it is reported, never guessed.
+- **K05/K10 by provenance (`scripts/run_m9_auditor.py` `class_provenance`).**
+  - A K05 line clears only when every count on it is the shipped-package facts' computation (types, classes or
+    enums). Two kinds of count are also held to the type-table rows that follow the line: an "N of them listed"
+    count, and any total said to be listed, organized or summarized below.
+  - A K10 line clears only when every "<name> — Enterprise Edition" on it meets all of these:
+    - it is the H1 name at the SUPPORTED target's level;
+    - a link carrying it points at that target's URL;
+    - it does not come right after a link that already names it.
+  - Register rows and the claim detectors still refute first. The verified computation is written into the cleared
+    row (`provenance`).
+  - The audit packet's `computed_counts` now also carries the enums and the counted facts by source root.
+
+**R42 (aspose.org's published READMEs are the reference).**
+
+| Case | Upstream-caused? | What aspose.org did | Decision and change |
+|---|---|---|---|
+| Cells C++, line 566-567 | No: our engine broke the sentence. | Its published README (PR #2, merge 9f852d0) reads "[Aspose.Cells for C++ — Enterprise Edition](…), the commercial product line …". | Adopted: an appositive after a naming link is never edited (v4 a). |
+| Words Python, line 625 | Partly: the live text is aspose.org's own. | Its published README (PR #2, merge 2d2efee) keeps "the commercial Aspose.Words" there, against its own anchor contract (`skills/readme-refresh.md`: platform → "Aspose.{Family} for {public_platform} — Enterprise Edition"). The same README names the Enterprise Edition "Aspose.Words for Python — Enterprise Edition" at line 630. | Improved on: we apply the anchor contract with the README's own full name (v4 b). |
+| 3D Java, e43a75 line 633 | No. | Its published README names "Aspose.3D for Java — Enterprise Edition". | Adopted as the verification form for K10. |
+
+**O6 / checklist 13 (report-only first).** No pipeline check changed; the producer changes and the auditor rule were
+measured first:
+- `enterprise_edition_naming`, v3 against v4, over the 74 distinct live READMEs of every seal:
+  - edits went from 35 to 34, in 8 READMEs, and no finding was added;
+  - every change is one of the two shapes above.
+- `class_provenance` over every latest seal and live README (`measure_m9_derivation.py classes`):
+  - Seal K05: 45 of 57 lines verified. Six of them are refuted by register rows: Words .NET "618" ×5 (stale C#
+    facts) and Cells TypeScript "31".
+  - Seal K10: 46 of 60 lines verified. One is refuted, by the Words .NET register row.
+  - Every verified line that is false is caught by the register first, so the combined rule clears none of them.
+  - Taken alone, the provenance rule is wrong 13% of the time on K05 and 2% on K10. That is why it never runs before
+    the register.
+
+**Measured, zero calls.**
+
+Zero-call replay of round 43559491132's frozen findings (`measure_m9_derivation.py replay`): 45 of 45 cases were
+rebuilt from the seals the seeder read, and the seeds were re-applied by their operators.
+
+| Step | Recall | False-flag | Flagged controls |
+|---|---|---|---|
+| Corrected auditor (B'), this round's baseline | 19/19 = 1.000 | 5/22 = 0.227 | 802069, 8aecb5, ab8a03, e43a75, e48a84 |
+| + BL-065 | 19/19 | 5/22 = 0.227 | the same; ab8a03's "198" lines are now CONFIRMED by rule (h) |
+| + BL-070 | 19/19 | 7/22 = 0.318 | + PSD .NET 5584e7 and Cells .NET 63b47d: their seals still carry v3 names, which current code no longer writes |
+| + K05/K10 provenance | 19/19 | 5/22 = 0.227 | e43a75, e48a84 and 802069:266 cleared with their computation; each of the five left has a defect in its frozen text |
+| Projected: the controls re-certified under this branch, frozen flags kept | 19/19 | 3/22 = 0.136 | see below |
+
+The three projected flags:
+- 8aecb5: "385 public types are organized by module below" sits over 284 rows. This is a genuine defect (BL-093).
+- ab8a03: maintainer rows 401 and 402. Row 402 is the pre-existing false "Style | Class with 11 properties".
+- 802069: a frozen flag on the broken sentence, which the re-certified seal no longer prints.
+
+Excluding the two controls with a genuine defect gives 1/20 = 0.050.
+
+`recertify --all --remote origin` (read-only), supervisor-branch code against this branch:
+- Lane L stays 28/28 and Lane R stays 6/18.
+- No seal changes outcome. Four Lane L seals re-certify with a changed README:
+  - Words Python a500a1b3: lines 337 and 614 now say 189, and line 632 names Aspose.Words for Python. Its facts are
+    narrowed.
+  - Cells C++ 77c525e0: line 561 is back to the published appositive.
+  - PSD .NET f8a54f99: lines 5, 21, 112 and 116 now name Aspose.PSD for .NET.
+  - Cells .NET ee8bd2b5: line 136 now names Aspose.Cells for .NET.
+- PDF Python 3d91633f's facts are narrowed (the `fuzz/` modules); its README is unchanged.
+
+`recertify --gate --base-baseline <origin/main baseline>`:
+- OK: 46 seals checked and no regression.
+- There is no newly failing seal, so no justification is needed.
+- 34 latest seals that re-certify were missing from the baseline (written by hosted re-certification since). They are
+  added with `--write-baseline`:
+  - 33 cells move to their current seal commit, and 1 cell is new (Cells Go Lane L).
+  - Six cells go from NEEDS_REPAIR to RECERTIFIED: 3D .NET L, and Cells Java, Cells Rust, Email .NET, Email Python and
+    Imaging .NET R. These are hosted seals made since; they re-certify under the supervisor-branch code as well.
+  - Every NEEDS_REPAIR row keeps its justification.
+  - The gate is OK against the updated baseline.
+
+**Receipts.** One receipt went STALE during this work: TC-024. The cause was a test added to `tests/test_recertify.py`,
+which is one of that card's checker files; TC-011, TC-019b, TC-019c and TC-028a, which depend on TC-024, were blocked
+with it. The test moved to `tests/test_recertify_shipped_facts.py`, and no scope check was bypassed.
+
+The baseline rewrite raises the registration test's derived clean-twin floor from 78 to 85, so
+`tests/acceptance/test_registration.py` changed, in its own commit tagged TC-022a. That makes **TC-022a STALE**
+(the file is one of its checker files), and TC-007, TC-009b, TC-011, TC-012b, TC-022b, TC-023 and TC-023b are blocked
+behind it. It needs the supervisor's `gatecli.py review`/`verify` of TC-022a and a regenerated dashboard, as the
+78-floor bump got on 2026-11-13 (97da322). A worker never re-verifies its own card.
+
+**Not done here (R41).** The hosted `recertify --write` on main writes the re-certified seals, and the next hosted
+round audits them.
+
+Backlog: BL-013, BL-065, BL-070, BL-093
