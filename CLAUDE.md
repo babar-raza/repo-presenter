@@ -12,7 +12,7 @@ Non-negotiable summary (details in `docs/RULINGS.md`):
 - **No upstream push** before every candidate of both lanes passes; draft PRs only, allowlist (R15, R3, R22).
 - **Decide, don't ask** the owner; report results first; when stuck, change approach (R11, R12).
 - **Feedback is global** (R41): a fix applies to both lanes and every candidate; done only after every candidate is re-verified under the fixed code, with evidence.
-- **Upstream-caused blockers** (R42): consult the README candidate aspose.org's readme-refresh published at the live URL, learn how it solved the problem, and implement the same approach in the pipeline.
+- **Upstream-caused blockers** (R42): aspose.org's published readme-refresh candidates are the quick reference — adopt their approach for quick fixes, beat it where we can, decide case by case where it is wrong; always implemented in the pipeline globally.
 - **Backlog** (R40, `project/backlog.yaml`): every requirement, defect and feedback is an item with source, acceptance and evidence; never closed without proof.
 - **Pipeline-first** (R38, `docs/R38_PIPELINE_FIRST.md`): execute only through the governed, reproducible pipeline; first principles + Pareto; done = reproducible + verified + evidenced. Re-check `docs/R38_CHECKPOINT.md` from time to time.
 - **The system runs itself on GitHub Actions** (R37): never do by hand what the hosted loop should do; the session oversees and fixes.
