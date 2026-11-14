@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 68277adca33b: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-06; nothing sealed",
+    "classification": "transient",
+    "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.annotations.lineintent: identifiers that are not accepted fact values: LineArrow, LineDimension; unit type:public_symbol:aspose.pdf.annotations.polyintent: identifiers that are not accepted fact values: PolyLineDimension, PolygonCloud, PolygonDimension; unit type:public_symbol:aspose.pdf.annotations.printermarkcornerposition: identifiers that are not accepted fact values: BottomLeft, BottomRight, TopLeft, TopRight; unit type:public_symbol:aspose.pdf.annotations.stampicon: identifiers that are not accepted fact values: NotApproved, NotForPublicRelease",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-11T13:30:02.318473+00:00",
+    "occurred_at": "2026-11-14T08:10:28.019265+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 47,
+  "state_version": 48,
   "recent_trigger_dedup_keys": {
     "run:41149996795:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "27084422c2ed489697485041c13baa1e",
     "run:41154207665:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "7c7bda772f6d48339400dbdbc08191d7",
