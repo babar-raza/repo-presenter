@@ -55,7 +55,6 @@ LABELS = [
     "key_capabilities",
     "quick_start",
     "api_reference",
-    "scope_limitations",
 ]
 
 
@@ -808,7 +807,9 @@ def test_a_failure_routed_to_any_of_s4_s5_s6_reaches_the_settle_repair(
 # (always None, by this shell's own design) -- not an LLM-owned section ``validation_defects`` can
 # route to, regardless of this fix. scope_limitations has a real heading, exactly like the real
 # hosted finding's own section ('development_testing').
-_SCOPE_SLOT_INDEX = 4
+# R43(2): Scope and Limitations is no longer authored; api_reference (the last authored section,
+# with a real "## " heading) carries the same BC-12 shape in its intro unit.
+_SCOPE_SLOT_INDEX = 3
 _BC12_TEXT = "Aspose.Widget FOSS for Py avoids any native build dependency for the reader."
 _BC12_FIXED_TEXT = "The library avoids any native build dependency for the reader."
 _BC12_STILL_WRONG_TEXT = "Aspose.Widget FOSS for Py requires no native build dependency at all."
@@ -821,15 +822,15 @@ def _scope_reply_with_text(text: str) -> dict[str, Any]:
 
 
 def _replies_with_scope_text(text: str) -> list[dict[str, Any]]:
-    """The fixture's 9 replies, with the scope_limitations unit's text replaced and the coherence
+    """The fixture's 8 replies, with the carrier unit's text replaced and the coherence
     batch's own echo rebuilt from that same text -- the violation must survive coherence
     unchanged, or it would never reach BC-12 at all."""
     replies = _first_replies()
     scope = _scope_reply_with_text(text)
     replies[3 + _SCOPE_SLOT_INDEX] = scope
-    authoring = [*replies[3:7], scope]
+    authoring = [*replies[3 : 3 + _SCOPE_SLOT_INDEX], scope]
     merged = merge_units(dict(zip(LABELS, authoring, strict=True)))
-    replies[8] = {"units": merged["units"], "omitted": []}
+    replies[7] = {"units": merged["units"], "omitted": []}
     return replies
 
 

@@ -95,21 +95,10 @@ def test_run_cascade_authors_a_readme_from_facts_when_the_repository_has_none(
     _write_registry(registry_path, entry)
     out_dir = tmp_path / "out"
 
-    # No inherited unit exists, so the investigation's limitation is authored from facts only
-    # (the fixture's original reply cites the README's limitation paragraph instead).
-    text = _AUTHORING_REPLIES[4]["units"][0]["text"]
-    authoring = [
-        *_AUTHORING_REPLIES[:4],
-        {
-            "units": [
-                {"section": "scope_limitations", "slot": slot, "text": text,
-                 "fact_ids": ["package:name"]}
-                for slot in ("scope", "limitation:1")
-            ],
-            "omitted": [],
-        },
-    ]
-    labels = ["opening", "key_capabilities", "quick_start", "api_reference", "scope_limitations"]
+    # No inherited unit exists; Scope and Limitations is rendered from the facts (R43(2)), so the
+    # four authored sections are the whole authoring phase.
+    authoring = [*_AUTHORING_REPLIES[:4]]
+    labels = ["opening", "key_capabilities", "quick_start", "api_reference"]
     merged = merge_units(dict(zip(labels, authoring)))
     replies = [
         _completion(_INVESTIGATION_REPLY),
@@ -126,7 +115,7 @@ def test_run_cascade_authors_a_readme_from_facts_when_the_repository_has_none(
     )
 
     # Zero reconciliation calls: investigation, planning, five authoring tasks, one coherence.
-    assert result.provider_calls == 8
+    assert result.provider_calls == 7
     assert not client.chat.completions.replies
     assert not read_facts(facts_path).by_kind("inherited_unit")
     readme = (out_dir / "README.coherent.md").read_text(encoding="utf-8")

@@ -465,20 +465,11 @@ def test_bc04_admits_an_identifier_a_units_own_cited_inherited_fact_spells(
             tasks,
         )
 
-    cited = _make(True)
-    assert (
-        "`CSSRule.css_text`" in cited.readme
-    )  # the renderer wrapped it too (item 69, renderer)
-    document = validate_candidate(cited, tmp_path, ())
-    assert "BC-04" not in {f["id"] for f in blocking_failures(document)}
-
-    # Mutation: the identical text, on a unit that does not cite the fact, still fails - the
-    # admission is scoped to citation, never a blanket allowance for any inherited_unit content
-    # (item 44's own docstring already rejected that as licensing an unrelated capability claim).
-    uncited = _make(False)
-    assert "`CSSRule.css_text`" not in uncited.readme
-    document = validate_candidate(uncited, tmp_path, ())
-    assert "BC-04" in {f["id"] for f in blocking_failures(document)}
+    # R43(2) (BL-102): Scope and Limitations is never authored, so neither a sealed scope unit's
+    # text nor its citation reaches the README; BC-04 judges no such line, cited or not.
+    for cite in (True, False):
+        candidate = _make(cite)
+        assert "CSSRule" not in candidate.readme
 
 
 def test_bc04_never_extends_the_cited_inherited_pass_to_key_capabilities(
@@ -1082,8 +1073,17 @@ def test_a_broken_external_link_fact_still_fails_bc06_on_its_verdict_alone(
         for fact in BASE_FACTS
     )
     facts = FactsDocument(ENTRY.repository, REVISION, broken)
-    placed = _candidate(facts=facts)
-    assert "https://docs.example.com/3d" in placed.readme
+    rendered = _candidate(facts=facts)
+    # R43(2) (BL-102): Documentation and Resources prints only a SUPPORTED link target, so the
+    # renderer no longer prints it; BC-06 still fails a README that does (the check is unchanged).
+    assert "https://docs.example.com/3d" not in rendered.readme
+    import dataclasses
+
+    placed = dataclasses.replace(
+        rendered,
+        readme=rendered.readme.rstrip("\n")
+        + "\n\n- **[Docs](https://docs.example.com/3d)** — Product documentation.\n",
+    )
     failed = _failed(validate_candidate(placed, tmp_path, ()), "BC-06")
     assert any(
         "https://docs.example.com/3d is CONTRADICTED: MISSING" in str(failure)
@@ -3728,8 +3728,9 @@ def test_bc04_does_not_fire_on_an_identifier_inside_preserve_attributed_content(
     authored = dataclasses.replace(
         candidate,
         readme=candidate.readme.replace(
-            "The package writes GLB only.",
-            "The package writes GLB only through `SceneGraphOptimizer`.",
+            # R43(2): Scope is no longer authored; the authored opening carries the shape.
+            "builds scenes with `Scene`.",
+            "builds scenes with `Scene` through `SceneGraphOptimizer`.",
         ),
     )
     assert "through `SceneGraphOptimizer`" in authored.readme

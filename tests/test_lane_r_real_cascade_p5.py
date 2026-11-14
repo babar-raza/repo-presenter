@@ -49,9 +49,10 @@ from tests.test_lane_l_hosted import (
     fresh_invocation,
 )
 
-#: Measured: nine pipeline stages (investigation, reconciliation, planning, five authoring tasks,
-#: one coherence batch) plus the one independent-review request of a sealable candidate.
-PIPELINE_STAGE_REQUESTS = 9
+#: Measured: eight pipeline stages (investigation, reconciliation, planning, four authoring tasks --
+#: Scope and Limitations is rendered, R43(2) --, one coherence batch) plus the one independent-review
+#: request of a sealable candidate.
+PIPELINE_STAGE_REQUESTS = 8
 COLD_RUN_REQUESTS = PIPELINE_STAGE_REQUESTS + 1
 
 #: The live README, with the three headings the candidate keeps so ``live_readme_loss`` is silent.
@@ -213,7 +214,7 @@ def test_cold_run_executes_the_real_pipeline_and_seals_a_candidate(world: RealWo
 
     assert error is None, error
     assert runs == 1
-    assert requests == COLD_RUN_REQUESTS == 10  # 9 pipeline stages + 1 independent review
+    assert requests == COLD_RUN_REQUESTS == 9  # 8 pipeline stages + 1 independent review
     _record("cold_run", requests)
     assert world.state() == "ACCEPTED"
     # Every one of those requests is in the one ledger under the one invocation.

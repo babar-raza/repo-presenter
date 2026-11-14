@@ -173,7 +173,7 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
         failures.extend(
             Failure("COMPOSING", f"{task.section_id}: {error}", task.section_id)
             # BC-18 judges the printed README against the findings register (BL-087).
-            for error in unit_checks(partial, task, facts, name, register=False)
+            for error in unit_checks(partial, task, facts, name, register=False, values=False)
         )
     allowed = allowed_identifiers(facts, name)
     # The same per-unit citation scoping unit_checks applies, restricted to scope_limitations

@@ -305,6 +305,9 @@ def test_lane_rs_dependencies_document_keeps_exactly_its_keys(tmp_path: Path) ->
         "facts",
         "prompts",
         "components",
+        # R43(3) (owner, 2026-11-14): the one sanctioned addition -- which Lane R policy ran
+        # (inherit_and_correct / regenerate), a per-repository input outside the version set.
+        "lane_r_policy",
     }
     assert set(document["source"]) == {"revision"}
     assert set(document["components"]) == {
@@ -312,6 +315,7 @@ def test_lane_rs_dependencies_document_keeps_exactly_its_keys(tmp_path: Path) ->
         "renderer",
         "normalisation",
         "reviewer_logic",
+        "lane_r_policy",
     }
 
 

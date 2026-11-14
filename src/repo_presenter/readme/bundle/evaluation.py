@@ -95,6 +95,12 @@ def evaluate(sealed: dict[str, Any], current: dict[str, Any]) -> Evaluation:
     changes: list[Change] = []
     if _differs(sealed.get("source"), current.get("source")):
         changes.append(_change("source", "revision or tree fingerprint changed"))
+    if current.get("lane_r_policy") is not None or sealed.get("lane_r_policy") is not None:
+        # R43(3): a Lane R seal made before the switch existed ran the regenerate engine.
+        before = (sealed.get("lane_r_policy") or {}).get("name", "regenerate")
+        after = (current.get("lane_r_policy") or {}).get("name", "regenerate")
+        if before != after:
+            changes.append(_change("lane_r_policy", f"{before} -> {after}"))
     # G5-W02 (27.2 RC7): what answered extraction, not what the repository claims, so a fact
     # already SUPPORTED under one Python version or extractor build is never trusted unchanged
     # under a different one - each differing sub-field is its own change, reopening EXTRACTING

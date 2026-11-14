@@ -724,36 +724,6 @@ def _missing_kept_list_links(
 missing_kept_list_links = _missing_kept_list_links
 
 
-def _hand_off_dropped_lists(
-    output: dict[str, Any],
-    facts: FactsDocument,
-    dispositions: dict[str, Any] | None,
-    ecosystem: str,
-) -> None:
-    """Hand every list kept as written that placement drops from Scope and Limitations to the
-    limitation slots, so the section's authored units can state its items."""
-    if dispositions is None:
-        return
-    limitations = output.get("material_limitations") or []
-    handed = {str(unit) for item in limitations for unit in item.get("unit_ids") or []}
-    dropped = [
-        decision.unit_id
-        for decision in placements(output, dispositions, facts, ecosystem)
-        if decision.destination == "scope_limitations"
-        and decision.outcome == "overlap"
-        and decision.unit_id.endswith(".list")
-        and decision.unit_id not in handed
-        and len(list_items(decision.text)) >= 2
-    ]
-    if not dropped:
-        return
-    if not limitations:
-        limitations = [{"fact_ids": [], "unit_ids": []}]
-        output["material_limitations"] = limitations
-    for item in limitations:
-        item["unit_ids"] = [*dict.fromkeys([*(item.get("unit_ids") or []), *dropped])]
-
-
 def _drop_license_limitations(output: dict[str, Any], facts: FactsDocument) -> None:
     """Section fit (BL-004): the project's license is what the License section prints from the
     ``license`` facts, never a limitation. A ``material_limitations`` slot cites no ``license``
@@ -908,7 +878,10 @@ def plan_checks(
     output["sections"] = [_decision(section, conditions[section.id]) for section in SEMANTIC_SHELL]
     decisions = {entry["section_id"]: entry for entry in output["sections"]}
     included = {section for section, entry in decisions.items() if entry["include"]}
-    _hand_off_dropped_lists(output, facts, dispositions, ecosystem)
+    # R43(2) (BL-102): Scope and Limitations has no authored slot, so the plan names no material
+    # limitation; the section prints the maintainers' kept limitations and the implementation
+    # facts (renderer.scope_fact_bullets), and nothing is handed to a slot that no longer exists.
+    output["material_limitations"] = []
     preserved_hrefs: list[str] = []
     if dispositions is not None:
         by_unit_id = {

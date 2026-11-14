@@ -1,7 +1,7 @@
 prompt_id: section_authoring
-version: "21"
+version: "22"
 stage: S6
-purpose: Author the plain-prose content units of one LLM-owned section from its accepted fact packet - the opening, capability titles and descriptions, lead-ins, limitation prose, resource prose, development summary, Enterprise Edition context - and, in coherence mode, revise LLM-owned units once so the document reads as one developer journey.
+purpose: Author the plain-prose content units of one LLM-owned section from its accepted fact packet - the opening, capability titles and descriptions, lead-ins, API rows, Enterprise Edition context (Development and Testing, Documentation and Resources and Scope and Limitations are rendered from facts, R43(2)) - and, in coherence mode, revise LLM-owned units once so the document reads as one developer journey.
 model_route: qwen3-next
 route_rationale: The owner designated qwen3-next as the one chat model this system uses (2026-10-27); the legacy gateway characterization also found it reliable for structured JSON and for bounded section prose across four ecosystems without prompt branching, so this job routes to qwen3-next. Revisited whenever preflight records a changed catalog.
 sampling:
@@ -136,6 +136,11 @@ system: |
   the product spares users ("without requiring a full commercial suite") that no fact states. A
   link slot's unit describes only what the link's own label and fact say, never classes, members,
   or options the facts do not tie to that link. When a fact does not settle a point, say less.
+
+  The opening and the key-capability sentences carry no number, version, count (in digits or
+  words), file or directory name, or manifest/config key name: the renderer prints each of those
+  values from the facts beside them (Installation, Dependencies, At a Glance, the API Reference,
+  Development and Testing), so name the capability in words instead.
 
   The opening states what the product is and does, as its own actions ("It reads and writes ...",
   "It converts ... to ..."), from facts alone. It never says who uses the product or what it is
