@@ -348,7 +348,7 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `Body` | Class with 2 properties. |
 | `BookmarkEnd` | Class with 2 properties. |
 | `BookmarkStart` | Marks the beginning of a Word bookmark (`<w:bookmarkStart>`). |
-| `Border` | Class with 3 properties. |
+| `Border` | Class with 6 properties. |
 | `Cell` | Class with 4 properties. |
 | `CellFormat` | Class with 14 properties. |
 | `ColorMode` | Color rendering mode. |
@@ -361,7 +361,7 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `FieldEnd` | Class with 3 properties. |
 | `FieldSeparator` | Class with 2 properties. |
 | `FieldStart` | Class with 2 properties. |
-| `Font` | Class with 23 properties. |
+| `Font` | Class with 32 properties. |
 | `FrameFormat` | Floating text-frame definition. |
 | `HeaderFooter` | Class with 5 properties. |
 | `ImageData` | Class with 7 properties. |
@@ -391,15 +391,15 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `PdfSaveOptions` | Options for saving documents as PDF. |
 | `PdfTextCompression` | Text compression in PDF. |
 | `PdfZoomBehavior` | Mirrors public API. |
-| `Row` | Class with 3 properties. |
-| `RowFormat` | Class with 7 properties. |
+| `Row` | Class with 4 properties. |
+| `RowFormat` | Class with 6 properties. |
 | `RtfFileReader` | Reads RTF files (OLE2-format) and produces the same data structures as DocumentReader (for .docx) and DocFileReader (for .doc). |
 | `Run` | Class with 3 properties. |
 | `RunFormatting` | Text run formatting properties. |
 | `SaveFormat` | Document save format constants. |
 | `Section` | Class with 4 properties. |
 | `Shading` | Class with 2 properties. |
-| `Style` | Class with 11 properties. |
+| `Style` | Class with 15 properties. |
 | `TabStop` | Class with 4 properties. |
 | `TabStopCollection` | Class with 5 methods and 1 property. |
 | `Table` | Class with 11 properties. |

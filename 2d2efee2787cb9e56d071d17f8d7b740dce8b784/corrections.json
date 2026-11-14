@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 7,
+    "edits": 12,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "c728a6c3bb8e836b0b12c891a3e26298a60d69ebd27736f361008b88775747bb",
+  "corrected_sha256": "73820ff10c01ca5ef535e7170787afe03be98eb5b472ce6b5451548371d6ebe2",
   "edits": [
     {
       "detector": "enterprise_edition_naming",
@@ -106,6 +106,82 @@
       "start": 12033
     },
     {
+      "detector": "type_description",
+      "end": 12532,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.border",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Border"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 342,
+      "original": "Class with 3 properties.",
+      "rationale": "line 342: the count cell 'Class with 3 properties.' miscounts the own public members of Border (method=0,dunder=0,init=0,property=0,field=6,inherits=0); the true count replaces it",
+      "replacement": "Class with 6 properties.",
+      "start": 12508
+    },
+    {
+      "detector": "type_description",
+      "end": 13229,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.font",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Font"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 355,
+      "original": "Class with 23 properties.",
+      "rationale": "line 355: the count cell 'Class with 23 properties.' miscounts the own public members of Font (method=0,dunder=0,init=0,property=0,field=32,inherits=0); the true count replaces it",
+      "replacement": "Class with 32 properties.",
+      "start": 13204
+    },
+    {
+      "detector": "type_description",
+      "end": 15177,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.row",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Row"
+        }
+      ],
+      "index": 5,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 385,
+      "original": "Class with 3 properties.",
+      "rationale": "line 385: the count cell 'Class with 3 properties.' miscounts the own public members of Row (method=0,dunder=0,init=0,property=0,field=4,inherits=1); the true count replaces it",
+      "replacement": "Class with 4 properties.",
+      "start": 15153
+    },
+    {
+      "detector": "type_description",
+      "end": 15220,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.rowformat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.RowFormat"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 386,
+      "original": "Class with 7 properties.",
+      "rationale": "line 386: the count cell 'Class with 7 properties.' miscounts the own public members of RowFormat (method=0,dunder=0,init=0,property=0,field=6,inherits=0); the true count replaces it",
+      "replacement": "Class with 6 properties.",
+      "start": 15196
+    },
+    {
       "detector": "absent_type_row",
       "end": 15641,
       "evidence": [
@@ -158,13 +234,32 @@
           "value": "aspose.words_foss.converters.ListHandler.get_list_info"
         }
       ],
-      "index": 3,
+      "index": 7,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 393,
       "original": "| `ShapeNode` | Class with 25 properties. |\n",
       "rationale": "line 393 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
       "replacement": "",
       "start": 15597
+    },
+    {
+      "detector": "type_description",
+      "end": 15678,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.style",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Style"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 394,
+      "original": "Class with 11 properties.",
+      "rationale": "line 394: the count cell 'Class with 11 properties.' miscounts the own public members of Style (method=0,dunder=0,init=0,property=0,field=15,inherits=0); the true count replaces it",
+      "replacement": "Class with 15 properties.",
+      "start": 15653
     },
     {
       "detector": "absent_type_row",
@@ -219,7 +314,7 @@
           "value": "aspose.words_foss.converters.ListHandler.get_list_info"
         }
       ],
-      "index": 4,
+      "index": 9,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 463,
       "original": "| `ReaderContext` | Class extending Protocol. |\n",
@@ -280,7 +375,7 @@
           "value": "aspose.words_foss.converters.ListHandler.get_list_info"
         }
       ],
-      "index": 5,
+      "index": 10,
       "kind": "FALSE_CLAIM_FIX",
       "line": 607,
       "original": "146",
@@ -299,7 +394,7 @@
           "value": "https://products.aspose.com/words/python-net/"
         }
       ],
-      "index": 6,
+      "index": 11,
       "kind": "FALSE_CLAIM_FIX",
       "line": 625,
       "original": "the commercial Aspose.Words",
@@ -322,7 +417,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 4,
+    "FALSE_CLAIM_FIX": 9,
     "TABLE_ROW_REMOVAL": 2
   },
   "unapplied": [
