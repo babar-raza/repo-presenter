@@ -72,6 +72,7 @@ import sys
 import tempfile
 from collections.abc import Callable, Collection, Mapping, Sequence
 from pathlib import Path
+import re
 from typing import Any, NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -230,6 +231,145 @@ KNOWN_FALSE_DETECTORS: Mapping[str, str] = {
 #: The text every authored unit is replaced by in the facts-only Lane R render.
 _SENTINEL = "Authored unit {index} placeholder."
 
+# --- K05 / K10 by provenance (BL-013 round 2, after BL-065 and BL-070) -------------------------------
+#
+# The 2026-11-13 fact-check's K05 and K10 instances were each a defect of the producer, now fixed at the
+# root: counts over tree packages the build never ships (BL-065, ``recertify.shipped_facts``) or over
+# types public only under ``#if`` / nested in internal types (BL-065, C#: registered rows in
+# ``data/readme_findings.json`` until re-sealed), and an Enterprise Edition name that repeats the link
+# just before it or drops the platform (BL-070, ``enterprise_edition_naming`` v4). So a K05 / K10 line no
+# longer stays kept for its class alone: it stays kept unless its provenance VERIFIES it --
+#
+# * K05: every count the line states is the computation from the (shipped-package) facts: N "types" =
+#   SUPPORTED class + enum ``public_symbol`` facts, "classes" = the classes among them, "enums" = the
+#   enums; "N of them listed below" = the type-table rows that follow, to the next level-1/2 heading. A
+#   kind no fact counts ("interfaces") or any other number stays kept;
+# * K10: every "<name> — Enterprise Edition" on the line names the product as the README's own H1 does
+#   (" FOSS" removed; the family alone at a family-level target), the ``link_target:product.enterprise``
+#   fact is SUPPORTED, any link carrying it targets that fact's URL, and no bare name follows a link that
+#   already names it (the Cells C++ duplicate).
+#
+# The register and the claim detectors still refute first (Words .NET "618 public types" is a registered
+# K05 row), K02/K03 are unchanged, and the verified computation is written into the cleared row
+# (``provenance``) so the model's flag is answered by evidence, never by silence.
+
+#: The K05 statement shape (``KNOWN_FALSE_PATTERNS``) with its parts captured.
+_K05_COUNT = re.compile(
+    r"(?i)(?<![\w.,])(?P<count>\d{1,3}(?:,\d{3})+|\d+)\s+(?:verified\s+)?(?:public\s+)?"
+    r"(?P<noun>types?|classes(?:\s+and\s+(?:enumerations|enums))?|enums|interfaces)\b"
+)
+_LISTED_OF_THEM = re.compile(r"(?i)(?<![\w.,])(?P<count>\d{1,3}(?:,\d{3})+|\d+)\s+of\s+them\s+(?:are\s+)?listed\b")
+_TYPE_TABLE_ROW = re.compile(r"^\s*\|\s*`[^`]+`\s*\|")
+_LEVEL_1_2 = re.compile(r"^\s*#{1,2}\s")
+_EE_NAME = re.compile(r"(\[)?(?P<name>Aspose\.[^\]\[]*?)\s*[—–]\s*Enterprise\s+Edition(?:\]\((?P<url>[^)\s]+)\))?")
+_H1 = re.compile(r"^#(?!#)[ \t]+(\S.*)$")
+_BELOW = re.compile(r"(?i)\b(?:below|as\s+follows|(?:table|tables)\s+that\s+follows?|following\s+tables?)\b")
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def _count_value(text: str) -> int:
+    return int(text.replace(",", ""))
+
+
+def count_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None:
+    """The verified computation of every count line ``number`` (1-based) of ``rows`` states, or
+    ``None`` when any count on it is not the facts' computation (see the section comment)."""
+    from repo_presenter.readme.validation.surface_claims import _evidence_type_count, type_counts
+
+    row = rows[number - 1]
+    types, classes = type_counts(facts)
+    by_locator = _evidence_type_count(facts)
+    if types == 0 or by_locator != types:
+        return None
+    enums = types - classes
+    roots: dict[str, int] = {}
+    for fact in getattr(facts, "facts", ()):
+        if fact.kind == "public_symbol" and fact.polarity == "SUPPORTED" and \
+                (fact.attributes or {}).get("symbol_kind") in ("class", "enum") and fact.evidence:
+            parts = fact.evidence[0].path.split("/")
+            root = "/".join(parts[:2]) if len(parts) > 2 else parts[0]
+            roots[root] = roots.get(root, 0) + 1
+    # a hard-wrapped sentence ("... ships 198" / "public types across ..."): read the line with the next
+    # prose line, counting only the statements that start on this line
+    following = rows[number] if number < len(rows) else ""
+    joined = row
+    if following.strip() and not following.lstrip().startswith(("|", "#", "```", "- ", "* ")):
+        joined = f"{row} {following.strip()}"
+    listed = 0
+    for later in rows[number:]:
+        if _LEVEL_1_2.match(later):
+            break
+        listed += bool(_TYPE_TABLE_ROW.match(later))
+    stated = []
+    for match in _K05_COUNT.finditer(joined):
+        if match.start() >= len(row):
+            continue
+        value, noun = _count_value(match.group("count")), match.group("noun").lower()
+        expected = types if noun.startswith("type") or " and " in noun else classes if noun == "classes" else \
+            enums if noun == "enums" else None
+        if expected is None or value != expected:
+            return None
+        # a total said to be listed/organized/summarized below is also held to the rows that follow
+        # (rule (h)'s listed-count, widened to every "below" phrasing): PDF Python's "385 public types are
+        # organized by module below" heads 284 rows, Cells C++'s "195 ... is listed below" 157
+        sentence = _SENTENCE_END.split(joined[match.start():], maxsplit=1)[0]
+        if _BELOW.search(sentence) and not _LISTED_OF_THEM.search(sentence) and value != listed:
+            return None
+        stated.append(" ".join(match.group(0).split()))
+    for match in _LISTED_OF_THEM.finditer(joined):
+        if match.start() >= len(row):
+            continue
+        if _count_value(match.group("count")) != listed:
+            return None
+        stated.append(f"{listed} listed (type-table rows that follow)")
+    if not stated:
+        return None
+    within = ", ".join(f"{root} {n}" for root, n in sorted(roots.items()))
+    return (f"K05 verified: {'; '.join(stated)} = SUPPORTED class/enum public_symbol facts "
+            f"({classes} classes + {enums} enums = {types}; by source root: {within}), after the "
+            "build's package list (recertify.shipped_facts)")
+
+
+def enterprise_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None:
+    """The verified naming of every "— Enterprise Edition" mention on line ``number``, or ``None``."""
+    enterprise = next((f for f in getattr(facts, "facts", ()) if f.id == "link_target:product.enterprise"), None)
+    if enterprise is None or enterprise.polarity != "SUPPORTED":
+        return None
+    h1 = next((m.group(1).strip() for m in map(_H1.match, rows) if m), None)
+    if not h1:
+        return None
+    expected = re.sub(r"[ .]FOSS\b", "", h1)  # as enterprise_edition_naming derives it
+    if (enterprise.attributes or {}).get("level") == "family":
+        expected = expected.split(" for ", 1)[0]
+    row = rows[number - 1]
+    previous = rows[number - 2] if number > 1 else ""
+    found = False
+    for match in _EE_NAME.finditer(row):
+        found = True
+        name = " ".join(match.group("name").split())
+        if name.lower() != " ".join(expected.split()).lower():
+            return None
+        if match.group(1) and match.group("url") and match.group("url").rstrip("/") != enterprise.value.rstrip("/"):
+            return None
+        if not match.group(1):
+            before = row[: match.start()]
+            if not before.strip():
+                before = previous + " " + before
+            if re.search(r"\[[^\]]*\bAspose\.[^\]]*\]\([^)\s]+\)\s*[,;:—–-]?\s*(?:the\s*)?$", before, re.I):
+                return None
+    if not found:
+        return None
+    return (f"K10 verified: named '{expected} — Enterprise Edition' as the README's H1 names the product "
+            f"({(enterprise.attributes or {}).get('level', 'platform')}-level target {enterprise.value}, SUPPORTED)")
+
+
+def class_provenance(label: str, rows: Sequence[str], number: int, facts: Any) -> str | None:
+    if label.startswith("K05"):
+        return count_provenance(rows, number, facts)
+    if label.startswith("K10"):
+        return enterprise_provenance(rows, number, facts)
+    return None
+
 
 class Rederived(NamedTuple):
     """The README a deterministic stage writes, and per line (0-based) where it came from: ``{"source":
@@ -250,6 +390,8 @@ class Derivation(NamedTuple):
     underived: frozenset[int]
     clearable: frozenset[int] = frozenset()
     kept: Mapping[int, str] = {}
+    #: clearable lines of a K05/K10 class: the verified computation (``class_provenance``)
+    provenance: Mapping[int, str] = {}
 
 
 def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
@@ -265,21 +407,32 @@ def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
                      if row.strip() and section is None)
 
 
-def keep_reason(lane: str, row: str, origin: Mapping[str, Any] | None, facts: Any) -> str | None:
+def keep_reason(
+    lane: str, row: str, origin: Mapping[str, Any] | None, facts: Any,
+    rows: Sequence[str] = (), number: int = 0, verified: dict[int, str] | None = None,
+) -> str | None:
     """Why a model flag on this reproduced line must stay (``None``: it may be cleared). See the
-    section comment: SUPPORTED-fact origin and not a known-false class. The register and the claim
-    detectors are checked by the caller (they need the whole text)."""
-    import re
-
+    section comments: SUPPORTED-fact origin, and a known-false class only when its provenance does not
+    verify it (``class_provenance`` over ``rows``, the whole case text; a verified line's computation is
+    recorded in ``verified``). The register and the claim detectors are checked by the caller."""
     if not origin:
         return "no recorded origin"
     source = origin.get("source")
+
+    def unverified(label: str) -> str | None:
+        proof = class_provenance(label, rows, number, facts) if rows and number else None
+        if proof is None:
+            return label
+        if verified is not None and proof not in verified.get(number, ""):
+            verified[number] = "; ".join(filter(None, [verified.get(number), proof]))
+        return None
+
     if lane == "L":
         if source != "edit":
             return "maintainer text, not derived from a fact"
         detector = str(origin.get("detector") or "")
-        if detector in KNOWN_FALSE_DETECTORS:
-            return KNOWN_FALSE_DETECTORS[detector]
+        if detector in KNOWN_FALSE_DETECTORS and (why := unverified(KNOWN_FALSE_DETECTORS[detector])):
+            return why
         fact_ids = list(origin.get("fact_ids") or ())
         if not fact_ids:
             return "edit cites no fact (locator only)"
@@ -290,13 +443,14 @@ def keep_reason(lane: str, row: str, origin: Mapping[str, Any] | None, facts: An
         return "authored unit text"
     else:
         polarities = facts_in_line(row, facts)
-        if not polarities:
+        # a computed count is a fact-derived statement when its computation verifies (K05 below)
+        if not polarities and not (rows and number and count_provenance(rows, number, facts)):
             return "no fact value in the line"
         if any(p != "SUPPORTED" for p in polarities):
             return "the line carries a fact that is not SUPPORTED"
     for label, pattern in KNOWN_FALSE_PATTERNS:
-        if re.search(pattern, row, re.IGNORECASE):
-            return label
+        if re.search(pattern, row, re.IGNORECASE) and (why := unverified(label)):
+            return why
     return None
 
 
@@ -398,15 +552,19 @@ def derivation(
     derivable = frozenset(owned & set(source_of))
     refuted = refuted_lines(text, facts, repository, register) if derivable and (ask is None or ask) else {}
     kept: dict[int, str] = {}
+    verified: dict[int, str] = {}
     for number in sorted(derivable):
         if ask is not None and number not in ask:
             kept[number] = "not asked"
             continue
-        why = refuted.get(number) or keep_reason(lane, rows[number - 1], source_of[number], facts)
+        why = refuted.get(number) or keep_reason(lane, rows[number - 1], source_of[number], facts,
+                                                 rows, number, verified)
         if why:
             kept[number] = why
+    clearable = frozenset(derivable - set(kept))
     return Derivation(derivable=derivable, underived=frozenset(owned - set(source_of)),
-                      clearable=frozenset(derivable - set(kept)), kept=kept)
+                      clearable=clearable, kept=kept,
+                      provenance={n: p for n, p in verified.items() if n in clearable})
 
 
 def _line_origins(text: str, spans: Sequence[tuple[int, int]], edits: Sequence[Any]) -> tuple[Mapping[str, Any], ...]:
@@ -427,15 +585,19 @@ def _line_origins(text: str, spans: Sequence[tuple[int, int]], edits: Sequence[A
     return tuple(origins)
 
 
-def rederived_readme(lane: str, bundle: Path, entry: Any, original: str, tree_paths: Sequence[str] = ()) -> Rederived:
+def rederived_readme(
+    lane: str, bundle: Path, entry: Any, original: str, tree_paths: Sequence[str] = (), facts: Any = None,
+) -> Rederived:
     """The README the pipeline's deterministic stage writes from the pinned inputs, zero calls, with each
     line's origin: Lane L, the correction engine over the live README (``recertify._rerun_lane_l``'s
     context); Lane R, the renderer over the stored facts, plan, content units and dispositions, and once
     more with every authored unit replaced by a sentinel (a line identical in both is printed from facts
-    alone). The seal's README is never read."""
+    alone). The seal's README is never read. ``facts`` (default: the bundle's) is the document after
+    ``recertify.shipped_facts``, as the current pipeline re-derives it."""
     from repo_presenter.core.facts import read_facts
 
-    facts = read_facts(bundle / "facts.json")
+    if facts is None:
+        facts = read_facts(bundle / "facts.json")
     if lane == "L":
         from repo_presenter.core.registry_entry_stub import RegistryEntryStub
         from repo_presenter.readme.correction.engine import correct
@@ -502,9 +664,13 @@ def apply_derivation(case_id: str, text: str, rows: Sequence[Mapping[str, Any]],
         if line in derived.clearable:
             row["verdict"] = "supported"
             row["cleared_by"] = "derivation"
+            proof = derived.provenance.get(line)
             row["evidence"] = ("cleared: the line is printed from SUPPORTED facts by a deterministic stage "
                                "(zero-call re-derivation), no register row or claim detector refutes it, and it is "
-                               f"in no known-false class; was: {row.get('evidence', '')}")[:500]
+                               + (f"verified by its provenance ({proof})" if proof else "in no known-false class")
+                               + f"; was: {row.get('evidence', '')}")[:900]
+            if proof:
+                row["provenance"] = proof
         elif line in derived.kept:
             row["kept_because"] = derived.kept[line]
     lines = text.splitlines()
@@ -694,16 +860,22 @@ def case_derivation(
 
     bundle = Path(seal.bundle)
     try:
+        from repo_presenter.recertify import shipped_facts
+
         facts = read_facts(bundle / "facts.json")
         entry = require_listed(load_registry(REPO_ROOT / "data" / "registry.json"), seal.repository)
         original, tree_paths = "", ()
+        if fetch is None:
+            from repo_presenter.recertify import fetch_source as fetch
+        snapshot = None
+        if seal.lane == "L" or entry.ecosystem == "python":  # the build's package list (BL-065)
+            work.mkdir(parents=True, exist_ok=True)
+            snapshot = fetch(seal.repository, seal.revision, work)
+            facts = shipped_facts(facts, entry.ecosystem, snapshot)[0] if getattr(snapshot, "manifests", None) else facts
         if seal.lane == "L":
             original = (bundle / "README.original.md").read_text(encoding="utf-8")
-            if fetch is None:
-                from repo_presenter.recertify import fetch_source as fetch
-            work.mkdir(parents=True, exist_ok=True)
-            tree_paths = fetch(seal.repository, seal.revision, work).tree_paths
-        rederived = rederived_readme(seal.lane, bundle, entry, original, tree_paths)
+            tree_paths = snapshot.tree_paths
+        rederived = rederived_readme(seal.lane, bundle, entry, original, tree_paths, facts)
     except Exception as error:  # noqa: BLE001 -- no re-derivation is no derivation, never a crash
         print(f"derivation unavailable for {seal.repository} lane {seal.lane}: {error}", file=sys.stderr)
         return None
