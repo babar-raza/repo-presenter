@@ -1354,3 +1354,50 @@ items:
     next_action: "STOPPED alert; reservations from measured p90; owner decision on a rolling stop-rule window"
     updated: "2026-11-14"
 
+  - id: BL-101
+    title: "R43(1): stop rule judges a rolling window of the last 12 hosted runs"
+    type: requirement
+    source: "owner ruling R43 (2026-11-14)"
+    priority: P0
+    status: open
+    implementation_path: "core/llm/budget.py ensure_open_batch stop rule; plus STOPPED alert in supervisor-tick and per-cell reservation from measured p90 (BL-100)"
+    acceptance: "a single zero-seal batch no longer stops the loop; stop fires only when the last 12 runs' cost per seal exceeds 2x the previous 12; tests"
+    evidence: []
+    next_action: "worker dispatched 2026-11-14"
+    updated: "2026-11-14"
+
+  - id: BL-102
+    title: "R43(2): deterministic Development & Testing, Documentation & Resources, Scope & Limitations"
+    type: requirement
+    source: "owner ruling R43 (2026-11-14)"
+    priority: P0
+    status: open
+    implementation_path: "readme/composition planning + renderer: these sections rendered from facts and kept maintainer text; the model writes only the opening and key capabilities without numbers/file/key names"
+    acceptance: "zero-call render of the 18 Lane R seals with those sections deterministic shows fewer BC/REVIEW failures and no new class; hosted re-runs seal at a higher rate"
+    evidence: []
+    next_action: "worker dispatched 2026-11-14"
+    updated: "2026-11-14"
+
+  - id: BL-103
+    title: "R43(3): inherit-and-correct Lane R for repos with an aspose.org-published README (near-term; lanes stay separately evaluable long-run)"
+    type: requirement
+    source: "owner ruling R43 (2026-11-14)"
+    priority: P0
+    status: open
+    implementation_path: "S4 default VERIFIED_PRESERVE plus register withholding for those repos; re-author only what facts or the register force; keep the Lane R/Lane L engines separate and record per-lane metrics so differences are measurable"
+    acceptance: "applies only to repos listed in aspose.org data/readme_published_state.json; Lane R/Lane L outputs stay separately produced and compared"
+    evidence: []
+    next_action: "worker dispatched 2026-11-14"
+    updated: "2026-11-14"
+
+  - id: BL-104
+    title: "R43(4): a failing API-type or hub row falls back to the renderer's fact-true row instead of failing the run"
+    type: requirement
+    source: "owner ruling R43 (2026-11-14)"
+    priority: P0
+    status: open
+    implementation_path: "authoring_retry / recover_authoring_output: blank the failing type:/hub: unit so the renderer prints docstring, signature or enum values"
+    acceptance: "no section_authoring job fails on a type/hub unit; PDF and Words .NET rejection shapes pass with fallback rows"
+    evidence: []
+    next_action: "worker dispatched 2026-11-14"
+    updated: "2026-11-14"
