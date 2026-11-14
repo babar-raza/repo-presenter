@@ -1,0 +1,85 @@
+--- a/README.md
++++ b/README.md
+@@ -47,38 +47,43 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+-    direction LR
+-    i1["An existing XLSX workbook (including password-protected)"]
++    direction TB
++    i1["An existing XLSX<br/>workbook (including<br/>password-protected)"]
+     i2["CSV files"]
+   end
+   PRODUCT["Aspose.Cells FOSS for Go"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Cell read and write (A1-style references)"]
+-      c2["Styles, number formats, and Excel date serials"]
+-      c3["Formula engine: 22 functions, cross-sheet refs, error values"]
+-      c4["Layout: merges, freeze panes, hyperlinks, row insert/delete"]
+-      c5["Data validation, tables, charts, and pivot tables"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c6["Conditional formatting (DXF styles, scales, bars, icons)"]
+-      c7["Picture embedding and VBA project round-trip"]
+-      c8["CSV import/export and streaming row reader"]
+-      c9["Stream I/O (io.Reader / io.Writer)"]
+-      c10["Excel-compatible Agile Encryption"]
+-    end
++    direction TB
++    c1["Cell read and write<br/>(A1-style references)"]
++    c2["Styles, number<br/>formats, and Excel<br/>date serials"]
++    c3["Formula engine: 22<br/>functions, cross-sheet<br/>refs, error values"]
++    c4["Layout: merges, freeze<br/>panes, hyperlinks, row<br/>insert/delete"]
++    c5["Data validation,<br/>tables, charts, and<br/>pivot tables"]
++    c6["Conditional formatting<br/>(DXF styles, scales,<br/>bars, icons)"]
++    c7["Picture embedding and<br/>VBA project round-trip"]
++    c8["CSV import/export and<br/>streaming row reader"]
++    c9["Stream I/O (io.Reader<br/>/ io.Writer)"]
++    c10["Excel-compatible Agile<br/>Encryption"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c8
++    c6 ~~~ c9
++    c7 ~~~ c10
++    c8 ~~~ c10
++    c9 ~~~ c10
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+-    o1["XLSX workbooks (including password-protected)"]
++    o1["XLSX workbooks<br/>(including<br/>password-protected)"]
+     o2["CSV files"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities
+@@ -126,7 +131,7 @@
+ go get github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/v26/aspose/cells_foss
+ ```
+ 
+-# Requires **Go 1.24.5+** (see `go.mod`). Depends only on the Go standard library — no third-party modules.
++## Requires **Go 1.24.5+** (see `go.mod`). Depends only on the Go standard library — no third-party modules.
+ 
+ The module supports Go 1.24.5 or later and has zero third-party dependencies — encryption and
+ everything else builds on the Go standard library alone. Because the package name (`cells_foss`)
+@@ -611,6 +616,8 @@
+ For a complete usage walkthrough beyond this README, see the repository's own
+ [docs/usage.md](docs/usage.md).
+ 
++</details>
++
+ ## Detailed Documentation
+ 
+ For the complete API reference and usage guide, see **[docs/usage.md](docs/usage.md)**.

@@ -1,0 +1,101 @@
+{
+  "confinement": {
+    "edits": 3,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "19e1549c57c02b5cc6dc7fae01238c62641eaf279a86b816cea8be3c01d1e9a0",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 4035,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:49"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 50,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction LR\n    i1[\"An existing XLSX workbook (including password-protected)\"]\n    i2[\"CSV files\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for Go\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Cell read and write (A1-style references)\"]\n      c2[\"Styles, number formats, and Excel date serials\"]\n      c3[\"Formula engine: 22 functions, cross-sheet refs, error values\"]\n      c4[\"Layout: merges, freeze panes, hyperlinks, row insert/delete\"]\n      c5[\"Data validation, tables, charts, and pivot tables\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c6[\"Conditional formatting (DXF styles, scales, bars, icons)\"]\n      c7[\"Picture embedding and VBA project round-trip\"]\n      c8[\"CSV import/export and streaming row reader\"]\n      c9[\"Stream I/O (io.Reader / io.Writer)\"]\n      c10[\"Excel-compatible Agile Encryption\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"XLSX workbooks (including password-protected)\"]\n    o2[\"CSV files\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 2362 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 714 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing XLSX<br/>workbook (including<br/>password-protected)\"]\n    i2[\"CSV files\"]\n  end\n  PRODUCT[\"Aspose.Cells FOSS for Go\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Cell read and write<br/>(A1-style references)\"]\n    c2[\"Styles, number<br/>formats, and Excel<br/>date serials\"]\n    c3[\"Formula engine: 22<br/>functions, cross-sheet<br/>refs, error values\"]\n    c4[\"Layout: merges, freeze<br/>panes, hyperlinks, row<br/>insert/delete\"]\n    c5[\"Data validation,<br/>tables, charts, and<br/>pivot tables\"]\n    c6[\"Conditional formatting<br/>(DXF styles, scales,<br/>bars, icons)\"]\n    c7[\"Picture embedding and<br/>VBA project round-trip\"]\n    c8[\"CSV import/export and<br/>streaming row reader\"]\n    c9[\"Stream I/O (io.Reader<br/>/ io.Writer)\"]\n    c10[\"Excel-compatible Agile<br/>Encryption\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n    c7 ~~~ c10\n    c8 ~~~ c10\n    c9 ~~~ c10\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"XLSX workbooks<br/>(including<br/>password-protected)\"]\n    o2[\"CSV files\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 2879
+    },
+    {
+      "detector": "second_h1",
+      "end": 7273,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:129"
+        }
+      ],
+      "index": 1,
+      "kind": "STRUCTURE_FIX",
+      "line": 129,
+      "original": "#",
+      "rationale": "line 129 is a second H1 ('# Requires **Go 1.24.5+** (see `go.mod`). Depends only on th'); the template has exactly one, the product title on line 1",
+      "replacement": "##",
+      "start": 7272
+    },
+    {
+      "detector": "unclosed_details",
+      "end": 28874,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:586"
+        },
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:614"
+        }
+      ],
+      "index": 2,
+      "kind": "STRUCTURE_FIX",
+      "line": 614,
+      "original": "",
+      "rationale": "the <details> opened on line 586 is never closed, so everything after it renders collapsed; it ends before the next H2, line 614",
+      "replacement": "</details>\n\n",
+      "start": 28874
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "d6acbf447e478b71d9f80cdc5464cc67f040aee73fef3b5f0e9596f5b83f8c27",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Go",
+  "schema_version": 1,
+  "source_revision": "e77cfa0e84bbe5c338a7d9bbfd139cc57cccb3c0",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1,
+    "STRUCTURE_FIX": 2
+  },
+  "unapplied": [
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:006"
+      ],
+      "line": 283,
+      "reason": "the example verifier recorded a failure for the example on lines 283-304: example 6: FAILED; ./main.go:16:31: undefined: generateSmallPNG",
+      "text": "func main() {"
+    }
+  ]
+}
