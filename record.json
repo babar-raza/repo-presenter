@@ -1,0 +1,74 @@
+{
+ "history": [
+  {
+   "at": "2026-11-14T08:11:41+00:00",
+   "classes": [
+    "job_error|job_error|unknown:model_output_was_rejected"
+   ],
+   "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43572742592",
+   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+   "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-14T08:11:41+00:00",
+  "classes": {
+   "job_error|job_error|unknown:model_output_was_rejected": {
+    "example": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.annotations.lineintent: identifiers that are not accepted fact values: LineArrow, LineDimension; unit type:public_symbol:aspose.pdf.annotations.polyintent: identifie",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "unknown"
+    ],
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "unknown:model_output_was_rejected",
+    "upstream": ""
+   }
+  },
+  "code": "33ee0453e48f5f0816abafdec1d05155d0297283326249262569647da8f79454",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.annotations.lineintent: identifiers that are not accepted fact values: LineArrow, LineDimension; unit type:public_symbol:aspose.pdf.annotations.polyintent: identifiers that are not accepted fact values: PolyLineDimension, PolygonCloud, PolygonDimension; unit type:public_symbol:aspose.pdf.annotations.printermarkcornerposition: identifiers that are not accepted fact values: BottomLeft, BottomRight, TopLeft, TopRight; unit type:public_symbol:aspose.pdf.annotations.stampicon: identifiers that are not accepted fact values: NotApproved, NotForPublicRelease",
+   "kind": "unknown",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "unknown",
+    "message": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.annotations.lineintent: identifiers that are not accepted fact values: LineArrow, LineDimension; unit type:public_symbol:aspose.pdf.annotations.polyintent: identifie",
+    "origin": {
+     "id": "unknown",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|unknown:model_output_was_rejected",
+    "source": "job",
+    "sub_rule": "unknown:model_output_was_rejected",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "ff570fa517d09ded373b2062090a2cbb1a634b2b",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
+  "run_id": "43572742592",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43572742592",
+  "schema_version": 1,
+  "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+ },
+ "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
+ "schema_version": 1
+}
