@@ -1340,3 +1340,17 @@ items:
       - "2026-11-14: ASSUMPTION: the truncated PDF Python reply itself is not recoverable here (the run's artifacts are refused by the artifact blob host), so which part ran over is inferred from the schema bound, not observed"
     next_action: "supervisor merges; the next hosted Lane R run of PDF Python is the closing evidence; if it truncates again, read the reply from its call store before any budget change"
     updated: "2026-11-14"
+
+  - id: BL-100
+    title: "Engine stopped 5h+ by the R25 stop rule on a zero-seal, token-overrun batch; nothing reopened or alerted"
+    type: defect
+    source: "independent Lane R investigation 2026-11-14 (budget status STOPPED at 09:04:57Z on e2-009-hosted)"
+    priority: P0
+    status: active
+    implementation_path: "immediate: owner-approved batch e2-010 committed. Root: per-cell reservation sized cap/6 instead of measured cost (1-2-cell cohorts for 6h); stop rule compares against a single-seal batch and fires on any zero-seal batch (owner decision B pending); no supervisor-tick alert on STOPPED"
+    acceptance: "budget status not STOPPED; the next cohort funds its planned cells; a STOPPED state is reported by the supervisor within one tick"
+    evidence:
+      - "e2-010 committed 2026-11-14 on owner approval ('Renew budget')"
+    next_action: "STOPPED alert; reservations from measured p90; owner decision on a rolling stop-rule window"
+    updated: "2026-11-14"
+
