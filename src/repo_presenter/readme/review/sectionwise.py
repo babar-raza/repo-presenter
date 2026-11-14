@@ -38,6 +38,19 @@ from repo_presenter.readme.review.scope import authored_type_rows, line_sections
 #: original excerpt are bounded separately (``evidence``).
 UNIT_CHARS = 4_500
 
+#: The M9 audit packet only (``audit=True``). The system prompt tells every reviewer that the title and
+#: every heading are renderer-printed and never shown; the audit shows heading lines (BL-013), so a unit
+#: carried a numbered ``0001| # Title <sentence>`` line its own instructions said could not be there.
+#: Hosted round 43559491132 missed 9 of its 10 seeds written onto the title line although each was in a
+#: unit and in scope (one D14 was caught, as ``quality``). This note removes the contradiction for the
+#: audit and nothing else: production packets never carry it, so their request hashes are unchanged.
+AUDIT_SCOPE_NOTE = (
+    "This is an audit review: heading lines (the title included) ARE shown in candidate_section, with "
+    "their numbers, and any words on a heading line after the heading itself are author text. Judge and "
+    "cite a shown heading line like any other line: a sentence written onto the title line is a claim "
+    "(unsupported, or a contradiction, or promotional wording) exactly as it would be in a paragraph."
+)
+
 
 @dataclass(frozen=True)
 class ReviewUnit:
@@ -189,6 +202,7 @@ def unit_packet(
     }
     if audit:
         scope["computed_counts"] = computed_counts(facts)
+        scope["audit_scope"] = AUDIT_SCOPE_NOTE
     return {
         "repository": repository,
         "review_scope": scope,
