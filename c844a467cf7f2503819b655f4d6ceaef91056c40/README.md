@@ -1,6 +1,6 @@
 # Aspose.Email FOSS for Cpp
 
-![C++](https://img.shields.io/badge/c%2B%2B-17-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![C++](https://img.shields.io/badge/c%2B%2B-17-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C?logo=cplusplus)](CMakeLists.txt)
 
 [![Aspose.Email FOSS for Cpp](https://products.aspose.org/media/email/cpp/banner-readme.png)](https://products.aspose.org/email/cpp/)
 
@@ -23,17 +23,22 @@ Aspose.Email FOSS for Cpp reads and writes MSG and EML formats. It converts mess
 ## At a Glance
 
 ```mermaid
-flowchart LR
-Product["Aspose.Email FOSS for Cpp"]
-Product["Aspose.Email FOSS for Cpp"] --> Cap1["Low-level CFB access"]
-Cap2["Low-level MSG document model"]
-Cap3["High-level message authoring"]
-Cap4["Recipients and attachments"]
-Cap5["MSG/EML interoperability"]
-Product["Aspose.Email FOSS for Cpp"] --> Cap2["Low-level MSG document model"]
-Product["Aspose.Email FOSS for Cpp"] --> Cap3["High-level message authoring"]
-Product["Aspose.Email FOSS for Cpp"] --> Cap4["Recipients and attachments"]
-Product["Aspose.Email FOSS for Cpp"] --> Cap5["MSG/EML interoperability"]
+flowchart TB
+  PRODUCT["Aspose.Email FOSS for Cpp"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Low-level CFB access"]
+    c2["Low-level MSG document<br/>model"]
+    c3["High-level message<br/>authoring"]
+    c4["Recipients and<br/>attachments"]
+    c5["MSG/EML<br/>interoperability"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c5
+  end
+  PRODUCT --> Capabilities
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
@@ -63,7 +68,7 @@ Product["Aspose.Email FOSS for Cpp"] --> Cap5["MSG/EML interoperability"]
 
 ## Installation
 
-The package `AsposeEmailFoss` could not be confirmed on any package registry (package registry: none could not be read).
+No install command for `AsposeEmailFoss` is available.
 
 ## Dependencies
 
@@ -119,7 +124,7 @@ int main()
 
 Aspose.Email FOSS for Cpp provides the `mapi_message` class as the primary high-level entry point for creating, editing, and reloading messages, while lower-level classes such as `msg_reader`, `msg_document`, `msg_writer`, `cfb_reader`, `cfb_document`, and `cfb_writer` expose the underlying MSG and CFB container structure directly for callers that need it.
 
-The verified public surface has 26 types.
+The public API has 26 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -217,8 +222,6 @@ structure directly for callers that need it.
   - `add_attachment(filename, data, mime_type, content_id) -> mapi_attachment` (byte-buffer or
     stream overload)
   - `add_embedded_message_attachment(message, filename, mime_type) -> mapi_attachment`
-  - `set_property(property_id, property_type, value, flags) -> mapi_property` /
-    `get_property_value(property_id, property_type) -> std::any`
   - `validation_issues() -> std::vector<std::string>`
   - `save() -> std::vector<std::uint8_t>` / `save(path) -> void` / `save(stream) -> void`
   - `save_to_eml() -> std::vector<std::uint8_t>` / `save_to_eml(path) -> void` /
@@ -281,8 +284,6 @@ structure directly for callers that need it.
 
 - `mapi_property_collection`
   - `set(property) -> mapi_property`, `add(property_id, property_type, value, flags) -> mapi_property`
-  - `get(property_id, property_type) -> mapi_property`,
-    `remove(property_id, property_type) -> void`, `items() -> std::map<std::pair<std::uint16_t, std::uint16_t>, mapi_property>`
 
 - `mapi_property`
   - `property_id() -> std::uint16_t`, `property_type() -> std::uint16_t`
@@ -294,7 +295,7 @@ structure directly for callers that need it.
 
 - **[Getting started guide](https://docs.aspose.org/email/cpp/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
 - **[How-to guides & FAQ](https://kb.aspose.org/email/cpp/)** — The how-to guides and FAQ provide task-focused answers for common MSG, EML, and CFB processing questions.
-- **[Full API reference](https://reference.aspose.org/email/cpp/)** — The full API reference offers the complete, browsable reference for all 26 public types. It covers all 26 verified public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[Full API reference](https://reference.aspose.org/email/cpp/)** — The full API reference offers the complete, browsable reference for all 26 public types. It covers all 26 public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[Public API surface](PUBLIC_API.md)** — The public API surface documents the stable public namespaces and headers this library commits to.
 - **[Changelog](CHANGELOG.md)** — The changelog records the release history.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-Cpp/issues).
