@@ -229,11 +229,24 @@ def computed_counts(facts: FactsDocument) -> dict[str, Any]:
     from repo_presenter.readme.validation.surface_claims import type_counts
 
     types, classes = type_counts(facts)
+    # BL-013 round 2 (K05): the computation's provenance, so a blind reviewer can check a count instead of
+    # flagging it -- the counted facts by kind and by source root. The facts are the ones the build ships
+    # (BL-065: re-certification drops tree packages outside the manifest's package list, e.g. Words
+    # Python's ApiExamples/), so a directory the wheel does not contain never appears here.
+    roots: dict[str, int] = {}
+    for fact in facts.by_kind("public_symbol"):
+        if fact.polarity == "SUPPORTED" and (fact.attributes or {}).get("symbol_kind") in ("class", "enum") and fact.evidence:
+            parts = fact.evidence[0].path.split("/")
+            root = "/".join(parts[:2]) if len(parts) > 2 else parts[0]
+            roots[root] = roots.get(root, 0) + 1
     return {
         "public_types": types,
         "public_classes": classes,
-        "note": "computed from the SUPPORTED type-level public_symbol facts; a stated count of public "
-        "types (or classes) equal to one of these is evidenced by that computation, any other count is not",
+        "public_enums": types - classes,
+        "counted_by_source_root": dict(sorted(roots.items())),
+        "note": "computed from the SUPPORTED type-level public_symbol facts (class + enum) of the packages the "
+        "build ships; a stated count of public types (or classes, or enums) equal to one of these is evidenced "
+        "by that computation, any other count is not; 'N of them listed below' is the type-table rows that follow",
     }
 
 
