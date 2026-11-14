@@ -11,63 +11,100 @@
    "run_id": "43617108350",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  },
+  {
+   "at": "2026-11-14T19:32:15+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_restates_its_own_title"
+   ],
+   "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43631639931",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T16:49:16+00:00",
+  "at": "2026-11-14T19:32:15+00:00",
   "classes": {
-   "job_error|job_error|unknown:model_output_was_rejected": {
-    "example": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
+   "job_error|job_error|OutputRejectedError:section_authoring_restates_its_own_title": {
+    "example": "attempt under version set 84c5d935a8db: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "unknown"
+     "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "unknown:model_output_was_rejected",
+    "scope": "d6abec08b77eb9e974d84fbe08450e468fd414205a3e27db0c4fa9d2a8d3da82",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_restates_its_own_title",
     "upstream": ""
    }
   },
-  "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "transient",
-   "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
-   "kind": "unknown",
+   "detail": "attempt under version set 84c5d935a8db: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
+   "kind": "OutputRejectedError",
    "transient": true
   },
   "findings": [
    {
-    "label": "unknown",
-    "message": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 84c5d935a8db: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
     "origin": {
-     "id": "unknown",
+     "id": "OutputRejectedError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|unknown:model_output_was_rejected",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_restates_its_own_title",
     "source": "job",
-    "sub_rule": "unknown:model_output_was_rejected",
+    "sub_rule": "OutputRejectedError:section_authoring_restates_its_own_title",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "4c502590be7ace92988f42e43d37d76f75f74cc5",
+  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "43617108350",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43617108350",
+  "run_id": "43631639931",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631639931",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
-  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
  },
  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
  "schema_version": 1
