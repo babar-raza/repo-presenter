@@ -338,6 +338,32 @@ def test_an_issues_request_validates_and_takes_no_other_field():
         rr.validate({"job": "issues", "repository": "x/y"}, REGISTRY, OK, True)
 
 
+def test_a_count_request_validates_and_takes_no_other_field():
+    """BL-111: the official delivered count, hosted, with attestations read."""
+    assert rr.validate({"job": "count"}, REGISTRY, OK, True) == {
+        "job": "count", "repository": "", "ecosystem": "", "lane": ""}
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "count", "lane": "R"}, REGISTRY, OK, True)
+    with pytest.raises(rr.RequestError, match="must change only"):
+        rr.validate({"job": "count"}, REGISTRY, ["run-request.json", "x.py"], True)
+
+
+def test_the_count_job_runs_mains_counter_read_only_with_attestations_read():
+    wf, _ = _wf("run-request-execute.yml")
+    job = wf["jobs"]["count"]
+    assert job["needs"] == "validate" and job["if"] == "needs.validate.outputs.job == 'count'"
+    assert job["permissions"] == {"contents": "read", "attestations": "read"} and not _write_scopes(job["permissions"])
+    assert "secrets" not in job and "uses" not in job
+    assert "secrets." not in json.dumps(job)
+    (checkout,) = [s for s in job["steps"] if str(s.get("uses", "")).startswith("actions/checkout")]
+    assert checkout["with"]["ref"] == "main" and checkout["with"]["persist-credentials"] is False
+    run = "\n".join(s.get("run", "") for s in job["steps"])
+    assert "python ops/checks/portfolio_delivery_count.py --per-lane 25" in run
+    assert "$GITHUB_STEP_SUMMARY" in run
+    (step,) = [s for s in job["steps"] if "portfolio_delivery_count" in s.get("run", "")]
+    assert step["env"] == {"GH_TOKEN": "${{ github.token }}", "REPOSITORY_PRESENTER_STATE_TOKEN": "${{ github.token }}"}
+
+
 def test_the_recertify_workflow_carries_no_llm_secret():
     """R10 re-certification makes zero provider calls; the workflow must not even hold the key."""
     text = (Path(__file__).resolve().parent.parent / ".github/workflows/recertify.yml").read_text()

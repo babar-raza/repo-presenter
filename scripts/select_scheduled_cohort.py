@@ -40,16 +40,21 @@ and each later seal (Cells Java, Email .NET, Cells Rust, Imaging .NET) came righ
 class was fixed. Within the batch, cells are ranked
 
 * (a) fix landed: the record of its last failure (``repo_presenter.failures.scope_status``) has a
-  class whose code scope changed since -- a fix reached it;
-* (b) never attempted: no hosted attempt yet;
+  class whose code scope changed since -- a fix reached it (the scope is the class's paths under
+  the CURRENT scope tables, hashed at the run's commit and now, BL-110);
 * (c) needs repair, no failure record: a NEEDS_REPAIR seal and no failure record of its last
-  attempt;
+  attempt -- a re-run one targeted repair away (BL-110: re-runs before first attempts; measured since
+  02:09Z on 2026-11-14, re-runs sealed 4 of 10, first attempts 0 of 15);
+* (b) never attempted: no hosted attempt yet;
 * (d) retry: everything else (a code change outside its classes' scope, an upstream move, an older
   record);
 
-then a NEEDS_REPAIR seal (one repair away) before no seal, then registry order. A repository
-whose two lanes both need work runs as one ``both`` run (two cells) at the better lane's rank. The plan's runs and queue carry ``order`` and each lane's
-``priority``, and the summary prints both with the reason.
+then a NEEDS_REPAIR seal (one repair away) before no seal, then registry order. BL-110: each
+(repository, lane) cell is ranked on its own and takes one of the six slots, and while one lane has
+reached ``LANE_TARGET`` (25 certified) and the other has not, every cell of the lagging lane ranks
+first (``lane_ranks``). Two cells of one repository that both make the batch run as one ``both`` run.
+The plan's runs and queue carry ``order`` and each lane's ``priority``, and the summary prints both
+with the reason.
 
 One cohort at a time (R25 batches of six; R37 self-continuing loop): while any cell a previous
 planner dispatched is still in flight (an unsettled, unexpired reservation whose id carries
@@ -100,10 +105,16 @@ MAX_HOSTED_FAILURES_WITHOUT_SCOPE_CHANGE = 2
 #: (``core.llm.budget.reserve_cohort``); a rerun of such a run reserves ``<that id>-a<attempt>``.
 COHORT_ID_PREFIX = "cohort-"
 
+#: BL-110 (supervisor decision 2026-11-14): re-runs before first attempts -- measured since 02:09Z,
+#: re-runs sealed 4 of 10 and first attempts 0 of 15 -- so a NEEDS_REPAIR seal (one targeted repair
+#: away) ranks ahead of a never-attempted cell; the letters stay the summary's names.
 PRIORITY_FIX_LANDED = 0
-PRIORITY_NEVER_ATTEMPTED = 1
-PRIORITY_NEEDS_REPAIR = 2
+PRIORITY_NEEDS_REPAIR = 1
+PRIORITY_NEVER_ATTEMPTED = 2
 PRIORITY_RETRY = 3
+#: R4/R13: the per-lane target. While one lane has reached it and the other has not, every cell of the
+#: lagging lane ranks ahead of every cell of the other (BL-110; today Lane L 28, Lane R 6).
+LANE_TARGET = 25
 #: The summary's name for each rank (BL-086).
 PRIORITY_LABELS = {
     PRIORITY_FIX_LANDED: "(a) fix landed",
@@ -212,6 +223,15 @@ def hosted_failure_streak(attempts: list[dict[str, Any]]) -> int:
             break
         count += 1
     return count
+
+
+def lane_ranks(certified: Mapping[str, int], target: int = LANE_TARGET) -> dict[str, int]:
+    """BL-110: ``{lane: rank}`` -- 0 for a lane below ``target`` while the other lane has reached it
+    (it goes first), 1 for that other lane; both 0 when neither or both have reached it."""
+    reached = {lane: int(certified.get(lane, 0)) >= target for lane in LANES}
+    if len(set(reached.values())) == 1:
+        return {lane: 0 for lane in LANES}
+    return {lane: 1 if reached[lane] else 0 for lane in LANES}
 
 
 def _run_id(run_url: Any) -> str:
@@ -400,7 +420,13 @@ def plan_cohort(
             needs.setdefault(repository, {})[lane] = (priority, reason, 0 if needs_repair else 1)
 
     order = {repository: index for index, repository in enumerate(entries)}
-    ranked = sorted(needs, key=lambda repo: (min(n[0::2] for n in needs[repo].values()), order[repo]))
+    lane_rank = lane_ranks(certified)
+    # BL-110: every (repository, lane) cell is ranked on its own and takes one of the six slots; two
+    # cells of one repository that both make the batch run as one ``both`` run at the earlier slot.
+    cells = sorted(
+        ((repository, lane) for repository in needs for lane in needs[repository]),
+        key=lambda cell: (lane_rank[cell[1]], *needs[cell[0]][cell[1]][0::2], order[cell[0]], LANES.index(cell[1])),
+    )
     runs: list[dict[str, Any]] = []
     queued: list[dict[str, Any]] = []
     room = max(0, max_cells)
@@ -415,16 +441,16 @@ def plan_cohort(
             "reservations": sorted({flying[cell] for cell in cohort_cells}),
         }
         room = 0
-    for repository in ranked:
-        lanes = sorted(needs[repository], key=lambda lane: (needs[repository][lane][0::2], LANES.index(lane)))
-        take = lanes[: min(len(lanes), room)]
-        for lane in lanes[len(take):]:
-            queued.append({"repository": repository, "lane": lane, "reason": needs[repository][lane][1],
-                           "order": len(queued) + 1,
-                           "priority": PRIORITY_LABELS[needs[repository][lane][0]]})
-        if not take:
+    chosen: dict[str, list[str]] = {}
+    for repository, lane in cells:
+        if room > 0:
+            chosen.setdefault(repository, []).append(lane)
+            room -= 1
             continue
-        room -= len(take)
+        queued.append({"repository": repository, "lane": lane, "reason": needs[repository][lane][1],
+                       "order": len(queued) + 1,
+                       "priority": PRIORITY_LABELS[needs[repository][lane][0]]})
+    for repository, take in chosen.items():
         take = sorted(take, key=LANES.index)
         runs.append(
             {
@@ -635,8 +661,18 @@ def failure_classes(
             scope_cache[key] = scope_fingerprint(key, REPO_ROOT, "HEAD")
         return scope_cache[key]
 
-    known = known_failures(documents, scope_of)
-    scopes = scope_status(documents, scope_of)
+    at_cache: dict[tuple[tuple[str, ...], str], str] = {}
+
+    def scope_at(paths: Any, revision: str) -> str:
+        # BL-110: a class's CURRENT scope at the commit its run ran on, so a widened or narrowed scope
+        # table applies to records already written; "" (unreadable tree) falls back to the recorded hash.
+        key = (tuple(paths), revision)
+        if key not in at_cache:
+            at_cache[key] = scope_fingerprint(key[0], REPO_ROOT, revision)
+        return at_cache[key]
+
+    known = known_failures(documents, scope_of, scope_at)
+    scopes = scope_status(documents, scope_of, scope_at)
     rows = [
         {"signature": row["signature"], "cells": len(row["cells"]), "findings": row["findings"], "new": row["new"],
          "upstream": row.get("upstream", "")}

@@ -127,6 +127,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          # BL-110: the planner hashes each failure class's current code scope at the commit its run
+          # ran on (failures.class_scope_changed), so it needs main's history, not one commit.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:

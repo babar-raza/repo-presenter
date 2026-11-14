@@ -28,7 +28,10 @@ concurrency:
 jobs:
   tick:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # BL-111 (2026-11-14): the delivery count grew past nine minutes (45 seals re-certified, every
+    # older version set listed); with a 10-minute ceiling the 06:31Z and 14:11Z ticks were cancelled
+    # inside it and no section after it ran. The count is bounded on its own (below) and the job has room.
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,9 +60,37 @@ jobs:
             echo "### Delivery"
             echo '```'
             set +e
-            python ops/checks/portfolio_delivery_count.py --per-lane 25 2>&1 | tail -20
+            # Bounded (BL-111): a slow count can no longer starve the sections after it. The per-lane
+            # headline first: a bare `tail -20` showed only the last per-seal notes, never the count.
+            timeout 25m python ops/checks/portfolio_delivery_count.py --per-lane 25 > "$RUNNER_TEMP/count.txt" 2>&1
+            count_rc=$?
             set -e
+            grep -E '^(reviewer_calibration|acceptance_calibration|lane [RL]:|  accepted:)' "$RUNNER_TEMP/count.txt" || true
+            echo "..."
+            tail -8 "$RUNNER_TEMP/count.txt"
+            if [ "$count_rc" -eq 124 ]; then echo "delivery count timed out after 25 minutes"; fi
             echo '```'
+            echo
+            # BL-100 (2026-11-14): the engine sat STOPPED for 5h+ with nothing reporting it. The budget's
+            # folded view comes right after the delivery numbers, and STOPPED fails the tick loudly.
+            echo "### Budget"
+            echo '```'
+            set +e
+            python -m repo_presenter.core.llm.budget status --remote "https://github.com/${GITHUB_REPOSITORY}.git" > "$RUNNER_TEMP/budget.txt" 2>&1
+            budget_rc=$?
+            set -e
+            cat "$RUNNER_TEMP/budget.txt"
+            echo '```'
+            if [ "$budget_rc" -ne 0 ]; then
+              echo "::error title=Budget status unreadable::python -m repo_presenter.core.llm.budget status exited $budget_rc" >&2
+              status=1
+            fi
+            if grep -q '^STOPPED:' "$RUNNER_TEMP/budget.txt"; then
+              echo "::error title=Budget STOPPED::$(grep '^STOPPED:' "$RUNNER_TEMP/budget.txt" | head -1)" >&2
+              echo
+              echo "**Budget STOPPED** -- no cohort can be funded until the owner commits a batch to data/provider_budget.json."
+              status=1
+            fi
             echo
             # R40 (owner, 2026-11-13): silently dropped work is the failure mode -- every tick shows what is next,
             # what has gone stale and what is untracked, right after the delivery numbers.

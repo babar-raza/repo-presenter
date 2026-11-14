@@ -990,12 +990,15 @@ items:
     type: defect
     source: "BL-013 diagnosis of hosted round 43445578226 (7 of 8 Lane R controls did not re-certify)"
     priority: P1
-    status: open
+    status: active
     implementation_path: "audit-seed.yml seed step: filter control candidates through recertify --all (RECERTIFIED only) before sampling; keep the writer's controls_not_recertified exclusion as defence in depth"
     acceptance: "a seeded round's controls_not_recertified is empty; evidence = seed run id"
-    evidence: []
-    next_action: "after PR #64 merges"
-    updated: "2026-11-13"
+    evidence:
+      - "2026-11-14: phase1-engine 6587489: scripts/run_m9_seeder.py recertified_seals + build_seed_plan(recertified=...) -- a latest seal that is not RECERTIFIED is never a control slot (it may still carry a seed); main fails closed if re-certification cannot run; a shape with no injection site falls through to the next shape before a seal becomes a control (the first miss used to make a stale seal a control: 3 of 12 stale Lane R seals in the replay)"
+      - "2026-11-14: scripts/run_m9_scorer.py false_flag_split beside the raw figure (thresholds unchanged). Replay of round 43593733280 (acceptance records + frozen findings, tests/fixtures/m9/round_43593733280_controls.json): raw 7/27; recertified controls 0/20; not-recertified controls 7/7 (= the writer's 0/20)"
+      - "2026-11-14: tests/test_m9_control_population_bl075.py (8) incl. negative control (no filter -> stale seals get control slots); tests/test_run_m9_seeder.py, tests/test_run_m9_scorer.py green"
+    next_action: "supervisor merges phase1-engine; the next seeded round's acceptance records must show controls_not_recertified empty and the scorecard's false_flag_split (record the seed run id here, then close)"
+    updated: "2026-11-14"
 
   - id: BL-076
     title: "Targeted repair could not reach BC-18 / BC-05 / BC-17 defects: contract-breaking stored rationales, code-span quote mapping, renderer-printed lines, register-false table rows"
@@ -1239,6 +1242,7 @@ items:
     evidence:
       - "2026-11-14: tests/test_cohort_order_bl086.py (9, real backfilled records of runs 43473790998..43529879702 and real-shaped settle entries) pass; negative control (rank (a) moved last, cap raised to 99) fails 7 of 9"
       - "2026-11-14: on o2-planner (BL-084 merged, BL-086 and the R42 upstream tag applied): full suite (6435 collected, 1 deselected) green; ops/gatecli.py validate OK, no STALE receipt; ops/checks/backlog_check.py OK; recertify --gate --remote origin --base-baseline <origin/main data/recertification_baseline.json> OK (45 seals checked; Lane R 6 RECERTIFIED / 12 NEEDS_REPAIR, Lane L 27 RECERTIFIED)"
+      - "2026-11-14: BL-110 refinement on phase1-engine (b1db710, TC-012 re-verified ACCEPTED 7559105): one slot per lane-cell, Lane R first while Lane L >= 25, order (a) > (c) > (b) > (d) (measured since 02:09Z: re-runs sealed 4/10, first attempts 0/15), class scopes read at the run's commit. Live read-only gate (scheduled_execution_gate.py --max 6 --remote origin, 16:3xZ): authorized, runs=6: PDF Go R (a), PDF Python R (a), PDF .NET R (a), 3D .NET R (c), 3D Python R (c), Cells .NET R (c); Words .NET/HTML Python/Cells TS queued 9/5/3"
     next_action: "supervisor merges after the BL-084 records are on the refs (without them every cell with two hosted failures in a row is capped for want of a record: by design, it cannot show a scope change); then read the first hosted planner fire's 'Ran' table"
   - id: BL-087
     title: "Audit O3 (S1): the findings register binds at authoring; Core API rows never print analysis wording or a register quote"
@@ -1351,7 +1355,9 @@ items:
     acceptance: "budget status not STOPPED; the next cohort funds its planned cells; a STOPPED state is reported by the supervisor within one tick"
     evidence:
       - "e2-010 committed 2026-11-14 on owner approval ('Renew budget')"
-    next_action: "STOPPED alert; reservations from measured p90; owner decision on a rolling stop-rule window"
+      - "2026-11-14: phase1-engine 0af7c8e (TC-015 re-verified ACCEPTED 7559105): per-cell reservation = measured p90 of the latest 24 settled lane-cells (calls and tokens; a run's spend split over the lanes it ran), once 5 are measured, bounded by the batch's remaining amount. Real ledger: p90 55 calls / 2.73M tokens per lane-cell vs cap/6 = 45 calls / 1.87M on e2-010 -- e2-010 (270 calls, 11.2M) funds 4 whole cells instead of 6 under-funded ones"
+      - "2026-11-14: phase1-engine 313df52: supervisor-tick.yml '### Budget' section (budget status) right after the delivery numbers; a STOPPED line or an unreadable status emits '::error title=Budget STOPPED::' and fails the tick; tests/test_supervisor_tick_bl111.py"
+    next_action: "supervisor merges phase1-engine; first hosted supervisor tick after merge must show the Budget section (and ::error:: if STOPPED) -- record its run id; then close with that evidence"
     updated: "2026-11-14"
 
   - id: BL-101
@@ -1359,11 +1365,13 @@ items:
     type: requirement
     source: "owner ruling R43 (2026-11-14)"
     priority: P0
-    status: open
+    status: active
     implementation_path: "core/llm/budget.py ensure_open_batch stop rule; plus STOPPED alert in supervisor-tick and per-cell reservation from measured p90 (BL-100)"
     acceptance: "a single zero-seal batch no longer stops the loop; stop fires only when the last 12 runs' cost per seal exceeds 2x the previous 12; tests"
-    evidence: []
-    next_action: "worker dispatched 2026-11-14"
+    evidence:
+      - "2026-11-14: phase1-engine 0af7c8e: core/llm/budget.py rolling_stop_reason -- the last 12 settled hosted runs' cost per seal against the previous 12, stops only above stop_rule_cost_per_sealed_candidate_multiplier (owner key unchanged, 2.0); fewer than 24 runs, a window that spent nothing, or an older window with no seal never fire it. Replaces the per-batch comparison in ensure_open_batch"
+      - "2026-11-14: tests/core/llm/test_budget_rolling_stop_bl101.py (11): a zero-seal batch of six at the same spend at most doubles the window cost, so never stops; real settle entries of 2026-11-14 (tests/fixtures/budget/ledger_settles_2026-11-14.json): the rolling rule would have fired from run 45 (06:48Z) on -- last 12 runs 408 calls/seal vs previous 12 106.3 -- so the 09:04Z stop is not an artefact of the per-batch rule"
+    next_action: "supervisor merges phase1-engine. FACT for the owner: on the real ledger the last 12 settled runs (1 seal) cost 408 calls/seal vs 106.3 for the 12 before, so the rolling rule will fire again when e2-010 is spent unless the next cohort seals; the planner fix (BL-110) sends that cohort to the fixed PDF cells and NEEDS_REPAIR re-runs first"
     updated: "2026-11-14"
 
   - id: BL-102
@@ -1400,4 +1408,34 @@ items:
     acceptance: "no section_authoring job fails on a type/hub unit; PDF and Words .NET rejection shapes pass with fallback rows"
     evidence: []
     next_action: "worker dispatched 2026-11-14"
+    updated: "2026-11-14"
+
+  - id: BL-110
+    title: "Planner priority: job-error scope misses readme/composition, OutputRejectedError read as unknown, authored-unit scope too broad, Lane L (a) carried Lane R (d), first attempts ahead of re-runs"
+    type: defect
+    source: "independent Lane R investigation 2026-11-14 (/inv-lane-r plan.md 12:37Z: PDF Python held on a class BL-097 fixed; 4 PDF cells ranked (d) as unknown:model_output_was_rejected; measured since 02:09Z re-runs 4/10, first attempts 0/15); supervisor brief 2026-11-14"
+    priority: P0
+    status: active
+    depends_on: [BL-084, BL-086]
+    implementation_path: "src/repo_presenter/failures.py (_RULE_SCOPES job_error + readme/composition; job_error_kind reads a wrapped OutputRejectedError into stage + last-rejection shape, SCOPED_TRANSIENT_KINDS; ORIGIN_AUTHORED narrowed to authoring/authoring_retry/coherence/text_hygiene/section_authoring prompt; record_class_paths / class_scope_changed: current tables hashed at the run's main_sha; reclassified on read); scripts/select_scheduled_cohort.py (per lane-cell slots, lane_ranks with LANE_TARGET 25, order (a) > (c) > (b) > (d), scope_at); present.yml cohort checkout fetch-depth 0"
+    acceptance: "read-only gate shows the fixed PDF cells at (a) and NEEDS_REPAIR re-runs ahead of first attempts, Lane R first while Lane L >= 25; tests; TC-012 re-verified; the next hosted cohort's 'Ran' table matches"
+    evidence:
+      - "2026-11-14: phase1-engine d29bc5e, b1db710, 3f2a700; TC-012 re-verified ACCEPTED (7559105); tests/test_planner_priority_bl110.py (9, real failure records of 16:15Z) incl. negative controls (pre-BL-110 reading holds PDF Python; renderer/planning change no longer releases Page Python), tests/test_cohort_order_bl086.py updated"
+      - "2026-11-14: identical cached inputs (harness /home/user/.supervisor/w-engine/harness.py, origin/main planner+failures vs branch): before = PDF TS both (R d, L b), PSD Python R (b), Slides .NET R (b), Slides C++ both (b, b); PDF Python held; 3D .NET (c) queued 14th. After = PDF Go R (a), PDF Python R (a), PDF .NET R (a), PDF TS R (a), 3D .NET R (c), 3D Python R (c)"
+      - "2026-11-14: live read-only scheduled_execution_gate.py --max 6 --remote origin after the change: authorized=true runs=6: PDF Go R (a), PDF Python R (a), PDF .NET R (a), 3D .NET R (c), 3D Python R (c), Cells .NET R (c) (PDF TS/C++ idempotent: ran this code at 16:2xZ)"
+    next_action: "supervisor merges phase1-engine; read the first hosted cohort's Ran table and its seals"
+    updated: "2026-11-14"
+
+  - id: BL-111
+    title: "supervisor-tick had no successful run since 2026-11-13T23:36: the delivery count outgrew the job's 10-minute ceiling; no hosted way to get the official delivered count"
+    type: defect
+    source: "supervisor-tick runs 43566771426 (06:31Z) and 43603607740 (14:11Z), both cancelled ('The operation was canceled') inside ops/checks/portfolio_delivery_count.py; it took 9m20s in 43528417117, 4m28s on 11-13 01:52, 2m on 11-11"
+    priority: P1
+    status: active
+    implementation_path: "supervisor-tick.yml: timeout-minutes 10 -> 40, the count under 'timeout 25m' into a file, its per-lane headline shown (a bare tail -20 showed only per-seal notes); scripts/run_request.py job 'count' + run-request-execute.yml job 'count' (main checkout, contents: read, attestations: read, github token only)"
+    acceptance: "the next scheduled supervisor tick after merge succeeds and shows Delivery, Budget, Backlog and Failure classes; a run request {\"job\": \"count\"} prints the per-lane delivered count with attestations verified (record both run ids)"
+    evidence:
+      - "2026-11-14: gh run view 43603607740 --log: '### Delivery' at 14:12:15Z, '##[error]The operation was canceled.' at 14:22:13Z with python/gh still running; 43566771426 the same (06:31:52Z -> cancelled); 43528417117 (success): Delivery 23:37:07Z -> Backlog 23:46:27Z"
+      - "2026-11-14: phase1-engine 313df52; tests/test_supervisor_tick_bl111.py (4), tests/test_run_request.py (count validation + job shape), tests/test_reusable_workflow_permissions.py green"
+    next_action: "supervisor merges phase1-engine; push a run-requests/<id> branch with {\"job\": \"count\"} for the official count"
     updated: "2026-11-14"
