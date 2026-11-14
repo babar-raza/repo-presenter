@@ -482,7 +482,7 @@
  
  The library source lives under `aspose/cells_foss/`, with runnable examples, tests, a
  verification tool, and a usage guide alongside it at the repository root:
-@@ -472,19 +557,6 @@
+@@ -472,24 +557,8 @@
  └── README.md
  ```
  
@@ -501,13 +501,40 @@
 -
  | Class                       | Description                                                                                                                     |
  | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
- | `Alignment`                 | Alignment controls how cell content is positioned within the cell bounds.                                                       |
-@@ -525,57 +597,59 @@
- | `Workbook`                  | Workbook is the top-level object representing an Excel workbook.                                                                |
- | `Worksheet`                 | Worksheet represents a single sheet within a workbook.                                                                          |
- 
-+For the complete API reference and usage guide, see **[docs/usage.md](docs/usage.md)**.
+-| `Alignment`                 | Alignment controls how cell content is positioned within the cell bounds.                                                       |
+-| `Border`                    | Border defines which sides of a cell have a visible rule and the colour of those rules.                                         |
+-| `Cell`                      | Cell represents a single cell in a worksheet grid.                                                                              |
+ | `CellNotFoundError`         | Error returned by `Cells.Get` when the reference does not exist in the worksheet.                                               |
+ | `Cells`                     | Cells is a collection of Cell values indexed by A1-style string references (e.g. "A1", "B2", "Z100").                           |
+ | `Chart`                     | Chart represents a chart embedded in a worksheet (bar, line, pie, scatter, area).                                               |
+@@ -503,79 +572,72 @@
+ | `ConditionalFormatting`     | ConditionalFormatting is a group of conditional-formatting rules applied to a range of cells (sqref).                           |
+ | `ConditionalFormattingRule` | ConditionalFormattingRule represents a single rule (cellIs, text, expression, colorScale, dataBar, iconSet, top10).             |
+ | `DataBar`                   | DataBar is an in-cell data-bar rule.                                                                                            |
+-| `DataValidation`            | DataValidation represents a single data-validation rule applied to a range of cells on a worksheet.                            |
+ | `ErrorValue`                | Excel error values (`#DIV/0!`, `#N/A`, …) usable as cell values and returned by formula evaluation.                             |
+-| `Fill`                      | Fill describes the background appearance of a cell.                                                                             |
+-| `Font`                      | Font describes the typographic properties applied to cell text.                                                                 |
+ | `FormulaError`              | Error returned when a formula cannot be parsed or evaluated.                                                                    |
+ | `Hyperlink`                 | Hyperlink is a cell hyperlink — external (`Target`) or internal (`Location`).                                                   |
+ | `IconSet`                   | IconSet is an icon-set rule with per-icon thresholds (17 built-in icon sets).                                                   |
+ | `InvalidRefError`           | Error for cell references that cannot be parsed.                                                                                |
+ | `LegendPosition`            | Enum of where a chart legend is drawn.                                                                                          |
+-| `Picture`                   | Picture represents an image embedded in a worksheet.                                                                            |
+ | `PivotDataField`            | PivotDataField represents a value field in a pivot table with its aggregation.                                                  |
+ | `PivotTable`                | PivotTable represents a pivot table on a worksheet (row, column, and data fields).                                              |
+-| `RowCallback`               | RowCallback is invoked by StreamingReader.ProcessRows once for every row in the worksheet.                                      |
+ | `SheetNotFoundError`        | Error for a formula reference to a sheet name that does not exist in the workbook.                                              |
+ | `StreamOptions`             | Optional row/column filters for StreamingReader; zero values mean no filtering.                                                 |
+-| `StreamingReader`           | StreamingReader reads an .xlsx workbook row by row without loading the entire sheet XML into memory.                            |
+ | `Style`                     | Style groups font, fill, alignment, border, and number-format settings into a named formatting record.                          |
+-| `Table`                     | Table represents a structured range of data (a "table" in Excel terminology) with optional header row and built-in auto-filter. |
+ | `VBAProject`                | Raw `vbaProject.bin` storage for macro-enabled (.xlsm) round-trips.                                                             |
+-| `Workbook`                  | Workbook is the top-level object representing an Excel workbook.                                                                |
+-| `Worksheet`                 | Worksheet represents a single sheet within a workbook.                                                                          |
 +
++For the complete API reference and usage guide, see **[docs/usage.md](docs/usage.md)**.
+ 
  </details>
  
  ## Documentation & Resources
@@ -601,7 +628,7 @@
  
  Run the full test suite from the repository root:
  
-@@ -583,16 +657,9 @@
+@@ -583,16 +645,9 @@
  go test ./...
  ```
  
@@ -618,7 +645,7 @@
  
  ```bash
  cd examples
-@@ -611,20 +678,6 @@
+@@ -611,20 +666,6 @@
  For a complete usage walkthrough beyond this README, see the repository's own
  [docs/usage.md](docs/usage.md).
  
