@@ -1227,7 +1227,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 1: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 10.0.403",
+          "detail": "example 1: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
           "path": "receipts.json"
         }
       ],
@@ -1245,7 +1245,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 2: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 10.0.403",
+          "detail": "example 2: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
           "path": "receipts.json"
         }
       ],
@@ -1263,7 +1263,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 3: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 10.0.403",
+          "detail": "example 3: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
           "path": "receipts.json"
         }
       ],
@@ -1281,7 +1281,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 4: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 10.0.403",
+          "detail": "example 4: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
           "path": "receipts.json"
         }
       ],
@@ -4657,6 +4657,34 @@
     },
     {
       "attributes": {
+        "aspect": "sample_reference",
+        "package": "Aspose.Email.Foss",
+        "package_reference": "0",
+        "project_reference": "3",
+        "samples": "3"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "examples/create_msg_and_eml/create_msg_and_eml.csproj"
+        },
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "examples/msg_reader/msg_reader.csproj"
+        },
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "examples/msg_summary/msg_summary.csproj"
+        }
+      ],
+      "id": "project_file:samples.product_reference",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "all 3 sample projects reference the product project by ProjectReference; none references the published package"
+    },
+    {
+      "attributes": {
         "file": "tests/Aspose.Email.Foss.Tests/CfbRoundTripTests.cs",
         "test": "DirectoryEntryNameOrderingMatchesSpecRules"
       },
@@ -5138,7 +5166,8 @@
     {
       "attributes": {
         "declaration": "public static class CfbConstants",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5155,6 +5184,8 @@
     {
       "attributes": {
         "docstring": "Byte order marker value that identifies little-endian encoding for integer fields in CFB structures.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5173,6 +5204,8 @@
     {
       "attributes": {
         "docstring": "Maximum regular sector number (0xFFFFFFFA).",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5191,6 +5224,8 @@
     {
       "attributes": {
         "docstring": "Maximum regular stream ID (0xFFFFFFFA).",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5209,6 +5244,8 @@
     {
       "attributes": {
         "docstring": "Maximum stream size allocated from the mini FAT and mini stream.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5227,6 +5264,8 @@
     {
       "attributes": {
         "docstring": "Terminator or empty pointer (0xFFFFFFFF).",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5245,6 +5284,8 @@
     {
       "attributes": {
         "docstring": "Required UTF-16 null-terminated name for the root storage directory entry.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -5263,6 +5304,8 @@
     {
       "attributes": {
         "docstring": "Stream ID of the root directory entry in the first directory sector.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5281,7 +5324,8 @@
     {
       "attributes": {
         "declaration": "public sealed class CfbDocument",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5297,6 +5341,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "CfbDocument()",
         "symbol_kind": "method"
       },
@@ -5314,6 +5359,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromFile(string path)",
         "symbol_kind": "method"
       },
@@ -5331,6 +5378,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromReader(CfbReader reader)",
         "symbol_kind": "method"
       },
@@ -5348,6 +5397,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromStream(Stream stream)",
         "symbol_kind": "method"
       },
@@ -5365,6 +5416,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -5382,6 +5435,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -5399,6 +5454,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "CfbStorage",
         "symbol_kind": "method"
       },
@@ -5416,6 +5473,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5433,8 +5492,10 @@
     },
     {
       "attributes": {
+        "bases": "Exception",
         "declaration": "public sealed class CfbException : Exception",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5450,6 +5511,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "CfbException(string message)",
         "symbol_kind": "method"
       },
@@ -5468,7 +5530,8 @@
     {
       "attributes": {
         "declaration": "public abstract class CfbNode",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5484,6 +5547,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -5501,6 +5566,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -5518,6 +5585,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -5535,6 +5604,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -5552,6 +5623,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -5569,8 +5642,10 @@
     },
     {
       "attributes": {
+        "bases": "IDisposable",
         "declaration": "public sealed class CfbReader : IDisposable",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5586,6 +5661,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "CfbReader(byte[] data)",
         "symbol_kind": "method"
       },
@@ -5603,6 +5679,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ReadOnlyCollection<uint>",
         "symbol_kind": "method"
       },
@@ -5620,6 +5698,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ReadOnlyCollection<DirectoryEntry>",
         "symbol_kind": "method"
       },
@@ -5637,6 +5717,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5654,6 +5736,7 @@
     },
     {
       "attributes": {
+        "member_kind": "method",
         "signature": "Dispose()",
         "symbol_kind": "method"
       },
@@ -5671,6 +5754,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ReadOnlyCollection<uint>",
         "symbol_kind": "method"
       },
@@ -5688,6 +5773,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5705,6 +5792,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FindChildByName(uint storageStreamId, string name)",
         "symbol_kind": "method"
       },
@@ -5722,6 +5811,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromFile(string path)",
         "symbol_kind": "method"
       },
@@ -5739,6 +5830,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromStream(Stream stream)",
         "symbol_kind": "method"
       },
@@ -5756,6 +5849,7 @@
     },
     {
       "attributes": {
+        "member_kind": "method",
         "signature": "GetEntry(uint streamId)",
         "symbol_kind": "method"
       },
@@ -5773,6 +5867,7 @@
     },
     {
       "attributes": {
+        "member_kind": "method",
         "signature": "GetStreamData(uint streamId)",
         "symbol_kind": "method"
       },
@@ -5790,6 +5885,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "Header",
         "symbol_kind": "method"
       },
@@ -5807,6 +5904,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterChildren(uint storageStreamId)",
         "symbol_kind": "method"
       },
@@ -5824,6 +5923,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterStorages()",
         "symbol_kind": "method"
       },
@@ -5841,6 +5942,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterStreams()",
         "symbol_kind": "method"
       },
@@ -5858,6 +5961,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterTree(uint startStreamId)",
         "symbol_kind": "method"
       },
@@ -5875,6 +5980,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5892,6 +5999,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5909,6 +6018,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ReadOnlyCollection<uint>",
         "symbol_kind": "method"
       },
@@ -5926,6 +6037,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5943,6 +6056,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -5960,6 +6075,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ResolvePath(IEnumerable<string> names, uint startStreamId)",
         "symbol_kind": "method"
       },
@@ -5977,6 +6094,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "DirectoryEntry",
         "symbol_kind": "method"
       },
@@ -5994,6 +6113,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6011,8 +6132,10 @@
     },
     {
       "attributes": {
+        "bases": "CfbNode",
         "declaration": "public sealed class CfbStorage : CfbNode",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6028,6 +6151,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddStorage(CfbStorage storage)",
         "symbol_kind": "method"
       },
@@ -6045,6 +6170,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddStream(CfbStream stream)",
         "symbol_kind": "method"
       },
@@ -6062,6 +6189,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "CfbStorage(string name)",
         "symbol_kind": "method"
       },
@@ -6079,6 +6207,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IList<CfbNode>",
         "symbol_kind": "method"
       },
@@ -6096,6 +6226,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -6113,6 +6245,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -6130,6 +6264,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -6147,6 +6283,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -6164,6 +6302,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -6181,8 +6321,10 @@
     },
     {
       "attributes": {
+        "bases": "CfbNode",
         "declaration": "public sealed class CfbStream : CfbNode",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6198,6 +6340,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "constructor",
         "signature": "CfbStream(string name, byte[]? data)",
         "symbol_kind": "method"
       },
@@ -6215,6 +6359,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -6232,6 +6378,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -6249,6 +6397,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -6266,6 +6416,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -6283,6 +6435,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -6300,6 +6454,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -6318,7 +6474,8 @@
     {
       "attributes": {
         "declaration": "public static class CfbWriter",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6334,6 +6491,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ToBytes(CfbDocument document)",
         "symbol_kind": "method"
       },
@@ -6351,6 +6510,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "WriteFile(CfbDocument document, string path)",
         "symbol_kind": "method"
       },
@@ -6368,11 +6529,13 @@
     },
     {
       "attributes": {
+        "bases": "byte",
         "declaration": "public enum DirectoryColorFlag : byte",
         "docstring": "Stores the red-black tree color used by directory sibling links.",
         "member_count": "2",
         "members": "Red, Black",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6389,7 +6552,8 @@
     {
       "attributes": {
         "declaration": "public sealed record DirectoryEntry(",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "record"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6405,6 +6569,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IsRoot()",
         "symbol_kind": "method"
       },
@@ -6422,6 +6588,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IsStorage()",
         "symbol_kind": "method"
       },
@@ -6439,6 +6607,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IsStream()",
         "symbol_kind": "method"
       },
@@ -6457,7 +6627,8 @@
     {
       "attributes": {
         "declaration": "public static class DirectoryEntryNameComparer",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6473,6 +6644,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Compare(string left, string right)",
         "symbol_kind": "method"
       },
@@ -6490,11 +6663,13 @@
     },
     {
       "attributes": {
+        "bases": "byte",
         "declaration": "public enum DirectoryObjectType : byte",
         "docstring": "Classifies the directory entry payload as unallocated, storage, stream, or root storage.",
         "member_count": "4",
         "members": "UnknownOrUnallocated, StorageObject, StreamObject, RootStorageObject",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6511,7 +6686,8 @@
     {
       "attributes": {
         "declaration": "public sealed record Header(",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "record"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6527,6 +6703,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6544,6 +6722,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6561,11 +6741,13 @@
     },
     {
       "attributes": {
+        "bases": "uint",
         "declaration": "public enum SectorMarker : uint",
         "docstring": "Special FAT marker values reserved for sector allocation metadata.",
         "member_count": "4",
         "members": "DIFSECT, FATSECT, ENDOFCHAIN, FREESECT",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6597,11 +6779,13 @@
     },
     {
       "attributes": {
+        "bases": "ushort",
         "declaration": "public enum CommonMessagePropertyId : ushort",
         "docstring": "Common MAPI property identifiers used by the MSG reader and writer for core message semantics, body fields, transport headers, and attachments.",
         "member_count": "27",
         "members": "MessageClass, TransportMessageHeaders, Subject, DisplayTo, DisplayCc, DisplayBcc, InternetMessageId, MessageFlags, InternetCodepage, SenderName, SenderAddressType, SenderEmailAddress, MessageDeliveryTime, StoreSupportMask, Body, BodyHtml, DisplayName, AttachMethod, AttachDataBinary, AttachFilename, AttachLongFilename, AttachMimeTag, AttachContentId, ScheduleInfoDelegateNames, ScheduleInfoMonthsBusy, ExampleTag100A, ExampleTag101D",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6618,7 +6802,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MapiAttachment",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6634,6 +6819,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -6651,6 +6838,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -6668,6 +6857,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "MapiMessage?",
         "symbol_kind": "method"
       },
@@ -6685,6 +6876,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -6702,6 +6895,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromBytes(string filename, byte[] data, string? mimeType, string? contentId)",
         "symbol_kind": "method"
       },
@@ -6719,6 +6914,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromStream(string filename, Stream stream, string? mimeType, string? contentId)",
         "symbol_kind": "method"
       },
@@ -6736,6 +6933,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -6753,6 +6952,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -6770,6 +6971,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "LoadData(Stream stream)",
         "symbol_kind": "method"
       },
@@ -6787,6 +6990,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -6804,6 +7009,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "OpenRead()",
         "symbol_kind": "method"
       },
@@ -6821,6 +7028,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "MapiPropertyCollection",
         "symbol_kind": "method"
       },
@@ -6838,8 +7047,10 @@
     },
     {
       "attributes": {
+        "bases": "IDisposable",
         "declaration": "public sealed partial class MapiMessage : IDisposable",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6855,6 +7066,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddAttachment(string filename, byte[] data, string? mimeType, string? contentId)",
         "symbol_kind": "method"
       },
@@ -6872,6 +7085,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddEmbeddedMessageAttachment(MapiMessage message, string? filename, string? mimeType)",
         "symbol_kind": "method"
       },
@@ -6889,6 +7104,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddRecipient(string emailAddress, string? displayName, int recipientType)",
         "symbol_kind": "method"
       },
@@ -6906,6 +7123,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IList<MapiAttachment>",
         "symbol_kind": "method"
       },
@@ -6923,6 +7142,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6940,6 +7161,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6957,6 +7180,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6974,6 +7199,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -6991,6 +7218,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Create(string subject, string body, bool unicodeStrings)",
         "symbol_kind": "method"
       },
@@ -7008,6 +7237,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -7025,6 +7256,7 @@
     },
     {
       "attributes": {
+        "member_kind": "method",
         "signature": "Dispose()",
         "symbol_kind": "method"
       },
@@ -7042,6 +7274,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromFile(string path, bool strict)",
         "symbol_kind": "method"
       },
@@ -7059,6 +7293,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromMsgDocument(MsgDocument document)",
         "symbol_kind": "method"
       },
@@ -7076,6 +7312,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromStream(Stream stream, bool strict)",
         "symbol_kind": "method"
       },
@@ -7093,6 +7331,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "GetPropertyValue(ushort propertyId, ushort? propertyType, bool decode)",
         "symbol_kind": "method"
       },
@@ -7110,6 +7350,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7127,6 +7369,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7144,6 +7388,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterAttachmentsInfo()",
         "symbol_kind": "method"
       },
@@ -7161,6 +7407,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterProperties()",
         "symbol_kind": "method"
       },
@@ -7178,6 +7426,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterPropertyKeys()",
         "symbol_kind": "method"
       },
@@ -7195,6 +7445,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "LoadFromEml(string path)",
         "symbol_kind": "method"
       },
@@ -7212,6 +7464,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -7229,6 +7483,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7246,6 +7502,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "DateTime?",
         "symbol_kind": "method"
       },
@@ -7263,6 +7521,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -7280,6 +7540,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "MapiPropertyCollection",
         "symbol_kind": "method"
       },
@@ -7297,6 +7559,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IList<MapiRecipient>",
         "symbol_kind": "method"
       },
@@ -7314,6 +7578,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7331,6 +7597,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7348,6 +7616,8 @@
     },
     {
       "attributes": {
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7365,6 +7635,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Save()",
         "symbol_kind": "method"
       },
@@ -7382,6 +7654,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "SaveToEml()",
         "symbol_kind": "method"
       },
@@ -7399,6 +7673,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7416,6 +7692,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7433,6 +7711,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7450,6 +7730,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "SetProperty(ushort propertyId, ushort propertyType, object? value, uint flags)",
         "symbol_kind": "method"
       },
@@ -7467,6 +7749,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7484,6 +7768,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ToMsgDocument()",
         "symbol_kind": "method"
       },
@@ -7501,6 +7787,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -7518,6 +7806,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -7535,6 +7825,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IReadOnlyList<string>",
         "symbol_kind": "method"
       },
@@ -7553,7 +7845,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MapiProperty",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7569,6 +7862,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -7586,6 +7881,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "constructor",
         "signature": "MapiProperty(ushort propertyId, ushort propertyType, object? value, uint flags)",
         "symbol_kind": "method"
       },
@@ -7603,6 +7900,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -7620,6 +7919,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -7637,6 +7938,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -7654,6 +7957,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "object?",
         "symbol_kind": "method"
       },
@@ -7672,7 +7977,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MapiPropertyCollection",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7688,6 +7994,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Add(ushort propertyId, ushort propertyType, object? value, uint flags)",
         "symbol_kind": "method"
       },
@@ -7705,6 +8013,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Get(ushort propertyId, ushort? propertyType)",
         "symbol_kind": "method"
       },
@@ -7722,6 +8032,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "IterProperties()",
         "symbol_kind": "method"
       },
@@ -7739,6 +8051,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Remove(ushort propertyId, ushort? propertyType)",
         "symbol_kind": "method"
       },
@@ -7756,6 +8070,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Set(MapiProperty property)",
         "symbol_kind": "method"
       },
@@ -7774,7 +8090,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MapiRecipient",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7790,6 +8107,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -7807,6 +8126,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7824,6 +8145,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string?",
         "symbol_kind": "method"
       },
@@ -7841,6 +8164,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "MapiPropertyCollection",
         "symbol_kind": "method"
       },
@@ -7858,6 +8183,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7876,7 +8203,8 @@
     {
       "attributes": {
         "declaration": "public static class MsgConstants",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7893,6 +8221,8 @@
     {
       "attributes": {
         "docstring": "Prefix for attachment object storage names; suffix is 8-digit hexadecimal index.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -7911,6 +8241,8 @@
     {
       "attributes": {
         "docstring": "Substorage name under attachment storage that contains an embedded message object.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -7929,6 +8261,8 @@
     {
       "attributes": {
         "docstring": "Maximum number of attachment object storages in one MSG file.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -7947,6 +8281,8 @@
     {
       "attributes": {
         "docstring": "Maximum number of recipient object storages in one MSG file.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -7965,6 +8301,8 @@
     {
       "attributes": {
         "docstring": "Required storage name for named property mapping streams.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -7983,6 +8321,8 @@
     {
       "attributes": {
         "docstring": "Property must not be deleted from MSG file.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -8001,6 +8341,8 @@
     {
       "attributes": {
         "docstring": "If clear, property must not be read.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -8019,6 +8361,8 @@
     {
       "attributes": {
         "docstring": "If clear, property must not be modified or deleted.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -8037,6 +8381,8 @@
     {
       "attributes": {
         "docstring": "Required name for the property stream in all MSG storages except Named Property Mapping storage.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -8055,6 +8401,8 @@
     {
       "attributes": {
         "docstring": "Prefix used to form stream names that store values of variable-length and multi-valued properties.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -8073,6 +8421,8 @@
     {
       "attributes": {
         "docstring": "Prefix for recipient object storage names; suffix is 8-digit hexadecimal index.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -8091,7 +8441,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MsgDocument",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8107,6 +8458,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromFile(string path, bool strict)",
         "symbol_kind": "method"
       },
@@ -8124,6 +8477,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromStream(Stream stream, bool strict)",
         "symbol_kind": "method"
       },
@@ -8141,6 +8496,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -8158,6 +8515,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ushort",
         "symbol_kind": "method"
       },
@@ -8175,6 +8534,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "MsgDocument(MsgStorage root, ushort majorVersion, ushort minorVersion, uint transactionSignatureNumber, bool strict)",
         "symbol_kind": "method"
       },
@@ -8192,6 +8552,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "MsgStorage",
         "symbol_kind": "method"
       },
@@ -8209,6 +8571,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -8226,6 +8590,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ToCfbDocument()",
         "symbol_kind": "method"
       },
@@ -8243,6 +8609,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -8260,8 +8628,10 @@
     },
     {
       "attributes": {
+        "bases": "Exception",
         "declaration": "public sealed class MsgException : Exception",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8277,6 +8647,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "MsgException(string message)",
         "symbol_kind": "method"
       },
@@ -8294,8 +8665,10 @@
     },
     {
       "attributes": {
+        "bases": "IDisposable",
         "declaration": "public sealed class MsgReader : IDisposable",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8311,6 +8684,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "Dispose()",
         "symbol_kind": "method"
       },
@@ -8328,6 +8703,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromFile(string path, bool strict)",
         "symbol_kind": "method"
       },
@@ -8345,6 +8722,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FromStream(Stream stream, bool strict)",
         "symbol_kind": "method"
       },
@@ -8362,6 +8741,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IReadOnlyList<string>",
         "symbol_kind": "method"
       },
@@ -8380,7 +8761,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MsgStorage",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8396,6 +8778,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddStorage(MsgStorage storage)",
         "symbol_kind": "method"
       },
@@ -8413,6 +8797,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "AddStream(MsgStream stream)",
         "symbol_kind": "method"
       },
@@ -8430,6 +8816,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -8447,6 +8835,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -8464,6 +8854,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FindStorage(string name)",
         "symbol_kind": "method"
       },
@@ -8481,6 +8873,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "FindStream(string name)",
         "symbol_kind": "method"
       },
@@ -8498,6 +8892,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -8515,6 +8911,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "MsgStorage(string name, MsgStorageRole role)",
         "symbol_kind": "method"
       },
@@ -8532,6 +8929,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -8549,6 +8948,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "MsgStorageRole",
         "symbol_kind": "method"
       },
@@ -8566,6 +8967,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -8583,6 +8986,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IList<MsgStorage>",
         "symbol_kind": "method"
       },
@@ -8600,6 +9005,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "false",
         "signature": "IList<MsgStream>",
         "symbol_kind": "method"
       },
@@ -8620,7 +9027,8 @@
         "declaration": "public enum MsgStorageRole",
         "member_count": "7",
         "members": "Generic, Message, Recipient, Attachment, EmbeddedMessage, NamedPropertyMapping, CustomAttachment",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8637,7 +9045,8 @@
     {
       "attributes": {
         "declaration": "public sealed class MsgStream",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8653,6 +9062,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -8670,6 +9081,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -8687,6 +9100,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -8704,6 +9119,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ulong",
         "symbol_kind": "method"
       },
@@ -8721,6 +9138,7 @@
     },
     {
       "attributes": {
+        "member_kind": "constructor",
         "signature": "MsgStream(string name, byte[]? data)",
         "symbol_kind": "method"
       },
@@ -8738,6 +9156,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -8755,6 +9175,8 @@
     },
     {
       "attributes": {
+        "member_kind": "property",
+        "settable": "true",
         "signature": "uint",
         "symbol_kind": "method"
       },
@@ -8773,7 +9195,8 @@
     {
       "attributes": {
         "declaration": "public static class MsgWriter",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8789,6 +9212,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "ToBytes(MsgDocument document)",
         "symbol_kind": "method"
       },
@@ -8806,6 +9231,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "WriteFile(MsgDocument document, string path)",
         "symbol_kind": "method"
       },
@@ -8823,11 +9250,13 @@
     },
     {
       "attributes": {
+        "bases": "ushort",
         "declaration": "public enum PropertyTypeCode : ushort",
         "docstring": "MAPI property type codes that appear in property tags and stream names in MSG files.",
         "member_count": "27",
         "members": "PtypInteger16, PtypInteger32, PtypFloating32, PtypFloating64, PtypCurrency, PtypFloatingTime, PtypErrorCode, PtypBoolean, PtypObject, PtypInteger64, PtypString8, PtypString, PtypTime, PtypGuid, PtypBinary, PtypMultipleInteger16, PtypMultipleInteger32, PtypMultipleFloating32, PtypMultipleFloating64, PtypMultipleCurrency, PtypMultipleFloatingTime, PtypMultipleInteger64, PtypMultipleString8, PtypMultipleString, PtypMultipleTime, PtypMultipleGuid, PtypMultipleBinary",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [

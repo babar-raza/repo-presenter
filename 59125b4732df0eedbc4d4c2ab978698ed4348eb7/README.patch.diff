@@ -20,7 +20,7 @@
  deterministic binary and message processing: reading, creating, and inspecting Outlook `.msg`
  files, Compound File Binary (CFB) containers, and EML message data. It ships with no required
  third-party package dependencies and needs no Microsoft Outlook installation, making it a
-@@ -28,82 +30,52 @@
+@@ -28,82 +30,65 @@
  ## At a Glance
  
  ```mermaid
@@ -31,39 +31,49 @@
 -    i2["An existing MSG file (Outlook message)"]
 -  end
 -  PRODUCT["Aspose.Email FOSS for .NET"]
--  subgraph Capabilities["Core Capabilities"]
--    direction TB
++flowchart TB
++  PRODUCT["Aspose.Email FOSS for .Net"]
+   subgraph Capabilities["Core Capabilities"]
+     direction TB
 -    c1["CFB container read and write"]
 -    c2["MSG document read and write"]
 -    c3["High-level message creation, editing, and property access"]
 -    c4["EML and MSG conversion through a built-in MIME implementation"]
--  end
++    c1["Read and write MSG<br/>files"]
++    c2["Create messages<br/>programmatically"]
++    c3["Convert between MSG<br/>and EML"]
++    c4["Inspect CFB containers"]
++    c5["Access MAPI properties"]
++    c6["Attach recipients and<br/>files"]
++    c7["Validate message<br/>structure"]
++    c8["Build CFB containers"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c8
++    c6 ~~~ c8
+   end
 -  subgraph Outputs["Outputs"]
 -    direction TB
 -    o1["A CFB container (file or byte array)"]
 -    o2["An MSG file (Outlook message)"]
 -  end
 -  StartingPoints --> PRODUCT --> Capabilities --> Outputs
-+flowchart LR
-+Product["Aspose.Email FOSS for .Net"]
-+Product["Aspose.Email FOSS for .Net"] --> Cap1["Read and write MSG files"]
-+Cap2["Create messages programmatically"]
-+Cap3["Convert between MSG and EML"]
-+Cap4["Inspect CFB containers"]
-+Product["Aspose.Email FOSS for .Net"] --> Cap2["Create messages programmatically"]
-+Product["Aspose.Email FOSS for .Net"] --> Cap3["Convert between MSG and EML"]
-+Product["Aspose.Email FOSS for .Net"] --> Cap4["Inspect CFB containers"]
++  PRODUCT --> Capabilities
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
  ```
  
  ## Key Capabilities
  
 +- **Read and write MSG files.** It reads MSG files from streams or files using `MapiMessage.FromStream` and writes them back with Save, preserving MAPI structure and metadata.
 +- **Create messages programmatically.** It creates new messages with `MapiMessage.Create`, sets sender and recipient details, attaches files via streams, and saves the result as a complete MSG file.
-+- **Convert between MSG and EML.** It converts EML files to MSG using `MapiMessage.LoadFromEml` and writes them back to EML format with `SaveToEml`, using native parsing without external dependencies.
-+- **Inspect CFB containers.** It opens CFB containers from files with `CfbReader.FromFile`, reports sector size and directory entry count, and iterates the internal tree structure depth-first.
++- **Convert between MSG and EML.** It converts EML files to MSG using `MapiMessage.LoadFromEml` and back to EML using `SaveToEml`, handling MIME parsing and serialization natively without external dependencies.
++- **Inspect CFB containers.** It opens CFB containers from files with `CfbReader.FromFile`, exposing sector size, directory entry count, and tree traversal via `IterTree` to inspect internal structure.
 +- **Access MAPI properties.** It reads and writes arbitrary MAPI properties on messages using `SetProperty` and `GetPropertyValue`, beyond the strongly-typed properties exposed directly by `MapiMessage`.
-+- **Attach recipients and files.** It adds recipients with `AddRecipient` and attaches files or embedded messages using `AddAttachment` and `AddEmbeddedMessageAttachment`, supporting in-memory streams.
-+- **Validate message structure.** It exposes a read-only `ValidationIssues` list on loaded messages and MSG documents to report structural anomalies encountered during strict parsing.
++- **Attach recipients and files.** It adds recipients with `AddRecipient` and attaches files or embedded messages with `AddAttachment` and `AddEmbeddedMessageAttachment`, supporting both external and nested content.
++- **Validate message structure.** It populates a read-only `ValidationIssues` list on loaded messages or MSG documents whenever strict parsing encounters structural anomalies.
 +- **Build CFB containers.** It builds CFB containers programmatically using `CfbDocument`, `CfbStorage`, and `CfbStream`, then serializes them to files or byte arrays with `CfbWriter.WriteFile` or `CfbWriter.ToBytes`.
 +
  - **Open and traverse CFB containers** from a file, stream, or byte array via `CfbReader.FromFile()`, `CfbReader.FromStream()`, or `new CfbReader(data)`, then walk the directory tree with `IterStorages()`, `IterStreams()`, `IterChildren()`, and `IterTree()`.
@@ -121,24 +131,41 @@
  ## Quick Start
  
 -Read a subject from an MSG file:
-+The first example reads a MSG file and prints its subject line using `Aspose.Email.Foss` version 26.7.0 for net8.0.
++This example reads a MSG file and prints its subject line using `Aspose.Email.Foss` version 26.7.0 for net8.0.
  
  ```csharp
  using System.IO;
-@@ -114,11 +86,7 @@
- Console.WriteLine(message.Subject);
- ```
+@@ -116,9 +101,26 @@
  
--## Additional Examples
--
+ ## Additional Examples
+ 
 -A few more real, runnable patterns beyond the Quick Start example above.
 -
 -### Create and Save an MSG Message
-+The second example creates a new MSG file with a sender, recipient, attachment, and body, then saves it to disk using `Aspose.Email.Foss` version 26.7.0 for net8.0.
++The following examples demonstrate creating and saving MSG messages, converting EML to MSG, and inspecting CFB container structures.
++
++### Convert an EML File to MSG and Back to EML
++
++```csharp
++using System.IO;
++using Aspose.Email.Foss.Msg;
++
++using var input = File.OpenRead("message.eml");
++var message = MapiMessage.LoadFromEml(input);
++using var msgOutput = File.Create("message.msg");
++message.Save(msgOutput);
++using var emlOutput = File.Create("roundtrip.eml");
++message.SaveToEml(emlOutput);
++```
++
++<details>
++<summary>View Additional Examples</summary>
++
++### Create and Save an MSG Message with Sender, Recipient, and Attachment
  
  ```csharp
  using System.IO;
-@@ -134,10 +102,11 @@
+@@ -134,28 +136,7 @@
  message.Save(output);
  ```
  
@@ -146,43 +173,45 @@
 -<summary>View Additional Examples</summary>
 -
 -### Convert EML to MSG
-+## Additional Examples
-+
-+Additional workflows demonstrate converting EML to MSG and inspecting the CFB structure of MSG files.
-+
-+### Convert an EML File to MSG and Back to EML Using Aspose.Email FOSS for .Net
- 
- ```csharp
- using System.IO;
-@@ -151,11 +120,10 @@
- message.SaveToEml(emlOutput);
- ```
- 
+-
+-```csharp
+-using System.IO;
+-using Aspose.Email.Foss.Msg;
+-
+-using var input = File.OpenRead("message.eml");
+-var message = MapiMessage.LoadFromEml(input);
+-using var msgOutput = File.Create("message.msg");
+-message.Save(msgOutput);
+-using var emlOutput = File.Create("roundtrip.eml");
+-message.SaveToEml(emlOutput);
+-```
+-
 -### Inspect a CFB Container's Structure
 -
 -`CfbReader` gives direct access to a `.msg` file's underlying CFB geometry — useful when
 -diagnosing a damaged or non-standard file, independently of the higher-level MSG or MapiMessage
 -APIs.
-+<details>
-+<summary>View Additional Examples</summary>
-+
-+### Inspect the CFB Container Structure of an MSG File Using Aspose.Email FOSS for .Net
++### Inspect the CFB Container Structure of an MSG File
  
  ```csharp
  using Aspose.Email.Foss.Cfb;
-@@ -170,20 +138,69 @@
+@@ -170,20 +151,73 @@
  }
  ```
  
 +A few more real, runnable patterns beyond the Quick Start example above.
 +
++`CfbReader` gives direct access to a `.msg` file's underlying CFB geometry — useful when
++diagnosing a damaged or non-standard file, independently of the higher-level MSG or MapiMessage
++APIs.
++
  </details>
  
  ## API Reference
 +
-+Aspose.Email FOSS for .Net provides high-level message handling through `MapiMessage` and low-level CFB container access through `CfbReader`. `MapiMessage` serves as the primary entry point for creating, editing, and converting messages, while `CfbReader` enables direct inspection and manipulation of the underlying structured storage format.
++Aspose.Email FOSS for .Net provides high-level message handling through `MapiMessage` and lower-level access via `CfbReader` and `MsgReader` for direct container and document inspection.
 +
-+The verified public surface has 29 types.
++The public API has 29 types.
 +
 +<details>
 +<summary>View the Complete Public API Surface</summary>
@@ -191,29 +220,29 @@
 +
 +| Class | Description |
 +| --- | --- |
-+| `CfbConstants` | Aspose.Email.Foss.Cfb.CfbConstants is a public symbol that exposes the constants ByteOrderLittleEndian, MAXREGSECT, MAXREGSID, MiniStreamCutoffSize, NOSTREAM, RootEntryName, and RootStreamId. |
-+| `CfbDocument` | Aspose.Email.Foss.Cfb.CfbDocument is a public symbol that exposes the constructors CfbDocument, FromFile, FromReader, FromStream, and the properties MajorVersion, MinorVersion, Root, and TransactionSignatureNumber. |
-+| `CfbException` | Aspose.Email.Foss.Cfb.CfbException is a public symbol that exposes the constructor CfbException. |
-+| `CfbNode` | Aspose.Email.Foss.Cfb.CfbNode is a public symbol that exposes the properties Clsid, CreationTime, ModifiedTime, Name, and StateBits. |
-+| `CfbReader` | Aspose.Email.Foss.Cfb.CfbReader is a public symbol that exposes the constructors CfbReader, FromFile, FromStream, and the properties Difat, DirectoryEntries, DirectoryEntryCount, Fat, FileSize, Header, MajorVersion, MaterializedStreamCount, MiniFat, MiniSectorSize, MiniStream, RootEntry, SectorSize, and the methods FindChildByName, Dispose, GetEntry, and GetStreamData; CfbReader.CfbReader throws ArgumentNullException (conditionally), CfbReader.GetEntry throws CfbException (conditionally), and CfbReader.GetStreamData throws CfbException (conditionally). |
-+| `CfbStorage` | Aspose.Email.Foss.Cfb.CfbStorage is a public symbol that exposes the constructor CfbStorage, the properties Clsid, CreationTime, ModifiedTime, Name, and the methods AddStorage, AddStream, and Children. |
-+| `CfbStream` | Aspose.Email.Foss.Cfb.CfbStream is a public symbol that exposes the constructor CfbStream and the properties Clsid, CreationTime, Data, ModifiedTime, Name, and StateBits. |
-+| `CfbWriter` | Aspose.Email.Foss.Cfb.CfbWriter is a public symbol that exposes the methods ToBytes and WriteFile. |
-+| `DirectoryEntry` | Aspose.Email.Foss.Cfb.DirectoryEntry is a public symbol that exposes the properties IsRoot, IsStorage, and IsStream. |
-+| `DirectoryEntryNameComparer` | Aspose.Email.Foss.Cfb.DirectoryEntryNameComparer is a public symbol that exposes the method Compare. |
-+| `Header` | Aspose.Email.Foss.Cfb.Header is a public symbol that exposes the properties MiniSectorSize and SectorSize. |
-+| `MapiAttachment` | Aspose.Email.Foss.Msg.MapiAttachment is a public symbol that exposes the properties ContentId, Data, EmbeddedMessage, Filename, IsEmbeddedMessage, and IsStorageAttachment, and the methods FromBytes and FromStream. |
-+| `MapiMessage` | Aspose.Email.Foss.Msg.MapiMessage is a public symbol that exposes the properties Attachments and Body, and the methods AddAttachment, AddEmbeddedMessageAttachment, AddRecipient, AttachMethodByValue, AttachMethodEmbedded, and AttachMethodStorage. |
-+| `MapiProperty` | Aspose.Email.Foss.Msg.MapiProperty is a public symbol that exposes the constructor MapiProperty and the properties Flags, PropertyId, PropertyTag, PropertyType, and Value. |
-+| `MapiPropertyCollection` | Aspose.Email.Foss.Msg.MapiPropertyCollection is a public symbol that exposes the methods Add, Get, IterProperties, Remove, and Set. |
-+| `MapiRecipient` | Aspose.Email.Foss.Msg.MapiRecipient is a public symbol that exposes the properties AddressType, DisplayName, EmailAddress, Properties, and RecipientType. |
-+| `MsgConstants` | Aspose.Email.Foss.Msg.MsgConstants is a public symbol that exposes the constants AttachmentStoragePrefix, EmbeddedMessageStorageName, MaxAttachmentStorages, MaxRecipientStorages, NamedPropertyMappingStorageName, PROPATTR_MANDATORY, PROPATTR_READABLE, and PROPATTR_WRITABLE. |
-+| `MsgDocument` | Aspose.Email.Foss.Msg.MsgDocument is a public symbol that exposes the constructor MsgDocument, the properties MajorVersion, MinorVersion, Root, Strict, and the methods FromFile, FromStream, and ToCfbDocument; MsgDocument.MsgDocument throws ArgumentNullException (conditionally). |
-+| `MsgException` | Aspose.Email.Foss.Msg.MsgException is a public symbol that exposes the constructor MsgException. |
-+| `MsgReader` | Aspose.Email.Foss.Msg.MsgReader is a public symbol that exposes the methods Dispose, FromFile, FromStream, and the property ValidationIssues. |
-+| `MsgStorage` | Aspose.Email.Foss.Msg.MsgStorage is a public symbol that exposes the constructor MsgStorage, the properties Clsid, CreationTime, ModifiedTime, and the methods AddStorage, AddStream, FindStorage, and FindStream; MsgStorage.MsgStorage throws ArgumentNullException (conditionally). |
-+| `MsgStream` | Aspose.Email.Foss.Msg.MsgStream is a public symbol that exposes the constructor MsgStream and the properties Clsid, CreationTime, Data, ModifiedTime, Name, and StateBits; MsgStream.MsgStream throws ArgumentNullException (conditionally). |
-+| `MsgWriter` | Aspose.Email.Foss.Msg.MsgWriter is a public symbol that exposes the methods ToBytes and WriteFile. |
++| `CfbConstants` | CfbConstants class defines constants used in Compound File Binary structures, including ByteOrderLittleEndian for little-endian encoding, MAXREGSECT and MAXREGSID for maximum sector and stream identifiers, and MiniStreamCutoffSize for the maximum size of streams stored in the mini stream. |
++| `CfbDocument` | CfbDocument class represents a Compound File Binary document and provides methods to load from a file, stream, or reader, exposing properties such as MajorVersion, MinorVersion, TransactionSignatureNumber, and Root. |
++| `CfbException` | CfbException class is the exception type used for errors in Compound File Binary processing and provides a constructor for initialization. |
++| `CfbNode` | CfbNode class holds metadata for a Compound File Binary node, including Clsid, CreationTime, ModifiedTime, Name, and StateBits. |
++| `CfbReader` | CfbReader class reads Compound File Binary files and provides access to header, directory entries, FAT, DIFAT, MiniFAT, and mini stream data, with methods to find children, iterate tree structures, and retrieve stream data; its constructor throws ArgumentNullException conditionally, and GetEntry and GetStreamData throw CfbException conditionally. |
++| `CfbStorage` | CfbStorage class represents a storage node in a Compound File Binary document and provides methods to add child storages and streams, exposing properties such as Children, Clsid, CreationTime, ModifiedTime, and Name. |
++| `CfbStream` | CfbStream class represents a stream node in a Compound File Binary document and provides access to its data, Clsid, CreationTime, ModifiedTime, Name, and StateBits. |
++| `CfbWriter` | CfbWriter class writes Compound File Binary documents and provides methods ToBytes and WriteFile. |
++| `DirectoryEntry` | DirectoryEntry class provides methods to determine whether a directory entry is a root, storage, or stream. |
++| `DirectoryEntryNameComparer` | DirectoryEntryNameComparer class provides a Compare method to compare directory entry names. |
++| `Header` | Header class exposes read-only properties MiniSectorSize and SectorSize for the sector and mini sector sizes in a Compound File Binary file. |
++| `MapiAttachment` | MapiAttachment class represents a MAPI attachment and provides properties for ContentId, Data, EmbeddedMessage, Filename, and methods to load from bytes or stream, as well as read-only properties IsEmbeddedMessage and IsStorageAttachment. |
++| `MapiMessage` | MapiMessage class represents a MAPI message and provides methods to add attachments and recipients, exposing properties such as Attachments and Body, and constants AttachMethodByValue, AttachMethodEmbedded, and AttachMethodStorage. |
++| `MapiProperty` | MapiProperty class represents a MAPI property and provides properties for Flags, PropertyId, PropertyTag, PropertyType, and Value, and a constructor for initialization. |
++| `MapiPropertyCollection` | MapiPropertyCollection class provides methods to add, get, set, and remove MAPI properties, and to iterate over properties. |
++| `MapiRecipient` | MapiRecipient class represents a MAPI recipient and provides properties for AddressType, DisplayName, EmailAddress, RecipientType, and a read-only property for Properties. |
++| `MsgConstants` | MsgConstants class defines constants used in MSG files, including AttachmentStoragePrefix for attachment storage names, EmbeddedMessageStorageName for embedded message substorage, MaxAttachmentStorages and MaxRecipientStorages for limits, and property attribute constants. |
++| `MsgDocument` | MsgDocument class represents an MSG file document and provides methods to load from a file or stream, exposing properties such as MajorVersion, MinorVersion, Root, and Strict, and a method ToCfbDocument. |
++| `MsgException` | MsgException class is the exception type used for errors in MSG processing and provides a constructor for initialization. |
++| `MsgReader` | MsgReader class reads MSG files and provides methods to load from a file or stream, a method to dispose resources, and a read-only property ValidationIssues. |
++| `MsgStorage` | MsgStorage class represents an MSG storage object and provides methods to add storages and streams, find storages and streams, and exposes properties such as Clsid, CreationTime, and ModifiedTime; its constructor throws ArgumentNullException conditionally. |
++| `MsgStream` | MsgStream class represents an MSG stream object and provides properties for Clsid, CreationTime, Data, ModifiedTime, Name, and StateBits; its constructor throws ArgumentNullException conditionally. |
++| `MsgWriter` | MsgWriter class writes MSG files and provides methods ToBytes and WriteFile. |
 +
 +#### Enumerations
 +
@@ -223,14 +252,14 @@
 +| `DirectoryObjectType` | Classifies the directory entry payload as unallocated, storage, stream, or root storage. |
 +| `SectorMarker` | Special FAT marker values reserved for sector allocation metadata. |
 +| `CommonMessagePropertyId` | Common MAPI property identifiers used by the MSG reader and writer for core message semantics, body fields, transport headers, and attachments. |
-+| `MsgStorageRole` | Aspose.Email.Foss.Msg.MsgStorageRole is a public symbol. |
++| `MsgStorageRole` | MsgStorageRole enum lists the roles of MSG storage objects, including Attachment, EmbeddedMessage, Generic, Message, and Recipient. |
 +| `PropertyTypeCode` | MAPI property type codes that appear in property tags and stream names in MSG files. |
 +
 +#### Detailed Member Reference
 +
 +### Foss
 +
-+The `Aspose.Email.Foss` package exposes `MapiMessage` for high-level message operations and `CfbReader` for low-level CFB container inspection, with `MapiMessage` built on top of the lower-level `CfbReader` and `MsgReader` APIs.
++The `Aspose.Email.Foss` package version 26.7.0 targets net8.0 and exposes `MapiMessage` for creating, editing, and converting messages, as well as `CfbReader` for inspecting the underlying CFB container structure.
  
  `MapiMessage` is the primary high-level entry point for creating, editing, and converting
  messages; `CfbReader`/`CfbWriter` and `MsgReader`/`MsgWriter`/`MsgDocument` provide direct,
@@ -245,7 +274,7 @@
  
  | Class | Description |
  |---|---|
-@@ -211,48 +228,32 @@
+@@ -211,48 +245,32 @@
  | `MsgStream` | MsgStream.MsgStream initializes a new stream with a name and optional data bytes. |
  | `MsgWriter` | MsgWriter.WriteFile(document, path) writes a MsgDocument to the given file path in MSG format. |
  
@@ -299,7 +328,7 @@
  
  - `MapiMessage` (implements `IDisposable`)
    - `Create(subject, body, unicodeStrings)`, `FromFile(path, strict)`, `FromStream(stream, strict)`, `FromMsgDocument(document)`
-@@ -262,15 +263,31 @@
+@@ -262,9 +280,11 @@
    - `AddRecipient(emailAddress, displayName, recipientType)`, `AddAttachment(filename, data, mimeType, contentId)`, `AddAttachment(filename, stream, mimeType, contentId)`, `AddEmbeddedMessageAttachment(message, filename, mimeType)`
    - `SetProperty(propertyId, propertyType, value, flags)`, `GetPropertyValue(propertyId, propertyType, decode)`, `IterProperties()`, `IterPropertyKeys()`
    - Properties: `Subject`, `Body`, `HtmlBody`, `SenderName`, `SenderEmailAddress`, `MessageClass`, `InternetMessageId`, `MessageDeliveryTime`, `Recipients`, `Attachments`, `ValidationIssues`
@@ -311,32 +340,25 @@
  - `MapiPropertyCollection`
    - `Set(property)`, `Add(propertyId, propertyType, value, flags)`, `Get(propertyId, propertyType)`, `Remove(propertyId, propertyType)`, `IterProperties()`
  
- </details>
+@@ -272,27 +292,38 @@
  
  ## Documentation & Resources
-+
-+- **[Documentation & Resources](#documentation--resources)** — Documentation & Resources provides links to the public API summary, changelog, and issue tracker for Aspose.Email FOSS for .Net.
-+- **[Public API summary](PUBLIC_API.md)** — The public API summary in `PUBLIC_API.md` lists the namespaces and classes exposed by Aspose.Email FOSS for .Net.
-+- **[Changelog](CHANGELOG.md)** — The changelog in `CHANGELOG.md` records version-specific changes and improvements for Aspose.Email FOSS for .Net.
+ 
+-- **[Getting started guide](https://docs.aspose.org/email/net/)** — installation, walkthroughs, and feature guides for this library.
+-- **[How-to guides & FAQ](https://kb.aspose.org/email/net/)** — task-focused answers for common MSG, CFB, and EML questions.
+-- **[Full API reference](https://reference.aspose.org/email/net/)** — the complete, browsable reference for all 29 public types (the [API reference](#api-reference) section above covers the essentials).
+-- **[Public API summary](PUBLIC_API.md)** — the repository's own stable-namespace and primary-type list.
+-- **[Changelog](CHANGELOG.md)** — release history.
+-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-.Net/issues) on GitHub.
++- **[Getting started guide](https://docs.aspose.org/email/net/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
++- **[How-to guides & FAQ](https://kb.aspose.org/email/net/)** — The how-to guides and FAQ provide task-focused answers for common MSG, CFB, and EML questions.
++- **[Full API reference](https://reference.aspose.org/email/net/)** — The full API reference offers the complete, browsable reference for all 29 public types. It covers all 29 public types; the [API Reference](#api-reference) section above covers the essentials.
++- **[Public API summary](PUBLIC_API.md)** — The public API summary lists the repository's own stable-namespace and primary-type list.
++- **[Changelog](CHANGELOG.md)** — The changelog documents the release history.
 +- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-.Net/issues).
-+
-+## Scope and Limitations
-+
-+Aspose.Email FOSS for .Net reads and writes local email files in MSG, EML, and CFB formats; it does not connect to mail servers and provides no dedicated IMAP, SMTP, or POP3 functionality.
-+
-+- The library does not support IMAP, SMTP, or POP3 protocols and works only with local files, so it cannot connect to mail servers.
-+- Transport Neutral Encapsulation Format files (`winmail.dat`) are not parsed or generated.
-+- Calendar or appointment support is not provided; calendar-specific MAPI properties can be accessed generically via `SetProperty()` or `GetPropertyValue()` but there is no dedicated calendar API.
-+- The library requires .NET 8.0 or later and does not support classic .NET Framework (4.x).
  
- - **[Getting started guide](https://docs.aspose.org/email/net/)** — installation, walkthroughs, and feature guides for this library.
- - **[How-to guides & FAQ](https://kb.aspose.org/email/net/)** — task-focused answers for common MSG, CFB, and EML questions.
-@@ -279,20 +296,26 @@
- - **[Changelog](CHANGELOG.md)** — release history.
- - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-.Net/issues) on GitHub.
+ ## Scope and Limitations
  
--## Scope and Limitations
--
 -- **No IMAP, SMTP, or POP3 support** — this library reads and writes local files only; it does not connect to mail servers.
 -- **No TNEF support** — Transport Neutral Encapsulation Format (`winmail.dat`) is not parsed or generated.
 -- **No calendar or appointment support** — calendar-specific MAPI properties can be accessed generically via `SetProperty()`/`GetPropertyValue()`, but there is no dedicated calendar API.
@@ -347,11 +369,18 @@
 -broader format and protocol coverage: direct IMAP/SMTP/POP3 mail-server connectivity, TNEF
 -(`winmail.dat`) support, calendar and appointment APIs, and classic .NET Framework support
 -alongside this edition's MSG, CFB, and EML processing.
++Aspose.Email FOSS for .Net reads and writes local email files in formats supported by the `Aspose.Email.Foss` package version 26.7.0 for .NET 8.0, including MSG, EML, MHTML, and others, without requiring a commercial license.
++
++- The library does not connect to mail servers and provides no IMAP, SMTP, or POP3 support, and it does not parse or generate TNEF (`winmail.dat`) files.
++- Calendar and appointment functionality is not available; calendar-specific MAPI properties can only be accessed generically via `SetProperty()` and `GetPropertyValue()`.
++- The package requires .NET 8.0 or later and does not support classic .NET Framework (4.x).
++- The package targets net8.0 and requires the .NET 8.0 SDK (or later) to build and the matching .NET 8.0 runtime (or later) to run.
++
 +These limitations don't apply to [full-featured Aspose.Email for .Net — Enterprise Edition](https://products.aspose.com/email/net/). It adds broader format and protocol coverage: direct IMAP/SMTP/POP3 mail-server connectivity, TNEF (winmail.dat) support, calendar and appointment APIs, and classic .NET Framework support alongside this edition's MSG, CFB, and EML processing.
  
  ## Development and Testing
 +
-+Aspose.Email FOSS for .Net targets net8.0 and uses the dotnet CLI to build and test from the repository's own assets. The test project at `tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj` uses Microsoft.NET.Test.Sdk 17.8.0, xunit 2.5.3, and xunit.runner.visualstudio 2.5.3 for the xUnit test host and adapter, and coverlet.collector 6.0.0 for code-coverage collection; none of these dependencies are referenced by the main library project and they are never shipped with the published package. The test suite covers CFB round-trips, MSG reading, and EML round-trip conversion, with runnable example programs under examples/ that each have their own project file and are documented in `examples/README.md`.
++Aspose.Email FOSS for .Net targets net8.0 and is built using the .NET CLI. The test suite in `tests/Aspose.Email.Foss.Tests/Aspose.Email.Foss.Tests.csproj` uses xUnit 2.5.3 with Microsoft.NET.Test.Sdk 17.8.0 and xunit.runner.visualstudio 2.5.3, and includes coverlet.collector 6.0.0 for code-coverage collection; these dependencies apply only to the test project and are not referenced by the main library. The test suite asserts CFB round-trips, MSG reading, and EML round-trip conversion through classes such as CfbRoundTripTests, MsgReaderTests, MapiMessageTests, MapiMessageEmlTests, and MetadataSmokeTests. Example programs in examples/ demonstrate usage and can be run directly with dotnet run.
 +
 +The suite covers 5 test files under `tests/`.
 +
@@ -360,17 +389,13 @@
 +
 +Or add it directly to a project file:
 +
-+The library targets .NET 8.0 or later and runs on Windows, Linux, macOS, Docker containers, and
-+serverless functions — see [Dependencies](#dependencies) below for the full required, native, and
-+development-only breakdown.
-+
 +The published `Aspose.Email.Foss` package builds
 +from `src/Aspose.Email.Foss/Aspose.Email.Foss.csproj`, which declares zero `<PackageReference>`
 +entries — CFB, MSG, and EML/MIME handling are all implemented natively within the library.
  
  Clone the repository and run the xUnit test suite:
  
-@@ -315,6 +338,4 @@
+@@ -315,6 +346,4 @@
  
  ## License
  

@@ -1,13 +1,17 @@
 {
   "additional_example_ids": [
+    "example:002",
     "example:003",
     "example:004"
   ],
   "api_hubs": [
     {
       "fact_ids": [
-        "public_symbol:aspose.email.foss.msg.mapimessage",
-        "public_symbol:aspose.email.foss.cfb.cfbreader"
+        "public_symbol:aspose.email.foss",
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004"
       ],
       "symbol_fact_id": "public_symbol:aspose.email.foss"
     }
@@ -17,7 +21,11 @@
       "Read and write MSG files",
       "Create messages programmatically",
       "Convert between MSG and EML",
-      "Inspect CFB containers"
+      "Inspect CFB containers",
+      "Access MAPI properties",
+      "Attach recipients and files",
+      "Validate message structure",
+      "Build CFB containers"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -26,9 +34,11 @@
     {
       "fact_ids": [
         "example:001",
+        "example:002",
         "public_symbol:aspose.email.foss"
       ],
       "shared_fact_ids": [
+        "example:002",
         "public_symbol:aspose.email.foss"
       ],
       "title": "Read and write MSG files"
@@ -106,12 +116,41 @@
   "deviations": [
     {
       "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "opening",
+      "text": "The Mermaid diagram from inherited_unit:008.code_block was moved to the opening section to illustrate the product's identity as a .NET library for MSG/CFB/EML processing."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "additional_examples",
+      "text": "HTML details/summary wrappers (inherited_unit:032.html_block and inherited_unit:038.html_block) were omitted as they are not rendered by deterministic sections."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.email.foss.cfb.cfbreader",
+        "public_symbol:aspose.email.foss.msg.msgreader"
+      ],
+      "section_id": "api_reference",
+      "text": "The HTML summary block (inherited_unit:041.html_block) was omitted as it is redundant with the API Reference section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The closing HTML tag (inherited_unit:053.html_block) was omitted as it is redundant with the API Reference section."
+    },
+    {
+      "fact_ids": [
         "license:file",
         "license:spdx",
         "link_target:product.enterprise"
       ],
       "section_id": "enterprise_relationship",
-      "text": "Moved the license paragraph from the inherited README to this section to avoid duplication with the dedicated License section."
+      "text": "The license paragraph (inherited_unit:065.paragraph) was moved to enterprise_relationship to avoid duplication with the license section."
     }
   ],
   "flagship_example_id": "example:003",
@@ -142,7 +181,7 @@
     },
     {
       "link_fact_id": "link_target:011",
-      "section_id": "installation"
+      "section_id": "navigation"
     },
     {
       "link_fact_id": "link_target:012",
@@ -150,11 +189,11 @@
     },
     {
       "link_fact_id": "link_target:013",
-      "section_id": "quick_start"
+      "section_id": "navigation"
     },
     {
       "link_fact_id": "link_target:014",
-      "section_id": "additional_examples"
+      "section_id": "navigation"
     },
     {
       "link_fact_id": "link_target:015",
@@ -162,7 +201,7 @@
     },
     {
       "link_fact_id": "link_target:016",
-      "section_id": "documentation_resources"
+      "section_id": "navigation"
     },
     {
       "link_fact_id": "link_target:017",
@@ -175,6 +214,18 @@
     {
       "link_fact_id": "link_target:019",
       "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:021",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:022",
+      "section_id": "documentation_resources"
     },
     {
       "link_fact_id": "link_target:023",
@@ -195,14 +246,6 @@
     {
       "link_fact_id": "link_target:028",
       "section_id": "development_testing"
-    },
-    {
-      "link_fact_id": "link_target:002",
-      "section_id": "license"
-    },
-    {
-      "link_fact_id": "link_target:004",
-      "section_id": "installation"
     }
   ],
   "material_limitations": [
@@ -240,7 +283,7 @@
     }
   ],
   "quick_start_example_id": "example:001",
-  "second_quick_start_example_id": "example:002",
+  "second_quick_start_example_id": null,
   "sections": [
     {
       "include": true,
