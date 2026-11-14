@@ -17,13 +17,38 @@ when it is:
   re-run would repeat the same run on unchanged inputs;
 * marked for diagnosis: it failed ``max_failures`` consecutive times on the current code (a
   changed upstream revision does not reset this; only a code change does). R36(b): the class is
-  diagnosed and fixed once, locally, before another hosted run is spent on it.
+  diagnosed and fixed once, locally, before another hosted run is spent on it;
+* held on a known failure (BL-084): the code changed since its last attempt, but not the code of
+  any class that attempt failed in (its failure record, ``repo_presenter.failures``, on the cell's
+  failure ref; every class's recorded code scope still hashes the same), on the same upstream
+  revision -- ``idempotent`` only catches a byte-identical code fingerprint, so every unrelated
+  commit re-dispatched every failed cell and paid again for a failure nothing had fixed;
+* capped (BL-086, audit O2): its last ``max_hosted_failures`` hosted attempts in a row failed (on
+  any code) and no class of its last failure has a changed code scope since -- after two misses a
+  cell needs a fix that reaches one of its classes, not merely any commit or an upstream move, before
+  the loop pays for it again. A last failure that was transient (an infrastructure retry) does not
+  cap.
 
 Attempts are the ``settle`` entries of the durable provider-spend ledger
 (``core.llm.budget.LEDGER_REF``), which every hosted ``present`` job writes on success or failure;
-a run refused any budget is not an attempt. Cells are ordered NEEDS_REPAIR first (a seal one
-repair away), then never-attempted, then retries after a code or upstream change; a repository
-whose two lanes both need work runs as one ``both`` run (two cells).
+a run refused any budget is not an attempt.
+
+Order (BL-086, audit O2, supervisor decision 2026-11-14): the 2026-11-13 audit found four cells
+took 17 of 25 hosted runs and went 0 for 17, while first attempts sealed several times as often,
+and each later seal (Cells Java, Email .NET, Cells Rust, Imaging .NET) came right after its blocker
+class was fixed. Within the batch, cells are ranked
+
+* (a) fix landed: the record of its last failure (``repo_presenter.failures.scope_status``) has a
+  class whose code scope changed since -- a fix reached it;
+* (b) never attempted: no hosted attempt yet;
+* (c) needs repair, no failure record: a NEEDS_REPAIR seal and no failure record of its last
+  attempt;
+* (d) retry: everything else (a code change outside its classes' scope, an upstream move, an older
+  record);
+
+then a NEEDS_REPAIR seal (one repair away) before no seal, then registry order. A repository
+whose two lanes both need work runs as one ``both`` run (two cells) at the better lane's rank. The plan's runs and queue carry ``order`` and each lane's
+``priority``, and the summary prints both with the reason.
 
 One cohort at a time (R25 batches of six; R37 self-continuing loop): while any cell a previous
 planner dispatched is still in flight (an unsettled, unexpired reservation whose id carries
@@ -67,13 +92,24 @@ TERMINAL_CELLS = REPO_ROOT / "data" / "terminal_cells.json"
 MAX_CELLS = 6
 #: Consecutive failures on unchanged code before a cell is set aside for diagnosis.
 MAX_CONSECUTIVE_FAILURES = 3
+#: BL-086: consecutive failed hosted attempts (any code) after which a cell needs a changed class
+#: scope before it is dispatched again.
+MAX_HOSTED_FAILURES_WITHOUT_SCOPE_CHANGE = 2
 #: present.yml's cohort job reserves every run it dispatches as ``cohort-<run id>-<attempt>-<n>``
 #: (``core.llm.budget.reserve_cohort``); a rerun of such a run reserves ``<that id>-a<attempt>``.
 COHORT_ID_PREFIX = "cohort-"
 
-PRIORITY_NEEDS_REPAIR = 0
+PRIORITY_FIX_LANDED = 0
 PRIORITY_NEVER_ATTEMPTED = 1
-PRIORITY_RETRY = 2
+PRIORITY_NEEDS_REPAIR = 2
+PRIORITY_RETRY = 3
+#: The summary's name for each rank (BL-086).
+PRIORITY_LABELS = {
+    PRIORITY_FIX_LANDED: "(a) fix landed",
+    PRIORITY_NEVER_ATTEMPTED: "(b) never attempted",
+    PRIORITY_NEEDS_REPAIR: "(c) needs repair, no failure record",
+    PRIORITY_RETRY: "(d) retry",
+}
 
 
 def select_eligible(
@@ -167,6 +203,20 @@ def consecutive_failures(attempts: list[dict[str, Any]], code: str) -> int:
     return count
 
 
+def hosted_failure_streak(attempts: list[dict[str, Any]]) -> int:
+    """Trailing unsealed attempts on any code (a seal ends the streak; BL-086's cap)."""
+    count = 0
+    for attempt in reversed(attempts):
+        if attempt["sealed"]:
+            break
+        count += 1
+    return count
+
+
+def _run_id(run_url: Any) -> str:
+    return str(run_url or "").rstrip("/").rsplit("/", 1)[-1]
+
+
 def _terminal_for(
     terminals: list[dict[str, Any]], repository: str, lane: str
 ) -> dict[str, Any] | None:
@@ -189,10 +239,15 @@ def plan_cohort(
     max_cells: int = MAX_CELLS,
     max_failures: int = MAX_CONSECUTIVE_FAILURES,
     epoch: Any = None,
+    known: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
+    scopes: Mapping[tuple[str, str], Mapping[str, Any]] | None = None,
+    max_hosted_failures: int = MAX_HOSTED_FAILURES_WITHOUT_SCOPE_CHANGE,
 ) -> dict[str, Any]:
     """The fire's plan (pure but for ``head``, which is only asked when a decision needs it):
     ``runs`` to dispatch, every ``skipped`` cell with its category and reason, the ``diagnose``
-    list, the cells ``queued`` behind a full batch, and the certified count per lane (R11)."""
+    list, the cells ``queued`` behind a full batch, and the certified count per lane (R11).
+    ``known`` is BL-084's hold (``failures.known_failures``), ``scopes`` BL-086's per-cell class
+    scope status (``failures.scope_status``); both are keyed by ``(repository, lane)``."""
     now = now or _now_utc()
     all_entries = ledger_entries(ledger, any_epoch=True)
     attempts = attempts_by_cell(all_entries)
@@ -207,7 +262,9 @@ def plan_cohort(
     certified = {lane: 0 for lane in LANES}
     skipped: list[dict[str, Any]] = []
     diagnose: list[dict[str, Any]] = []
-    needs: dict[str, dict[str, tuple[int, str]]] = {}
+    held_known: list[dict[str, Any]] = []
+    capped: list[dict[str, Any]] = []
+    needs: dict[str, dict[str, tuple[int, str, int]]] = {}
     notes: list[str] = []
 
     def skip(repository: str, lane: str, category: str, reason: str) -> None:
@@ -264,6 +321,9 @@ def plan_cohort(
             needs_repair = cert is not None and getattr(cert, "outcome", "") == "NEEDS_REPAIR"
             if history:
                 last = history[-1]
+                status = (scopes or {}).get((repository, lane))
+                if status is not None and str(status.get("run_id") or "") != _run_id(last.get("run_url")):
+                    status = None  # a record of an older attempt says nothing about the last one
                 if last["code"] == code and code:
                     # An unreadable upstream head or an unrecorded revision reads as "unchanged":
                     # the cheaper error is one skipped fire, not a repeated hosted run.
@@ -279,10 +339,56 @@ def plan_cohort(
                         continue
                     reason = "upstream moved since the last attempt"
                 else:
+                    hold = (known or {}).get((repository, lane))
+                    last_run = _run_id(last.get("run_url"))
+                    if hold and hold.get("classes") and str(hold.get("run_id") or "") == last_run:
+                        current = head_of(repository)
+                        recorded = str(hold.get("source_revision") or last["source_revision"] or "")
+                        if current is None or not recorded or current == recorded:
+                            classes = ", ".join(hold["classes"])
+                            held_known.append(
+                                {"repository": repository, "lane": lane, "classes": list(hold["classes"]),
+                                 "last_run": last.get("run_url", "")}
+                            )
+                            skip(
+                                repository, lane, "known_failure",
+                                f"held: last failure in classes {classes}; waiting for a fix",
+                            )
+                            continue
                     reason = "code changed since the last attempt"
-                priority = PRIORITY_NEEDS_REPAIR if needs_repair else PRIORITY_RETRY
+                changed = list((status or {}).get("changed") or [])
+                streak = hosted_failure_streak(history)
+                if (
+                    streak >= max_hosted_failures and not changed
+                    and not (status or {}).get("transient")
+                ):
+                    why = (
+                        "no failure record of the last attempt" if status is None
+                        else "no class of the last failure has a changed code scope"
+                    )
+                    capped.append(
+                        {"repository": repository, "lane": lane, "consecutive_failures": streak,
+                         "last_run": last.get("run_url", ""), "why": why}
+                    )
+                    skip(
+                        repository, lane, "capped",
+                        f"capped: {streak} consecutive hosted failures and {why}; waiting for a fix "
+                        "that reaches one of its classes (BL-086)",
+                    )
+                    continue
+                if changed:
+                    priority = PRIORITY_FIX_LANDED
+                    reason = f"fix landed: code scope changed for {', '.join(changed)}"
+                    still = list((status or {}).get("unchanged") or []) + list((status or {}).get("unscoped") or [])
+                    if still:
+                        reason += f" (unchanged: {', '.join(still)})"
+                elif needs_repair and status is None:
+                    priority = PRIORITY_NEEDS_REPAIR
+                    reason = f"{reason}; no failure record of the last attempt"
+                else:
+                    priority = PRIORITY_RETRY
             elif needs_repair:
-                priority, reason = PRIORITY_NEEDS_REPAIR, ""
+                priority, reason = PRIORITY_NEVER_ATTEMPTED, "never attempted by the hosted loop"
             else:
                 priority, reason = PRIORITY_NEVER_ATTEMPTED, "no seal, never attempted by the hosted loop"
             if needs_repair:
@@ -290,10 +396,10 @@ def plan_cohort(
                 reason = f"latest seal NEEDS_REPAIR ({checks})" + (f"; {reason}" if reason else "")
             elif cert is None and reason != "no seal, never attempted by the hosted loop":
                 reason = f"no seal; {reason}"
-            needs.setdefault(repository, {})[lane] = (priority, reason)
+            needs.setdefault(repository, {})[lane] = (priority, reason, 0 if needs_repair else 1)
 
     order = {repository: index for index, repository in enumerate(entries)}
-    ranked = sorted(needs, key=lambda repo: (min(p for p, _ in needs[repo].values()), order[repo]))
+    ranked = sorted(needs, key=lambda repo: (min(n[0::2] for n in needs[repo].values()), order[repo]))
     runs: list[dict[str, Any]] = []
     queued: list[dict[str, Any]] = []
     room = max(0, max_cells)
@@ -309,10 +415,12 @@ def plan_cohort(
         }
         room = 0
     for repository in ranked:
-        lanes = sorted(needs[repository], key=lambda lane: (needs[repository][lane][0], LANES.index(lane)))
+        lanes = sorted(needs[repository], key=lambda lane: (needs[repository][lane][0::2], LANES.index(lane)))
         take = lanes[: min(len(lanes), room)]
         for lane in lanes[len(take):]:
-            queued.append({"repository": repository, "lane": lane, "reason": needs[repository][lane][1]})
+            queued.append({"repository": repository, "lane": lane, "reason": needs[repository][lane][1],
+                           "order": len(queued) + 1,
+                           "priority": PRIORITY_LABELS[needs[repository][lane][0]]})
         if not take:
             continue
         room -= len(take)
@@ -324,12 +432,16 @@ def plan_cohort(
                 "lanes": take,
                 "lane": "both" if len(take) == 2 else take[0],
                 "reasons": {lane: needs[repository][lane][1] for lane in take},
+                "priority": {lane: PRIORITY_LABELS[needs[repository][lane][0]] for lane in take},
+                "order": len(runs) + 1,
             }
         )
     return {
         "runs": runs,
         "skipped": skipped,
         "diagnose": diagnose,
+        "known_failure": held_known,
+        "capped": capped,
         "queued": queued,
         "certified": certified,
         "notes": notes,
@@ -337,6 +449,9 @@ def plan_cohort(
         "code": code,
         "planned_at": now.isoformat(timespec="seconds"),
     }
+
+
+_SIG_PIPE = " \\| "
 
 
 def render_summary(plan: dict[str, Any], budget_lines: list[str] | None = None,
@@ -378,12 +493,16 @@ def render_summary(plan: dict[str, Any], budget_lines: list[str] | None = None,
     runs = dispatched if dispatched is not None else plan.get("runs") or []
     lines += [f"### Ran ({len(runs)})", ""]
     if runs:
-        lines += ["| repository | lane | why | budget |", "|---|---|---|---|"]
-        for run in runs:
+        lines += ["| # | repository | lane | priority | why | budget |", "|---|---|---|---|---|---|"]
+        for index, run in enumerate(runs, 1):
             why = "; ".join(f"{lane}: {text}" for lane, text in (run.get("reasons") or {}).items())
+            ranks = run.get("priority") or {}
+            rank = "; ".join(f"{lane}: {ranks[lane]}" for lane in ranks) or "-"
             granted = run.get("reservation") or {}
             budget = (f"{granted.get('calls', 0):g} calls" if granted else run.get("refusal", "-"))
-            lines.append(f"| {run['repository']} | {run['lane']} | {why} | {budget} |")
+            lines.append(
+                f"| {run.get('order', index)} | {run['repository']} | {run['lane']} | {rank} | {why} | {budget} |"
+            )
     else:
         lines.append("nothing")
     lines.append("")
@@ -391,8 +510,55 @@ def render_summary(plan: dict[str, Any], budget_lines: list[str] | None = None,
         items = plan.get(key) or []
         if items:
             lines += [f"### {title} ({len(items)})", ""]
-            lines += [f"- {i['repository']} Lane {i['lane']}: {i.get('reason') or i.get('consecutive_failures')}" for i in items]
+            lines += [
+                (f"- {i['order']}. " if i.get("order") else "- ")
+                + f"{i['repository']} Lane {i['lane']}: "
+                + (f"{i['priority']}; " if i.get("priority") else "")
+                + f"{i.get('reason') or i.get('consecutive_failures')}"
+                for i in items
+            ]
             lines.append("")
+    held_known = plan.get("known_failure") or []
+    if held_known:
+        lines += [f"### Held on a known failure ({len(held_known)})", ""]
+        lines += [
+            f"- {i['repository']} Lane {i['lane']}: held: last failure in classes "
+            f"{', '.join(i['classes'])}; waiting for a fix"
+            for i in held_known
+        ]
+        lines.append("")
+    capped = plan.get("capped") or []
+    if capped:
+        lines += [f"### Capped: two hosted failures, no scope change ({len(capped)})", ""]
+        lines += [
+            f"- {i['repository']} Lane {i['lane']}: {i['consecutive_failures']} consecutive hosted failures; "
+            f"{i['why']}"
+            for i in capped
+        ]
+        lines.append("")
+    pareto_rows = plan.get("failure_pareto") or []
+    if pareto_rows or plan.get("failure_pareto_note"):
+        lines += ["### Failure classes (latest record per cell)", ""]
+        if plan.get("failure_pareto_note"):
+            lines += [f"- {plan['failure_pareto_note']}", ""]
+        if pareto_rows:
+            # R42: the upstream-caused classes apart from this code's own.
+            for title, rows in (
+                ("", [row for row in pareto_rows if not row.get("upstream")]),
+                ("Upstream-caused (R42)", [row for row in pareto_rows if row.get("upstream")]),
+            ):
+                if title:
+                    if not rows:
+                        continue
+                    lines += [f"**{title}**", ""]
+                lines += ["| class | cells | findings | new | upstream |", "|---|---|---|---|---|"]
+                for row in rows:
+                    shown = str(row["signature"]).replace("|", _SIG_PIPE)
+                    lines.append(
+                        f"| {shown} | {row['cells']} | {row['findings']} | {'yes' if row.get('new') else ''} | "
+                        f"{row.get('upstream') or ''} |"
+                    )
+                lines.append("")
     skipped = plan.get("skipped") or []
     if skipped:
         lines += [f"### Skipped ({len(skipped)})", "", "| repository | lane | category | reason |", "|---|---|---|---|"]
@@ -424,7 +590,8 @@ def build_plan(
         epoch = json.loads((REPO_ROOT / "data" / "provider_budget.json").read_text("utf-8")).get("epoch")
     except (OSError, ValueError):
         pass
-    return plan_cohort(
+    known, pareto_rows, note, scopes = failure_classes(remote, token)
+    plan = plan_cohort(
         entries=entries,
         authorized_repos=set(entries) if authorized_repos is None else authorized_repos,
         certifications=certifications,
@@ -433,7 +600,48 @@ def build_plan(
         code=code_fingerprint(REPO_ROOT),
         max_cells=max_cells,
         epoch=epoch,
+        known=known,
+        scopes=scopes,
     )
+    plan["failure_pareto"] = pareto_rows
+    if note:
+        plan["failure_pareto_note"] = note
+    return plan
+
+
+def failure_classes(
+    remote: str, token: str | None, *, limit: int = 8
+) -> tuple[
+    dict[tuple[str, str], dict[str, Any]], list[dict[str, Any]], str, dict[tuple[str, str], dict[str, Any]]
+]:
+    """BL-084: the cells held on a known failure and the short Pareto, from every cell's failure
+    ref; BL-086: every failed cell's class scope status (the planner's rank (a) and its cap). An
+    unreadable namespace holds nothing (the cheaper error is a re-run, never a cell held on
+    evidence that could not be read) and says so in the summary; the cap still applies (a cell
+    that failed twice in a row cannot show a scope change nobody can read)."""
+    from repo_presenter.failures import known_failures, pareto, read_cells, scope_fingerprint, scope_status
+
+    try:
+        documents = read_cells(remote=remote, token=token)
+    except Exception as exc:  # noqa: BLE001
+        note = f"failure records not readable ({type(exc).__name__}: {str(exc)[:200]}); nothing held"
+        return {}, [], note, {}
+    scope_cache: dict[tuple[str, ...], str] = {}
+
+    def scope_of(paths: Any) -> str:
+        key = tuple(paths)
+        if key not in scope_cache:
+            scope_cache[key] = scope_fingerprint(key, REPO_ROOT, "HEAD")
+        return scope_cache[key]
+
+    known = known_failures(documents, scope_of)
+    scopes = scope_status(documents, scope_of)
+    rows = [
+        {"signature": row["signature"], "cells": len(row["cells"]), "findings": row["findings"], "new": row["new"],
+         "upstream": row.get("upstream", "")}
+        for row in pareto(documents)["classes"][:limit]
+    ]
+    return known, rows, "" if documents else "no failure records yet", scopes
 
 
 def main(argv: list[str] | None = None) -> int:

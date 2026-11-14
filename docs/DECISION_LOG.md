@@ -5860,3 +5860,150 @@ reason. The fix is always implemented in the pipeline, globally. The RULINGS row
 the consolidated goals and BL-091 are updated to match.
 
 Backlog: BL-091
+
+## 2026-11-14: BL-084 — failure classification is a pipeline stage of the present job (owner-directed)
+
+**Owner direction (2026-11-13, verbatim):** "Lane R is not progressing at all. Every failure must be categorised and
+reviewed deeply to find appropriate solution and that solution must be integrated to pipeline for repeatability."
+
+**Why it fits R27.** No new subsystem, workflow or stage outside the present transaction: it extends the present job's
+failure path (one `always()` step after `settle`, beside the existing evidence steps) and the durable state (one more
+ref namespace under `refs/repository-presenter-state/`, written by the same `GitJsonRef` compare-and-swap the
+provider-spend ledger uses). It reuses only data the run already has: the review's blocking findings, `validation.json`'s
+failing checks, the repair ledger (`repairs.json`, including its "facts defect: printed by the renderer from fact X"),
+the facts' inherited-unit and example facts, the content units and the plan. Zero provider calls. R37: classification
+happens on Actions for every run; a session no longer has to read `gh run view --log` to know why a cell failed.
+
+**What runs.**
+- `present.py`: `keep_blocking` writes the rejected candidate's blocking findings next to the lane's outputs before
+  each `PresentFailure`; after every run (success or failure) `write_local_record` writes
+  `<workdir>/failures/<lane>.json`. Evidence only: it never changes the exit code.
+- `present.yml` (present job) `Classify this run's failures`: `python -m repo_presenter.failures publish` stamps run id,
+  code fingerprint and each class's code scope, records a job error for a lane that left no record (facts job
+  failure, crash), pushes to `refs/repository-presenter-state/failures/<owner>__<name>[@lane-l]` (one commit per run,
+  latest record + 20-run history; re-publishing a run id is a no-op; an older backfilled run never replaces a newer
+  latest) and writes a class table to the job summary.
+- Class signature = `rule|origin kind|sub-rule`. Origin kinds: `renderer_fact`, `authored_unit`, `inherited_unit`,
+  `planned_example`, `lane_l_correction`, `job_error`, else `unresolved` (with the quote's location, e.g.
+  `api_table_row:X`, never a guess). Sub-rules come from a fixed pattern table (claim_contradiction member_kind,
+  never_thrown, stub_format, ...; BC-17's coverage tag; BC-18's claim kind; the Lane L detector), else the text's shape.
+- `python -m repo_presenter.failures pareto --remote origin`: latest record per cell -> class, cells, findings, lanes,
+  example, origins, and `new` (seen under the newest code fingerprint and in no record of an older one). Printed in
+  supervisor-tick as `### Failure classes` (after `### Backlog`) and, top 8, in the cohort planner summary.
+- Planner (`select_scheduled_cohort.plan_cohort`, `known=`). Checked first: `idempotent` skips only a byte-identical
+  whole-code fingerprint, and `diagnose` only after 3 failures on that same fingerprint; with the readme code changing
+  on almost every commit (178 commits since 2026-11-12, composition 33, validation 25), every failed cell was
+  re-dispatched after every unrelated commit. Gap filled: a cell whose last attempt (matched by run id) failed in
+  classes whose recorded code scope (rule's code + origin's code + the lane's driver and repair, hashed with
+  `git ls-tree`) is unchanged at HEAD, on the same upstream revision, is skipped as `known_failure`: "held: last
+  failure in classes X, Y; waiting for a fix". Never held: transient failures, unknown rules, job errors with no
+  classified cause, an unreadable failure namespace, a moved upstream.
+- `failures backfill` rebuilds records from `gh run view <id> --log` (artifacts are unreadable through the proxy).
+
+**Backfill (dry run, 2026-11-14).** 26 completed dispatched present runs since 2026-11-12 (the 22 failed ones the
+owner named plus later runs and the successes), 31 lane records; latest per cell: 13 failing of 15 cells, 19 classes.
+
+| class (rule / origin / sub-rule) | cells | findings |
+|---|---|---|
+| claim_contradiction / unresolved / member_kind | 2 | 12 |
+| lane_l_unrepaired_defect / lane_l_correction / format_overclaim | 2 | 8 |
+| BC-05 / unresolved / section_fit | 2 | 3 |
+| live_readme_loss / unresolved / code_block | 2 | 3 |
+| BC-18 / unresolved / false_claim | 2 | 2 |
+| BC-07 / unresolved / internal_wording | 1 | 12 |
+| claim_contradiction / inherited_unit / never_thrown (Lane L) | 1 | 4 |
+| llm:factuality / unresolved / scope_limitations | 1 | 3 |
+| claim_contradiction / inherited_unit / member_owner, not_implemented_but_returns, stub_described_working, unknown_member (Lane L) | 1 each | 7 |
+| disposition_coverage / inherited_unit | 1 | 2 |
+| BC-07 trailing_colon, BC-07 title_case, BC-18 renderer_fact misleading_claim, claim_contradiction stub_format, JobError section_authoring truncation, lane_l failing_example | 1 each | 1 each |
+
+Over all 31 records (not only the latest), the heaviest classes are claim_contradiction member_kind (94 findings in 4
+cell-runs), BC-18 false_claim (7 cell-runs), claim_contradiction never_thrown and stub_format (4 each), BC-17
+inherited technical_content (16 findings) and NoOpProofError LEDGER_NO_RECORDS (3, Lane L 3D .NET). Log-only records
+cannot tell an authored type sentence from a renderer docstring for an API table row (`unresolved
+api_table_row:<Name>`); hosted records resolve it from the content units and facts.
+
+**Does NOT decide.** The fixes of the classes (the readme/* worker owns composition and validation; no readme/* file
+was edited here, `readme.repair.loop.renderer_printed_facts` is only imported). The backfilled records are not yet on
+the refs: this worker was told not to push; the supervisor runs the same command with `--remote`. Whether the scope
+table is too narrow or too broad is measured by the first holds; a wrong hold is released by any edit to the class's
+scope or by an upstream move.
+
+Backlog: BL-084
+
+## 2026-11-14: BL-084 merged; BL-086 (audit O2) the planner ranks fix-landed and first attempts first and caps repeat failures
+
+**Supervisor decisions (owner-delegated, 2026-11-14).** (1) Merge BL-084. (2) Take audit option O2 in
+`scripts/select_scheduled_cohort.py`. (3) Publish BL-084's backfilled failure records to the state refs, without this
+worker writing a ref.
+
+**Evidence.** The audit (`docs/investigations/2026-11-13-lane-r-not-progressing.md`, S6) found that four cells took 17
+of 25 hosted Lane R runs and went 0 for 17, while first attempts sealed several times as often, and 27 of 40 active
+cells got no run. Since then the loop sealed Cells Java, Email .NET, Cells Rust and Imaging .NET, each after its
+blocker class was fixed. The old order put NEEDS_REPAIR first and treated any commit as a reason to retry.
+
+**Decision: the order within the batch of six.**
+- (a) **Fix landed.** The failure record of the cell's last attempt has a class whose code scope hash
+  (`failures.scope_status`, BL-084's scope table) differs from current code.
+- (b) **Never attempted** by the hosted loop.
+- (c) **NEEDS_REPAIR, no failure record** of its last attempt.
+- (d) **Everything else**: a code change outside the classes' scope, an upstream move, or a record of an older run.
+
+Ties go to a NEEDS_REPAIR seal (one repair away), then to registry order. A record counts only if its run id is the
+cell's last ledger attempt. Every run and queued cell carries `order` and `priority`, and the summary's "Ran" table
+prints `#`, priority and reason.
+
+**Decision: the cap.** After 2 consecutive failed hosted attempts on any code (`hosted_failure_streak`), a cell is
+skipped as `capped` until a class of its last failure has a changed scope. BL-084's hold alone did not cover this. It
+releases on an upstream move, on a class with no scope, and when the cell has no record; a missing record is what let
+the four cells repeat.
+- The hold is checked first, so a held cell stays `known_failure`.
+- A transient last failure (an infrastructure retry) does not cap.
+- With no readable record, the cap still applies: a scope change cannot be shown without one.
+
+All existing bounds are unchanged: six cells per batch, one cohort in flight, the budget reservation, the
+three-on-same-code diagnose rule and the stop rule.
+
+**Failure records on the state refs: a documented supervisor command, not a hosted step.** The backfill is one-time
+history. From the merge on, every present run publishes its own record in present.yml's "Classify this run's failures"
+step. A hosted backfill would be a new workflow or step, which R27 does not allow for a one-off. Run the command from
+a full-history checkout of main after the merge (`finalize` hashes each record's scope at the run's `main_sha`):
+
+```
+mkdir -p "$SCRATCH/bl084-logs"
+PYTHONPATH=src REPOSITORY_PRESENTER_STATE_TOKEN="$GH_TOKEN" python -m repo_presenter.failures backfill \
+  --repo babar-raza/repo-presenter --since 2026-11-12 --limit 200 --logs-dir "$SCRATCH/bl084-logs" \
+  --remote https://github.com/babar-raza/repo-presenter.git
+rm -rf "$SCRATCH/bl084-logs"
+PYTHONPATH=src python -m repo_presenter.failures pareto --remote origin   # read-back check
+```
+
+Re-running it is safe: `merge` keys each record by run id. Until it has run, every cell with two hosted failures in
+a row is capped for want of a record. That is intended, and it is why it must run before the first planner fire on the
+merged code.
+
+**BL-084 worker's failing test.** `tests/ops/test_gate_guard_tc005.py::test_release_contract_adopted_and_dashboard_matches_live`
+passes on the merge. Run directly, `ops/checks/dashboard_matches_live.py --no-loss` reads live R=6, L=27 (recorded R=1,
+L=26) and reports no seal lost. Its L=20 reading was not reproduced. During this session's run the disk reached 99%,
+which fits the reading that it was a disk-full or partial-fetch artifact.
+
+**R42 (owner, 2026-11-14; BL-091): upstream-caused classes are tagged.** Every class in a failure record now carries
+a deterministic `upstream` cause (`failures.upstream_cause`, first match in `_UPSTREAM_CAUSES`):
+- `source_build`: BC-02 `unproven_build` (no build of the source exited 0).
+- `package`: claim_contradiction `samples_reference`, or any message naming a not-published or foreign package.
+- `source_stub`: claim_contradiction `stub_format` or `stub_described_working` (the source itself only stubs it).
+- `maintainer_example`: `failing_example` (the maintainer's own example does not build).
+- `upstream_unreadable`: a clone or fetch that failed, a repository not found, an upstream unreadable or moved.
+
+Every other class, `never_thrown` and `not_implemented_but_returns` included, is this code's own. Records written
+before the field get the same table applied to their rule, sub-rule and example (`class_upstream`). The Pareto
+(`pareto`'s `upstream_classes` and `upstream_cells`, `render_pareto`, the cohort summary) prints the upstream-caused
+classes in their own table, apart from this code's. Over the committed backfill: 3 upstream classes in 2 cells.
+Learning from aspose.org's published candidate for each upstream class is BL-091's work, not this entry's.
+
+**Does NOT decide.** It does not decide whether two failures is the right cap, or whether (b) should outrank (a) once
+the never-attempted pool is small. Both are measured over the next cohorts against the audit baseline (`measure.py`).
+It does not decide O1 or O3–O8. Done only once a hosted planner fire shows the order, and the cohorts show fewer 0-for-N
+retries.
+
+Backlog: BL-084, BL-086, BL-091
