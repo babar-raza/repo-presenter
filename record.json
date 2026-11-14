@@ -25,11 +25,25 @@
    "run_id": "43619829230",
    "source_revision": "2eed1113e22902f24965bc7b10285fabef6278aa",
    "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  },
+  {
+   "at": "2026-11-14T19:37:43+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is",
+    "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "43631631539",
+   "source_revision": "2eed1113e22902f24965bc7b10285fabef6278aa",
+   "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T17:38:26+00:00",
+  "at": "2026-11-14T19:37:43+00:00",
   "classes": {
    "BC-04|unresolved|code_span_q_is": {
     "example": "code span '_examples/<name>/main.go' is not a fact value",
@@ -39,7 +53,7 @@
      "-"
     ],
     "rule": "BC-04",
-    "scope": "eb0a32020f7cd800c1ce19abc5e68997d55f00fabb66e70255edab6840cd5e36",
+    "scope": "09122d49e78072a35fbb304c6d48c9441a3c0b1752e67d43f5374d5788b054b5",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -63,7 +77,7 @@
      "inherited_unit:025.paragraph"
     ],
     "rule": "BC-08",
-    "scope": "c570367016f3e0d7be11a03ab3a6c6755de849f58f4015c25efa9be94490d369",
+    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -85,7 +99,7 @@
      "inherited_unit:025.paragraph"
     ],
     "rule": "BC-17",
-    "scope": "c570367016f3e0d7be11a03ab3a6c6755de849f58f4015c25efa9be94490d369",
+    "scope": "c4c47fb2d9e701e6408224264c1d99ac60f5cbc3885ee04ef01a44d0fa481fee",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -100,12 +114,12 @@
     "upstream": ""
    }
   },
-  "code": "addd98ae1c816bd70e7ce80c09238b97564e599cd53015822741a4953bf2eeef",
+  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 81a1cb4204c1: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-04, BC-08, BC-17; nothing sealed",
+   "detail": "attempt under version set 84c5d935a8db: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-04, BC-08, BC-17; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
@@ -157,7 +171,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "f67d7684efa04071db1c4b61790062fef1cbdd85",
+  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -173,17 +187,17 @@
     "facts_defects": [],
     "label": "BC-08",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: unit preview: text contains a Markdown link (']('); revised_output: unit preview: identifiers that are not accepted fact values: feature_showcase (nearest accepted: feature_showcase.pdf, feature_showcase-preview.png); a shortened or run-together name is not an identifier: where you mean the accepted name, write it in full exactly as listed, otherwise name the thing in plain words",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: unit preview: identifiers that are not accepted fact values: feature_showcase (nearest accepted: feature_showcase.pdf, feature_showcase-preview.png); a shortened or run-together name is not an identifier: where you mean the accepted name, write it in full exactly as listed, otherwise name the thing in plain words",
     "section_id": "additional_examples",
     "stage": "S6"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
-  "run_id": "43619829230",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43619829230",
+  "run_id": "43631631539",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631631539",
   "schema_version": 1,
   "source_revision": "2eed1113e22902f24965bc7b10285fabef6278aa",
-  "version_set": "81a1cb4204c1c3e6de3a0ff6823f167f02618a8dc7f6310e8e5b350bf90a86ca"
+  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
  },
  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
  "schema_version": 1
