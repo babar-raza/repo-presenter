@@ -220,7 +220,7 @@ owner_review_status:
 
 release_gate_dashboard:
   generated_by: gatecli
-  generated_at: '2026-11-14T18:45:14Z'
+  generated_at: '2026-11-14T21:19:55Z'
   note: Tool-generated from gateverify.rebuild_state() -- never hand-edit this block.
     Historical current_gate/active_work_item below are preserved bootstrap-era narrative,
     not this cursor; this block is the real, evidence-derived release-gate status
@@ -419,18 +419,19 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-019a/receipt.json
   - id: TC-019b
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: 0c3d5b7928cdcab5c6e2330087b4b230e613adf9
-    receipt: GATE5_DELIVERY_PROGRAM/TC-019b/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-019c
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: AWAITING_PREREQUISITE
     attempt: 0
-    blocker: null
-    commit: 50e780b09b5113b46ca2a9effbedff8492bd7218
-    receipt: GATE5_DELIVERY_PROGRAM/TC-019c/receipt.json
+    blocker:
+      class: AWAITING_PREREQUISITE
+      summary: 'depends on TC-019b, not yet accepted (receipt also stale: card changed
+        since verification)'
   - id: TC-020
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -485,7 +486,7 @@ release_gate_dashboard:
     status: ACCEPTED
     attempt: 0
     blocker: null
-    commit: 03506a24f8f4ba4d9b3124b999ddbaaab35cb5ae
+    commit: 258674fa68d641dd683ff4e39373a9656c45f42d
     receipt: GATE5_DELIVERY_PROGRAM/TC-024/receipt.json
   - id: TC-025
     gate: GATE5_DELIVERY_PROGRAM
@@ -503,11 +504,11 @@ release_gate_dashboard:
     receipt: GATE5_DELIVERY_PROGRAM/TC-026/receipt.json
   - id: TC-028a
     gate: GATE5_DELIVERY_PROGRAM
-    status: ACCEPTED
+    status: STALE_RECEIPT
     attempt: 0
-    blocker: null
-    commit: 9c08111bd4e9bd89f5983a62f8cde8e50e0d7756
-    receipt: GATE5_DELIVERY_PROGRAM/TC-028a/receipt.json
+    blocker:
+      class: STALE_RECEIPT
+      summary: card definition changed since this receipt was generated -- re-verify
   - id: TC-029a
     gate: GATE5_DELIVERY_PROGRAM
     status: ACCEPTED
@@ -519,6 +520,8 @@ release_gate_dashboard:
   - TC-005
   - TC-011
   - TC-012b
+  - TC-019b
+  - TC-028a
 current_gate:
   id: P1_PORTFOLIO_SCALE
   status: ACCEPTED
