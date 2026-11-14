@@ -6597,3 +6597,49 @@ production batch of 270 calls and 11.2M tokens. This is within the total caps.
 well) and 4 in Lane L. Production resumes under the Phase 1 planner order.
 
 Backlog: BL-100, BL-101
+
+## 2026-11-14 — R43(2)/(3): deterministic Dev & Testing, Docs & Resources and Scope; inherit-and-correct as a Lane R policy
+
+**Facts (zero calls).** Re-judging the latest seal of all 18 Lane R cells with recertify's own path (main vs this
+branch): failure details 92 -> 65, BC-18 rows 58 -> 35. No repository gains a failing check. 3D .NET loses BC-14 and
+REVIEW, PDF Java loses BC-04 and REVIEW:disposition_coverage, and PSD .NET loses BC-18. `recertify --all --json
+--remote origin`: Lane L 29/29 -> 29/29, Lane R 7/18 -> 7/18 (the same seven). Lane R by policy: inherit_and_correct
+6/16, regenerate 1/2. measure.py: REGISTER_ROW_REPRINTED 58 -> 35, RETURNS_CLAIMED_NOT_IMPLEMENTED 1 -> 0,
+SUPERSEDED_UNCITED 1 -> 0, and no class new.
+
+**Decisions (R43(2)/(3), owner-sanctioned R27 exceptions, built into the existing components).**
+1. The three sections have no authored slot. S6 drops them from AUTHORED_SECTIONS, and S5 plans no material
+   limitation (presentation_planning v15). The renderer (v42) prints them from facts plus kept maintainer text. A
+   sealed candidate's authored units for them are dropped and never printed.
+2. The opening and key capabilities carry no number, count, file name or key name. The rule is in the packet
+   (section_authoring v22) and in unit_checks. It binds the producer only: BC-04's re-judgement passes `values=False`,
+   so no seal is demoted. NORMALISATION_VERSION 38.
+3. S4 keeps, as written, a superseded unit that the deterministic sections' authors had to carry, for every
+   repository. It keeps every superseded prose unit of those sections for a repository on aspose.org's published
+   list while `inherit_and_correct` is in force. The register folds then withhold what is proven false, and the S9
+   accounting settles a kept unit that has nothing left to print. Re-certification applies the same steps.
+4. The policy can be switched. It is read from `data/aspose_published_readmes.json`, with
+   `REPO_PRESENTER_LANE_R_POLICY` as an override. Each Lane R seal records it in
+   `dependencies.lane_r_policy`, outside the version set, so switching reopens RECONCILING and never splits a
+   version set. Recertify reports per-policy counts. Lane L is untouched and stays a separate engine.
+
+**R42, per section.**
+- Documentation & Resources: adopted. The line form is aspose.org's, and so are its docs/KB/reference
+  descriptions. Improved on: the reference type count comes from the facts, register-refuted descriptions are
+  dropped, the product name is canonicalised, and non-SUPPORTED targets are not printed.
+- Scope & Limitations: adopted. aspose.org's curated limitation bullets are kept as written. Improved on: register
+  withholding, a collapsed tail of fact-derived stubs and never-thrown exceptions, and hard wraps joined (3D
+  Python would otherwise go over the 300-line visible budget). Rejected as not followable: Cells Go's "the 22
+  functions listed above", a pointer into a section we author. The words "listed above" are removed.
+- Development & Testing: adopted. aspose.org shows commands, a suite-size sentence and the release workflow.
+  Improved on: commands only from verified facts, and locator sentences for assets nothing else names.
+
+**O6 (checklist 13), report-only before landing.**
+- Value rule: 584 sealed opening and capability units, 36 hits (all numbers), 0 false positives after calibration.
+- Pointer form: 1 of 131 units hit, a true positive.
+- Unwrap form: 63 units hit, with 0 word changes.
+
+**Does not decide.** Hosted proof (BL-150), publishing through `recertify --write` (BL-151), the hosted A/B switch
+(BL-152), and two pre-existing kept-text defects found in review (BL-153, BL-154).
+
+Backlog: BL-102, BL-103, BL-150, BL-151, BL-152, BL-153, BL-154
