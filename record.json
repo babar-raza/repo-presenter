@@ -23,88 +23,340 @@
    "run_id": "43631639931",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  },
+  {
+   "at": "2026-11-14T23:38:13+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|development_testing",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 13,
+   "outcome": "failure",
+   "run_id": "43652852534",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T19:32:15+00:00",
+  "at": "2026-11-14T23:38:13+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_restates_its_own_title": {
-    "example": "attempt under version set 84c5d935a8db: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
-    "findings": 1,
-    "origin_kind": "job_error",
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "The `aspose_psd_foss.PsdImage.has_icc_profile` property indicates whether the document contains an ICC profile, and `aspose_psd_foss.resources.imageresourceids` and `aspose_psd_foss.resources.psdresourcekind` support ICC profile resource identification and kind.",
+    "findings": 11,
+    "origin_kind": "authored_unit",
     "origins": [
-     "OutputRejectedError"
+     "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
+     "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.active_layer",
+     "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.save",
+     "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.load",
+     "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.layers"
     ],
-    "rule": "job_error",
-    "scope": "d6abec08b77eb9e974d84fbe08450e468fd414205a3e27db0c4fa9d2a8d3da82",
+    "rule": "llm:factuality",
+    "scope": "ced5df1023ce34a9ee1c031299fc76d0a001f2ee9101e76f24ad410da0f1f263",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_restates_its_own_title",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|development_testing": {
+    "example": "- None.  ",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "development_testing",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "These limitations don't apply to [full-featured Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment laye",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 84c5d935a8db: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 13 blocking finding(s) of 13; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 84c5d935a8db: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:2: restates its own title 'Layer model access'; the title is printed immediately before the unit, so its text adds what the title does not already say",
+    "label": "F01",
+    "message": "The `aspose_psd_foss.PsdImage.has_icc_profile` property indicates whether the document contains an ICC profile, and `aspose_psd_foss.resources.imageresourceids` and `aspose_psd_foss.resources.psdresourcekind` support ICC profile resource identification and kind.",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_restates_its_own_title",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_restates_its_own_title",
+    "quote": "The `aspose_psd_foss.PsdImage.has_icc_profile` property indicates whether the document contains an ICC profile, and `aspose_psd_foss.resources.imageresourceids` and `aspose_psd_foss.resources.psdresourcekind` support ICC profile resource identification and kind.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "The `aspose_psd_foss.PsdImage.active_layer` property returns the currently active layer, and `aspose_psd_foss.layers.layer` represents individual layers within the `aspose_psd_foss.PsdImage.layers` collection.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.active_layer",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.active_layer` property returns the currently active layer, and `aspose_psd_foss.layers.layer` represents individual layers within the `aspose_psd_foss.PsdImage.layers` collection.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "The `aspose_psd_foss.PsdImage.save` method writes the document to a file or stream using the `aspose_psd_foss.writedescriptors.psdimagewriter` descriptor.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.save",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.save` method writes the document to a file or stream using the `aspose_psd_foss.writedescriptors.psdimagewriter` descriptor.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F04",
+    "message": "The `aspose_psd_foss.PsdImage.load` method loads a Photoshop document from a file path using `aspose_psd_foss.ImageLoader.load_from_path` or from a stream using `aspose_psd_foss.ImageLoader.load_from_stream`, and the `aspose_psd_foss.loaders.psdimageloader` class provides the underlying loader implementation.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.load",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.load` method loads a Photoshop document from a file path using `aspose_psd_foss.ImageLoader.load_from_path` or from a stream using `aspose_psd_foss.ImageLoader.load_from_stream`, and the `aspose_psd_foss.loaders.psdimageloader` class provides the underlying loader imple",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F05",
+    "message": "The `aspose_psd_foss.PsdImage.layers` property exposes the collection of layers, with the count available via `aspose_psd_foss.PsdImage.layer_count`, and layers are loaded and saved using `aspose_psd_foss.LayerAndMaskSectionReader.load` and `aspose_psd_foss.LayerAndMaskSectionWriter.save` internally.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.layers",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.layers` property exposes the collection of layers, with the count available via `aspose_psd_foss.PsdImage.layer_count`, and layers are loaded and saved using `aspose_psd_foss.LayerAndMaskSectionReader.load` and `aspose_psd_foss.LayerAndMaskSectionWriter.save` internally",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F06",
+    "message": "The `aspose_psd_foss.PsdImage.image_resources` property provides access to the collection of image resources, and the `aspose_psd_foss.resources.imageresourceids`, `aspose_psd_foss.resources.psdresourceinfo`, `aspose_psd_foss.resources.unknownresource`, and `aspose_psd_foss.sections.imageresourcessection` types support resource identification, metadata, and handling.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.image_resources",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.image_resources` property provides access to the collection of image resources, and the `aspose_psd_foss.resources.imageresourceids`, `aspose_psd_foss.resources.psdresourceinfo`, `aspose_psd_foss.resources.unknownresource`, and `aspose_psd_foss.sections.imageresourcesse",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F07",
+    "message": "The `aspose_psd_foss.PsdImage.color_mode` property returns the document's color mode, and `aspose_psd_foss.PsdImage.color_data_info` provides additional color-related metadata, with `aspose_psd_foss.ColorModes` enumerating supported modes and `aspose_psd_foss.sections.colordata` representing the color data section.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.color_mode",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.color_mode` property returns the document's color mode, and `aspose_psd_foss.PsdImage.color_data_info` provides additional color-related metadata, with `aspose_psd_foss.ColorModes` enumerating supported modes and `aspose_psd_foss.sections.colordata` representing the col",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F08",
+    "message": "The `aspose_psd_foss.PsdImage.compression` property indicates the compression method used, and `aspose_psd_foss.CompressionMethod` enumerates supported compression types, while `aspose_psd_foss.PsdImage.image_data_kind` and `aspose_psd_foss.sections.imagedatastructure` and `aspose_psd_foss.sections.imagedata` describe the image data layout.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.compression",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.compression` property indicates the compression method used, and `aspose_psd_foss.CompressionMethod` enumerates supported compression types, while `aspose_psd_foss.PsdImage.image_data_kind` and `aspose_psd_foss.sections.imagedatastructure` and `aspose_psd_foss.sections.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F09",
+    "message": "The `aspose_psd_foss.PsdImage.is_psb` property indicates whether the document is a large Photoshop document (PSB), and `aspose_psd_foss.PsdImage.version` and `aspose_psd_foss.PsdVersion` and `aspose_psd_foss.sections.psdheader` provide version and header information.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.is_psb",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.is_psb` property indicates whether the document is a large Photoshop document (PSB), and `aspose_psd_foss.PsdImage.version` and `aspose_psd_foss.PsdVersion` and `aspose_psd_foss.sections.psdheader` provide version and header information.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F10",
+    "message": "The `aspose_psd_foss.PsdImage.has_layers` property indicates whether the document contains layers, and `aspose_psd_foss.PsdImage.layer_count` returns the number of layers, with layer loading and saving handled by `aspose_psd_foss.LayerAndMaskSectionReader.load` and `aspose_psd_foss.LayerAndMaskSectionWriter.save`.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.has_layers",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.has_layers` property indicates whether the document contains layers, and `aspose_psd_foss.PsdImage.layer_count` returns the number of layers, with layer loading and saving handled by `aspose_psd_foss.LayerAndMaskSectionReader.load` and `aspose_psd_foss.LayerAndMaskSecti",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F11",
+    "message": "The `aspose_psd_foss.PsdImage.has_image_resources` property indicates whether the document contains image resources, and `aspose_psd_foss.PsdImage.resource_count` returns the number of resources, with `aspose_psd_foss.resources.psdresourceinfo` and `aspose_psd_foss.sections.imageresourcessection` supporting resource metadata and section handling.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.has_image_resources",
+     "kind": "authored_unit"
+    },
+    "quote": "The `aspose_psd_foss.PsdImage.has_image_resources` property indicates whether the document contains image resources, and `aspose_psd_foss.PsdImage.resource_count` returns the number of resources, with `aspose_psd_foss.resources.psdresourceinfo` and `aspose_psd_foss.sections.imageresourcessection` su",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F12",
+    "message": "It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment layers, and enterprise-grade features such as multi-threaded processing and cloud-based rendering.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment laye",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F13",
+    "message": "- None.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- None.  ",
+    "rule": "llm:factuality",
+    "section_id": "development_testing",
+    "signature": "llm:factuality|unresolved|development_testing",
+    "source": "review",
+    "sub_rule": "development_testing",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
+    "label": "F12",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
    },
    {
     "facts_defects": [],
-    "label": "BC-17",
+    "label": "F01+F02+F03+F04",
     "outcome": "repaired",
     "reason": "",
-    "section_id": null,
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F13",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:018.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"- None.  \". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "section_id": "development_testing",
     "stage": "S4"
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "43631639931",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631639931",
+  "run_id": "43652852534",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43652852534",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
-  "version_set": "84c5d935a8dba993dc6933eece4cc9ac1ec3f4cd349a594861ffd3d8a221f2c3"
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
  "schema_version": 1
