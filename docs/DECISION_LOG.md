@@ -5860,3 +5860,68 @@ reason. The fix is always implemented in the pipeline, globally. The RULINGS row
 the consolidated goals and BL-091 are updated to match.
 
 Backlog: BL-091
+
+## 2026-11-14: hosted M9 round 43559491132 still failed (recall 0.421, false-flag 0.318) — classified, fixed at the root (BL-013)
+
+**Round.** Run-request audit-20261114a on main after the first BL-013 fixes: 45 cases (27 L, 18 R), 19 seeded, 26
+controls (4 stale, excluded), 122 findings, all flagged. Writer `acceptance-record/run-43559491132-43559491132`:
+recall 8/19 = 0.421, false-flag 7/22 = 0.318, batch failed, 0/45 accepted. Diagnosis zero-call (no manifest, no key,
+no model): seeds re-derived by re-applying the seeder's operators to each case's seal at the audited revision (the 11
+missed match the published missed list exactly; each caught seed is the operator whose seeded line holds a frozen
+flag); packets re-planned with `llm_review.planned_requests`. Evidence:
+`evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_diagnosis.json`.
+
+**Missed seeds (11), Pareto.**
+
+| Class | Seeds | Shape / operator | Why missed |
+|---|---|---|---|
+| M1 title line, prompt contradiction | 9 (L 4, R 5) | D inject_unsupported_claim 6, D14 add_promotional_filler 3 | shown and in scope (the first fix worked), but the system prompt says the title and every heading are renderer-printed and never shown; the model raised nothing on line 1 (1 of 10 title seeds caught, as `quality`) |
+| M2 facts absent | 1 (L) | D9 misdescribe_type, Cells TypeScript row 200 | count cell "Class with 5 methods and 2 properties." on a type no fact describes; no correction writes such a line |
+| M3 model miss | 1 (R) | D9 misdescribe_type, Note Python row 285 | the model flagged rows 286–298 (donor and neighbours) but not the seeded row; renderer-owned row |
+
+No miss was one line off; none was outside the units.
+
+**False flags on re-certifying controls (7 of 22), Pareto.**
+
+| Class | Controls | Cause |
+|---|---|---|
+| F1 Lane L engine-written lines | 5 (3D Java, Cells C++, PDF Python, Words Python, PSD .NET) | flags on lines the zero-call correction engine wrote from SUPPORTED facts (type counts equal to the computed count, the Enterprise Edition name, the published NuGet version) and on unchanged maintainer rows beside a removed row. The writer refuted only PSD .NET: a `glance_layout` DIAGRAM_FIX whose evidence is `README_TEXT` made `derived_lines` return nothing for every other case |
+| F2 Lane R renderer-printed lines | 2 (Cells Rust, Cells Java) | type count, member bullets and a docstring row, shown to the model without the facts they are printed from (all refuted, still counted) |
+| Genuine defect in a control | 0 | the 21 CONFIRMED adjudications are all on the two stale Cells .NET / C++ Lane R controls |
+
+**Fixes (existing components only).**
+- (B, auditor, `scripts/run_m9_auditor.py`) The auditor re-derives, blind and zero-call, every line a deterministic stage
+  owns: Lane L, the correction engine over the PUBLIC live README with the pinned facts and the revision's tracked tree;
+  Lane R, the renderer over the pinned facts, plan, content units and dispositions (ecosystem plugin imported as in
+  `recertify_bundle`). It never reads the seal's README. Only deterministic-owned lines are compared (every line of a
+  Lane L candidate; a Lane R line the renderer prints, `scope.line_sections` with the authored rows): a model flag on a
+  reproduced line is cleared (`cleared_by: derivation`), an owned line not reproduced gets one deterministic finding.
+  An authored line stays the model's alone; a failed re-derivation changes nothing.
+- (C, audit packet, `readme/review/sectionwise.py` audit path only) `review_scope.audit_scope` says heading lines are
+  shown and words after a heading are author text. Production packets never carry it (hashes unchanged). Model-side:
+  cost ~80 tokens per unit, no extra calls; not provable zero-call.
+- (A, writer, `scripts/run_acceptance_writer.py`) Lane L derivation counts `README_TEXT` / `TREE_PATH` locator evidence
+  as evidenced (ABSENT/CONTRADICTED still derive nothing). Thresholds and populations unchanged.
+
+**O6 / checklist 13 (report-only first).** The derivation rule was run report-only over the latest seal of every
+(repository, lane) — all 45 — with its own README as the case: 0 of 27 Lane L and 0 of 6 re-certifying Lane R flagged
+(false-positive rate 0.0); all 12 stale Lane R seals flagged (renderer drift: At a Glance diagram, badges — they do not
+re-certify). Over the full seal history (268 seals, every superseded one included) 105/206 Lane L and 56/62 Lane R are
+flagged: superseded seals written by older engine/renderer code, which current code no longer reproduces; only the
+latest seal is ever seeded or audited, and that population is the one above. Measurement in
+`evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/m9_derivation_history_2026-11-14.json` (`scripts/measure_m9_derivation.py`).
+Not a pipeline check, so no `recertify --all` change: the R10 gate below is unchanged by construction. Rejected: using the
+M6 wording ban as an auditor rule for D14 — its lexicon is transcribed from the seeder's own D14 sentences, so it would
+measure the seeder, not the auditor.
+
+**Zero-call replay of the frozen findings.** Round writer: 8/19 = 0.421, 7/22 = 0.318. + A: unchanged rates (a refuted
+flag is still an auditor false flag), refuted 20 → 29, controls clear of unrefuted flags 18 → 22. + B: 19/19 = 1.000,
+0/22 = 0.000 (52 model flags cleared, every seed line underived). A + B: the same. Honest limit: 18 of 19 seeds sit on
+deterministic-owned lines and the one on an authored line is caught by the claim detector, so this round measured the
+model alone on no seed (BL-092); 7 of the 10 Lane R seeds were on stale seals (BL-075).
+
+**What the next hosted round must show.** Recall ≥ 0.90 and false-flag ≤ 0.10 with the derivation live: no
+"derivation unavailable" line in the audit log for a re-certifying case, and `cleared_by: derivation` rows on the Lane L
+corrections. If it passes, the re-certifying controls are attested (22 in this population: 18 Lane L, 4 Lane R).
+
+Backlog: BL-013, BL-075, BL-092
