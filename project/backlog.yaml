@@ -112,24 +112,30 @@ items:
     source: "owner feedback 536baa63f4 (3D Java Lane L, 2026-11-13T14:59Z)"
     priority: P1
     status: active
-    implementation_path: "branch fix/type-description-rule 252fe6c (doc-comment junk filter; Lane R facts-only purpose objective; new Lane L type_description detector); integration pending"
+    implementation_path: "branch phase3-feedback: type_description v4 (TypeDescriber: kind, bases, member names by recorded kind, enum values, Python fields; never purpose text) + renderer v40 _label_only/_described fallback + surface_claims.kept_unit_form (kept Lane R API tables)"
     acceptance: "Pareto scan (scripts/measure_type_descriptions.py) shows no count/label/junk row a doc comment could replace; Lane R rows re-authored on next run"
     evidence:
       - "worker measurement: 237 non-descriptive of 10,489 rows; 4 Lane L cells corrected; 232 reported (no doc comment); R10 gate OK 45 seals"
       - "verified 2026-11-13: 252fe6c exists only on local branch fix/type-description-rule; no origin branch contains it; not in origin/main (0adf334)"
-    next_action: "integrate 252fe6c; decide Lane L enum-cell extension (supervisor decision: yes, verifiable values) and Java enum_member extractor gap"
+      - "2026-11-14 phase3-feedback: zero-call recertify --all --write --no-publish: label/count/bookkeeping rows in the audited 10 seal READMEs 393 -> 203 (L: 3D Java 41->11, PDF Python 16->0, Words Python 28->1, Cells Rust 59->52, Cells TS 91->69, 3D Python 1->0; R: 3D .NET 53->0, 3D Python 1->0, Words .NET 12->1, Cells TS 91->69); new seal Page Python L 67->7; type-backed rows (scripts/measure_type_descriptions.py, both lanes incl. NEEDS_REPAIR Lane R) 276 -> 26; every seal still RECERTIFIED; R10 gate OK 47 seals"
+      - "residual: 118 rows name types the public-surface facts do not record (Cells Rust 52, Cells TS 66; BL-130); 26 type-backed rows with nothing true to add (BL-136)"
+      - "R42: aspose.org published 3D Java README (live HEAD README.md:366,391,460,503) prints the same filler; its readme_refresh_checks.py check_no_generic_class_description only flags it non-blocking -- improved on (deterministic fact-true replacement, both lanes)"
+    next_action: "R41: hosted recertify --write of the changed seals (BL-137); then close on that run id"
+    updated: "2026-11-14"
 
   - id: BL-006
     title: "Java extractor records no enum constants (ReferenceMode, PresetShaders)"
     type: gap
     source: "BL-005 worker finding"
     priority: P2
-    status: open
-    implementation_path: "extractors/platforms/java* enum member facts"
+    status: active
+    implementation_path: "extractor already emits Java enum_member facts (cffbdbd; proven 2026-11-14 on PresetShaders/ReferenceMode @3d2ed6be91f5); phase3-feedback: JavaPlugin.member_count_facts + recertify reads .java sources so sealed enums gain enum_values"
     acceptance: "Java enum constants appear as enum_member facts; test from 3D Java"
-    evidence: []
+    evidence:
+      - "2026-11-14 phase3-feedback: zero-call recertify of 3D Java L: CubeFace, IndexDataType, PresetShaders, TextureType rows -> \"Enumerates ...\" from the pinned declarations; tests/extractors/platforms/test_example_runs.py::test_a_sealed_java_enum_gains_its_values_from_the_pinned_source"
     depends_on: [BL-005]
-    next_action: "after BL-005 integration"
+    next_action: "R41 hosted recertify --write (BL-137)"
+    updated: "2026-11-14"
 
   - id: BL-007
     title: "At a Glance mermaid must be glanceable — grouped capabilities, vertical layout, no horizontal scrolling (global)"
@@ -139,8 +145,11 @@ items:
     status: active
     implementation_path: "renderer At a Glance layout (TB, grouped, bounded rows); Lane L re-layout only if verified and recorded (R14)"
     acceptance: "all diagrams render within ~800px width without horizontal scroll (measured with mermaid 10.9.1); R10 gate OK"
-    evidence: ["layout fix 9e08023 (glance.py, Lane L detector glance_layout v1): 26 diagrams 509-3054px -> 398-741px at 800px, labels 16px; R10 gate OK 45 seals; not yet merged, candidates change only on re-certification"]
-    next_action: "merge (PR #64), recertify --write through the hosted loop; then capability sub-groups (BL-059)"
+    evidence:
+      - "layout fix 9e08023 (glance.py, Lane L detector glance_layout v1): 26 diagrams 509-3054px -> 398-741px at 800px, labels 16px; R10 gate OK 45 seals; not yet merged, candidates change only on re-certification"
+      - "2026-11-14 phase3-feedback: glance.estimated_width counts drawn edges (bare and inline-declared): 6 sealed Lane R LR diagrams measure 819-1578 px (v1 said 252-511); all 41 seal diagrams re-measured, every re-certified/staged diagram <= 800 px (max 722), Lane R re-renders 374-722 px; glance_layout v2"
+    next_action: "R41 hosted recertify --write (BL-137)"
+    updated: "2026-11-14"
 
   - id: BL-008
     title: "Every printed example verified (owner question \"Are all examples verified globally?\")"
@@ -153,7 +162,11 @@ items:
     evidence:
       - "audit 2026-11-13: 273 printed = 174 SUPPORTED / 72 UNRESOLVED / 26 CONTRADICTED / 1 no fact; local verifier proof PDF Python 48->59 executed, 17->0 failed"
       - "verified 2026-11-13: a5b96e9 exists only on local branch audit/example-verification; not on origin; not in origin/main (0adf334)"
-    next_action: "integrate; hosted re-runs of PDF .NET L, Words .NET L+R, Cells Rust L, 3D TS L, PDF Python L"
+      - "2026-11-14 phase3-feedback: printed_example_audit before 295 printed (L 169 S / 28 C / 64 U / 1 none; R 22 S / 11 U), after (zero-call, Page Python L seal added) 303 (L 174/29/66/1; R 22/11): zero-call re-certification does not re-verify examples"
+      - "CONTRADICTED classes: 17 PDF Python + 1 PSD Python NameError are stale receipts of the verifier fixed in d8bbcab (BL-131); Slides .NET CS5001, Cells Go undefined helper, Email Cpp std::cerr are verifier/fragment defects (BL-132); 7 genuine (BL-133)"
+      - "Lane R: all 11 UNRESOLVED are retained maintainer fragments, never plan-selected; withholding them demotes 4 RECERTIFIED seals via BC-17 (R10) -- decision: keep, chain-verify (BL-134)"
+    next_action: "BL-131 hosted facts re-runs; BL-132/BL-134 verifier fixes; BL-133 withhold decision"
+    updated: "2026-11-14"
 
   - id: BL-009
     title: "README Candidate Review page — maintain it; Lane R must show the diff from live"
@@ -171,11 +184,15 @@ items:
     type: feedback
     source: "owner feedback a922e11316 (Cells Python, 2026-11-13T15:40Z)"
     priority: P2
-    status: open
-    implementation_path: "facts stage records whether the repository has GitHub Releases; dead_link (new version-pinned sibling or v2) repairs to ../../releases when verified, unlinks only otherwise"
+    status: active
+    implementation_path: "phase3-feedback: dead_link v2 repairs a dead release-notes link to https://github.com/<repo>/releases (or /releases/tag/<tag> when the link names a tagged version) when git ls-remote --tags lists release tags (Context.release_tags from recertify.SourceSnapshot and lane_l_run); unlinks only otherwise"
     acceptance: "Cells .NET/Python release-notes link points to a live Releases page when releases exist; else unlinked with the decision recorded"
-    evidence: ["verified 2026-11-13: RELEASE_NOTES.md 404 at 952317cad8db and HEAD; never existed in history"]
-    next_action: "check GitHub Releases from a hosted facts run"
+    evidence:
+      - "verified 2026-11-13: RELEASE_NOTES.md 404 at 952317cad8db and HEAD; never existed in history"
+      - "2026-11-14 phase3-feedback: tags verified by git ls-remote: Cells Python V26.3.0..V26.10.0, Cells .NET V26.4.0..V26.10.0; report-only (no-publish) run over all 29 Lane L live READMEs: 2 hits, 2 true (Cells Python -> /releases, Cells .NET -> /releases/tag/V26.10.0), 0 false positives; both seals still RECERTIFIED"
+      - "R42: aspose.org live Cells Python README.md:164 still links the dead RELEASE_NOTES.md -- improved on"
+    next_action: "R41 hosted recertify --write (BL-137)"
+    updated: "2026-11-14"
 
   - id: BL-011
     title: "Hosted engine must not depend on cron punctuality (cohort chain)"
@@ -760,12 +777,13 @@ items:
     type: feedback
     source: "owner feedback d820dad695 (Cells Java, 2026-11-13); layout worker declined named groups because no verified per-capability category exists"
     priority: P1
-    status: open
-    implementation_path: "derive a verified category per capability from facts (module/namespace of the API it cites; input vs output formats vs API areas) and group by it; never invent a category"
+    status: active
+    implementation_path: "phase3-feedback: renderer.capability_categories (namespace each capability cites, below the product root) + glance._capabilities nested, vertically stacked sub-groups; Lane L: BL-135"
     acceptance: "each capability node sits in a group whose title is backed by its facts; diagrams stay within 800px; R10 gate OK"
-    evidence: []
-    next_action: "after BL-007 merges"
-    updated: "2026-11-13"
+    evidence:
+      - "2026-11-14 phase3-feedback: categories on the 18 Lane R plans: 7 group (3D .NET Shading/Formats/Entities, 3D Python, Email Python, HTML Python, PSD .NET, Words .NET); Cells Java (the feedback cell) cites one namespace only, so no verified category exists; Email Python R re-certified with groups (669 -> 442 px)"
+    next_action: "BL-135 Lane L; R41 hosted recertify --write (BL-137)"
+    updated: "2026-11-14"
 
   - id: BL-060
     title: "R41: after every merge that changes the pipeline, re-verify every candidate of both lanes automatically"
@@ -787,12 +805,15 @@ items:
     type: defect
     source: "BL-003 review (2026-11-13), class K01: 3 findings (3D .NET Quick Start FBX7400Binary/WavefrontOBJ throw NotImplementedException; Words Body.Shapes is internal)"
     priority: P0
-    status: open
-    implementation_path: "extractors/platforms/net_examples.py::verify_net_examples — after a clean build, run the program (dotnet run, same isolated workspace, timeout); an unhandled API exception is CONTRADICTED, a missing input file stays UNRESOLVED (Python rule); ::_is_fragment NOT_VERIFIED fragments are not printed in Lane R (BL-008 policy). Same for java_examples."
+    status: active
+    implementation_path: "phase3-feedback: net_examples runs dotnet run --no-build after a clean build, java_examples runs java -cp after javac; unhandled exception -> FAILED, missing input -> NEEDS_INPUT, timeout -> TIMED_OUT"
     acceptance: "unit test from the real 3D .NET Quick Start shape (Save(path, FileFormat.FBX7400Binary)) yields CONTRADICTED; Words chart fragment is not printed; R10 gate OK"
-    evidence: ["3D .NET FileFormat.cs:66,83,347-350@52b0f00ebf28; Words Story.cs:68 internal Shapes@0d3f1add920f"]
-    next_action: "fix worker"
+    evidence:
+      - "3D .NET FileFormat.cs:66,83,347-350@52b0f00ebf28; Words Story.cs:68 internal Shapes@0d3f1add920f"
+      - "2026-11-14 phase3-feedback: tests/extractors/platforms/test_net_examples.py::test_a_compiled_example_that_throws_when_run_is_failed (3D .NET NotImplementedException shape); test_example_runs.py runs real javac+java locally (UnsupportedOperationException -> FAILED, exit 0 -> EXECUTED); no dotnet SDK on this machine, so .NET proven by unit test only"
+    next_action: "hosted facts re-runs of every .NET/Java cell (BL-131); Words chart fragment policy via BL-134"
     depends_on: [BL-008]
+    updated: "2026-11-14"
 
   - id: BL-062
     title: "K02 — behaviour/capability claimed beyond the real code path (stubs via virtual dispatch or dispatcher order, metadata-only types sold as features, wrong 'throws' claims)"
@@ -1400,4 +1421,100 @@ items:
     acceptance: "no section_authoring job fails on a type/hub unit; PDF and Words .NET rejection shapes pass with fallback rows"
     evidence: []
     next_action: "worker dispatched 2026-11-14"
+    updated: "2026-11-14"
+
+  - id: BL-130
+    title: "API table rows that name types the public-surface facts do not record keep their label cells (Cells Rust 52, Cells TypeScript 66 per lane)"
+    type: gap
+    source: "BL-005 re-verification 2026-11-14"
+    priority: P2
+    status: open
+    implementation_path: "absent_type_row (Lane L) / facts: decide per name whether it is internal (row removal under R14) or a missed export (extractor fix); then type_description describes it"
+    acceptance: "every such row either describes a SUPPORTED public type or is removed with a recorded R14 decision"
+    evidence: []
+    next_action: "decide the class from the Rust and TypeScript barrels"
+    updated: "2026-11-14"
+
+  - id: BL-131
+    title: "Example verdicts in sealed facts predate verifier fixes: hosted facts re-runs needed (stale NameError receipts; .NET/Java run step)"
+    type: task
+    source: "BL-008 / BL-061 audit 2026-11-14"
+    priority: P0
+    status: open
+    implementation_path: "hosted facts re-run (governed pipeline) of PDF Python L, PSD Python L and every .NET and Java cell, so example facts carry the d8bbcab verifier and the BL-061 run step"
+    acceptance: "printed_example_audit over the re-run seals: no NameError-class CONTRADICTED; .NET/Java SUPPORTED examples are executed"
+    evidence: []
+    next_action: "schedule through the hosted loop (R37)"
+    updated: "2026-11-14"
+
+  - id: BL-132
+    title: "Verifier defect classes left in the CONTRADICTED audit: C# snippet declaring a class without Main (Slides .NET CS5001), Go call to a helper the README defines elsewhere (Cells Go generateSmallPNG), C++ snippet relying on a standard include (Email Cpp std::cerr)"
+    type: defect
+    source: "BL-008 audit 2026-11-14 (R36 b4: question the check)"
+    priority: P1
+    status: open
+    implementation_path: "net_examples / go_examples / cpp_examples: classify each as a fragment (NOT_VERIFIED) or supply the harness piece, with a unit test from the real shape"
+    acceptance: "the three receipts re-classified; no true contradiction lost"
+    evidence: []
+    next_action: "fix worker"
+    updated: "2026-11-14"
+
+  - id: BL-133
+    title: "Lane L: a genuinely CONTRADICTED kept maintainer example is withheld with a recorded R14/R21 decision (3D .NET ex3, 3D Python ex8, Cells Cpp ex2, Email Cpp ex3, Font Python ex2/ex7, Note Python ex1, Page Python)"
+    type: requirement
+    source: "phase-3 feedback brief 2026-11-14 (BL-008 item 2)"
+    priority: P1
+    status: open
+    implementation_path: "needs a fenced-block withhold correction kind (failing_example today only reports); not landed: a new edit kind is an R27 change and every edit must pass the R10 gate -- decide after BL-131 re-runs remove the stale verdicts"
+    acceptance: "each genuine CONTRADICTED printed example withheld or repaired with its R14 record; R10 gate OK"
+    evidence: []
+    next_action: "after BL-131"
+    updated: "2026-11-14"
+
+  - id: BL-134
+    title: "Lane R prints 11 unverified retained maintainer examples (Cells Rust 6, Imaging .NET 3, Email Python 1 fragments; Cells Go 1 import-only fence)"
+    type: gap
+    source: "BL-008 acceptance \"Lane R prints no unverified example\" (2026-11-14 measurement)"
+    priority: P1
+    status: open
+    implementation_path: "chain-verify a fragment with the README example that binds its names (verifier), and treat an import-only fence as not an example; withholding instead fails BC-17 parity on 4 RECERTIFIED seals (R10)"
+    acceptance: "printed_example_audit Lane R UNRESOLVED 0 with no seal lost"
+    evidence: []
+    next_action: "verifier worker"
+    updated: "2026-11-14"
+
+  - id: BL-135
+    title: "Lane L At a Glance capability groups: live diagram nodes carry no fact ids, so no verified category exists (Cells Java cites one namespace)"
+    type: gap
+    source: "owner feedback d820dad695 / BL-059 (2026-11-14)"
+    priority: P2
+    status: open
+    implementation_path: "map each live node to the Key Capabilities bullet and the types it cites; group only on a verified namespace; layout-only otherwise (R14)"
+    acceptance: "grouped Lane L diagrams with fact-backed headings, or a recorded no-category decision per seal"
+    evidence: []
+    next_action: "design after BL-137"
+    updated: "2026-11-14"
+
+  - id: BL-136
+    title: "Type rows with nothing true to add beyond name and kind (3D Java 10 empty interfaces + ShaderSource, Cells TS SaveFormat/EncryptionType/CellValue, Page Python 7 enum-like classes, Words Python Table, Words .NET R INodeCollection \"Public class.\")"
+    type: gap
+    source: "BL-005 re-verification 2026-11-14"
+    priority: P3
+    status: open
+    implementation_path: "TypeScript/Python enum values into enum_member facts; Lane R last-resort row wording"
+    acceptance: "no label-only row in any seal"
+    evidence: []
+    next_action: "after BL-130"
+    updated: "2026-11-14"
+
+  - id: BL-137
+    title: "R41: publish the zero-call re-certification of the BL-005/006/007/010/059 fixes (9 Lane L seals + Email Python R change)"
+    type: task
+    source: "owner ruling R41"
+    priority: P0
+    status: open
+    implementation_path: "hosted recertify --write (R37 loop) after this branch merges; record the run id and per-lane result in BL-005/006/007/010/059"
+    acceptance: "run id with lane L 29 / lane R 6 certified and the changed seals published"
+    evidence: []
+    next_action: "after merge"
     updated: "2026-11-14"
