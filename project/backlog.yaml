@@ -885,6 +885,7 @@ items:
       - "2026-11-14 portfolio check of the class, every seal revision: type facts outside a product root occur only in Words Python (9 ApiExamples/ classes, 198 -> 189) and PSD Python (13 classes in src/aspose_psd_foss_test/; no build manifest at 2271c228, so nothing to honour, and no PSD Python seal states a count); .NET, Java, C++, Go, Rust and TypeScript facts hold no test/sample/example types; the other 7 Python builds keep every type (PDF Python drops only the fuzz/ modules, no type)"
       - "tests: tests/extractors/platforms/test_python_shipped_packages.py (real manifests, trees and sealed surfaces of 6 Python repositories in tests/fixtures/shipped_packages/; Words Python positive, 5 negative controls), tests/test_recertify_shipped_facts.py"
       - "zero-call recertify --all --remote origin, supervisor-branch code -> this branch: Lane L 28/28 -> 28/28, Lane R 6/18 -> 6/18; Words Python Lane L a500a1b3 README 198 -> 189 (lines 337, 614) with facts.json narrowed; recertify --gate --base-baseline <origin/main baseline> OK (46 seals, no regression); evidence evidence/build/GATE5_DELIVERY_PROGRAM/BL-013/round_43559491132_k05_k10_2026-11-14.json"
+      - "2026-11-14 branch phase1-readme (P5, C# variant at re-certification): recertify.fetch_source reads the pinned .cs sources of a .NET seal; net.current_public_types re-reads every file a sealed class/enum fact cites with the same extractor (surface_symbols) and drops a type it no longer finds public, with its members (only removes; a type whose file was not read stays); recertify.current_units drops the Core API row and hub units of such types. O6 report-only run over every sealed .NET facts document: 6 hits, 0 false positives (Words .NET DocumentPositionMovement/INodeCollection/NodeEnumerator under '#if CPLUSPLUS public #else internal'; 3D .NET Chunk; PDF .NET PsTintSpace nested in internal static PsColorSpaces, Tagged.Rule in internal PageContentScan). Zero-call recertify --all --remote origin: Words .NET Lane R prints 615 ('The public API has 615 types.', lines 170/1024/1035), its BC-05 and the type-row citations clear (NEEDS_REPAIR BC-05+BC-18 -> BC-18 only); Words .NET Lane L stays RECERTIFIED and prints 615 where the renderer states the count; tests/test_recertify_fact_derivations.py (verbatim DocumentPositionMovement.cs@0d3f1add)"
     next_action: "merge; the hosted recertify --write on main (recertify.yml) writes the re-certified Words Python Lane L seal with the narrowed facts (R41 run id), then done for the Python variant; still open from the C# variant: hosted re-seal of Words .NET and 3D .NET (stored facts count 618/293; register rows keep the lines refuted)"
     updated: "2026-11-14"
 
@@ -1424,11 +1425,92 @@ items:
     type: requirement
     source: "owner ruling R43 (2026-11-14)"
     priority: P0
-    status: open
-    implementation_path: "authoring_retry / recover_authoring_output: blank the failing type:/hub: unit so the renderer prints docstring, signature or enum values"
+    status: active
+    implementation_path: "authoring_retry.recover_failing_api_rows (last step of recover_authoring_output, given the job's own unit_checks in cascade._run_authoring and repair/loop._regenerate_section): a type:/hub: unit still failing after every ask is left out and recorded in omitted against its symbol fact (authoring.API_ROW_FALLBACK_REASON); unit_checks owes such a slot no unit; renderer._symbol_description prints the fact-true row (docstring, else enum values or signature, else 'Public <kind>.'), a blank hub prints the same; run_job writes each fallback into the .repaired-<n>.json record (notes); merge_units keeps a batch omission's section id"
     acceptance: "no section_authoring job fails on a type/hub unit; PDF and Words .NET rejection shapes pass with fallback rows"
+    evidence:
+      - "2026-11-14 branch phase1-readme: tests/readme/composition/test_api_row_fallback.py (8 tests) drives the real section_authoring manifest through run_job with scripted replies carrying the real rejected shapes - enum members the facts do not list (PDF Java Permissions 'AssembleDocument, FillForm, PrintingQuality', hosted run 43572741039; Words .NET RevisionType, 43563712540), HTML in a summary (HTML Python HTMLAnchorElement '<a>'), an unknown identifier in a hub (Cells C++ Workbook 'uint8_t'): without the fallback the job raises OutputRejectedError; with it the job is accepted, the stored output replays from the call store with zero calls, the repaired record names every fallback with its rejection lines, and the rendered rows read 'Enumerates ModifyAnnotations and PrintDocument.' / 'Defined as `class HTMLAnchorElement(HTMLElement)`.'; no fallback while any non-API defect remains; a unit carrying a must-carry inherited unit is never blanked (R14); a batch whose every row fails keeps one unit as the fact-true sentence (units.minItems 1)"
+      - "2026-11-14 zero-call recertify --all --remote origin: no sealed candidate changes outcome through the fallback (it acts only on a fresh rejected reply); NORMALISATION_VERSION 36 -> 37, RENDERER_VERSION 39 -> 40"
+    next_action: "hosted proof: the next Lane R run whose type/hub batch is rejected (PDF Java, Words .NET) completes section_authoring with the fallback recorded; then done"
+    updated: "2026-11-14"
+
+  - id: BL-120
+    title: "P2: zero-call re-certification judges sealed Lane R dispositions under the current register folds; nested list items and uncovered Scope units are withheld"
+    type: defect
+    source: "supervisor design review 2026-11-14 (/home/user/.supervisor/inv-design exp/fold_exp.py: BC-18 92 -> 69 with the folds alone); BL-088; R36(b)(4)"
+    priority: P0
+    status: active
+    implementation_path: "recertify.current_dispositions applies dispositions._fold_register_corrections/_fold_register_kept_units(plan)/_fold_register_omitted_units to the sealed dispositions before judging (published with --write as dispositions.json); must_correct.without_quoted_items withholds the innermost (nested) item that prints a quote; _fold_register_kept_units withholds a Scope and Limitations unit no planned limitation covers (plan given) and matches a quote against a kept paragraph's printed, count-corrected form; surface_claims.kept_unit_form withholds the quoted sentence of the count-corrected paragraph"
+    acceptance: "more Lane R seals RECERTIFIED with no false ones; Email C++ re-certifies; R10 gate OK"
+    evidence:
+      - "2026-11-14 branch phase1-readme, zero-call recertify --all --json --remote origin: Lane R BC-18 details 92 -> 58; Aspose.Email-FOSS-for-Cpp Lane R NEEDS_REPAIR (BC-18: get(property_id, property_type) -> mapi_property / get_property_value(...) -> std::any in 059.003.list / 053.list) -> RECERTIFIED; Cells C++ 041.paragraph's '195 public types - is listed below' withheld; tests/test_recertify_current_folds.py (real Email C++ units and register rows)"
+      - "O6 report-only run (every sealed bundle and the 15 live READMEs): 53 register-fold hits on sealed Lane R dispositions, 6 nested-item hits on live READMEs, all on OPEN register rows (0 false positives by construction: the register row is the confirmed false claim)"
+    next_action: "(gate 2026-11-14: recertify --gate --remote origin --base-baseline <origin/main baseline> OK, 47 seals, certified R 7 / L 29; data/recertification_baseline.json rewritten, Email C++ Lane R RECERTIFIED) hosted recertify --write on main (recertify.yml) publishes the re-certified Email C++ seal with folded dispositions (R41 run id); then done"
+    updated: "2026-11-14"
+
+  - id: BL-121
+    title: "P3: fact polarity and the Python floor - a format its own receipt refutes is not SUPPORTED; requires-python named for pyproject; floor rendered as aspose.org does"
+    type: defect
+    source: "supervisor design review 2026-11-14 (3D Python obj/dae export register rows; HTML/Cells/Email Python 'python_requires' register rows); R42 (aspose.org prints '- Requires Python 3.10 or later.')"
+    priority: P0
+    status: active
+    implementation_path: "formats.demote_failed_receipt_formats (in format_facts and, zero-call, recertify.corrected_facts): a SUPPORTED format:input/output fact whose own example receipt is FAILED or records NotImplemented/TypeError, with no executed example, is UNRESOLVED; python.floor_field_for/corrected_floor_declaration: the evidence detail and floor_declaration name requires-python for a pyproject.toml; renderer: 'Requires Python X or later.' in Installation and the floor bullet (a setup.py/setup.cfg bullet keeps its true python_requires key, as aspose.org's 3D Python README does)"
+    acceptance: "3D Python format:output.obj UNRESOLVED; HTML Python floor evidence says requires-python; no README prints python_requires for a pyproject repository"
+    evidence:
+      - "2026-11-14 branch phase1-readme: O6 report-only run over every sealed facts document: P3a 1 unique hit (3D Python format:output.obj, 'example 8: FAILED; TypeError'; the register confirms obj export false), 0 false positives; P3b 9 repositories (8 pyproject 'python_requires declared' corrected to requires-python, 3D Python setup.py gains the attribute only), 0 false positives; .dae: no sealed receipt refutes it (stub/code_path facts already UNRESOLVED it where measured), left to the register"
+      - "zero-call recertify: Email Python Lane R (RECERTIFIED) prints 'Requires Python 3.10 or later.' twice; 3D Python Lane R now also fails BC-04 on its authored opening/capability units citing the UNRESOLVED format:output.obj (a genuine defect, already NEEDS_REPAIR: BL-123); tests/test_recertify_fact_derivations.py, tests/readme/evidence/facts/test_formats.py, tests/extractors/platforms/test_python_floor_declaration.py"
+    next_action: "hosted recertify --write; BL-123 repairs the 3D Python units"
+    updated: "2026-11-14"
+
+  - id: BL-122
+    title: "P4: placement - resource lists fold to Documentation and Resources and render from link facts; a kept API Reference type table prints only rows the Core API table does not"
+    type: defect
+    source: "supervisor design review 2026-11-14 (BC-05 section fit on 3D .NET, Cells C++, Words .NET; duplicate type table in Cells C++); BL-004"
+    priority: P0
+    status: active
+    implementation_path: "recertify.current_dispositions applies dispositions.fit_sealed_sections (BL-004 _fit_resource_and_license_units) and recertify.current_plan the planning link backstop (missing_kept_list_links, now owing only links a kept list prints); list_coverage.kept_link_descriptions: a link line no unit describes prints the maintainers' item description (leading-link, inline-link and bold-lead group items), authoring gives such links no slot; placement.rows_not_rendered: a kept type table in api_reference prints only rows the rendered Core API table does not print cell for cell (independent_reviewer agrees: _table_rows_printed)"
+    acceptance: "BC-05 section fit clears on 3D .NET, Cells C++ and Words .NET; Cells C++ prints no duplicate type table; no RECERTIFIED seal lost"
+    evidence:
+      - "2026-11-14 branch phase1-readme, zero-call recertify --all: BC-05 gone from 3D .NET, Cells C++ and Words .NET Lane R; Cells C++ NEEDS_REPAIR BC-05+BC-14+BC-18+REVIEW -> BC-18 only (its 044.table prints 9 rows the Core API table does not, BC-14 'listed below' cleared); measure.py on latest seals: SECTION_FIT_RESOURCE_IN_SCOPE 20 -> 0, SECTION_FIT_LICENSE_IN_SCOPE 1 -> 0, TYPE_COUNT_VS_LISTED 1 -> 0; Cells Go Lane R stays RECERTIFIED with 12 duplicate rows gone"
+      - "a superseding fold of inherited type tables was measured and rejected the same day: it raised BC-05/BC-17 on 10 Lane R seals (descriptions and members the generated rows do not carry) and demoted 3 RECERTIFIED seals"
+      - "tests/readme/composition/test_kept_type_table_rows.py, test_kept_link_descriptions.py, tests/test_recertify_current_folds.py"
+    next_action: "hosted recertify --write; PDF Java's wholly restated 126.list (REVIEW:disposition_coverage, new on an already failing seal) is the S9 accounting's to supersede"
+    updated: "2026-11-14"
+
+  - id: BL-123
+    title: "3D Python Lane R authored opening and capability units claim .obj export, which its own receipt and the register refute"
+    type: defect
+    source: "BL-121 zero-call recertify 2026-11-14: BC-04 'opening/opening cites format:output.obj, which is UNRESOLVED' (2 units)"
+    priority: P1
+    status: open
+    implementation_path: "the next hosted Lane R run of 3D Python: targeted repair of the two units (S6) under the UNRESOLVED fact"
+    acceptance: "3D Python Lane R BC-04 clear on format:output.obj"
     evidence: []
-    next_action: "worker dispatched 2026-11-14"
+    next_action: "scheduled cell selection picks it up (hosted)"
+    updated: "2026-11-14"
+
+  - id: BL-124
+    title: "Words .NET Lane L prints the maintainers' 617 public types above the facts' 615"
+    type: defect
+    source: "BL-065 zero-call recertify 2026-11-14: README line 943 '... for all 617 public types' (the Lane L seal edited it to 618 under the old facts)"
+    priority: P2
+    status: open
+    implementation_path: "readme/correction/detectors/stale_type_count.py deliberately leaves a stated count above the facts' count (PDF .NET delegates); decide per R36 whether a C#-#if-explained gap is rewritable (owner of the Lane L detectors)"
+    acceptance: "Words .NET Lane L states 615 or no count; seal still RECERTIFIED"
+    evidence: []
+    next_action: "hand to the Lane L detector worker"
+    updated: "2026-11-14"
+
+  - id: BL-125
+    title: "REVIEWER_LOGIC_VERSION not bumped for the type-table 'printed' test"
+    type: debt
+    source: "phase1-readme 2026-11-14: independent_reviewer._table_rows_printed changes disposition_coverage matching"
+    priority: P3
+    status: open
+    implementation_path: "bump REVIEWER_LOGIC_VERSION together with a refreshed calibration record (data/reviewer_calibration.json is frozen at '10', R33)"
+    acceptance: "version and calibration record agree"
+    evidence: []
+    next_action: "decide with the next reviewer change"
     updated: "2026-11-14"
 
   - id: BL-110

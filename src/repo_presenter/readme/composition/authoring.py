@@ -54,7 +54,12 @@ from repo_presenter.readme.composition.components.identity import (
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL, section_ids
 from repo_presenter.readme.composition.components.terminology import canonical_forms
 from repo_presenter.readme.composition.coverage import Destinations, states_all, uncovered
-from repo_presenter.readme.composition.list_coverage import OWED_SECTIONS, kept_lists, list_items
+from repo_presenter.readme.composition.list_coverage import (
+    OWED_SECTIONS,
+    kept_link_descriptions,
+    kept_lists,
+    list_items,
+)
 from repo_presenter.readme.composition.placement import placements
 from repo_presenter.readme.composition.text_hygiene import hygiene_errors
 from repo_presenter.readme.evidence.facts.links import link_text
@@ -207,7 +212,9 @@ _TYPE_IMPLEMENTATION_RULE = (
     "always raises or throws (such as a not-implemented error), say plainly that the member is "
     "not implemented, and never describe work the implementation facts show the type does not do."
 )
-NORMALISATION_VERSION = "36"
+# 37 (2026-11-14, BL-104 / R43(4)): a type:/hub: slot recorded as an API-row fallback in
+# ``omitted`` (API_ROW_FALLBACK_REASON) is owed no unit; the renderer prints its fact-true row.
+NORMALISATION_VERSION = "37"
 _EXCEPTION_SUFFIXES = ("Error", "Exception", "Warning")
 EDITION_SUBSTITUTE = re.compile(
     r"(?i)\b(?:commercial|on[- ]?premises?|premium|paid|full|licensed|proprietary)[\s-]+"
@@ -840,9 +847,14 @@ def section_selections(
             ids.extend(hub.get("fact_ids", []))
             slots.append(f"hub:{hub.get('symbol_fact_id', '')}")
     elif section == "documentation_resources":
+        # A link a kept resource-links list describes is rendered from the link fact and the
+        # maintainers' own description (``list_coverage.kept_link_descriptions``, P4): no slot.
+        described = kept_link_descriptions(dispositions, facts)
         for link in plan.get("links", []):
             # A link the plan carries that is not SUPPORTED gets no slot: its only citable fact
             # would be the one the binding guard rejects (Words .NET, link_target:020).
+            if link.get("link_fact_id", "") in described:
+                continue
             if link.get("section_id") == section and link.get("link_fact_id", "") in supported:
                 ids.append(link.get("link_fact_id", ""))
                 slots.append(f"link:{link.get('link_fact_id', '')}")
@@ -2036,6 +2048,33 @@ def restated_command_lines(text: str, lines: Iterable[str]) -> list[str]:
     return [line for line in lines if line.lower() in lowered]
 
 
+#: The ``omitted`` reason of an API-row fallback (owner ruling R43(4), BL-104): a ``type:`` or
+#: ``hub:`` unit still failing its checks after every ask is left out, recorded against its
+#: symbol fact, and the renderer prints that symbol's fact-true row (``renderer.
+#: _symbol_description``: docstring, else signature or enum values, else "Public <kind>.").
+API_ROW_FALLBACK_REASON = (
+    "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the "
+    "renderer prints the type's fact-true row"
+)
+API_ROW_SLOT_PREFIXES = ("type:", "hub:")
+
+
+def api_row_fallback_slots(output: Mapping[str, Any], task: SectionTask) -> frozenset[str]:
+    """The ``type:``/``hub:`` slots of ``task`` whose symbol ``output`` records as an API-row
+    fallback (:data:`API_ROW_FALLBACK_REASON`)."""
+    fallen = {
+        str(item.get("fact_id"))
+        for item in output.get("omitted", [])
+        if isinstance(item, Mapping)
+        and str(item.get("reason") or "").startswith(API_ROW_FALLBACK_REASON)
+    }
+    return frozenset(
+        slot
+        for slot in task.slots
+        if slot.startswith(API_ROW_SLOT_PREFIXES) and slot.split(":", 1)[1] in fallen
+    )
+
+
 def unit_checks(
     output: dict[str, Any],
     task: SectionTask,
@@ -2073,7 +2112,11 @@ def unit_checks(
     nouns = prose_nouns(facts, name)
     placeholders = recorded_placeholders(facts)
     merge_repeated_slots(output)
-    expected = list(task.slots)
+    returned = {unit.get("slot") for unit in output.get("units", [])}
+    fallback = api_row_fallback_slots(output, task)
+    # A type:/hub: slot the API-row fallback blanked (R43(4), BL-104) is filled by the renderer's
+    # fact-true row, so it is owed no unit; one the reply still fills is judged as any other.
+    expected = [slot for slot in task.slots if slot in returned or slot not in fallback]
     output["units"] = [unit for unit in output.get("units", []) if unit.get("slot") in expected]
     slots_seen = [unit.get("slot") for unit in output.get("units", [])]
     if sorted(slots_seen) != sorted(expected):
@@ -2554,7 +2597,11 @@ def merge_units(
     omitted: list[dict[str, Any]] = []
     for section, output in sorted(pairs, key=lambda pair: order.get(pair[0], len(order))):
         units.extend(output.get("units", []))
-        omitted.extend({"section": section, **item} for item in output.get("omitted", []))
+        # A batch task's label ("api_reference#types-1") names its section before the "#": every
+        # reader matches an omission to its task by ``section_id`` (the API-row fallback, BL-104).
+        omitted.extend(
+            {"section": section.split("#", 1)[0], **item} for item in output.get("omitted", [])
+        )
     return {"schema_version": 1, "units": units, "omitted": omitted}
 
 

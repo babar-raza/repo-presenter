@@ -111,7 +111,14 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # of the type's kind, bases, members or values (type_description.TypeDescriber), shared with Lane L.
 # BL-059 (owner feedback d820dad695): At a Glance capabilities citing one namespace below the product
 # root sit in a sub-group of that heading, the groups stacked top to bottom (capability_categories).
-RENDERER_VERSION = "40"
+# 41 (2026-11-14, BL-104 / R43(4)): a Detailed Member Reference hub whose unit the API-row
+# fallback left out prints the type's fact-true description. P4: a Documentation and Resources
+# link a kept resource-links list describes prints the maintainers' description
+# (list_coverage.kept_link_descriptions), and a kept API Reference type table prints only the rows
+# the rendered Core API table does not (placement.rows_not_rendered). P3: the Python floor prints
+# "Requires Python 3.10 or later." (as aspose.org's published READMEs do); only a setup.py /
+# setup.cfg floor bullet still names its (true) python_requires key.
+RENDERER_VERSION = "41"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
@@ -774,7 +781,14 @@ def _dependencies(context: RenderContext) -> list[str]:
         floor = _FLOOR.fullmatch(requires.value.strip())
         path = requires.evidence[0].path
         declaration = (requires.attributes or {}).get("floor_declaration") or spec.floor_declaration
-        if floor:
+        if floor and requires.id == PYTHON_FLOOR_FACT_ID and declaration != "python_requires":
+            # P3 (2026-11-14): a pyproject.toml floor as aspose.org's published READMEs state it
+            # (HTML and Note Python: "- Requires Python 3.10 or later."), with no manifest key to
+            # get wrong (register rows on Cells, Email and HTML Python: "`python_requires=">=3.10"`
+            # in `pyproject.toml`"). A setup.py/setup.cfg floor keeps its true key, as aspose.org
+            # prints it (3D Python: "(`python_requires=">=3.7"` in `setup.py`)").
+            requirements.append(f"- {python_floor_sentence(floor.group(1))}")
+        elif floor:
             requirements.append(
                 f"- Requires {spec.floor_label} {floor.group(1)} or later "
                 f'(`{declaration}="{requires.value}"` in `{path}`).'
@@ -822,6 +836,10 @@ def _documentation_resources(context: RenderContext) -> list[str]:
     repository = context.fact("identity:repository")
     issues = f"https://github.com/{repository.value}/issues" if repository is not None else None
     api_included = any(section.id == "api_reference" for section in context.included)
+    from repo_presenter.readme.composition.list_coverage import kept_link_descriptions
+
+    # A link a kept resource-links list describes prints the maintainers' description (P4).
+    described = kept_link_descriptions(context.dispositions, context.facts)
     lines: list[str] = []
     seen: set[str] = set()
     for link in context.plan.get("links", []):
@@ -831,9 +849,17 @@ def _documentation_resources(context: RenderContext) -> list[str]:
         if target is None or target.value in seen or target.value == issues:
             continue
         seen.add(target.value)
-        sentence = context.unit(sid, f"link:{target.id}")
+        # A sealed candidate's authored line stands; a link no unit describes (one the link
+        # backstop owes a kept list) prints the maintainers' own description of it.
+        authored = context.unit(sid, f"link:{target.id}")
+        sentence = authored or described.get(target.id, "")
         host = (urlsplit(target.value).hostname or "").lower()
-        if host.startswith("reference.") and api_included:
+        if host.startswith("reference.") and api_included and not (
+            not authored and target.id in described and "public types" in sentence
+        ):
+            # A maintainers' description that already states the count (Words .NET ``080.list``:
+            # "for all 617 public types (the API reference section above covers the essentials)",
+            # count-corrected below) is not told it twice.
             count = _public_type_count(context)
             sentence += (
                 f" It covers all {count} public types; the "
@@ -1305,7 +1331,12 @@ def _api_reference(context: RenderContext) -> list[str]:
         lines += ["", "#### Detailed Member Reference"]
         for hub, symbol in hubs:
             lines += ["", f"### {names.get(symbol.value, symbol.value.rsplit('.', 1)[-1])}", ""]
-            lines.append(context.unit(sid, f"hub:{hub['symbol_fact_id']}"))
+            # A hub unit the API-row fallback left out (R43(4), BL-104) prints the type's
+            # fact-true description, exactly as its Core API row does.
+            lines.append(
+                context.unit(sid, f"hub:{hub['symbol_fact_id']}")
+                or _symbol_description(context, symbol)
+            )
             owned = sorted(hub_methods.get(symbol.value, []), key=lambda f: f.value)
             bullets = [
                 bullet
@@ -1552,18 +1583,37 @@ def _installation(context: RenderContext) -> list[str]:
         else ""
     )
     sentence = ""
+    floor = (
+        _FLOOR.fullmatch(requires.value.strip())
+        if requires is not None and requires.polarity == "SUPPORTED"
+        else None
+    )
     if versions is not None and versions.polarity == "SUPPORTED":
         listed = _oxford([v.strip() for v in versions.value.split(",") if v.strip()])
         sentence = f"The package supports Python {listed}"
-        if requires is not None and requires.polarity == "SUPPORTED":
-            sentence += f" and declares `{field}` as `{requires.value}`"
-        sentence += "."
+        if floor is not None:
+            sentence += f". {python_floor_sentence(floor.group(1))}"
+        else:
+            if requires is not None and requires.polarity == "SUPPORTED":
+                sentence += f" and declares `{field}` as `{requires.value}`"
+            sentence += "."
+    elif floor is not None:
+        # P3: the floor in aspose.org's words, deterministic (never "declares `<key>` as ...").
+        sentence = python_floor_sentence(floor.group(1))
     elif requires is not None and requires.polarity == "SUPPORTED":
         sentence = f"The package declares `{field}` as `{requires.value}`."
     if sentence:
         lines.append("")
         lines.append(sentence)
     return lines[1:] if lines and lines[0] == "" else lines
+
+
+PYTHON_FLOOR_FACT_ID = "package:python_requires"
+
+
+def python_floor_sentence(version: str) -> str:
+    """The Python-version requirement, worded as aspose.org's published READMEs word it."""
+    return f"Requires Python {version} or later."
 
 
 def _code_block(language: str, code: str) -> list[str]:

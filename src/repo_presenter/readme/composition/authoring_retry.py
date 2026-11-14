@@ -44,12 +44,13 @@ It sits beside ``authoring.py`` rather than inside it so the change moves no gov
 
 from __future__ import annotations
 
+import copy
 import dataclasses
 import json
 import re
 import string
 from collections import Counter
-from collections.abc import Collection, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
@@ -497,15 +498,163 @@ def recover_out_of_slot_citations(
     return output if changed else None
 
 
+#: Where an API-row fallback is recorded for the run's evidence: ``run_job`` pops this key from a
+#: recovered reply before re-validating it and writes it into the ``.repaired-<attempt>.json``
+#: record beside the call store (``CallStore.record_repairs``), with the slots, symbols and the
+#: rejection lines each fallback answered.
+RECOVERY_NOTES_KEY = "_recovery_notes"
+
+
+def recover_failing_api_rows(
+    output: dict[str, Any],
+    *,
+    task: SectionTask,
+    facts: FactsDocument,
+    checks: Callable[[dict[str, Any]], Sequence[str]],
+) -> dict[str, Any] | None:
+    """Owner ruling R43(4) (BL-104): a ``type:`` or ``hub:`` unit that still fails its checks
+    after every ask is blanked - left out of ``units`` and recorded in ``omitted`` against its
+    symbol fact with :data:`authoring.API_ROW_FALLBACK_REASON` - so the renderer prints that
+    type's fact-true row (``renderer._symbol_description``: docstring, else signature or enum
+    values, else "Public <kind>.") instead of the job failing. Fallback only, never render-all:
+    a unit that passes is kept as written, and the model still writes every row.
+
+    Only when every remaining rejection line belongs to a ``type:``/``hub:`` slot: with any
+    other defect left the job fails as before, so a fallback never hides one. A unit that cites
+    an inherited unit the section must carry is not blanked (its substance would lose its only
+    carrier, R14). Real rejected shapes: enum members the facts do not list (PDF Java
+    ``Permissions``, Words .NET ``RevisionType``), HTML in a summary (HTML Python
+    ``HTMLAnchorElement`` "<a>"), unknown identifiers (Cells C++ ``uint8_t``, Imaging ``DjVu``).
+
+    ``checks`` is the job's own ``unit_checks`` closure, run on a copy (it normalises in place).
+    Returns ``None`` when nothing was blanked."""
+    from repo_presenter.readme.composition.authoring import (
+        API_ROW_FALLBACK_REASON,
+        API_ROW_SLOT_PREFIXES,
+    )
+
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    rejection = list(checks(copy.deepcopy(output)))
+    if not rejection:
+        return None
+    failing: dict[str, list[str]] = {}
+    returned = Counter(str(unit.get("slot")) for unit in units if isinstance(unit, dict))
+    for error in rejection:
+        if error.startswith(_SLOT_SET_ERROR):
+            # A type:/hub: slot the reply left out is a failing row too; any other slot-set
+            # fault (a missing prose slot, a slot returned twice) is not an API row.
+            absent = [slot for slot in task.slots if returned[slot] != 1]
+            if not absent or any(
+                returned[slot] or not slot.startswith(API_ROW_SLOT_PREFIXES) for slot in absent
+            ):
+                return None
+            for slot in absent:
+                failing.setdefault(slot, []).append(error)
+            continue
+        owned = _slots_of(task, error)
+        if owned is None or not owned[0].startswith(API_ROW_SLOT_PREFIXES):
+            return None
+        failing.setdefault(owned[0], []).append(error)
+    by_slot = {str(unit.get("slot")): unit for unit in units if isinstance(unit, dict)}
+    for slot in failing:
+        cited = by_slot.get(slot, {}).get("fact_ids") or []
+        if any(fact_id in task.must_carry for fact_id in cited):
+            return None
+    known = {fact.id for fact in facts.facts if fact.polarity == "SUPPORTED"}
+    notes: list[dict[str, Any]] = []
+    omitted = [item for item in output.get("omitted", []) if isinstance(item, dict)]
+    for slot, errors in failing.items():
+        symbol = slot.split(":", 1)[1]
+        if symbol not in known:
+            return None
+        if not any(item.get("fact_id") == symbol for item in omitted):
+            omitted.append({"fact_id": symbol, "reason": API_ROW_FALLBACK_REASON})
+        notes.append(
+            {
+                "fallback": "api_row",
+                "ruling": "R43(4)",
+                "slot": slot,
+                "symbol_fact_id": symbol,
+                "rejected_text": str(by_slot.get(slot, {}).get("text", "")),
+                "rejection": errors,
+            }
+        )
+    kept = [
+        unit for unit in units if not (isinstance(unit, dict) and str(unit.get("slot")) in failing)
+    ]
+    if not kept:
+        # The output contract holds at least one unit (``units.minItems``), so when every row of a
+        # batch fails, one of them carries the fact-true sentence itself - the same words the
+        # renderer's fallback row would print - instead of being left out.
+        slot = sorted(failing, key=lambda s: (not _is_enum_slot(s, facts), task.slots.index(s)))[0]
+        symbol = slot.split(":", 1)[1]
+        kept = [
+            {
+                "section": task.section_id,
+                "slot": slot,
+                "text": fact_true_type_sentence(symbol, facts),
+                "fact_ids": [symbol],
+            }
+        ]
+        omitted = [item for item in omitted if item.get("fact_id") != symbol]
+        for note in notes:
+            if note["slot"] == slot:
+                note["fallback"] = "api_row_fact_true_unit"
+                note["text"] = kept[0]["text"]
+        candidate = {**output, "units": kept, "omitted": omitted}
+        candidate.pop(RECOVERY_NOTES_KEY, None)
+        if list(checks(copy.deepcopy(candidate))):
+            return None
+    output["units"] = kept
+    output["omitted"] = omitted
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
+def _is_enum_slot(slot: str, facts: FactsDocument) -> bool:
+    fact = next((f for f in facts.facts if f.id == slot.split(":", 1)[1]), None)
+    return fact is not None and (fact.attributes or {}).get("symbol_kind") == "enum"
+
+
+def fact_true_type_sentence(symbol_id: str, facts: FactsDocument) -> str:
+    """The fact-true sentence for one public type with no usable authored one: an enum's verified
+    values ("Enumerates A, B and C."), else "Public <kind>." - the renderer's own fallback words
+    (``renderer._described``), with no identifier beyond the type's own verified values."""
+    from repo_presenter.readme.composition.authoring import type_values
+
+    fact = next((f for f in facts.facts if f.id == symbol_id), None)
+    kind = str((fact.attributes or {}).get("symbol_kind", "symbol")) if fact else "symbol"
+    if fact is not None and kind == "enum":
+        values = type_values(fact, facts, limit=len(facts.facts))
+        shown = values[:8]
+        if shown:
+            listed = ", ".join(shown[:-1]) + (" and " if len(shown) > 1 else "") + shown[-1]
+            lead = "Enumerates values including" if len(values) > len(shown) else "Enumerates"
+            return f"{lead} {listed}."
+    return f"Public {kind}."
+
+
 def recover_authoring_output(
-    output: dict[str, Any], *, task: SectionTask, facts: FactsDocument
+    output: dict[str, Any],
+    *,
+    task: SectionTask,
+    facts: FactsDocument,
+    checks: Callable[[dict[str, Any]], Sequence[str]] | None = None,
 ) -> dict[str, Any] | None:
     """The one ``recover=`` for a section_authoring task other than the opening: every last-resort
-    correction of this module, in order."""
+    correction of this module, in order, ending with the API-row fallback
+    (:func:`recover_failing_api_rows`) when the job's ``checks`` are given."""
     restated = recover_restating_sentences(output, task=task, facts=facts)
     withdrawn = recover_out_of_slot_citations(
         output if restated is None else restated, task=task, facts=facts
     )
-    if withdrawn is not None:
-        return withdrawn
-    return restated
+    recovered = withdrawn if withdrawn is not None else restated
+    if checks is not None:
+        fallen = recover_failing_api_rows(
+            output if recovered is None else recovered, task=task, facts=facts, checks=checks
+        )
+        if fallen is not None:
+            return fallen
+    return recovered

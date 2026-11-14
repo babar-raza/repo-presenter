@@ -6557,3 +6557,28 @@ the public-surface facts do not record, BL-130). printed_example_audit unchanged
 --write` (BL-137, R37/R41); the items stay active until that run.
 
 Backlog: BL-005, BL-006, BL-007, BL-008, BL-010, BL-059, BL-061, BL-130, BL-131, BL-132, BL-133, BL-134, BL-135, BL-136, BL-137
+
+## 2026-11-14 — Phase 1 README fixes: API-row fallback, sealed-candidate folds, fact polarity, placement, .NET type count
+
+**Facts (zero calls).** `recertify --all --json --remote origin`, supervisor branch -> this branch: Lane R 6/18 -> 7/18
+RECERTIFIED (Aspose.Email-FOSS-for-Cpp), Lane L 28/28 -> 29/29 (the new Page Python seal); no seal changes outcome
+for the worse. Lane R BC-18 details 92 -> 58. BC-05 clears on 3D .NET, Cells C++ and Words .NET; Cells C++ goes from
+BC-05+BC-14+BC-18+REVIEW to BC-18 only, Words .NET from BC-05+BC-18 to BC-18 only and prints 615 public types.
+`recertify --gate --remote origin --base-baseline <origin/main baseline>`: OK, 47 seals, certified R 7 / L 29. The O6 report-only run (every sealed
+facts/dispositions document and the 15 live READMEs) found no false positive in any changed rule.
+
+**Decisions.**
+1. R43(4): a `type:`/`hub:` unit still failing after every ask is left out and recorded in `omitted`; the renderer prints
+   the type's fact-true row; a whole failing batch keeps one unit as the fact-true sentence (the contract needs one);
+   never when another defect remains or the unit carries a must-carry inherited unit (R14).
+2. Re-certification holds a sealed Lane R candidate to the current S4 folds (register folds with the sealed plan, BL-004
+   section fit and its link backstop): a seal is never judged by a disposition current code would not produce (R10/R41).
+3. A format fact whose own example receipt failed is not SUPPORTED, whatever static sources say (3D Python obj export).
+4. The Python floor is printed as aspose.org prints it (R42: adopted): "Requires Python 3.10 or later."; a setup.py
+   floor keeps its true key, as aspose.org's 3D Python README does.
+5. A kept API Reference type table prints only the rows the rendered Core API table does not print. A superseding fold
+   was measured and rejected (it raised BC-05/BC-17 on 10 seals and demoted 3).
+6. Not bumped: REVIEWER_LOGIC_VERSION (calibration record frozen at "10"; BL-125). Bumped: RENDERER_VERSION 40,
+   NORMALISATION_VERSION 37.
+
+Backlog: BL-104, BL-065, BL-120, BL-121, BL-122, BL-123, BL-124, BL-125

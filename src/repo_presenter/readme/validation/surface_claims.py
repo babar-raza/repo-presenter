@@ -641,7 +641,14 @@ def kept_unit_form(
     # computed 195). Idempotent with the renderer's own pass; prose only, fenced code is never edited.
     from repo_presenter.readme.composition.renderer import correct_stated_type_counts
 
-    return correct_stated_type_counts(text, facts)
+    corrected = correct_stated_type_counts(text, facts)
+    if false_quotes and corrected != text and unit_id.endswith(".paragraph"):
+        # A register quote of the printed, count-corrected sentence (Cells C++ ``041.paragraph``:
+        # the register quotes "195 public types", the maintainers wrote 197) is withheld too.
+        from repo_presenter.readme.validation.must_correct import withheld_form
+
+        corrected = withheld_form(unit_id, corrected, false_quotes)
+    return corrected
 
 
 def _table_findings(

@@ -1,0 +1,190 @@
+{
+ "branch": "phase1-readme",
+ "changed_seals": [
+  {
+   "after": [
+    "NEEDS_REPAIR",
+    [
+     "BC-14",
+     "BC-18",
+     "REVIEW:claim_contradiction"
+    ]
+   ],
+   "before": [
+    "NEEDS_REPAIR",
+    [
+     "BC-05",
+     "BC-14",
+     "BC-18",
+     "REVIEW:claim_contradiction"
+    ]
+   ],
+   "lane": "R",
+   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET"
+  },
+  {
+   "after": [
+    "NEEDS_REPAIR",
+    [
+     "BC-04",
+     "BC-14",
+     "BC-18",
+     "REVIEW:claim_contradiction"
+    ]
+   ],
+   "before": [
+    "NEEDS_REPAIR",
+    [
+     "BC-14",
+     "BC-18",
+     "REVIEW:claim_contradiction"
+    ]
+   ],
+   "lane": "R",
+   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python"
+  },
+  {
+   "after": [
+    "NEEDS_REPAIR",
+    [
+     "BC-18"
+    ]
+   ],
+   "before": [
+    "NEEDS_REPAIR",
+    [
+     "BC-05",
+     "BC-14",
+     "BC-18",
+     "REVIEW:claim_contradiction"
+    ]
+   ],
+   "lane": "R",
+   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp"
+  },
+  {
+   "after": [
+    "RECERTIFIED",
+    []
+   ],
+   "before": [
+    "NEEDS_REPAIR",
+    [
+     "BC-18"
+    ]
+   ],
+   "lane": "R",
+   "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp"
+  },
+  {
+   "after": [
+    "RECERTIFIED",
+    []
+   ],
+   "before": [
+    null,
+    null
+   ],
+   "lane": "L",
+   "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python"
+  },
+  {
+   "after": [
+    "NEEDS_REPAIR",
+    [
+     "BC-04",
+     "BC-05",
+     "BC-17",
+     "BC-18",
+     "REVIEW:disposition_coverage"
+    ]
+   ],
+   "before": [
+    "NEEDS_REPAIR",
+    [
+     "BC-04",
+     "BC-05",
+     "BC-17",
+     "BC-18"
+    ]
+   ],
+   "lane": "R",
+   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java"
+  },
+  {
+   "after": [
+    "NEEDS_REPAIR",
+    [
+     "BC-18"
+    ]
+   ],
+   "before": [
+    "NEEDS_REPAIR",
+    [
+     "BC-05",
+     "BC-18"
+    ]
+   ],
+   "lane": "R",
+   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET"
+  }
+ ],
+ "commands": [
+  "PYTHONPATH=src python -m repo_presenter.recertify --all --json --remote origin (supervisor branch 5a1dbf8 = before; this branch = after, via --write-baseline --json)",
+  "PYTHONPATH=src python -m repo_presenter.recertify --gate --remote origin --base-baseline <git show origin/main:data/recertification_baseline.json>",
+  "python docs/investigations/2026-11-13-lane-r-not-progressing/measure.py --hosted .../hosted_lane_r.jsonl --recertify <after json>"
+ ],
+ "counts_after": {
+  "L:RECERTIFIED": 29,
+  "R:NEEDS_REPAIR": 11,
+  "R:RECERTIFIED": 7
+ },
+ "counts_before": {
+  "L:RECERTIFIED": 28,
+  "R:NEEDS_REPAIR": 12,
+  "R:RECERTIFIED": 6
+ },
+ "date": "2026-11-14",
+ "gate": "OK: no seal that re-certified in the baseline regressed (47 seals checked); certified under current code: lane R 7, lane L 29",
+ "lane_r_bc18_details": [
+  92,
+  58
+ ],
+ "o6_report_only": {
+  "adjudication": {
+   "P2_register_fold / P2_live_nested_quote_withheld": "every hit cites an OPEN findings-register row (a confirmed false claim)",
+   "P3a_format_refuted_by_own_receipt": "1 unique (3D Python format:output.obj, example 8 FAILED; TypeError); the register row confirms obj export false",
+   "P3b_floor_key": "9 repositories; 8 pyproject 'python_requires declared' -> requires-python (true key), 3D Python setup.py gains the attribute only",
+   "P4a_resource_list_to_docs / P4a_license_paragraph / P4a_link_added": "BL-004 fold applied to seals older than it; every moved list is a resource-links list, every license paragraph a license statement",
+   "P4b_type_table_superseded": "measured for the superseding type-table fold, which was then rejected (BC-05/BC-17 on 10 Lane R seals); not in the landed code, which prints only the rows the Core API table does not",
+   "P5_net_type_not_public": "6 unique, each verified in source: Words DocumentPositionMovement/INodeCollection/NodeEnumerator (#if CPLUSPLUS public #else internal), 3D .NET Chunk (nested in internal ChunkHelper), PDF .NET PsTintSpace (nested in internal static PsColorSpaces), Tagged.Rule (internal PageContentScan)",
+   "note": "the O6 run preceded two refinements that only extend the same rules to more of the register's own rows (a kept paragraph's printed, count-corrected form; inline and grouped link descriptions); their effect is in counts_after"
+  },
+  "false_positive_rate": 0.0,
+  "false_positives": 0,
+  "hits_all_revisions": {
+   "P2_live_nested_quote_withheld": 6,
+   "P2_register_fold": 53,
+   "P3a_format_refuted_by_own_receipt": 11,
+   "P3b_floor_key": 83,
+   "P4a_license_paragraph": 5,
+   "P4a_link_added": 34,
+   "P4a_resource_list_to_docs": 6,
+   "P4b_type_table_superseded": 38,
+   "P5_net_type_not_public": 6
+  },
+  "scope": "332 sealed facts documents (every seal revision on the state refs, both lanes) and 15 live READMEs",
+  "unique_hits": {
+   "P2_live_nested_quote_withheld": 6,
+   "P2_register_fold": 24,
+   "P3a_format_refuted_by_own_receipt": 1,
+   "P3b_floor_key": 9,
+   "P4a_license_paragraph": 4,
+   "P4a_link_added": 23,
+   "P4a_resource_list_to_docs": 5,
+   "P4b_type_table_superseded": 23,
+   "P5_net_type_not_public": 6
+  }
+ },
+ "provider_calls": 0
+}

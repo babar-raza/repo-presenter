@@ -1192,7 +1192,7 @@ def _regenerate_section(
             return recover_opening_duplicates_preserved(
                 output, dispositions=rc.dispositions, facts=rc.facts
             )
-        return recover_authoring_output(output, task=task, facts=rc.facts)
+        return recover_authoring_output(output, task=task, facts=rc.facts, checks=checks)
 
     try:
         result = run_job(

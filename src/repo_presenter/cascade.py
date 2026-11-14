@@ -322,12 +322,12 @@ def _run_authoring(
         def checks(output: dict, task=task) -> list[str]:
             return unit_checks(output, task, document, name, dispositions=dispositions)
 
-        def recover(output: dict, task=task) -> dict | None:
+        def recover(output: dict, task=task, checks=checks) -> dict | None:
             if task.section_id == "opening":
                 return recover_opening_duplicates_preserved(
                     output, dispositions=dispositions, facts=document
                 )
-            return recover_authoring_output(output, task=task, facts=document)
+            return recover_authoring_output(output, task=task, facts=document, checks=checks)
 
         result = run_job(
             loaded, task.packet, config=config, facts=document, ledger=ledger, store=store,

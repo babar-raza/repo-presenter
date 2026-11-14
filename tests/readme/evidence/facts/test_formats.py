@@ -196,9 +196,13 @@ def test_two_static_sources_support_a_format_no_example_executed() -> None:
     facts = format_facts(
         candidates, receipts, format_claims, "examples.json", declarations
     )
+    # P3 (2026-11-14): input.obj is declared and registered, but its own example 1 FAILED, so the
+    # measured run of that very direction outweighs the two static sources (3D Python
+    # format:output.obj, "example 8: FAILED; TypeError"): UNRESOLVED. output.obj, which no
+    # example claims, keeps its two-source support.
     assert [(f.id, f.polarity) for f in facts] == [
         ("format:input.fbx", "SUPPORTED"),
-        ("format:input.obj", "SUPPORTED"),
+        ("format:input.obj", "UNRESOLVED"),
         ("format:output.3mf", "UNRESOLVED"),
         ("format:output.fbx", "UNRESOLVED"),
         ("format:output.obj", "SUPPORTED"),

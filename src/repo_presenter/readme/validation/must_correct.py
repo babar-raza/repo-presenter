@@ -198,25 +198,54 @@ _LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
 
 
 def without_quoted_items(text: str, quotes: Collection[str]) -> str:
-    """A kept list's printed form without the items (a marker line and its continuation lines)
-    that print a cited register row's quote. Unchanged when no item prints one, or when every item
-    does (that list is withheld, not kept)."""
+    """A kept list's printed form without the items (a marker line, its continuation lines and
+    its nested sub-items) that print a cited register row's quote: the innermost item that prints
+    it, so a quote in a nested sub-item withholds that sub-item only (P2, 2026-11-14: Email C++'s
+    two signature bullets sit under the single top-level item of ``053.list`` and
+    ``059.003.list``). Unchanged when no item prints one, or when every item does (that list is
+    withheld, not kept)."""
     wanted = [_squash(quote) for quote in quotes if _squash(quote)]
     if not wanted:
         return text
-    items: list[list[str]] = []
+    # One block per item marker line, at any depth, with its continuation lines; a block's
+    # subtree is the block and every deeper block right after it.
+    blocks: list[tuple[int, list[str]]] = []
     lead: list[str] = []
     for line in text.split("\n"):
-        if _LIST_ITEM.match(line) and not line.startswith((" ", "\t")):
-            items.append([line])
-        elif items:
-            items[-1].append(line)
+        if _LIST_ITEM.match(line):
+            blocks.append((len(line) - len(line.lstrip(" \t")), [line]))
+        elif blocks:
+            blocks[-1][1].append(line)
         else:
             lead.append(line)
-    held = [any(quote in _squash("\n".join(item)) for quote in wanted) for item in items]
-    if not any(held) or all(held):
+    if not blocks:
         return text
-    kept = [line for item, drop in zip(items, held) if not drop for line in item]
+
+    def subtree_end(index: int) -> int:
+        end = index + 1
+        while end < len(blocks) and blocks[end][0] > blocks[index][0]:
+            end += 1
+        return end
+
+    def joined(start: int, end: int) -> str:
+        return _squash("\n".join(line for _depth, lines in blocks[start:end] for line in lines))
+
+    # Each quote withholds the innermost item that prints it whole: a nested sub-item when the
+    # quote sits inside it (Email C++ ``053.list``/``059.003.list``: a signature bullet under the
+    # one top-level type item, which withheld whole would withhold the whole list), else the
+    # nearest enclosing item, as for a top-level item.
+    dropped = [False] * len(blocks)
+    ends = [subtree_end(index) for index in range(len(blocks))]
+    for quote in wanted:
+        holding = [quote in joined(index, ends[index]) for index in range(len(blocks))]
+        for index in range(len(blocks)):
+            if not holding[index] or any(holding[child] for child in range(index + 1, ends[index])):
+                continue
+            for member in range(index, ends[index]):
+                dropped[member] = True
+    if not any(dropped) or all(dropped):
+        return text
+    kept = [line for (_depth, lines), drop in zip(blocks, dropped) if not drop for line in lines]
     return "\n".join([*lead, *kept])
 
 

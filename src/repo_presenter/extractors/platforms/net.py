@@ -24,7 +24,7 @@ held to it (``extract._source_build_fact``), which would drop the executed-examp
 from __future__ import annotations
 
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
@@ -413,6 +413,61 @@ def _sample_reference_facts(root: Path, manifest: Path, package_id: str) -> list
     ]
 
 
+_TYPE_KINDS = frozenset({"class", "enum"})
+
+
+def current_public_types(document: Any, sources: Mapping[str, str]) -> tuple[Any, list[str]]:
+    """``(document, dropped)``: the sealed facts without the public types today's extractor no
+    longer finds public in their own source files, and those types' members (BL-065, C#
+    variant, P5 2026-11-14). The extractor reads a split ``#if X public #else internal #endif``
+    modifier from the Release branch, skips types in a definitely-false ``#if`` branch and types
+    nested in a non-public type; facts sealed before that count Words .NET's
+    ``DocumentPositionMovement``, ``INodeCollection`` and ``NodeEnumerator`` (618 instead of 615)
+    and 3D .NET's ``Chunk``. Zero calls: every file a sealed type fact cites is re-read by the
+    same extractor (``surface_symbols``) from ``sources`` at the pinned revision. Only removes,
+    and only a type whose own file was read and parsed; ``dropped`` is empty when nothing
+    changed."""
+    import tempfile
+    import dataclasses
+
+    types = [
+        fact
+        for fact in document.facts
+        if fact.kind == "public_symbol"
+        and fact.polarity == "SUPPORTED"
+        and (fact.attributes or {}).get("symbol_kind") in _TYPE_KINDS
+        and fact.evidence
+        and fact.evidence[0].path.endswith(".cs")
+    ]
+    paths = sorted({fact.evidence[0].path for fact in types if fact.evidence[0].path in sources})
+    if not paths:
+        return document, []
+    with tempfile.TemporaryDirectory(prefix="net-surface-") as scratch:
+        root = Path(scratch)
+        for path in paths:
+            target = root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(sources[path], encoding="utf-8")
+        symbols = surface_symbols(get_parser(_PARSER_LANGUAGE), _PARSER_LANGUAGE, root, root, "net")
+    found = {symbol.value for symbol in symbols if symbol.symbol_kind in _TYPE_KINDS}
+    gone = sorted(
+        fact.value for fact in types if fact.evidence[0].path in sources and fact.value not in found
+    )
+    if not gone:
+        return document, []
+    prefixes = tuple(f"{value}." for value in gone)
+    dropped_values = set(gone)
+    kept = tuple(
+        fact
+        for fact in document.facts
+        if not (
+            fact.kind == "public_symbol"
+            and (fact.value in dropped_values or fact.value.startswith(prefixes))
+        )
+    )
+    return dataclasses.replace(document, facts=kept), gone
+
+
 class NetPlugin:
     """What the facts stage asks of .NET."""
 
@@ -523,6 +578,14 @@ class NetPlugin:
         facts.extend(_dependency_facts(manifest, where, root, name))
         facts.extend(_sample_reference_facts(root, manifest, name))
         return facts
+
+    #: The tracked source suffix re-certification reads for ``current_type_facts``.
+    source_suffix = ".cs"
+
+    def current_type_facts(self, document: Any, sources: Mapping[str, str]) -> tuple[Any, list[str]]:
+        """Re-certification's view of sealed type facts under today's C# visibility rules
+        (:func:`current_public_types`)."""
+        return current_public_types(document, sources)
 
     def surface_facts(self, root: Path, tree_paths: list[str]) -> list[Fact]:
         """Public types and members, read from the tree by the shared extractor."""
