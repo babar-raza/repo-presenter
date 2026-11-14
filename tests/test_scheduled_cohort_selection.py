@@ -171,9 +171,13 @@ def test_a_code_change_resets_the_retry_bound() -> None:
     certs = {("o/a", "L"): Cert("RECERTIFIED", True)}
     # BL-086: the code change resets the diagnose bound, but after two hosted failures in a row
     # the cell also needs a fix that reached one of its failure classes.
-    capped = _plan(_entries("o/a"), entries_ledger=ledger, certs=certs)
-    assert capped["runs"] == [] and capped["diagnose"] == []
-    assert _skip(capped, "o/a", "R")["category"] == "capped"
+    # With no failure record of the last attempt there is no class to wait on: it runs once.
+    unrecorded = _plan(_entries("o/a"), entries_ledger=ledger, certs=certs)
+    assert unrecorded["runs"][0]["lane"] == "R" and unrecorded["diagnose"] == []
+    # With a record whose classes are all unchanged, it is capped.
+    still = {("o/a", "R"): {"run_id": "9", "transient": False, "changed": [], "unchanged": ["X|a|b"], "unscoped": []}}
+    capped = _plan(_entries("o/a"), entries_ledger=ledger, certs=certs, scopes=still)
+    assert capped["runs"] == [] and _skip(capped, "o/a", "R")["category"] == "capped"
     scopes = {("o/a", "R"): {"run_id": "9", "transient": False, "changed": ["X|a|b"], "unchanged": [], "unscoped": []}}
     plan = _plan(_entries("o/a"), entries_ledger=ledger, certs=certs, scopes=scopes)
     assert plan["runs"][0]["lane"] == "R" and plan["diagnose"] == []

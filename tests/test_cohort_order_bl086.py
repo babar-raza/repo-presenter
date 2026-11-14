@@ -223,8 +223,9 @@ def test_the_cap_without_any_record_and_its_release_by_a_seal_or_a_transient_fai
 
     two = [attempt("1", hours=1), attempt("2", hours=2)]
     plan = _plan(records=[], registry=[NOTE_PY], extra_ledger=two)
-    assert _skip(plan, NOTE_PY)["category"] == "capped"
-    assert "no failure record of the last attempt" in _skip(plan, NOTE_PY)["reason"]
+    # No failure record of the last attempt: the cap has no class to wait on, so the cell runs once
+    # (and that run writes its record) instead of being held for good.
+    assert any(run["repository"] == NOTE_PY for run in plan["runs"])
     # A seal in between ends the streak.
     sealed_between = [attempt("1", hours=1), attempt("2", sealed=True, hours=2), attempt("3", hours=3)]
     assert _plan(records=[], registry=[NOTE_PY], extra_ledger=sealed_between)["runs"]
@@ -235,8 +236,6 @@ def test_the_cap_without_any_record_and_its_release_by_a_seal_or_a_transient_fai
         run_id="2", source_revision="n1", at="2026-11-13T12:00:00Z", code="old-2", root=ROOT,
     )
     assert transient["failure"]["transient"]
-    plan = _plan(records=[], registry=[NOTE_PY], extra_ledger=two, hold=False)
-    assert plan["runs"] == []
     documents = failures.documents_from_records([transient])
     released = plan_cohort(
         entries={NOTE_PY: Entry(NOTE_PY)}, authorized_repos={NOTE_PY},
@@ -262,8 +261,10 @@ def test_a_record_of_an_older_attempt_does_not_count_as_a_landed_fix() -> None:
              "outcomes": {"R": "failure"}, "sealed": [], "code": "newer", "source_revision": "e2",
              "at": "2026-11-14T09:00:00+00:00", "run_url": RUNS + "43700000000", "epoch": 2}
     plan = _plan(records=records, registry=[EMAIL_NET], extra_ledger=[later], heads={EMAIL_NET: "e2"})
-    assert plan["runs"] == []
-    assert "no failure record of the last attempt" in _skip(plan, EMAIL_NET)["reason"]
+    # The older attempt's record is not a landed fix for the later attempt; that attempt has no record,
+    # so the cell runs once (no cap without evidence) and not at priority (a).
+    (run,) = [r for r in plan["runs"] if r["repository"] == EMAIL_NET]
+    assert run["priority"]["R"] != "(a) fix landed"
 
 
 def test_the_existing_bounds_still_hold() -> None:
