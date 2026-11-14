@@ -1107,3 +1107,29 @@ items:
     next_action: "owner discussion of options O1-O8 (section 7)"
     updated: "2026-11-14"
 
+  - id: BL-090
+    title: "Process (O6): a blocking check lands only with its producer-side fix, a measured false-positive rate under 5%, and a recertify --all diff"
+    type: requirement
+    source: "supervisor decision 2026-11-14 (owner-delegated), audit O6 and S2"
+    priority: P1
+    status: active
+    implementation_path: "docs/RULINGS.md pre-work checklist item 13; every worker brief carries it"
+    acceptance: "every PR adding or changing a blocking check states its report-only false-positive rate and the recertify --all diff; no new Lane R failure class appears that a merged check introduced without its fix (measured with docs/investigations/2026-11-13-lane-r-not-progressing/measure.py)"
+    evidence:
+      - "checklist item 13 added 2026-11-14; applied to the O3/O4/O7/O8 worker brief"
+    next_action: "enforce in review of every check-changing PR"
+    updated: "2026-11-14"
+
+  - id: BL-091
+    title: "R42: upstream-caused blockers are resolved by learning from aspose.org's published README candidates"
+    type: requirement
+    source: "owner ruling R42 (2026-11-14)"
+    priority: P0
+    status: active
+    implementation_path: "failure classification (BL-084) marks a class upstream-caused (origin upstream: build not passing, package unpublished or not owned, stub or unimplemented feature, broken maintainer example or text, unreadable upstream); each upstream class gets a recorded resolution that cites the aspose.org readme-refresh live candidate (github.com/<owner>/<name> README, publication in aspose.org data/readme_published_state.json) and its handling code (aspose.org skills/readme-refresh.md, scripts/pipeline/commands/foss/readme_refresh_*.py); the approach is implemented in the pipeline globally"
+    acceptance: "every upstream-caused failure class in the failure records has a resolution entry naming the aspose.org source consulted and the pipeline change adopted (or why no aspose.org candidate applies); no upstream class is re-run unchanged"
+    evidence:
+      - "ruling R42 recorded in docs/RULINGS.md (checklist item 14), CLAUDE.md, CONSOLIDATED_GOALS; tests/test_rulings_in_focus.py requires R42"
+    next_action: "once BL-084 lands, tag upstream classes and run the first R42 consultation on them"
+    updated: "2026-11-14"
+
