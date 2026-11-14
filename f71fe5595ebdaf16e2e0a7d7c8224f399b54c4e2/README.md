@@ -133,7 +133,7 @@ dotnet run --project samples\Aspose.Cells_FOSS.Samples.Basic\Aspose.Cells_FOSS.S
 - The library stores formulas but does not include a formula calculation engine.
 - PDF export is supported, but there is no general HTML export or image export API.
 - Macros, VBA, and pivot tables are outside the supported public API surface.
-- Broader format coverage and richer spreadsheet features belong to Aspose.Cells — Enterprise Edition line.
+- Broader format coverage and richer spreadsheet features belong to Aspose.Cells for .NET — Enterprise Edition line.
 
 ## Development and Testing
 
