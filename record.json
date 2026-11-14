@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+    "classification": "transient",
+    "detail": "attempt under version set 81a1cb4204c1: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit type:public_symbol:aspose.pdf.permissions: identifiers that are not accepted fact values: AssembleDocument, ExtractContentWithDisabilities, FillForm, ModifyTextAnnotations (nearest accepted: ModifyAnnotations), PrintingQuality",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-01T11:59:52.548198+00:00",
+    "occurred_at": "2026-11-14T08:20:36.578494+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 7,
+  "state_version": 8,
   "recent_trigger_dedup_keys": {
     "run:41298091280:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "448eb341fb514700bc5945502a805a20",
     "run:41303579390:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "f3097cd8c67844ca981292e0e2abf2a7",
