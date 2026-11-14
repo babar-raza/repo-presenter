@@ -5780,3 +5780,21 @@ path from a call store) and C11 (BL-083). Whether S5 re-plans and the LLM review
 re-run of the eight cells and the R41 re-verification.
 
 Backlog: BL-081, BL-082, BL-083
+
+## 2026-11-14 — BL-085: the Lane R audit is the baseline, on record on main
+
+**Owner.** "Run manual audit on every lane R failure to date then present the findings and stop for further
+discussion." Then: "Make analysis part of the main so it's on record and we can always measure against it."
+
+**Decision.** `docs/investigations/2026-11-13-lane-r-not-progressing.md` is merged together with everything it was
+built from:
+- the frozen hosted-run extract and seal re-judgement;
+- the classifier;
+- the classified findings;
+- a generated `baseline.json`;
+- `measure.py`, which compares any later state with it class by class.
+
+A CI test keeps the baseline reproducible from its inputs. This merge is analysis only. It contains none of the
+audit's code prototypes, nor the BL-084 pipeline classifier; both wait for the owner's discussion of options O1–O8.
+
+Backlog: BL-085

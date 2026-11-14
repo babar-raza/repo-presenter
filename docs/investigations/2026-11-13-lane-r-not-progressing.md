@@ -307,7 +307,40 @@ The certified-count effects below are estimates. The assumptions are stated in e
 | O7 | Repair: BL-083 (a blank unit becomes a plan-level drop), a third try only for noop revisions, OMIT offered for supersede targets | S3 | More calls per defect | Cells C++ and 3D Python are the immediate cases |
 | O8 | Owner rulings on two checks: SECTION_FIT_LICENSE_IN_SCOPE (is a license mention in Scope a defect?), and whether maintainer formatting defects (title case, dangling colon) in kept text block or are auto-corrected | R36(b)(4) | — | Cells TypeScript and Cells Python |
 
-## 8. Gate state
+## 8. On record: the baseline, and how to measure against it
+
+At the owner's direction (2026-11-14: "make analysis part of the main so it's on record and we can always measure
+against it"), this audit is the Lane R baseline. Everything it was built from lives beside this document in
+`docs/investigations/2026-11-13-lane-r-not-progressing/`:
+
+| File | What it is |
+|---|---|
+| `hosted_lane_r.jsonl` | The frozen input: the Lane R `blocking`/`finding`/`repair`/`restore`/`failure` lines of every hosted present run audited (26 runs, 13 cells), extracted from the job logs by `extract_hosted.py` |
+| `recertify_lane_r.json` | The frozen input: the latest seal of every sealed Lane R cell (18), re-judged with zero calls under main `0655d41` |
+| `classify.py` | The classifier: rule, class (this document's vocabulary), printing origin, verdict, repair outcome |
+| `classified.json` | Its output: one row per finding (193 hosted, 245 on seals) |
+| `baseline.json` | The frozen headline: certified cells, attempts, findings and cells per class, repair outcomes. Never hand-edited; `measure.py --write-baseline` regenerates it from the frozen inputs and refuses to change it |
+| `measure.py` | Compares any later state with the baseline, class by class (classes GONE, NEW, shrinking) |
+
+`tests/test_lane_r_audit_baseline.py` fails CI if the baseline stops being reproducible from its inputs.
+
+Baseline, 2026-11-14T00:00Z:
+- **Certified Lane R:** 2 (Cells Go, Email Python).
+- **Sealed Lane R cells needing repair:** 16 of 18.
+- **Hosted Lane R runs:** 26, covering 13 cells.
+- **Repairs:** 67 of 130 repaired.
+- **Top hosted classes:** KIND_WORD_MISREAD_LIST 94, REGISTER_ROW_REPRINTED 27, LIVE_ITEM_LOST 18, NEVER_THROWN_CLAIMED_THROWN 16, INTERNAL_WORDING_TYPE_ROW 12.
+
+To measure a later state:
+
+```bash
+gh run view <id> -R babar-raza/repo-presenter --log --job <present job id> > LOGDIR/<id>.log   # for each run to measure
+python docs/investigations/2026-11-13-lane-r-not-progressing/extract_hosted.py LOGDIR > NEW/hosted_lane_r.jsonl
+PYTHONPATH=src python -m repo_presenter.recertify --all --json --remote origin > NEW/recertify_all.json
+python docs/investigations/2026-11-13-lane-r-not-progressing/measure.py --hosted NEW/hosted_lane_r.jsonl --recertify NEW/recertify_all.json
+```
+
+## 9. Gate state
 
 Only this document is committed on branch `bl-085-lane-r-deep-review`. No code changes are committed, so the R10 gate,
 the test suite, gatecli and the backlog check are as on main `0655d41`. During the audit, the uncommitted prototypes

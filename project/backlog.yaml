@@ -1093,3 +1093,17 @@ items:
       - "2026-11-13: the five refusals and four Cells Python findings quoted from the logs in the DECISION_LOG entry for BL-081/BL-082"
     next_action: "after the BL-081/BL-082 re-runs; artifacts were unreadable through the proxy, so the call store is needed for the claimed-path case"
     updated: "2026-11-13"
+
+  - id: BL-085
+    title: "Lane R not progressing: manual audit of every Lane R failure, on record as the baseline to measure against"
+    type: requirement
+    source: "owner 2026-11-13 ('every failure must be categorised and reviewed deeply'), 2026-11-14 ('run manual audit on every lane R failure'; 'make analysis part of the main so it's on record and we can always measure against it')"
+    priority: P0
+    status: active
+    implementation_path: "docs/investigations/2026-11-13-lane-r-not-progressing.md plus its directory: frozen inputs, classify.py, baseline.json, measure.py; tests/test_lane_r_audit_baseline.py keeps the baseline reproducible"
+    acceptance: "the audit and its baseline are on main; every later Lane R measurement is reported as a measure.py comparison against baseline.json; the options O1-O8 are decided by the owner and each decision is recorded"
+    evidence:
+      - "audit 2026-11-14: 26 hosted Lane R runs over 13 cells and 18 latest seals; 193 hosted and 245 seal findings classified; baseline certified Lane R 2"
+    next_action: "owner discussion of options O1-O8 (section 7)"
+    updated: "2026-11-14"
+
