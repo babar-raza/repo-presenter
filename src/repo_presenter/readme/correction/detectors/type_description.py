@@ -25,6 +25,20 @@ Version 2 (BL-080, 2026-11-13): a cell of any shape that a SUPPORTED fact refute
 exception type described as thrown that no library code throws, a stub described as working -- is
 replaced by the fact-true text the Lane R renderer prints for the same type (:func:`fact_true_cell`).
 
+Version 3 (BL-094, M9 round 43559491132, Words Python Lane L control ab8a03 line 402): a count cell
+the facts refute is made true. ``| `Style` | Class with 11 properties. |`` -- ``Style`` declares 15
+annotated fields (``light_document_model.py:1012-1027`` at 2d2efee2) -- reads "Class with 15
+properties.": each stated tally is held to the type fact's ``member_counts`` (the extractor's own
+methods/properties/fields of the class body, ``source_detail.python_member_counts``, read for sealed
+facts by ``recertify.current_surface``): "methods" to the public methods (with or without the dunders
+and ``__init__``),
+"properties" to fields plus properties (or either alone), "fields" to fields; a count matching any
+reading stays, a wrong one becomes fields plus properties / public methods. A count above every
+reading is refuted only for a class with no base that could add members (``inherits``): inherited
+members never make a count smaller, so a count below them is refuted whatever the bases. "members", values,
+constants and functions, or a type with no ``member_counts``, are never judged. Only the wrong numbers change; the row and its other cells stay (R14). A cell that
+the type's doc comment can replace is still replaced by it, as before.
+
 :func:`cell_shape` is the one classification of a description cell, shared with
 ``scripts/measure_type_descriptions.py`` (the portfolio Pareto measurement), so the measurement and
 the correction cannot disagree about which cells are bad.
@@ -92,6 +106,63 @@ def cell_shape(description: str, docstring: str = "", symbol: str = "") -> str:
         if a.startswith(b[:40]) or b.startswith(a[:40]):
             return SHAPE_DOC
     return SHAPE_OTHER
+
+
+_TALLY_PART = re.compile(r"(?i)(?P<count>\d+)\s+(?P<kind>methods?|members?|propert(?:y|ies)|fields?)\b")
+# "properties" may be read as fields plus properties, fields alone or properties alone; "methods" with
+# or without the dunder methods: a count matching any reading is left as the maintainers wrote it.
+
+
+def member_counts(fact: Fact) -> dict[str, int] | None:
+    """The type fact's ``member_counts`` attribute as ``{"method": n, "property": n, "field": n}``."""
+    raw = (fact.attributes or {}).get("member_counts")
+    if not raw:
+        return None
+    try:
+        counts = {k: int(v) for k, v in (part.split("=", 1) for part in raw.split(","))}
+    except ValueError:
+        return None
+    return counts if {"method", "dunder", "init", "property", "field", "inherits"} <= set(counts) else None
+
+
+def true_count_cell(cell: str, fact: Fact) -> str | None:
+    """``cell`` with every tally the type's ``member_counts`` refutes replaced by the true count (the
+    noun's number agreeing), or ``None`` when no tally is refuted or none can be judged."""
+    counts = member_counts(fact)
+    if counts is None or not _COUNT.match(_plain(cell)):
+        return None
+    # Every reading a maintainer's count can truthfully have; the first is what a wrong count becomes.
+    # "members" is never judged: maintainers use it for enum-like constants as well (PDF Python
+    # ``Encoding``: "1 method and 4 members", its four class-level constants).
+    readings = {
+        "method": tuple(dict.fromkeys((
+            counts["method"], counts["method"] + counts["dunder"], counts["method"] + counts["init"],
+            counts["method"] + counts["dunder"] + counts["init"],
+        ))),
+        "propert": (counts["property"] + counts["field"], counts["field"], counts["property"]),
+        "field": (counts["field"],),
+    }
+    changed = False
+
+    def fix(match: re.Match[str]) -> str:
+        nonlocal changed
+        kind = match.group("kind").lower()
+        key = next((k for k in readings if kind.startswith(k)), None)
+        stated = int(match.group("count"))
+        if key is None or stated in readings[key]:
+            return match.group(0)
+        if counts["inherits"] and stated > max(readings[key]):
+            return match.group(0)  # a base may add members the maintainers counted: not refuted
+        true = readings[key][0]
+        changed = True
+        noun = {"method": "method", "propert": "property", "field": "field"}[key]
+        word = noun if true == 1 else {"property": "properties"}.get(noun, noun + "s")
+        if match.group("kind")[0].isupper():
+            word = word.capitalize()
+        return f"{true} {word}"
+
+    fixed = _TALLY_PART.sub(fix, cell)
+    return fixed if changed else None
 
 
 def type_facts_by_name(facts: list[Fact]) -> dict[str, list[Fact]]:
@@ -218,6 +289,27 @@ def type_description(ctx: Context) -> DetectorResult:
         if shape not in NON_DESCRIPTIVE:
             continue
         summary = usable_doc(docstring, fact.value) if docstring else ""
+        corrected = None if summary else true_count_cell(cell, fact)
+        if (
+            corrected is not None
+            and len(cell) <= MAX_SPAN
+            and ctx.readme[offset : offset + len(cell)] == cell
+        ):
+            edits.append(
+                Edit(
+                    kind=FALSE_CLAIM_FIX,
+                    detector=DETECTOR,
+                    start=offset,
+                    end=offset + len(cell),
+                    original=cell,
+                    replacement=corrected,
+                    fact_ids=(fact.id,),
+                    rationale=(
+                        f"line {number}: the count cell {cell!r} miscounts the own public members of "
+                        f"{name} ({(fact.attributes or {}).get('member_counts')}); the true count replaces it"
+                    ),
+                )
+            )
         if summary and not is_bookkeeping(summary):
             replacement = " ".join(summary.replace("|", "/").replace("`", "").split())
             if (

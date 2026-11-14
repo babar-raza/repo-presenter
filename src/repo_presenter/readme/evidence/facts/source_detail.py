@@ -427,6 +427,55 @@ def _reexported_definition(
     return None
 
 
+_PROPERTY_DECORATORS = frozenset({"property", "cached_property", "functools.cached_property", "abstractproperty"})
+#: Bases that add no member a README counts as the class's own.
+_ROOT_BASES = frozenset({"object", "BaseModel", "NamedTuple", "TypedDict", "Generic", "ABC", "Protocol", "Struct", "BaseSettings"})
+
+
+def python_member_counts(node: ast.ClassDef, field_names: Sequence[str]) -> str:
+    """``"method=N,dunder=N,init=N,property=N,field=N,inherits=0|1"`` for one Python class's own body (BL-094):
+    public methods, dunder methods other than ``__init__``, whether it defines ``__init__``,
+    ``@property``-like members, and the
+    fields ``_python_members`` reads (dataclass/pydantic/attrs fields, ``__slots__``, ``self.x`` set
+    in ``__init__``), and whether a non-root base may add members. Inherited members are not counted. What a "Class with N properties." cell is
+    held to (``type_description.true_count_cell``)."""
+    methods = dunders = init = properties = 0
+    seen: set[str] = set()
+    for item in node.body:
+        if not isinstance(item, ast.FunctionDef | ast.AsyncFunctionDef) or item.name in seen:
+            continue
+        seen.add(item.name)
+        if item.name == "__init__":
+            init = 1
+        elif item.name.startswith("__") and item.name.endswith("__"):
+            dunders += 1
+        elif item.name.startswith("_"):
+            continue
+        elif any(name in _PROPERTY_DECORATORS for name in _decorator_names(item)):
+            properties += 1
+        else:
+            methods += 1
+    fields = len([name for name in dict.fromkeys(field_names) if name not in seen])
+    # whether a base may add members a maintainer's count includes (anything but a root base)
+    inherits = int(any(
+        ast.unparse(base).rsplit(".", 1)[-1].split("[", 1)[0] not in _ROOT_BASES for base in node.bases
+    ))
+    return f"method={methods},dunder={dunders},init={init},property={properties},field={fields},inherits={inherits}"
+
+
+def class_member_counts_from_source(text: str, owner: str, path: str, line: int) -> str | None:
+    """``python_member_counts`` of the class declared at ``line`` of ``text`` (None when there is none)."""
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return None
+    node = _node_at(tree, line)
+    if not isinstance(node, ast.ClassDef):
+        return None
+    _enum, fields = _python_members(_Collector(()), Path("."), owner, path, node)
+    return python_member_counts(node, fields)
+
+
 def _python_detail(out: _Collector, root: Path, tree_paths: Sequence[str], symbols: list[Fact]) -> dict[str, dict[str, str]]:
     """Per public symbol id, the attributes to add; and every Python detail fact."""
     updates: dict[str, dict[str, str]] = {}
@@ -464,6 +513,8 @@ def _python_detail(out: _Collector, root: Path, tree_paths: Sequence[str], symbo
                 extra["member_count"] = str(len(enum_names))
             if field_names:
                 extra["fields"] = ", ".join(field_names)
+            if kind == "class" and not enum_names:
+                extra["member_counts"] = python_member_counts(node, field_names)
         elif isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef) and kind == "function":
             # A method is read with its class (every accessor of a property included).
             _python_function(out, fact.value, path, node)

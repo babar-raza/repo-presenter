@@ -52,8 +52,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "ea2956b8beed9d4f9f1bb3af15ffd3cdb02f9ab83d62f6a1f7a1d68a51f80fe7",
     ),
     "listed_type_count.py": (
-        ("1",),
-        "d6f3603cfaafb4c57957c9c650a1c32972472ec5b60288ad41bf9005ad57b903",
+        ("2",),
+        "83db2f5a0d4fba994916c61d18d4d1589b3a0c838d542d30e4d9d16288ff729c",
     ),
     "links.py": (
         ("2",),
@@ -72,8 +72,8 @@ PINS: dict[str, tuple[tuple[str, ...], str]] = {
         "7c836b19f79488ef3f857c9e9b40df9813d717539e4cfe26050227ea9871c573",
     ),
     "type_description.py": (
-        ("2",),
-        "d27bc30388456f21a3f557db6445bb57518523fd488e6c79d1bd538694762c70",
+        ("3",),
+        "7618d6523b41d62658f0db320c7e1529d08e48f5625c993145be7957d99a451c",
     ),
     "versioned_link_target.py": (
         ("1",),
