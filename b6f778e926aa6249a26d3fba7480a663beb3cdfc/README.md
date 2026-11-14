@@ -2,7 +2,7 @@
 
 Aspose.PSD.FOSS is a free open-source .NET library for loading, inspecting, editing a small subset of PSD/PSB metadata, and saving the file back without rendering.
 
-This library is for metadata-safe PSD/PSB inspection and limited structural editing. It is not a rendering engine, a raster editor, or an open-source replacement for the full Aspose.PSD — Enterprise Edition.
+This library is for metadata-safe PSD/PSB inspection and limited structural editing. It is not a rendering engine, a raster editor, or an open-source replacement for the full Aspose.PSD for .NET — Enterprise Edition.
 
 ## Who This Project Is For
 
@@ -18,7 +18,7 @@ Do not use Aspose.PSD.FOSS when you need to:
 - render PSD/PSB content;
 - edit pixels or export raster images;
 - interpret the full Photoshop feature set semantically;
-- replace Aspose.PSD — Enterprise Edition API surface one-to-one.
+- replace Aspose.PSD for .NET — Enterprise Edition API surface one-to-one.
 
 ## Common Workflows
 
@@ -109,11 +109,11 @@ image.Layers[0].BlendModeKey = BlendMode.Multiply;
 image.Save("output.psd");
 ```
 
-## Choosing Between Aspose.PSD.FOSS and Aspose.PSD — Enterprise Edition
+## Choosing Between Aspose.PSD.FOSS and Aspose.PSD for .NET — Enterprise Edition
 
 Choose Aspose.PSD.FOSS if you need a small open-source library for structural inspection and limited non-rendering edits.
 
-Choose Aspose.PSD — Enterprise Edition if you need broad Photoshop feature support such as rendering, raster editing, export pipelines, richer resource/tag handling, or wider PSD/PSB compatibility.
+Choose Aspose.PSD for .NET — Enterprise Edition if you need broad Photoshop feature support such as rendering, raster editing, export pipelines, richer resource/tag handling, or wider PSD/PSB compatibility.
 
 ## Samples
 
