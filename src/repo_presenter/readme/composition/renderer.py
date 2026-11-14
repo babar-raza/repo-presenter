@@ -64,6 +64,7 @@ from repo_presenter.readme.composition.placement import (
     renders_verbatim,
     with_attribution,
 )
+from repo_presenter.readme.composition.source_topics import without_license_statement
 from repo_presenter.readme.composition.retained_examples import (
     RetainedBlock,
     active_retained,
@@ -96,7 +97,14 @@ from repo_presenter.readme.evidence.facts.product_pages import banner_target, en
 # 38 (2026-11-13, BL-080): a Core API row's member list the facts refute ("x, y, dot ... methods" with
 # x and y properties) is spelled "members", and a Detailed Member Reference bullet the findings
 # register confirms false is not printed (hosted runs 43513034263, 43513037866).
-RENDERER_VERSION = "38"
+# 39 (2026-11-14, BL-087 / audit O3 P1): a Core API row whose description (docstring or authored
+# sentence) prints the pipeline's analysis wording ("X class is a public symbol in Y") or a
+# findings-register quote prints its substance without the lead, else the fact-true fallback
+# (hosted run 43525324808; sealed 3D .NET, Email .NET, Words .NET, 3D .NET Chunk). BL-089 (audit
+# O8): Scope and Limitations never prints a license clause (source_topics.without_license_
+# statement); a kept retained-example heading prints in title case and a kept paragraph whose
+# colon introduces nothing printed after it ends with a full stop (formatting only).
+RENDERER_VERSION = "39"
 ADDITIONAL_EXAMPLES_SUMMARY = "View Additional Examples"
 API_SURFACE_SUMMARY = "View the Complete Public API Surface"
 README_FILENAME = "README.md"
@@ -976,14 +984,88 @@ def renderer_sentences(
 
 def _symbol_description(context: RenderContext, fact: Fact) -> str:
     """The docstring first line when the source has one, else the sentence authored from the
-    signature in a bounded batch, else the verified signature; never an invented sentence."""
+    signature in a bounded batch, else the verified signature; never an invented sentence.
+
+    A description the README may not print is passed over for the next one, down to the fact-true
+    fallback (enum values, signature, ``Public <kind>.``): one that prints the pipeline's own
+    analysis wording (BC-07, ``public_text.analysis_markers``: "NodeFilter class is a public symbol
+    in aspose_html.dom.") or whose printed row holds a findings-register quote (BC-18,
+    ``_register_refuted``: "`Chunk` | Represents a 3DS chunk header. |").
+
+    Decision (BL-087, supervisor 2026-11-14, audit O3 P1): replace, never drop, the row. The type
+    is real public API and the count line above the table counts it; only the sentence is refused, and the refusal
+    is the check's own judgement, so the renderer and BC-07/BC-18 cannot disagree about a row.
+    Measured: hosted Lane R run 43525324808 (HTML Python: 12 authored rows "X class is a public
+    symbol in aspose_html.dom." blocked BC-07 and no repair was attempted for them) and the sealed
+    3D .NET / Email .NET / Words .NET candidates (89 such rows); 3D .NET's Chunk row is a docstring
+    the register confirms false, which the repair loop records as an unreachable "facts defect"."""
     attributes = fact.attributes or {}
     docstring = attributes.get("docstring") or ""
-    text = docstring
+    candidates = []
     if docstring:
-        text, _ = elide_noncanonical(docstring, context.name)
-    if not text:
-        text = context.units.get(("api_reference", f"type:{fact.id}"), "")
+        candidates.append(elide_noncanonical(docstring, context.name)[0])
+    candidates.append(context.units.get(("api_reference", f"type:{fact.id}"), ""))
+    for text in candidates:
+        if not text:
+            continue
+        for form in dict.fromkeys((text, without_symbol_wording(text))):
+            if not form:
+                continue
+            described = _described(context, fact, form)
+            if not _row_refused(context, fact, described):
+                return described
+    return _described(context, fact, "")
+
+
+_SYMBOL_WORDING = re.compile(
+    r"^\s*(?:the\s+)?`?[\w.]+`?(?:\s+(?:class|enum|enumeration|interface|struct|type))?"
+    r"\s+is\s+a\s+public\s+symbol\b"
+    r"(?:\s+in\s+(?:the\s+)?`?[\w.]+`?(?:\s+(?:module|namespace|package))?)?\s*",
+    re.IGNORECASE,
+)
+
+
+def without_symbol_wording(text: str) -> str:
+    """``text`` with its pipeline-perspective lead "<name> is a public symbol [in <module>]"
+    removed and what it says about the type kept, or an empty string when nothing is left.
+
+    The authored type sentences of the sealed 3D .NET / Email .NET / Words .NET candidates read
+    "Aspose.ThreeD.Utilities.Matrix4 is a public symbol with members Concatenate, Decompose, ...":
+    the lead is internal wording (BC-07), but the member list is the row's substance, and
+    supersession (BC-05) and live-loss (BC-17) checks count on it (3D .NET ``054.table``'s
+    Concatenate, Transpose, Inverse, Decompose are stated only there). So the lead goes and the
+    substance stays: "Has members Concatenate, Decompose, ...". "NodeFilter class is a public
+    symbol in aspose_html.dom." states nothing else, so it leaves nothing (the fact-true fallback
+    describes the row)."""
+    match = _SYMBOL_WORDING.match(text)
+    if match is None:
+        return text
+    rest = text[match.end() :].strip()
+    rest = re.sub(r"^(?:,\s*|(?:that|which)\s+)", "", rest)
+    rest = re.sub(r"^with\s+(members?)\b", r"has \1", rest, flags=re.IGNORECASE)
+    if not rest.strip(" .;,"):
+        return ""
+    rest = rest[0].upper() + rest[1:]
+    return rest if rest.endswith((".", "!", "?")) else rest + "."
+
+
+def _row_refused(context: RenderContext, fact: Fact, description: str) -> bool:
+    """Whether the Core API row ``description`` would print is one BC-07 or BC-18 refuses."""
+    from repo_presenter.readme.validation.public_text import analysis_markers
+
+    if analysis_markers(description):
+        return True
+    names = getattr(context, "_api_names_cache", None)
+    if names is None:
+        names = api_reference_names(context.facts)
+        context._api_names_cache = names  # type: ignore[attr-defined]
+    name = names.get(fact.value, fact.value.rsplit(".", 1)[-1])
+    return _register_refuted(context, f"| `{name}` | {description} |")
+
+
+def _described(context: RenderContext, fact: Fact, text: str) -> str:
+    """The Core API row description built from ``text`` (empty: the fact-true fallback)."""
+    attributes = fact.attributes or {}
     if not text and attributes.get("symbol_kind") == "enum":
         # An enum with no authored sentence is still described by its verified values, never by
         # the label "Public enum." (owner review, 2026-11-13: a label is not a description).
@@ -1609,15 +1691,27 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
     elif sid == "documentation_resources":
         lines.extend(_documentation_resources(context))
     elif sid == "scope_limitations":
-        lines.append(context.unit(sid, "scope"))
+        # Scope never states the project's license (BC-05 section fit; the License section
+        # does): a license clause goes, the rest of its sentence stays (BL-089, audit O8a).
+        raw_scope = context.unit(sid, "scope")
+        scope = without_license_statement(raw_scope)
+        scope_printed = bool(scope) or not raw_scope  # an empty unit printed as before
+        if scope_printed:
+            lines.append(scope)
         slots = sorted(
             (int(slot.split(":", 1)[1]), slot)
             for (section, slot) in context.units
             if section == sid and slot.startswith("limitation:") and slot[11:].isdigit()
         )
-        if slots:
-            lines.append("")
-            lines.extend(f"- {context.unit(sid, slot)}" for _, slot in slots)
+        bullets = [
+            text
+            for _, slot in slots
+            if (text := without_license_statement(raw := context.unit(sid, slot))) or not raw
+        ]
+        if bullets:
+            if scope_printed:
+                lines.append("")
+            lines.extend(f"- {text}" for text in bullets)
     elif sid == "development_testing":
         lines.append(context.unit(sid, "summary"))
         facts_sentences = _development_sentences(context)

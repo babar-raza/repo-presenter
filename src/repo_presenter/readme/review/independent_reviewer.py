@@ -383,6 +383,15 @@ def _kept_text_printed(
         return heading_printed(unit_text, readme_text)
     if _squeezed(unit_text) in _squeezed(readme_text):
         return True
+    if unit_id.endswith(".paragraph"):
+        # Placement's one formatting edit of a kept paragraph (BL-089): a closing colon that
+        # introduces nothing printed after it is printed as a full stop
+        # (``placement.colon_closed_form``); the words are the maintainers' own.
+        from repo_presenter.readme.composition.placement import colon_closed_form
+
+        closed = colon_closed_form(unit_text)
+        if closed != unit_text and _squeezed(closed) in _squeezed(readme_text):
+            return True
     # A list is retained when every one of its items is: the renderer prints only the items its
     # section does not already state, so a fully stated list is rarely one verbatim block.
     if unit_id.endswith(".list") and _list_items_stated(

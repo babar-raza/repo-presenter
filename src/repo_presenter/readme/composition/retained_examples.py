@@ -184,6 +184,30 @@ def adopts(entry: Mapping[str, Any] | None, retained: RetainedExample) -> bool:
     )
 
 
+_HEADING_LINE = re.compile(r"^(?P<marks>#{1,6})\s+(?P<title>.*?)\s*#*\s*$")
+
+
+def kept_heading_form(unit_id: str, text: str) -> str:
+    """A kept maintainers' heading as the README prints it: in title case (BC-07), its words
+    otherwise unchanged. A formatting-only edit, never a content change: every comparison of a
+    heading (``independent_reviewer._heading_key``, the parity gate) is case-insensitive, so the
+    heading is still the maintainers' own.
+
+    Decision (BL-089, supervisor 2026-11-14, audit O8b): auto-correct, never block, a heading the
+    maintainers wrote in sentence case. Measured: hosted Lane R run 43516330798 (Aspose.Cells-FOSS-
+    for-Python ``023.heading`` "### Export a workbook" failed BC-07 "not in title case: 'workbook'",
+    and no stored disposition named the defect, so no repair was possible). The published
+    aspose.org README-refresh output uses title case for every heading (its Rule 6)."""
+    if not unit_id.endswith(".heading"):
+        return text
+    match = _HEADING_LINE.match(text)
+    if match is None:
+        return text
+    from repo_presenter.readme.composition.components.terminology import to_title_case
+
+    return f"{match.group('marks')} {to_title_case(match.group('title'))}"
+
+
 def active_retained(
     facts: FactsDocument, dispositions: Mapping[str, Any]
 ) -> list[RetainedBlock]:
@@ -200,7 +224,7 @@ def active_retained(
         if not adopts(entries.get(retained.code_unit), retained):
             continue
         leads = tuple(
-            text[unit].strip()
+            kept_heading_form(unit, text[unit].strip())
             for unit in retained.lead_units
             if unit in text and adopts(entries.get(unit), retained)
         )

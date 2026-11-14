@@ -56,7 +56,7 @@ class Spy:
         self, monkeypatch: pytest.MonkeyPatch, verdict: ReviewVerdict, validation: Any
     ) -> None:
         self.sealed: list[Any] = []
-        result = SimpleNamespace(
+        self.result = result = SimpleNamespace(
             review_verdict=verdict,
             validation=validation,
             entry=None,
@@ -74,6 +74,8 @@ class Spy:
         )
 
     def run(self, tmp_path: Path) -> None:
+        # BL-084's keep_blocking writes beside the lane outputs: keep it out of the checkout.
+        self.result.out_dir = tmp_path / "out"
         present._cascade_and_seal(
             repository=REPO,
             ecosystem="python",

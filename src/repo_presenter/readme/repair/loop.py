@@ -121,8 +121,10 @@ from repo_presenter.readme.repair.targeted import (
     Defect,
     RepairLedger,
     SlotSetProbe,
+    blanked_slots,
     defect_fingerprint,
     merge_equivalent,
+    plan_without_slots,
     repair_checks,
     repair_packet,
     repair_schema,
@@ -1666,7 +1668,12 @@ def _repair_task(
         if citation_fixed is not None:
             candidate = citation_fixed
             changed = True
+        # ``recover`` sees only the FINAL rejected reply: remember the slots it asked to blank
+        # (BL-083), so a refusal of that ledger becomes a plan-level drop below.
+        blanked[:] = blanked_slots(candidate, original)
         return candidate if changed else None
+
+    blanked: list[str] = []
 
     outcome = _targeted_call(
         rc,
@@ -1681,10 +1688,125 @@ def _repair_task(
         recover=recover,
     )
     if isinstance(outcome, JobError):
+        if blanked and set(blanked) <= set(task.slots):
+            return _drop_slots_at_plan(rc, defect, task, blanked, repairs, str(outcome))
         if probe.conflicts:
             return _escalate_to_plan(rc, defect, repairs, probe)
         return _unrepairable(defect, repairs, str(outcome))
     return _accept(rc, defect, loaded, key, outcome, repairs)
+
+
+#: Dispositions whose unit a section's own authored slot carries: dropping that slot would lose it.
+_CARRIED_BY_SLOT = frozenset({"SUPERSEDE_REDUNDANT", "VERIFIED_REWRITE", "CORRECT_WITH_EVIDENCE"})
+
+
+def _drop_slots_at_plan(
+    rc: RepairContext,
+    defect: Defect,
+    task: SectionTask,
+    slots: Sequence[str],
+    repairs: RepairLedger,
+    refusal: str,
+) -> bool:
+    """A targeted S6 repair that blanked ``slots`` (``targeted.blanked_slots``) drops them at the
+    plan, deterministically and with no provider call: the plan items that give the section those
+    slots are removed and a ``deviations`` record names the drop (``targeted.plan_without_slots``),
+    the revised plan is judged by the same ``plan_checks`` every plan is, and the section's stored
+    output without the dropped units is stored for the re-planned task when its slots line up, so
+    the next round re-renders with no new authoring call.
+
+    Accounting: the dropped items' facts are recorded in the deviation and in the repair ledger's
+    changes; an inherited unit a dropped item carries (SUPERSEDE_REDUNDANT / VERIFIED_REWRITE /
+    CORRECT_WITH_EVIDENCE into this section) would lose its only carrier, so such a drop is refused
+    here with that reason, never made silently (R14).
+
+    Decision (BL-083, supervisor 2026-11-14, audit O7): replaces the changes-ledger refusal for
+    exactly this shape (Cells C++ 43516323114, Cells Python 43516330798)."""
+    loaded = rc.prompts["presentation_planning"]
+    packet = planning_packet(
+        rc.entry, rc.facts, rc.investigation, rc.dispositions, loaded.manifest
+    )
+    schema = planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions)
+    plan_key = request_hash(loaded, packet, schema, model=effective_model(loaded, rc.context))
+    plan = rc.store.get(plan_key) or rc.plan
+    if not isinstance(plan, Mapping) or not plan:
+        return _unrepairable(defect, repairs, refusal)
+    reason = f"{defect.label}: the targeted repair blanked the slot"
+    dropped = plan_without_slots(plan, task.section_id, slots, reason)
+    if dropped is None:
+        return _unrepairable(
+            defect, repairs,
+            f"{refusal}; the blanked slot(s) {', '.join(slots)} are not plan-owned, so no "
+            "plan-level drop is possible",
+        )
+    revised, _cited, changes = dropped
+    carried = sorted(
+        str(unit)
+        for change in changes
+        if isinstance(change.get("before"), Mapping)
+        for unit in change["before"].get("unit_ids") or []
+        if any(
+            str(entry.get("unit_id")) == str(unit)
+            and entry.get("disposition") in _CARRIED_BY_SLOT
+            and entry.get("destination_section") == task.section_id
+            for entry in rc.dispositions.get("dispositions", [])
+        )
+    )
+    if carried:
+        return _unrepairable(
+            defect, repairs,
+            f"{refusal}; dropping {', '.join(slots)} would lose {', '.join(carried)}, which "
+            "only that slot carries (R14), so it is not dropped at the plan",
+        )
+    errors = plan_checks(
+        revised, rc.facts, dispositions=rc.dispositions, ecosystem=rc.entry.ecosystem
+    )
+    if errors:
+        return _unrepairable(
+            defect, repairs,
+            f"{refusal}; the plan without {', '.join(slots)} fails its own checks: "
+            + "; ".join(errors[:3]),
+        )
+    rc.store.put(plan_key, loaded.manifest.prompt_id, None, revised)
+    _store_trimmed_section(rc, task, slots, revised)
+    repairs.record(
+        replace(defect, reason=f"plan-level drop of {', '.join(slots)} (blanked by the repair)"),
+        "repaired",
+        None,
+        changes,
+    )
+    return True
+
+
+def _store_trimmed_section(
+    rc: RepairContext, task: SectionTask, slots: Sequence[str], plan: Mapping[str, Any]
+) -> None:
+    """Store the section's own output without the dropped slots' units under the re-planned
+    task's key, renaming the remaining units to the new task's slots in order, when the two line
+    up and the result passes the section's own ``unit_checks``; otherwise store nothing and the
+    next round authors the section afresh."""
+    loaded = rc.prompts["section_authoring"]
+    original = rc.store.get(_task_key(rc, loaded, task))
+    if not isinstance(original, Mapping):
+        return
+    tasks = authoring_tasks(rc.entry, rc.facts, rc.investigation, rc.dispositions, dict(plan))
+    new_task = next((t for t in tasks if t.section_id == task.section_id), None)
+    if new_task is None:
+        return
+    kept = [
+        dict(unit) for unit in original.get("units") or []
+        if isinstance(unit, Mapping) and str(unit.get("slot")) not in set(slots)
+    ]
+    if len(kept) != len(new_task.slots):
+        return
+    for unit, slot in zip(kept, new_task.slots, strict=True):
+        if str(unit.get("slot")).split(":", 1)[0] != slot.split(":", 1)[0]:
+            return
+        unit["slot"] = slot
+    trimmed = {**dict(original), "units": kept}
+    if unit_checks(trimmed, new_task, rc.facts, rc.name, dispositions=rc.dispositions):
+        return
+    rc.store.put(_task_key(rc, loaded, new_task), loaded.manifest.prompt_id, None, trimmed)
 
 
 def repair_defect(rc: RepairContext, defect: Defect, repairs: RepairLedger) -> bool:
