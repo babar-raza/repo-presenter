@@ -5780,3 +5780,73 @@ path from a call store) and C11 (BL-083). Whether S5 re-plans and the LLM review
 re-run of the eight cells and the R41 re-verification.
 
 Backlog: BL-081, BL-082, BL-083
+
+## 2026-11-14: BL-084 — failure classification is a pipeline stage of the present job (owner-directed)
+
+**Owner direction (2026-11-13, verbatim):** "Lane R is not progressing at all. Every failure must be categorised and
+reviewed deeply to find appropriate solution and that solution must be integrated to pipeline for repeatability."
+
+**Why it fits R27.** No new subsystem, workflow or stage outside the present transaction: it extends the present job's
+failure path (one `always()` step after `settle`, beside the existing evidence steps) and the durable state (one more
+ref namespace under `refs/repository-presenter-state/`, written by the same `GitJsonRef` compare-and-swap the
+provider-spend ledger uses). It reuses only data the run already has: the review's blocking findings, `validation.json`'s
+failing checks, the repair ledger (`repairs.json`, including its "facts defect: printed by the renderer from fact X"),
+the facts' inherited-unit and example facts, the content units and the plan. Zero provider calls. R37: classification
+happens on Actions for every run; a session no longer has to read `gh run view --log` to know why a cell failed.
+
+**What runs.**
+- `present.py`: `keep_blocking` writes the rejected candidate's blocking findings next to the lane's outputs before
+  each `PresentFailure`; after every run (success or failure) `write_local_record` writes
+  `<workdir>/failures/<lane>.json`. Evidence only: it never changes the exit code.
+- `present.yml` (present job) `Classify this run's failures`: `python -m repo_presenter.failures publish` stamps run id,
+  code fingerprint and each class's code scope, records a job error for a lane that left no record (facts job
+  failure, crash), pushes to `refs/repository-presenter-state/failures/<owner>__<name>[@lane-l]` (one commit per run,
+  latest record + 20-run history; re-publishing a run id is a no-op; an older backfilled run never replaces a newer
+  latest) and writes a class table to the job summary.
+- Class signature = `rule|origin kind|sub-rule`. Origin kinds: `renderer_fact`, `authored_unit`, `inherited_unit`,
+  `planned_example`, `lane_l_correction`, `job_error`, else `unresolved` (with the quote's location, e.g.
+  `api_table_row:X`, never a guess). Sub-rules come from a fixed pattern table (claim_contradiction member_kind,
+  never_thrown, stub_format, ...; BC-17's coverage tag; BC-18's claim kind; the Lane L detector), else the text's shape.
+- `python -m repo_presenter.failures pareto --remote origin`: latest record per cell -> class, cells, findings, lanes,
+  example, origins, and `new` (seen under the newest code fingerprint and in no record of an older one). Printed in
+  supervisor-tick as `### Failure classes` (after `### Backlog`) and, top 8, in the cohort planner summary.
+- Planner (`select_scheduled_cohort.plan_cohort`, `known=`). Checked first: `idempotent` skips only a byte-identical
+  whole-code fingerprint, and `diagnose` only after 3 failures on that same fingerprint; with the readme code changing
+  on almost every commit (178 commits since 2026-11-12, composition 33, validation 25), every failed cell was
+  re-dispatched after every unrelated commit. Gap filled: a cell whose last attempt (matched by run id) failed in
+  classes whose recorded code scope (rule's code + origin's code + the lane's driver and repair, hashed with
+  `git ls-tree`) is unchanged at HEAD, on the same upstream revision, is skipped as `known_failure`: "held: last
+  failure in classes X, Y; waiting for a fix". Never held: transient failures, unknown rules, job errors with no
+  classified cause, an unreadable failure namespace, a moved upstream.
+- `failures backfill` rebuilds records from `gh run view <id> --log` (artifacts are unreadable through the proxy).
+
+**Backfill (dry run, 2026-11-14).** 26 completed dispatched present runs since 2026-11-12 (the 22 failed ones the
+owner named plus later runs and the successes), 31 lane records; latest per cell: 13 failing of 15 cells, 19 classes.
+
+| class (rule / origin / sub-rule) | cells | findings |
+|---|---|---|
+| claim_contradiction / unresolved / member_kind | 2 | 12 |
+| lane_l_unrepaired_defect / lane_l_correction / format_overclaim | 2 | 8 |
+| BC-05 / unresolved / section_fit | 2 | 3 |
+| live_readme_loss / unresolved / code_block | 2 | 3 |
+| BC-18 / unresolved / false_claim | 2 | 2 |
+| BC-07 / unresolved / internal_wording | 1 | 12 |
+| claim_contradiction / inherited_unit / never_thrown (Lane L) | 1 | 4 |
+| llm:factuality / unresolved / scope_limitations | 1 | 3 |
+| claim_contradiction / inherited_unit / member_owner, not_implemented_but_returns, stub_described_working, unknown_member (Lane L) | 1 each | 7 |
+| disposition_coverage / inherited_unit | 1 | 2 |
+| BC-07 trailing_colon, BC-07 title_case, BC-18 renderer_fact misleading_claim, claim_contradiction stub_format, JobError section_authoring truncation, lane_l failing_example | 1 each | 1 each |
+
+Over all 31 records (not only the latest), the heaviest classes are claim_contradiction member_kind (94 findings in 4
+cell-runs), BC-18 false_claim (7 cell-runs), claim_contradiction never_thrown and stub_format (4 each), BC-17
+inherited technical_content (16 findings) and NoOpProofError LEDGER_NO_RECORDS (3, Lane L 3D .NET). Log-only records
+cannot tell an authored type sentence from a renderer docstring for an API table row (`unresolved
+api_table_row:<Name>`); hosted records resolve it from the content units and facts.
+
+**Does NOT decide.** The fixes of the classes (the readme/* worker owns composition and validation; no readme/* file
+was edited here, `readme.repair.loop.renderer_printed_facts` is only imported). The backfilled records are not yet on
+the refs: this worker was told not to push; the supervisor runs the same command with `--remote`. Whether the scope
+table is too narrow or too broad is measured by the first holds; a wrong hold is released by any edit to the class's
+scope or by an upstream move.
+
+Backlog: BL-084

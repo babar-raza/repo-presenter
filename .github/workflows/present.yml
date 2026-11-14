@@ -507,6 +507,30 @@ jobs:
             --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}" \
             --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
+      # BL-084 (owner, 2026-11-13: "Every failure must be categorised ... integrated to pipeline for
+      # repeatability"). Success or failure, each lane's final blocking findings and repair attempts,
+      # classified by rule, printing origin and sub-rule (repo_presenter/failures.py, zero provider
+      # calls), go to the cell's durable failure ref
+      # (refs/repository-presenter-state/failures/<owner>__<name>[@lane-l], one commit per run) and
+      # to this job's summary. A lane that left no record (a facts failure, a crash) is recorded as
+      # a job error. The planner reads these refs to hold a cell whose last failure lies entirely in
+      # classes the current code has not touched; `failures pareto` aggregates them.
+      - name: Classify this run's failures
+        if: always()
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python -m repo_presenter.failures publish \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --repository "$INPUT_REPOSITORY" --lanes "${{ steps.budget.outputs.lanes }}" \
+            --outcome "R=${{ steps.lane_r.outcome }}" --outcome "L=${{ steps.lane_l.outcome }}" \
+            --facts-result "${{ needs.facts.result }}" \
+            --source-revision "${{ needs.facts.outputs.source_revision }}" \
+            --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --workdir .present-work --summary "$GITHUB_STEP_SUMMARY"
+
       - name: Save the sealed bundle and call store for the next run
         if: always() && needs.facts.outputs.authorized == 'true'
         uses: actions/cache/save@v4

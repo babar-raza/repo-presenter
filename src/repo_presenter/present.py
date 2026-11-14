@@ -64,6 +64,7 @@ from repo_presenter.core.state.present_transaction import (
     run_present_transaction,
 )
 from repo_presenter.facts_handoff import FactsManifest, load_handoff, write_handoff
+from repo_presenter.failures import keep_blocking, write_local_record
 from repo_presenter.lane_l import build_lane_l_facts
 from repo_presenter.lane_l_run import preflight_lane_l, run_lane_l
 from repo_presenter.readme.bundle.seal import SealInputs, seal_candidate
@@ -261,6 +262,7 @@ def _cascade_and_seal(
     )
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
+        keep_blocking(result.out_dir, verdict)  # BL-084: the run's failure record reads them
         report_findings(verdict)
         report_repairs(result.out_dir)
         raise PresentFailure(
@@ -343,6 +345,7 @@ def _lane_l_and_seal(
     )
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
+        keep_blocking(result.out_dir, verdict)  # BL-084: the run's failure record reads them
         report_findings(verdict)
         recommendation = (
             f"; {lane_r_recommendation(result.correction)}"
@@ -727,6 +730,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     failure = getattr(record, "failure", None) if exit_code else None
     if failure is not None:
         print(f"failure ({failure.classification}): {failure.detail}")
+    # BL-084: every run of either lane leaves the record of what blocked it (zero calls); the
+    # present job's classify step publishes it to the cell's failure ref. Evidence only: it never
+    # changes this run's exit code.
+    try:
+        write_local_record(
+            workdir=args.workdir,
+            repository=args.repository,
+            lane=args.lane,
+            exit_code=exit_code,
+            durable_state=state,
+            failure_detail=failure.detail if failure is not None else "",
+            failure_classification=failure.classification if failure is not None else "",
+            version_set=version_set or "",
+        )
+    except Exception as exc:  # noqa: BLE001
+        print(f"failure record: not written ({type(exc).__name__}: {exc})")
     return exit_code
 
 
