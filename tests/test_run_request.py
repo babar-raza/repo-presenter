@@ -406,10 +406,11 @@ def test_open_seed_batches_reads_the_real_branch_conventions():
     assert rr.open_seed_batches(["audit-seed/run-5", "acceptance-record/run-55-1", "acceptance-record/run-5x"]) == ["5"]
 
 
-def test_an_audit_seed_request_passes_only_while_no_batch_is_open():
+def test_an_audit_seed_request_reaches_the_gate_which_resumes_an_open_batch():
     assert rr.validate({"job": "audit-seed"}, REGISTRY, OK, True, _ctx())["job"] == "audit-seed"
-    with pytest.raises(rr.RequestError, match="seed batch run 77 is still open"):
-        rr.validate({"job": "audit-seed"}, REGISTRY, OK, True, _ctx(heads=[*CLOSED_HEADS, "audit-seed/run-77"]))
+    # An open batch no longer refuses the request: audit-seed.yml's gate resumes it (one batch at a time).
+    open_ctx = _ctx(heads=[*CLOSED_HEADS, "audit-seed/run-77"])
+    assert rr.validate({"job": "audit-seed"}, REGISTRY, OK, True, open_ctx)["job"] == "audit-seed"
     with pytest.raises(rr.RequestError, match="takes no other field"):
         rr.validate({"job": "audit-seed", "salt": "1"}, REGISTRY, OK, True, _ctx())
     with pytest.raises(rr.RequestError, match="cannot be verified"):
@@ -545,8 +546,6 @@ def test_an_audit_score_request_end_to_end_through_real_git(remote, monkeypatch,
     out = capsys.readouterr().out.splitlines()
     assert "job=audit-score" in out and f"seed_run_id={SEED}" in out and f"findings_path={FINDINGS}" in out
 
-    sha = remote.request({"job": "audit-seed"}, branch="run-requests/2")
-    _refused(remote, monkeypatch, capsys, sha, f"seed batch run {SEED} is still open", branch="run-requests/2")
 
 
 def test_a_findings_file_that_exists_only_on_the_request_branch_is_refused(remote, monkeypatch, capsys):
