@@ -22,6 +22,7 @@ import re
 import subprocess
 import sys
 import tarfile
+import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -114,13 +115,20 @@ def _badge_mirror(url: str) -> str | None:
     return mirror + (f"?branch={urllib.parse.quote(branch)}" if branch else "")
 
 
-def _download(url: str) -> tuple[str, bytes] | None:
-    try:
-        request = urllib.request.Request(url, headers={"User-Agent": "readme-review-preview"})
-        with urllib.request.urlopen(request, timeout=20) as response:
-            return (response.headers.get("Content-Type") or "").split(";")[0], response.read()
-    except Exception:  # noqa: BLE001 -- an unreachable image keeps its alt text on the page
-        return None
+def _download(url: str, attempts: int = 3) -> tuple[str, bytes] | None:
+    # A large image can time out while 16 downloads share the connection; one slow fetch must not leave a
+    # broken image on the page (seen 2026-11-14 on the Imaging .NET banner), so retry before giving up.
+    for _ in range(attempts):
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "readme-review-preview"})
+            with urllib.request.urlopen(request, timeout=40) as response:
+                return (response.headers.get("Content-Type") or "").split(";")[0], response.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code < 500:
+                return None  # a definite answer (403/404): retrying cannot change it
+        except Exception:  # noqa: BLE001 -- an unreachable image keeps its alt text on the page
+            pass
+    return None
 
 
 def _fetch(item: tuple[str, str, str]) -> tuple[str, str, str | None]:
