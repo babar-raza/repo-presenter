@@ -1,10 +1,10 @@
 {
   "confinement": {
-    "edits": 12,
+    "edits": 34,
     "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
     "verified": true
   },
-  "corrected_sha256": "73820ff10c01ca5ef535e7170787afe03be98eb5b472ce6b5451548371d6ebe2",
+  "corrected_sha256": "df0f7c74f92cf2101e401ce5decc75080062957a87c45bbb0be566da07aaac78",
   "edits": [
     {
       "detector": "enterprise_edition_naming",
@@ -107,6 +107,62 @@
     },
     {
       "detector": "type_description",
+      "end": 12363,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.body",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Body"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.body.get_child_nodes",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Body.get_child_nodes"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.body.paragraphs",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Body.paragraphs"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.body.tables",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Body.tables"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 339,
+      "original": "Class with 2 properties.",
+      "rationale": "line 339: the count only cell 'Class with 2 properties.' does not describe Body and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and NodeCastMixin and declares the members get_child_nodes, paragraphs and tables.",
+      "start": 12339
+    },
+    {
+      "detector": "type_description",
+      "end": 12408,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.bookmarkend",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.BookmarkEnd"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 340,
+      "original": "Class with 2 properties.",
+      "rationale": "line 340: the count only cell 'Class with 2 properties.' does not describe BookmarkEnd and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 12384
+    },
+    {
+      "detector": "type_description",
       "end": 12532,
       "evidence": [
         {
@@ -116,13 +172,127 @@
           "value": "aspose.words_foss.light_document_model.Border"
         }
       ],
-      "index": 3,
+      "index": 5,
       "kind": "FALSE_CLAIM_FIX",
       "line": 342,
       "original": "Class with 3 properties.",
-      "rationale": "line 342: the count cell 'Class with 3 properties.' miscounts the own public members of Border (method=0,dunder=0,init=0,property=0,field=6,inherits=0); the true count replaces it",
-      "replacement": "Class with 6 properties.",
+      "rationale": "line 342: the count only cell 'Class with 3 properties.' does not describe Border and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
       "start": 12508
+    },
+    {
+      "detector": "type_description",
+      "end": 12570,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.cell",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Cell"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 343,
+      "original": "Class with 4 properties.",
+      "rationale": "line 343: the count only cell 'Class with 4 properties.' does not describe Cell and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and NodeCastMixin.",
+      "start": 12546
+    },
+    {
+      "detector": "type_description",
+      "end": 12615,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.cellformat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.CellFormat"
+        }
+      ],
+      "index": 7,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 344,
+      "original": "Class with 14 properties.",
+      "rationale": "line 344: the count only cell 'Class with 14 properties.' does not describe CellFormat and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 12590
+    },
+    {
+      "detector": "type_description",
+      "end": 12835,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.doclist",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.DocList"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 348,
+      "original": "Class with 4 properties.",
+      "rationale": "line 348: the count only cell 'Class with 4 properties.' does not describe DocList and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 12811
+    },
+    {
+      "detector": "type_description",
+      "end": 13098,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.fieldend",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.FieldEnd"
+        }
+      ],
+      "index": 9,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 352,
+      "original": "Class with 3 properties.",
+      "rationale": "line 352: the count only cell 'Class with 3 properties.' does not describe FieldEnd and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 13074
+    },
+    {
+      "detector": "type_description",
+      "end": 13146,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.fieldseparator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.FieldSeparator"
+        }
+      ],
+      "index": 10,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 353,
+      "original": "Class with 2 properties.",
+      "rationale": "line 353: the count only cell 'Class with 2 properties.' does not describe FieldSeparator and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 13122
+    },
+    {
+      "detector": "type_description",
+      "end": 13190,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.fieldstart",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.FieldStart"
+        }
+      ],
+      "index": 11,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 354,
+      "original": "Class with 2 properties.",
+      "rationale": "line 354: the count only cell 'Class with 2 properties.' does not describe FieldStart and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 13166
     },
     {
       "detector": "type_description",
@@ -135,13 +305,151 @@
           "value": "aspose.words_foss.light_document_model.Font"
         }
       ],
-      "index": 4,
+      "index": 12,
       "kind": "FALSE_CLAIM_FIX",
       "line": 355,
       "original": "Class with 23 properties.",
-      "rationale": "line 355: the count cell 'Class with 23 properties.' miscounts the own public members of Font (method=0,dunder=0,init=0,property=0,field=32,inherits=0); the true count replaces it",
-      "replacement": "Class with 32 properties.",
+      "rationale": "line 355: the count only cell 'Class with 23 properties.' does not describe Font and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
       "start": 13204
+    },
+    {
+      "detector": "type_description",
+      "end": 13327,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.headerfooter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.HeaderFooter"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.headerfooter.paragraphs",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.HeaderFooter.paragraphs"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.headerfooter.tables",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.HeaderFooter.tables"
+        }
+      ],
+      "index": 13,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 357,
+      "original": "Class with 5 properties.",
+      "rationale": "line 357: the count only cell 'Class with 5 properties.' does not describe HeaderFooter and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and declares the members paragraphs and tables.",
+      "start": 13303
+    },
+    {
+      "detector": "type_description",
+      "end": 13370,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.drawing.imagedata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.drawing.ImageData"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.drawing.imagedata.content_type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.drawing.ImageData.content_type"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.drawing.imagedata.from_mime",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.drawing.ImageData.from_mime"
+        }
+      ],
+      "index": 14,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 358,
+      "original": "Class with 7 properties.",
+      "rationale": "line 358: the count only cell 'Class with 7 properties.' does not describe ImageData and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and declares the members content_type and from_mime.",
+      "start": 13346
+    },
+    {
+      "detector": "type_description",
+      "end": 13505,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.listformat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.ListFormat"
+        }
+      ],
+      "index": 15,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 360,
+      "original": "Class with 3 properties.",
+      "rationale": "line 360: the count only cell 'Class with 3 properties.' does not describe ListFormat and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 13481
+    },
+    {
+      "detector": "type_description",
+      "end": 13622,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.listlevel",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.ListLevel"
+        }
+      ],
+      "index": 16,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 362,
+      "original": "Class with 9 properties.",
+      "rationale": "line 362: the count only cell 'Class with 9 properties.' does not describe ListLevel and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 13598
+    },
+    {
+      "detector": "type_description",
+      "end": 14460,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.pagesetup",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.PageSetup"
+        }
+      ],
+      "index": 17,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 374,
+      "original": "Class with 18 properties.",
+      "rationale": "line 374: the count only cell 'Class with 18 properties.' does not describe PageSetup and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 14435
+    },
+    {
+      "detector": "type_description",
+      "end": 14703,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.paragraphformat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.ParagraphFormat"
+        }
+      ],
+      "index": 18,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 376,
+      "original": "Class with 35 properties.",
+      "rationale": "line 376: the count only cell 'Class with 35 properties.' does not describe ParagraphFormat and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 14678
     },
     {
       "detector": "type_description",
@@ -154,12 +462,12 @@
           "value": "aspose.words_foss.light_document_model.Row"
         }
       ],
-      "index": 5,
+      "index": 19,
       "kind": "FALSE_CLAIM_FIX",
       "line": 385,
       "original": "Class with 3 properties.",
-      "rationale": "line 385: the count cell 'Class with 3 properties.' miscounts the own public members of Row (method=0,dunder=0,init=0,property=0,field=4,inherits=1); the true count replaces it",
-      "replacement": "Class with 4 properties.",
+      "rationale": "line 385: the count only cell 'Class with 3 properties.' does not describe Row and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and NodeCastMixin.",
       "start": 15153
     },
     {
@@ -173,13 +481,70 @@
           "value": "aspose.words_foss.light_document_model.RowFormat"
         }
       ],
-      "index": 6,
+      "index": 20,
       "kind": "FALSE_CLAIM_FIX",
       "line": 386,
       "original": "Class with 7 properties.",
-      "rationale": "line 386: the count cell 'Class with 7 properties.' miscounts the own public members of RowFormat (method=0,dunder=0,init=0,property=0,field=6,inherits=0); the true count replaces it",
-      "replacement": "Class with 6 properties.",
+      "rationale": "line 386: the count only cell 'Class with 7 properties.' does not describe RowFormat and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
       "start": 15196
+    },
+    {
+      "detector": "type_description",
+      "end": 15407,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.run",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Run"
+        }
+      ],
+      "index": 21,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 388,
+      "original": "Class with 3 properties.",
+      "rationale": "line 388: the count only cell 'Class with 3 properties.' does not describe Run and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and NodeCastMixin.",
+      "start": 15383
+    },
+    {
+      "detector": "type_description",
+      "end": 15553,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.section",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Section"
+        }
+      ],
+      "index": 22,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 391,
+      "original": "Class with 4 properties.",
+      "rationale": "line 391: the count only cell 'Class with 4 properties.' does not describe Section and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and NodeCastMixin.",
+      "start": 15529
+    },
+    {
+      "detector": "type_description",
+      "end": 15594,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.shading",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.Shading"
+        }
+      ],
+      "index": 23,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 392,
+      "original": "Class with 2 properties.",
+      "rationale": "line 392: the count only cell 'Class with 2 properties.' does not describe Shading and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 15570
     },
     {
       "detector": "absent_type_row",
@@ -234,7 +599,7 @@
           "value": "aspose.words_foss.converters.ListHandler.get_list_info"
         }
       ],
-      "index": 7,
+      "index": 24,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 393,
       "original": "| `ShapeNode` | Class with 25 properties. |\n",
@@ -253,13 +618,138 @@
           "value": "aspose.words_foss.light_document_model.Style"
         }
       ],
-      "index": 8,
+      "index": 25,
       "kind": "FALSE_CLAIM_FIX",
       "line": 394,
       "original": "Class with 11 properties.",
-      "rationale": "line 394: the count cell 'Class with 11 properties.' miscounts the own public members of Style (method=0,dunder=0,init=0,property=0,field=15,inherits=0); the true count replaces it",
-      "replacement": "Class with 15 properties.",
+      "rationale": "line 394: the count only cell 'Class with 11 properties.' does not describe Style and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
       "start": 15653
+    },
+    {
+      "detector": "type_description",
+      "end": 15719,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstop",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStop"
+        }
+      ],
+      "index": 26,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 395,
+      "original": "Class with 4 properties.",
+      "rationale": "line 395: the count only cell 'Class with 4 properties.' does not describe TabStop and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 15695
+    },
+    {
+      "detector": "type_description",
+      "end": 15782,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStopCollection"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection.add",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStopCollection.add"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection.after",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStopCollection.after"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection.before",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStopCollection.before"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection.clear",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStopCollection.clear"
+        },
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.tabstopcollection.remove_by_position",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TabStopCollection.remove_by_position"
+        }
+      ],
+      "index": 27,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 396,
+      "original": "Class with 5 methods and 1 property.",
+      "rationale": "line 396: the count only cell 'Class with 5 methods and 1 property.' does not describe TabStopCollection and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel and declares the members add, after, before, clear and remove_by_position.",
+      "start": 15746
+    },
+    {
+      "detector": "type_description",
+      "end": 16165,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.textcolumn",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TextColumn"
+        }
+      ],
+      "index": 28,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 403,
+      "original": "Class with 2 properties.",
+      "rationale": "line 403: the count only cell 'Class with 2 properties.' does not describe TextColumn and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 16141
+    },
+    {
+      "detector": "type_description",
+      "end": 16210,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.textcolumns",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.TextColumns"
+        }
+      ],
+      "index": 29,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 404,
+      "original": "Class with 5 properties.",
+      "rationale": "line 404: the count only cell 'Class with 5 properties.' does not describe TextColumns and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 16186
+    },
+    {
+      "detector": "type_description",
+      "end": 16341,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose.words_foss.light_document_model.unknownnode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "aspose.words_foss.light_document_model.UnknownNode"
+        }
+      ],
+      "index": 30,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 406,
+      "original": "Class with 1 property.",
+      "rationale": "line 406: the count only cell 'Class with 1 property.' does not describe UnknownNode and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from BaseModel.",
+      "start": 16319
     },
     {
       "detector": "absent_type_row",
@@ -314,7 +804,7 @@
           "value": "aspose.words_foss.converters.ListHandler.get_list_info"
         }
       ],
-      "index": 9,
+      "index": 31,
       "kind": "TABLE_ROW_REMOVAL",
       "line": 463,
       "original": "| `ReaderContext` | Class extending Protocol. |\n",
@@ -375,7 +865,7 @@
           "value": "aspose.words_foss.converters.ListHandler.get_list_info"
         }
       ],
-      "index": 10,
+      "index": 32,
       "kind": "FALSE_CLAIM_FIX",
       "line": 607,
       "original": "146",
@@ -394,7 +884,7 @@
           "value": "https://products.aspose.com/words/python-net/"
         }
       ],
-      "index": 11,
+      "index": 33,
       "kind": "FALSE_CLAIM_FIX",
       "line": 625,
       "original": "the commercial Aspose.Words",
@@ -417,7 +907,7 @@
   },
   "summary": {
     "DIAGRAM_FIX": 1,
-    "FALSE_CLAIM_FIX": 9,
+    "FALSE_CLAIM_FIX": 31,
     "TABLE_ROW_REMOVAL": 2
   },
   "unapplied": [
@@ -437,303 +927,6 @@
       "line": 0,
       "reason": "41 of 189 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.words_foss.doc_reader.images.shapecropinfo, public_symbol:aspose.words_foss.drawing.imagetype, public_symbol:aspose.words_foss.light_document_model.conditionalstylemask, public_symbol:aspose.words_foss.light_document_model.nodecastmixin, public_symbol:aspose.words_foss.light_document_model.preferredwidth, public_symbol:aspose.words_foss.light_document_model.tablestyleproperty, public_symbol:aspose.words_foss.md_import.atxheadingblock, public_symbol:aspose.words_foss.md_import.autolinkblock (+33 more)",
       "text": ""
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.body"
-      ],
-      "line": 339,
-      "reason": "the count only cell does not describe Body, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.bookmarkend"
-      ],
-      "line": 340,
-      "reason": "the count only cell does not describe BookmarkEnd, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.border"
-      ],
-      "line": 342,
-      "reason": "the count only cell does not describe Border, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.cell"
-      ],
-      "line": 343,
-      "reason": "the count only cell does not describe Cell, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.cellformat"
-      ],
-      "line": 344,
-      "reason": "the count only cell does not describe CellFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 14 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.doclist"
-      ],
-      "line": 348,
-      "reason": "the count only cell does not describe DocList, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.fieldend"
-      ],
-      "line": 352,
-      "reason": "the count only cell does not describe FieldEnd, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.fieldseparator"
-      ],
-      "line": 353,
-      "reason": "the count only cell does not describe FieldSeparator, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.fieldstart"
-      ],
-      "line": 354,
-      "reason": "the count only cell does not describe FieldStart, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.font"
-      ],
-      "line": 355,
-      "reason": "the count only cell does not describe Font, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 23 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.headerfooter"
-      ],
-      "line": 357,
-      "reason": "the count only cell does not describe HeaderFooter, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.drawing.imagedata"
-      ],
-      "line": 358,
-      "reason": "the count only cell does not describe ImageData, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.listformat"
-      ],
-      "line": 360,
-      "reason": "the count only cell does not describe ListFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.listlevel"
-      ],
-      "line": 362,
-      "reason": "the count only cell does not describe ListLevel, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 9 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.pagesetup"
-      ],
-      "line": 374,
-      "reason": "the count only cell does not describe PageSetup, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 18 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.paragraphformat"
-      ],
-      "line": 376,
-      "reason": "the count only cell does not describe ParagraphFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 35 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.row"
-      ],
-      "line": 385,
-      "reason": "the count only cell does not describe Row, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.rowformat"
-      ],
-      "line": 386,
-      "reason": "the count only cell does not describe RowFormat, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 7 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.run"
-      ],
-      "line": 388,
-      "reason": "the count only cell does not describe Run, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 3 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.section"
-      ],
-      "line": 391,
-      "reason": "the count only cell does not describe Section, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.shading"
-      ],
-      "line": 392,
-      "reason": "the count only cell does not describe Shading, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.style"
-      ],
-      "line": 394,
-      "reason": "the count only cell does not describe Style, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 11 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.tabstop"
-      ],
-      "line": 395,
-      "reason": "the count only cell does not describe TabStop, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 4 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.tabstopcollection"
-      ],
-      "line": 396,
-      "reason": "the count only cell does not describe TabStopCollection, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 methods and 1 property."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.textcolumn"
-      ],
-      "line": 403,
-      "reason": "the count only cell does not describe TextColumn, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 2 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.textcolumns"
-      ],
-      "line": 404,
-      "reason": "the count only cell does not describe TextColumns, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 5 properties."
-    },
-    {
-      "defect": false,
-      "detector": "type_description",
-      "fact_ids": [
-        "public_symbol:aspose.words_foss.light_document_model.unknownnode"
-      ],
-      "line": 406,
-      "reason": "the count only cell does not describe UnknownNode, and the source has no doc comment that does; only authored prose can (Lane R)",
-      "report_only_reason": "NO_DOC_COMMENT",
-      "text": "Class with 1 property."
     }
   ]
 }

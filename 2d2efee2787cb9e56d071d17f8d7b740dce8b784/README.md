@@ -345,30 +345,30 @@ shared Light Document Model, summarized in the module-grouped table below.
 
 | Class | Description |
 |---|---|
-| `Body` | Class with 2 properties. |
-| `BookmarkEnd` | Class with 2 properties. |
+| `Body` | Class that inherits from BaseModel and NodeCastMixin and declares the members get_child_nodes, paragraphs and tables. |
+| `BookmarkEnd` | Class that inherits from BaseModel. |
 | `BookmarkStart` | Marks the beginning of a Word bookmark (`<w:bookmarkStart>`). |
-| `Border` | Class with 6 properties. |
-| `Cell` | Class with 4 properties. |
-| `CellFormat` | Class with 14 properties. |
+| `Border` | Class that inherits from BaseModel. |
+| `Cell` | Class that inherits from BaseModel and NodeCastMixin. |
+| `CellFormat` | Class that inherits from BaseModel. |
 | `ColorMode` | Color rendering mode. |
 | `CompressionLevel` | Compression level for OOXML files. |
 | `ConversionOptions` | Options for controlling DOCX to Markdown conversion. |
-| `DocList` | Class with 4 properties. |
+| `DocList` | Class that inherits from BaseModel. |
 | `Document` | Represents a Word document. |
 | `Document-light_document_model` | Class with 2 methods and 13 properties. |
 | `DocumentFormatReader` | Protocol defining the interface all document readers must implement. |
-| `FieldEnd` | Class with 3 properties. |
-| `FieldSeparator` | Class with 2 properties. |
-| `FieldStart` | Class with 2 properties. |
-| `Font` | Class with 32 properties. |
+| `FieldEnd` | Class that inherits from BaseModel. |
+| `FieldSeparator` | Class that inherits from BaseModel. |
+| `FieldStart` | Class that inherits from BaseModel. |
+| `Font` | Class that inherits from BaseModel. |
 | `FrameFormat` | Floating text-frame definition. |
-| `HeaderFooter` | Class with 5 properties. |
-| `ImageData` | Class with 7 properties. |
+| `HeaderFooter` | Class that inherits from BaseModel and declares the members paragraphs and tables. |
+| `ImageData` | Class that inherits from BaseModel and declares the members content_type and from_mime. |
 | `LdmMarkdownWriter` | Converts a `light_document_model.Document` to a Markdown string. |
-| `ListFormat` | Class with 3 properties. |
+| `ListFormat` | Class that inherits from BaseModel. |
 | `ListLabel` | Snapshot of a list-item's rendered bullet/number label. |
-| `ListLevel` | Class with 9 properties. |
+| `ListLevel` | Class that inherits from BaseModel. |
 | `ListLevelOverride` | One `<w:lvlOverride>` inside a concrete `<w:num>`. |
 | `LoadFormat` | Document load format constants. |
 | `MarkdownEmptyParagraphExportMode` | Controls how empty paragraphs are exported. |
@@ -380,9 +380,9 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `OoxmlCompliance` | OOXML standards compliance level. |
 | `OoxmlSaveOptions` | Options for saving a document as DOCX (Office Open XML). |
 | `OutlineOptions` | Controls how outlines (bookmarks panel) are generated in the PDF. |
-| `PageSetup` | Class with 18 properties. |
+| `PageSetup` | Class that inherits from BaseModel. |
 | `Paragraph` | A paragraph whose children — `Run`, `BookmarkStart` / `End`, `FieldStart` / `Separator` / `End` and inline `ShapeNode` — sit in a single ordered collection in document order. |
-| `ParagraphFormat` | Class with 35 properties. |
+| `ParagraphFormat` | Class that inherits from BaseModel. |
 | `ParagraphInfo` | Information about a paragraph's style and context. |
 | `PdfCompliance` | PDF standards compliance level. |
 | `PdfFontEmbeddingMode` | Font embedding mode in PDF. |
@@ -391,27 +391,27 @@ shared Light Document Model, summarized in the module-grouped table below.
 | `PdfSaveOptions` | Options for saving documents as PDF. |
 | `PdfTextCompression` | Text compression in PDF. |
 | `PdfZoomBehavior` | Mirrors public API. |
-| `Row` | Class with 4 properties. |
-| `RowFormat` | Class with 6 properties. |
+| `Row` | Class that inherits from BaseModel and NodeCastMixin. |
+| `RowFormat` | Class that inherits from BaseModel. |
 | `RtfFileReader` | Reads RTF files (OLE2-format) and produces the same data structures as DocumentReader (for .docx) and DocFileReader (for .doc). |
-| `Run` | Class with 3 properties. |
+| `Run` | Class that inherits from BaseModel and NodeCastMixin. |
 | `RunFormatting` | Text run formatting properties. |
 | `SaveFormat` | Document save format constants. |
-| `Section` | Class with 4 properties. |
-| `Shading` | Class with 2 properties. |
-| `Style` | Class with 15 properties. |
-| `TabStop` | Class with 4 properties. |
-| `TabStopCollection` | Class with 5 methods and 1 property. |
+| `Section` | Class that inherits from BaseModel and NodeCastMixin. |
+| `Shading` | Class that inherits from BaseModel. |
+| `Style` | Class that inherits from BaseModel. |
+| `TabStop` | Class that inherits from BaseModel. |
+| `TabStopCollection` | Class that inherits from BaseModel and declares the members add, after, before, clear and remove_by_position. |
 | `Table` | Class with 11 properties. |
 | `Table-models` | Represents a table structure. |
 | `TableCell` | Represents a table cell. |
 | `TableContentAlignment` | Table content alignment options. |
 | `TableRow` | Represents a table row. |
 | `TableStyleFormat` | Table-level properties stored on table styles (`w:tblPr` inside `w:style`). |
-| `TextColumn` | Class with 2 properties. |
-| `TextColumns` | Class with 5 properties. |
+| `TextColumn` | Class that inherits from BaseModel. |
+| `TextColumns` | Class that inherits from BaseModel. |
 | `TextFileReader` | Reads plain-text (.txt) files and yields one Paragraph per line. |
-| `UnknownNode` | Class with 1 property. |
+| `UnknownNode` | Class that inherits from BaseModel. |
 | `Zip64Mode` | Controls when to use ZIP64 format extensions for OOXML files. |
 
 #### Enumerations
