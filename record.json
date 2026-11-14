@@ -5,7 +5,7 @@
   "provider_repository_id": 1243410151,
   "registry_revision": null,
   "active_transaction_id": "bc35911b249b4732972df03504f57ae9",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "0743660a8b614bf4b50404038fcb098f",
-    "transaction_id": "5a639e621a1c468eb47a2bac11e7ed2d",
+    "transition_id": "2c29790895f943488f25735c13875103",
+    "transaction_id": "bc35911b249b4732972df03504f57ae9",
     "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-11-09T19:30:24.638998+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-14T16:17:52.261806+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-page-foss/Aspose.Page-FOSS-for-Python",
     "output_manifest": "candidates/aspose-page-foss__Aspose.Page-FOSS-for-Python/lane-l/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 10,
+  "state_version": 11,
   "recent_trigger_dedup_keys": {
     "run:42683743189:aspose-page-foss/Aspose.Page-FOSS-for-Python": "5a639e621a1c468eb47a2bac11e7ed2d",
     "run:42689605272:aspose-page-foss/Aspose.Page-FOSS-for-Python": "c2cccba4161248dcb97412dc0deafd78",
