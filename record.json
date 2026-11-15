@@ -1,0 +1,82 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T03:48:32+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43672441969",
+   "source_revision": "1a062dd88a27c946c872185349beb45b92e7a948",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T03:48:32+00:00",
+  "classes": {
+   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '8', '2003'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around th",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "OutputRejectedError"
+    ],
+    "rule": "job_error",
+    "scope": "c21b5c6dc1236bada547de4ea014fe03b1318f053f1da91f7372b9a2dc31f8cb",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '8', '2003'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "kind": "OutputRejectedError",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '8', '2003'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around th",
+    "origin": {
+     "id": "OutputRejectedError",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
+  "run_id": "43672441969",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43672441969",
+  "schema_version": 1,
+  "source_revision": "1a062dd88a27c946c872185349beb45b92e7a948",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
+ "schema_version": 1
+}
