@@ -51,21 +51,33 @@
    "run_id": "43650797919",
    "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-15T01:54:18+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43664910650",
+   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T23:04:18+00:00",
+  "at": "2026-11-15T01:54:18+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'inherited_unit:010.list', 'reason': 'The list is a source for multiple capability units; its items are cited directly in the units above and not repeated as a separate entry.'",
+   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:4: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this ",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
      "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "3018f7d92cf765d9ca98eb725ba4c60fe71f1de2b28188c70d40905e42d48c59",
+    "scope": "c21b5c6dc1236bada547de4ea014fe03b1318f053f1da91f7372b9a2dc31f8cb",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -75,23 +87,23 @@
      "src/repo_presenter/readme/composition",
      "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_omitted_q_q_q",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
     "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'inherited_unit:010.list', 'reason': 'The list is a source for multiple capability units; its items are cited directly in the units above and not repeated as a separate entry.'}, {'fact_id': 'example:003', 'reason': 'example is CONTRADICTED and not used by any capability unit'}, {'fact_id': 'example:006', 'reason': 'example is CONTRADICTED and not used by any capability unit'}, {'fact_id': 'example:008', 'reason': 'example is UNRESOLVED and not used by any capability unit'}, {'fact_id': 'example:009', 'reason': 'example is UNRESOLVED and not used by any capability unit'}, {'fact_id': 'example:010', 'reason': 'example is UNRESOLVED and not used by any capability unit'}",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:4: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
    "kind": "OutputRejectedError",
    "transient": true
   },
   "findings": [
    {
     "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'inherited_unit:010.list', 'reason': 'The list is a source for multiple capability units; its items are cited directly in the units above and not repeated as a separate entry.'",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:4: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this ",
     "origin": {
      "id": "OutputRejectedError",
      "kind": "job_error"
@@ -99,20 +111,20 @@
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no",
     "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_omitted_q_q_q",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
-  "run_id": "43650797919",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43650797919",
+  "run_id": "43664910650",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43664910650",
   "schema_version": 1,
   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
