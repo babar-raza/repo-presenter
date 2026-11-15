@@ -5,7 +5,7 @@
   "provider_repository_id": 1332915817,
   "registry_revision": null,
   "active_transaction_id": "66295dd1073d41ea9dcf89a58630a4f7",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set f39787980017: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Layers` as a property of `Image` ('The Image class provides the Load and Save methods to read and write image files, and exposes properties such as Width, Height, Bounds, and Layers for inspection and modification, as demonstrated when loading a PSD file and accessing its layers and resources.'), but `Aspose.PSD.Image` has no such member; `Layers` is a member of `PsdImage`)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-14T05:48:52.682483+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-15T01:06:25.113283+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 3
   },
   "lease": null,
   "last_transition": {
@@ -40,11 +40,11 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 27,
+  "state_version": 28,
   "recent_trigger_dedup_keys": {
     "run:41290980069:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "420a41ac7b7b4ee8a4282def04b3cee9",
     "run:41294881468:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "a46cdcf117be4c239142b216c9a17ef6",
     "run:42687354651:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "66295dd1073d41ea9dcf89a58630a4f7"
   },
-  "recovery_count": 2
+  "recovery_count": 3
 }
