@@ -5,7 +5,7 @@
   "provider_repository_id": 1426901814,
   "registry_revision": null,
   "active_transaction_id": "5073002602e84d8ebf2d79701cae92ea",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "58fbe3f875f94fb6ba485c2162a57004",
-    "transaction_id": "c2fe112917fc4cbaa4d7c9d0a6680343",
+    "transition_id": "1e5e7007e0374fbf896bfba4ff2b436d",
+    "transaction_id": "5073002602e84d8ebf2d79701cae92ea",
     "repository": "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-11-13T13:04:30.452557+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-15T03:41:14.413698+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-ocr-foss__Aspose.OCR-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 4,
+  "state_version": 5,
   "recent_trigger_dedup_keys": {
     "run:43423561117:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "c2fe112917fc4cbaa4d7c9d0a6680343",
     "run:43672437897:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "5073002602e84d8ebf2d79701cae92ea"
