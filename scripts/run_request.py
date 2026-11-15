@@ -17,6 +17,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
      "findings_ref": "audit-findings/run-...", "adjudications_path": ""}
     {"job": "audit-settle", "seed_run_id": "43620199171", "audit_run_id": "43641838293",
      "batch": "e2-011-audit-and-production"}
+    {"job": "audit-abandon", "seed_run_id": "43620199171"}
 
 ``audit-settle`` (BL-160) records one past M9 audit round's measured provider spend on the durable
 provider-spend ledger, for a round that ran before the audit reserved from it: the executor downloads that
@@ -24,6 +25,14 @@ round's ``m9-audit-ledger-<seed_run_id>-<audit_run_id>`` artifact (its call ledg
 the seed's public case index, and appends one ``settle`` entry ``audit-<seed_run_id>-<audit_run_id>``
 charged to ``batch`` (a batch committed in ``data/provider_budget.json`` on main). A second request for the
 same round is a no-op. It can only ever add spend, never free any.
+
+``audit-abandon`` (BL-163) ends a seed batch the gate reports ``blocked``: ``MAX_AUDIT_ATTEMPTS`` hosted audit
+attempts and no frozen findings. Until 2026-11-15 the gate's message pointed at an override that only existed
+for a batch WITH findings (score, then write), so a blocked batch stalled every later round for good. The
+executor pushes ``audit-abandoned/run-<seed_run_id>`` at main; ``open_seed_batches`` counts it as ended. It is
+refused for a batch that has findings (that one is finished by score and write, never discarded) or fewer
+attempts. It accepts nothing and writes no acceptance record; the batch's candidates stay unjudged, so they
+can be seeded again.
 
 Trust boundary. A push-triggered workflow runs the workflow files of the PUSHED commit, so nothing that holds a
 secret may run on the push. ``.github/workflows/run-request.yml`` (push) holds no secret, has a read-only
@@ -94,7 +103,7 @@ from pathlib import Path
 from typing import Any
 
 REQUEST_FILE = "run-request.json"
-AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle")
+AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle", "audit-abandon")
 JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
@@ -110,10 +119,15 @@ SEED_BRANCH_PREFIX = "audit-seed/run-"
 FINDINGS_BRANCH_PREFIX = "audit-findings/run-"
 SCORE_BRANCH_PREFIX = "audit-score/seed-run-"
 ATTEMPT_BRANCH_PREFIX = "audit-attempt/run-"
+ABANDON_BRANCH_PREFIX = "audit-abandoned/run-"
+#: Hosted audit attempts after which the gate reports a batch without findings ``blocked`` (the same number
+#: as ``run_m9_seeder.MAX_AUDIT_ATTEMPTS``; tests pin the two together).
+MAX_AUDIT_ATTEMPTS = 3
 BOT_EMAIL = "41898282+github-actions[bot]@users.noreply.github.com"
 _RUN_ID = re.compile(r"^[1-9][0-9]{0,19}$")
 _SEED_BRANCH = re.compile(r"^audit-seed/run-([1-9][0-9]{0,19})$")
 _RECORD_BRANCH = re.compile(r"^acceptance-record/run-([1-9][0-9]{0,19})(?:-[1-9][0-9]{0,19})?$")
+_ABANDON_BRANCH = re.compile(r"^audit-abandoned/run-([1-9][0-9]{0,19})$")
 #: The workflows a seed run may be a run of, and the events that may start it. A ``workflow_run`` run
 #: always executes the default branch's files; ``audit-seed.yml`` must also have run on main.
 SEED_WORKFLOWS = {
@@ -156,13 +170,16 @@ def is_run_id(value: Any) -> bool:
 
 def open_seed_batches(heads: Iterable[str]) -> list[str]:
     """Seed run ids (oldest first) that have an ``audit-seed/run-<id>`` branch and no acceptance-record
-    branch ``acceptance-record/run-<id>`` or ``acceptance-record/run-<id>-<writer run id>``: the rounds
-    seeded and not yet written. ``heads`` are branch names without ``refs/heads/``."""
+    branch ``acceptance-record/run-<id>`` or ``acceptance-record/run-<id>-<writer run id>``, and no
+    ``audit-abandoned/run-<id>`` branch (BL-163): the rounds seeded and neither written nor abandoned.
+    ``heads`` are branch names without ``refs/heads/``."""
     seeded, written = set(), set()
     for head in heads:
         if (match := _SEED_BRANCH.match(head)) is not None:
             seeded.add(match.group(1))
-        elif (match := _RECORD_BRANCH.match(head)) is not None:
+        elif (match := _RECORD_BRANCH.match(head)) is not None or (
+            match := _ABANDON_BRANCH.match(head)
+        ) is not None:
             written.add(match.group(1))
     return sorted(seeded - written, key=int)
 
@@ -200,6 +217,8 @@ def _validate_audit(job: str, request: dict[str, Any], context: AuditContext | N
         return blank
     if job == "audit-settle":
         return _validate_audit_settle(request, context, blank)
+    if job == "audit-abandon":
+        return _validate_audit_abandon(request, context, blank)
     allowed = {"job", "seed_run_id", "findings_path", "findings_ref"}
     if job == "acceptance-write":
         allowed.add("adjudications_path")
@@ -249,6 +268,29 @@ def _validate_audit_settle(request: dict[str, Any], context: AuditContext, blank
     if batch not in context.batch_ids():
         raise RequestError(f"batch {batch!r} is not committed in data/provider_budget.json on main")
     return {**blank, "seed_run_id": seed, "audit_run_id": audit, "batch": batch}
+
+
+def _validate_audit_abandon(request: dict[str, Any], context: AuditContext, blank: dict[str, str]) -> dict[str, str]:
+    """BL-163: end only a batch the gate reports ``blocked`` -- open, no frozen findings (on its hosted
+    branch or committed to main), and at least ``MAX_AUDIT_ATTEMPTS`` hosted audit attempts."""
+    if set(request) != {"job", "seed_run_id"}:
+        raise RequestError("an audit-abandon request takes exactly seed_run_id")
+    seed = request.get("seed_run_id")
+    if not is_run_id(seed):
+        raise RequestError(f"seed_run_id {seed!r} is not a run id (a string of digits)")
+    heads = list(context.heads)
+    if seed not in open_seed_batches(heads):
+        raise RequestError(f"seed batch {seed} is not open (no {SEED_BRANCH_PREFIX}{seed} branch, or already ended)")
+    if findings_ref_for(seed) in heads or context.exists("main", findings_path_for(seed)):
+        raise RequestError(
+            f"seed batch {seed} has frozen findings: finish it with audit-score and acceptance-write, never abandon it"
+        )
+    attempts = sum(1 for h in heads if h.startswith(f"{ATTEMPT_BRANCH_PREFIX}{seed}-"))
+    if attempts < MAX_AUDIT_ATTEMPTS:
+        raise RequestError(
+            f"seed batch {seed} has {attempts} hosted audit attempt(s) < {MAX_AUDIT_ATTEMPTS}: resume it with audit-seed"
+        )
+    return {**blank, "seed_run_id": seed}
 
 
 def verify_seed_run(run_id: str, repository: str, get_json: Callable[[str], Any]) -> None:

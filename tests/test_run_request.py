@@ -653,3 +653,58 @@ def test_the_hosted_audit_reserves_before_its_attempt_and_settles_always():
     assert "--call-ledger \"$RUNNER_TEMP/m9-audit/work/ledger.jsonl\"" in steps[settle_at]["run"]
     for index in (reserve, settle_at):
         assert steps[index]["env"] == {"REPOSITORY_PRESENTER_STATE_TOKEN": "${{ github.token }}"}
+
+
+# --- BL-163: audit-abandon ends a batch the gate reports blocked ----------------------------------------
+
+ABANDON = {"job": "audit-abandon", "seed_run_id": SEED}
+
+
+def _blocked_heads(attempts: int = 3, *extra: str) -> list[str]:
+    return [f"audit-seed/run-{SEED}", *(f"audit-attempt/run-{SEED}-{SEED}{i}" for i in range(attempts)), *extra]
+
+
+def test_an_abandon_request_ends_only_a_blocked_batch_and_the_gate_then_sees_none_open():
+    ctx = rr.AuditContext(heads=_blocked_heads())
+    assert rr.validate(ABANDON, REGISTRY, OK, True, ctx) == {
+        "job": "audit-abandon", "repository": "", "ecosystem": "", "lane": "", "seed_run_id": SEED}
+    assert rr.open_seed_batches(_blocked_heads()) == [SEED]
+    assert rr.open_seed_batches(_blocked_heads(3, f"audit-abandoned/run-{SEED}")) == []
+
+
+@pytest.mark.parametrize(
+    "heads, exists, fragment",
+    [
+        (_blocked_heads(2), False, "resume it with audit-seed"),
+        (_blocked_heads(3, f"audit-findings/run-{SEED}"), False, "has frozen findings"),
+        (_blocked_heads(3), True, "has frozen findings"),
+        (_blocked_heads(3, f"audit-abandoned/run-{SEED}"), False, "is not open"),
+        ([], False, "is not open"),
+    ],
+)
+def test_an_abandon_request_is_refused_unless_the_gate_would_report_blocked(heads, exists, fragment):
+    ctx = rr.AuditContext(heads=heads, exists=lambda ref, path: exists)
+    with pytest.raises(rr.RequestError, match=re.escape(fragment)):
+        rr.validate(ABANDON, REGISTRY, OK, True, ctx)
+
+
+def test_an_abandon_request_takes_only_its_seed_and_the_attempt_limit_matches_the_gate():
+    with pytest.raises(rr.RequestError, match="takes exactly"):
+        rr.validate({**ABANDON, "reason": "x"}, REGISTRY, OK, True, rr.AuditContext(heads=_blocked_heads()))
+    import importlib.util, pathlib
+    spec = importlib.util.spec_from_file_location(
+        "run_m9_seeder_for_pin", pathlib.Path(__file__).resolve().parents[1] / "scripts" / "run_m9_seeder.py")
+    seeder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seeder)
+    assert seeder.MAX_AUDIT_ATTEMPTS == rr.MAX_AUDIT_ATTEMPTS
+
+
+def test_the_audit_abandon_job_holds_no_secret_and_pushes_only_the_abandoned_branch():
+    wf, _ = _wf("run-request-execute.yml")
+    job = wf["jobs"]["audit-abandon"]
+    assert job["needs"] == "validate" and job["if"] == "needs.validate.outputs.job == 'audit-abandon'"
+    assert job["permissions"] == {"contents": "write"}
+    text = json.dumps(job)
+    assert "secrets." not in text and "environment" not in job and "download-artifact" not in text
+    run = "\n".join(s.get("run", "") for s in job["steps"])
+    assert 'git push origin "HEAD:refs/heads/audit-abandoned/run-${SEED}"' in run

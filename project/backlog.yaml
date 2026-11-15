@@ -1754,3 +1754,16 @@ items:
     evidence: []
     next_action: "bring to the owner with the next batch request (sizing: cases x the measured per-case cost)"
     updated: "2026-11-14"
+
+  - id: BL-163
+    title: "A seed batch the M9 gate reports blocked had no way to end, so it held every later audit round"
+    type: defect
+    source: "hosted run 43701332052 (2026-11-15): gate 'seed batch 43620199171: 3 hosted audit attempts froze no findings; end it with the run-request override' -- but the runbook's override needs frozen findings (score, then write)"
+    priority: P0
+    status: active
+    implementation_path: "scripts/run_request.py: audit-abandon job (refused unless the batch is open, has no frozen findings and >= MAX_AUDIT_ATTEMPTS attempts); open_seed_batches counts audit-abandoned/run-<id> as ended; .github/workflows/run-request-execute.yml audit-abandon job pushes that branch at main"
+    acceptance: "after merge, an audit-abandon request for 43620199171 runs green and the next audit-seed gate reports no open batch (seed or noop, not blocked)"
+    evidence:
+      - "tests/test_run_request.py: abandon accepted only when blocked; refused with findings, fewer attempts, or already ended; attempt limit pinned to run_m9_seeder.MAX_AUDIT_ATTEMPTS; job holds no secret (153 passed with the seeder tests)"
+    next_action: "merge, then push {\"job\": \"audit-abandon\", \"seed_run_id\": \"43620199171\"} and confirm the gate"
+    updated: "2026-11-15"

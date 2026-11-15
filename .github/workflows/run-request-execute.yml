@@ -32,6 +32,9 @@ name: run-request-execute
 #             and the attestation is still signed by acceptance-write.yml@refs/heads/main.
 #   audit-settle  (BL-160) records a past M9 audit round's measured provider spend, from its own
 #             m9-audit-ledger artifact, as one idempotent settle entry on the provider-spend ledger. No secret.
+#   audit-abandon (BL-163) ends a seed batch the gate reports blocked (MAX_AUDIT_ATTEMPTS attempts, no frozen
+#             findings) by pushing audit-abandoned/run-<id> at main. validate refuses a batch with findings or
+#             with fewer attempts. Nothing is accepted; no secret.
 #
 # Residual risk (not closed here, see docs/DECISION_LOG.md): any account with push access can add a NEW
 # workflow file on any branch and reach repository-level secrets; only moving the secrets to an Environment
@@ -267,3 +270,24 @@ jobs:
             --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${AUDIT_RUN}"
           python -m repo_presenter.core.llm.budget status \
             --remote "https://github.com/${{ github.repository }}.git" >> "$GITHUB_STEP_SUMMARY"
+
+  # BL-163: end a seed batch the gate reports `blocked` (no frozen findings after MAX_AUDIT_ATTEMPTS hosted
+  # attempts), so it stops holding every later round (first: seed 43620199171, 2026-11-15). validate has
+  # already refused a batch with findings or fewer attempts. No secret, no environment, nothing accepted.
+  audit-abandon:
+    needs: validate
+    if: needs.validate.outputs.job == 'audit-abandon'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write  # the audit-abandoned/run-<id> branch only
+    env:
+      SEED: ${{ needs.validate.outputs.seed_run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Mark the blocked seed batch abandoned
+        run: |
+          git push origin "HEAD:refs/heads/audit-abandoned/run-${SEED}"
+          echo "seed batch ${SEED} abandoned at main ${GITHUB_SHA} (BL-163): its candidates stay unjudged" >> "$GITHUB_STEP_SUMMARY"
