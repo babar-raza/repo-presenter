@@ -5,7 +5,7 @@
   "provider_repository_id": 1417497797,
   "registry_revision": null,
   "active_transaction_id": "cacfc4457982444980e4df0a11215596",
-  "state": "OBSERVED",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -25,8 +25,21 @@
     "expires_at": "2026-11-15T08:53:43.486022+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "545676d913984caeb75c0fa1c7e01e26",
+    "transaction_id": "cacfc4457982444980e4df0a11215596",
+    "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-15T08:38:55.233554+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-psd-foss__Aspose.PSD-FOSS-for-Java/lane-l/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:43695394652:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "cacfc4457982444980e4df0a11215596"
   },
