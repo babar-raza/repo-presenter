@@ -581,3 +581,75 @@ def test_the_executor_calls_the_m9_workflows_with_validated_inputs_and_minimal_p
         assert set(job.get("with") or {}) == inputs
         for key, value in (job.get("with") or {}).items():
             assert value == f"${{{{ needs.validate.outputs.{key} }}}}"
+
+
+# --- BL-160: the audit-settle backfill of a past round's measured spend --------------------------------
+
+SETTLE = {"job": "audit-settle", "seed_run_id": SEED, "audit_run_id": "43641838293",
+          "batch": "e2-011-audit-and-production"}
+
+
+def _settle_ctx(**kwargs):
+    return rr.AuditContext(heads=CLOSED_HEADS, batch_ids=lambda: {"e2-011-audit-and-production"}, **kwargs)
+
+
+def test_an_audit_settle_request_validates_its_run_ids_seed_branch_and_committed_batch():
+    assert rr.validate(SETTLE, REGISTRY, OK, True, _settle_ctx()) == {
+        "job": "audit-settle", "repository": "", "ecosystem": "", "lane": "", "seed_run_id": SEED,
+        "audit_run_id": "43641838293", "batch": "e2-011-audit-and-production"}
+    # the real committed budget file on this checkout holds the batch the backfill charges
+    assert "e2-011-audit-and-production" in rr.committed_batch_ids()
+
+
+@pytest.mark.parametrize(
+    "fields, fragment",
+    [
+        ({"audit_run_id": "4364x"}, "audit_run_id"),
+        ({"seed_run_id": "0"}, "seed_run_id"),
+        ({"seed_run_id": "999"}, "not a seed batch"),
+        ({"batch": "e2-999-nope"}, "not committed"),
+        ({"batch": "../x"}, "not a batch id"),
+        ({"calls": "1"}, "takes exactly"),
+    ],
+)
+def test_every_other_audit_settle_request_is_refused(fields, fragment):
+    with pytest.raises(rr.RequestError, match=re.escape(fragment)):
+        rr.validate({**SETTLE, **fields}, REGISTRY, OK, True, _settle_ctx())
+
+
+def test_the_audit_settle_job_holds_no_secret_and_settles_the_rounds_artifact_ledger():
+    wf, _ = _wf("run-request-execute.yml")
+    validate = wf["jobs"]["validate"]
+    for key in ("audit_run_id", "batch"):
+        assert validate["outputs"][key] == f"${{{{ steps.check.outputs.{key} }}}}"
+    job = wf["jobs"]["audit-settle"]
+    assert job["needs"] == "validate" and job["if"] == "needs.validate.outputs.job == 'audit-settle'"
+    assert job["permissions"] == {"contents": "write", "actions": "read"}
+    text = json.dumps(job)
+    assert "secrets." not in text and "environment" not in job
+    assert "m9-seed-manifest" not in text and "AUDIT_SEED_KEY" not in text
+    downloads = [s["with"]["name"] for s in job["steps"] if "download-artifact" in str(s.get("uses"))]
+    assert downloads == [
+        "m9-audit-ledger-${{ needs.validate.outputs.seed_run_id }}-${{ needs.validate.outputs.audit_run_id }}",
+        "m9-seed-candidates-${{ needs.validate.outputs.seed_run_id }}",
+    ]
+    run = "\n".join(s.get("run", "") for s in job["steps"])
+    assert "budget settle --purpose audit" in run and '--id "audit-${SEED}-${AUDIT_RUN}"' in run
+    assert '--batch "$BATCH"' in run and "--call-ledger" in run
+
+
+def test_the_hosted_audit_reserves_before_its_attempt_and_settles_always():
+    """BL-160: the audit job reserves from the durable ledger before its first call (and before its
+    bounded attempt is recorded) and settles its own measured spend whatever the outcome."""
+    wf, _ = _wf("audit-seed.yml")
+    steps = wf["jobs"]["audit"]["steps"]
+    names = [s.get("name", "") for s in steps]
+    reserve = next(i for i, s in enumerate(steps) if "budget reserve --purpose audit" in s.get("run", ""))
+    attempt = next(i for i, n in enumerate(names) if n.startswith("Record this attempt"))
+    audit = next(i for i, s in enumerate(steps) if "run_m9_auditor.py audit" in s.get("run", ""))
+    settle_at = next(i for i, s in enumerate(steps) if "budget settle --purpose audit" in s.get("run", ""))
+    assert reserve < attempt < audit < settle_at
+    assert steps[settle_at]["if"] == "always()"
+    assert "--call-ledger \"$RUNNER_TEMP/m9-audit/work/ledger.jsonl\"" in steps[settle_at]["run"]
+    for index in (reserve, settle_at):
+        assert steps[index]["env"] == {"REPOSITORY_PRESENTER_STATE_TOKEN": "${{ github.token }}"}

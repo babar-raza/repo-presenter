@@ -319,3 +319,172 @@ def test_an_unreachable_ledger_fails_closed_to_zero_call_work(tmp_path: Path) ->
                         "--id", "x"]) == 0
     with pytest.raises(BudgetExceededError):
         check_budget(budget_path)
+
+
+# --- BL-160: the M9 audit draws from, and settles to, the same durable ledger as production ---------
+
+
+def _e2_011(**batch: Any) -> dict[str, Any]:
+    """The 2026-11-14 shape: one committed batch (420 calls / 17.2M tokens), unspent in the file."""
+    return _committed(spent={"calls": 650, "tokens": 1_077_799}, batches=[
+        {"id": "e2-011-audit-and-production", "repositories": [], "calls_cap": 420,
+         "tokens_cap": 17_200_000, "calls_spent": 0, "tokens_spent": 0, **batch}])
+
+
+def _audit_settle(ledger: dict, rid: str, calls: float, tokens: float, cases: int, *,
+                  batch: str | None = None, at: datetime = NOW) -> dict:
+    entry = {"id": rid, "purpose": budget.AUDIT_PURPOSE, "repository": "m9-audit", "outcomes": {},
+             "sealed": [], "cases": cases, "calls": calls, "tokens": tokens}
+    if batch:
+        entry["batch"] = batch
+    return settle(_committed(), ledger, entry, at)
+
+
+def test_production_never_reserves_a_batchs_audit_reserve() -> None:
+    committed = _e2_011(audit_reserve_calls=150, audit_reserve_tokens=6_000_000)
+    _, planned = reserve_cohort(committed, empty_ledger(),
+                                [{"repository": f"o/{i}", "lanes": ["R"]} for i in range(8)],
+                                id_prefix="c", now=NOW)
+    assert sum(run["reservation"]["calls"] for run in planned if run["reservation"]) <= 420 - 150
+    ledger, _ = reserve_cohort(committed, empty_ledger(), [{"repository": "o/a", "lanes": ["R"]}],
+                               id_prefix="d", now=NOW)
+    document = effective_document(committed, ledger, NOW)
+    assert budget.audit_reserve_unspent(document["batches"][-1]) == (150.0, 6_000_000.0)
+    # with no audit reserve the same cohort may take the whole batch
+    _, planned = reserve_cohort(_e2_011(), empty_ledger(),
+                                [{"repository": f"o/{i}", "lanes": ["R"]} for i in range(8)],
+                                id_prefix="c", now=NOW)
+    assert sum(run["reservation"]["calls"] for run in planned if run["reservation"]) == 420
+
+
+def test_the_audit_reserves_its_measured_per_case_cost_from_the_reserve_first() -> None:
+    committed = _e2_011(audit_reserve_calls=150, audit_reserve_tokens=6_000_000)
+    ledger, entry, refusal = budget.reserve_audit(committed, empty_ledger(), reservation_id="audit-1-2-a1",
+                                                  cases=12, now=NOW)
+    assert refusal is None and entry["purpose"] == "audit" and entry["cases"] == 12
+    assert (entry["calls"], entry["tokens"]) == (120.0, 4_800_000.0)  # the defaults, 10 / 400k per case
+    document = effective_document(committed, ledger, NOW)
+    batch = document["batches"][-1]
+    assert batch["hosted"]["audit_calls"] == 120 and budget.audit_reserve_unspent(batch)[0] == 30
+    # production's remaining is the batch less what the audit holds and its unspent reserve
+    assert budget.production_remaining(document, batch) == (270.0, 11_200_000.0)
+    # settling the audit charges its measured spend, and the next round is sized from it
+    settled = settle(committed, ledger, {"id": "audit-1-2-a1", "purpose": "audit", "cases": 12,
+                                         "calls": 96, "tokens": 3_000_000, "outcomes": {}, "sealed": []}, NOW)
+    batch = effective_document(committed, settled, NOW)["batches"][-1]
+    assert batch["calls_spent"] == 96 and batch["hosted"]["audit_runs"] == 1
+    assert batch["hosted"]["runs"] == 0  # never a production run
+    assert budget.measured_audit_case_cost(budget.ledger_entries(settled, 2)) == (8.0, 250_000.0)
+    again, same, _ = budget.reserve_audit(committed, settled, reservation_id="audit-1-2-a1", cases=12, now=NOW)
+    assert same == entry and len(again["entries"]) == len(settled["entries"])  # idempotent
+
+
+def test_the_audit_is_refused_when_the_ledger_shows_the_batch_spent_though_the_file_says_unspent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The exact 2026-11-14 failure: production spent about 408 of e2-011's 420 calls through the
+    ledger while the committed file still says 0 spent. The audit of 46 cases is refused before any
+    call, and a hosted PRODUCT call against the committed file (the old second purse) is refused too."""
+    committed = _e2_011()
+    ledger = empty_ledger()
+    for index, calls in enumerate([12, 16, 7, 19, 14, 45, 15, 38, 56, 50, 80, 56]):
+        ledger, entry, _ = reserve(committed, ledger, reservation_id=f"p{index}", repository="o/a",
+                                   lanes=["R"], now=NOW)
+        if entry is not None:
+            ledger = _settled(ledger, f"p{index}", calls, sealed=())
+    assert effective_document(committed, ledger, NOW)["batches"][-1]["calls_spent"] >= 400
+    _, entry, refusal = budget.reserve_audit(committed, ledger, reservation_id="audit-x", cases=46, now=NOW)
+    assert entry is None and "cannot fund the audit of 46 case(s)" in refusal
+    path = tmp_path / "provider_budget.json"
+    path.write_text(json.dumps(committed), encoding="utf-8")
+    check_budget(path)  # locally (offline use) the committed file still funds a call
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    with pytest.raises(BudgetExceededError, match="no ledger reservation"):
+        check_budget(path)
+    # a materialised reservation still funds a hosted call
+    granted_ledger, granted, _ = budget.reserve_audit(_e2_011(), empty_ledger(), reservation_id="a",
+                                                      cases=4, now=NOW)
+    path.write_text(json.dumps(local_budget_document(_e2_011(), granted_ledger, granted, NOW)), encoding="utf-8")
+    check_budget(path)
+
+
+def test_audit_spend_is_charged_to_the_rolling_window_but_never_sizes_a_cell() -> None:
+    ledger = empty_ledger()
+    for index in range(5):
+        ledger = _settled(ledger, f"r{index}", 10, sealed=("R",))
+    ledger = _audit_settle(ledger, "audit-a", 400, 4_000_000, 40, batch="e2-001")
+    entries = budget.ledger_entries(ledger, 2)
+    assert [run["id"] for run in budget.settled_runs(entries)] == [f"r{i}" for i in range(5)]
+    assert budget.measured_cell_cost(entries)["calls"] == 10  # the audit is not a lane-cell
+    charged = budget.runs_with_audit_spend(entries)
+    assert sum(run["calls"] for run in charged) == 450
+    assert sum(run.get("audit_calls", 0) for run in charged) == 400 and len(charged) == 5
+    document = effective_document(_committed(), ledger, NOW)
+    assert document["spent"]["calls"] == 600 + 400  # the programme totals see the audit
+    assert any("M9 audit" in line for line in budget.budget_summary_lines(document))
+
+
+def test_audit_reserve_then_settle_through_the_cli_measures_only_its_own_call_ledger(
+    remote: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    budget_path = tmp_path / "provider_budget.json"
+    committed = _e2_011(audit_reserve_calls=150, audit_reserve_tokens=6_000_000)
+    budget_path.write_text(json.dumps(committed), encoding="utf-8")
+    monkeypatch.setattr(budget, "code_fingerprint", lambda *a, **k: "code-1")
+    monkeypatch.setattr(budget, "_sealed_lanes", lambda *a: pytest.fail("an audit has no lanes to seal"))
+    monkeypatch.setattr(budget, "upstream_revision", lambda *a: pytest.fail("an audit has no upstream"))
+    spend, work = tmp_path / "spend", tmp_path / "work"
+    common = ["--remote", str(remote), "--budget", str(budget_path), "--repository", "m9-audit",
+              "--workdir", str(spend), "--id", "audit-5-6-a1", "--purpose", "audit"]
+    assert budget.main(["reserve", *common, "--cases", "3"]) == 0
+    local = json.loads(budget_path.read_text(encoding="utf-8"))
+    assert local["batches"][0]["calls_cap"] == 30 and local["batches"][0]["reservation"] == "audit-5-6-a1"
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    check_budget(budget_path)  # the materialised reservation funds the hosted audit
+    record_spend(budget_path, 2, 900)
+    (work / "seals" / "R" / "o__a").mkdir(parents=True)
+    (work / "seals" / "R" / "o__a" / "ledger.jsonl").write_text(_call("sealed-old", tokens=10**6) + "\n")
+    (work / "ledger.jsonl").write_text(_call("a1", tokens=500) + "\n" + _call("a2", tokens=400) + "\n")
+    # outside git, settle reads the committed caps from this file: keep its locally recorded spend
+    spent = json.loads(budget_path.read_text(encoding="utf-8"))["spent"]
+    budget_path.write_text(json.dumps({**committed, "spent": spent}), encoding="utf-8")
+    assert budget.main(["settle", *common, "--call-ledger", str(work / "ledger.jsonl")]) == 0
+    entries = budget.read_ledger(str(remote))["entries"]
+    settled = next(e for e in entries if e["kind"] == "settle")
+    assert (settled["calls"], settled["tokens"]) == (2, 900)  # never the sealed bundle's old calls
+    assert settled["purpose"] == "audit" and settled["cases"] == 3 and settled["outcomes"] == {}
+    assert settled["batch"] == "e2-011-audit-and-production" and settled["budget_refused"] is False
+
+
+def test_a_refused_audit_reservation_fails_the_step(remote: Path, tmp_path: Path) -> None:
+    budget_path = tmp_path / "provider_budget.json"
+    budget_path.write_text(json.dumps(_e2_011(calls_cap=5)), encoding="utf-8")
+    assert budget.main(["reserve", "--remote", str(remote), "--budget", str(budget_path),
+                        "--repository", "m9-audit", "--workdir", str(tmp_path / "s"), "--id", "audit-1",
+                        "--purpose", "audit", "--cases", "46"]) == 3
+    with pytest.raises(BudgetExceededError):
+        check_budget(budget_path)  # the local file holds no allowance
+
+
+def test_the_backfill_settles_a_past_rounds_artifact_ledger_once(
+    remote: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The ``audit-settle`` run request: no reservation, the round's artifact ledger, an explicit batch."""
+    budget_path = tmp_path / "provider_budget.json"
+    budget_path.write_text(json.dumps(_e2_011()), encoding="utf-8")
+    monkeypatch.setattr(budget, "code_fingerprint", lambda *a, **k: "code-1")
+    artifact = tmp_path / "m9-audit-spend"
+    artifact.mkdir()
+    (artifact / "ledger.jsonl").write_text("\n".join(_call(f"c{i}", tokens=40_000) for i in range(420)) + "\n")
+    args = ["settle", "--purpose", "audit", "--cases", "46", "--remote", str(remote), "--budget",
+            str(budget_path), "--id", "audit-43620199171-43641838293", "--repository", "m9-audit",
+            "--batch", "e2-011-audit-and-production", "--workdir", str(artifact),
+            "--call-ledger", str(artifact / "ledger.jsonl"), "--run-id", "43641838293"]
+    assert budget.main(args) == 0
+    assert budget.main(args) == 0  # a repeated request is a no-op
+    ledger = budget.read_ledger(str(remote))
+    settles = [e for e in ledger["entries"] if e["kind"] == "settle"]
+    assert len(settles) == 1 and settles[0]["calls"] == 420 and settles[0]["tokens"] == 16_800_000
+    batch = effective_document(_e2_011(), ledger, NOW)["batches"][-1]
+    assert batch["calls_spent"] == 420 and batch["hosted"]["audit_calls"] == 420
+    assert budget.measured_audit_case_cost(budget.ledger_entries(ledger, 2)) == (10.0, 365_218.0)

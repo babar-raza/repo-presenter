@@ -18,6 +18,8 @@ name: audit-seed
 #           never the manifest. scripts/run_m9_auditor.py runs the existing independent reviewer
 #           (qwen3-next via GPT_OSS_*, the R25/R31 budget gate) over every case and pushes the findings
 #           FROZEN to audit-findings/run-<id> (a bot branch, never main) before anything is decrypted.
+#           Its allowance is reserved from, and its measured spend settled to, the durable provider-spend
+#           ledger (core/llm/budget.py, BL-160), exactly as present.yml's runs are; never the committed file.
 #   score / write  the reusable audit-score.yml and acceptance-write.yml, on main, in acceptance-audit: the
 #           scorecard, then the attested acceptance records (whose branch also closes the batch).
 #
@@ -157,9 +159,6 @@ jobs:
       - name: Install
         run: python -m pip install -e .
 
-      - name: Record this attempt (bounded retries, run_m9_seeder.MAX_AUDIT_ATTEMPTS)
-        run: git push origin "HEAD:refs/heads/audit-attempt/run-${SEED}-${GITHUB_RUN_ID}"
-
       - name: Download this run's candidates + case index (never the manifest)
         if: ${{ needs.gate.outputs.seed_run_id == github.run_id }}
         uses: actions/download-artifact@v4
@@ -176,6 +175,30 @@ jobs:
           run-id: ${{ needs.gate.outputs.seed_run_id }}
           github-token: ${{ github.token }}
 
+      # BL-160 (2026-11-14, hosted round 43641838293 spent ~420 calls against a checkout's committed
+      # budget file that never sees hosted spend): the audit draws its allowance from the same durable
+      # ledger as production, sized from the measured per-case cost, before its first call. The local
+      # data/provider_budget.json is rewritten to hold exactly that reservation, as present.yml does;
+      # a refusal fails the job here, before the attempt below is recorded, so it burns no attempt.
+      - name: Name this audit's budget reservation
+        id: budget
+        if: always()
+        run: echo "id=audit-${SEED}-${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+
+      - name: Reserve the audit's provider budget from the durable ledger
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          cases=$(python -c "import json,sys; print(len(json.load(open(sys.argv[1]))))" "$RUNNER_TEMP/m9-audit/in/case_index.json")
+          python -m repo_presenter.core.llm.budget reserve --purpose audit --cases "$cases" \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --id "${{ steps.budget.outputs.id }}" --repository m9-audit \
+            --workdir "$RUNNER_TEMP/m9-audit/spend" \
+            --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}"
+
+      - name: Record this attempt (bounded retries, run_m9_seeder.MAX_AUDIT_ATTEMPTS)
+        run: git push origin "HEAD:refs/heads/audit-attempt/run-${SEED}-${GITHUB_RUN_ID}"
+
       - name: Blind audit with the existing independent reviewer
         env:
           GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
@@ -189,6 +212,22 @@ jobs:
             --candidates "$RUNNER_TEMP/m9-audit/in/candidates" \
             --work "$RUNNER_TEMP/m9-audit/work" \
             --out "$RUNNER_TEMP/m9-audit/findings.json"
+
+      # Success, failure or timeout: the audit's measured calls and tokens (its own call ledger only --
+      # the work directory also holds the audited seals' ledgers) go to the durable ledger, so the
+      # programme totals and the R43(1) stop rule see them.
+      - name: Record the audit's measured spend
+        if: always()
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          python -m repo_presenter.core.llm.budget settle --purpose audit \
+            --remote "https://github.com/${{ github.repository }}.git" \
+            --id "${{ steps.budget.outputs.id }}" --repository m9-audit \
+            --workdir "$RUNNER_TEMP/m9-audit/spend" \
+            --call-ledger "$RUNNER_TEMP/m9-audit/work/ledger.jsonl" \
+            --run-id "${{ github.run_id }}" --main-sha "${{ github.sha }}" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       - name: Upload the audit ledger (measured provider spend)
         if: ${{ !cancelled() }}

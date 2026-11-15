@@ -1718,3 +1718,39 @@ items:
     evidence: []
     next_action: "measure against every sealed Scope section before changing placement (checklist 13)"
     updated: "2026-11-14"
+
+  - id: BL-160
+    title: "The M9 audit spent from a checkout's committed budget file, not the durable ledger: ~828 calls against e2-011's 420 cap, invisible to the programme totals and the R43(1) stop rule"
+    type: defect
+    source: "hosted run 43641838293 (2026-11-14, seed batch 43620199171): production settled 408 calls (11 runs) of e2-011-audit-and-production through refs/repository-presenter-state/ledger/provider-spend; the audit job's run_job checked and incremented data/provider_budget.json in its own checkout (calls_spent 0 there), made about 420 calls over 46 cases until check_budget raised 'no open batch', and wrote none of it to the ledger; nothing reserved e2-011's audit allowance from production"
+    priority: P0
+    status: active
+    implementation_path: "core/llm/budget.py: reserve_audit (purpose 'audit', sized cases x measured_audit_case_cost, default 10 calls / 400k tokens per case, whole or refused), settle --purpose audit --call-ledger, optional committed audit_reserve_calls/audit_reserve_tokens held from production (production_remaining), audit spend in batch/programme totals and in the R43(1) window (runs_with_audit_spend) but never a production run, and check_budget refusing a hosted PRODUCT call without a materialised reservation; .github/workflows/audit-seed.yml audit job reserves (before its attempt marker) and settles (always()); scripts/run_request.py + run-request-execute.yml 'audit-settle' backfills a past round from its m9-audit-ledger artifact"
+    acceptance: "(1) tests: production never reserves an audit reserve; the audit reserves per-case and settles; the 2026-11-14 shape (ledger shows e2-011 spent, file says unspent) refuses the audit and refuses a hosted call against the committed file; the backfill settles once (tests/core/llm/test_budget_ledger.py, tests/test_run_request.py); (2) hosted: the next audit round's ledger shows a purpose=audit reserve before its first call and a settle with its measured calls; (3) the audit-settle backfill of 43641838293 appears on the ledger (BL-161)"
+    evidence: []
+    next_action: "supervisor merges audit-budget; then BL-161 (backfill) and the next hosted audit round shows (2)"
+    updated: "2026-11-14"
+
+  - id: BL-161
+    title: "Backfill the 2026-11-14 M9 audit round's spend (run 43641838293) onto the provider-spend ledger"
+    type: task
+    source: "BL-160 (the round's ~420 calls were never written to the ledger; its call ledger is only in artifact m9-audit-ledger-43620199171-43641838293, which the supervisor session's proxy cannot download)"
+    priority: P0
+    status: open
+    implementation_path: "after BL-160 merges: push run-requests/<id> holding only run-request.json {\"job\": \"audit-settle\", \"seed_run_id\": \"43620199171\", \"audit_run_id\": \"43641838293\", \"batch\": \"e2-011-audit-and-production\"} on current main; run-request-execute.yml's audit-settle job downloads the artifact and appends settle 'audit-43620199171-43641838293' (idempotent)"
+    acceptance: "`python -m repo_presenter.core.llm.budget status` shows the audit's calls/tokens charged to e2-011 (the 'M9 audit (BL-160)' line), with the settle entry's run id 43641838293 and cases 46"
+    evidence: []
+    next_action: "trigger after merge (artifact retention 90 days)"
+    updated: "2026-11-14"
+
+  - id: BL-162
+    title: "Owner: set audit_reserve_calls / audit_reserve_tokens on the next committed batch that funds an M9 audit"
+    type: task
+    source: "BL-160 (e2-011's basis named a ~150 call / 6M token audit allowance, but no field held it, so the hosted planner spent it on production); data/provider_budget.json batches are owner-only"
+    priority: P1
+    status: open
+    implementation_path: "data/provider_budget.json: the owner adds audit_reserve_calls/audit_reserve_tokens to the batch; core/llm/budget.py already holds that reserve from production and draws the audit from it first"
+    acceptance: "the next batch committed for an audit round carries the two fields and `budget status` prints its audit reserve"
+    evidence: []
+    next_action: "bring to the owner with the next batch request (sizing: cases x the measured per-case cost)"
+    updated: "2026-11-14"
