@@ -1,0 +1,85 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T04:24:25+00:00",
+   "classes": [
+    "BC-02|unresolved|id_is_contradicted_package"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43676127071",
+   "source_revision": "1d3875808ec4eef334683f505c9c3fb9076a3ea5",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T04:24:25+00:00",
+  "classes": {
+   "BC-02|unresolved|id_is_contradicted_package": {
+    "example": "install_command:dotnet is CONTRADICTED: package registry: distribution not found on nuget; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-02",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "id_is_contradicted_package",
+    "upstream": "package"
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-02",
+    "message": "install_command:dotnet is CONTRADICTED: package registry: distribution not found on nuget; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-02",
+    "section_id": "",
+    "signature": "BC-02|unresolved|id_is_contradicted_package",
+    "source": "validation",
+    "sub_rule": "id_is_contradicted_package",
+    "upstream": "package"
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+  "run_id": "43676127071",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43676127071",
+  "schema_version": 1,
+  "source_revision": "1d3875808ec4eef334683f505c9c3fb9076a3ea5",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-gis-foss/Aspose.GIS.FOSS-for-.Net",
+ "schema_version": 1
+}
