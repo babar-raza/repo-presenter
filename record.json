@@ -1,0 +1,107 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T03:34:37+00:00",
+   "classes": [
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "43672439965",
+   "source_revision": "4228a88533afcbde54d40c5ac6d8253a226f29be",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T03:34:37+00:00",
+  "classes": {
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "These limitations don't apply to [full-featured Aspose.OMR \u2014 Enterprise Edition](https://products.aspose.com/omr/). It adds advanced recognition algorithms, batch processing, and export to multiple formats including PDF, DOCX, and Excel.",
+    "findings": 2,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "F01",
+    "message": "It adds advanced recognition algorithms, batch processing, and export to multiple formats including PDF, DOCX, and Excel.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.OMR \u2014 Enterprise Edition](https://products.aspose.com/omr/). It adds advanced recognition algorithms, batch processing, and export to multiple formats including PDF, DOCX, and Excel.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "ChildOverflowException is declared but unused by the library's own code.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- `ChildOverflowException` is declared but unused by the library's own code.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   }
+  ],
+  "repository": "aspose-omr-foss/Aspose.OMR-FOSS-for-Python",
+  "run_id": "43672439965",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43672439965",
+  "schema_version": 1,
+  "source_revision": "4228a88533afcbde54d40c5ac6d8253a226f29be",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-omr-foss/Aspose.OMR-FOSS-for-Python",
+ "schema_version": 1
+}
