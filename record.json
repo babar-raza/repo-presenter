@@ -13,11 +13,25 @@
    "run_id": "43672443603",
    "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-15T14:11:50+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-14|inherited_unit|the_readme_claims_fbx",
+    "claim_contradiction|inherited_unit|stub_format"
+   ],
+   "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+   "findings": 5,
+   "outcome": "failure",
+   "run_id": "43722640931",
+   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T03:51:20+00:00",
+  "at": "2026-11-15T14:11:50+00:00",
   "classes": {
    "BC-05|inherited_unit|superseded_unstated": {
     "example": "inherited_unit:050.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('| Created by lexchou on 12/14/2016.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
@@ -27,7 +41,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "BC-05",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -49,7 +63,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "BC-14",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -71,7 +85,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "claim_contradiction",
-    "scope": "cd86cddb121296bc6bb299f6ff0ab4155cbe0b3615022bffe524e7b5dfb2245c",
+    "scope": "62c7fd334dbefe036098a00e7e9bc98ba9868ae8f2a5b70ee928e2c5fb7b0123",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -85,7 +99,7 @@
     "upstream": "source_stub"
    }
   },
-  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -172,7 +186,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -180,16 +194,8 @@
     "facts_defects": [],
     "label": "BC-05",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:050.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documentation_reso",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:050.table: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into api_reference, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, documentatio",
     "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
     "stage": "S4"
    },
    {
@@ -199,19 +205,11 @@
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats; revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .fbx output, but format:output.fbx is reachable only through a stub",
     "section_id": null,
     "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
-  "run_id": "43672443603",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43672443603",
+  "run_id": "43722640931",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43722640931",
   "schema_version": 1,
   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
