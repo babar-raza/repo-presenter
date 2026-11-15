@@ -2,187 +2,167 @@
   "audience": {
     "fact_ids": [
       "identity:repository",
+      "package:name",
       "identity:ecosystem",
       "identity:family",
-      "identity:platform",
-      "package:name",
-      "package:version",
-      "license:spdx",
-      "license:file",
-      "build_test_asset:examples",
-      "example:001"
+      "identity:platform"
     ],
-    "text": "Developers needing metadata-safe PSD/PSB inspection and limited structural editing in .NET without rendering or full Photoshop feature support."
+    "text": "Developers needing metadata-safe structural inspection and limited non-rendering edits of PSD/PSB files from .NET code."
   },
   "capabilities": [
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
         "public_symbol:aspose.psd.streamcontainer"
       ],
-      "text": "Load PSD and supported PSB files from file paths or streams using the Image.Load API.",
+      "text": "Load PSD and supported PSB files from file paths or stream sources.",
       "title": "Load PSD/PSB from file or stream"
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
         "public_symbol:aspose.psd.rectangle",
         "public_symbol:aspose.psd.size"
       ],
-      "text": "Read document properties including Width, Height, ChannelsCount, BitsPerChannel, ColorMode, Version, Compression, Layers, and ImageResources.",
+      "text": "Read document properties including width, height, channels, bits per channel, color mode, version, size, bounds, compression, image resources, and flatten status.",
       "title": "Read document metadata"
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.fileformats",
         "public_symbol:aspose.psd.rectanglef",
         "public_symbol:aspose.psd.point"
       ],
-      "text": "Read and modify layer properties such as Name, Bounds, IsVisible, Opacity, Clipping, BlendModeKey, and geometry coordinates.",
-      "title": "Read and edit layer metadata"
+      "text": "Read and modify layer name, visibility, opacity, clipping, blend mode key, and geometry via coordinate properties.",
+      "title": "Read and modify layer metadata"
     },
     {
       "fact_ids": [
-        "example:001",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "text": "Preserve unsupported file sections as raw bytes during save to minimize unintended changes.",
+      "title": "Preserve unsupported sections"
+    },
+    {
+      "fact_ids": [
         "build_test_asset:build-command",
         "build_test_asset:test-command",
         "build_test_asset:tests"
       ],
-      "text": "Save updated PSD/PSB files without rendering pixels, preserving unsupported sections as raw bytes where possible.",
-      "title": "Save without rendering"
+      "text": "Build and run tests using the dotnet CLI with the provided solution file.",
+      "title": "Build and test with dotnet CLI"
     },
     {
       "fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "install_command:dotnet"
+        "install_command:dotnet",
+        "package:name"
       ],
-      "text": "Build and test the library using standard .NET CLI commands on the provided solution file.",
-      "title": "Build and test with .NET CLI"
+      "text": "Install the Aspose.PSD.FOSS package using the dotnet CLI command.",
+      "title": "Install via dotnet add package"
     }
   ],
   "limitations": [
     {
       "fact_ids": [
-        "identity:repository",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.imageloader"
       ],
       "text": "Does not render PSD/PSB content or support pixel editing."
     },
     {
       "fact_ids": [
-        "identity:repository",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.imageloader"
       ],
       "text": "Does not export to raster formats such as PNG or JPEG."
     },
     {
       "fact_ids": [
-        "identity:repository",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.fileformats"
       ],
-      "text": "Does not provide semantic recognition or full editing of image resources or tagged blocks."
+      "text": "Does not interpret full Photoshop feature set semantically."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats"
+      ],
+      "text": "Image resources are exposed only through lightweight unknown-only summaries."
     }
   ],
   "problems_solved": [
     {
       "fact_ids": [
-        "example:001",
-        "public_symbol:aspose.psd.fileformats",
-        "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.point",
-        "public_symbol:aspose.psd.size"
-      ],
-      "text": "Enables reading and editing of supported layer metadata such as name, visibility, opacity, blend mode, clipping, and geometry without rendering pixels."
-    },
-    {
-      "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
         "public_symbol:aspose.psd.rectangle",
-        "public_symbol:aspose.psd.streamcontainer"
+        "public_symbol:aspose.psd.size"
       ],
-      "text": "Provides a compact API to inspect document properties like dimensions, color mode, version, compression, layers, and image resources."
+      "text": "Enables reading document properties such as dimensions, color mode, and compression from PSD/PSB files without rendering."
     },
     {
       "fact_ids": [
-        "identity:repository",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.image"
       ],
-      "text": "Preserves unsupported file sections as raw bytes when saving, ensuring minimal data loss during metadata edits."
+      "text": "Supports enumeration and modification of layer metadata including name, visibility, opacity, and geometry."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "text": "Preserves unsupported file sections as raw bytes during save, minimizing unintended side effects."
     }
   ],
   "product_summary": {
     "fact_ids": [
       "identity:repository",
+      "package:name",
       "identity:ecosystem",
       "identity:family",
-      "identity:platform",
-      "package:name",
-      "package:version",
-      "license:spdx",
-      "license:file"
+      "identity:platform"
     ],
-    "text": "Aspose.PSD.FOSS is a free open-source .NET library for loading, inspecting, editing a small subset of PSD/PSB metadata, and saving the file back without rendering."
+    "text": "Aspose.PSD.FOSS is a free open-source .NET library for inspecting and editing a limited subset of PSD/PSB metadata without rendering pixels."
   },
   "uncertainties": [
-    "Whether the package is published to NuGet or only available via local build.",
+    "Whether the package is published to NuGet or only built locally.",
     "Exact set of supported image resource types and their metadata exposure.",
-    "Whether PSB support is complete or partial for large documents.",
-    "How raw-byte preservation behaves for complex or nested unsupported structures.",
-    "Whether blend mode keys beyond those in the example are supported.",
-    "Whether layer mask and channel data are exposed beyond basic metadata.",
-    "Whether the library supports reading or writing text layers.",
-    "Whether adjustment layers or smart filters are supported."
+    "Whether all layer types (e.g., text, adjustment, smart object) are fully supported.",
+    "Behavior when saving files with unsupported layer effects or blending modes.",
+    "Whether PSB files larger than typical PSDs are fully supported.",
+    "How coordinate transformations are handled for layer geometry edits.",
+    "Whether resource IDs or tagged blocks are exposed beyond raw byte preservation.",
+    "Whether the library handles multi-page PSB or large-document edge cases."
   ],
   "workflows": [
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
-        "public_symbol:aspose.psd.fileformats"
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.size"
       ],
       "name": "Load and inspect PSD/PSB",
-      "text": "Load a PSD/PSB file from path or stream and read document and layer metadata using the Aspose.PSD-style API."
+      "text": "Load a PSD or PSB file from a path or stream and read document-level metadata."
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.fileformats",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.point"
+        "public_symbol:aspose.psd.image"
       ],
-      "name": "Edit layer properties",
-      "text": "Modify supported layer properties including name, visibility, opacity, blend mode, clipping, and geometry coordinates."
+      "name": "Enumerate layers",
+      "text": "Iterate over layers and read their basic properties such as name, bounds, visibility, and opacity."
     },
     {
       "fact_ids": [
-        "example:001",
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.rectanglef"
+      ],
+      "name": "Edit layer metadata",
+      "text": "Modify supported layer properties including name, visibility, opacity, clipping, blend mode, and geometry."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.streamcontainer",
+        "build_test_asset:build-command"
       ],
       "name": "Save without rendering",
-      "text": "Save the updated PSD/PSB file back to disk or stream without rendering pixels, preserving unsupported sections as raw bytes."
+      "text": "Save the updated file back to disk or stream without rendering pixels, preserving unsupported sections."
     }
   ]
 }

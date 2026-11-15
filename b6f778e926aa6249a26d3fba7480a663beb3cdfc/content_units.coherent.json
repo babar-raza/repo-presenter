@@ -2,294 +2,53 @@
   "coherence": {
     "applied": true,
     "revised": [
-      "opening/opening",
-      "key_capabilities/capability:1",
-      "key_capabilities/capability:2",
-      "key_capabilities/capability:3",
-      "key_capabilities/capability:4",
-      "api_reference/intro",
       "enterprise_relationship/context"
     ]
   },
   "omitted": [
     {
-      "fact_id": "identity:ecosystem",
-      "reason": "Ecosystem identity is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "Family identity is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "Platform identity is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
       "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Knowledge refresh metadata is not used in the opening prose.",
+      "reason": "provenance metadata, not a capability or fact about what the product does",
       "section": "opening"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "Repository identity is not used in the opening prose.",
+      "reason": "provenance metadata, not a capability or fact about what the product does",
       "section": "opening"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "Revision identity is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "Package name is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "Published version is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:target_framework",
-      "reason": "Target framework is not used in the opening prose.",
+      "reason": "provenance metadata, not a capability or fact about what the product does",
       "section": "opening"
     },
     {
       "fact_id": "package:version",
-      "reason": "Version is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "license:spdx",
-      "reason": "License SPDX identifier is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "license:file",
-      "reason": "License file name is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "build_test_asset:examples",
-      "reason": "Examples directory path is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.psd.fileformats",
-      "reason": "Public symbol namespace is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.psd.rectanglef",
-      "reason": "Public symbol namespace is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.psd.point",
-      "reason": "Public symbol namespace is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.psd.size",
-      "reason": "Public symbol namespace is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.psd.rectangle",
-      "reason": "Public symbol namespace is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.psd.streamcontainer",
-      "reason": "Public symbol namespace is not used in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "build_test_asset:tests",
-      "reason": "Test directory path is not used in the opening prose.",
+      "reason": "provenance metadata, not a capability or fact about what the product does",
       "section": "opening"
     },
     {
       "fact_id": "build_test_asset:build-command",
-      "reason": "Build command is not used in the opening prose.",
+      "reason": "build/test asset, not part of the opening capability description",
       "section": "opening"
     },
     {
       "fact_id": "build_test_asset:test-command",
-      "reason": "Test command is not used in the opening prose.",
+      "reason": "build/test asset, not part of the opening capability description",
+      "section": "opening"
+    },
+    {
+      "fact_id": "build_test_asset:tests",
+      "reason": "build/test asset, not part of the opening capability description",
       "section": "opening"
     },
     {
       "fact_id": "install_command:dotnet",
-      "reason": "Install command is not used in the opening prose.",
+      "reason": "installation detail, not part of the opening capability description",
       "section": "opening"
     },
     {
-      "fact_id": "inherited_unit:012.list",
-      "reason": "Inherited unit content is preserved separately by the renderer and not repeated in the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:010.list",
-      "reason": "The list items are already covered in the prose description of the example's actions; listing them separately would duplicate content.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "inherited_unit:025.code_block",
-      "reason": "The code block is rendered separately by the renderer; the lead-in unit must not repeat it.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "inherited_unit:040.paragraph",
-      "reason": "The default save path behavior is not mentioned in the example's actions or the renderer's lead-in context; it applies to other examples not in this slot.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "Ecosystem identity supports the product but is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "Family identity supports the product but is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "Platform identity supports the product but is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Knowledge refresh provenance is not relevant to describing what the example does.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Repository identity is not relevant to describing what the example does.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Revision identity is not relevant to describing what the example does.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "Package name is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "Published version is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "package:target_framework",
-      "reason": "Target framework is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "Package version is not needed in a lead-in sentence describing the example's purpose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "inherited_unit:042.paragraph",
-      "reason": "This inherited unit is a documentation navigation aid, not a product capability, and belongs in a separate section about documentation.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:043.list",
-      "reason": "This inherited unit is a list of documentation file paths, not a product capability, and belongs in a separate section about documentation.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:035.paragraph",
-      "reason": "The sample/workflow matrix table is rendered by the renderer as a table block; describing its content in prose duplicates the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:037.paragraph",
-      "reason": "The example commands are rendered verbatim by the renderer; describing them in prose duplicates the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:034.paragraph",
-      "reason": "Runtime output parity is not a build or test requirement; it is a guidance note about expected differences between FOSS and commercial libraries.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:036.table",
-      "reason": "The sample/workflow matrix is rendered by the renderer as a table block; describing its content in prose duplicates the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:038.code_block",
-      "reason": "The example commands are rendered verbatim by the renderer; describing them in prose duplicates the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:039.paragraph",
-      "reason": "The fallback behavior for missing input files is not a build or test requirement; it is a usage note for sample execution.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "build_test_asset:examples",
-      "reason": "The samples/ folder is already referenced by inherited_unit:030.paragraph and inherited_unit:031.list; stating it again adds no new information.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "The product family is not relevant to toolchain or build/test requirements.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "This is provenance metadata, not a requirement for building or testing.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "The repository name is not a build or test requirement.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "The revision hash is not a build or test requirement.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "The package name is already used in the summary sentence; repeating it adds no new information.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "The published version is not a build or test requirement.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "The package version is not a build or test requirement.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:020.code_block",
-      "reason": "The pack command is rendered verbatim by the renderer; describing it in prose duplicates the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:021.paragraph",
-      "reason": "The output path for the built package is rendered by the renderer; describing it in prose duplicates the renderer's output.",
-      "section": "development_testing"
-    },
-    {
-      "fact_id": "inherited_unit:049.paragraph",
-      "reason": "The license (MIT) does not describe commercial feature additions and is not relevant to the commercial product's capabilities.",
+      "fact_id": "inherited_unit:027.paragraph",
+      "reason": "This inherited unit describes the FOSS package's scope, not what the commercial product adds; it is not cited in the context sentence for the commercial offering.",
       "section": "enterprise_relationship"
     }
   ],
@@ -297,194 +56,170 @@
   "units": [
     {
       "fact_ids": [
-        "example:001",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:published_version",
+        "package:target_framework",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader"
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.streamcontainer",
+        "public_symbol:aspose.psd.rectangle",
+        "public_symbol:aspose.psd.size",
+        "public_symbol:aspose.psd.rectanglef",
+        "public_symbol:aspose.psd.point"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "It reads and writes PSD and PSB files for metadata-safe structural inspection and limited non-rendering edits. It exposes image dimensions through Image.Width and Image.Height, and layer information through image.Layers. It supports mutating layer properties such as Name, IsVisible, Left, Top, Right, Bottom, Opacity, and BlendModeKey."
+      "text": "Aspose.PSD FOSS for .NET reads and writes PSD files using the Aspose.PSD.Image class. It supports the netstandard2.1 and net10.0 target frameworks and exposes core types including Aspose.PSD.FileFormats, Aspose.PSD.StreamContainer, Aspose.PSD.Rectangle, Aspose.PSD.Size, Aspose.PSD.RectangleF, and Aspose.PSD.Point. The product provides methods such as Image.Load, Image.Save, Image.Dispose, and properties like Image.Width, Image.Height, and Image.Bounds."
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
         "public_symbol:aspose.psd.streamcontainer"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It loads PSD and PSB files from file paths or streams using Aspose.PSD.Image.Load and Aspose.PSD.ImageLoader.Load, with Aspose.PSD.StreamContainer providing stream access."
+      "text": "It loads PSD and PSB files from file paths or streams using the Aspose.PSD.Image.Load method and accepts Aspose.PSD.StreamContainer for stream-based input."
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
         "public_symbol:aspose.psd.rectangle",
         "public_symbol:aspose.psd.size"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It reads document metadata including Width, Height, ChannelsCount, BitsPerChannel, ColorMode, Version, Compression, and ImageResources, and exposes Size and Bounds."
+      "text": "It reads document metadata including dimensions via Image.Width and Image.Height, color mode, compression, bounds via Image.Bounds, and layer count from the file header."
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.fileformats",
         "public_symbol:aspose.psd.point",
         "public_symbol:aspose.psd.rectanglef"
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It reads and edits layer metadata such as Name, Bounds, BlendModeKey, IsVisible, and Opacity, and updates layer geometry using coordinate properties like Left, Top, Right, and Bottom."
+      "text": "It enumerates layers via Aspose.PSD.FileFormats, reads layer metadata such as Name, Bounds, Width, Height, Top, Left, Bottom, Right, IsVisible, Opacity, Clipping, and BlendModeKey, and modifies supported properties including geometry using Aspose.PSD.RectangleF and Aspose.PSD.Point."
     },
     {
       "fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "example:001"
+        "public_symbol:aspose.psd.streamcontainer"
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It saves PSD and PSB files back to disk without rendering pixels, preserving the original structure and metadata."
+      "text": "It preserves unsupported sections as raw bytes by maintaining Aspose.PSD.StreamContainer content during save operations where direct parsing is not implemented."
     },
     {
       "fact_ids": [
         "build_test_asset:build-command",
         "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "install_command:dotnet"
+        "build_test_asset:tests"
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It builds and tests using the .NET CLI with dotnet build Aspose.PSD-FOSS-for-.NET.sln and dotnet test Aspose.PSD-FOSS-for-.NET.sln, and installs via dotnet add package Aspose.PSD.FOSS."
+      "text": "It builds and tests using the dotnet CLI with standard commands against the solution and test project."
     },
     {
       "fact_ids": [
-        "example:001"
+        "install_command:dotnet",
+        "package:name"
       ],
-      "section": "quick_start",
-      "slot": "lead_in",
-      "text": "This example loads a PSD file, inspects its structural metadata and layer properties, updates the first layer's name, visibility, opacity, blend mode, and geometry, then saves the modified file."
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It installs via dotnet add package Aspose.PSD.FOSS targeting netstandard2.1 and net10.0."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.psd",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
-        "public_symbol:aspose.psd.streamcontainer",
-        "public_symbol:aspose.psd.rectangle",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.point",
-        "public_symbol:aspose.psd.size"
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "The verified public surface includes Aspose.PSD.Image for loading, manipulating, and saving PSD files, Aspose.PSD.ImageLoader for custom image loading, and supporting types such as Aspose.PSD.StreamContainer, Aspose.PSD.Rectangle, Aspose.PSD.RectangleF, Aspose.PSD.Point, and Aspose.PSD.Size for geometric and stream operations."
+      "text": "Aspose.PSD FOSS for .NET provides the Aspose.PSD class as the main entry point, which exposes core image operations through the Aspose.PSD.Image class. The Aspose.PSD.Image class serves as the base for working with image data, while supporting formats and utilities are provided by Aspose.PSD.FileFormats, Aspose.PSD.ImageLoader, and supporting types."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.psd",
-        "public_symbol:aspose.psd.fileformats",
-        "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
-        "public_symbol:aspose.psd.point",
-        "public_symbol:aspose.psd.rectangle",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.size",
-        "public_symbol:aspose.psd.streamcontainer"
+        "public_symbol:aspose.psd"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.psd",
-      "text": "The Aspose.PSD namespace provides core types including Aspose.PSD.Image for handling PSD image data with methods such as Load, Save, and Dispose, and properties such as Width, Height, and Bounds; Aspose.PSD.ImageLoader for custom image loading; Aspose.PSD.StreamContainer for stream-based I/O; and geometric types Aspose.PSD.Rectangle, Aspose.PSD.RectangleF, Aspose.PSD.Point, and Aspose.PSD.Size for coordinate and dimension operations."
+      "text": "The Aspose.PSD class is the root namespace for the Aspose.PSD FOSS for .NET library and provides access to core image handling capabilities."
     },
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:003.paragraph",
-        "inherited_unit:027.paragraph",
-        "license:spdx",
-        "package:name",
-        "package:published_version",
-        "package:target_framework",
-        "package:version",
-        "inherited_unit:007.paragraph"
+        "public_symbol:aspose.psd.image"
       ],
-      "section": "scope_limitations",
-      "slot": "scope",
-      "text": "Aspose.PSD FOSS for .NET reads and writes PSD and PSB files for metadata-safe structural inspection and limited non-rendering edits."
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.image",
+      "text": "The Aspose.PSD.Image class provides core image operations including loading from streams, saving to files, and accessing image dimensions through Width and Height properties, as well as managing resources with the Bounds and Dispose members."
     },
     {
       "fact_ids": [
-        "build_test_asset:tests",
-        "identity:repository",
-        "inherited_unit:003.paragraph",
-        "inherited_unit:008.list",
-        "inherited_unit:027.paragraph",
-        "inherited_unit:047.list",
-        "license:spdx",
-        "package:name",
-        "package:version"
+        "public_symbol:aspose.psd.fileformats"
       ],
-      "section": "scope_limitations",
-      "slot": "limitation:1",
-      "text": "It does not render PSD/PSB content, edit pixels or export raster images, interpret the full Photoshop feature set semantically, or replace the commercial Aspose.PSD API surface one-to-one."
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.fileformats",
+      "text": "The Aspose.PSD.FileFormats namespace contains types that represent various file formats supported by Aspose.PSD FOSS for .NET, including format-specific image implementations."
     },
     {
       "fact_ids": [
-        "build_test_asset:tests",
-        "identity:repository",
-        "inherited_unit:003.paragraph",
-        "inherited_unit:008.list",
-        "inherited_unit:027.paragraph",
-        "inherited_unit:047.list",
-        "license:spdx",
-        "package:name",
-        "package:version"
+        "public_symbol:aspose.psd.imageloader"
       ],
-      "section": "scope_limitations",
-      "slot": "limitation:2",
-      "text": "Rendering, pixel editing, export to PNG, JPEG, or other raster formats, full image resource editing, semantic recognition of specific image resource kinds, full tagged block editing, and text, vector, effects, smart filters, and adjustment rendering are not implemented."
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.imageloader",
+      "text": "The Aspose.PSD.ImageLoader class provides the Load method for loading images from streams."
     },
     {
       "fact_ids": [
-        "build_test_asset:tests",
-        "identity:repository",
-        "inherited_unit:003.paragraph",
-        "inherited_unit:008.list",
-        "inherited_unit:027.paragraph",
-        "inherited_unit:047.list",
-        "license:spdx",
-        "package:name",
-        "package:version"
+        "public_symbol:aspose.psd.point"
       ],
-      "section": "scope_limitations",
-      "slot": "limitation:3",
-      "text": "This library is not a rendering engine, a raster editor, or an open-source replacement for the full commercial Aspose.PSD product."
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.point",
+      "text": "The Aspose.PSD.Point structure represents a location in a two-dimensional coordinate system with X and Y integer properties, and includes methods such as Equals, GetHashCode, and ToString."
     },
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:platform",
-        "inherited_unit:016.list",
-        "package:target_framework",
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "inherited_unit:030.paragraph",
-        "inherited_unit:031.list",
-        "inherited_unit:032.paragraph",
-        "inherited_unit:033.paragraph"
+        "public_symbol:aspose.psd.rectangle"
       ],
-      "section": "development_testing",
-      "slot": "summary",
-      "text": "Aspose.PSD FOSS for .NET targets .NET Standard 2.1 and .NET 10.0, requiring the .NET 10.0 SDK or later. The solution builds with dotnet build Aspose.PSD-FOSS-for-.NET.sln and tests run from src/Aspose.PSD.FOSS.Test/ using dotnet test Aspose.PSD-FOSS-for-.NET.sln. Runnable sample projects reside in the samples/ folder, including Aspose.PSD.FOSS.Samples.Basic, Aspose.PSD.FOSS.Samples.Layers, Aspose.PSD.FOSS.Samples.StructuralEditing, Aspose.PSD.FOSS.Samples.Streams, Aspose.PSD.NuGet.Samples.Basic, Aspose.PSD.NuGet.Samples.Layers, Aspose.PSD.NuGet.Samples.StructuralEditing, and Aspose.PSD.NuGet.Samples.Streams. Each FOSS sample has a corresponding NuGet sample with identical Program.cs to validate workflow parity across the FOSS and commercial libraries."
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.rectangle",
+      "text": "The Aspose.PSD.Rectangle structure defines a rectangle with integer coordinates and provides properties such as Width, Height, Left, Top, Right, Bottom, and methods including Contains, Intersect, Union, and Normalize."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.rectanglef"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.rectanglef",
+      "text": "The Aspose.PSD.RectangleF structure defines a rectangle with floating-point coordinates and provides properties such as Width, Height, Left, Top, Right, Bottom, and methods including Equals and GetHashCode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.size"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.size",
+      "text": "The Aspose.PSD.Size structure represents the dimensions of a rectangle with Width and Height integer properties, and includes methods such as Equals, GetHashCode, and ToString."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.streamcontainer",
+      "text": "The Aspose.PSD.StreamContainer class provides a base abstraction for stream-based data access used during image loading and saving operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.buildversioninfo"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.psd.buildversioninfo",
+      "text": "The Aspose.PSD.BuildVersionInfo class provides version information about the Aspose.PSD FOSS for .NET library build."
     },
     {
       "fact_ids": [

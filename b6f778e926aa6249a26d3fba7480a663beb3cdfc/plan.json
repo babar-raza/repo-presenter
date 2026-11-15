@@ -3,26 +3,73 @@
   "api_hubs": [
     {
       "fact_ids": [
-        "public_symbol:aspose.psd",
-        "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
-        "public_symbol:aspose.psd.streamcontainer",
-        "public_symbol:aspose.psd.fileformats",
-        "public_symbol:aspose.psd.rectangle",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.point",
-        "public_symbol:aspose.psd.size"
+        "public_symbol:aspose.psd"
       ],
       "symbol_fact_id": "public_symbol:aspose.psd"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.image"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.image"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.fileformats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.imageloader"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.imageloader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.point"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.point"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.rectangle"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.rectangle"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.rectanglef"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.rectanglef"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.size"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.size"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.streamcontainer"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.psd.buildversioninfo"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.psd.buildversioninfo"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
       "Load PSD/PSB from file or stream",
       "Read document metadata",
-      "Read and edit layer metadata",
-      "Save without rendering",
-      "Build and test with .NET CLI"
+      "Read and modify layer metadata",
+      "Preserve unsupported sections",
+      "Build and test with dotnet CLI",
+      "Install via dotnet add package"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -30,102 +77,97 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
         "public_symbol:aspose.psd.streamcontainer"
       ],
       "shared_fact_ids": [
-        "example:001",
-        "public_symbol:aspose.psd.image"
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.streamcontainer"
       ],
       "title": "Load PSD/PSB from file or stream"
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
         "public_symbol:aspose.psd.rectangle",
         "public_symbol:aspose.psd.size"
       ],
       "shared_fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image"
       ],
       "title": "Read document metadata"
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.fileformats",
         "public_symbol:aspose.psd.rectanglef",
         "public_symbol:aspose.psd.point"
       ],
-      "shared_fact_ids": [
-        "example:001"
-      ],
-      "title": "Read and edit layer metadata"
+      "shared_fact_ids": [],
+      "title": "Read and modify layer metadata"
     },
     {
       "fact_ids": [
-        "example:001",
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.streamcontainer"
       ],
       "shared_fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "example:001"
+        "public_symbol:aspose.psd.streamcontainer"
       ],
-      "title": "Save without rendering"
+      "title": "Preserve unsupported sections"
     },
     {
       "fact_ids": [
         "build_test_asset:build-command",
         "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "install_command:dotnet"
-      ],
-      "shared_fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
         "build_test_asset:tests"
       ],
-      "title": "Build and test with .NET CLI"
+      "shared_fact_ids": [],
+      "title": "Build and test with dotnet CLI"
+    },
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name"
+      ],
+      "shared_fact_ids": [],
+      "title": "Install via dotnet add package"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "license:spdx",
-        "link_target:product.enterprise"
+        "inherited_unit:025.code_block"
       ],
-      "section_id": "enterprise_relationship",
-      "text": "The MIT license statement is preserved in the enterprise_relationship section to clarify the FOSS license in relation to the enterprise product."
+      "section_id": "quick_start",
+      "text": "The example code block is not verified as a runnable example; the dispositions list it as UNRESOLVED, so the Quick Start section is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:029.heading",
+        "inherited_unit:030.paragraph",
+        "inherited_unit:031.list",
+        "inherited_unit:032.paragraph",
+        "inherited_unit:033.paragraph",
+        "inherited_unit:034.paragraph",
+        "inherited_unit:035.paragraph"
+      ],
+      "section_id": "additional_examples",
+      "text": "No additional verified examples exist; the examples field lists zero verified IDs and one UNRESOLVED ID, so the Additional Examples section is omitted."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:041.heading",
+        "inherited_unit:042.paragraph",
+        "inherited_unit:043.list"
+      ],
+      "section_id": "documentation_resources",
+      "text": "The documentation links are superseded by the 'Documentation & Resources' section and are not verified as distinct targets, so the section is omitted."
     }
   ],
   "flagship_example_id": null,
   "links": [],
-  "material_limitations": [
-    {
-      "fact_ids": [
-        "identity:repository",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "build_test_asset:tests"
-      ],
-      "unit_ids": [
-        "inherited_unit:003.paragraph",
-        "inherited_unit:008.list",
-        "inherited_unit:027.paragraph",
-        "inherited_unit:047.list"
-      ]
-    }
-  ],
-  "quick_start_example_id": "example:001",
+  "material_limitations": [],
+  "quick_start_example_id": null,
   "second_quick_start_example_id": null,
   "sections": [
     {
@@ -174,8 +216,8 @@
       "section_id": "dependencies"
     },
     {
-      "include": true,
-      "reason": "its condition holds",
+      "include": false,
+      "reason": "its condition does not hold",
       "section_id": "quick_start"
     },
     {

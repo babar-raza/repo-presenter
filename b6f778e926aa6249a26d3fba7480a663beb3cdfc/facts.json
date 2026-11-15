@@ -934,20 +934,20 @@
     },
     {
       "attributes": null,
-      "confidence": 1.0,
+      "confidence": 0.5,
       "evidence": [
         {
           "detail": "lines 74-110; csharp fence; unit inherited_unit:025.code_block",
           "path": "README.md"
         },
         {
-          "detail": "example 1: EXECUTED; compiled against Aspose.PSD.FOSS.csproj; SDK 10.0.403",
+          "detail": "example 1: NEEDS_INPUT; compiled against Aspose.PSD.FOSS.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
           "path": "receipts.json"
         }
       ],
       "id": "example:001",
       "kind": "example",
-      "polarity": "SUPPORTED",
+      "polarity": "UNRESOLVED",
       "value": "using Aspose.PSD;\nusing Aspose.PSD.FileFormats.Core.Blending;\nusing Aspose.PSD.FileFormats.Psd;\nusing Aspose.PSD.FileFormats.Psd.Layers;\n\nusing var image = (PsdImage)Image.Load(\"input.psd\");\n\nConsole.WriteLine(image.Width);\nConsole.WriteLine(image.Height);\nConsole.WriteLine(image.ChannelsCount);\nConsole.WriteLine(image.BitsPerChannel);\nConsole.WriteLine(image.ColorMode);\nConsole.WriteLine(image.Version);\nConsole.WriteLine(image.Compression);\nConsole.WriteLine(image.Layers.Length);\nConsole.WriteLine(image.ImageResources.Length);\n\nforeach (Layer layer in image.Layers)\n{\n    Console.WriteLine(layer.Name);\n    Console.WriteLine(layer.Bounds);\n    Console.WriteLine(layer.BlendModeKey);\n    Console.WriteLine(layer.IsVisible);\n    Console.WriteLine(layer.Opacity);\n}\n\nimage.Layers[0].Name = \"Updated layer\";\nimage.Layers[0].IsVisible = false;\nimage.Layers[0].Left = 10;\nimage.Layers[0].Top = 20;\nimage.Layers[0].Right = 110;\nimage.Layers[0].Bottom = 120;\nimage.Layers[0].Opacity = 128;\nimage.Layers[0].BlendModeKey = BlendMode.Multiply;\nimage.Save(\"output.psd\");\n"
     },
     {
@@ -3010,7 +3010,7 @@
     },
     {
       "attributes": {
-        "source_checkout_unverified": "the checkout root holds no manifest for the build to start from"
+        "source_checkout_unverified": "no example executed against a build of this checkout that succeeded"
       },
       "confidence": 1.0,
       "evidence": [
@@ -4080,6 +4080,38 @@
       "kind": "package_trait",
       "polarity": "SUPPORTED",
       "value": "pure managed .NET code: no P/Invoke declarations"
+    },
+    {
+      "attributes": {
+        "aspect": "sample_reference",
+        "package": "Aspose.PSD.FOSS",
+        "package_reference": "0",
+        "project_reference": "4",
+        "samples": "4"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "samples/Aspose.PSD.FOSS.Samples.Basic/Aspose.PSD.FOSS.Samples.Basic.csproj"
+        },
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "samples/Aspose.PSD.FOSS.Samples.Layers/Aspose.PSD.FOSS.Samples.Layers.csproj"
+        },
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "samples/Aspose.PSD.FOSS.Samples.Streams/Aspose.PSD.FOSS.Samples.Streams.csproj"
+        },
+        {
+          "detail": "ProjectReference to the product project",
+          "path": "samples/Aspose.PSD.FOSS.Samples.StructuralEditing/Aspose.PSD.FOSS.Samples.StructuralEditing.csproj"
+        }
+      ],
+      "id": "project_file:samples.product_reference",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "all 4 sample projects reference the product project by ProjectReference; none references the published package"
     },
     {
       "attributes": {
@@ -5473,7 +5505,8 @@
       "attributes": {
         "declaration": "public static class BuildVersionInfo",
         "docstring": "Contains the current build version information.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5490,6 +5523,8 @@
     {
       "attributes": {
         "docstring": "The assembly version.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -5508,6 +5543,8 @@
     {
       "attributes": {
         "docstring": "The file version.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -5526,6 +5563,8 @@
     {
       "attributes": {
         "docstring": "The product title.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -5544,6 +5583,8 @@
     {
       "attributes": {
         "docstring": "The major product version.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5562,6 +5603,8 @@
     {
       "attributes": {
         "docstring": "The minor product version.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5580,6 +5623,8 @@
     {
       "attributes": {
         "docstring": "The product release date.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "DateTime",
         "symbol_kind": "method"
       },
@@ -5648,11 +5693,13 @@
     },
     {
       "attributes": {
+        "bases": "uint",
         "declaration": "public enum BlendMode : uint",
         "docstring": "Defines the blend modes used for layers in PSD files.",
         "member_count": "29",
         "members": "Normal, Multiply, Screen, Overlay, Darken, Lighten, ColorDodge, ColorBurn, HardLight, SoftLight, Difference, Exclusion, Hue, Saturation, Color, Luminosity, DarkerColor, LighterColor, LinearBurn, LinearDodge, LinearLight, VividLight, PinLight, HardMix, Subtract, Divide, Dissolve, PassThrough, Absent",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5685,11 +5732,13 @@
     },
     {
       "attributes": {
+        "bases": "short",
         "declaration": "public enum ColorModes : short",
         "docstring": "Defines the color modes supported by PSD files.",
         "member_count": "8",
         "members": "Bitmap, Grayscale, Indexed, Rgb, Cmyk, Multichannel, Duotone, Lab",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5705,11 +5754,13 @@
     },
     {
       "attributes": {
+        "bases": "short",
         "declaration": "public enum CompressionMethod : short",
         "docstring": "Defines the compression methods used for image data in PSD files.",
         "member_count": "4",
         "members": "Raw, RLE, ZipWithoutPrediction, ZipWithPrediction",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5744,7 +5795,8 @@
       "attributes": {
         "declaration": "public class BlendRange",
         "docstring": "Represents a PSD layer blend range.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5761,6 +5813,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the destination blend range.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5779,6 +5833,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the source blend range.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5798,7 +5854,8 @@
       "attributes": {
         "declaration": "public class ChannelInformation",
         "docstring": "Represents PSD layer channel information.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5815,6 +5872,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the channel identifier.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "short",
         "symbol_kind": "method"
       },
@@ -5832,8 +5891,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Initializes a new instance of the ChannelInformation class.",
         "docstring_full": "Initializes a new instance of the ChannelInformation class. The channel compression method. The channel bit depth. The PSD version number.",
+        "member_kind": "constructor",
         "signature": "ChannelInformation(CompressionMethod compressionMethod, int bitDepth, int psdVersion)",
         "symbol_kind": "method"
       },
@@ -5852,6 +5913,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the channel compression method.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "CompressionMethod",
         "symbol_kind": "method"
       },
@@ -5870,6 +5933,8 @@
     {
       "attributes": {
         "docstring": "Gets the channel length in bytes.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5889,7 +5954,8 @@
       "attributes": {
         "declaration": "public class GlobalLayerMaskInfo",
         "docstring": "Represents global layer mask information.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5907,7 +5973,8 @@
       "attributes": {
         "declaration": "public class Layer",
         "docstring": "Represents a single PSD layer with basic metadata used by the FOSS library.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -5924,6 +5991,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer blend mode key.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "BlendMode",
         "symbol_kind": "method"
       },
@@ -5942,6 +6011,8 @@
     {
       "attributes": {
         "docstring": "Gets the bottom edge of the layer bounds.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -5960,6 +6031,8 @@
     {
       "attributes": {
         "docstring": "Gets the Aspose.PSD-compatible local layer rectangle.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "Rectangle",
         "symbol_kind": "method"
       },
@@ -5978,6 +6051,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the channel information.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ChannelInformation[]",
         "symbol_kind": "method"
       },
@@ -5996,6 +6071,8 @@
     {
       "attributes": {
         "docstring": "Gets the layer's channels count.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6014,6 +6091,8 @@
     {
       "attributes": {
         "docstring": "Gets the PSD clipping value for the layer.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte",
         "symbol_kind": "method"
       },
@@ -6032,6 +6111,8 @@
     {
       "attributes": {
         "docstring": "Gets the layer height in pixels.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6050,6 +6131,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets a value indicating whether the layer is visible.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -6068,6 +6151,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer blending ranges data.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "LayerBlendingRangesData",
         "symbol_kind": "method"
       },
@@ -6086,6 +6171,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer mask data.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "LayerMaskData?",
         "symbol_kind": "method"
       },
@@ -6104,6 +6191,8 @@
     {
       "attributes": {
         "docstring": "Gets the fixed-size byte count of the layer record trailer fields.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6122,6 +6211,8 @@
     {
       "attributes": {
         "docstring": "Gets the left edge of the layer bounds.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6140,6 +6231,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the Pascal layer name stored in the layer record.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -6158,6 +6251,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer opacity in the 0-255 range.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte",
         "symbol_kind": "method"
       },
@@ -6176,6 +6271,8 @@
     {
       "attributes": {
         "docstring": "Gets the right edge of the layer bounds.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6194,6 +6291,8 @@
     {
       "attributes": {
         "docstring": "Gets the top edge of the layer bounds.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6212,6 +6311,8 @@
     {
       "attributes": {
         "docstring": "Gets the layer width in pixels.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6231,7 +6332,8 @@
       "attributes": {
         "declaration": "public class LayerBlendingRangesData",
         "docstring": "Represents PSD layer blending ranges data.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6248,6 +6350,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the per-channel blend ranges.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "BlendRange[]",
         "symbol_kind": "method"
       },
@@ -6266,6 +6370,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the composite blend range.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "BlendRange",
         "symbol_kind": "method"
       },
@@ -6284,6 +6390,7 @@
     {
       "attributes": {
         "docstring": "Initializes a new instance of the LayerBlendingRangesData class.",
+        "member_kind": "constructor",
         "signature": "LayerBlendingRangesData()",
         "symbol_kind": "method"
       },
@@ -6302,6 +6409,8 @@
     {
       "attributes": {
         "docstring": "Gets the blending ranges data length in bytes.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6321,7 +6430,8 @@
       "attributes": {
         "declaration": "public abstract class LayerMaskData",
         "docstring": "Defines the base class for PSD layer mask data.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6338,6 +6448,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the bottom layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6356,6 +6468,8 @@
     {
       "attributes": {
         "docstring": "Gets the size of the layer mask data.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6374,6 +6488,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the default layer mask color.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte",
         "symbol_kind": "method"
       },
@@ -6392,6 +6508,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer mask flags.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "LayerMaskFlags",
         "symbol_kind": "method"
       },
@@ -6410,6 +6528,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer mask image data.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -6428,6 +6548,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the left layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6446,6 +6568,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the mask rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "Rectangle",
         "symbol_kind": "method"
       },
@@ -6464,6 +6588,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the right layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6482,6 +6608,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the top layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6499,9 +6627,11 @@
     },
     {
       "attributes": {
+        "bases": "LayerMaskData",
         "declaration": "public class LayerMaskDataShort : LayerMaskData",
         "docstring": "Defines layer mask data for layers that have only a raster or vector mask.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6518,6 +6648,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the bottom layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6536,6 +6668,8 @@
     {
       "attributes": {
         "docstring": "Gets the size of the layer mask data.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6554,6 +6688,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the default layer mask color.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte",
         "symbol_kind": "method"
       },
@@ -6572,6 +6708,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer mask flags.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "LayerMaskFlags",
         "symbol_kind": "method"
       },
@@ -6590,6 +6728,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer mask image data.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "byte[]",
         "symbol_kind": "method"
       },
@@ -6608,6 +6748,7 @@
     {
       "attributes": {
         "docstring": "Initializes a new instance of the LayerMaskDataShort class.",
+        "member_kind": "constructor",
         "signature": "LayerMaskDataShort()",
         "symbol_kind": "method"
       },
@@ -6626,6 +6767,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the left layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6644,6 +6787,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the mask rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "Rectangle",
         "symbol_kind": "method"
       },
@@ -6662,6 +6807,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the layer mask padding.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "short",
         "symbol_kind": "method"
       },
@@ -6680,6 +6827,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the right layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6698,6 +6847,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the top layer mask position.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6715,11 +6866,13 @@
     },
     {
       "attributes": {
+        "bases": "byte",
         "declaration": "[Flags]",
         "docstring": "Defines PSD layer mask flags.",
         "member_count": "6",
         "members": "None, RelativeToLayer, Disabled, InvertedWhenBlending, UserMaskFromRenderingOtherData, UserOrVectorMasksHaveParameters",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6737,7 +6890,8 @@
       "attributes": {
         "declaration": "public abstract class LayerResource",
         "docstring": "Represents a PSD layer resource.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6754,6 +6908,8 @@
     {
       "attributes": {
         "docstring": "Gets the layer resource key.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6772,6 +6928,8 @@
     {
       "attributes": {
         "docstring": "Gets the layer resource length in bytes.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6790,6 +6948,8 @@
     {
       "attributes": {
         "docstring": "The PSB-specific layer resource signature.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6808,6 +6968,8 @@
     {
       "attributes": {
         "docstring": "Gets the minimal PSD version required for the layer resource.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6826,6 +6988,8 @@
     {
       "attributes": {
         "docstring": "The common layer resource signature.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6845,6 +7009,7 @@
       "attributes": {
         "docstring": "Saves the layer resource to the specified stream container.",
         "docstring_full": "Saves the layer resource to the specified stream container. The stream container to save to. The PSD version.",
+        "member_kind": "method",
         "signature": "Save(StreamContainer streamContainer, int psdVersion)",
         "symbol_kind": "method"
       },
@@ -6863,6 +7028,8 @@
     {
       "attributes": {
         "docstring": "Gets the layer resource signature.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6880,9 +7047,11 @@
     },
     {
       "attributes": {
+        "bases": "Image",
         "declaration": "public sealed class PsdImage : Image",
         "docstring": "Represents a PSD image that can be loaded, inspected, and saved without rendering.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -6899,6 +7068,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the active layer.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "Layer?",
         "symbol_kind": "method"
       },
@@ -6917,6 +7088,8 @@
     {
       "attributes": {
         "docstring": "Gets the number of bits stored per channel.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6935,6 +7108,8 @@
     {
       "attributes": {
         "docstring": "Gets the image bounds.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "Rectangle",
         "symbol_kind": "method"
       },
@@ -6953,6 +7128,8 @@
     {
       "attributes": {
         "docstring": "Gets the PSD channels count.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -6971,6 +7148,8 @@
     {
       "attributes": {
         "docstring": "Gets the PSD color mode reported by the header.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ColorModes",
         "symbol_kind": "method"
       },
@@ -6989,6 +7168,8 @@
     {
       "attributes": {
         "docstring": "Gets the compression method used by the merged image data section.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "CompressionMethod",
         "symbol_kind": "method"
       },
@@ -7006,7 +7187,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Releases the image and optionally the underlying stream.",
+        "member_kind": "method",
         "signature": "Dispose()",
         "symbol_kind": "method"
       },
@@ -7026,6 +7209,8 @@
       "attributes": {
         "docstring": "Gets the parsed global angle from the image resources, when present.",
         "docstring_full": "Gets the parsed global angle from the image resources, when present. The current lightweight unknown-only parser does not reconstruct ID-specific semantic values.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7044,6 +7229,8 @@
     {
       "attributes": {
         "docstring": "Gets the global layer mask info.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "GlobalLayerMaskInfo",
         "symbol_kind": "method"
       },
@@ -7062,6 +7249,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the global layer resources.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "LayerResource[]",
         "symbol_kind": "method"
       },
@@ -7080,6 +7269,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets a value indicating whether first alpha channel contains the transparency data for the merged result when specifying layers data.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -7098,6 +7289,8 @@
     {
       "attributes": {
         "docstring": "Gets the document height in pixels.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7116,6 +7309,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the PSD image resources.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "ResourceBlock[]",
         "symbol_kind": "method"
       },
@@ -7134,6 +7329,8 @@
     {
       "attributes": {
         "docstring": "Gets a value indicating whether the PSD image is flattened.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -7152,6 +7349,8 @@
     {
       "attributes": {
         "docstring": "Gets the parsed layer collection.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "Layer[]",
         "symbol_kind": "method"
       },
@@ -7171,6 +7370,7 @@
       "attributes": {
         "docstring": "Loads a PSD image from a file path.",
         "docstring_full": "Loads a PSD image from a file path. The path to the PSD file. A loaded PsdImage instance.",
+        "member_kind": "method",
         "signature": "Load(string filePath)",
         "symbol_kind": "method"
       },
@@ -7190,6 +7390,7 @@
       "attributes": {
         "docstring": "Saves the image to a file path.",
         "docstring_full": "Saves the image to a file path. The destination file path.",
+        "member_kind": "method",
         "signature": "Save(string filePath)",
         "symbol_kind": "method"
       },
@@ -7208,6 +7409,8 @@
     {
       "attributes": {
         "docstring": "Gets the image size.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "Size",
         "symbol_kind": "method"
       },
@@ -7226,6 +7429,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the Aspose.PSD-compatible API version number.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7244,6 +7449,8 @@
     {
       "attributes": {
         "docstring": "Gets the document width in pixels.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7261,9 +7468,11 @@
     },
     {
       "attributes": {
+        "bases": "Exception",
         "declaration": "public class PsdLoadException : Exception",
         "docstring": "Exception that is thrown when an error occurs while loading a PSD file.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7281,6 +7490,7 @@
       "attributes": {
         "docstring": "Initializes a new instance of the PsdLoadException class with a specified error message.",
         "docstring_full": "Initializes a new instance of the PsdLoadException class with a specified error message. The error message that explains the reason for the exception.",
+        "member_kind": "constructor",
         "signature": "PsdLoadException(string message)",
         "symbol_kind": "method"
       },
@@ -7298,9 +7508,11 @@
     },
     {
       "attributes": {
+        "bases": "Exception",
         "declaration": "public class PsdSaveException : Exception",
         "docstring": "Exception that is thrown when an error occurs while saving a PSD file.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7318,6 +7530,7 @@
       "attributes": {
         "docstring": "Initializes a new instance of the PsdSaveException class with a specified error message.",
         "docstring_full": "Initializes a new instance of the PsdSaveException class with a specified error message. The error message that explains the reason for the exception.",
+        "member_kind": "constructor",
         "signature": "PsdSaveException(string message)",
         "symbol_kind": "method"
       },
@@ -7335,11 +7548,13 @@
     },
     {
       "attributes": {
+        "bases": "byte",
         "declaration": "public enum PsdVersion : byte",
         "docstring": "Represents the supported PSD container versions.",
         "member_count": "2",
         "members": "Psd, Psb",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7357,7 +7572,8 @@
       "attributes": {
         "declaration": "public abstract class ResourceBlock",
         "docstring": "Represents a PSD image resource block.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7374,6 +7590,8 @@
     {
       "attributes": {
         "docstring": "Gets the resource data size in bytes.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7392,6 +7610,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the unique identifier for the resource.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "short",
         "symbol_kind": "method"
       },
@@ -7410,6 +7630,8 @@
     {
       "attributes": {
         "docstring": "Gets the minimal required PSD version.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7428,6 +7650,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the resource name.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -7446,6 +7670,8 @@
     {
       "attributes": {
         "docstring": "The ImageReady resource signature.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7464,6 +7690,8 @@
     {
       "attributes": {
         "docstring": "The regular Photoshop resource signature.",
+        "member_kind": "constant",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7483,6 +7711,7 @@
       "attributes": {
         "docstring": "Saves the resource block to the specified stream container.",
         "docstring_full": "Saves the resource block to the specified stream container. The stream container to save to.",
+        "member_kind": "method",
         "signature": "Save(StreamContainer stream)",
         "symbol_kind": "method"
       },
@@ -7501,6 +7730,8 @@
     {
       "attributes": {
         "docstring": "Gets the resource signature.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7519,6 +7750,8 @@
     {
       "attributes": {
         "docstring": "Gets the resource block size in bytes including its data.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7537,6 +7770,7 @@
     {
       "attributes": {
         "docstring": "Validates the resource values.",
+        "member_kind": "method",
         "signature": "ValidateValues()",
         "symbol_kind": "method"
       },
@@ -7558,7 +7792,8 @@
         "docstring": "Represents resource block state.",
         "member_count": "2",
         "members": "Ready, Disposed",
-        "symbol_kind": "enum"
+        "symbol_kind": "enum",
+        "type_kind": "enum"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7574,9 +7809,11 @@
     },
     {
       "attributes": {
+        "bases": "IDisposable",
         "declaration": "public abstract class Image : IDisposable",
         "docstring": "Provides the Aspose.PSD-compatible base image entry point for loading PSD/PSB documents.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7593,6 +7830,8 @@
     {
       "attributes": {
         "docstring": "Gets the image bounds.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "Rectangle",
         "symbol_kind": "method"
       },
@@ -7611,6 +7850,7 @@
     {
       "attributes": {
         "docstring": "Releases resources used by the image.",
+        "member_kind": "method",
         "signature": "Dispose()",
         "symbol_kind": "method"
       },
@@ -7629,6 +7869,8 @@
     {
       "attributes": {
         "docstring": "Gets the image height in pixels.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7646,8 +7888,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Loads a new image from the specified file path.",
         "docstring_full": "Loads a new image from the specified file path. The file path to load image from. The loaded image.",
+        "member_kind": "method",
         "signature": "Load(string filePath)",
         "symbol_kind": "method"
       },
@@ -7667,6 +7911,7 @@
       "attributes": {
         "docstring": "Saves the image data to the specified file path.",
         "docstring_full": "Saves the image data to the specified file path. The destination file path.",
+        "member_kind": "method",
         "signature": "Save(string filePath)",
         "symbol_kind": "method"
       },
@@ -7685,6 +7930,8 @@
     {
       "attributes": {
         "docstring": "Gets the image width in pixels.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7704,7 +7951,8 @@
       "attributes": {
         "declaration": "public abstract class ImageLoader",
         "docstring": "Provides the Load functionality for Images.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7720,8 +7968,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Loads a new image from the specified file path.",
         "docstring_full": "Loads a new image from the specified file path. The file path to load image from. The loaded image.",
+        "member_kind": "method",
         "signature": "Load(string filePath)",
         "symbol_kind": "method"
       },
@@ -7739,9 +7989,11 @@
     },
     {
       "attributes": {
+        "bases": "IEquatable<Point>",
         "declaration": "public struct Point : IEquatable<Point>",
         "docstring": "Represents an ordered pair of integer x- and y-coordinates that defines a point in a two-dimensional plane.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "struct"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7758,6 +8010,8 @@
     {
       "attributes": {
         "docstring": "Represents a Point with coordinates left uninitialized.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "Point",
         "symbol_kind": "method"
       },
@@ -7775,8 +8029,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Determines whether the specified point is equal to this point.",
         "docstring_full": "Determines whether the specified point is equal to this point. The point to compare. true if the points are equal; otherwise, false.",
+        "member_kind": "method",
         "signature": "Equals(Point other)",
         "symbol_kind": "method"
       },
@@ -7794,8 +8050,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a hash code for this point.",
         "docstring_full": "Returns a hash code for this point. The hash code.",
+        "member_kind": "method",
         "signature": "GetHashCode()",
         "symbol_kind": "method"
       },
@@ -7814,6 +8072,8 @@
     {
       "attributes": {
         "docstring": "Gets a value indicating whether this Point has coordinates left uninitialized.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -7831,8 +8091,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Initializes a new instance of the Point structure with the specified coordinates.",
         "docstring_full": "Initializes a new instance of the Point structure with the specified coordinates. The x-coordinate of the point. The y-coordinate of the point.",
+        "member_kind": "constructor",
         "signature": "Point(int x, int y)",
         "symbol_kind": "method"
       },
@@ -7850,8 +8112,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a compact coordinate representation.",
         "docstring_full": "Returns a compact coordinate representation. The coordinate representation.",
+        "member_kind": "method",
         "signature": "ToString()",
         "symbol_kind": "method"
       },
@@ -7870,6 +8134,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the x-coordinate of this Point.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7888,6 +8154,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the y-coordinate of this Point.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7905,9 +8173,11 @@
     },
     {
       "attributes": {
+        "bases": "IEquatable<Rectangle>",
         "declaration": "public struct Rectangle : IEquatable<Rectangle>",
         "docstring": "Stores a set of four integers that represent the location and size of a rectangle.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "struct"
       },
       "confidence": 1.0,
       "evidence": [
@@ -7924,6 +8194,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the y-coordinate of the bottom edge of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -7941,8 +8213,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Converts a RectangleF structure to a Rectangle structure by rounding up the coordinates and size.",
         "docstring_full": "Converts a RectangleF structure to a Rectangle structure by rounding up the coordinates and size. The rectangle to convert. The converted rectangle.",
+        "member_kind": "method",
         "signature": "Ceiling(RectangleF value)",
         "symbol_kind": "method"
       },
@@ -7960,8 +8234,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Determines whether the specified point is contained within this Rectangle.",
         "docstring_full": "Determines whether the specified point is contained within this Rectangle. The point to test. true if the point is contained in this rectangle; otherwise, false.",
+        "member_kind": "method",
         "signature": "Contains(Point point)",
         "symbol_kind": "method"
       },
@@ -7980,6 +8256,8 @@
     {
       "attributes": {
         "docstring": "Represents a Rectangle structure with its properties left uninitialized.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "Rectangle",
         "symbol_kind": "method"
       },
@@ -7997,8 +8275,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Determines whether the specified rectangle is equal to this rectangle.",
         "docstring_full": "Determines whether the specified rectangle is equal to this rectangle. The rectangle to compare. true if the rectangles are equal; otherwise, false.",
+        "member_kind": "method",
         "signature": "Equals(Rectangle other)",
         "symbol_kind": "method"
       },
@@ -8016,8 +8296,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Creates a rectangle from edge coordinates.",
         "docstring_full": "Creates a rectangle from edge coordinates. The left edge. The top edge. The right edge. The bottom edge. The rectangle.",
+        "member_kind": "method",
         "signature": "FromLeftTopRightBottom(int left, int top, int right, int bottom)",
         "symbol_kind": "method"
       },
@@ -8035,8 +8317,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Creates a rectangle that spans the specified points.",
         "docstring_full": "Creates a rectangle that spans the specified points. The first point. The second point. The rectangle that spans the two points.",
+        "member_kind": "method",
         "signature": "FromPoints(Point point1, Point point2)",
         "symbol_kind": "method"
       },
@@ -8054,8 +8338,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a hash code for this rectangle.",
         "docstring_full": "Returns a hash code for this rectangle. The hash code.",
+        "member_kind": "method",
         "signature": "GetHashCode()",
         "symbol_kind": "method"
       },
@@ -8074,6 +8360,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the height of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8091,8 +8379,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Creates and returns an inflated copy of the specified rectangle.",
         "docstring_full": "Creates and returns an inflated copy of the specified rectangle. The rectangle to inflate. The amount to inflate horizontally. The amount to inflate vertically. The inflated rectangle.",
+        "member_kind": "method",
         "signature": "Inflate(Rectangle rectangle, int x, int y)",
         "symbol_kind": "method"
       },
@@ -8110,8 +8400,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a rectangle that represents the intersection of two rectangles.",
         "docstring_full": "Returns a rectangle that represents the intersection of two rectangles. The first rectangle. The second rectangle. The intersection rectangle, or Empty when there is no overlap.",
+        "member_kind": "method",
         "signature": "Intersect(Rectangle a, Rectangle b)",
         "symbol_kind": "method"
       },
@@ -8129,8 +8421,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Determines whether this rectangle intersects with the specified rectangle.",
         "docstring_full": "Determines whether this rectangle intersects with the specified rectangle. The rectangle to test. true if the rectangles intersect; otherwise, false.",
+        "member_kind": "method",
         "signature": "IntersectsWith(Rectangle rectangle)",
         "symbol_kind": "method"
       },
@@ -8149,6 +8443,8 @@
     {
       "attributes": {
         "docstring": "Gets a value indicating whether this Rectangle has no location or size.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -8167,6 +8463,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the x-coordinate of the left edge of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8185,6 +8483,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the coordinates of the upper-left corner of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "Point",
         "symbol_kind": "method"
       },
@@ -8202,7 +8502,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Normalizes this rectangle so that width and height are non-negative.",
+        "member_kind": "method",
         "signature": "Normalize()",
         "symbol_kind": "method"
       },
@@ -8220,8 +8522,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Moves this rectangle by the specified point.",
         "docstring_full": "Moves this rectangle by the specified point. The offset to apply.",
+        "member_kind": "method",
         "signature": "Offset(Point point)",
         "symbol_kind": "method"
       },
@@ -8241,6 +8545,7 @@
       "attributes": {
         "docstring": "Initializes a new instance of the Rectangle structure with the specified location and size.",
         "docstring_full": "Initializes a new instance of the Rectangle structure with the specified location and size. The upper-left corner of the rectangle. The size of the rectangle.",
+        "member_kind": "constructor",
         "signature": "Rectangle(Point location, Size size)",
         "symbol_kind": "method"
       },
@@ -8259,6 +8564,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the x-coordinate of the right edge of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8276,8 +8583,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Converts a RectangleF structure to a Rectangle structure by rounding the coordinates and size.",
         "docstring_full": "Converts a RectangleF structure to a Rectangle structure by rounding the coordinates and size. The rectangle to convert. The converted rectangle.",
+        "member_kind": "method",
         "signature": "Round(RectangleF value)",
         "symbol_kind": "method"
       },
@@ -8296,6 +8605,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the size of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "Size",
         "symbol_kind": "method"
       },
@@ -8314,6 +8625,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the y-coordinate of the top edge of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8331,8 +8644,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a string representation of this rectangle.",
         "docstring_full": "Returns a string representation of this rectangle. The string representation.",
+        "member_kind": "method",
         "signature": "ToString()",
         "symbol_kind": "method"
       },
@@ -8350,8 +8665,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Converts a RectangleF structure to a Rectangle structure by truncating the coordinates and size.",
         "docstring_full": "Converts a RectangleF structure to a Rectangle structure by truncating the coordinates and size. The rectangle to convert. The converted rectangle.",
+        "member_kind": "method",
         "signature": "Truncate(RectangleF value)",
         "symbol_kind": "method"
       },
@@ -8369,8 +8686,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a rectangle that contains the union of two rectangles.",
         "docstring_full": "Returns a rectangle that contains the union of two rectangles. The first rectangle. The second rectangle. The union rectangle.",
+        "member_kind": "method",
         "signature": "Union(Rectangle a, Rectangle b)",
         "symbol_kind": "method"
       },
@@ -8389,6 +8708,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the width of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8407,6 +8728,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the x-coordinate of the upper-left corner of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8425,6 +8748,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the y-coordinate of the upper-left corner of this Rectangle.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8442,9 +8767,11 @@
     },
     {
       "attributes": {
+        "bases": "IEquatable<RectangleF>",
         "declaration": "public struct RectangleF : IEquatable<RectangleF>",
         "docstring": "Stores a set of four floating-point numbers that represent the location and size of a rectangle.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "struct"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8461,6 +8788,8 @@
     {
       "attributes": {
         "docstring": "Gets the y-coordinate of the bottom edge of this RectangleF.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8479,6 +8808,8 @@
     {
       "attributes": {
         "docstring": "Represents a RectangleF structure with its properties left uninitialized.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "RectangleF",
         "symbol_kind": "method"
       },
@@ -8496,8 +8827,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Determines whether the specified rectangle is equal to this rectangle.",
         "docstring_full": "Determines whether the specified rectangle is equal to this rectangle. The rectangle to compare. true if the rectangles are equal; otherwise, false.",
+        "member_kind": "method",
         "signature": "Equals(RectangleF other)",
         "symbol_kind": "method"
       },
@@ -8515,8 +8848,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a hash code for this rectangle.",
         "docstring_full": "Returns a hash code for this rectangle. The hash code.",
+        "member_kind": "method",
         "signature": "GetHashCode()",
         "symbol_kind": "method"
       },
@@ -8535,6 +8870,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the height of this RectangleF.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8553,6 +8890,8 @@
     {
       "attributes": {
         "docstring": "Gets a value indicating whether this RectangleF has no location or size.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -8571,6 +8910,8 @@
     {
       "attributes": {
         "docstring": "Gets the x-coordinate of the left edge of this RectangleF.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8588,8 +8929,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Initializes a new instance of the RectangleF structure with the specified coordinates.",
         "docstring_full": "Initializes a new instance of the RectangleF structure with the specified coordinates. The left coordinate. The top coordinate. The rectangle width. The rectangle height.",
+        "member_kind": "constructor",
         "signature": "RectangleF(float x, float y, float width, float height)",
         "symbol_kind": "method"
       },
@@ -8608,6 +8951,8 @@
     {
       "attributes": {
         "docstring": "Gets the x-coordinate of the right edge of this RectangleF.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8626,6 +8971,8 @@
     {
       "attributes": {
         "docstring": "Gets the y-coordinate of the top edge of this RectangleF.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8643,8 +8990,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a compact coordinate representation.",
         "docstring_full": "Returns a compact coordinate representation. The coordinate representation.",
+        "member_kind": "method",
         "signature": "ToString()",
         "symbol_kind": "method"
       },
@@ -8663,6 +9012,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the width of this RectangleF.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8681,6 +9032,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the x-coordinate of the upper-left corner of this RectangleF.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8699,6 +9052,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the y-coordinate of the upper-left corner of this RectangleF.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "float",
         "symbol_kind": "method"
       },
@@ -8716,9 +9071,11 @@
     },
     {
       "attributes": {
+        "bases": "IEquatable<Size>",
         "declaration": "public struct Size : IEquatable<Size>",
         "docstring": "Represents an ordered pair of integer width and height values that defines a size.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "struct"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8735,6 +9092,8 @@
     {
       "attributes": {
         "docstring": "Represents a Size with width and height left uninitialized.",
+        "member_kind": "field",
+        "settable": "false",
         "signature": "Size",
         "symbol_kind": "method"
       },
@@ -8752,8 +9111,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Determines whether the specified size is equal to this size.",
         "docstring_full": "Determines whether the specified size is equal to this size. The size to compare. true if the sizes are equal; otherwise, false.",
+        "member_kind": "method",
         "signature": "Equals(Size other)",
         "symbol_kind": "method"
       },
@@ -8771,8 +9132,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a hash code for this size.",
         "docstring_full": "Returns a hash code for this size. The hash code.",
+        "member_kind": "method",
         "signature": "GetHashCode()",
         "symbol_kind": "method"
       },
@@ -8791,6 +9154,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the height component of this Size.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8809,6 +9174,8 @@
     {
       "attributes": {
         "docstring": "Gets a value indicating whether this Size has width and height left uninitialized.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -8826,8 +9193,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Initializes a new instance of the Size structure with the specified dimensions.",
         "docstring_full": "Initializes a new instance of the Size structure with the specified dimensions. The width component. The height component.",
+        "member_kind": "constructor",
         "signature": "Size(int width, int height)",
         "symbol_kind": "method"
       },
@@ -8845,8 +9214,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Returns a compact size representation.",
         "docstring_full": "Returns a compact size representation. The size representation.",
+        "member_kind": "method",
         "signature": "ToString()",
         "symbol_kind": "method"
       },
@@ -8865,6 +9236,8 @@
     {
       "attributes": {
         "docstring": "Gets or sets the width component of this Size.",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -8884,7 +9257,8 @@
       "attributes": {
         "declaration": "public class StreamContainer",
         "docstring": "Represents a stream container used by resource save APIs.",
-        "symbol_kind": "class"
+        "symbol_kind": "class",
+        "type_kind": "class"
       },
       "confidence": 1.0,
       "evidence": [
@@ -8901,6 +9275,8 @@
     {
       "attributes": {
         "docstring": "Gets the wrapped stream.",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "Stream",
         "symbol_kind": "method"
       },
@@ -8920,6 +9296,7 @@
       "attributes": {
         "docstring": "Initializes a new instance of the StreamContainer class.",
         "docstring_full": "Initializes a new instance of the StreamContainer class. The wrapped stream.",
+        "member_kind": "constructor",
         "signature": "StreamContainer(Stream stream)",
         "symbol_kind": "method"
       },

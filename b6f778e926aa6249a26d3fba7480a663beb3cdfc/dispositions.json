@@ -15,7 +15,7 @@
         "package:target_framework",
         "package:version"
       ],
-      "rationale": "The H1 product name is rendered by the identity section from facts.",
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
@@ -23,29 +23,23 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:repository",
+        "package:name",
         "identity:ecosystem",
         "identity:family",
-        "identity:platform",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "license:file"
+        "identity:platform"
       ],
-      "rationale": "The product summary in the opening section is supported by the facts and matches this paragraph's substance.",
+      "rationale": "The opening summary matches the verified product summary and is supported by identity and package facts.",
       "unit_id": "inherited_unit:002.paragraph"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:tests",
-        "identity:repository",
-        "license:spdx",
-        "package:name",
-        "package:version",
-        "public_symbol:aspose.psd"
+        "public_symbol:aspose.psd",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
       ],
-      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "This clarifies the library is not a rendering engine or full commercial replacement, supported by limitations.",
       "unit_id": "inherited_unit:003.paragraph"
     },
     {
@@ -54,76 +48,72 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Who This Project Is For' heading is superseded by the opening section's audience description.",
+      "rationale": "The 'Who This Project Is For' heading is subsumed by the opening section, which already covers audience.",
       "unit_id": "inherited_unit:004.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_REWRITE",
-      "fact_ids": [],
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform"
+      ],
       "rationale": "Lead-in of the block that follows: kept in its section, with it.",
       "unit_id": "inherited_unit:005.paragraph"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
-        "public_symbol:aspose.psd.streamcontainer",
         "public_symbol:aspose.psd.fileformats",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.point"
+        "public_symbol:aspose.psd.streamcontainer"
       ],
-      "rationale": "The list items are supported by facts and moved to key_capabilities to align with action-led capability items.",
+      "rationale": "The list of use cases is supported by verified capabilities and fits the key capabilities section.",
       "unit_id": "inherited_unit:006.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "package:name"
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.fileformats"
       ],
-      "rationale": "Superseded, and redundant with the verified facts it names: package:name. The 'Do not use Aspose.PSD.FOSS when you need to' lead-in is superseded by the scope_l",
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:007.paragraph"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:tests",
-        "identity:repository",
-        "license:spdx",
-        "package:name",
-        "package:version",
-        "public_symbol:aspose.psd"
+        "public_symbol:aspose.psd",
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.imageloader"
       ],
-      "rationale": "The limitations list is supported by evidence and moved to scope_limitations to consolidate known constraints.",
+      "rationale": "The list of non-features is supported by the limitations and clarifies scope.",
       "unit_id": "inherited_unit:008.list"
     },
     {
-      "destination_section": "quick_start",
+      "destination_section": "key_capabilities",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Common Workflows' heading is superseded by the quick_start section's example-driven workflow.",
+      "rationale": "The 'Common Workflows' heading is subsumed by the key capabilities section.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "VERIFIED_MOVE",
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001",
-        "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.imageloader",
         "public_symbol:aspose.psd.fileformats",
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.image",
+        "public_symbol:aspose.psd.streamcontainer"
       ],
-      "rationale": "The workflow list is supported by facts and moved to quick_start to provide a minimal executed example.",
+      "rationale": "Not printed again: key capabilities already states this material from the facts it cites, so the kept unit is redundant.",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -132,14 +122,17 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Mental Model' heading is superseded by the scope_limitations section's limitation descriptions.",
+      "rationale": "The 'Mental Model' heading is subsumed by the scope and limitations section.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
-      "destination_section": "opening",
+      "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The 'Mental Model' list is present in the published README and must be preserved in the opening section as it describes the library's structural constraints.",
+      "fact_ids": [
+        "public_symbol:aspose.psd.fileformats",
+        "public_symbol:aspose.psd.streamcontainer"
+      ],
+      "rationale": "The mental model list clarifies scope and is supported by the limitations and preservation facts.",
       "unit_id": "inherited_unit:012.list"
     },
     {
@@ -148,23 +141,19 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Highlights' heading is superseded by the key_capabilities section's action-led capability items.",
+      "rationale": "The 'Highlights' heading is subsumed by the key capabilities section.",
       "unit_id": "inherited_unit:013.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose.psd",
         "public_symbol:aspose.psd.fileformats",
         "public_symbol:aspose.psd.image",
-        "public_symbol:aspose.psd.point",
-        "public_symbol:aspose.psd.rectangle",
-        "public_symbol:aspose.psd.rectanglef",
-        "public_symbol:aspose.psd.size"
+        "public_symbol:aspose.psd.streamcontainer"
       ],
-      "rationale": "The highlights list is supported by facts and moved to key_capabilities to align with action-led capability items.",
+      "rationale": "The highlights list is supported by verified capabilities and fits the key capabilities section.",
       "unit_id": "inherited_unit:014.list"
     },
     {
@@ -173,14 +162,16 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The 'Requirements' heading is superseded by the installation section's ecosystem-specific install command.",
+      "rationale": "The 'Requirements' heading is subsumed by the installation section, which includes target framework.",
       "unit_id": "inherited_unit:015.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The .NET 10.0 SDK requirement is present in the published README and must be preserved.",
+      "fact_ids": [
+        "package:target_framework"
+      ],
+      "rationale": "The .NET 10.0 requirement is supported by the target framework fact and fits development/testing.",
       "unit_id": "inherited_unit:016.list"
     },
     {
@@ -189,49 +180,44 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The 'Installation' heading is rendered by the installation section from facts.",
+      "rationale": "The 'Installation' heading is rendered deterministically by the installation section.",
       "unit_id": "inherited_unit:017.heading"
     },
     {
-      "destination_section": "opening",
+      "destination_section": "development_testing",
       "disposition": "CORRECT_WITH_EVIDENCE",
       "fact_ids": [
         "install_command:dotnet",
-        "package:name",
-        "package:published_version"
+        "package:name"
       ],
-      "rationale": "The package is published to NuGet as Aspose.PSD.FOSS version 26.10.0, contradicting the claim it is not published.",
+      "rationale": "The package is published and installable via 'dotnet add package Aspose.PSD.FOSS', contradicting 'not published to NuGet'.",
       "unit_id": "inherited_unit:018.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "Local build instructions are irrelevant since the package is published and the install_command fact supports direct installation.",
+      "rationale": "The 'Build the package locally' paragraph is superseded by the verified install command.",
       "unit_id": "inherited_unit:019.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:examples",
-        "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "install_command:dotnet"
+        "build_test_asset:build-command"
       ],
-      "rationale": "The local build command is omitted because the package is published and the install_command fact supports direct installation.",
+      "rationale": "The 'dotnet pack' command is not the verified install command, but the 'dotnet build' command is verified for testing.",
       "unit_id": "inherited_unit:020.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "inherited_unit:021.paragraph"
+        "install_command:dotnet"
       ],
-      "rationale": "The build output path is not verified; the section renders build commands, not output locations.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:021.paragraph"
     },
     {
@@ -240,7 +226,7 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The install command is rendered literally in the installation section.",
+      "rationale": "The paragraph introduces the install command, which is rendered directly by the installation section.",
       "unit_id": "inherited_unit:022.paragraph"
     },
     {
@@ -249,25 +235,26 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The install command is rendered literally in the installation section.",
+      "rationale": "The code block matches the verified install command exactly and is superseded by the installation section.",
       "unit_id": "inherited_unit:023.code_block"
     },
     {
       "destination_section": "quick_start",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "example:001",
         "identity:ecosystem"
       ],
-      "rationale": "The heading introduces the Quick Start section, which is freshly authored.",
+      "rationale": "Reprinted verbatim in Quick Start beside the unverified example it introduces.",
       "unit_id": "inherited_unit:024.heading"
     },
     {
       "destination_section": "quick_start",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The example is verified as a supported, executable workflow and matches the Quick Start example fact.",
+      "rationale": "Reprinted verbatim in Quick Start with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:025.code_block"
     },
     {
@@ -277,16 +264,16 @@
         "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The heading introduces FOSS vs commercial comparison, which belongs in enterprise_relationship.",
+      "rationale": "The heading introduces FOSS vs commercial comparison, supported by verified product homepage and enterprise links.",
       "unit_id": "inherited_unit:026.heading"
     },
     {
-      "destination_section": "scope_limitations",
+      "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "inherited_unit:027.paragraph"
+        "link_target:product.enterprise"
       ],
-      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Maintainer insight on FOSS scope is valuable and not contradicted; it is kept unverified as it adds context.",
       "unit_id": "inherited_unit:027.paragraph"
     },
     {
@@ -295,72 +282,70 @@
       "fact_ids": [
         "link_target:product.enterprise"
       ],
-      "rationale": "Maintainer insight on commercial feature scope is valuable and not contradicted; kept as written.",
+      "rationale": "Maintainer insight on commercial product scope is valuable and not contradicted; it is kept unverified as it adds context.",
       "unit_id": "inherited_unit:028.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "build_test_asset:examples"
+        "build_test_asset:tests"
       ],
-      "rationale": "The samples section is superseded by the development_testing section, which renders sample paths.",
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:029.heading"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The samples folder path is rendered in the development_testing section.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:030.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The sample list is rendered in the development_testing section.",
+      "rationale": "The list of sample projects is supported by the verified samples/ folder and build_test_asset:examples.",
       "unit_id": "inherited_unit:031.list"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [
-        "build_test_asset:examples",
         "public_symbol:aspose.psd"
       ],
-      "rationale": "The FOSS and NuGet sample relationship is confirmed by the build_test_asset:examples fact.",
+      "rationale": "Maintainer guidance on sample parity between FOSS and NuGet is valuable and not contradicted; kept unverified.",
       "unit_id": "inherited_unit:032.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [
-        "build_test_asset:examples"
+        "finding:93c5ea07c9dd"
       ],
-      "rationale": "The h2 'Samples' heading appears in the published README and must be preserved in the development_testing section.",
+      "rationale": "Maintainer guidance on keeping only project files different is valuable and not contradicted; kept unverified.",
       "unit_id": "inherited_unit:033.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [
-        "inherited_unit:034.paragraph",
         "public_symbol:aspose.psd"
       ],
-      "rationale": "The runtime output parity note is rendered in the development_testing section.",
+      "rationale": "Maintainer clarification on runtime output parity is valuable and not contradicted; kept unverified.",
       "unit_id": "inherited_unit:034.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The sample matrix is rendered in the development_testing section.",
+      "rationale": "The table introduction is supported by the verified samples/ folder and build_test_asset:examples.",
       "unit_id": "inherited_unit:035.paragraph"
     },
     {
@@ -370,16 +355,16 @@
         "build_test_asset:examples",
         "public_symbol:aspose.psd"
       ],
-      "rationale": "The sample matrix is rendered in the development_testing section.",
+      "rationale": "The sample/workflow matrix is supported by the verified samples/ folder and build_test_asset:examples.",
       "unit_id": "inherited_unit:036.table"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The example commands are rendered in the development_testing section.",
+      "rationale": "The example commands introduction is supported by the verified samples/ folder and build_test_asset:examples.",
       "unit_id": "inherited_unit:037.paragraph"
     },
     {
@@ -388,25 +373,21 @@
       "fact_ids": [
         "build_test_asset:examples"
       ],
-      "rationale": "The example commands are rendered in the development_testing section.",
+      "rationale": "The dotnet run commands are supported by the verified samples/ folder and build_test_asset:examples.",
       "unit_id": "inherited_unit:038.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "inherited_unit:039.paragraph"
-      ],
-      "rationale": "The unit text is supported by the inherited unit fact and must be preserved in the destination section.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "Maintainer guidance on default input file behavior is valuable and not contradicted; kept unverified.",
       "unit_id": "inherited_unit:039.paragraph"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "inherited_unit:040.paragraph"
-      ],
-      "rationale": "The default output folder behavior is rendered in the development_testing section, but the published README places this under 'Samples', and 'quick_start' is a§",
+      "destination_section": "development_testing",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "Maintainer guidance on default output folder for stream/structural samples is valuable and not contradicted; kept unverified.",
       "unit_id": "inherited_unit:040.paragraph"
     },
     {
@@ -419,17 +400,17 @@
       "unit_id": "inherited_unit:041.heading"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "scope_limitations",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The paragraph introduces documentation links and matches the heading 'Documentation' present in the published README; it is preserved as-is since no fact refuts",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:042.paragraph"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "scope_limitations",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [],
-      "rationale": "The list of documentation files matches the heading 'Documentation' present in the published README and is not superseded by any other section; it is preserved.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:043.list"
     },
     {
@@ -438,21 +419,19 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Supported Scope' heading is superseded by the 'Scope and Limitations' section, which is rendered from facts and includes the same capabilities.",
+      "rationale": "The 'Supported Scope' heading is superseded by the 'Scope and Limitations' section, which is rendered from facts and will include supported capabilities.",
       "unit_id": "inherited_unit:044.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001",
-        "public_symbol:aspose.psd.image",
+        "build_test_asset:build-command",
         "public_symbol:aspose.psd.fileformats",
         "public_symbol:aspose.psd.fileformats.psd.layers",
-        "public_symbol:aspose.psd.fileformats.core.blending",
-        "build_test_asset:build-command"
+        "public_symbol:aspose.psd.image"
       ],
-      "rationale": "The list of supported operations is verified by the example and public symbols and preserved as key capabilities.",
+      "rationale": "Not printed again: key capabilities already states this material from the facts it cites, so the kept unit is redundant.",
       "unit_id": "inherited_unit:045.list"
     },
     {
@@ -461,20 +440,17 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Out of Scope' heading is superseded by the 'Scope and Limitations' section, which is rendered from facts and includes the same limitations.",
+      "rationale": "The 'Out of Scope' heading is superseded by the 'Scope and Limitations' section, which is rendered from facts and will include limitations.",
       "unit_id": "inherited_unit:046.heading"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "identity:repository",
-        "package:name",
-        "package:version",
-        "license:spdx",
-        "build_test_asset:tests"
+        "public_symbol:aspose.psd.imageloader",
+        "public_symbol:aspose.psd.fileformats"
       ],
-      "rationale": "The list of out-of-scope features is verified by the accepted investigation and preserved as scope limitations.",
+      "rationale": "The list of out-of-scope features is factually supported and adds concrete detail to limitations not fully captured in the summary.",
       "unit_id": "inherited_unit:047.list"
     },
     {
@@ -484,17 +460,17 @@
         "license:file",
         "license:spdx"
       ],
-      "rationale": "The 'License' heading is superseded by the 'License' section, which is rendered from facts.",
+      "rationale": "The 'License' heading is superseded by the 'License' section, which is rendered from facts and will include the SPDX identifier.",
       "unit_id": "inherited_unit:048.heading"
     },
     {
-      "destination_section": "enterprise_relationship",
+      "destination_section": "license",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "license:spdx",
-        "link_target:product.enterprise"
+        "license:file",
+        "license:spdx"
       ],
-      "rationale": "The MIT license statement is verified and preserved; it is moved to 'Enterprise Relationship' to clarify the FOSS license in relation to the enterprise product.",
+      "rationale": "The 'MIT' license statement is superseded by the 'License' section, which is rendered from the license:spdx fact.",
       "unit_id": "inherited_unit:049.paragraph"
     }
   ]
