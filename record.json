@@ -27,11 +27,25 @@
    "run_id": "43647239376",
    "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-15T12:10:28+00:00",
+   "classes": [
+    "BC-14|unresolved|the_readme_claims_dae",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|authored_unit|stub_format"
+   ],
+   "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+   "findings": 7,
+   "outcome": "failure",
+   "run_id": "43712100927",
+   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T22:36:37+00:00",
+  "at": "2026-11-15T12:10:28+00:00",
   "classes": {
    "BC-14|unresolved|the_readme_claims_dae": {
     "example": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
@@ -41,7 +55,7 @@
      "-"
     ],
     "rule": "BC-14",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "affc91cc0a96ca773ce8a905bebf5d7fc81646a7095eac41f6788024d0feb9ad",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -65,7 +79,7 @@
      "inherited_unit:060.table"
     ],
     "rule": "BC-17",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -89,7 +103,7 @@
      "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin"
     ],
     "rule": "claim_contradiction",
-    "scope": "9adafd0ce74b1823d529fa71833c10567f3adec83dc89e93acc55c7572c04274",
+    "scope": "1e5c878cc76e3b7b0d192067e294550f72ea325aef7f46901ede54038f76939a",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -105,7 +119,7 @@
     "upstream": "source_stub"
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -222,15 +236,15 @@
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "claim_contradiction:3",
-    "outcome": "repaired",
-    "reason": "",
+    "label": "claim_contradiction:0",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
     "section_id": "opening",
     "stage": "S6"
    },
@@ -249,19 +263,11 @@
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
-    "stage": "S6"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
-  "run_id": "43647239376",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43647239376",
+  "run_id": "43712100927",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43712100927",
   "schema_version": 1,
   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
