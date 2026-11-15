@@ -1,0 +1,177 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T01:37:58+00:00",
+   "classes": [
+    "BC-18|inherited_unit|false_claim",
+    "BC-18|renderer_fact|misleading_claim",
+    "BC-18|unresolved|unsupported_claim"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "43662163005",
+   "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T01:37:58+00:00",
+  "classes": {
+   "BC-18|inherited_unit|false_claim": {
+    "example": "Chart chart = doc.FirstSection.Body.Shapes[0].Chart;",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:043.code_block"
+    ],
+    "rule": "BC-18",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "false_claim",
+    "upstream": ""
+   },
+   "BC-18|renderer_fact|misleading_claim": {
+    "example": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |",
+    "findings": 1,
+    "origin_kind": "renderer_fact",
+    "origins": [
+     "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil"
+    ],
+    "rule": "BC-18",
+    "scope": "e1d74f324b32fc5ceabf66ab20968cbb4667d50384351cc87596042be8309a2e",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition/renderer.py",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "misleading_claim",
+    "upstream": ""
+   },
+   "BC-18|unresolved|unsupported_claim": {
+    "example": "These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition]",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-18",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "unsupported_claim",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-18; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-18",
+    "message": "open finding (confirmed false claim: Chart chart = doc.FirstSection.Body.Shapes[0].Chart;) still printed: The README text 'Chart chart = doc.FirstSection.Body.Shapes[0].Chart;' is false (confirmed false claim: Chart chart = doc.FirstSection.Body.Shapes[0].Chart;). Correct it: Story.Shapes (inherited by Body) and ShapeCollection are declared internal in the .NET build, so consumer code cannot compile this line. Only the test assemblies can see them, through InternalsVisibleTo. The snippet also us",
+    "origin": {
+     "id": "inherited_unit:043.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "Chart chart = doc.FirstSection.Body.Shapes[0].Chart;",
+    "rule": "BC-18",
+    "section_id": "additional_examples",
+    "signature": "BC-18|inherited_unit|false_claim",
+    "source": "validation",
+    "sub_rule": "false_claim",
+    "upstream": ""
+   },
+   {
+    "label": "BC-18",
+    "message": "open finding (confirmed misleading claim: | `DigitalSignatureUtil` | Provides methods for signing document. | | `SignOptions` |) still printed: The README text '| `DigitalSignatureUtil` | Provides methods for signing document. |\\n| `SignOptions` |' is false (confirmed misleading claim: | `DigitalSignatureUtil` | Provides methods for signing document. | | `SignOptions` |). Correct it: DigitalSignatureUtil.Sign exists, but for DOCX/DOTX/DOCM/DOTM, DOC and ODT it throws NotSupportedException(\"FOSS\"",
+    "origin": {
+     "id": "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil",
+     "kind": "renderer_fact"
+    },
+    "quote": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |",
+    "rule": "BC-18",
+    "section_id": "api_reference",
+    "signature": "BC-18|renderer_fact|misleading_claim",
+    "source": "validation",
+    "sub_rule": "misleading_claim",
+    "upstream": ""
+   },
+   {
+    "label": "BC-18",
+    "message": "open finding (confirmed unsupported claim: These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition) still printed: The README text \"These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition]\" is false (confirmed unsupported claim: These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition). Correct it: Neither the repository nor the nuspec mentions an 'Enterprise Edition'; the upstream README just",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition]",
+    "rule": "BC-18",
+    "section_id": "scope_limitations",
+    "signature": "BC-18|unresolved|unsupported_claim",
+    "source": "validation",
+    "sub_rule": "unsupported_claim",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [
+     {
+      "fact_ids": [
+       "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil"
+      ],
+      "quote": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |"
+     }
+    ],
+    "label": "BC-18",
+    "outcome": "unrepairable",
+    "reason": "facts defect: '| `DigitalSignatureUtil` | Provides methods for signing document. |\\n| `SignOptions` |' is printed by the renderer from fact public_symbol:aspose.words.digitalsignatures.digitalsignatureutil, not by any authored or inherited unit; fix the facts (a repair cannot change renderer-printed text)",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
+  "run_id": "43662163005",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43662163005",
+  "schema_version": 1,
+  "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
+ "schema_version": 1
+}
