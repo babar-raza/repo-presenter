@@ -1,0 +1,305 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T02:13:37+00:00",
+   "classes": [
+    "BC-05|unresolved|section_fit",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 13,
+   "outcome": "failure",
+   "run_id": "43664912460",
+   "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T02:13:37+00:00",
+  "classes": {
+   "BC-05|unresolved|section_fit": {
+    "example": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Getting started guide](https://docs.aspose.org/slides/cpp/)** \u2014 installation, walkthroughs, and feature guides for th'",
+    "findings": 5,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-05",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:102.list holds api_identifiers 'set_rotation()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 8,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:102.list"
+    ],
+    "rule": "BC-17",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Getting started guide](https://docs.aspose.org/slides/cpp/)** \u2014 installation, walkthroughs, and feature guides for th'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[How-to guides & FAQ](https://kb.aspose.org/slides/cpp/)** \u2014 task-focused answers for common PowerPoint-processing que'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Full API reference](https://reference.aspose.org/slides/cpp/)** \u2014 the complete, browsable reference for the public AP'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Publishing guide](PUBLISHING.md)** \u2014 how a release of `Aspose.Slides.Cpp.FOSS` reaches nuget.org, and what to do when'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[GitHub repository](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp)'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "scope_limitations",
+    "signature": "BC-05|unresolved|section_fit",
+    "source": "validation",
+    "sub_rule": "section_fit",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'set_rotation()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'set_name()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'Shape::x()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'height()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'Shape::get_xfrm()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'Shape::get_inherited_frame()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'get_sp_pr()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:102.list holds api_identifiers 'ensure_xfrm()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:102.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+  "run_id": "43664912460",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43664912460",
+  "schema_version": 1,
+  "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+ "schema_version": 1
+}
