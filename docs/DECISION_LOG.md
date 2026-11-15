@@ -6690,3 +6690,20 @@ provider key. recertify, issues, audit-score, acceptance-write, the cohort job a
 **Does not decide.** The owner's audit reserve on the next batch (BL-162) and running the backfill (BL-161).
 
 Backlog: BL-160, BL-161, BL-162
+
+## 2026-11-15 — A blocked M9 seed batch can be ended (BL-163)
+
+**What happened.** Seed batch 43620199171 (seeded 2026-11-14) never froze findings: its first audit was refused
+for want of an open provider batch, the second ran out of the file budget, the third (run 43701332052) found the
+attempt limit reached. The gate correctly reported it `blocked` and pointed at "the run-request override", but the
+runbook's only override finishes a batch WITH findings (audit-score, then acceptance-write). A blocked batch
+therefore held every later round for good ("one open batch at a time"). Its candidates were also sealed under
+pre-R43 code, so auditing them now would accept nothing.
+
+**Decision.** A new run-request job `audit-abandon` (seed_run_id only) ends a batch exactly when the gate would
+report it blocked: open, no frozen findings on the hosted branch or on main, and at least MAX_AUDIT_ATTEMPTS
+attempts. The executor pushes `audit-abandoned/run-<id>` at main; `open_seed_batches` counts it as ended. A batch
+with findings can never be abandoned (it is finished by score and write), so no audit outcome can be discarded.
+Nothing is accepted and no record is written; the batch's candidates stay unjudged and can be seeded again.
+
+Backlog: BL-163
