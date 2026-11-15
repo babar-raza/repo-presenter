@@ -1,0 +1,57 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "the README says the package is not published ('A Maven package is not published yet.'), but a package-registry reading lists it",
+      "kind": "claim_contradiction",
+      "line": 89,
+      "quote": "A Maven package is not published yet. Either download the jar, alone or with its dependencies, from [Releases](../../releases), or build it from source. To buil",
+      "rule": "claim_contradiction"
+    }
+  ],
+  "review_logic_version": "4",
+  "schema_version": 1,
+  "source_revision": "1a062dd88a27c946c872185349beb45b92e7a948",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}

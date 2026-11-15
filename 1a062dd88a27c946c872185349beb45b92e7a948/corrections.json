@@ -1,0 +1,240 @@
+{
+  "confinement": {
+    "edits": 5,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "d7632802a1559d94c7c77fd56ccc62cd91c0909c0227a66d6065fcb53d51d456",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 1267,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:9"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 10,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing DOCX, DOCM, DOTX, or DOTM document\"]\n    i2[\"A Flat OPC package\"]\n    i3[\"A Markdown or plain text file\"]\n  end\n  PRODUCT[\"Aspose.Words FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Document creation from scratch and editing\"]\n      c2[\"Text, styles, tables, lists, and sections\"]\n      c3[\"Tracked-changes engine\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c4[\"Field evaluation engine\"]\n      c5[\"Document protection and signature verification\"]\n      c6[\"DOCX, Markdown, and plain-text conversion\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"DOCX, DOCM, DOTX, or DOTM documents\"]\n    o2[\"Flat OPC packages\"]\n    o3[\"Markdown (.md)\"]\n    o4[\"Plain text (.txt)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1096 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 722 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing DOCX,<br/>DOCM, DOTX, or DOTM<br/>document\"]\n    i2[\"A Flat OPC package\"]\n    i3[\"A Markdown or plain<br/>text file\"]\n  end\n  PRODUCT[\"Aspose.Words FOSS for Java\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Document creation from<br/>scratch and editing\"]\n    c2[\"Text, styles, tables,<br/>lists, and sections\"]\n    c3[\"Tracked-changes engine\"]\n    c4[\"Field evaluation<br/>engine\"]\n    c5[\"Document protection<br/>and signature<br/>verification\"]\n    c6[\"DOCX, Markdown, and<br/>plain-text conversion\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"DOCX, DOCM, DOTX, or<br/>DOTM documents\"]\n    o2[\"Flat OPC packages\"]\n    o3[\"Markdown (.md)\"]\n    o4[\"Plain text (.txt)\"]\n    o1 ~~~ o3\n    o2 ~~~ o4\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 321
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 4013,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/words/java/"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 85,
+      "original": "the commercial [Aspose.Words for Java](https://products.aspose.com/words/java/)",
+      "rationale": "line 85 names the aspose.com product with a substitute for its proper name ('the commercial [Aspose.Words for Java](https://products.aspose.com/words/java/)'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "[Aspose.Words for Java — Enterprise Edition](https://products.aspose.com/words/java/)",
+      "start": 3934
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 5071,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/words/java/"
+        }
+      ],
+      "index": 2,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 97,
+      "original": "the commercial product",
+      "rationale": "line 97 names the aspose.com product with a substitute for its proper name ('the commercial product'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Words for Java — Enterprise Edition",
+      "start": 5049
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 7513,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/words/java/"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 152,
+      "original": "the commercial Aspose.Words for Java",
+      "rationale": "line 152 names the aspose.com product with a substitute for its proper name ('the commercial Aspose.Words for Java'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "Aspose.Words for Java — Enterprise Edition",
+      "start": 7477
+    },
+    {
+      "detector": "enterprise_edition_naming",
+      "end": 15420,
+      "evidence": [
+        {
+          "fact_id": "link_target:product.enterprise",
+          "kind": "link_target",
+          "status": "SUPPORTED",
+          "value": "https://products.aspose.com/words/java/"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 283,
+      "original": "the commercial [Aspose.Words for Java](https://products.aspose.com/words/java/)",
+      "rationale": "line 283 names the aspose.com product with a substitute for its proper name ('the commercial [Aspose.Words for Java](https://products.aspose.com/words/java/)'); the mission naming rule requires \"Enterprise Edition\" with no substitute wording",
+      "replacement": "[Aspose.Words for Java — Enterprise Edition](https://products.aspose.com/words/java/)",
+      "start": 15341
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "3b0053dfae8fac3cdf5706683a80629e93aec934bd82d06089da79e0f932868c",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
+  "schema_version": 1,
+  "source_revision": "1a062dd88a27c946c872185349beb45b92e7a948",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1,
+    "FALSE_CLAIM_FIX": 4
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:com.aspose.anyxmlbuilder",
+        "public_symbol:com.aspose.anyxmlreader",
+        "public_symbol:com.aspose.anyxmltexthandling",
+        "public_symbol:com.aspose.anyxmltexthandlingconsts",
+        "public_symbol:com.aspose.argumentutil",
+        "public_symbol:com.aspose.arrayutil",
+        "public_symbol:com.aspose.base64splitter",
+        "public_symbol:com.aspose.basepathutil"
+      ],
+      "line": 0,
+      "reason": "1523 of 1566 verified public types are named nowhere in the README; would fill API Reference: public_symbol:com.aspose.anyxmlbuilder, public_symbol:com.aspose.anyxmlreader, public_symbol:com.aspose.anyxmltexthandling, public_symbol:com.aspose.anyxmltexthandlingconsts, public_symbol:com.aspose.argumentutil, public_symbol:com.aspose.arrayutil, public_symbol:com.aspose.base64splitter, public_symbol:com.aspose.basepathutil (+1515 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/words/java/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 13,
+      "reason": "the README marks 'DOCM' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing DOCX, DOCM, DOTX, or DOTM document\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 13,
+      "reason": "the README marks 'DOCX' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing DOCX, DOCM, DOTX, or DOTM document\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 13,
+      "reason": "the README marks 'DOTM' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing DOCX, DOCM, DOTX, or DOTM document\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 13,
+      "reason": "the README marks 'DOTX' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing DOCX, DOCM, DOTX, or DOTM document\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 14,
+      "reason": "the README marks 'OPC' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i2[\"A Flat OPC package\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'DOCM' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"DOCX, DOCM, DOTX, or DOTM documents\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'DOCX' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"DOCX, DOCM, DOTX, or DOTM documents\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'DOTM' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"DOCX, DOCM, DOTX, or DOTM documents\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'DOTX' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"DOCX, DOCM, DOTX, or DOTM documents\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 36,
+      "reason": "the README marks 'OPC' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"Flat OPC packages\"]"
+    }
+  ]
+}
