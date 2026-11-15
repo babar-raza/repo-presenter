@@ -6707,3 +6707,46 @@ with findings can never be abandoned (it is finished by score and write), so no 
 Nothing is accepted and no record is written; the batch's candidates stay unjudged and can be seeded again.
 
 Backlog: BL-163
+
+## 2026-11-15 — The no-values rule reads names as names and no longer kills a Lane R run (BL-170)
+
+**What happened.** Since PR #83 (R43(2)), five Lane R cells failed `section_authoring` as a job error after all three
+asks: BarCode Python (run 43674580663, `unit opening: spells '128', '39'`), PDF .NET (43683719616, `unit capability:5:
+spells '1', '7'`), Words Java (43672441969, `unit opening: spells '8', '2003'`), PDF C++ (43664910650, `unit
+capability:4: spells '7'`) and PDF Java (43664908666, `unit capability:6: spells '7'`). Read against each cell's facts
+at the failing revision: '128'/'39' are the symbologies Code 128 and Code 39 (the product's subject), '1'/'7' are the
+signature standards PKCS#1 and PKCS#7. Those four cells were rejected for a name, not a value (R36(b)(4): the check was
+over-broad). Words Java's '8' and '2003' are a runtime version and a year (both in its inherited units: "runs on Java
+8", "since 2003"), which is a true hit. The rule had no deterministic way out, so one sentence cost the whole paid run.
+
+**Decision.** Both halves, in existing components:
+1. *Narrower rule.* `value_tokens` now takes the facts. A whole number that ends a proper name the SUPPORTED facts spell
+   the same way (`<Head> <n>`, `<Head>#<n>`) is part of that name. It is still a value when the head is a runtime, tool or
+   date word (Java 8, JUnit 5, August 2009) or a dependency's name. Dotted versions, `n of ...` and phrases the facts
+   spell only at a sentence, list-item or table-cell start ("Detects 14 image formats") stay values too. The R43 intent
+   holds: a reader can check a name the facts spell, and the renderer still prints every version and count.
+2. *Deterministic deletion.* After the last ask, an opening or key-capability unit that still spells a value loses the
+   sentence that spells it, if another sentence is left. Otherwise it loses the parenthesis that spells it. No word is
+   rewritten, and `run_job` re-validates the result. A unit that is nothing but the value still fails closed.
+
+Rejected alternatives: turning the rejection into a BC-04 finding on the finished candidate (that would make the rule a
+blocking check on seals, against checklist 13 and R10). Telling the model more in the packet (that changes the
+`section_authoring` packet and reuses no stored call, and the three asks already said it).
+
+**Versions.** None bump. The prompt manifests, the renderer, the shell and the normalisation are unchanged. BC-04's
+re-judgement of a sealed candidate still passes `values=False`. The change only decides which fresh reply is
+accepted, so no stored output renders or judges differently. A bump would reset acceptances for no change in any seal.
+
+**Measured (checklist 13, report-only).** Every opening and key-capability unit in the history of every Lane R bundle ref
+was checked: 387 distinct units over 50 bundle revisions. Before the change, 21 units and 33 tokens hit. After it, 20
+and 32. The only token now exempt is `RFC 5322` (Email .NET), a standard name the old rule wrongly flagged. The 32
+still hit are all real counts or versions ("14 image formats", "18 of the 25 ChartType values", "Python 3.10", ".NET
+8.0", "C++17"), so there are no false positives after the change. A first cut also exempted "Detects 14" and "Create 18
+of the 25", counts the inherited text spells at a list-item start. That was fixed before landing. `recertify --all`
+before and after gives Lane R 11/19 and Lane L 34/34 both times. No row changed, the calls were zero and the version
+sets are unchanged. The R10 gate is OK on 53 seals.
+
+**Residual.** A single-sentence key-capability unit whose only sentence carries a genuine count still fails closed
+after the three asks, because no honest deletion exists. BL-170 records it as next action if it recurs.
+
+Backlog: BL-170

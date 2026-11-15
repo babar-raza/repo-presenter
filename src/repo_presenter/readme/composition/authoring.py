@@ -408,14 +408,94 @@ _KEY_NAMES = frozenset(
     }
 )
 _KEY_TOKEN = re.compile(r"[A-Za-z_][\w.-]*")
+#: A whole number that is the tail of a proper name - a symbology (``Code 128``), a standard
+#: (``PKCS#7``, ``ISO 32000``, ``RFC 5322``), a format (``Word 2003``), a font class (``Type 1``) -
+#: not a value: the name is what the product handles, and it has no other spelling (BL-170, hosted
+#: runs 43674580663 BarCode Python ``Code 128``/``Code 39``, 43683719616 PDF .NET ``PKCS#1``/
+#: ``PKCS#7``, 43664910650/43664908666 PDF C++/Java ``PKCS#7``). Only a head word, ``#`` or one
+#: space, then digits with no decimal part: ``Python 3.10`` stays a version.
+_NAMED_NUMBER = re.compile(
+    r"(?<![\w.#+-])([A-Z][A-Za-z0-9+]*)( |#)(\d+)(?![\w#+-]|[.,]\d|\s+of\b)"
+)
+#: A name the facts spell only at the start of a sentence, list item or table cell is no name: there
+#: a capitalised verb reads as a head word ("Detects 14 image formats", "Create 18 of the 25
+#: ChartType values" - counts, measured on the sealed Cells Java and Imaging .NET capabilities). This
+#: matches the text before a list item's first word (:func:`_spelled_as_name`).
+_BULLET_END = re.compile(r"(?:^|\n)\s*[-*+]$")
+#: Head words whose trailing number is a version or a date, never a name (``Java 8``, ``JDK 17``,
+#: ``JUnit 5``, ``August 2009``): the renderer prints the runtime and tool floors from the facts.
+_VERSION_HEADS = frozenset(
+    {
+        "Java", "JDK", "JRE", "JVM", "Python", "CPython", "PyPy", "NET", "Node", "Go", "Golang",
+        "Rust", "PHP", "Ruby", "Perl", "Kotlin", "Scala", "Swift", "TypeScript", "JavaScript",
+        "ECMAScript", "ES", "C", "Gradle", "Maven", "Ant", "JUnit", "TestNG", "NUnit", "xUnit",
+        "MSTest", "CMake", "GCC", "Clang", "LLVM", "MSVC", "Studio", "Xcode", "Android", "iOS",
+        "Windows", "macOS", "Ubuntu", "Debian", "Linux", "Unity", "Qt", "Boost", "OpenSSL",
+        "Version", "Release", "Edition", "Level", "January", "February", "March", "April", "May",
+        "June", "July", "August", "September", "October", "November", "December", "Q",
+        "Since", "Before", "After", "Until",
+    }
+)
+#: Fact kinds whose value is a version-bearing coordinate, never a name a unit may borrow.
+_UNNAMING_KINDS = frozenset({"dependency", "package", "install_command", "example"})
 
 
-def value_tokens(text: str, name: str) -> list[str]:
+def _named_numbers(text: str, facts: FactsDocument | None) -> list[str]:
+    """The ``<Head> <n>`` / ``<Head>#<n>`` names ``text`` spells that a SUPPORTED fact spells too,
+    with a head that is no runtime, tool or date word (:data:`_VERSION_HEADS`) and no dependency's
+    own name: the number belongs to a name the facts carry, which a reader checks against them."""
+    if facts is None or not text:
+        return []
+    candidates = [
+        match.group(0)
+        for match in _NAMED_NUMBER.finditer(text)
+        if match.group(1) not in _VERSION_HEADS
+    ]
+    if not candidates:
+        return []
+    named: list[str] = []
+    dependency_heads = {
+        str(fact.value).split(" ", 1)[0]
+        for fact in facts.facts
+        if fact.kind in _UNNAMING_KINDS and fact.kind != "example"
+    }
+    for phrase in dict.fromkeys(candidates):
+        if re.split(r"[ #]", phrase, maxsplit=1)[0] in dependency_heads:
+            continue
+        pattern = re.compile(rf"(?<![\w.#+-]){re.escape(phrase)}(?![\w#+-]|[.,]\d|\s+of\b)")
+        if any(
+            fact.polarity == "SUPPORTED"
+            and fact.kind not in _UNNAMING_KINDS
+            and phrase in str(fact.value)
+            and _spelled_as_name(pattern, str(fact.value))
+            for fact in facts.facts
+        ):
+            named.append(phrase)
+    return named
+
+
+def _spelled_as_name(pattern: re.Pattern[str], value: str) -> bool:
+    """Whether ``value`` spells ``pattern`` somewhere other than at the start of a sentence, line,
+    list item or table cell; a wrapped line is no sentence start."""
+    for match in pattern.finditer(value):
+        before = value[max(0, match.start() - 40) : match.start()].rstrip()
+        at_start = match.start() <= 40 and not before
+        if not (at_start or before.endswith((".", "!", "?", ":", "|")) or _BULLET_END.search(before)):
+            return True
+    return False
+
+
+def value_tokens(text: str, name: str, facts: FactsDocument | None = None) -> list[str]:
     """The numbers, counts, file names and key names ``text`` spells, outside the product name
-    (``Aspose.3D FOSS for .NET``), each once, in order (R43(2))."""
+    (``Aspose.3D FOSS for .NET``), each once, in order (R43(2)).
+
+    With ``facts``, a number that ends a proper name the facts spell the same way (``Code 128``,
+    ``PKCS#7``; :func:`_named_numbers`) is part of that name, not a value (BL-170)."""
     plain = text.replace(name, " ")
     for token in product_name_tokens(name):
         plain = re.sub(rf"(?<![\w.]){re.escape(token)}(?![\w])", " ", plain)
+    for phrase in _named_numbers(plain, facts):
+        plain = re.sub(rf"(?<![\w.#+-]){re.escape(phrase)}(?![\w#+-]|[.,]\d)", " ", plain)
     found: list[str] = []
     for pattern in (_NUMBER, _COUNT_WORD, _FILE_NAME):
         found.extend(match.group(0) for match in pattern.finditer(plain))
@@ -2207,7 +2287,7 @@ def unit_checks(
                 "the only edition name and the shell prints it, so name no edition"
             )
         if values and task.section_id in VALUE_FREE_SECTIONS:
-            spelled = value_tokens(text, name)
+            spelled = value_tokens(text, name, facts)
             if spelled:
                 errors.append(
                     f"unit {unit.get('slot')}: spells {', '.join(repr(v) for v in spelled)}; "

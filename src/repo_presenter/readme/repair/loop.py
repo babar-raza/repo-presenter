@@ -68,7 +68,6 @@ from repo_presenter.readme.composition.authoring import (
     authoring_schema,
     authoring_tasks,
     carried_unit_errors,
-    recover_opening_duplicates_preserved,
     recover_title_verbatim_opening,
     repair_title_verbatim_opening_errors,
     unit_checks,
@@ -76,6 +75,7 @@ from repo_presenter.readme.composition.authoring import (
 from repo_presenter.readme.composition.authoring_retry import (
     authoring_narrowing,
     recover_authoring_output,
+    recover_opening_output,
     recover_targeted_repair_dropped_citation,
     recover_targeted_repair_restatements,
 )
@@ -1189,10 +1189,12 @@ def _regenerate_section(
 
     def recover(output: dict[str, Any]) -> dict[str, Any] | None:
         if task.section_id == "opening":
-            return recover_opening_duplicates_preserved(
-                output, dispositions=rc.dispositions, facts=rc.facts
+            return recover_opening_output(
+                output, task=task, facts=rc.facts, dispositions=rc.dispositions, name=rc.name
             )
-        return recover_authoring_output(output, task=task, facts=rc.facts, checks=checks)
+        return recover_authoring_output(
+            output, task=task, facts=rc.facts, checks=checks, name=rc.name
+        )
 
     try:
         result = run_job(
