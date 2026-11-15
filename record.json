@@ -23,63 +23,83 @@
    "run_id": "43631633406",
    "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-15T06:17:42+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43683719616",
+   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T20:57:58+00:00",
+  "at": "2026-11-15T06:17:42+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:5: spells '1', '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around ",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepFailure"
+     "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "scope": "c21b5c6dc1236bada547de4ea014fe03b1318f053f1da91f7372b9a2dc31f8cb",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
     "upstream": ""
    }
   },
-  "code": "9313fda502dc41359422f0b04749d44076ad07313ca2bb654f68fed9436bead3",
-  "durable_state": "",
-  "exit_code": null,
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
-   "kind": "LaneStepFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:5: spells '1', '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:5: spells '1', '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around ",
     "origin": {
-     "id": "LaneStepFailure",
+     "id": "OutputRejectedError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write",
     "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "08a5008636de57ff04dc7d92bdc04197d15716f4",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
-  "run_id": "43631633406",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43631633406",
+  "run_id": "43683719616",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43683719616",
   "schema_version": 1,
   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
-  "version_set": ""
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
  "schema_version": 1
