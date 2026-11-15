@@ -14,11 +14,26 @@
    "run_id": "43657144056",
    "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-15T12:31:49+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is",
+    "BC-14|unresolved|the_readme_calls_code",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|authored_unit|member_kind"
+   ],
+   "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+   "findings": 8,
+   "outcome": "failure",
+   "run_id": "43713154844",
+   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T00:41:41+00:00",
+  "at": "2026-11-15T12:31:49+00:00",
   "classes": {
    "BC-04|unresolved|code_span_q_is": {
     "example": "code span 'examples' is not a fact value",
@@ -28,7 +43,7 @@
      "-"
     ],
     "rule": "BC-04",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "affc91cc0a96ca773ce8a905bebf5d7fc81646a7095eac41f6788024d0feb9ad",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -52,7 +67,7 @@
      "-"
     ],
     "rule": "BC-14",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "affc91cc0a96ca773ce8a905bebf5d7fc81646a7095eac41f6788024d0feb9ad",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -76,7 +91,7 @@
      "inherited_unit:037.table"
     ],
     "rule": "BC-17",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -99,7 +114,7 @@
      "api_reference.hub:public_symbol:legacyworksheet.setrowheight"
     ],
     "rule": "claim_contradiction",
-    "scope": "9adafd0ce74b1823d529fa71833c10567f3adec83dc89e93acc55c7572c04274",
+    "scope": "1e5c878cc76e3b7b0d192067e294550f72ea325aef7f46901ede54038f76939a",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -115,7 +130,7 @@
     "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -247,7 +262,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -269,17 +284,9 @@
    },
    {
     "facts_defects": [],
-    "label": "duplicate_paragraph:0",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
     "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README calls `LegacyWorksheet.defaultColumnWidth` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAuto",
+    "outcome": "escalated",
+    "reason": "the revision cites public_symbol:legacyworksheet.addhyperlink outside the slot's planned facts; escalated once to a plan-level repair at S5",
     "section_id": "api_reference",
     "stage": "S6"
    },
@@ -290,11 +297,19 @@
     "reason": "the revision cites public_symbol:legacyworksheet.addhyperlink outside the slot's planned facts; escalated once to a plan-level repair at S5",
     "section_id": "api_reference",
     "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README calls `LegacyWorksheet.defaultColumnWidth` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAuto",
+    "section_id": null,
+    "stage": "S5"
    }
   ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
-  "run_id": "43657144056",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43657144056",
+  "run_id": "43713154844",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43713154844",
   "schema_version": 1,
   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
