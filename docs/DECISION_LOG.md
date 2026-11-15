@@ -6750,3 +6750,48 @@ sets are unchanged. The R10 gate is OK on 53 seals.
 after the three asks, because no honest deletion exists. BL-170 records it as next action if it recurs.
 
 Backlog: BL-170
+## 2026-11-15 — BC-17 technical_content, the top Lane R failure class, fixed at three roots (BL-180)
+
+**What happened.** The hosted failure Pareto ranked `BC-17|inherited_unit|technical_content` first: 8 Lane R cells,
+24 findings (records on `refs/repository-presenter-state/failures/*`, latest runs 43647239376, 43674579104,
+43657144056, 43650795881, 43654917831, 43664912460, 43667477825, 43669801825). The run bundles could not be
+downloaded (the session proxy refuses the artifact blob host), so each finding was classified from the hosted log's
+restore/repair lines, the benchmark README, the Lane L seals at the same revisions (same facts pipeline) and zero-call
+replays of the Lane R seals (3D Python at the hosted revision 65b1f57; Cells TypeScript).
+
+| Type | Findings | Cells | Root |
+|---|---|---|---|
+| (c) check judged raw text, not the printed form | 1 | 3D Python `060.table` `FbxExporter.save()` | the stub row is withheld on evidence (`without_stub_rows`, R14 rule 2026-11-13); BC-17 still named the kept table |
+| (a) true loss: links list the restore homed in Scope | 6 | Slides Java `084.list`, Slides .NET `083.list` (sibling-edition links) | restore re-homed a DEFER_UNRESOLVED links list to Scope (BC-05 section fit refused, rolled back); S4's BL-004 rule keeps it in Documentation and Resources |
+| (a) true loss: kept list restated for an embedded unverified example | 8 | Slides C++ `102.list` | S4 folds such a unit to VERIFIED_REWRITE (BC-03); the restatement lost 8 identifiers; restoring it printed the example |
+| (a) open: API member table not kept | 6 | 3D TypeScript `047.table` (Camera row) | restore did not keep it; cause not determinable without the run bundle (BL-181) |
+| (a)/(b) open, other shapes | 3 | Cells TS `037.table` (model rewrite), PDF Go `025.paragraph` (pointer "capability above"), TeX status badge (no renderer slot) | BL-182..BL-184 |
+
+No finding was an identifier the facts prove false (type b) or a `save()`/`Save` normalisation defect; the
+identifier boundary test was sound.
+
+**Decision (fixes to existing components, both lanes' shared code, every candidate).**
+1. `parity_gate.Accounting` judges a holding unit by its ONE printable form (`withheld_rows_form` + `kept_unit_form`
+   + the fence rule below), the form placement, BC-05 and the reviewer already use: a unit that holds an item only
+   in text that form leaves out on evidence does not owe it. A real loss in another unit is still named.
+2. `restore_units.restore_lost_units` keeps a resource-links list (`planning.link_list_targets`) in Documentation and
+   Resources, as S4 does (BL-004); the cascade restore (`_restore_plan`) and recertify's restore re-apply the planning
+   link backstop so the restored list prints as that section's link lines.
+3. `surface_claims.fence_withheld_form`: a kept-as-written prose unit carrying the reconciler's
+   `RECOVERED_FENCE_RATIONALE` (what restore carries forward) prints without its example-language fences, every other
+   word as written; placement, the reviewer and BC-17's printed form use it. The withheld block is the recorded BC-03
+   reason; BC-17 already exempts the code item on that marker.
+
+**R42.** All eight live READMEs are aspose.org's published candidates (`data/readme_published_state.json`). (1)
+aspose.org prints the false FbxExporter row and the limitation that refutes it: improved on (row withheld, limitation
+kept). (2) aspose.org prints the sibling-edition links under Documentation & Resources ("Choosing an Edition"):
+adopted (printed there as link lines). (3) aspose.org prints the Slides C++ limitation list with the throwing
+`pres.save(... SaveFormat::PDF)` example inline: improved on (list kept whole, unverified example withheld).
+
+**Checks.** No blocking check was added; check 1 only narrows when BC-17 blames a unit (checklist 13: measured by
+`recertify --all` before/after, see BL-180 evidence). No version constant changed.
+
+**Does not decide.** 3D TypeScript `047.table` and the three other open shapes (BL-181..BL-184); hosted re-runs of
+the 8 cells are the planner's (R37) once this lands.
+
+Backlog: BL-180, BL-181, BL-182, BL-183, BL-184, BL-185

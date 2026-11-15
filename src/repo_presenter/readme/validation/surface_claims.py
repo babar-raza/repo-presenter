@@ -70,6 +70,7 @@ from __future__ import annotations
 import re
 from collections.abc import Collection, Iterable, Mapping
 from pathlib import Path
+from typing import Any
 
 from repo_presenter.core.facts import Fact, FactKind, FactsDocument
 from repo_presenter.readme.validation import line_provenance
@@ -539,6 +540,84 @@ def kept_table_form(text: str, facts: FactsDocument) -> str:
     from repo_presenter.readme.validation.links import defang_unsafe_html
 
     return defang_unsafe_html(without_stub_rows(without_absent_type_rows(text, facts), facts))
+
+
+#: The marker the reconciler writes on a unit restated because it embeds an unverified code example
+#: (``reconciliation.dispositions.RECOVERED_FENCE_RATIONALE``), which the zero-call restore carries
+#: forward when it keeps the unit as written again (``repair.restore_units``).
+_FENCE_WITHHELD_RATIONALE = re.compile(r"embeds an unverified (?:code )?example", re.IGNORECASE)
+_FENCE_WITHHELD_KINDS = (".paragraph", ".list", ".blockquote")
+_KEPT_AS_WRITTEN = frozenset({"VERIFIED_PRESERVE", "VERIFIED_MOVE", "PRESERVE_ATTRIBUTED"})
+
+
+def _example_fence_languages(facts: FactsDocument) -> frozenset[str]:
+    from repo_presenter.core.ecosystems import spec_for
+    from repo_presenter.core.errors import ConfigError
+
+    ecosystem = next(
+        (f.value for f in facts.by_kind("identity") if f.id == "identity:ecosystem"), ""
+    )
+    try:
+        return frozenset(language.lower() for language in spec_for(ecosystem).example_fences)
+    except ConfigError:
+        return frozenset()
+
+
+def without_example_fences(text: str, languages: Collection[str]) -> str:
+    """``text`` with every fenced block in one of ``languages`` left out, every other line exactly
+    as written; a line that introduced a removed block with a colon ends with a full stop instead,
+    and the blank lines around the block collapse to one."""
+    from markdown_it import MarkdownIt
+
+    lines = text.split("\n")
+    drop: set[int] = set()
+    for token in MarkdownIt("commonmark").parse(text):
+        if token.type != "fence" or token.map is None:
+            continue
+        info = token.info.strip()
+        if (info.split()[0].lower() if info else "") not in languages:
+            continue
+        start, end = token.map
+        drop.update(range(start, end))
+        before = start - 1
+        while before >= 0 and not lines[before].strip():
+            before -= 1
+        if before >= 0 and before not in drop and lines[before].rstrip().endswith(":"):
+            lines[before] = lines[before].rstrip()[:-1] + "."
+    if not drop:
+        return text
+    kept: list[str] = []
+    for index, line in enumerate(lines):
+        if index in drop:
+            continue
+        if not line.strip() and kept and not kept[-1].strip():
+            continue
+        kept.append(line)
+    while kept and not kept[-1].strip():
+        kept.pop()
+    return "\n".join(kept) + ("\n" if text.endswith("\n") else "")
+
+
+def fence_withheld_form(
+    unit_id: str, text: str, row: Mapping[str, Any] | None, facts: FactsDocument
+) -> str:
+    """A kept prose unit that embeds an unverified code example, printed without that example
+    (BL-180). The reconciler restates such a unit (VERIFIED_REWRITE, ``RECOVERED_FENCE_RATIONALE``)
+    because BC-03 forbids printing the example; the model's restatement then lost the unit's API
+    identifiers (BC-17), and the zero-call restore that keeps it as written again would print the
+    example and be rolled back for BC-03 (hosted Lane R run 43664912460, Aspose.Slides-FOSS-for-Cpp
+    ``102.list``: eight identifiers lost around one ``pres.save("report.pdf", SaveFormat::PDF)``
+    line). Kept as written with the marker, the unit prints every word but that block, which is
+    withheld on the recorded BC-03 reason, as BC-17 already accounts for it
+    (``parity_gate._UNVERIFIED_EXAMPLE_RATIONALE``). Any other unit is returned unchanged."""
+    if (
+        row is None
+        or row.get("disposition") not in _KEPT_AS_WRITTEN
+        or not unit_id.endswith(_FENCE_WITHHELD_KINDS)
+        or not _FENCE_WITHHELD_RATIONALE.search(str(row.get("rationale") or ""))
+    ):
+        return text
+    return without_example_fences(text, _example_fence_languages(facts))
 
 
 #: Kept maintainers' unit kinds whose prose BC-12 judges and ``kept_unit_form`` corrects. A heading
