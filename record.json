@@ -1,0 +1,82 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T01:02:47+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43659891002",
+   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T01:02:47+00:00",
+  "classes": {
+   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this ",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "OutputRejectedError"
+    ],
+    "rule": "job_error",
+    "scope": "3018f7d92cf765d9ca98eb725ba4c60fe71f1de2b28188c70d40905e42d48c59",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "upstream": ""
+   }
+  },
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "kind": "OutputRejectedError",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this ",
+    "origin": {
+     "id": "OutputRejectedError",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+  "run_id": "43659891002",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43659891002",
+  "schema_version": 1,
+  "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
+ "schema_version": 1
+}
