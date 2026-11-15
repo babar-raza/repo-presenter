@@ -23,68 +23,295 @@
    "run_id": "43664908666",
    "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-15T13:56:56+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+   "findings": 8,
+   "outcome": "failure",
+   "run_id": "43714978082",
+   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T01:56:00+00:00",
+  "at": "2026-11-15T13:56:56+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this ",
-    "findings": 1,
-    "origin_kind": "job_error",
+   "BC-05|inherited_unit|superseded_unstated": {
+    "example": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "findings": 3,
+    "origin_kind": "inherited_unit",
     "origins": [
-     "OutputRejectedError"
+     "inherited_unit:013.code_block",
+     "inherited_unit:015.code_block",
+     "inherited_unit:070.table"
     ],
-    "rule": "job_error",
-    "scope": "c21b5c6dc1236bada547de4ea014fe03b1318f053f1da91f7372b9a2dc31f8cb",
+    "rule": "BC-05",
+    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
     "scope_paths": [
+     "data/readme_findings.json",
      "prompts",
-     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 5,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:013.code_block",
+     "inherited_unit:015.code_block",
+     "inherited_unit:070.table",
+     "inherited_unit:002.badge_row"
+    ],
+    "rule": "BC-17",
+    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   },
-  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this ",
+    "label": "BC-05",
+    "message": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "inherited_unit:013.code_block",
+     "kind": "inherited_unit"
     },
     "quote": "",
-    "rule": "job_error",
+    "rule": "BC-05",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:015.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (implementation 'org.aspose:aspose-pdf-foss:26.9.0'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:015.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:070.table is SUPERSEDE_REDUNDANT, but the README does not state 11 piece(s) of it (span '[a, , c]'; span '= += -= ...'; span '<xfa:datasets>'; span 'do body while (test)'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:070.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:013.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:015.code_block holds code_blocks 'implementation 'org.aspose:aspose-pdf-foss:26.9.0'', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:015.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:070.table holds api_identifiers '_Detail.addInstance()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:070.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:002.badge_row",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:002.badge_row holds links 'https://search.maven.org/artifact/org.aspose/aspose-pdf-foss', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:002.badge_row",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-18",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:0",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:015.code_block: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or ",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-18",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:013.code_block: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or ",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:013.code_block: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documen",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:015.code_block: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into quick_start, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, additional_examples, api_reference, documen",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:070.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:070.table: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into api_reference, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, documentatio",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
-  "run_id": "43664908666",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43664908666",
+  "run_id": "43714978082",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43714978082",
   "schema_version": 1,
   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
