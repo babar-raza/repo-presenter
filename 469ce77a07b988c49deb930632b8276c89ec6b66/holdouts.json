@@ -1,0 +1,92 @@
+{
+  "checks": [
+    {
+      "details": [],
+      "id": "L-01",
+      "name": "Every change is a listed, evidenced edit; the text outside them is unchanged",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-02",
+      "name": "A second run of the correction over the same inputs gives the same bytes",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-03",
+      "name": "No claim in the final README contradicts a verified fact",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-04",
+      "name": "Nothing of the live README is lost unless an evidenced edit accounts for it",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-05",
+      "name": "An unrepaired defect blocks unless this run is itself a net improvement (R21)",
+      "verdict": "PASS"
+    },
+    {
+      "details": [],
+      "id": "L-06",
+      "name": "A run over the corrected text finds nothing further to correct (recorded, not blocking)",
+      "verdict": "PASS"
+    }
+  ],
+  "lane": "L",
+  "residuals": [
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 241-261: example 1: FAILED; example_001.cpp:14:19: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "kind": "unrepaired_defect",
+      "line": 241,
+      "quote": "#include <Aspose/Slides/Foss/presentation.h>",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 284-305: example 3: FAILED; example_003.cpp:15:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "kind": "unrepaired_defect",
+      "line": 284,
+      "quote": "#include <Aspose/Slides/Foss/presentation.h>",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 315-334: example 4: FAILED; example_004.cpp:15:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "kind": "unrepaired_defect",
+      "line": 315,
+      "quote": "#include <Aspose/Slides/Foss/presentation.h>",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 341-360: example 5: FAILED; example_005.cpp:13:18: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "kind": "unrepaired_defect",
+      "line": 341,
+      "quote": "#include <Aspose/Slides/Foss/presentation.h>",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 367-387: example 6: FAILED; example_006.cpp:13:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "kind": "unrepaired_defect",
+      "line": 367,
+      "quote": "#include <Aspose/Slides/Foss/presentation.h>",
+      "rule": "lane_l_unrepaired_defect"
+    },
+    {
+      "detail": "failing_example: the example verifier recorded a failure for the example on lines 393-406: example 7: FAILED; example_007.cpp:12:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "kind": "unrepaired_defect",
+      "line": 393,
+      "quote": "#include <Aspose/Slides/Foss/presentation.h>",
+      "rule": "lane_l_unrepaired_defect"
+    }
+  ],
+  "review_logic_version": "4",
+  "schema_version": 1,
+  "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+  "summary": {
+    "fail": 0,
+    "pass": 6
+  }
+}

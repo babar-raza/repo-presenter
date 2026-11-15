@@ -1,0 +1,112 @@
+--- a/README.md
++++ b/README.md
+@@ -23,35 +23,37 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+     direction TB
+-    i1["Nothing — authored from scratch"]
+-    i2["An existing .pptx presentation"]
++    i1["Nothing — authored<br/>from scratch"]
++    i2["An existing .pptx<br/>presentation"]
+   end
+   PRODUCT["Aspose.Slides FOSS for C++"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Presentation and slide creation and editing"]
+-      c2["Shape creation (AutoShape, Table, Connector, PictureFrame)"]
+-      c3["Text formatting (TextFrame, Paragraph, Portion)"]
+-      c4["Fill, line, and 3D shape styling"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c5["Visual effects (shadow, glow, blur, reflection)"]
+-      c6["Document properties (core, app, custom)"]
+-      c7["Speaker notes and comments"]
+-      c8["Image embedding"]
+-    end
++    direction TB
++    c1["Presentation and slide<br/>creation and editing"]
++    c2["Shape creation<br/>(AutoShape, Table,<br/>Connector,<br/>PictureFrame)"]
++    c3["Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)"]
++    c4["Fill, line, and 3D<br/>shape styling"]
++    c5["Visual effects<br/>(shadow, glow, blur,<br/>reflection)"]
++    c6["Document properties<br/>(core, app, custom)"]
++    c7["Speaker notes and<br/>comments"]
++    c8["Image embedding"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c8
++    c6 ~~~ c8
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+     o1["A .pptx presentation"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities
+@@ -473,7 +475,6 @@
+ |---|---|
+ | `AdjustValue` | Represents a geometry shape's adjustment value. |
+ | `AdjustValueCollection` | Represents a collection of shape's adjustments. |
+-| `AppPropertiesPart` | Parse/serialize docProps/app.xml. |
+ | `AuthorData` | Raw data for a comment author parsed from XML. |
+ | `AutoShape` | Represents an AutoShape. |
+ | `BaseHandoutNotesSlideHeaderFooterManager` | Base class for handout and notes slide header/footer managers. |
+@@ -495,16 +496,9 @@
+ | `CommentAuthorCollection` | Manages a collection of comment authors in a presentation. |
+ | `CommentAuthorsPart` | Manages the comment authors XML part (`ppt/commentAuthors.xml`). |
+ | `CommentCollection` | Manages a collection of comments belonging to a single author. |
+-| `CommentData` | Raw data for a single comment parsed from XML. |
+-| `CommentsPart` | Manages a slide comments XML part (`ppt/comments/slideN.xml`). |
+ | `Connector` | Represents a connector shape that links two shapes. |
+-| `ContentTypesManager` | Manages the [Content_Types].xml part, which maps part names to MIME types. |
+-| `CorePropertiesPart` | Parse/serialize docProps/core.xml (Dublin Core metadata). |
+-| `CustomPropertiesPart` | Parse and serialize docProps/custom.xml. |
+ | `DocumentProperties` | Represents properties of a presentation. |
+ | `EffectFormat` | Represents effect properties of a shape (shadow, glow, blur, etc.). |
+-| `ExporterBase` | Abstract base class for presentation format exporters. |
+-| `ExporterRegistry` | Central registry for format exporters. |
+ | `FillFormat` | Represents the fill formatting properties of a shape. |
+ | `FillOverlay` | Represents a Fill Overlay effect. |
+ | `FontData` | Represents font information used in a presentation. |
+@@ -520,7 +514,6 @@
+ | `ImageCollection` | Manages the collection of images in a presentation. |
+ | `ImageTransformOperation` | Base class for image transform operations that participate in property value inheritance via PVIObject. |
+ | `Images` | Factory methods to create IImage instances. |
+-| `InMemoryOpcPackage` | In-memory OPC package with ZIP file I/O support. |
+ | `InnerShadow` | Represents an inner shadow effect applied to a shape. |
+ | `LayoutSlide` | Represents a layout slide. |
+ | `LayoutSlideCollection` | Manages a collection of layout slides belonging to a master slide. |
+@@ -552,12 +545,9 @@
+ | `Portion` | Represents a text portion (run) within a paragraph. |
+ | `PortionCollection` | Manages a collection of text portions within a paragraph. |
+ | `PortionFormat` | Represents text portion formatting properties with write access. |
+-| `PptxExporter` | Exporter for PPTX and related Office Open XML formats. |
+-| `PptxExporterFactory` | Factory for creating PPTX exporters with specific target formats. |
+ | `Presentation` | Represents a Microsoft PowerPoint presentation. |
+ | `PresetShadow` | Represents a preset shadow effect applied to a shape. |
+ | `Reflection` | Represents a reflection effect applied to a shape. |
+-| `RelationshipsManager` | Manages the .rels file associated with a given OPC part. |
+ | `Row` | Represents a row in a table. |
+ | `RowCollection` | Represents collection of rows in a table. |
+ | `RowFormat` | Represents formatting properties for a table row. |
+@@ -575,7 +565,6 @@
+ | `TextFrame` | Represents a TextFrame containing paragraphs of text. |
+ | `TextFrameFormat` | Represents text frame formatting properties. |
+ | `ThreeDFormat` | Represents 3D formatting properties of a shape. |
+-| `XmlElement` | Lightweight in-memory XML element for OOXML manipulation. |
+ 
+ #### Structs
+ 

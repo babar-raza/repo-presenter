@@ -1,0 +1,943 @@
+{
+  "confinement": {
+    "edits": 14,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "a28bc28048af40b2e99af581c35b2642a68b0226d607420e463e73538676f56e",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2345,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:25"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 26,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"Nothing — authored from scratch\"]\n    i2[\"An existing .pptx presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Presentation and slide creation and editing\"]\n      c2[\"Shape creation (AutoShape, Table, Connector, PictureFrame)\"]\n      c3[\"Text formatting (TextFrame, Paragraph, Portion)\"]\n      c4[\"Fill, line, and 3D shape styling\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c5[\"Visual effects (shadow, glow, blur, reflection)\"]\n      c6[\"Document properties (core, app, custom)\"]\n      c7[\"Speaker notes and comments\"]\n      c8[\"Image embedding\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A .pptx presentation\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1710 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 699 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"Nothing — authored<br/>from scratch\"]\n    i2[\"An existing .pptx<br/>presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for C++\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Presentation and slide<br/>creation and editing\"]\n    c2[\"Shape creation<br/>(AutoShape, Table,<br/>Connector,<br/>PictureFrame)\"]\n    c3[\"Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)\"]\n    c4[\"Fill, line, and 3D<br/>shape styling\"]\n    c5[\"Visual effects<br/>(shadow, glow, blur,<br/>reflection)\"]\n    c6[\"Document properties<br/>(core, app, custom)\"]\n    c7[\"Speaker notes and<br/>comments\"]\n    c8[\"Image embedding\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c8\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A .pptx presentation\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1420
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 19951,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 1,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 476,
+      "original": "| `AppPropertiesPart` | Parse/serialize docProps/app.xml. |\n",
+      "rationale": "line 476 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 19891
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 21515,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 2,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 498,
+      "original": "| `CommentData` | Raw data for a single comment parsed from XML. |\n",
+      "rationale": "line 498 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 21448
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 21599,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 3,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 499,
+      "original": "| `CommentsPart` | Manages a slide comments XML part (`ppt/comments/slideN.xml`). |\n",
+      "rationale": "line 499 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 21515
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 21772,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 4,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 501,
+      "original": "| `ContentTypesManager` | Manages the [Content_Types].xml part, which maps part names to MIME types. |\n",
+      "rationale": "line 501 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 21669
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 21857,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 5,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 502,
+      "original": "| `CorePropertiesPart` | Parse/serialize docProps/core.xml (Dublin Core metadata). |\n",
+      "rationale": "line 502 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 21772
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 21927,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 6,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 503,
+      "original": "| `CustomPropertiesPart` | Parse and serialize docProps/custom.xml. |\n",
+      "rationale": "line 503 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 21857
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 22160,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 7,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 506,
+      "original": "| `ExporterBase` | Abstract base class for presentation format exporters. |\n",
+      "rationale": "line 506 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 22084
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 22224,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 8,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 507,
+      "original": "| `ExporterRegistry` | Central registry for format exporters. |\n",
+      "rationale": "line 507 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 22160
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 23506,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 9,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 523,
+      "original": "| `InMemoryOpcPackage` | In-memory OPC package with ZIP file I/O support. |\n",
+      "rationale": "line 523 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 23430
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 26068,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 10,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 555,
+      "original": "| `PptxExporter` | Exporter for PPTX and related Office Open XML formats. |\n",
+      "rationale": "line 555 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 25992
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 26162,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 11,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 556,
+      "original": "| `PptxExporterFactory` | Factory for creating PPTX exporters with specific target formats. |\n",
+      "rationale": "line 556 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 26068
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 26462,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 12,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 560,
+      "original": "| `RelationshipsManager` | Manages the .rels file associated with a given OPC part. |\n",
+      "rationale": "line 560 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 26376
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 27654,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:aspose",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.adjustvalue",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.AdjustValue"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.angle_value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.angle_value"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.gd_element",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.gd_element"
+        },
+        {
+          "fact_id": "public_symbol:aspose.slides.foss.adjustvalue.init_internal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Aspose.Slides.Foss.AdjustValue.init_internal"
+        }
+      ],
+      "index": 13,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 578,
+      "original": "| `XmlElement` | Lightweight in-memory XML element for OOXML manipulation. |\n",
+      "rationale": "line 578 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 27577
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "cbfd5ca5a0f581aad8b66380510df91e2e7d52f8c11dacc2ce3efc0162258a52",
+  "outcome": "REFUSED_LANE_R_RECOMMENDED",
+  "readme_path": "README.md",
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+  "schema_version": 1,
+  "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1,
+    "TABLE_ROW_REMOVAL": 13
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "format:output.fodp",
+        "format:output.gif",
+        "format:output.html5",
+        "format:output.otp",
+        "format:output.swf",
+        "format:output.tiff",
+        "format:output.xps"
+      ],
+      "line": 0,
+      "reason": "7 verified format(s) named nowhere in the README; would fill At a Glance or Key Capabilities: format:output.fodp, format:output.gif, format:output.html5, format:output.otp, format:output.swf, format:output.tiff, format:output.xps",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss.baseslide",
+        "public_symbol:aspose.slides.foss.effects.iblur",
+        "public_symbol:aspose.slides.foss.effects.ifilloverlay",
+        "public_symbol:aspose.slides.foss.effects.iglow",
+        "public_symbol:aspose.slides.foss.effects.iimagetransformoperation",
+        "public_symbol:aspose.slides.foss.effects.iinnershadow",
+        "public_symbol:aspose.slides.foss.effects.ioutershadow",
+        "public_symbol:aspose.slides.foss.effects.ipresetshadow"
+      ],
+      "line": 0,
+      "reason": "97 of 234 verified public types are named nowhere in the README; would fill API Reference: public_symbol:aspose.slides.foss.baseslide, public_symbol:aspose.slides.foss.effects.iblur, public_symbol:aspose.slides.foss.effects.ifilloverlay, public_symbol:aspose.slides.foss.effects.iglow, public_symbol:aspose.slides.foss.effects.iimagetransformoperation, public_symbol:aspose.slides.foss.effects.iinnershadow, public_symbol:aspose.slides.foss.effects.ioutershadow, public_symbol:aspose.slides.foss.effects.ipresetshadow (+89 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "third_party_notices:file"
+      ],
+      "line": 0,
+      "reason": "the tree holds THIRD_PARTY_NOTICES and the README never mentions it (third_party_notices:file); not one of the ten sections, so never added",
+      "text": ""
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:001"
+      ],
+      "line": 241,
+      "reason": "the example verifier recorded a failure for the example on lines 241-261: example 1: FAILED; example_001.cpp:14:19: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "text": "#include <Aspose/Slides/Foss/presentation.h>"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:003"
+      ],
+      "line": 284,
+      "reason": "the example verifier recorded a failure for the example on lines 284-305: example 3: FAILED; example_003.cpp:15:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "text": "#include <Aspose/Slides/Foss/presentation.h>"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:004"
+      ],
+      "line": 315,
+      "reason": "the example verifier recorded a failure for the example on lines 315-334: example 4: FAILED; example_004.cpp:15:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "text": "#include <Aspose/Slides/Foss/presentation.h>"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:005"
+      ],
+      "line": 341,
+      "reason": "the example verifier recorded a failure for the example on lines 341-360: example 5: FAILED; example_005.cpp:13:18: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "text": "#include <Aspose/Slides/Foss/presentation.h>"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:006"
+      ],
+      "line": 367,
+      "reason": "the example verifier recorded a failure for the example on lines 367-387: example 6: FAILED; example_006.cpp:13:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "text": "#include <Aspose/Slides/Foss/presentation.h>"
+    },
+    {
+      "defect": true,
+      "detector": "failing_example",
+      "fact_ids": [
+        "example:007"
+      ],
+      "line": 393,
+      "reason": "the example verifier recorded a failure for the example on lines 393-406: example 7: FAILED; example_007.cpp:12:35: error: invalid use of incomplete type ‘class Aspose::Slides::Foss::Slide’",
+      "text": "#include <Aspose/Slides/Foss/presentation.h>"
+    }
+  ]
+}
