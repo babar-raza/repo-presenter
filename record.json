@@ -1,0 +1,229 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T04:13:55+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 7,
+   "outcome": "failure",
+   "run_id": "43674579104",
+   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T04:13:55+00:00",
+  "classes": {
+   "BC-05|inherited_unit|superseded_unstated": {
+    "example": "inherited_unit:047.table is SUPERSEDE_REDUNDANT, but the README does not state 5 piece(s) of it (span 'moveforward'; span 'getboundingbox'; span 'nearplane'; span 'orthoheight'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:047.table"
+    ],
+    "rule": "BC-05",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:047.table holds api_identifiers 'moveForward', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 6,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:047.table"
+    ],
+    "rule": "BC-17",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:047.table is SUPERSEDE_REDUNDANT, but the README does not state 5 piece(s) of it (span 'moveforward'; span 'getboundingbox'; span 'nearplane'; span 'orthoheight'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:047.table holds api_identifiers 'moveForward', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:047.table holds api_identifiers 'getBoundingBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:047.table holds api_identifiers 'nearPlane', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:047.table holds api_identifiers 'orthoHeight', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:047.table holds api_identifiers 'fieldOfViewX', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:047.table holds api_identifiers 'projectionType', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:047.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units[9].text' changed ('The Camera class and Light class, with ProjectionType and LightType enumerations, define view and illumination properties for 3D rendering.' to 'The Camera class and Light class, with ProjectionType and LightType classes, define view and illumination properties for 3D rendering.'), but the causal stage's own input and this revision hold the identical value there",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:047.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into key_capabilities, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, quick_start, additional_examples, api_reference, documentation_reso",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+  "run_id": "43674579104",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43674579104",
+  "schema_version": 1,
+  "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
+ "schema_version": 1
+}
