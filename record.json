@@ -23,70 +23,1284 @@
    "run_id": "43613422254",
    "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
    "version_set": "13ea8ecba614ec4548d9b253388f77ac723988a2f1237113ae62c6573ee74e44"
+  },
+  {
+   "at": "2026-11-15T06:08:34+00:00",
+   "classes": [
+    "claim_contradiction|inherited_unit|member_kind",
+    "claim_contradiction|inherited_unit|member_owner",
+    "claim_contradiction|lane_l_correction|member_owner",
+    "lane_l_unrepaired_defect|lane_l_correction|failing_example"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 77,
+   "outcome": "failure",
+   "run_id": "43683721652",
+   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+   "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
   }
  ],
  "lane": "L",
  "latest": {
-  "at": "2026-11-14T16:26:14+00:00",
+  "at": "2026-11-15T06:08:34+00:00",
   "classes": {
-   "llm:factuality|inherited_unit|opening": {
-    "example": "strict subset of Aspose.PDF for .NET \u2014 Enterprise Edition library \u2014 class names, method names, and",
-    "findings": 1,
+   "claim_contradiction|inherited_unit|member_kind": {
+    "example": "| `Bookmarks` | Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag. |",
+    "findings": 4,
     "origin_kind": "inherited_unit",
     "origins": [
-     "live_readme"
+     "inherited_unit:088.table"
     ],
-    "rule": "llm:factuality",
-    "scope": "37c79d51ef65f68f7c35dc35fd63de83fb52f6b023e62e558dcd5e4c9341c2db",
+    "rule": "claim_contradiction",
+    "scope": "71fdf30c0b003a59519b0a3a021ecee955f45b8ac06614065109ec33f4f89164",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/lane_l.py",
      "src/repo_presenter/lane_l_run.py",
      "src/repo_presenter/readme/evidence/facts/inherited.py",
      "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/review"
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
     ],
-    "sub_rule": "opening",
+    "sub_rule": "member_kind",
     "upstream": ""
+   },
+   "claim_contradiction|inherited_unit|member_owner": {
+    "example": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "findings": 6,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:078.table"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "71fdf30c0b003a59519b0a3a021ecee955f45b8ac06614065109ec33f4f89164",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   "claim_contradiction|lane_l_correction|member_owner": {
+    "example": "| `PngDevice` | Class that inherits from ImageDevice and declares the methods Process and TransparentBackground. |",
+    "findings": 65,
+    "origin_kind": "lane_l_correction",
+    "origins": [
+     "type_description"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "7b86c58c00d79eb6cf3a9b899a2300413414f15d0ba95d67afcdd9fafbe64d1f",
+    "scope_paths": [
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/correction",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   "lane_l_unrepaired_defect|lane_l_correction|failing_example": {
+    "example": "#include <aspose/pdf/document.hpp>",
+    "findings": 2,
+    "origin_kind": "lane_l_correction",
+    "origins": [
+     "failing_example"
+    ],
+    "rule": "lane_l_unrepaired_defect",
+    "scope": "2ac9cd2e6539c02cc16c37bd15833862aa76be4d03df1cd433102962552b04d8",
+    "scope_paths": [
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/correction"
+    ],
+    "sub_rule": "failing_example",
+    "upstream": "maintainer_example"
    }
   },
-  "code": "ca948d9052e889aec100a7be156c61d349ae2367a050d9a416f4ec19dd358de1",
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 13ea8ecba614: PresentFailure: Lane L: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); Lane L left 2 defect(s) it may not repair (failing_example line 252: the example verifier recorded a failure for the example on lines 252-299: example 3: FAILED; example_003.cpp:36:20: error: invalid use of incomplete type \u2018class Aspose::Pdf::Paragraphs\u2019; failing_example line 359: the example verifier recorded a failure for the example on lines 359-378: example 6: FAILED; example_006.cpp:15:52: error: invalid use of incomplete type \u2018class Aspose::Pdf::PageCollection\u2019); Lane R is the recommended lane for this repository",
+   "detail": "attempt under version set 810f7969970a: PresentFailure: Lane L: independent review returned REJECT with 77 blocking finding(s) of 77; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Title` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Title` is a member of `Bookmark`, `DocumentInfo`, `MarkupAnnotation`); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Author` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Author` is a member of `DocumentInfo`, `PdfFileInfo`); claim_contradiction [contradiction] block",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "F01",
-    "message": "strict subset of Aspose.PDF for .NET \u2014 Enterprise Edition library",
+    "label": "claim_contradiction",
+    "message": "line 532 (COMPOSING): the README names `Title` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Title` is a member of `Bookmark`, `DocumentInfo`, `MarkupAnnotation`",
     "origin": {
-     "id": "live_readme",
+     "id": "inherited_unit:078.table",
      "kind": "inherited_unit"
     },
-    "quote": "strict subset of Aspose.PDF for .NET \u2014 Enterprise Edition library \u2014 class names, method names, and",
-    "rule": "llm:factuality",
-    "section_id": "opening",
-    "signature": "llm:factuality|inherited_unit|opening",
+    "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
     "source": "review",
-    "sub_rule": "opening",
+    "sub_rule": "member_owner",
     "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 532 (COMPOSING): the README names `Author` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Author` is a member of `DocumentInfo`, `PdfFileInfo`",
+    "origin": {
+     "id": "inherited_unit:078.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 532 (COMPOSING): the README names `Creator` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Creator` is a member of `DocumentInfo`, `PdfFileInfo`",
+    "origin": {
+     "id": "inherited_unit:078.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 532 (COMPOSING): the README names `Producer` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Producer` is a member of `DocumentInfo`, `PdfFileInfo`",
+    "origin": {
+     "id": "inherited_unit:078.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 532 (COMPOSING): the README names `Subject` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Subject` is a member of `DocumentInfo`, `MarkupAnnotation`, `PdfFileInfo`",
+    "origin": {
+     "id": "inherited_unit:078.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 532 (COMPOSING): the README names `Keywords` as a method of `Document` ('Document metadata can be read via Document.Info() and the accessor methods Title(), Author(), Creator(), Producer(), Subject(), and Keywords().'), but `Aspose.Pdf.Document` has no such member; `Keywords` is a member of `DocumentInfo`, `PdfFileInfo`",
+    "origin": {
+     "id": "inherited_unit:078.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Document` | Document metadata can be read via `Document.Info()` and the accessor methods `Title()`, `Author()`, `Creator()`, `Producer()`, `Subject()`, and `Keywords()`. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 560 (COMPOSING): the README names `TransparentBackground` as a method of `ImageDevice` ('Class that inherits from ImageDevice and declares the methods Process and TransparentBackground.'), but `Aspose.Pdf.Devices.ImageDevice` has no such member; `TransparentBackground` is a member of `PngDevice`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PngDevice` | Class that inherits from ImageDevice and declares the methods Process and TransparentBackground. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 573 (COMPOSING): the README names `GetEncoding` as a method of `PageDevice` ('Class that inherits from PageDevice and declares the methods GetEncoding, Process and SetEncoding.'), but `Aspose.Pdf.Devices.PageDevice` has no such member; `GetEncoding` is a member of `Encoding`, `TextDevice`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TextDevice` | Class that inherits from PageDevice and declares the methods GetEncoding, Process and SetEncoding. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 573 (COMPOSING): the README names `SetEncoding` as a method of `PageDevice` ('Class that inherits from PageDevice and declares the methods GetEncoding, Process and SetEncoding.'), but `Aspose.Pdf.Devices.PageDevice` has no such member; `SetEncoding` is a member of `TextDevice`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TextDevice` | Class that inherits from PageDevice and declares the methods GetEncoding, Process and SetEncoding. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 580 (COMPOSING): the README names `BinarizeBradley` as a method of `DocumentDevice` ('Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution.'), but `Aspose.Pdf.Devices.DocumentDevice` has no such member; `BinarizeBradley` is a member of `TiffDevice`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TiffDevice` | Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 580 (COMPOSING): the README names `FormPresentationMode` as a method of `DocumentDevice` ('Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution.'), but `Aspose.Pdf.Devices.DocumentDevice` has no such member; `FormPresentationMode` is a member of `ImageDevice`, `PdfConverter`, `TiffDevice`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TiffDevice` | Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 580 (COMPOSING): the README names `Height` as a method of `DocumentDevice` ('Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution.'), but `Aspose.Pdf.Devices.DocumentDevice` has no such member; `Height` is a member of `Annotation`, `BitmapInfo`, `Ellipse`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TiffDevice` | Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 580 (COMPOSING): the README names `RenderingOptions` as a method of `DocumentDevice` ('Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution.'), but `Aspose.Pdf.Devices.DocumentDevice` has no such member; `RenderingOptions` is a member of `ImageDevice`, `PdfConverter`, `TiffDevice`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TiffDevice` | Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 580 (COMPOSING): the README names `Resolution` as a method of `DocumentDevice` ('Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution.'), but `Aspose.Pdf.Devices.DocumentDevice` has no such member; `Resolution` is a member of `BarcodeField`, `ImageDevice`, `PdfConverter`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TiffDevice` | Class that inherits from DocumentDevice and declares methods including BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions and Resolution. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 617 (COMPOSING): the README names `Frame` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Frame` is a member of `CaretAnnotation`, `CommonFigureAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CaretAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 617 (COMPOSING): the README names `Symbol` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Symbol` is a member of `CaretAnnotation`, `FontStyle`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CaretAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 620 (COMPOSING): the README names `ColorOfCMYK` as a method of `PrinterMarkAnnotation` ('Class that inherits from PrinterMarkAnnotation and declares the methods Accept and ColorOfCMYK.'), but `Aspose.Pdf.Annotations.PrinterMarkAnnotation` has no such member; `ColorOfCMYK` is a member of `ColorBarAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `ColorBarAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and ColorOfCMYK. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 624 (COMPOSING): the README names `PageNumber` as a method of `IAppointment` ('Class that inherits from IAppointment and declares the methods PageNumber and ToString.'), but `Aspose.Pdf.Annotations.IAppointment` has no such member; `PageNumber` is a member of `Bookmark`, `ExplicitDestination`, `FormFieldFacade`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `ExplicitDestination` | Class that inherits from IAppointment and declares the methods PageNumber and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 627 (COMPOSING): the README names `Top` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Top and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Top` is a member of `BorderInfo`, `BorderSide`, `CaptionPosition`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitBHExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Top and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 628 (COMPOSING): the README names `Left` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Left and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Left` is a member of `AlignmentType`, `BorderInfo`, `BorderSide`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitBVExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Left and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 630 (COMPOSING): the README names `Top` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Top and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Top` is a member of `BorderInfo`, `BorderSide`, `CaptionPosition`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitHExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Top and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 631 (COMPOSING): the README names `Bottom` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Bottom` is a member of `BorderInfo`, `BorderSide`, `Ellipse`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitRExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 631 (COMPOSING): the README names `Left` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Left` is a member of `AlignmentType`, `BorderInfo`, `BorderSide`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitRExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 631 (COMPOSING): the README names `Right` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Right` is a member of `AlignmentType`, `BorderInfo`, `BorderSide`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitRExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 631 (COMPOSING): the README names `Top` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Top` is a member of `BorderInfo`, `BorderSide`, `CaptionPosition`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitRExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Bottom, Left, Right, Top and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 632 (COMPOSING): the README names `Left` as a method of `ExplicitDestination` ('Class that inherits from ExplicitDestination and declares the methods Left and ToString.'), but `Aspose.Pdf.Annotations.ExplicitDestination` has no such member; `Left` is a member of `AlignmentType`, `BorderInfo`, `BorderSide`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FitVExplicitDestination` | Class that inherits from ExplicitDestination and declares the methods Left and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 633 (COMPOSING): the README names `Callout` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Callout` is a member of `FreeTextAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 633 (COMPOSING): the README names `DefaultAppearance` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `DefaultAppearance` is a member of `DefaultAppearance`, `Form`, `FreeTextAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 633 (COMPOSING): the README names `DefaultAppearanceObject` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `DefaultAppearanceObject` is a member of `FreeTextAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 633 (COMPOSING): the README names `DefaultStyle` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `DefaultStyle` is a member of `FreeTextAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 633 (COMPOSING): the README names `EndingStyle` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `EndingStyle` is a member of `FreeTextAnnotation`, `LineAnnotation`, `PolyAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 634 (COMPOSING): the README names `Destination` as a method of `PdfAction` ('Class that inherits from PdfAction and declares the methods Destination, GetECMAScriptString and ToString.'), but `Aspose.Pdf.Annotations.PdfAction` has no such member; `Destination` is a member of `Bookmark`, `GoToAction`, `LinkAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `GoToAction` | Class that inherits from PdfAction and declares the methods Destination, GetECMAScriptString and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 639 (COMPOSING): the README names `CaptionOffset` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `CaptionOffset` is a member of `LineAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 639 (COMPOSING): the README names `CaptionPosition` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `CaptionPosition` is a member of `LineAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 639 (COMPOSING): the README names `Ending` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Ending` is a member of `LineAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 639 (COMPOSING): the README names `EndingStyle` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `EndingStyle` is a member of `FreeTextAnnotation`, `LineAnnotation`, `PolyAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 639 (COMPOSING): the README names `Intent` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Intent` is a member of `FreeTextAnnotation`, `LineAnnotation`, `PolyAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 643 (COMPOSING): the README names `Name` as a method of `PdfAction` ('Class that inherits from PdfAction and declares the methods Name and ToString.'), but `Aspose.Pdf.Annotations.PdfAction` has no such member; `Name` is a member of `Annotation`, `FileSpecification`, `NamedAction`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `NamedAction` | Class that inherits from PdfAction and declares the methods Name and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 644 (COMPOSING): the README names `Name` as a method of `IAppointment` ('Class that inherits from IAppointment and declares the methods Name and ToString.'), but `Aspose.Pdf.Annotations.IAppointment` has no such member; `Name` is a member of `Annotation`, `FileSpecification`, `NamedAction`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `NamedDestination` | Class that inherits from IAppointment and declares the methods Name and ToString. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 650 (COMPOSING): the README names `Open` as a method of `Annotation` ('Class that inherits from Annotation and declares the methods Accept, Open and Parent.'), but `Aspose.Pdf.Annotations.Annotation` has no such member; `Open` is a member of `Bookmark`, `OutlineItemCollection`, `PopupAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PopupAnnotation` | Class that inherits from Annotation and declares the methods Accept, Open and Parent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 650 (COMPOSING): the README names `Parent` as a method of `Annotation` ('Class that inherits from Annotation and declares the methods Accept, Open and Parent.'), but `Aspose.Pdf.Annotations.Annotation` has no such member; `Parent` is a member of `OutlineItemCollection`, `PopupAnnotation`, `WidgetAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PopupAnnotation` | Class that inherits from Annotation and declares the methods Accept, Open and Parent. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 653 (COMPOSING): the README names `Position` as a method of `PrinterMarkAnnotation` ('Class that inherits from PrinterMarkAnnotation and declares the methods Accept and Position.'), but `Aspose.Pdf.Annotations.PrinterMarkAnnotation` has no such member; `Position` is a member of `Artifact`, `CornerPrinterMarkAnnotation`, `FormFieldFacade`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `RegistrationMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and Position. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 655 (COMPOSING): the README names `Title` as a method of `Annotation` ('Class that inherits from Annotation and declares the methods Accept and Title.'), but `Aspose.Pdf.Annotations.Annotation` has no such member; `Title` is a member of `Bookmark`, `DocumentInfo`, `MarkupAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `ScreenAnnotation` | Class that inherits from Annotation and declares the methods Accept and Title. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 656 (COMPOSING): the README names `Icon` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept and Icon.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Icon` is a member of `FileAttachmentAnnotation`, `SoundAnnotation`, `StampAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `SoundAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept and Icon. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 659 (COMPOSING): the README names `Icon` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Icon` is a member of `FileAttachmentAnnotation`, `SoundAnnotation`, `StampAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `StampAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 659 (COMPOSING): the README names `Image` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Image` is a member of `FieldType`, `StampAnnotation`, `StampType`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `StampAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 661 (COMPOSING): the README names `Flags` as a method of `PdfAction` ('Class that inherits from PdfAction and declares the methods Flags, ToString and Url.'), but `Aspose.Pdf.Annotations.PdfAction` has no such member; `Flags` is a member of `Annotation`, `SubmitFormAction`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `SubmitFormAction` | Class that inherits from PdfAction and declares the methods Flags, ToString and Url. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 661 (COMPOSING): the README names `Url` as a method of `PdfAction` ('Class that inherits from PdfAction and declares the methods Flags, ToString and Url.'), but `Aspose.Pdf.Annotations.PdfAction` has no such member; `Url` is a member of `SubmitFormAction`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `SubmitFormAction` | Class that inherits from PdfAction and declares the methods Flags, ToString and Url. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 662 (COMPOSING): the README names `Icon` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Icon` is a member of `FileAttachmentAnnotation`, `SoundAnnotation`, `StampAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TextAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 662 (COMPOSING): the README names `Open` as a method of `MarkupAnnotation` ('Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open.'), but `Aspose.Pdf.Annotations.MarkupAnnotation` has no such member; `Open` is a member of `Bookmark`, `OutlineItemCollection`, `PopupAnnotation`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TextAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 708 (COMPOSING): the README names `PosX` as a method of `Shape` ('Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `PosX` is a member of `Circle`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Circle` | Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 708 (COMPOSING): the README names `PosY` as a method of `Shape` ('Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `PosY` is a member of `Circle`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Circle` | Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 708 (COMPOSING): the README names `Radius` as a method of `Shape` ('Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `Radius` is a member of `Circle`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Circle` | Class that inherits from Shape and declares the methods CheckBounds, PosX, PosY and Radius. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 709 (COMPOSING): the README names `Bottom` as a method of `Shape` ('Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `Bottom` is a member of `BorderInfo`, `BorderSide`, `Ellipse`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Ellipse` | Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 709 (COMPOSING): the README names `Height` as a method of `Shape` ('Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `Height` is a member of `Annotation`, `BitmapInfo`, `Ellipse`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Ellipse` | Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 709 (COMPOSING): the README names `Left` as a method of `Shape` ('Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `Left` is a member of `AlignmentType`, `BorderInfo`, `BorderSide`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Ellipse` | Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 709 (COMPOSING): the README names `Width` as a method of `Shape` ('Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `Width` is a member of `Annotation`, `BitmapInfo`, `Border`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Ellipse` | Class that inherits from Shape and declares the methods Bottom, CheckBounds, Height, Left and Width. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 711 (COMPOSING): the README names `PositionArray` as a method of `Shape` ('Class that inherits from Shape and declares the methods CheckBounds and PositionArray.'), but `Aspose.Pdf.Drawing.Shape` has no such member; `PositionArray` is a member of `Line`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `Line` | Class that inherits from Shape and declares the methods CheckBounds and PositionArray. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 721 (COMPOSING): the README calls `Bookmark.Action` a property ('Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag.'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "inherited_unit:088.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Bookmarks` | Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_kind",
+    "source": "review",
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 721 (COMPOSING): the README calls `Bookmark.Destination` a property ('Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag.'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "inherited_unit:088.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Bookmarks` | Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_kind",
+    "source": "review",
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 731 (COMPOSING): the README calls `PdfFileInfo.Author` a field ('PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value).'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "inherited_unit:088.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `PdfFileInfo` | PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value). |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_kind",
+    "source": "review",
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 731 (COMPOSING): the README calls `PdfFileInfo.Creator` a field ('PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value).'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "inherited_unit:088.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `PdfFileInfo` | PdfFileInfo provides getters and setters for standard metadata fields such as Author, Creator, and custom keys via GetMetaInfo(name) and SetMetaInfo(name, value). |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_kind",
+    "source": "review",
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 732 (COMPOSING): the README names `AllowExceptions` as a method of `SaveableFacade` ('Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile.'), but `Aspose.Pdf.Facades.SaveableFacade` has no such member; `AllowExceptions` is a member of `PdfFileSecurity`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PdfFileSecurity` | Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 732 (COMPOSING): the README names `ChangePassword` as a method of `SaveableFacade` ('Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile.'), but `Aspose.Pdf.Facades.SaveableFacade` has no such member; `ChangePassword` is a member of `PdfFileSecurity`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PdfFileSecurity` | Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 732 (COMPOSING): the README names `DecryptFile` as a method of `SaveableFacade` ('Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile.'), but `Aspose.Pdf.Facades.SaveableFacade` has no such member; `DecryptFile` is a member of `PdfFileSecurity`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PdfFileSecurity` | Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 732 (COMPOSING): the README names `EncryptFile` as a method of `SaveableFacade` ('Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile.'), but `Aspose.Pdf.Facades.SaveableFacade` has no such member; `EncryptFile` is a member of `PdfFileSecurity`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PdfFileSecurity` | Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 732 (COMPOSING): the README names `InputFile` as a method of `SaveableFacade` ('Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile.'), but `Aspose.Pdf.Facades.SaveableFacade` has no such member; `InputFile` is a member of `PdfFileInfo`, `PdfFileSecurity`, `PdfFileStamp`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PdfFileSecurity` | Class that inherits from SaveableFacade and declares methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile and InputFile. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 767 (COMPOSING): the README names `AddOption` as a method of `Field` ('Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue.'), but `Aspose.Pdf.Forms.Field` has no such member; `AddOption` is a member of `CheckboxField`, `ChoiceField`, `RadioButtonField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CheckboxField` | Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 767 (COMPOSING): the README names `AllowedStates` as a method of `Field` ('Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue.'), but `Aspose.Pdf.Forms.Field` has no such member; `AllowedStates` is a member of `CheckboxField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CheckboxField` | Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 767 (COMPOSING): the README names `Checked` as a method of `Field` ('Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue.'), but `Aspose.Pdf.Forms.Field` has no such member; `Checked` is a member of `CheckboxField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CheckboxField` | Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 767 (COMPOSING): the README names `Clone` as a method of `Field` ('Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue.'), but `Aspose.Pdf.Forms.Field` has no such member; `Clone` is a member of `CheckboxField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CheckboxField` | Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 767 (COMPOSING): the README names `ExportValue` as a method of `Field` ('Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue.'), but `Aspose.Pdf.Forms.Field` has no such member; `ExportValue` is a member of `CheckboxField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `CheckboxField` | Class that inherits from Field and declares methods including ActiveState, AddOption, AllowedStates, Checked, Clone and ExportValue. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 785 (COMPOSING): the README names `Add` as a method of `ChoiceField` ('Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style.'), but `Aspose.Pdf.Forms.ChoiceField` has no such member; `Add` is a member of `AnnotationCollection`, `ArtifactCollection`, `Cells`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `RadioButtonField` | Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 785 (COMPOSING): the README names `NoToggleToOff` as a method of `ChoiceField` ('Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style.'), but `Aspose.Pdf.Forms.ChoiceField` has no such member; `NoToggleToOff` is a member of `RadioButtonField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `RadioButtonField` | Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 785 (COMPOSING): the README names `Style` as a method of `ChoiceField` ('Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style.'), but `Aspose.Pdf.Forms.ChoiceField` has no such member; `Style` is a member of `Border`, `CheckboxField`, `RadioButtonField`",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `RadioButtonField` | Class that inherits from ChoiceField and declares the methods Add, AddOption, NoToggleToOff, SetPosition and Style. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|lane_l_correction|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "lane_l_unrepaired_defect",
+    "message": "failing_example found a defect at line 252 that no deterministic edit can repair: the example verifier recorded a failure for the example on lines 252-299: example 3: FAILED; example_003.cpp:36:20: error: invalid use of incomplete type \u2018class Aspose::Pdf::Paragraphs\u2019",
+    "origin": {
+     "id": "failing_example",
+     "kind": "lane_l_correction"
+    },
+    "quote": "#include <aspose/pdf/document.hpp>",
+    "rule": "lane_l_unrepaired_defect",
+    "section_id": "",
+    "signature": "lane_l_unrepaired_defect|lane_l_correction|failing_example",
+    "source": "review",
+    "sub_rule": "failing_example",
+    "upstream": "maintainer_example"
+   },
+   {
+    "label": "lane_l_unrepaired_defect",
+    "message": "failing_example found a defect at line 359 that no deterministic edit can repair: the example verifier recorded a failure for the example on lines 359-378: example 6: FAILED; example_006.cpp:15:52: error: invalid use of incomplete type \u2018class Aspose::Pdf::PageCollection\u2019",
+    "origin": {
+     "id": "failing_example",
+     "kind": "lane_l_correction"
+    },
+    "quote": "#include <aspose/pdf/document.hpp>",
+    "rule": "lane_l_unrepaired_defect",
+    "section_id": "",
+    "signature": "lane_l_unrepaired_defect|lane_l_correction|failing_example",
+    "source": "review",
+    "sub_rule": "failing_example",
+    "upstream": "maintainer_example"
    }
   ],
   "lane": "L",
-  "main_sha": "0bae77b5104d52709ef9dfcdf9137eadbd557f96",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
-  "run_id": "43613422254",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43613422254",
+  "run_id": "43683721652",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43683721652",
   "schema_version": 1,
   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
-  "version_set": "13ea8ecba614ec4548d9b253388f77ac723988a2f1237113ae62c6573ee74e44"
+  "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
  "schema_version": 1
