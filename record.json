@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `Workbook.LoadDiagnostics` a method ('The Workbook class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via DefinedNames, document properties via DocumentProperties, workbook-level settings via Settings, and utility methods such as EnsureUniqueDefinedName, EnsureUniqueSheetName, LoadDiagnostics, and Dispose.'), but the facts record it as a property, field or constant; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `LegacyWorksheet.defaultRowHeight` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, and setAutoFilter.'), but the facts record it as a property, field or constant; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `LegacyWorksheet.defaultColumnWidth` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, and setAutoFilter.'), but the facts record it as a property, field or constant; call it by its kind)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-15T12:31:42.141257+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43713154844",
     "acquired_at": "2026-11-15T12:19:42.175151+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 48,
+  "state_version": 49,
   "recent_trigger_dedup_keys": {
     "run:40555617732:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "b8b09d6469db42c4b94a798807bcff09",
     "run:40571563106:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "17282737701949eb95673de8c2b33f30",
