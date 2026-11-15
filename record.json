@@ -47,49 +47,69 @@
    "run_id": "43683717607",
    "source_revision": "6493dfc2318207d7abe538aaf37b111d49095b86",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-15T08:28:36+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:presentation_planning_api_hubs_n_fact_ids_n"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43691416767",
+   "source_revision": "6493dfc2318207d7abe538aaf37b111d49095b86",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T07:37:21+00:00",
+  "at": "2026-11-15T08:28:36+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "job_error|job_error|OutputRejectedError:presentation_planning_api_hubs_n_fact_ids_n": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: $.api_hubs[8].fact_ids[9]: 'public_symbol:aspose_pdf.document.save_as_image' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_test_",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepFailure"
+     "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "scope": "c21b5c6dc1236bada547de4ea014fe03b1318f053f1da91f7372b9a2dc31f8cb",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:presentation_planning_api_hubs_n_fact_ids_n",
     "upstream": ""
    }
   },
   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
-  "durable_state": "",
-  "exit_code": null,
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
-   "kind": "LaneStepFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: $.api_hubs[8].fact_ids[9]: 'public_symbol:aspose_pdf.document.save_as_image' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_test_asset:test-command', 'build_test_asset:tests', 'dependency:asn1crypto-1.5', 'dependency:cryptography-50', 'dependency:development.dev.brotli-1.2', 'dependency:development.dev.build-1.2', 'dependency:development.dev.fonttools-4.60.2'] (and 1868 more allowed values; cite only an offered ID)",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: $.api_hubs[8].fact_ids[9]: 'public_symbol:aspose_pdf.document.save_as_image' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_test_",
     "origin": {
-     "id": "LaneStepFailure",
+     "id": "OutputRejectedError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "signature": "job_error|job_error|OutputRejectedError:presentation_planning_api_hubs_n_fact_ids_n",
     "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "OutputRejectedError:presentation_planning_api_hubs_n_fact_ids_n",
     "upstream": ""
    }
   ],
@@ -97,13 +117,118 @@
   "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:306.paragraph: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into opening, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of key_capabilities, quick_start, additional_examples, api_reference, document",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:0+disposition_coverage:1+disposition_coverage:2+disposition_coverage:3",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:144.code_block: uncited_prose_omit: OMIT_UNSUPPORTED on a code_block needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"```python\\nwith Document(\\\"manual.pdf\\\") as document:\\n    document.export_bookmarks_csv(\\\"bookmarks.csv\\\", encoding=\\\"utf-8-sig\\\")\\n\\nwith Document(\\\"updated-manual.pdf\\\") as document:\\n    added ",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-08",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S5"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:273.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:128.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Pass `skip_artifacts=True` to `Document.extract_text`, `Page.extract_text`,\\n`PdfExtractor.extract_text`, or `TextExtractorOptions` to omit explicitly marked\\n`/Artifact` content, such as tagged head",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:042.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"The `Document` class supports the context manager protocol, so it can be used with the `with`\\nstatement. After the context exits, the document is closed and cannot be used further. The\\n`Document.cl",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:263.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documentation_reso",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-07",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-08",
+    "outcome": "escalated",
+    "reason": "the revision cites inherited_unit:282.list outside the slot's planned facts; escalated once to a plan-level repair at S5",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:271.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
-  "run_id": "43683717607",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43683717607",
+  "run_id": "43691416767",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43691416767",
   "schema_version": 1,
   "source_revision": "6493dfc2318207d7abe538aaf37b111d49095b86",
-  "version_set": ""
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
  "schema_version": 1
