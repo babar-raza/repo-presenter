@@ -5,7 +5,7 @@
   "provider_repository_id": 1443522692,
   "registry_revision": null,
   "active_transaction_id": "79e5099a5eb545e087df3159f62bbd7b",
-  "state": "OBSERVED",
+  "state": "FAILED_INTERNAL",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '8', '2003'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-15T03:48:00.672316+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:43672441969",
     "acquired_at": "2026-11-15T03:30:08.246025+00:00",
@@ -25,8 +32,21 @@
     "expires_at": "2026-11-15T03:45:08.246025+00:00",
     "fencing_token": 1
   },
-  "last_transition": null,
-  "state_version": 1,
+  "last_transition": {
+    "transition_id": "480ad2599aba4822907c53c6dc6629cf",
+    "transaction_id": "79e5099a5eb545e087df3159f62bbd7b",
+    "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
+    "from_state": "OBSERVED",
+    "to_state": "FAILED_INTERNAL",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-15T03:48:00.211205+00:00",
+    "actor": "runtime",
+    "input_manifest": "registry:aspose-words-foss/Aspose.Words-FOSS-for-Java",
+    "output_manifest": "candidates/aspose-words-foss__Aspose.Words-FOSS-for-Java/CURRENT",
+    "policy_version": "readme-contract-v1-draft",
+    "fencing_token": 1
+  },
+  "state_version": 2,
   "recent_trigger_dedup_keys": {
     "run:43672441969:aspose-words-foss/Aspose.Words-FOSS-for-Java": "79e5099a5eb545e087df3159f62bbd7b"
   },
