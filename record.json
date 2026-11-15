@@ -24,78 +24,137 @@
    "run_id": "43649217616",
    "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-15T12:33:30+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "43713153251",
+   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T22:46:21+00:00",
+  "at": "2026-11-15T12:33:30+00:00",
   "classes": {
-   "BC-02|inherited_unit|unproven_build": {
-    "example": "install_command:cmake: the README prints 'cmake --build build', the source build of a project whose build no run proved (no build exited 0: failed); remove the command or state only what the repository documents",
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "The `AutoFilterSupport` class provides support for auto-filtering data in worksheets.",
     "findings": 1,
-    "origin_kind": "inherited_unit",
+    "origin_kind": "authored_unit",
     "origins": [
-     "inherited_unit:060.code_block"
+     "api_reference.hub:public_symbol:aspose.cells_foss.autofiltersupport"
     ],
-    "rule": "BC-02",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "rule": "llm:factuality",
+    "scope": "ca840107b72ec1c4d6eb1041147d073cdf899b1c6bda51d3d26673d55375be82",
     "scope_paths": [
-     "data/readme_findings.json",
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "These limitations don't apply to [full-featured Aspose.Cells for Cpp \u2014 Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds support for legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "d45248785ed257252c24f0b078ffcf42649350f49a0406b9af92a92dc710d5d6",
+    "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "unproven_build",
-    "upstream": "source_build"
+    "sub_rule": "scope_limitations",
+    "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [contradiction] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-02",
-    "message": "install_command:cmake: the README prints 'cmake --build build', the source build of a project whose build no run proved (no build exited 0: failed); remove the command or state only what the repository documents",
+    "label": "F01",
+    "message": "The `AutoFilterSupport` class provides support for auto-filtering data in worksheets.",
     "origin": {
-     "id": "inherited_unit:060.code_block",
-     "kind": "inherited_unit"
+     "id": "api_reference.hub:public_symbol:aspose.cells_foss.autofiltersupport",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "BC-02",
-    "section_id": "",
-    "signature": "BC-02|inherited_unit|unproven_build",
-    "source": "validation",
-    "sub_rule": "unproven_build",
-    "upstream": "source_build"
+    "quote": "The `AutoFilterSupport` class provides support for auto-filtering data in worksheets.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "It adds support for legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.Cells for Cpp \u2014 Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds support for legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-02",
+    "label": "F02",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-02 still fails on this revision, which is the defect: install_command:cmake: the README prints 'cmake --build build', the source build of a project whose build no run proved (no build exited 0: failed); remove the command or state only what the repository documents",
-    "section_id": null,
-    "stage": "S4"
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "the causing section was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
+    "section_id": "api_reference",
+    "stage": "S6"
    }
   ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
-  "run_id": "43649217616",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43649217616",
+  "run_id": "43713153251",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43713153251",
   "schema_version": 1,
   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
