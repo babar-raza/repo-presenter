@@ -1,0 +1,221 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T03:51:20+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-14|inherited_unit|the_readme_claims_fbx",
+    "claim_contradiction|inherited_unit|stub_format"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 5,
+   "outcome": "failure",
+   "run_id": "43672443603",
+   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T03:51:20+00:00",
+  "classes": {
+   "BC-05|inherited_unit|superseded_unstated": {
+    "example": "inherited_unit:050.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('| Created by lexchou on 12/14/2016.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:050.table"
+    ],
+    "rule": "BC-05",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   "BC-14|inherited_unit|the_readme_claims_fbx": {
+    "example": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
+    "findings": 2,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:050.table"
+    ],
+    "rule": "BC-14",
+    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "the_readme_claims_fbx",
+    "upstream": ""
+   },
+   "claim_contradiction|inherited_unit|stub_format": {
+    "example": "| `FbxLoadOptions` | Load options for FBX format. |",
+    "findings": 2,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:050.table"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "cd86cddb121296bc6bb299f6ff0ab4155cbe0b3615022bffe524e7b5dfb2245c",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .fbx output, but format:output.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the output formats)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "claim_contradiction",
+    "message": "line 291 (COMPOSING): the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
+    "origin": {
+     "id": "inherited_unit:050.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `FbxLoadOptions` | Load options for FBX format. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|stub_format",
+    "source": "review",
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 292 (COMPOSING): the README claims .fbx output, but format:output.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the output formats",
+    "origin": {
+     "id": "inherited_unit:050.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `FbxSaveOptions` | Save options for FBX format. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|stub_format",
+    "source": "review",
+    "sub_rule": "stub_format",
+    "upstream": "source_stub"
+   },
+   {
+    "label": "BC-05",
+    "message": "inherited_unit:050.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('| Created by lexchou on 12/14/2016.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "origin": {
+     "id": "inherited_unit:050.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-05",
+    "section_id": "",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
+    "origin": {
+     "id": "inherited_unit:050.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|inherited_unit|the_readme_claims_fbx",
+    "source": "validation",
+    "sub_rule": "the_readme_claims_fbx",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README claims .fbx output, but format:output.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the output formats",
+    "origin": {
+     "id": "inherited_unit:050.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|inherited_unit|the_readme_claims_fbx",
+    "source": "validation",
+    "sub_rule": "the_readme_claims_fbx",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:050.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documentation_reso",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats; revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .fbx output, but format:output.fbx is reachable only through a stub",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
+  "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+  "run_id": "43672443603",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43672443603",
+  "schema_version": 1,
+  "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
+ "schema_version": 1
+}
