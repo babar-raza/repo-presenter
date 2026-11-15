@@ -1,0 +1,3535 @@
+{
+  "facts": [
+    {
+      "attributes": {
+        "role": "build command",
+        "source": "toolchain convention"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "build command; standard `dotnet build Aspose.Ocr.Foss.sln` for the project declared in Aspose.Ocr.Foss.sln; no workflow step or script names it",
+          "path": "Aspose.Ocr.Foss.sln"
+        }
+      ],
+      "id": "build_test_asset:build-command",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "dotnet build Aspose.Ocr.Foss.sln"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": ".github/workflows/build.yml"
+        },
+        {
+          "detail": "1 files; GitHub Actions workflows",
+          "path": ".github/workflows/"
+        }
+      ],
+      "id": "build_test_asset:ci",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": ".github/workflows/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": "docs/LICENSE.txt"
+        },
+        {
+          "detail": null,
+          "path": "docs/media/banner-readme.png"
+        },
+        {
+          "detail": null,
+          "path": "docs/media/icon.png"
+        },
+        {
+          "detail": "3 files; documentation directory",
+          "path": "docs/"
+        }
+      ],
+      "id": "build_test_asset:docs",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "docs/"
+    },
+    {
+      "attributes": {
+        "role": "test command",
+        "source": "toolchain convention"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "test command; standard `dotnet test Aspose.Ocr.Foss.sln` for the project declared in Aspose.Ocr.Foss.sln, which has tests in the tree; no workflow step or script names it",
+          "path": "Aspose.Ocr.Foss.sln"
+        }
+      ],
+      "id": "build_test_asset:test-command",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "dotnet test Aspose.Ocr.Foss.sln"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": "tests/AsposeOcrTests.cs"
+        },
+        {
+          "detail": null,
+          "path": "tests/AsposeOcrValidationTests.cs"
+        },
+        {
+          "detail": "2 files; test suite (2 test sources among the 8 files here)",
+          "path": "tests/"
+        }
+      ],
+      "id": "build_test_asset:tests",
+      "kind": "build_test_asset",
+      "polarity": "SUPPORTED",
+      "value": "tests/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package reference declared by the project file",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "dependency:aspose.pdf.foss",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.PDF.FOSS 26.10.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package reference declared by the project file",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "dependency:microsoft.ml.onnxruntime",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "Microsoft.ML.OnnxRuntime 1.22.1"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package reference declared by the project file",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "dependency:system.drawing.common",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "System.Drawing.Common 8.0.0"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package reference declared by the project file",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "dependency:system.security.cryptography.pkcs",
+      "kind": "dependency",
+      "polarity": "SUPPORTED",
+      "value": "System.Security.Cryptography.Pkcs 8.0.2"
+    },
+    {
+      "attributes": {
+        "enum": "Aspose.OCR.InputType"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; member of enum Aspose.OCR.InputType",
+          "path": "src/InputType.cs"
+        }
+      ],
+      "id": "enum_member:aspose.ocr.inputtype.pdf",
+      "kind": "enum_member",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.InputType.PDF"
+    },
+    {
+      "attributes": {
+        "enum": "Aspose.OCR.InputType"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; member of enum Aspose.OCR.InputType",
+          "path": "src/InputType.cs"
+        }
+      ],
+      "id": "enum_member:aspose.ocr.inputtype.singleimage",
+      "kind": "enum_member",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.InputType.SingleImage"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 112-130; csharp fence; unit inherited_unit:028.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 1: NEEDS_INPUT; compiled against Aspose.Ocr.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:001",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.PDF);\ninput.Add(\"document.pdf\");\n\nOcrOutput output = api.Recognize(input);\n\nforeach (RecognitionResult page in output)\n{\n    Console.WriteLine(page.RecognitionText);\n\n    foreach (RecognitionResult.LinesResult line in page.RecognitionLinesResult)\n    {\n        Console.WriteLine($\"{line.Line}: {line.TextInLine}\");\n    }\n}\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 139-148; csharp fence; unit inherited_unit:032.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 2: NEEDS_INPUT; compiled against Aspose.Ocr.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:002",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.SingleImage);\ninput.Add(\"scan.png\");\n\nRecognitionResult result = api.Recognize(input)[0];\nConsole.WriteLine(result.RecognitionText);\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 158-173; csharp fence; unit inherited_unit:036.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 3: NEEDS_INPUT; compiled against Aspose.Ocr.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:003",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.SingleImage);\ninput.Add(\"page-1.jpg\");\ninput.Add(\"page-2.png\");\n\nOcrOutput output = api.Recognize(input);\n\nfor (int index = 0; index < output.Count; index++)\n{\n    Console.WriteLine($\"Image {index + 1}\");\n    Console.WriteLine(output[index].RecognitionText);\n}\n"
+    },
+    {
+      "attributes": null,
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "lines 177-193; csharp fence; unit inherited_unit:038.code_block",
+          "path": "README.md"
+        },
+        {
+          "detail": "example 4: NEEDS_INPUT; compiled against Aspose.Ocr.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
+          "path": "receipts.json"
+        }
+      ],
+      "id": "example:004",
+      "kind": "example",
+      "polarity": "UNRESOLVED",
+      "value": "using Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.SingleImage);\ninput.Add(\"document.jpg\");\n\nRecognitionResult result = api.Recognize(input)[0];\n\nforeach (RecognitionResult.LinesResult line in result.RecognitionLinesResult)\n{\n    System.Drawing.Rectangle bounds = line.Line;\n    Console.WriteLine(\n        $\"x={bounds.X}, y={bounds.Y}, width={bounds.Width}, \" +\n        $\"height={bounds.Height}: {line.TextInLine}\");\n}\n"
+    },
+    {
+      "attributes": {
+        "source": "enum_declaration"
+      },
+      "confidence": 0.5,
+      "evidence": [
+        {
+          "detail": "declared by Aspose.OCR.InputType member PDF; declared is not verified",
+          "path": "src/InputType.cs"
+        }
+      ],
+      "id": "format:input.pdf",
+      "kind": "format",
+      "polarity": "UNRESOLVED",
+      "value": ".pdf"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:ecosystem",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "net"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:family",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "ocr"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:platform",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "net"
+    },
+    {
+      "attributes": {
+        "changed": "false",
+        "enterprise_target_status": "200",
+        "product_homepage_status": "200",
+        "stage": "product_knowledge_refresh"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "product_homepage; status 200",
+          "path": "https://products.aspose.org/ocr/net/"
+        },
+        {
+          "detail": "enterprise_target; status 200",
+          "path": "https://products.aspose.com/ocr/net/"
+        }
+      ],
+      "id": "identity:product-knowledge-refresh",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "checked 2 page(s) at revision 032181110c3d; changed=False"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "admitted registry entry",
+          "path": "data/registry.json"
+        }
+      ],
+      "id": "identity:repository",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "pinned default-branch revision",
+          "path": "source/snapshot.json"
+        }
+      ],
+      "id": "identity:revision",
+      "kind": "identity",
+      "polarity": "SUPPORTED",
+      "value": "032181110c3d6d3689404021d7473ccfd9050a80"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "150",
+        "name": "PdfRenderingResolution"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; named literal constant",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "implementation:constant.src-asposeocr.pdfrenderingresolution",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "PdfRenderingResolution = 150"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "0.406f",
+        "name": "BlueMean"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; named literal constant",
+          "path": "src/BitmapTensorFactory.cs"
+        }
+      ],
+      "id": "implementation:constant.src-bitmaptensorfactory.bluemean",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "BlueMean = 0.406f"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "0.456f",
+        "name": "GreenMean"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; named literal constant",
+          "path": "src/BitmapTensorFactory.cs"
+        }
+      ],
+      "id": "implementation:constant.src-bitmaptensorfactory.greenmean",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "GreenMean = 0.456f"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "0.485f",
+        "name": "RedMean"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; named literal constant",
+          "path": "src/BitmapTensorFactory.cs"
+        }
+      ],
+      "id": "implementation:constant.src-bitmaptensorfactory.redmean",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "RedMean = 0.485f"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "2",
+        "name": "CropPadding"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; named literal constant",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:constant.src-crnntextrecognizer.croppadding",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "CropPadding = 2"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "'\\u010A'",
+        "name": "IgnoredCharacter"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 119; named literal constant",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:constant.src-crnntextrecognizer.ignoredcharacter",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "IgnoredCharacter = '\\u010A'"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "32",
+        "name": "InputHeight"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; named literal constant",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:constant.src-crnntextrecognizer.inputheight",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "InputHeight = 32"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"input_1\"",
+        "name": "InputName"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; named literal constant",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:constant.src-crnntextrecognizer.inputname",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "InputName = \"input_1\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "1200",
+        "name": "InputWidth"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; named literal constant",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:constant.src-crnntextrecognizer.inputwidth",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "InputWidth = 1200"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"dense\"",
+        "name": "OutputName"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; named literal constant",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:constant.src-crnntextrecognizer.outputname",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "OutputName = \"dense\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "8d",
+        "name": "LanczosRadius"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; named literal constant",
+          "path": "src/GrayscaleImage.cs"
+        }
+      ],
+      "id": "implementation:constant.src-grayscaleimage.lanczosradius",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "LanczosRadius = 8d"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"Aspose.OCR.Resources.region_detection.onnx\"",
+        "name": "TextDetection"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; named literal constant",
+          "path": "src/ModelResourceNames.cs"
+        }
+      ],
+      "id": "implementation:constant.src-modelresourcenames.textdetection",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "TextDetection = \"Aspose.OCR.Resources.region_detection.onnx\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"Aspose.OCR.Resources.latin_text_recognition.onnx\"",
+        "name": "TextRecognition"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; named literal constant",
+          "path": "src/ModelResourceNames.cs"
+        }
+      ],
+      "id": "implementation:constant.src-modelresourcenames.textrecognition",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "TextRecognition = \"Aspose.OCR.Resources.latin_text_recognition.onnx\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"Aspose.OCR.Resources.region_refinement.onnx\"",
+        "name": "TextRefinement"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; named literal constant",
+          "path": "src/ModelResourceNames.cs"
+        }
+      ],
+      "id": "implementation:constant.src-modelresourcenames.textrefinement",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "TextRefinement = \"Aspose.OCR.Resources.region_refinement.onnx\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "0.4f",
+        "name": "LinkThreshold"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; named literal constant",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetectionpostprocessor.linkthreshold",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "LinkThreshold = 0.4f"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "3",
+        "name": "MinimumComponentSize"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; named literal constant",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetectionpostprocessor.minimumcomponentsize",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "MinimumComponentSize = 3"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "2f",
+        "name": "ModelOutputScale"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; named literal constant",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetectionpostprocessor.modeloutputscale",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "ModelOutputScale = 2f"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "0.4f",
+        "name": "TextThreshold"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; named literal constant",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetectionpostprocessor.textthreshold",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "TextThreshold = 0.4f"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "32",
+        "name": "BottomPadding"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; named literal constant",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetector.bottompadding",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "BottomPadding = 32"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"features\"",
+        "name": "DetectorFeaturesName"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; named literal constant",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetector.detectorfeaturesname",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "DetectorFeaturesName = \"features\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"x\"",
+        "name": "DetectorInputName"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; named literal constant",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetector.detectorinputname",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "DetectorInputName = \"x\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"maps\"",
+        "name": "DetectorMapsName"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; named literal constant",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetector.detectormapsname",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "DetectorMapsName = \"maps\""
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "1000",
+        "name": "MaximumModelSide"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 13; named literal constant",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetector.maximummodelside",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "MaximumModelSide = 1000"
+    },
+    {
+      "attributes": {
+        "aspect": "constant",
+        "literal": "\"y_refine\"",
+        "name": "RefinerOutputName"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; named literal constant",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:constant.src-regiondetector.refineroutputname",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "RefinerOutputName = \"y_refine\""
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "condition": "conditional",
+        "exception": "ArgumentNullException",
+        "member": "Aspose.OCR.AsposeOcr.Recognize"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 27; throw in the member's own body",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "implementation:throws.aspose.ocr.asposeocr.recognize.body.argumentnullexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.AsposeOcr.Recognize throws ArgumentNullException (conditionally)"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "condition": "conditional",
+        "exception": "FileNotFoundException",
+        "member": "Aspose.OCR.AsposeOcr.Recognize",
+        "message": "The OCR input file was not found."
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; throw in the member's own body",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "implementation:throws.aspose.ocr.asposeocr.recognize.body.filenotfoundexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.AsposeOcr.Recognize throws FileNotFoundException (conditionally)"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "condition": "conditional",
+        "exception": "NotSupportedException",
+        "member": "Aspose.OCR.AsposeOcr.Recognize",
+        "message": "Input type '{input.InputType}' is not supported."
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; throw in the member's own body",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "implementation:throws.aspose.ocr.asposeocr.recognize.body.notsupportedexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.AsposeOcr.Recognize throws NotSupportedException (conditionally)"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "condition": "conditional",
+        "exception": "ArgumentException",
+        "member": "Aspose.OCR.OcrInput.Add",
+        "message": "An image or PDF path must be provided."
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 32; throw in the member's own body",
+          "path": "src/OcrInput.cs"
+        }
+      ],
+      "id": "implementation:throws.aspose.ocr.ocrinput.add.body.argumentexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.OcrInput.Add throws ArgumentException (conditionally)"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "exception": "ArgumentException",
+        "member": "BitmapTensorFactory.CreateRegionDetectorInput",
+        "message": "The grayscale buffer size does not match the image dimensions.",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; throw in a non-public type's member",
+          "path": "src/BitmapTensorFactory.cs"
+        }
+      ],
+      "id": "implementation:throws.src-bitmaptensorfactory.cs.bitmaptensorfactory.createregiondetectorinput.argumentexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "BitmapTensorFactory.CreateRegionDetectorInput throws ArgumentException (non-public type)"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "exception": "InvalidOperationException",
+        "member": "CrnnTextRecognizer.ReadModel",
+        "message": "Embedded OCR model '{resourceName}' was not found.",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 109; throw in a non-public type's member",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "implementation:throws.src-crnntextrecognizer.cs.crnntextrecognizer.readmodel.invalidoperationexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "CrnnTextRecognizer.ReadModel throws InvalidOperationException (non-public type)"
+    },
+    {
+      "attributes": {
+        "aspect": "throws",
+        "exception": "InvalidOperationException",
+        "member": "RegionDetector.ReadModel",
+        "message": "Embedded OCR model '{resourceName}' was not found.",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 121; throw in a non-public type's member",
+          "path": "src/RegionDetector.cs"
+        }
+      ],
+      "id": "implementation:throws.src-regiondetector.cs.regiondetector.readmodel.invalidoperationexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "RegionDetector.ReadModel throws InvalidOperationException (non-public type)"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 1-1; heading",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:001.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "# Aspose.OCR.FOSS for .NET"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Ocr.Foss.csproj,src/Aspose.Ocr.Foss.csproj",
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 3-3; badge_row; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:002.badge_row",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "[![NuGet version](https://img.shields.io/nuget/v/Aspose.OCR.FOSS.svg)](https://www.nuget.org/packages/Aspose.OCR.FOSS/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![.NET](https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net48%20%7C%20net8%2B-blue.svg)](src/Aspose.Ocr.Foss.csproj)"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 5-5; badge_row; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:003.badge_row",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "[![Aspose.OCR.FOSS for .NET](https://raw.githubusercontent.com/aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET/main/docs/media/banner-readme.png)](https://products.aspose.com/ocr/net/)"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 7-11; paragraph; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:004.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.FOSS for .NET is a free, open-source OCR library for .NET Framework 4.8,\n.NET Standard 2.0, and .NET 8+. It detects text lines in raster images and PDF documents,\nrecognizes Latin-script text, and returns both the recognized text and the pixel coordinates of\nevery detected line. The detection, refinement, and recognition models are embedded in the\nassembly and run locally through ONNX Runtime."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 13-13; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:005.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Navigation"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Navigation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 15-26; list; under Aspose.OCR.FOSS for .NET > Navigation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:006.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- [At a Glance](#at-a-glance)\n- [Key Capabilities](#key-capabilities)\n- [Installation](#installation)\n- [Dependencies](#dependencies)\n- [Quick Start](#quick-start)\n- [Additional Examples](#additional-examples)\n- [How Recognition Works](#how-recognition-works)\n- [API Reference](#api-reference)\n- [Documentation & Resources](#documentation--resources)\n- [Scope and Limitations](#scope-and-limitations)\n- [Development and Testing](#development-and-testing)\n- [License](#license)"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 28-28; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:007.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## At a Glance"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > At a Glance"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 30-39; code_block; under Aspose.OCR.FOSS for .NET > At a Glance",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:008.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```mermaid\nflowchart LR\n    image[Raster image] --> detector[Text-line detection]\n    pdf[PDF document] --> render[Render pages at 150 DPI]\n    render --> detector\n    detector --> refine[Region refinement]\n    refine --> boxes[Line rectangles]\n    boxes --> recognize[Latin text recognition]\n    recognize --> output[Text and pixel coordinates]\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 41-41; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:009.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Key Capabilities"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Key Capabilities"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 43-55; list; under Aspose.OCR.FOSS for .NET > Key Capabilities",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:010.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- Recognize a single raster image through `InputType.SingleImage`.\n- Recognize every page of a PDF through `InputType.PDF`; pages are returned in source order.\n- Detect text-line regions with embedded ONNX detection and refinement models.\n- Recognize Latin-script text, including the diacritical characters included in the embedded\n  recognition model.\n- Return one `RecognitionResult` per image or PDF page.\n- Return the complete page text through `RecognitionResult.RecognitionText`.\n- Return individual lines and their `System.Drawing.Rectangle` coordinates through\n  `RecognitionResult.RecognitionLinesResult`.\n- Process multiple files in one `OcrInput` container, preserving their order.\n- Run entirely on the local CPU without network services or external model files.\n- Use an API shape compatible with the core Aspose.OCR recognition workflow:\n  `api.Recognize(input)`."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 57-57; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:011.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Installation"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 59-60; paragraph; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:012.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The NuGet package ID is\n[`Aspose.OCR.FOSS`](https://www.nuget.org/packages/Aspose.OCR.FOSS/):"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 62-64; code_block; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:013.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ndotnet add package Aspose.OCR.FOSS --version 26.10.0\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 66-66; paragraph; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:014.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Or add a `<PackageReference>`:"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 68-70; code_block; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:015.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```xml\n<PackageReference Include=\"Aspose.OCR.FOSS\" Version=\"26.10.0\" />\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 72-74; paragraph; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:016.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The package ships builds for **netstandard2.0, net48, net8.0, net9.0, and net10.0**. Building all\nfive targets from source requires the .NET 10 SDK; use `-f net8.0`, for example, to build one\ntarget."
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Ocr.Foss.csproj,src/Aspose.Ocr.Foss.csproj",
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 76-78; code_block; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:017.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ndotnet build src/Aspose.Ocr.Foss.csproj -c Release\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Installation"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 80-83; blockquote; under Aspose.OCR.FOSS for .NET > Installation",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:018.blockquote",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "> [!IMPORTANT]\n> Image processing uses `System.Drawing.Common 8.0.0`. On .NET 6 and later,\n> `System.Drawing.Common` is supported on Windows only. The modern builds are marked with\n> `SupportedOSPlatform(\"windows\")` so platform analyzers report this requirement to consumers."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 85-85; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:019.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Dependencies"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 87-87; heading; under Aspose.OCR.FOSS for .NET > Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:020.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Required Package Dependencies"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Dependencies > Required Package Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 89-94; table; under Aspose.OCR.FOSS for .NET > Dependencies > Required Package Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:021.table",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "| Package | Version | Purpose |\n|---|---:|---|\n| `Aspose.PDF.FOSS` | 26.10.0 | Opens PDF documents and renders pages for OCR. |\n| `System.Drawing.Common` | 8.0.0 | Loads, crops, resizes, and reads raster image pixels. |\n| `Microsoft.ML.OnnxRuntime` | 1.22.1 | Runs the embedded detection, refinement, and recognition models on the CPU. |\n| `System.Security.Cryptography.Pkcs` | 8.0.2 | Overrides an older transitive version on netstandard2.0 and net48. |"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 96-96; heading; under Aspose.OCR.FOSS for .NET > Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:022.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Native and System Requirements"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Dependencies > Native and System Requirements"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 98-101; list; under Aspose.OCR.FOSS for .NET > Dependencies > Native and System Requirements",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:023.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- Windows for OCR image processing with `System.Drawing.Common 8.0.0`.\n- .NET Framework 4.8, a .NET Standard 2.0-compatible runtime, or .NET 8 or later.\n- No separate OCR model download is required; all three ONNX models are embedded resources.\n- ONNX Runtime supplies the native runtime binaries through its NuGet package."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 103-103; heading; under Aspose.OCR.FOSS for .NET > Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:024.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Development Dependencies"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Dependencies > Development Dependencies"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 105-106; paragraph; under Aspose.OCR.FOSS for .NET > Dependencies > Development Dependencies",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:025.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The test project uses xUnit and `Microsoft.NET.Test.Sdk`. No separate test runner installation is\nrequired when tests are executed with `dotnet test`."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 108-108; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:026.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Quick Start"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Quick Start"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 110-110; paragraph; under Aspose.OCR.FOSS for .NET > Quick Start",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:027.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Recognize a PDF and print every detected line with its coordinates:"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Quick Start"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 112-130; code_block; under Aspose.OCR.FOSS for .NET > Quick Start",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:028.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.PDF);\ninput.Add(\"document.pdf\");\n\nOcrOutput output = api.Recognize(input);\n\nforeach (RecognitionResult page in output)\n{\n    Console.WriteLine(page.RecognitionText);\n\n    foreach (RecognitionResult.LinesResult line in page.RecognitionLinesResult)\n    {\n        Console.WriteLine($\"{line.Line}: {line.TextInLine}\");\n    }\n}\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Quick Start"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 132-133; paragraph; under Aspose.OCR.FOSS for .NET > Quick Start",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:029.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Each `RecognitionResult` corresponds to one rendered PDF page. Rectangle coordinates use the\n150-DPI page image produced internally by the PDF renderer."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 135-135; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:030.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Additional Examples"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 137-137; heading; under Aspose.OCR.FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:031.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Recognize a Single Image"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples > Recognize a Single Image"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 139-148; code_block; under Aspose.OCR.FOSS for .NET > Additional Examples > Recognize a Single Image",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:032.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.SingleImage);\ninput.Add(\"scan.png\");\n\nRecognitionResult result = api.Recognize(input)[0];\nConsole.WriteLine(result.RecognitionText);\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples > Recognize a Single Image"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 150-151; html_block; under Aspose.OCR.FOSS for .NET > Additional Examples > Recognize a Single Image",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:033.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "<details>\n<summary>View Additional Examples</summary>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 153-153; heading; under Aspose.OCR.FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:034.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Recognize Multiple Images"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples > Recognize Multiple Images"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 155-156; paragraph; under Aspose.OCR.FOSS for .NET > Additional Examples > Recognize Multiple Images",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:035.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "All files in one input container must have the same `InputType`. They are processed sequentially\nand returned in the order in which they were added."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples > Recognize Multiple Images"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 158-173; code_block; under Aspose.OCR.FOSS for .NET > Additional Examples > Recognize Multiple Images",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:036.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.SingleImage);\ninput.Add(\"page-1.jpg\");\ninput.Add(\"page-2.png\");\n\nOcrOutput output = api.Recognize(input);\n\nfor (int index = 0; index < output.Count; index++)\n{\n    Console.WriteLine($\"Image {index + 1}\");\n    Console.WriteLine(output[index].RecognitionText);\n}\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 175-175; heading; under Aspose.OCR.FOSS for .NET > Additional Examples",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:037.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### Work With Detected Line Coordinates"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples > Work With Detected Line Coordinates"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 177-193; code_block; under Aspose.OCR.FOSS for .NET > Additional Examples > Work With Detected Line Coordinates",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:038.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```csharp\nusing Aspose.OCR;\n\nvar api = new AsposeOcr();\nusing var input = new OcrInput(InputType.SingleImage);\ninput.Add(\"document.jpg\");\n\nRecognitionResult result = api.Recognize(input)[0];\n\nforeach (RecognitionResult.LinesResult line in result.RecognitionLinesResult)\n{\n    System.Drawing.Rectangle bounds = line.Line;\n    Console.WriteLine(\n        $\"x={bounds.X}, y={bounds.Y}, width={bounds.Width}, \" +\n        $\"height={bounds.Height}: {line.TextInLine}\");\n}\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Additional Examples > Work With Detected Line Coordinates"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 195-195; html_block; under Aspose.OCR.FOSS for .NET > Additional Examples > Work With Detected Line Coordinates",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:039.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "</details>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 197-197; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:040.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## How Recognition Works"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > How Recognition Works"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 199-217; list; under Aspose.OCR.FOSS for .NET > How Recognition Works",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:041.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "1. **Input validation** \u2014 all source paths and the selected `InputType` are validated before the\n   ONNX sessions are created.\n2. **PDF rendering** \u2014 PDF pages are rendered to 24-bit RGB images at 150 DPI with\n   `Aspose.PDF.FOSS`. Raster images are loaded directly.\n3. **Detector preprocessing** \u2014 the image is converted to Rec. 709 grayscale. If its longest side\n   exceeds 1000 pixels, it is reduced with a separable Lanczos-8 filter. A 32-pixel white strip is\n   appended to match the detector's training-time preprocessing.\n4. **Region detection** \u2014 the first ONNX model produces text probability maps and intermediate\n   visual features. The refinement model strengthens links between adjacent characters.\n5. **Region post-processing** \u2014 text and link maps are thresholded, grouped with a four-connected\n   breadth-first flood fill, dilated, fitted with a minimum-area rectangle, scaled back to source\n   coordinates, and reduced to non-nested axis-aligned line rectangles.\n6. **Line recognition** \u2014 each detected rectangle is padded by two pixels, cropped, resized to fit\n   a 1200\u00d732 white canvas while preserving its aspect ratio, converted to an NHWC grayscale tensor,\n   and passed to the recognition model.\n7. **CTC decoding** \u2014 greedy CTC decoding collapses repeated classes, removes the blank class, and\n   maps the remaining classes to the model's Latin alphabet.\n8. **Result assembly** \u2014 recognized lines are paired with their source-image rectangles and joined\n   with platform line breaks to produce `RecognitionText`."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > How Recognition Works"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 219-220; paragraph; under Aspose.OCR.FOSS for .NET > How Recognition Works",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:042.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "ONNX Runtime uses parallel graph execution with eight intra-operation worker threads. Input files\nand PDF pages themselves are processed sequentially."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 222-222; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:043.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## API Reference"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 224-224; paragraph; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:044.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The public API deliberately remains small."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 226-233; table; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:045.table",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "| Type | Description |\n|---|---|\n| `AsposeOcr` | Entry point that validates input, renders PDFs, and coordinates OCR. |\n| `OcrInput` | Disposable input container for image or PDF file paths. |\n| `OcrOutput` | Ordered list of recognition results. |\n| `RecognitionResult` | Recognized page text and line-level results. |\n| `RecognitionResult.LinesResult` | Text and pixel rectangle for one detected line. |\n| `InputType` | Selects `SingleImage` or `PDF` input. |"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 235-236; html_block; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:046.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "<details>\n<summary>View Detailed Member Reference</summary>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 238-238; heading; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:047.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### `AsposeOcr`"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `AsposeOcr`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 240-244; list; under Aspose.OCR.FOSS for .NET > API Reference > `AsposeOcr`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:048.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `Recognize(OcrInput input) -> OcrOutput`\n  - Returns one result per source image or PDF page.\n  - Throws `ArgumentNullException` for a null input.\n  - Throws `FileNotFoundException` when a source file does not exist.\n  - Throws `NotSupportedException` for an unsupported input type."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 246-246; heading; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:049.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### `OcrInput`"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `OcrInput`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 248-250; list; under Aspose.OCR.FOSS for .NET > API Reference > `OcrInput`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:050.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `OcrInput(InputType type)` \u2014 creates an input container for one source type.\n- `Add(string fullPath)` \u2014 adds a relative or absolute file path.\n- `Dispose()` \u2014 clears all paths held by the container."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 252-252; heading; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:051.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### `OcrOutput`"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `OcrOutput`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 254-255; list; under Aspose.OCR.FOSS for .NET > API Reference > `OcrOutput`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:052.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- Inherits `List<RecognitionResult>`.\n- Preserves image and PDF-page order."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 257-257; heading; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:053.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### `RecognitionResult`"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `RecognitionResult`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 259-260; list; under Aspose.OCR.FOSS for .NET > API Reference > `RecognitionResult`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:054.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `RecognitionText` \u2014 all non-empty recognized lines joined with line breaks.\n- `RecognitionLinesResult` \u2014 ordered line text and rectangles."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 262-262; heading; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:055.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### `RecognitionResult.LinesResult`"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `RecognitionResult.LinesResult`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 264-265; list; under Aspose.OCR.FOSS for .NET > API Reference > `RecognitionResult.LinesResult`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:056.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `TextInLine` \u2014 recognized text for one detected line.\n- `Line` \u2014 `System.Drawing.Rectangle` in source-image pixels."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 267-267; heading; under Aspose.OCR.FOSS for .NET > API Reference",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:057.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "### `InputType`"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `InputType`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 269-270; list; under Aspose.OCR.FOSS for .NET > API Reference > `InputType`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:058.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- `SingleImage` \u2014 one raster image per source path.\n- `PDF` \u2014 every page of each source PDF."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > API Reference > `InputType`"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 272-272; html_block; under Aspose.OCR.FOSS for .NET > API Reference > `InputType`",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:059.html_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "</details>"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 274-274; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:060.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Documentation & Resources"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Ocr.Foss.sln",
+        "section": "Aspose.OCR.FOSS for .NET > Documentation & Resources"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 276-279; list; under Aspose.OCR.FOSS for .NET > Documentation & Resources",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:061.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- [`src/`](src/) \u2014 library source code, ONNX integration, and embedded models.\n- [`tests/`](tests/) \u2014 xUnit validation and end-to-end OCR tests with sample documents.\n- [`Aspose.Ocr.Foss.sln`](Aspose.Ocr.Foss.sln) \u2014 solution for Visual Studio and the .NET CLI.\n- [`LICENSE`](LICENSE) \u2014 MIT license text."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 281-281; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:062.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Scope and Limitations"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Scope and Limitations"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 283-300; list; under Aspose.OCR.FOSS for .NET > Scope and Limitations",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:063.list",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "- The public API is intentionally compact and may evolve as recognition capabilities are extended.\n- Recognition supports Latin-script text and the diacritical characters present in the embedded\n  recognition alphabet. There is no runtime language-selection API.\n- Inputs are limited to raster images supported by `System.Drawing.Common` and PDF documents.\n- Image processing is Windows-only because the OCR pipeline depends on `System.Drawing.Common`\n  for bitmap loading, cropping, resizing, and pixel access.\n- PDF pages are always rendered at 150 DPI; rendering resolution is not configurable yet.\n- The detector returns axis-aligned text-line rectangles. Polygonal regions and layout labels are\n  not part of the public output.\n- Searchable PDF generation, text export helpers, confidence scores, font detection, spelling\n  correction, table structure, and barcode detection are not implemented.\n- Automatic page rotation, deskewing, color inversion, and user-configurable preprocessing are not\n  implemented.\n- GPU execution is not configured; inference uses the CPU execution provider.\n- There is no dedicated input-level multithreading API. A single call processes files and PDF pages\n  sequentially, although ONNX Runtime parallelizes operations inside each inference session.\n- The NuGet package is large because the three models are embedded into every target-framework\n  assembly."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 302-302; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:064.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## Development and Testing"
+    },
+    {
+      "attributes": {
+        "repository_files": "build-packages.bat",
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 304-305; paragraph; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:065.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "On Windows, run the complete restore, build, test, and package workflow by double-clicking\n`build-packages.bat` or from a terminal:"
+    },
+    {
+      "attributes": {
+        "repository_files": "build-packages.bat",
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 307-309; code_block; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:066.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bat\nbuild-packages.bat\n```"
+    },
+    {
+      "attributes": {
+        "repository_files": "build-packages.bat",
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 311-311; paragraph; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:067.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Use `build-packages.bat --no-pause` in scripts or CI environments."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 313-313; paragraph; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:068.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Restore, build, and run the complete test matrix:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Ocr.Foss.sln",
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 315-319; code_block; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:069.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ndotnet restore Aspose.Ocr.Foss.sln\ndotnet build Aspose.Ocr.Foss.sln -c Release --no-restore\ndotnet test Aspose.Ocr.Foss.sln -c Release --no-build\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 321-321; paragraph; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:070.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "The xUnit test project targets **net48, net8.0, net9.0, and net10.0**. To run one target only:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Ocr.Foss.Tests.csproj,tests/Aspose.Ocr.Foss.Tests.csproj",
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 323-325; code_block; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:071.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ndotnet test tests/Aspose.Ocr.Foss.Tests.csproj -c Release -f net8.0\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 327-327; paragraph; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:072.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "Create the NuGet package:"
+    },
+    {
+      "attributes": {
+        "repository_files": "Aspose.Ocr.Foss.csproj,src/Aspose.Ocr.Foss.csproj",
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 329-331; code_block; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:073.code_block",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "```bash\ndotnet pack src/Aspose.Ocr.Foss.csproj -c Release --no-build -o artifacts/packages\n```"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > Development and Testing"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 333-333; paragraph; under Aspose.OCR.FOSS for .NET > Development and Testing",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:074.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "This creates `Aspose.OCR.FOSS.26.10.0.nupkg` in `artifacts/packages`."
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 335-335; heading; under Aspose.OCR.FOSS for .NET",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:075.heading",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "## License"
+    },
+    {
+      "attributes": {
+        "section": "Aspose.OCR.FOSS for .NET > License"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "lines 337-339; paragraph; under Aspose.OCR.FOSS for .NET > License",
+          "path": "README.md"
+        }
+      ],
+      "id": "inherited_unit:076.paragraph",
+      "kind": "inherited_unit",
+      "polarity": "SUPPORTED",
+      "value": "This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying,\nmodification, distribution, sublicensing, and commercial use, provided its copyright and\npermission notice are retained. The software is provided without warranty."
+    },
+    {
+      "attributes": {
+        "source_checkout_unverified": "no example executed against a build of this checkout that succeeded"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "install command for the package id declared by the manifest",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        },
+        {
+          "detail": "package registry: found on nuget",
+          "path": "https://api.nuget.org/v3-flatcontainer/aspose.ocr.foss/index.json"
+        }
+      ],
+      "id": "install_command:dotnet",
+      "kind": "install_command",
+      "polarity": "SUPPORTED",
+      "value": "dotnet add package Aspose.OCR.FOSS"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class BitmapTensorFactory",
+        "docstring_full": "Converts bitmap pixels into the tensor layouts and value ranges expected by the embedded detection and recognition models.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; non-public class declaration",
+          "path": "src/BitmapTensorFactory.cs"
+        }
+      ],
+      "id": "internal_symbol:src-bitmaptensorfactory.bitmaptensorfactory",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "BitmapTensorFactory"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/BitmapTensorFactory.cs:124, src/BitmapTensorFactory.cs:125",
+        "declaration": "private sealed class Rgb24Buffer",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 95; non-public class declaration",
+          "path": "src/BitmapTensorFactory.cs"
+        },
+        {
+          "detail": "line 124; constructs Rgb24Buffer",
+          "path": "src/BitmapTensorFactory.cs"
+        },
+        {
+          "detail": "line 125; constructs Rgb24Buffer",
+          "path": "src/BitmapTensorFactory.cs"
+        }
+      ],
+      "id": "internal_symbol:src-bitmaptensorfactory.rgb24buffer",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Rgb24Buffer"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class CrnnDecoder",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 117; non-public class declaration",
+          "path": "src/CrnnTextRecognizer.cs"
+        }
+      ],
+      "id": "internal_symbol:src-crnntextrecognizer.crnndecoder",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "CrnnDecoder"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/OcrEngine.cs:19",
+        "declaration": "internal sealed class CrnnTextRecognizer : IDisposable",
+        "docstring_full": "Crops detected text lines, prepares fixed-size model input, and runs the CRNN text-recognition model.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; non-public class declaration",
+          "path": "src/CrnnTextRecognizer.cs"
+        },
+        {
+          "detail": "line 19; constructs CrnnTextRecognizer",
+          "path": "src/OcrEngine.cs"
+        }
+      ],
+      "id": "internal_symbol:src-crnntextrecognizer.crnntextrecognizer",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "CrnnTextRecognizer"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/GrayscaleImage.cs:64, src/GrayscaleImage.cs:85, src/GrayscaleImage.cs:94",
+        "declaration": "internal sealed class GrayscaleImage",
+        "docstring_full": "Stores an immutable 8-bit grayscale raster used by detector preprocessing.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 10; non-public class declaration",
+          "path": "src/GrayscaleImage.cs"
+        },
+        {
+          "detail": "line 64; constructs GrayscaleImage",
+          "path": "src/GrayscaleImage.cs"
+        },
+        {
+          "detail": "line 85; constructs GrayscaleImage",
+          "path": "src/GrayscaleImage.cs"
+        },
+        {
+          "detail": "line 94; constructs GrayscaleImage",
+          "path": "src/GrayscaleImage.cs"
+        }
+      ],
+      "id": "internal_symbol:src-grayscaleimage.grayscaleimage",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "GrayscaleImage"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/GrayscaleImage.cs:175",
+        "declaration": "private readonly struct Sample",
+        "symbol_kind": "struct",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 209; non-public struct declaration",
+          "path": "src/GrayscaleImage.cs"
+        },
+        {
+          "detail": "line 175; constructs Sample",
+          "path": "src/GrayscaleImage.cs"
+        }
+      ],
+      "id": "internal_symbol:src-grayscaleimage.sample",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Sample"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class ModelResourceNames",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; non-public class declaration",
+          "path": "src/ModelResourceNames.cs"
+        }
+      ],
+      "id": "internal_symbol:src-modelresourcenames.modelresourcenames",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "ModelResourceNames"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/AsposeOcr.cs:51",
+        "declaration": "internal sealed class OcrEngine : IDisposable",
+        "docstring_full": "Coordinates text-line detection and recognition.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; non-public class declaration",
+          "path": "src/OcrEngine.cs"
+        },
+        {
+          "detail": "line 51; constructs OcrEngine",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "internal_symbol:src-ocrengine.ocrengine",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "OcrEngine"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/RegionDetectionPostProcessor.cs:87",
+        "declaration": "private sealed class Component",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 383; non-public class declaration",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        },
+        {
+          "detail": "line 87; constructs Component",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        }
+      ],
+      "id": "internal_symbol:src-regiondetectionpostprocessor.component",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Component"
+    },
+    {
+      "attributes": {
+        "declaration": "internal static class RegionDetectionPostProcessor",
+        "docstring_full": "Converts detector probability maps into source-image text rectangles.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 9; non-public class declaration",
+          "path": "src/RegionDetectionPostProcessor.cs"
+        }
+      ],
+      "id": "internal_symbol:src-regiondetectionpostprocessor.regiondetectionpostprocessor",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "RegionDetectionPostProcessor"
+    },
+    {
+      "attributes": {
+        "constructed_at": "src/OcrEngine.cs:15",
+        "declaration": "internal sealed class RegionDetector : IDisposable",
+        "docstring_full": "Runs a two-stage detector: the first model produces text heatmaps and visual features, while the refinement model improves links between nearby characters.",
+        "symbol_kind": "class",
+        "visibility": "internal"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; non-public class declaration",
+          "path": "src/RegionDetector.cs"
+        },
+        {
+          "detail": "line 15; constructs RegionDetector",
+          "path": "src/OcrEngine.cs"
+        }
+      ],
+      "id": "internal_symbol:src-regiondetector.regiondetector",
+      "kind": "internal_symbol",
+      "polarity": "SUPPORTED",
+      "value": "RegionDetector"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": null,
+          "path": "LICENSE"
+        }
+      ],
+      "id": "license:file",
+      "kind": "license",
+      "polarity": "SUPPORTED",
+      "value": "LICENSE"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "license text states this license",
+          "path": "LICENSE"
+        }
+      ],
+      "id": "license:spdx",
+      "kind": "license",
+      "polarity": "SUPPORTED",
+      "value": "MIT"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'NuGet version'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://img.shields.io/nuget/v/Aspose.OCR.FOSS.svg"
+        }
+      ],
+      "id": "link_target:001",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://img.shields.io/nuget/v/Aspose.OCR.FOSS.svg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'NuGet version'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://www.nuget.org/packages/Aspose.OCR.FOSS/"
+        }
+      ],
+      "id": "link_target:002",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://www.nuget.org/packages/Aspose.OCR.FOSS/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text 'License: MIT'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://img.shields.io/badge/License-MIT-blue.svg"
+        }
+      ],
+      "id": "link_target:003",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://img.shields.io/badge/License-MIT-blue.svg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; relative; text 'License: MIT'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains LICENSE",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:004",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "LICENSE"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; external; text '.NET'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net48%20%7C%20net8%2B-blue.svg"
+        }
+      ],
+      "id": "link_target:005",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://img.shields.io/badge/.NET-netstandard2.0%20%7C%20net48%20%7C%20net8%2B-blue.svg"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 3; relative; text '.NET'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains src/Aspose.Ocr.Foss.csproj",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:006",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "src/Aspose.Ocr.Foss.csproj"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; external; text 'Aspose.OCR.FOSS for .NET'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://raw.githubusercontent.com/aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET/main/docs/media/banner-readme.png"
+        }
+      ],
+      "id": "link_target:007",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://raw.githubusercontent.com/aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET/main/docs/media/banner-readme.png"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 5; external; text 'Aspose.OCR.FOSS for .NET'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED",
+          "path": "https://products.aspose.com/ocr/net/"
+        }
+      ],
+      "id": "link_target:008",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.com/ocr/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; anchor; text 'At a Glance'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #at-a-glance exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:009",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#at-a-glance"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; anchor; text 'Key Capabilities'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #key-capabilities exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:010",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#key-capabilities"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 17; anchor; text 'Installation'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #installation exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:011",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#installation"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; anchor; text 'Dependencies'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #dependencies exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:012",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#dependencies"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 19; anchor; text 'Quick Start'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #quick-start exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:013",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#quick-start"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; anchor; text 'Additional Examples'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #additional-examples exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:014",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#additional-examples"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 21; anchor; text 'How Recognition Works'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #how-recognition-works exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:015",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#how-recognition-works"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 22; anchor; text 'API Reference'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #api-reference exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:016",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#api-reference"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; anchor; text 'Documentation & Resources'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #documentation--resources exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:017",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#documentation--resources"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 24; anchor; text 'Scope and Limitations'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #scope-and-limitations exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:018",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#scope-and-limitations"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; anchor; text 'Development and Testing'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #development-and-testing exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:019",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#development-and-testing"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 26; anchor; text 'License'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: heading #license exists",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:020",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "#license"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 276; relative; text 'src/'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains src",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:021",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "src/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 277; relative; text 'tests/'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains tests",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:022",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "tests/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 278; relative; text 'Aspose.Ocr.Foss.sln'",
+          "path": "README.md"
+        },
+        {
+          "detail": "RESOLVED: tree contains Aspose.Ocr.Foss.sln",
+          "path": "README.md"
+        }
+      ],
+      "id": "link_target:023",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.Ocr.Foss.sln"
+    },
+    {
+      "attributes": {
+        "branch": "main",
+        "role": "build status badge",
+        "workflow": ".github/workflows/build.yml"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "triggers push on main; runs dotnet; build status badge target",
+          "path": ".github/workflows/build.yml"
+        }
+      ],
+      "id": "link_target:badge.ci",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://github.com/aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET/actions/workflows/build.yml"
+    },
+    {
+      "attributes": {
+        "role": "banner illustration"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "RESOLVED; banner illustration",
+          "path": "https://products.aspose.org/media/ocr/net/banner-readme.png"
+        }
+      ],
+      "id": "link_target:product.banner",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.org/media/ocr/net/banner-readme.png"
+    },
+    {
+      "attributes": {
+        "level": "platform",
+        "platform": "net",
+        "role": "enterprise"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "RESOLVED; enterprise target; platform level; slug net",
+          "path": "https://products.aspose.com/ocr/net/"
+        }
+      ],
+      "id": "link_target:product.enterprise",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.com/ocr/net/"
+    },
+    {
+      "attributes": {
+        "role": "product homepage"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "RESOLVED; product homepage",
+          "path": "https://products.aspose.org/ocr/net/"
+        }
+      ],
+      "id": "link_target:product.homepage",
+      "kind": "link_target",
+      "polarity": "SUPPORTED",
+      "value": "https://products.aspose.org/ocr/net/"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "package id declared by the project file",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "package:name",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.FOSS"
+    },
+    {
+      "attributes": {
+        "registry": "nuget",
+        "version_count": "1"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "current stable release the nuget registry lists for the package; the registry's state, not the repository's; the registry lists 1 version in all",
+          "path": "https://api.nuget.org/v3-flatcontainer/aspose.ocr.foss/index.json"
+        }
+      ],
+      "id": "package:published_version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "26.10.0"
+    },
+    {
+      "attributes": {
+        "floor_declaration": "TargetFrameworks"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "target frameworks the project declares",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "package:target_framework",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "netstandard2.0;net8.0;net9.0;net10.0;net48"
+    },
+    {
+      "attributes": null,
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "version declared by the project file",
+          "path": "src/Aspose.Ocr.Foss.csproj"
+        }
+      ],
+      "id": "package:version",
+      "kind": "package",
+      "polarity": "SUPPORTED",
+      "value": "26.10.0"
+    },
+    {
+      "attributes": {
+        "files_checked": "13",
+        "language": "csharp"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "no P/Invoke declaration in any of the 13 product source files",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "package_trait:pure_source.csharp",
+      "kind": "package_trait",
+      "polarity": "SUPPORTED",
+      "value": "pure managed .NET code: no P/Invoke declarations"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrTests.cs",
+        "test": "RecognizePdfReturnsOneResultPerPage"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 20; test case",
+          "path": "tests/AsposeOcrTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrtests.cs.recognizepdfreturnsoneresultperpage",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize pdf returns one result per page"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrTests.cs",
+        "test": "RecognizePdfTestCase"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; test case",
+          "path": "tests/AsposeOcrTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrtests.cs.recognizepdftestcase",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize pdf test case"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrTests.cs",
+        "test": "RecognizeSingleImageTestCase"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 110; test case",
+          "path": "tests/AsposeOcrTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrtests.cs.recognizesingleimagetestcase",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize single image test case"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrValidationTests.cs",
+        "test": "AddRejectsBlankPath"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 48; test case",
+          "path": "tests/AsposeOcrValidationTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrvalidationtests.cs.addrejectsblankpath",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test add rejects blank path"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrValidationTests.cs",
+        "test": "RecognizeRejectsMissingFile"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 25; test case",
+          "path": "tests/AsposeOcrValidationTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrvalidationtests.cs.recognizerejectsmissingfile",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize rejects missing file"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrValidationTests.cs",
+        "test": "RecognizeRejectsNullInput"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 8; test case",
+          "path": "tests/AsposeOcrValidationTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrvalidationtests.cs.recognizerejectsnullinput",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize rejects null input"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrValidationTests.cs",
+        "test": "RecognizeRejectsUnsupportedInputType"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; test case",
+          "path": "tests/AsposeOcrValidationTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrvalidationtests.cs.recognizerejectsunsupportedinputtype",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize rejects unsupported input type"
+    },
+    {
+      "attributes": {
+        "file": "tests/AsposeOcrValidationTests.cs",
+        "test": "RecognizeReturnsEmptyOutputForEmptyInput"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 37; test case",
+          "path": "tests/AsposeOcrValidationTests.cs"
+        }
+      ],
+      "id": "project_file:test.tests-asposeocrvalidationtests.cs.recognizereturnsemptyoutputforemptyinput",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "test recognize returns empty output for empty input"
+    },
+    {
+      "attributes": {
+        "package": "Microsoft.NET.Test.Sdk",
+        "project": "tests/Aspose.Ocr.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "17.11.1"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; PackageReference of a test project",
+          "path": "tests/Aspose.Ocr.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.microsoft.net.test.sdk",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "Microsoft.NET.Test.Sdk 17.11.1"
+    },
+    {
+      "attributes": {
+        "package": "xunit",
+        "project": "tests/Aspose.Ocr.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "2.9.2"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 15; PackageReference of a test project",
+          "path": "tests/Aspose.Ocr.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.xunit",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "xunit 2.9.2"
+    },
+    {
+      "attributes": {
+        "package": "xunit.runner.visualstudio",
+        "project": "tests/Aspose.Ocr.Foss.Tests.csproj",
+        "scope": "test",
+        "version": "2.8.2"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 16; PackageReference of a test project",
+          "path": "tests/Aspose.Ocr.Foss.Tests.csproj"
+        }
+      ],
+      "id": "project_file:test_dependency.xunit.runner.visualstudio",
+      "kind": "project_file",
+      "polarity": "SUPPORTED",
+      "value": "xunit.runner.visualstudio 2.8.2"
+    },
+    {
+      "attributes": {
+        "docstring_full": "Provides the entry point for optical character recognition.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; module; public by declaration",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "public_symbol:aspose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose"
+    },
+    {
+      "attributes": {
+        "docstring_full": "Provides the entry point for optical character recognition.",
+        "symbol_kind": "module"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; module; public by declaration",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR"
+    },
+    {
+      "attributes": {
+        "declaration": "public class AsposeOcr",
+        "docstring": "Provides the entry point for optical character recognition.",
+        "symbol_kind": "class",
+        "type_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 11; class; public by declaration",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.asposeocr",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.AsposeOcr"
+    },
+    {
+      "attributes": {
+        "docstring": "Recognizes all files in the supplied input container.",
+        "docstring_full": "Recognizes all files in the supplied input container. Images or PDF documents to recognize. One result per image or PDF page, in source order. input is null. An input file does not exist. The input type is not supported.",
+        "member_kind": "method",
+        "signature": "Recognize(OcrInput input)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; public by declaration",
+          "path": "src/AsposeOcr.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.asposeocr.recognize",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.AsposeOcr.Recognize"
+    },
+    {
+      "attributes": {
+        "declaration": "public enum InputType",
+        "docstring": "Specifies the type of OCR input.",
+        "member_count": "2",
+        "members": "SingleImage, PDF",
+        "symbol_kind": "enum",
+        "type_kind": "enum"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; enum; public by declaration",
+          "path": "src/InputType.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.inputtype",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.InputType"
+    },
+    {
+      "attributes": {
+        "declaration": "[Serializable]",
+        "docstring": "Represents the recognized text and bounds of one text line.",
+        "symbol_kind": "class",
+        "type_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 12; class; public by declaration",
+          "path": "src/RecognitionResult.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.linesresult",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.LinesResult"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the line bounds, in source-image pixels.",
+        "member_kind": "property",
+        "settable": "true",
+        "signature": "System.Drawing.Rectangle",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 23; method; public by declaration",
+          "path": "src/RecognitionResult.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.linesresult.line",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.LinesResult.Line"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets the recognized text for this line.",
+        "member_kind": "property",
+        "settable": "true",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 18; method; public by declaration",
+          "path": "src/RecognitionResult.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.linesresult.textinline",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.LinesResult.TextInLine"
+    },
+    {
+      "attributes": {
+        "bases": "IDisposable",
+        "declaration": "public class OcrInput : IDisposable",
+        "docstring": "Represents input supplied to the OCR engine.",
+        "symbol_kind": "class",
+        "type_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/OcrInput.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.ocrinput",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.OcrInput"
+    },
+    {
+      "attributes": {
+        "docstring": "Adds a file to the input container.",
+        "docstring_full": "Adds a file to the input container. A relative or absolute path to an image or PDF document. fullPath is empty or whitespace.",
+        "member_kind": "method",
+        "signature": "Add(string fullPath)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 28; method; public by declaration",
+          "path": "src/OcrInput.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.ocrinput.add",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.OcrInput.Add"
+    },
+    {
+      "attributes": {
+        "body_throws": "no",
+        "docstring": "Releases the references held by this input container.",
+        "member_kind": "method",
+        "signature": "Dispose()",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 41; method; public by declaration",
+          "path": "src/OcrInput.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.ocrinput.dispose",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.OcrInput.Dispose"
+    },
+    {
+      "attributes": {
+        "body_throws": "no",
+        "docstring": "Initializes a new input container for the specified input type.",
+        "docstring_full": "Initializes a new input container for the specified input type. The type shared by all files added to this container.",
+        "member_kind": "constructor",
+        "signature": "OcrInput(InputType type)",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 14; method; public by declaration",
+          "path": "src/OcrInput.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.ocrinput.ocrinput",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.OcrInput.OcrInput"
+    },
+    {
+      "attributes": {
+        "bases": "List<RecognitionResult>",
+        "declaration": "[Serializable]",
+        "docstring": "Contains OCR recognition results.",
+        "symbol_kind": "class",
+        "type_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/OcrOutput.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.ocroutput",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.OcrOutput"
+    },
+    {
+      "attributes": {
+        "declaration": "[Serializable]",
+        "docstring": "Represents the recognition result for one image or one PDF page.",
+        "symbol_kind": "class",
+        "type_kind": "class"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 6; class; public by declaration",
+          "path": "src/RecognitionResult.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.recognitionresult",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.RecognitionResult"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets recognized lines together with their source-image coordinates.",
+        "member_kind": "property",
+        "settable": "false",
+        "signature": "List<LinesResult>",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 29; method; public by declaration",
+          "path": "src/RecognitionResult.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.recognitionresult.recognitionlinesresult",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.RecognitionResult.RecognitionLinesResult"
+    },
+    {
+      "attributes": {
+        "docstring": "Gets or sets all recognized lines joined with line breaks.",
+        "member_kind": "property",
+        "settable": "true",
+        "signature": "string",
+        "symbol_kind": "method"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 35; method; public by declaration",
+          "path": "src/RecognitionResult.cs"
+        }
+      ],
+      "id": "public_symbol:aspose.ocr.recognitionresult.recognitiontext",
+      "kind": "public_symbol",
+      "polarity": "SUPPORTED",
+      "value": "Aspose.OCR.RecognitionResult.RecognitionText"
+    }
+  ],
+  "repository": "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
+  "schema_version": 1,
+  "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80"
+}
