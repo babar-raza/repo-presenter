@@ -5,7 +5,7 @@
   "provider_repository_id": 1245412430,
   "registry_revision": null,
   "active_transaction_id": "d5d729d6e59a4873bab302473952eea3",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:6: spells '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-15T01:02:34.121078+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-15T01:52:17.772971+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 14
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 2
   },
-  "state_version": 67,
+  "state_version": 68,
   "recent_trigger_dedup_keys": {
     "run:41147002918:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "56267f90eb494405ba4c90f0c676ddb5",
     "run:41237173263:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "d5d729d6e59a4873bab302473952eea3"
   },
-  "recovery_count": 13
+  "recovery_count": 14
 }
