@@ -1,0 +1,51 @@
+{
+  "confinement": {
+    "edits": 0,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "31cd0c9477cbbc90b5e198a4726b2f1a4bb4f52b5f19ecfcc91d5e7c7971bb2b",
+  "edits": [],
+  "lane": "L",
+  "original_sha256": "31cd0c9477cbbc90b5e198a4726b2f1a4bb4f52b5f19ecfcc91d5e7c7971bb2b",
+  "outcome": "NO_CHANGE_WARRANTED",
+  "readme_path": "README.md",
+  "repository": "aspose-omr-foss/Aspose.OMR-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "4228a88533afcbde54d40c5ac6d8253a226f29be",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {},
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:omr.exceptions.childoverflowexception",
+        "public_symbol:omr.exceptions.invalidconfigurationexception",
+        "public_symbol:omr.exceptions.multiselectexception",
+        "public_symbol:omr.exceptions.runtimeexceptionomr",
+        "public_symbol:omr.generation.baseoffset",
+        "public_symbol:omr.generation.config.elements.answersheetconfig",
+        "public_symbol:omr.generation.config.elements.choiceboxanswerconfig",
+        "public_symbol:omr.generation.config.elements.choiceboxconfig"
+      ],
+      "line": 0,
+      "reason": "41 of 68 verified public types are named nowhere in the README; would fill API Reference: public_symbol:omr.exceptions.childoverflowexception, public_symbol:omr.exceptions.invalidconfigurationexception, public_symbol:omr.exceptions.multiselectexception, public_symbol:omr.exceptions.runtimeexceptionomr, public_symbol:omr.generation.baseoffset, public_symbol:omr.generation.config.elements.answersheetconfig, public_symbol:omr.generation.config.elements.choiceboxanswerconfig, public_symbol:omr.generation.config.elements.choiceboxconfig (+33 more)",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "line": 0,
+      "reason": "no Enterprise Edition paragraph; would be filled from link_target:product.enterprise (SUPPORTED, https://products.aspose.com/omr/) and the anchor rule of the Scope and Limitations closing paragraph",
+      "text": ""
+    }
+  ]
+}
