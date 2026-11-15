@@ -1,0 +1,138 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T00:35:18+00:00",
+   "classes": [
+    "llm:factuality|unresolved|documentation_resources",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "43657146318",
+   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T00:35:18+00:00",
+  "classes": {
+   "llm:factuality|unresolved|documentation_resources": {
+    "example": "- **[Full API reference](https://reference.aspose.org/html/python/)** \u2014 the complete, browsable reference for all 303 public types.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "documentation_resources",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "These limitations don't apply to [full-featured Aspose.HTML for Python \u2014 Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   }
+  },
+  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "F01",
+    "message": "The complete, browsable reference for all 303 public types.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- **[Full API reference](https://reference.aspose.org/html/python/)** \u2014 the complete, browsable reference for all 303 public types.",
+    "rule": "llm:factuality",
+    "section_id": "documentation_resources",
+    "signature": "llm:factuality|unresolved|documentation_resources",
+    "source": "review",
+    "sub_rule": "documentation_resources",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "These limitations don't apply to [full-featured Aspose.HTML for Python \u2014 Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F02",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "unrepairable",
+    "reason": "section documentation_resources is deterministic; its blocks change only when facts change",
+    "section_id": "documentation_resources",
+    "stage": null
+   }
+  ],
+  "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+  "run_id": "43657146318",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43657146318",
+  "schema_version": 1,
+  "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
+ "schema_version": 1
+}
