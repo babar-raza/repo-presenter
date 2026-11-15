@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 81a1cb4204c1: JobError: presentation_planning: output truncated at the manifest's max_output_tokens (6000); raise the budget or bound the output, never retry",
+    "classification": "transient",
+    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: $.api_hubs[8].fact_ids[9]: 'public_symbol:aspose_pdf.document.save_as_image' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_test_asset:test-command', 'build_test_asset:tests', 'dependency:asn1crypto-1.5', 'dependency:cryptography-50', 'dependency:development.dev.brotli-1.2', 'dependency:development.dev.build-1.2', 'dependency:development.dev.fonttools-4.60.2'] (and 1868 more allowed values; cite only an offered ID)",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-14T08:58:51.749014+00:00",
+    "occurred_at": "2026-11-15T08:28:28.848496+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 24,
+  "state_version": 25,
   "recent_trigger_dedup_keys": {
     "run:41142404776:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "fbc76990855041eb8011727b165ee2bd",
     "run:41276313821:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "45c3f42e6a9d431991bc33f6963548a2",
