@@ -478,19 +478,14 @@ The `MsoFillFormat` class provides access to Microsoft Office fill formatting pr
 
 ## Scope and Limitations
 
-Aspose.Cells FOSS for Python reads and writes Excel workbooks in the Open XML `.xlsx` format, preserves formula expressions and cached results, and exposes core cell and worksheet operations such as reading and writing cell values, applying styles, and managing data validations. It supports the `.xlsx` format for loading and saving workbooks and provides classes such as `Workbook`, `Worksheet`, `Cells`, `Cell`, `Style`, and `DataValidation`.
-
-- It does not implement a full Excel calculation engine, so formula expressions and cached results are preserved but not recalculated, and it supports only the `.xlsx` format for loading and saving workbooks, not .xls, .ods, or .xlsb.
+- Formula expressions and cached results are preserved, but this project is not a full Excel calculation engine.
+- Native workbook loading and saving targets the Open XML `.xlsx` format. Other spreadsheet formats such as `.xls`, `.ods`, and `.xlsb` are not supported.
 - Some advanced Excel features are preserved as source package parts rather than exposed as editable Python objects.
-- PDF output depends on locally available fonts and the optional skia-python renderer.
-- The package requires Python version 3.10 or later.
+- PDF output depends on locally available fonts and the optional `skia-python` renderer.
 
 ## Development and Testing
 
-The package requires Python 3.10 or later with core runtime dependencies pycryptodome>=3.15.0 and olefile>=0.46. PDF export requires the optional skia-python renderer, which must be installed separately. To build and test from the repository, install the development dependencies and run the example test suite.
-
-PDF export uses `skia-python`, which is not currently installed by the core package.
-Install the renderer separately:
+PDF export uses `skia-python`, which is not currently installed by the core package. Install the renderer separately:
 
 ```bash
 pip install "skia-python>=144.0.post2,<145"
@@ -503,8 +498,7 @@ pip install -e ".[dev]"
 python -m pytest examples -v
 ```
 
-Generated workbooks are written below `examples/outputfiles/` and are not intended for source
-control.
+Generated workbooks are written below `examples/outputfiles/` and are not intended for source control.
 
 ## Third-Party Notices
 

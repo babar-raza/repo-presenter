@@ -137,13 +137,16 @@
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "dependency:development.dev.pytest-7.0.0",
+        "dependency:development.dev.pytest-cov-4.0.0",
         "dependency:olefile-0.46",
         "dependency:pycryptodome-3.15.0",
+        "install_command:pip",
         "package:python_requires"
       ],
-      "rationale": "The runtime dependency and Python version requirements are preserved as development/testing detail.",
+      "rationale": "Not printed again: development testing already states this material from the facts it cites, so the kept unit is redundant.",
       "unit_id": "inherited_unit:010.paragraph"
     },
     {
