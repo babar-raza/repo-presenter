@@ -1,0 +1,94 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T08:38:58+00:00",
+   "classes": [
+    "lane_l_unrepaired_defect|lane_l_correction|format_overclaim"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "43695398192",
+   "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+   "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  }
+ ],
+ "lane": "L",
+ "latest": {
+  "at": "2026-11-15T08:38:58+00:00",
+  "classes": {
+   "lane_l_unrepaired_defect|lane_l_correction|format_overclaim": {
+    "example": "i1[\"An existing CFB container (file or bytes)\"]",
+    "findings": 2,
+    "origin_kind": "lane_l_correction",
+    "origins": [
+     "format_overclaim"
+    ],
+    "rule": "lane_l_unrepaired_defect",
+    "scope": "2ac9cd2e6539c02cc16c37bd15833862aa76be4d03df1cd433102962552b04d8",
+    "scope_paths": [
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/correction"
+    ],
+    "sub_rule": "format_overclaim",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 810f7969970a: PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'CFB' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'CFB' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); Lane L left 2 defect(s) it may not repair (format_overclaim line 34: the README marks 'CFB' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the clai",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "lane_l_unrepaired_defect",
+    "message": "format_overclaim found a defect at line 34 that no deterministic edit can repair: the README marks 'CFB' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+    "origin": {
+     "id": "format_overclaim",
+     "kind": "lane_l_correction"
+    },
+    "quote": "i1[\"An existing CFB container (file or bytes)\"]",
+    "rule": "lane_l_unrepaired_defect",
+    "section_id": "",
+    "signature": "lane_l_unrepaired_defect|lane_l_correction|format_overclaim",
+    "source": "review",
+    "sub_rule": "format_overclaim",
+    "upstream": ""
+   },
+   {
+    "label": "lane_l_unrepaired_defect",
+    "message": "format_overclaim found a defect at line 49 that no deterministic edit can repair: the README marks 'CFB' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
+    "origin": {
+     "id": "format_overclaim",
+     "kind": "lane_l_correction"
+    },
+    "quote": "o1[\"CFB containers\"]",
+    "rule": "lane_l_unrepaired_defect",
+    "section_id": "",
+    "signature": "lane_l_unrepaired_defect|lane_l_correction|format_overclaim",
+    "source": "review",
+    "sub_rule": "format_overclaim",
+    "upstream": ""
+   }
+  ],
+  "lane": "L",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "run_id": "43695398192",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43695398192",
+  "schema_version": 1,
+  "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+  "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+ },
+ "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+ "schema_version": 1
+}
