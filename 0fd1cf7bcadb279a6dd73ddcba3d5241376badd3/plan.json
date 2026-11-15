@@ -14,17 +14,10 @@
     {
       "fact_ids": [
         "public_symbol:aspose.note.document",
-        "example:004",
-        "format:input.one"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.document"
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.note.page",
         "public_symbol:aspose.note.pagehistory"
       ],
-      "symbol_fact_id": "public_symbol:aspose.note.page"
+      "symbol_fact_id": "public_symbol:aspose.note.document"
     },
     {
       "fact_ids": [
@@ -37,77 +30,32 @@
     {
       "fact_ids": [
         "public_symbol:aspose.note.image",
-        "example:003"
+        "public_symbol:aspose.note.attachedfile"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.image"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.note.attachedfile",
-        "example:006"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.attachedfile"
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.note.table",
-        "example:005"
+        "public_symbol:aspose.note.tablerow",
+        "public_symbol:aspose.note.tablecell"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.table"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.note.saveformat",
-        "format:output.pdf",
-        "example:002"
+        "public_symbol:aspose.note.saving"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.saveformat"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.saving",
-        "example:010"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.saving"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.notetag",
-        "example:007"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.notetag"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.numberlist",
-        "example:012"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.numberlist"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.documentvisitor",
-        "example:008"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.documentvisitor"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.exceptions",
-        "public_symbol:aspose.note.filecorruptedexception",
-        "public_symbol:aspose.note.incorrectpasswordexception",
-        "public_symbol:aspose.note.unsupportedfileformatexception",
-        "public_symbol:aspose.note.unsupportedsaveformatexception"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.note.exceptions"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Parse OneNote files from path or stream",
-      "Traverse document tree structure",
-      "Extract rich text with formatting",
-      "Export pages to PDF"
+      "Parse OneNote documents from file or stream",
+      "Traverse document tree and extract content",
+      "Export pages to PDF with options",
+      "Extract images and attached files"
     ],
     "input_format_ids": [
       "format:input.one"
@@ -119,21 +67,22 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "example:004",
         "format:input.one",
-        "public_symbol:aspose.note.document"
+        "example:004",
+        "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.fileformat"
       ],
       "shared_fact_ids": [
         "public_symbol:aspose.note.document"
       ],
-      "title": "Parse OneNote files from path or stream"
+      "title": "Parse OneNote documents from file or stream"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.documentvisitor",
+        "public_symbol:aspose.note.node",
         "public_symbol:aspose.note.page",
-        "public_symbol:aspose.note.outline",
-        "public_symbol:aspose.note.outlineelement",
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.image",
         "public_symbol:aspose.note.table",
@@ -147,19 +96,20 @@
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.table"
       ],
-      "title": "Traverse document tree structure"
+      "title": "Traverse document tree and extract content"
     },
     {
       "fact_ids": [
+        "example:009",
+        "example:011",
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.textrun",
-        "public_symbol:aspose.note.textstyle",
-        "public_symbol:aspose.note.paragraphstyle"
+        "public_symbol:aspose.note.textstyle"
       ],
       "shared_fact_ids": [
         "public_symbol:aspose.note.richtext"
       ],
-      "title": "Extract rich text with formatting"
+      "title": "Extract rich text with per-run formatting"
     },
     {
       "fact_ids": [
@@ -167,10 +117,11 @@
         "example:010",
         "format:output.pdf",
         "public_symbol:aspose.note.saveformat",
-        "public_symbol:aspose.note.saving"
+        "public_symbol:aspose.note.saving",
+        "dependency:optional.pdf.reportlab-3.6"
       ],
       "shared_fact_ids": [],
-      "title": "Export pages to PDF"
+      "title": "Export pages to PDF with options"
     },
     {
       "fact_ids": [
@@ -183,7 +134,7 @@
         "public_symbol:aspose.note.attachedfile",
         "public_symbol:aspose.note.image"
       ],
-      "title": "Extract embedded images and attachments"
+      "title": "Extract images and attached files"
     },
     {
       "fact_ids": [
@@ -201,38 +152,91 @@
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.note.document",
         "public_symbol:aspose.note.pagehistory",
         "public_symbol:aspose.note.page"
       ],
       "shared_fact_ids": [
+        "public_symbol:aspose.note.document",
         "public_symbol:aspose.note.page"
       ],
-      "title": "Support document revision history"
+      "title": "Support for page history and revision metadata"
     }
   ],
-  "deviations": [],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Detailed Member Reference' heading and its content are omitted; member details are covered by the public_symbol facts and key capabilities."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Document and Traversal' heading and its content are omitted; Document, PageHistory, and Node are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Document Structure' heading and its content are omitted; Page, Title, Outline, and OutlineElement are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Content' heading and its content are omitted; RichText, TextRun, ParagraphStyle, TextStyle, Image, AttachedFile, Table, and more are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Load and Save Options' heading and its content are omitted; LoadOptions, SaveOptions, and PdfSaveOptions are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Licensing' heading and its content are omitted; License and Metered are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Enumerations' heading and its content are omitted; FileFormat, SaveFormat, HorizontalAlignment, NodeType, and TagStatus are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Exceptions' heading and its content are omitted; exception types are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Saving' heading and its content are omitted; PdfSaveOptions and SaveOptions are covered by the public_symbol facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Core API' table is omitted; the public_symbol facts cover the essential classes."
+    }
+  ],
   "flagship_example_id": "example:003",
   "links": [
-    {
-      "link_fact_id": "link_target:001",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:003",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:004",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:006",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:008",
-      "section_id": "banner"
-    },
     {
       "link_fact_id": "link_target:022",
       "section_id": "documentation_resources"
@@ -250,62 +254,11 @@
       "section_id": "documentation_resources"
     },
     {
-      "link_fact_id": "link_target:028",
-      "section_id": "development_testing"
-    },
-    {
-      "link_fact_id": "link_target:029",
-      "section_id": "development_testing"
-    },
-    {
-      "link_fact_id": "link_target:030",
-      "section_id": "development_testing"
-    },
-    {
-      "link_fact_id": "link_target:031",
-      "section_id": "third_party_notices"
-    },
-    {
-      "link_fact_id": "link_target:005",
-      "section_id": "license"
+      "link_fact_id": "link_target:026",
+      "section_id": "enterprise_relationship"
     }
   ],
-  "material_limitations": [
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.saveformat",
-        "public_symbol:aspose.note.unsupportedsaveformatexception"
-      ],
-      "unit_ids": [
-        "inherited_unit:083.list"
-      ]
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.incorrectpasswordexception"
-      ],
-      "unit_ids": [
-        "inherited_unit:083.list"
-      ]
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.license",
-        "public_symbol:aspose.note.metered"
-      ],
-      "unit_ids": [
-        "inherited_unit:083.list"
-      ]
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.document"
-      ],
-      "unit_ids": [
-        "inherited_unit:083.list"
-      ]
-    }
-  ],
+  "material_limitations": [],
   "quick_start_example_id": "example:002",
   "second_quick_start_example_id": "example:004",
   "sections": [

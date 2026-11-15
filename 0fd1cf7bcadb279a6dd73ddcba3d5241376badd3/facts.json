@@ -1388,6 +1388,24 @@
     },
     {
       "attributes": {
+        "aspect": "never_thrown",
+        "member": "aspose.note.IncorrectDocumentStructureException",
+        "type": "IncorrectDocumentStructureException"
+      },
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "detail": "line 33; no product source throws, constructs or uses the type outside its own declaration",
+          "path": "src/aspose/note/exceptions.py"
+        }
+      ],
+      "id": "implementation:never_thrown.aspose.note.incorrectdocumentstructureexception",
+      "kind": "implementation",
+      "polarity": "SUPPORTED",
+      "value": "aspose.note.IncorrectDocumentStructureException is never thrown or constructed by the library's own code (declared only)"
+    },
+    {
+      "attributes": {
         "accessor": "getter",
         "aspect": "constant_return",
         "member": "aspose.note.PageHistory.IsReadOnly",
@@ -7573,11 +7591,13 @@
       "value": "26.9.0"
     },
     {
-      "attributes": null,
+      "attributes": {
+        "floor_declaration": "requires-python"
+      },
       "confidence": 1.0,
       "evidence": [
         {
-          "detail": "python_requires declared",
+          "detail": "requires-python declared",
           "path": "pyproject.toml"
         }
       ],
@@ -9361,6 +9381,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.AttachedFile",
+        "member_counts": "method=0,dunder=0,init=1,property=3,field=0,inherits=1",
         "public_paths": "aspose.note.model.AttachedFile",
         "signature": "class AttachedFile(Node)",
         "symbol_kind": "class"
@@ -9383,7 +9404,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.AttachedFile.Bytes",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Bytes(self) -> bytes",
         "symbol_kind": "method"
       },
@@ -9401,7 +9425,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.AttachedFile.FileName",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FileName(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -9419,7 +9446,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.AttachedFile.Tags",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Tags(self) -> list[NoteTag]",
         "symbol_kind": "method"
       },
@@ -9439,6 +9469,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.Document",
         "fields": "DisplayName, CreationTime",
+        "member_counts": "method=3,dunder=0,init=1,property=1,field=2,inherits=1",
         "public_paths": "aspose.note.model.Document",
         "signature": "class Document(CompositeNode)",
         "symbol_kind": "class"
@@ -9461,7 +9492,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Document.DetectLayoutChanges",
+        "member_kind": "method",
         "signature": "def DetectLayoutChanges(self) -> None",
         "symbol_kind": "method"
       },
@@ -9479,7 +9512,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Document.FileFormat",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FileFormat(self) -> FileFormat",
         "symbol_kind": "method"
       },
@@ -9497,7 +9533,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Document.GetPageHistory",
+        "member_kind": "method",
         "signature": "def GetPageHistory(self, page: Page) -> PageHistory",
         "symbol_kind": "method"
       },
@@ -9516,6 +9554,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.Document.Save",
+        "member_kind": "method",
         "signature": "def Save(self, target: str | Path | BinaryIO, format_or_options: SaveFormat | SaveOptions | None=None) -> None",
         "symbol_kind": "method"
       },
@@ -9534,6 +9573,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor",
+        "member_counts": "method=14,dunder=1,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.note.model.DocumentVisitor",
         "signature": "class DocumentVisitor",
         "symbol_kind": "class"
@@ -9557,6 +9597,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitDocumentEnd",
+        "member_kind": "method",
         "signature": "def VisitDocumentEnd(self, document: Document) -> None",
         "symbol_kind": "method"
       },
@@ -9575,6 +9616,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitDocumentStart",
+        "member_kind": "method",
         "signature": "def VisitDocumentStart(self, document: Document) -> None",
         "symbol_kind": "method"
       },
@@ -9593,6 +9635,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitImageEnd",
+        "member_kind": "method",
         "signature": "def VisitImageEnd(self, image: Image) -> None",
         "symbol_kind": "method"
       },
@@ -9611,6 +9654,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitImageStart",
+        "member_kind": "method",
         "signature": "def VisitImageStart(self, image: Image) -> None",
         "symbol_kind": "method"
       },
@@ -9629,6 +9673,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineElementEnd",
+        "member_kind": "method",
         "signature": "def VisitOutlineElementEnd(self, outline_element: OutlineElement) -> None",
         "symbol_kind": "method"
       },
@@ -9647,6 +9692,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineElementStart",
+        "member_kind": "method",
         "signature": "def VisitOutlineElementStart(self, outline_element: OutlineElement) -> None",
         "symbol_kind": "method"
       },
@@ -9665,6 +9711,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineEnd",
+        "member_kind": "method",
         "signature": "def VisitOutlineEnd(self, outline: Outline) -> None",
         "symbol_kind": "method"
       },
@@ -9683,6 +9730,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitOutlineStart",
+        "member_kind": "method",
         "signature": "def VisitOutlineStart(self, outline: Outline) -> None",
         "symbol_kind": "method"
       },
@@ -9701,6 +9749,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitPageEnd",
+        "member_kind": "method",
         "signature": "def VisitPageEnd(self, page: Page) -> None",
         "symbol_kind": "method"
       },
@@ -9719,6 +9768,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitPageStart",
+        "member_kind": "method",
         "signature": "def VisitPageStart(self, page: Page) -> None",
         "symbol_kind": "method"
       },
@@ -9737,6 +9787,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitRichTextEnd",
+        "member_kind": "method",
         "signature": "def VisitRichTextEnd(self, rich_text: RichText) -> None",
         "symbol_kind": "method"
       },
@@ -9755,6 +9806,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitRichTextStart",
+        "member_kind": "method",
         "signature": "def VisitRichTextStart(self, rich_text: RichText) -> None",
         "symbol_kind": "method"
       },
@@ -9773,6 +9825,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitTitleEnd",
+        "member_kind": "method",
         "signature": "def VisitTitleEnd(self, title: Title) -> None",
         "symbol_kind": "method"
       },
@@ -9791,6 +9844,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.DocumentVisitor.VisitTitleStart",
+        "member_kind": "method",
         "signature": "def VisitTitleStart(self, title: Title) -> None",
         "symbol_kind": "method"
       },
@@ -9840,6 +9894,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "signature": "class AsposeNoteError(Exception)",
         "symbol_kind": "class"
       },
@@ -9858,6 +9913,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.exceptions.FileCorruptedException",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "aspose.note.exceptions.FileCorruptedException",
         "signature": "class FileCorruptedException(AsposeNoteError)",
         "symbol_kind": "class"
@@ -9932,6 +9988,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.Image",
         "fields": "Width, Height, HorizontalOffset, VerticalOffset, IsBackground, LastModifiedTime, AlternativeTextTitle, AlternativeTextDescription, HyperlinkUrl",
+        "member_counts": "method=1,dunder=0,init=1,property=8,field=9,inherits=1",
         "public_paths": "aspose.note.model.Image",
         "signature": "class Image(CompositeNode)",
         "symbol_kind": "class"
@@ -9954,7 +10011,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.Alignment",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Alignment(self) -> HorizontalAlignment | None",
         "symbol_kind": "method"
       },
@@ -9972,7 +10032,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.Bytes",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Bytes(self) -> bytes",
         "symbol_kind": "method"
       },
@@ -9990,7 +10053,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.FileName",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FileName(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10008,7 +10074,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.FilePath",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FilePath(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10026,7 +10095,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.Format",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Format(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10044,7 +10116,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.OriginalHeight",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def OriginalHeight(self) -> float | None",
         "symbol_kind": "method"
       },
@@ -10062,7 +10137,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.OriginalWidth",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def OriginalWidth(self) -> float | None",
         "symbol_kind": "method"
       },
@@ -10080,7 +10158,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.Replace",
+        "member_kind": "method",
         "signature": "def Replace(self, image: Image) -> None",
         "symbol_kind": "method"
       },
@@ -10098,7 +10178,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Image.Tags",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Tags(self) -> list[NoteTag]",
         "symbol_kind": "method"
       },
@@ -10117,6 +10200,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.exceptions.IncorrectDocumentStructureException",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "aspose.note.exceptions.IncorrectDocumentStructureException",
         "signature": "class IncorrectDocumentStructureException(AsposeNoteError)",
         "symbol_kind": "class"
@@ -10140,6 +10224,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.exceptions.IncorrectPasswordException",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "aspose.note.exceptions.IncorrectPasswordException",
         "signature": "class IncorrectPasswordException(AsposeNoteError)",
         "symbol_kind": "class"
@@ -10163,6 +10248,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.License",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.note.model.License",
         "signature": "class License",
         "symbol_kind": "class"
@@ -10185,7 +10271,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.License.SetLicense",
+        "member_kind": "method",
         "signature": "def SetLicense(self, license_path_or_stream: Any) -> None",
         "symbol_kind": "method"
       },
@@ -10205,6 +10293,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.LoadOptions",
         "fields": "DocumentPassword, LoadHistory",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=2,inherits=0",
         "public_paths": "aspose.note.model.LoadOptions",
         "signature": "class LoadOptions",
         "symbol_kind": "class"
@@ -10228,6 +10317,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.Metered",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "public_paths": "aspose.note.model.Metered",
         "signature": "class Metered",
         "symbol_kind": "class"
@@ -10250,7 +10340,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Metered.SetMeteredKey",
+        "member_kind": "method",
         "signature": "def SetMeteredKey(self, public_key: str, private_key: str) -> None",
         "symbol_kind": "method"
       },
@@ -10284,6 +10376,7 @@
     },
     {
       "attributes": {
+        "member_counts": "method=6,dunder=2,init=0,property=2,field=0,inherits=1",
         "signature": "class CompositeNode(Node)",
         "symbol_kind": "class"
       },
@@ -10301,6 +10394,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def AppendChildFirst(self, node: TNode) -> TNode",
         "symbol_kind": "method"
       },
@@ -10318,6 +10413,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def AppendChildLast(self, node: TNode) -> TNode",
         "symbol_kind": "method"
       },
@@ -10335,6 +10432,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FirstChild(self) -> Node | None",
         "symbol_kind": "method"
       },
@@ -10352,6 +10452,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def GetChildNodes(self, node_type: type[TNode]) -> list[TNode]",
         "symbol_kind": "method"
       },
@@ -10369,6 +10471,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def GetEnumerator(self) -> Iterator[Node]",
         "symbol_kind": "method"
       },
@@ -10386,6 +10490,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def InsertChild(self, index: int, node: TNode) -> TNode",
         "symbol_kind": "method"
       },
@@ -10403,6 +10509,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def LastChild(self) -> Node | None",
         "symbol_kind": "method"
       },
@@ -10420,6 +10529,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "def RemoveChild(self, node: Node) -> None",
         "symbol_kind": "method"
       },
@@ -10439,6 +10550,7 @@
       "attributes": {
         "defined_at": "aspose.note.saving.options.PdfSaveOptions",
         "fields": "ImageCompression, JpegQuality, PageSettings, PageSplittingAlgorithm",
+        "member_counts": "method=0,dunder=0,init=1,property=0,field=4,inherits=1",
         "public_paths": "aspose.note.saving.options.PdfSaveOptions, aspose.note.saving.PdfSaveOptions",
         "signature": "class PdfSaveOptions(SaveOptions)",
         "symbol_kind": "class"
@@ -10467,6 +10579,7 @@
       "attributes": {
         "defined_at": "aspose.note.saving.options.SaveOptions",
         "fields": "PageIndex, PageCount, FontsSubsystem",
+        "member_counts": "method=0,dunder=0,init=1,property=1,field=3,inherits=0",
         "public_paths": "aspose.note.saving.options.SaveOptions, aspose.note.saving.SaveOptions",
         "signature": "class SaveOptions",
         "symbol_kind": "class"
@@ -10493,7 +10606,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.saving.options.SaveOptions.SaveFormat",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def SaveFormat(self) -> SaveFormat",
         "symbol_kind": "method"
       },
@@ -10512,6 +10628,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.Node",
+        "member_counts": "method=1,dunder=2,init=0,property=2,field=0,inherits=0",
         "public_paths": "aspose.note.model.Node",
         "signature": "class Node",
         "symbol_kind": "class"
@@ -10534,7 +10651,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Node.Accept",
+        "member_kind": "method",
         "signature": "def Accept(self, visitor: DocumentVisitor) -> None",
         "symbol_kind": "method"
       },
@@ -10552,7 +10671,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Node.Document",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Document(self) -> Document | None",
         "symbol_kind": "method"
       },
@@ -10570,7 +10692,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Node.ParentNode",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def ParentNode(self) -> Node | None",
         "symbol_kind": "method"
       },
@@ -10614,6 +10739,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.NoteTag",
+        "member_counts": "method=3,dunder=3,init=1,property=7,field=0,inherits=0",
         "public_paths": "aspose.note.model.NoteTag",
         "signature": "class NoteTag",
         "symbol_kind": "class"
@@ -10636,7 +10762,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.CompletedTime",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def CompletedTime(self) -> datetime | None",
         "symbol_kind": "method"
       },
@@ -10654,7 +10783,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.CreateMusicalNote",
+        "member_kind": "method",
         "signature": "def CreateMusicalNote(label: str | None=None) -> NoteTag",
         "symbol_kind": "method"
       },
@@ -10672,7 +10803,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.CreateQuestionMark",
+        "member_kind": "method",
         "signature": "def CreateQuestionMark(label: str | None=None) -> NoteTag",
         "symbol_kind": "method"
       },
@@ -10690,7 +10823,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.CreateYellowStar",
+        "member_kind": "method",
         "signature": "def CreateYellowStar(label: str | None=None) -> NoteTag",
         "symbol_kind": "method"
       },
@@ -10708,7 +10843,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.CreationTime",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def CreationTime(self) -> datetime | None",
         "symbol_kind": "method"
       },
@@ -10726,7 +10864,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.FontColor",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def FontColor(self) -> int | None",
         "symbol_kind": "method"
       },
@@ -10744,7 +10885,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.Highlight",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Highlight(self) -> int | None",
         "symbol_kind": "method"
       },
@@ -10762,7 +10906,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.Icon",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Icon(self) -> int | None",
         "symbol_kind": "method"
       },
@@ -10780,7 +10927,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.Label",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Label(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -10798,7 +10948,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NoteTag.Status",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Status(self) -> TagStatus",
         "symbol_kind": "method"
       },
@@ -10818,6 +10971,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.NumberList",
         "fields": "Format, NumberFormat, Font, FontSize, FontColor, IsBold, IsItalic, LastModifiedTime, Restart",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=9,inherits=0",
         "public_paths": "aspose.note.model.NumberList",
         "signature": "class NumberList",
         "symbol_kind": "class"
@@ -10840,7 +10994,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.NumberList.GetNumberedListHeader",
+        "member_kind": "method",
         "signature": "def GetNumberedListHeader(self, number: int) -> str",
         "symbol_kind": "method"
       },
@@ -10860,6 +11016,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.Outline",
         "fields": "HorizontalOffset, VerticalOffset, MaxWidth, MaxHeight, MinWidth, ReservedWidth, IndentPosition, DescendantsCannotBeMoved, LastModifiedTime",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=9,inherits=1",
         "public_paths": "aspose.note.model.Outline",
         "signature": "class Outline(CompositeNode)",
         "symbol_kind": "class"
@@ -10884,6 +11041,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.OutlineElement",
         "fields": "NumberList",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=1,inherits=1",
         "public_paths": "aspose.note.model.OutlineElement",
         "signature": "class OutlineElement(CompositeNode)",
         "symbol_kind": "class"
@@ -10908,6 +11066,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.Page",
         "fields": "Title, Author, CreationTime, LastModifiedTime, Level, BackgroundColor, Margin, SizeType, PageLayoutSize, IsConflictPage, PageContentRevisionSummary",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=11,inherits=1",
         "public_paths": "aspose.note.model.Page",
         "signature": "class Page(CompositeNode)",
         "symbol_kind": "class"
@@ -10931,6 +11090,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.Page.Clone",
+        "member_kind": "method",
         "signature": "def Clone(self, cloneHistory: bool=False, **kwargs: Any) -> Page",
         "symbol_kind": "method"
       },
@@ -10949,6 +11109,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.PageHistory",
+        "member_counts": "method=11,dunder=4,init=1,property=3,field=0,inherits=0",
         "public_paths": "aspose.note.model.PageHistory",
         "signature": "class PageHistory",
         "symbol_kind": "class"
@@ -10971,7 +11132,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Add",
+        "member_kind": "method",
         "signature": "def Add(self, page: Page) -> None",
         "symbol_kind": "method"
       },
@@ -10989,7 +11152,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.AddRange",
+        "member_kind": "method",
         "signature": "def AddRange(self, pages: list[Page]) -> None",
         "symbol_kind": "method"
       },
@@ -11007,7 +11172,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Clear",
+        "member_kind": "method",
         "signature": "def Clear(self) -> None",
         "symbol_kind": "method"
       },
@@ -11025,7 +11192,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Contains",
+        "member_kind": "method",
         "signature": "def Contains(self, page: Page) -> bool",
         "symbol_kind": "method"
       },
@@ -11043,7 +11212,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.CopyTo",
+        "member_kind": "method",
         "signature": "def CopyTo(self, target: list[Page], index: int) -> None",
         "symbol_kind": "method"
       },
@@ -11061,7 +11232,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Count",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Count(self) -> int",
         "symbol_kind": "method"
       },
@@ -11079,7 +11253,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Current",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Current(self) -> Page",
         "symbol_kind": "method"
       },
@@ -11097,7 +11274,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.GetEnumerator",
+        "member_kind": "method",
         "signature": "def GetEnumerator(self) -> Iterator[Page]",
         "symbol_kind": "method"
       },
@@ -11115,7 +11294,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.IndexOf",
+        "member_kind": "method",
         "signature": "def IndexOf(self, page: Page) -> int",
         "symbol_kind": "method"
       },
@@ -11133,7 +11314,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Insert",
+        "member_kind": "method",
         "signature": "def Insert(self, index: int, page: Page) -> None",
         "symbol_kind": "method"
       },
@@ -11151,7 +11334,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.IsReadOnly",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def IsReadOnly(self) -> bool",
         "symbol_kind": "method"
       },
@@ -11169,7 +11355,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.Remove",
+        "member_kind": "method",
         "signature": "def Remove(self, page: Page) -> bool",
         "symbol_kind": "method"
       },
@@ -11187,7 +11375,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.RemoveAt",
+        "member_kind": "method",
         "signature": "def RemoveAt(self, index: int) -> None",
         "symbol_kind": "method"
       },
@@ -11205,7 +11395,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.PageHistory.RemoveRange",
+        "member_kind": "method",
         "signature": "def RemoveRange(self, index: int, count: int) -> None",
         "symbol_kind": "method"
       },
@@ -11225,6 +11417,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.ParagraphStyle",
         "fields": "FontName, FontSize, FontColor, Highlight, IsBold, IsItalic, IsUnderline, IsStrikethrough, IsSuperscript, IsSubscript",
+        "member_counts": "method=1,dunder=0,init=1,property=1,field=10,inherits=0",
         "public_paths": "aspose.note.model.ParagraphStyle",
         "signature": "class ParagraphStyle",
         "symbol_kind": "class"
@@ -11247,7 +11440,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.ParagraphStyle.Default",
+        "member_kind": "method",
         "signature": "def Default(cls) -> ParagraphStyle",
         "symbol_kind": "method"
       },
@@ -11265,7 +11460,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.ParagraphStyle.FontStyle",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FontStyle(self) -> int",
         "symbol_kind": "method"
       },
@@ -11285,6 +11483,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.RichText",
         "fields": "LastModifiedTime, SpaceBefore, SpaceAfter, LineSpacing",
+        "member_counts": "method=11,dunder=0,init=1,property=9,field=4,inherits=1",
         "public_paths": "aspose.note.model.RichText",
         "signature": "class RichText(Node)",
         "symbol_kind": "class"
@@ -11307,7 +11506,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Alignment",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Alignment(self) -> HorizontalAlignment | None",
         "symbol_kind": "method"
       },
@@ -11325,7 +11527,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Append",
+        "member_kind": "method",
         "signature": "def Append(self, text: str, style: TextStyle | None=None) -> RichText",
         "symbol_kind": "method"
       },
@@ -11343,7 +11547,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.AppendFront",
+        "member_kind": "method",
         "signature": "def AppendFront(self, text: str, style: TextStyle | None=None) -> RichText",
         "symbol_kind": "method"
       },
@@ -11361,7 +11567,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Clear",
+        "member_kind": "method",
         "signature": "def Clear(self) -> RichText",
         "symbol_kind": "method"
       },
@@ -11379,7 +11587,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.GetEnumerator",
+        "member_kind": "method",
         "signature": "def GetEnumerator(self) -> Iterator[str]",
         "symbol_kind": "method"
       },
@@ -11397,7 +11607,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.IndexOf",
+        "member_kind": "method",
         "signature": "def IndexOf(self, value: str, startIndex: int=0, count: int | None=None, comparison: str | None=None) -> int",
         "symbol_kind": "method"
       },
@@ -11415,7 +11627,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Insert",
+        "member_kind": "method",
         "signature": "def Insert(self, index: int, text: str, style: TextStyle | None=None) -> RichText",
         "symbol_kind": "method"
       },
@@ -11433,7 +11647,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.IsTitleDate",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def IsTitleDate(self) -> bool",
         "symbol_kind": "method"
       },
@@ -11451,7 +11668,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.IsTitleText",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def IsTitleText(self) -> bool",
         "symbol_kind": "method"
       },
@@ -11469,7 +11689,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.IsTitleTime",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def IsTitleTime(self) -> bool",
         "symbol_kind": "method"
       },
@@ -11487,7 +11710,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Length",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Length(self) -> int",
         "symbol_kind": "method"
       },
@@ -11505,7 +11731,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.ParagraphStyle",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def ParagraphStyle(self) -> ParagraphStyle",
         "symbol_kind": "method"
       },
@@ -11523,7 +11752,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Remove",
+        "member_kind": "method",
         "signature": "def Remove(self, start: int, count: int | None=None) -> RichText",
         "symbol_kind": "method"
       },
@@ -11542,6 +11773,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.RichText.Replace",
+        "member_kind": "method",
         "signature": "def Replace(self, old_value: str, new_value: str, style: TextStyle | None=None) -> RichText",
         "symbol_kind": "method"
       },
@@ -11559,7 +11791,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Tags",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Tags(self) -> list[NoteTag]",
         "symbol_kind": "method"
       },
@@ -11577,7 +11812,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Text",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Text(self) -> str",
         "symbol_kind": "method"
       },
@@ -11595,7 +11833,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.TextRuns",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def TextRuns(self) -> list[TextRun]",
         "symbol_kind": "method"
       },
@@ -11613,7 +11854,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.Trim",
+        "member_kind": "method",
         "signature": "def Trim(self) -> RichText",
         "symbol_kind": "method"
       },
@@ -11631,7 +11874,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.TrimEnd",
+        "member_kind": "method",
         "signature": "def TrimEnd(self) -> RichText",
         "symbol_kind": "method"
       },
@@ -11649,7 +11894,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.RichText.TrimStart",
+        "member_kind": "method",
         "signature": "def TrimStart(self) -> RichText",
         "symbol_kind": "method"
       },
@@ -11759,6 +12006,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.Table",
         "fields": "IsBordersVisible, LastModifiedTime",
+        "member_counts": "method=0,dunder=0,init=1,property=2,field=2,inherits=1",
         "public_paths": "aspose.note.model.Table",
         "signature": "class Table(CompositeNode)",
         "symbol_kind": "class"
@@ -11781,7 +12029,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Table.Columns",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Columns(self) -> list[TableColumn]",
         "symbol_kind": "method"
       },
@@ -11799,7 +12050,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Table.Tags",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def Tags(self) -> list[NoteTag]",
         "symbol_kind": "method"
       },
@@ -11818,6 +12072,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.TableCell",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "aspose.note.model.TableCell",
         "signature": "class TableCell(CompositeNode)",
         "symbol_kind": "class"
@@ -11842,6 +12097,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.TableColumn",
         "fields": "Width, LockedWidth",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=2,inherits=0",
         "public_paths": "aspose.note.model.TableColumn",
         "signature": "class TableColumn",
         "symbol_kind": "class"
@@ -11865,6 +12121,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.TableRow",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "aspose.note.model.TableRow",
         "signature": "class TableRow(CompositeNode)",
         "symbol_kind": "class"
@@ -11914,6 +12171,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.TextRun",
         "fields": "Text, Style",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=2,inherits=0",
         "public_paths": "aspose.note.model.TextRun",
         "signature": "class TextRun",
         "symbol_kind": "class"
@@ -11937,6 +12195,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.model.TextStyle",
+        "member_counts": "method=4,dunder=0,init=1,property=16,field=0,inherits=0",
         "public_paths": "aspose.note.model.TextStyle",
         "signature": "class TextStyle",
         "symbol_kind": "class"
@@ -11959,7 +12218,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.Default",
+        "member_kind": "method",
         "signature": "def Default(cls) -> TextStyle",
         "symbol_kind": "method"
       },
@@ -11977,7 +12238,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.DefaultMsOneNoteTitleDateStyle",
+        "member_kind": "method",
         "signature": "def DefaultMsOneNoteTitleDateStyle(cls) -> TextStyle",
         "symbol_kind": "method"
       },
@@ -11995,7 +12258,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.DefaultMsOneNoteTitleTextStyle",
+        "member_kind": "method",
         "signature": "def DefaultMsOneNoteTitleTextStyle(cls) -> TextStyle",
         "symbol_kind": "method"
       },
@@ -12013,7 +12278,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.DefaultMsOneNoteTitleTimeStyle",
+        "member_kind": "method",
         "signature": "def DefaultMsOneNoteTitleTimeStyle(cls) -> TextStyle",
         "symbol_kind": "method"
       },
@@ -12031,7 +12298,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.FontColor",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def FontColor(self) -> int | None",
         "symbol_kind": "method"
       },
@@ -12049,7 +12319,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.FontName",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def FontName(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -12067,7 +12340,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.FontSize",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def FontSize(self) -> float | None",
         "symbol_kind": "method"
       },
@@ -12085,7 +12361,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.FontStyle",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FontStyle(self) -> int",
         "symbol_kind": "method"
       },
@@ -12103,7 +12382,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.Highlight",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Highlight(self) -> int | None",
         "symbol_kind": "method"
       },
@@ -12121,7 +12403,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.HyperlinkAddress",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def HyperlinkAddress(self) -> str | None",
         "symbol_kind": "method"
       },
@@ -12139,7 +12424,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsBold",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsBold(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12157,7 +12445,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsHidden",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsHidden(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12175,7 +12466,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsHyperlink",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsHyperlink(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12193,7 +12487,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsItalic",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsItalic(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12211,7 +12508,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsMathFormatting",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsMathFormatting(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12229,7 +12529,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsStrikethrough",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsStrikethrough(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12247,7 +12550,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsSubscript",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsSubscript(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12265,7 +12571,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsSuperscript",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsSuperscript(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12283,7 +12592,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.IsUnderline",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def IsUnderline(self) -> bool",
         "symbol_kind": "method"
       },
@@ -12301,7 +12613,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.TextStyle.Language",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def Language(self) -> int | None",
         "symbol_kind": "method"
       },
@@ -12321,6 +12636,7 @@
       "attributes": {
         "defined_at": "aspose.note.model.Title",
         "fields": "TitleText, TitleDate, TitleTime",
+        "member_counts": "method=2,dunder=1,init=1,property=3,field=0,inherits=1",
         "public_paths": "aspose.note.model.Title",
         "signature": "class Title(Node)",
         "symbol_kind": "class"
@@ -12343,7 +12659,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Title.GetChildNodes",
+        "member_kind": "method",
         "signature": "def GetChildNodes(self, node_type: type[TNode]) -> list[TNode]",
         "symbol_kind": "method"
       },
@@ -12361,7 +12679,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Title.GetEnumerator",
+        "member_kind": "method",
         "signature": "def GetEnumerator(self) -> Iterator[Node]",
         "symbol_kind": "method"
       },
@@ -12379,7 +12699,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Title.TitleDate",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def TitleDate(self) -> RichText | None",
         "symbol_kind": "method"
       },
@@ -12397,7 +12720,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Title.TitleText",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def TitleText(self) -> RichText | None",
         "symbol_kind": "method"
       },
@@ -12415,7 +12741,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.model.Title.TitleTime",
+        "member_kind": "property",
+        "settable": "true",
         "signature": "def TitleTime(self) -> RichText | None",
         "symbol_kind": "method"
       },
@@ -12434,6 +12763,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.exceptions.UnsupportedFileFormatException",
+        "member_counts": "method=0,dunder=0,init=1,property=1,field=0,inherits=1",
         "public_paths": "aspose.note.exceptions.UnsupportedFileFormatException",
         "signature": "class UnsupportedFileFormatException(AsposeNoteError)",
         "symbol_kind": "class"
@@ -12456,7 +12786,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "defined_at": "aspose.note.exceptions.UnsupportedFileFormatException.FileFormat",
+        "member_kind": "property",
+        "settable": "false",
         "signature": "def FileFormat(self) -> FileFormat",
         "symbol_kind": "method"
       },
@@ -12475,6 +12808,7 @@
     {
       "attributes": {
         "defined_at": "aspose.note.exceptions.UnsupportedSaveFormatException",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=1",
         "public_paths": "aspose.note.exceptions.UnsupportedSaveFormatException",
         "signature": "class UnsupportedSaveFormatException(AsposeNoteError)",
         "symbol_kind": "class"
