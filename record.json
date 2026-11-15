@@ -1,0 +1,93 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T02:44:08+00:00",
+   "classes": [
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "43667479594",
+   "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T02:44:08+00:00",
+  "classes": {
+   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
+    "example": "The primary entry point is `Presentation`, which owns a `SlideCollection` of `Slide` objects, each exposing its shapes through `Slide.shapes` (a `ShapeCollection`).",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.intro"
+    ],
+    "rule": "duplicate_paragraph",
+    "scope": "20ef9c39ca48407af3886aa326f1ef7af68aebf5a393a05b637e289ffa8aa2e0",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "duplicate_paragraph",
+    "message": "the candidate prints the same prose paragraph more than once",
+    "origin": {
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
+    },
+    "quote": "The primary entry point is `Presentation`, which owns a `SlideCollection` of `Slide` objects, each exposing its shapes through `Slide.shapes` (a `ShapeCollection`).",
+    "rule": "duplicate_paragraph",
+    "section_id": "",
+    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
+    "source": "review",
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "duplicate_paragraph:0",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+  "run_id": "43667479594",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43667479594",
+  "schema_version": 1,
+  "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+ "schema_version": 1
+}
