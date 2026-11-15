@@ -1,0 +1,117 @@
+{
+ "history": [
+  {
+   "at": "2026-11-15T03:49:26+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is"
+   ],
+   "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "43672435697",
+   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-15T03:49:26+00:00",
+  "classes": {
+   "BC-04|unresolved|code_span_q_is": {
+    "example": "code span 'aspose-words' is not a fact value",
+    "findings": 2,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-04",
+    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   }
+  },
+  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-04; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-04",
+    "message": "code span 'aspose-words' is not a fact value",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-04",
+    "section_id": "",
+    "signature": "BC-04|unresolved|code_span_q_is",
+    "source": "validation",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
+   {
+    "label": "BC-04",
+    "message": "code span 'aspose.words' is not a fact value",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-04",
+    "section_id": "",
+    "signature": "BC-04|unresolved|code_span_q_is",
+    "source": "validation",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
+  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+  "run_id": "43672435697",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43672435697",
+  "schema_version": 1,
+  "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
+ "schema_version": 1
+}
