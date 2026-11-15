@@ -68,13 +68,13 @@ from repo_presenter.readme.composition.authoring import (
     authoring_schema,
     authoring_tasks,
     merge_units,
-    recover_opening_duplicates_preserved,
     unit_checks,
     write_content_units,
 )
 from repo_presenter.readme.composition.authoring_retry import (
     authoring_narrowing,
     recover_authoring_output,
+    recover_opening_output,
 )
 from repo_presenter.readme.composition.coherence import (
     apply_coherence,
@@ -324,10 +324,12 @@ def _run_authoring(
 
         def recover(output: dict, task=task, checks=checks) -> dict | None:
             if task.section_id == "opening":
-                return recover_opening_duplicates_preserved(
-                    output, dispositions=dispositions, facts=document
+                return recover_opening_output(
+                    output, task=task, facts=document, dispositions=dispositions, name=name
                 )
-            return recover_authoring_output(output, task=task, facts=document, checks=checks)
+            return recover_authoring_output(
+                output, task=task, facts=document, checks=checks, name=name
+            )
 
         result = run_job(
             loaded, task.packet, config=config, facts=document, ledger=ledger, store=store,

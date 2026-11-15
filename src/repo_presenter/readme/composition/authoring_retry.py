@@ -57,12 +57,15 @@ from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm.narrowing import Narrowing
 from repo_presenter.core.llm.prompts import LoadedManifest
 from repo_presenter.readme.composition.authoring import (
+    VALUE_FREE_SECTIONS,
     SectionTask,
     authoring_schema,
     citable,
+    recover_opening_duplicates_preserved,
     restated_command_lines,
     restates_own_title,
     slots_clause,
+    value_tokens,
 )
 from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
 
@@ -636,17 +639,92 @@ def fact_true_type_sentence(symbol_id: str, facts: FactsDocument) -> str:
     return f"Public {kind}."
 
 
+_PARENTHETICAL = re.compile(r"\s*\([^()]*\)")
+
+
+def _without_values(text: str, name: str, facts: FactsDocument) -> str | None:
+    """``text`` with no value R43(2) forbids (:func:`authoring.value_tokens`), by deletion only:
+    each sentence that spells one goes when another sentence is left; otherwise each parenthesis
+    that spells one goes when what is left spells none. ``None`` when neither removes them all, so
+    the caller fails closed rather than ship a value or an empty unit. No word is rewritten."""
+    if not value_tokens(text, name, facts):
+        return None
+    pieces = _SENTENCE_BREAK.split(text)
+    sentences, separators = pieces[0::2], pieces[1::2]
+    keep = [i for i, sentence in enumerate(sentences) if not value_tokens(sentence, name, facts)]
+    if keep and len(keep) < len(sentences):
+        rebuilt = ""
+        for position, index in enumerate(keep):
+            rebuilt += sentences[index]
+            if position < len(keep) - 1:
+                rebuilt += separators[index] if index < len(separators) else " "
+        return rebuilt.strip()
+    stripped = _PARENTHETICAL.sub(
+        lambda match: "" if value_tokens(match.group(0), name, facts) else match.group(0), text
+    ).strip()
+    if stripped and stripped != text and not value_tokens(stripped, name, facts):
+        return stripped
+    return None
+
+
+def recover_value_sentences(
+    output: dict[str, Any], *, task: SectionTask, facts: FactsDocument, name: str
+) -> dict[str, Any] | None:
+    """Last-resort correction for an opening or key-capability ``section_authoring`` reply still
+    refused for R43(2)'s no-values rule after every ask (BL-170): the sentence, or the parenthesis,
+    that spells the number, count, file or key name is removed (:func:`_without_values`), and the
+    rest of the unit is kept as written. Before it, one stray number (Words Java, hosted run
+    43672441969: the opening's ``'8'``, ``'2003'``) cost the whole paid Lane R run as a job error.
+    ``run_job`` re-validates the result through the real checks. ``None`` when nothing changed."""
+    if task.section_id not in VALUE_FREE_SECTIONS or not name:
+        return None
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    changed = False
+    for unit in units:
+        if not isinstance(unit, dict) or not isinstance(unit.get("text"), str):
+            continue
+        kept = _without_values(unit["text"], name, facts)
+        if kept is not None:
+            unit["text"] = kept
+            changed = True
+    return output if changed else None
+
+
+def recover_opening_output(
+    output: dict[str, Any],
+    *,
+    task: SectionTask,
+    facts: FactsDocument,
+    dispositions: Mapping[str, Any],
+    name: str,
+) -> dict[str, Any] | None:
+    """The one ``recover=`` for the opening task: the preserved-paragraph trim
+    (``authoring.recover_opening_duplicates_preserved``), then the no-values deletion
+    (:func:`recover_value_sentences`)."""
+    trimmed = recover_opening_duplicates_preserved(output, dispositions=dispositions, facts=facts)
+    current = output if trimmed is None else trimmed
+    valued = recover_value_sentences(current, task=task, facts=facts, name=name)
+    return valued if valued is not None else trimmed
+
+
 def recover_authoring_output(
     output: dict[str, Any],
     *,
     task: SectionTask,
     facts: FactsDocument,
     checks: Callable[[dict[str, Any]], Sequence[str]] | None = None,
+    name: str = "",
 ) -> dict[str, Any] | None:
     """The one ``recover=`` for a section_authoring task other than the opening: every last-resort
     correction of this module, in order, ending with the API-row fallback
-    (:func:`recover_failing_api_rows`) when the job's ``checks`` are given."""
+    (:func:`recover_failing_api_rows`) when the job's ``checks`` are given. With the product
+    ``name``, a key-capability unit also loses a value it spells (:func:`recover_value_sentences`)."""
+    valued = recover_value_sentences(output, task=task, facts=facts, name=name)
+    output = output if valued is None else valued
     restated = recover_restating_sentences(output, task=task, facts=facts)
+    restated = restated if restated is not None else valued
     withdrawn = recover_out_of_slot_citations(
         output if restated is None else restated, task=task, facts=facts
     )
