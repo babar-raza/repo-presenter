@@ -10,9 +10,8 @@ of every latest seal, GitHub for PRs). Columns, in order of strictness:
   deterministic       the latest seal re-certifies under current code (zero provider calls)
   mechanism_passing   deterministic AND a model-reviewed ACCEPT is sealed AND every required
                       mechanism class holds a PASSED certificate (acceptance/record.py)
-  independently       mechanism_passing AND a verified, attested M9 audit record -- reported n/25;
-                      this script has no attestation source until the hosted writer exists on main,
-                      so it is 0 by construction, never guessed
+  independently       current-code validation plus the verified, attested M9 acceptance record
+                      classified by the portfolio counter -- reported n/25; no-action excluded
   pr_created, live_verified   from the counter's GitHub-derived columns
 
 Header line (every report): ``Lane R accepted | Lane L accepted | mechanism-passing only |
@@ -46,7 +45,7 @@ def funnel(outcomes, certificates, registered: int) -> dict:
             "sealed": len(sealed),
             "deterministic": len(deterministic),
             "mechanism_passing": len(mechanism),
-            "independently_accepted": sum(1 for o in mine if o.independently_accepted and False),
+            "independently_accepted": sum(1 for o in mine if o.independently_accepted),
             "pr_created": sum(1 for o in mine if o.effect_executed),
             "live_verified": sum(1 for o in mine if o.live_verified),
             "needs_repair": sorted(o.repository for o in mine if o.certification == "NEEDS_REPAIR"),
@@ -67,8 +66,8 @@ def main(argv: list[str]) -> int:
         return 0
     print(
         f"Lane R {r['independently_accepted']}/25 | Lane L {l['independently_accepted']}/25 | "
-        f"mechanism-passing only R {r['mechanism_passing']} L {l['mechanism_passing']} (Lane L count includes byte-identical no-op seals, R16: never an accepted candidate) | "
-        f"upstream PRs {r['pr_created'] + l['pr_created']} | upstream issues 0 | "
+        f"mechanism-passing only R {r['mechanism_passing'] - r['independently_accepted']} L {l['mechanism_passing'] - l['independently_accepted']} | "
+        f"upstream PRs {r['pr_created'] + l['pr_created']} | upstream issues unmeasured | "
         f"live-verified {r['live_verified'] + l['live_verified']}"
     )
     for lane, row in rows.items():

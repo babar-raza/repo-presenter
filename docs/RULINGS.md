@@ -9,11 +9,17 @@ text differ, that text governs. A new owner ruling is added here and there in th
 ## The goal (one paragraph)
 
 Deliver high-quality README files across the authorized Aspose FOSS portfolio, through two independent lanes —
-**Lane R** (regenerate) and **Lane L** (maintain the live README with only evidence-justified edits) — with **at
-least 25 certified candidates in each lane** out of the portfolio, at or above the published aspose.org
+**Lane R** (regenerate) and **Lane L** (maintain the live README with only evidence-justified edits) — with
+**Lane L: 100% handled; Lane R: at least 85% independently accepted across the portfolio** (R44), at or above the published aspose.org
 readme-refresh benchmark, preserving valuable maintainer content, every claim verified, and real upstream delivery
 (draft PRs) only once every candidate of both lanes passes. **Judge all work by certified candidates produced, not
-by machinery built.**
+by machinery built.** R44 supersedes the earlier target of at least 25 certified candidates in each lane.
+Accepted Lane L edits and justified no-action outcomes are reported separately; a no-action outcome never
+becomes an accepted candidate. Report registered, active and applicable denominators and all exclusions.
+
+**R44 (owner, 2026-11-16): supervisor continuity.** Codex uses the existing supervisor, agents, taskcards,
+leases, backlog, verification receipts and hosted production pipeline; Claude can resume from those same durable
+records. The owner explicitly authorized adjusting provider caps as needed and opening a bounded batch after fixes pass verification; measured batches and cost safeguards remain. Full wording and provenance: consolidated goals Part B, R44.
 
 ## Before you do anything, check
 

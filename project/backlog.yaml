@@ -303,13 +303,13 @@ items:
 
   # ---------------- BL-001 reconciliation, 2026-11-13: delivery targets ----------------
   - id: BL-019
-    title: "Lane R: at least 25 independently accepted (certified) candidates"
+    title: "Lane R: at least 85% independently accepted across the portfolio (R44)"
     type: requirement
-    source: "Part A §3 (\"approximately 25 independently accepted\"); R4, R13, R33; docs/RULINGS.md goal paragraph"
+    source: "R44 (owner, 2026-11-16: Lane R 85% across the portfolio); R13, R33; docs/RULINGS.md goal paragraph"
     priority: P0
     status: active
     implementation_path: "scheduled cohort (present.yml) -> seal -> recertify -> M9 audit -> attested acceptance writer -> ops/checks/portfolio_delivery_count.py; moved by BL-020, BL-021, BL-013"
-    acceptance: "`python ops/checks/portfolio_delivery_count.py --per-lane 25` reports Lane R independently_accepted >= 25 (attested, revision-bound)"
+    acceptance: "current-code, attested Lane R independently_accepted / registered portfolio >= 0.85, rounding the required count up; also report active/applicable denominators and every exclusion. For 41 registered products, at least 35 accepted; inactive/external-block products are never accepted by subtraction. Legacy per-lane-25 gate is not R44 completion."
     evidence:
       - "2026-11-13 recertify --all: Lane R 5 RECERTIFIED / 18 sealed / 40 active; 22 active repositories have no Lane R seal"
       - "2026-11-13: no Lane R record has audit_passed=true in any acceptance-record branch on origin (0/25)"
@@ -341,18 +341,18 @@ items:
     next_action: "ASSUMPTION: trust fixes BL-002/BL-004 should land first so new seals do not repeat the false-claim/placement classes"
 
   - id: BL-022
-    title: "Lane L: 25 independently accepted candidates that each remove a real, verified defect"
+    title: "Lane L: 100% handled; accepted edits and justified no-action reported separately (R44)"
     type: requirement
-    source: "R35, R21, R16, R4; Part A §2 Lane L"
+    source: "R44 (owner, 2026-11-16 clarification: 100% handled, accepted edits and justified no-action separate); R20, R21, R16; Part A §2 Lane L"
     priority: P0
     status: active
     implementation_path: "Lane L cohort -> seal -> M9 audit -> attested writer -> counter (R16 no-op rule fails closed)"
-    acceptance: "`portfolio_delivery_count.py --per-lane 25` reports Lane L independently_accepted >= 25, none an R16 no-op"
+    acceptance: "every active Lane L cell has a current, evidenced terminal outcome (independently accepted edit, NO_ACTION_JUSTIFIED, NOT_APPLICABLE, or valid BLOCKED_EXTERNAL); report each category separately beside all registered/inactive products. No-action is never accepted. All 41 registered products accounted for, including Cells PHP inactive pending BL-018."
     evidence:
       - "2026-11-13 recertify --all: Lane L 26 RECERTIFIED / 27 sealed / 40 active"
       - "2026-11-13: writer run 43252306864 (acceptance-records-43217648963.json, batch_passed=true) has 7 Lane L records with audit_passed=true: Cells Java, Email Cpp, Font Python, Imaging .NET, Note Python, PSD Python, Slides .NET; supervisor counter figure is 5 (not re-verifiable here, see BL-001)"
     depends_on: [BL-013, BL-014, BL-023]
-    next_action: "tracking item; remaining 18+ need real-defect Lane L seals that pass M9"
+    next_action: "BL-025 reconciles remaining unhandled cells and terminal evidence; BL-013 audits real edits that lack attested acceptance. BL-171 updates the existing target consumers to R44."
 
   - id: BL-023
     title: "3D .NET Lane L seal NEEDS_REPAIR (L-03 Watermark stub described as working; L-05 U3D format_overclaim unrepairable)"
@@ -758,7 +758,7 @@ items:
     status: done
     implementation_path: "TC-023/TC-023b measurement, TC-026 fallback"
     acceptance: "TC-007 and TC-026 ACCEPTED with receipts"
-    evidence: ["2026-11-13 gatecli validate: TC-007 ACCEPTED (e55f8be), TC-026 ACCEPTED (98d9234), TC-023 ACCEPTED (e6aad6e)"]
+    evidence: ["2026-11-13 gatecli validate: TC-007 ACCEPTED (e55f8be), TC-026 ACCEPTED (98d9234); TC-023 accepted receipt: evidence/build/GATE5_DELIVERY_PROGRAM/TC-023/receipt.json (scope-only verifier commit); equivalent production prompt landed in c1a6dd1, whose prompt blob is identical to the receipt head (verified 2026-11-16). Immutable receipt unchanged."]
     next_action: "none"
 
   - id: BL-058
@@ -1857,3 +1857,29 @@ items:
     evidence: []
     next_action: "after BC-18 on PDF Java is cleared (it does not count before then)"
     updated: "2026-11-15"
+
+  - id: BL-171
+    title: "R44: apply Lane L full handling and Lane R 85% targets to the existing counter and TC-011 consumers"
+    type: requirement
+    source: "owner chat 2026-11-16 and explicit Lane L clarification; consolidated goals Part B R44"
+    priority: P0
+    status: active
+    implementation_path: "extend the existing portfolio_delivery_count.py target arguments and its TC-011 / supervisor summary consumers; reuse R33 attested counts, R16 no-action classification and terminal_cells.json; no new framework or acceptance route"
+    acceptance: "Lane R threshold is ceil(0.85 * registered products), currently 35/41, with active and applicable denominators also printed; Lane L reports every active product terminal or explicitly unhandled, accepted edits and no-action separately, and every inactive registered product. A legacy 25-per-lane pass never claims R44 complete. Missing, stale and unaudited outcomes fail closed."
+    evidence:
+      - "2026-11-16 owner clarified Lane L: '100% handled; report accepted edits and justified no-action separately'. Existing R33/R16 acceptance safeguards unchanged."
+      - "baseline: hosted supervisor-tick 43794204298 reports R accepted 1, L accepted 24, L no-action 5; registry 41 registered / 40 active, Cells PHP inactive. These are observations, not R44 completion."
+    next_action: "reconcile terminal coverage through BL-025; update TC-011's existing target consumers with independent verification"
+    updated: "2026-11-16"
+
+  - id: BL-172
+    title: "Delivery funnel falsely forces independent acceptance to zero after the attested writer is live"
+    type: defect
+    source: "Codex progress assessment 2026-11-16: ops/checks/delivery_funnel.py uses independently_accepted and False; R11/R33 honest reporting"
+    priority: P1
+    status: active
+    implementation_path: "existing delivery_funnel.py reads each current LaneOutcome.independently_accepted; mechanism-only headline excludes accepted candidates; issues without a data source reported unmeasured"
+    acceptance: "cold regression proves a valid attested acceptance counts and no-action, unaudited and noncurrent outcomes do not; independent review and hosted CI pass; official portfolio count remains authoritative"
+    evidence: []
+    next_action: "independently verify worker f4adedfd, integrate and inspect hosted CI; do not claim the fix itself adds accepted candidates"
+    updated: "2026-11-16"
