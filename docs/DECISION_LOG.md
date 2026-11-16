@@ -6868,3 +6868,42 @@ replaced; this delivery is Git content replication. Old GitHub repository
 replacement and the portfolio's release gates remain separate from this request.
 
 Backlog: BL-033 (owner-requested GitLab portion delivered; full legacy GitHub cutover separately gated).
+
+## 2026-11-16: Codex supervisor continuity and owner portfolio targets (R44)
+
+The owner authorized Codex to work in the same supervisor capacity while Claude's allowance resets,
+preserving the existing process so either supervisor can resume. The owner's target is Lane L 100%
+and Lane R 85% across the portfolio. In the explicit clarification, Lane L means "100% handled;
+report accepted edits and justified no-action separately". R44 records the words and supersedes the
+old 25-per-lane finish line. No-action is never independently accepted. For the current 41 registered
+products, the Lane R target is at least 35 accepted; report the 40 active products and inactive Cells
+PHP as well. Missing or external-block outcomes never count as accepted.
+
+Codex fetched current main a21e339f into a separate worktree/branch
+`codex/portfolio-supervisor-2026-11-16`, leaving the older delivery-plan checkout and its untracked
+Cells Go/PDF Java candidates intact. `gatecli worker-tick --dry-run --holder codex-supervisor`
+reported no live taskcard lease. No in-flight product job was observed in the current Actions list.
+Routine work uses bounded isolated workers and a separate verifier; the existing taskcards,
+receipts, backlog and hosted execution routes remain the handoff mechanism. No new supervisor
+framework or product model route is introduced.
+
+Baseline evidence is hosted tick
+https://github.com/babar-raza/repo-presenter/actions/runs/43794204298: Lane R accepted 1, Lane L
+accepted 24, Lane L no-action 5, upstream README effects/live verified 0. Provider budget is stopped
+under R43 after 12 settled runs without a seal; 4,167 calls and 94,884,800 tokens are charged.
+The owner's unlimited-token wording is applied to assistant investigation effort; no numeric product
+envelope or owner-only batch control was changed. Zero-call diagnosis and repair proof proceed first.
+
+Immediate disjoint investigations: BL-103 inherited published member tables lost to forced
+supersession (3D TypeScript / 3D Python failures), BL-025 Lane L terminal accounting, and BL-172's
+hardcoded-zero acceptance reporter. Worker receipts and independent verification must precede
+integration; no new candidate acceptance is claimed from a code or reporting fix.
+
+Backlog: BL-019, BL-022, BL-025, BL-100, BL-103, BL-171, BL-172.
+
+
+## 2026-11-16: Provider budget authorization for R44
+
+The owner explicitly authorized: "Yes?adjust provider caps as needed, retain measured batches and cost safeguards" in response to opening a new bounded qwen3-next batch after fixes pass verification. This supersedes the earlier interpretation above. The rolling cost guard and verification prerequisite remain in force; no new batch has been opened by this decision.
+
+Backlog: BL-100, BL-103, BL-171.
