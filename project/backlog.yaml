@@ -1918,8 +1918,9 @@ items:
     priority: P0
     status: active
     implementation_path: "integrate existing lane_l_trigger baseline/trigger and monitor.relevance logic into the governed cohort and Lane L production path; retain validated bundle scope through planning and use pinned source revisions"
-    acceptance: "real relevant upstream change plus verified defect is required for a Lane L edit; irrelevant changes do not cause provider calls or regeneration; unknown and unreachable changes fail closed; the production path demonstrably invokes the trigger through offline end-to-end tests and hosted proof"
+    acceptance: "real relevant upstream change plus verified defect is required for a Lane L edit; no-action requires clean applicable probes; irrelevant changes do not cause provider calls or regeneration; unknown and unreachable changes fail closed; the production path demonstrably invokes the trigger through offline end-to-end tests and hosted proof"
     evidence:
       - "2026-11-16: lane_l_trigger.compute_trigger and compute_baseline have no production callers; lane_l_run.py documents deferred trigger wiring. select_scheduled_cohort.py skips recertified seals before assessing upstream drift; plan_cohort lacks retained bundle scope and changed paths."
+      - "2026-11-16: lane_l_trigger.classify_outcome returns NO_ACTION_JUSTIFIED for no trigger and no findings without checking probes_clean, contrary to its documented contract; present._lane_l_and_seal does not call it. Counter infers no-action from byte equality alone."
     next_action: "independently reproduce the production call graph, design minimal integration in the existing pipeline, and test relevance and trigger behavior before hosted execution"
     updated: "2026-11-16"
