@@ -619,6 +619,9 @@ def _rerun_lane_r(
         if not changes:
             break
         restored.extend(changes)
+        # A links list restored into Documentation and Resources prints there only through the
+        # plan's own link lines (BL-180): re-apply the planning backstop to the restored state.
+        plan = current_plan(sealed_plan, document, dispositions)
         failing, details, artifacts = _evaluate_lane_r(
             bundle, entry, source, dispositions, units_override,
             restored_out=vacated_sections(restored), plan_override=plan,

@@ -88,6 +88,7 @@ from repo_presenter.readme.composition.coherence import (
 from repo_presenter.readme.composition.components.identity import product_name
 from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
 from repo_presenter.readme.composition.planning import (
+    missing_kept_list_links,
     plan_checks,
     planning_packet,
     planning_schema,
@@ -787,6 +788,23 @@ def _strictly_fewer_failures(old: list[dict[str, Any]], new: list[dict[str, Any]
     )
 
 
+def _restore_plan(
+    plan: Mapping[str, Any], document: FactsDocument, dispositions: Mapping[str, Any]
+) -> dict[str, Any]:
+    """The plan a restore state is rendered with: the composed plan plus the planning backstop's
+    link lines (``planning.missing_kept_list_links``) for every resource-links list the restore
+    kept in Documentation and Resources, which prints such a list only through those lines.
+    Planning applies the same backstop to the dispositions it is given, and re-certification to a
+    seal (``recertify.current_plan``); the restore changes the dispositions after planning, so
+    without it a restored links list printed nothing (BL-180). Pure; zero calls."""
+    if not isinstance(document, FactsDocument):
+        return dict(plan)
+    missing = missing_kept_list_links(dict(plan), document, dict(dispositions))
+    if not missing:
+        return dict(plan)
+    return {**plan, "links": [*plan.get("links", []), *missing]}
+
+
 def _judge_restore(
     dispositions: dict[str, Any], *, composed: _Composition, entry: RegistryEntry,
     document: FactsDocument, investigation: dict, tree_paths: list[str], original: str,
@@ -794,24 +812,25 @@ def _judge_restore(
 ) -> tuple[str, list[Any], list[Accounted], dict[str, Any], dict[str, Any], ReviewVerdict]:
     """Render and judge one restore state with the unchanged validators and deterministic reviewer:
     ``(readme, tasks, accounted, dispositions, validation, verdict)``. Zero provider calls."""
-    readme = render_readme(entry, document, composed.plan, composed.coherent_units, dispositions)
+    plan = _restore_plan(composed.plan, document, dispositions)
+    readme = render_readme(entry, document, plan, composed.coherent_units, dispositions)
     tasks = authoring_tasks(
-        entry, document, investigation, dispositions, composed.plan,
+        entry, document, investigation, dispositions, plan,
         restored_out=vacated_sections(restored),
     )
     candidate = _candidate(
-        entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+        entry, document, plan, composed.coherent_units, dispositions, readme,
         tree_paths, tasks, benchmark=original,
     )
     accounted_dispositions, accounted = account_unprinted_units(candidate)
     if accounted and render_readme(
-        entry, document, composed.plan, composed.coherent_units, accounted_dispositions
+        entry, document, plan, composed.coherent_units, accounted_dispositions
     ) == readme:
         dispositions = accounted_dispositions
     else:
         accounted = []
     candidate = _candidate(
-        entry, document, composed.plan, composed.coherent_units, dispositions, readme,
+        entry, document, plan, composed.coherent_units, dispositions, readme,
         tree_paths, tasks, benchmark=original,
     )
     validation = validate_candidate(candidate, out_dir, [])
@@ -1057,9 +1076,13 @@ def _restore_lost_content(
         newline="\n",
     )
     write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+    plan = _restore_plan(composed.plan, document, dispositions)
+    if plan != composed.plan:
+        write_plan(plan, out_dir / "plan.json")
     return _Settled(
         replace(
             composed,
+            plan=plan,
             dispositions=dispositions,
             # Restore's reshaping becomes the new planning baseline too, not just the render-time
             # value: a recompose that follows this restore (``_settle_s9``'s ``dispositions_override``)
