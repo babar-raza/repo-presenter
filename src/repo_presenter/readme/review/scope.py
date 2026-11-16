@@ -64,6 +64,7 @@ _RENDERER_SENTENCES = tuple(
             r"section above covers the essentials\."
         ),
         r"These limitations don't apply to \[[^\]]*\]\([^)]*\)\.",
+        r"See \[[^\]]* — Enterprise Edition\]\([^)]*\)\.",
         r"(?:- )?Found a bug or have a feature request\? \[Open an issue\]\([^)]*\)\.",
     )
 )

@@ -1416,12 +1416,12 @@ def _api_reference(context: RenderContext) -> list[str]:
     return lines
 
 
-ENTERPRISE_SENTENCE_LEAD = "These limitations don't apply to"
+ENTERPRISE_SENTENCE_LEAD = "See"
 
 
 def enterprise_anchor(name: str) -> str:
     """The Enterprise Edition anchor text for the product ``name``."""
-    return f"full-featured {name} — Enterprise Edition"
+    return f"{name} — Enterprise Edition"
 
 
 def _enterprise_paragraph(context: RenderContext) -> str:
