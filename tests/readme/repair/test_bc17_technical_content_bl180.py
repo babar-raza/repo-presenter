@@ -264,6 +264,16 @@ def test_only_a_kept_unit_carrying_the_fence_marker_is_printed_without_it() -> N
     assert fence_withheld_form(unit, SLIDES_CPP, None, facts) == SLIDES_CPP
 
 
+def test_ambiguous_multiple_examples_are_preserved_for_downstream_checks() -> None:
+    from repo_presenter.extractors.platforms.registry import plugin_for
+
+    plugin_for("cpp")
+    text = 'Verified example:\n```cpp\nverified();\n```\nUnverified example:\n```cpp\nunverified();\n```\n'
+    marked = {"disposition": "PRESERVE_ATTRIBUTED", "rationale": RECOVERED_FENCE_RATIONALE}
+    assert without_example_fences(text, {"cpp"}) == text
+    assert fence_withheld_form("inherited_unit:102.list", text, marked, _cpp_facts()) == text
+
+
 def test_restore_keeps_the_marker_so_the_unit_prints_without_the_example() -> None:
     from repo_presenter.extractors.platforms.registry import plugin_for
 

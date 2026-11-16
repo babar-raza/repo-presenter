@@ -564,14 +564,20 @@ def _example_fence_languages(facts: FactsDocument) -> frozenset[str]:
 
 
 def without_example_fences(text: str, languages: Collection[str]) -> str:
-    """``text`` with every fenced block in one of ``languages`` left out, every other line exactly
-    as written; a line that introduced a removed block with a colon ends with a full stop instead,
-    and the blank lines around the block collapse to one."""
+    """Remove the single identifiable example fence, preserving ambiguous multi-fence units.
+
+    The marker identifies an unverified example but does not identify which block. When multiple
+    fences exist, leave the whole unit untouched so downstream checks can reject it rather than
+    silently delete unrelated examples and count their loss as justified.
+    """
     from markdown_it import MarkdownIt
 
     lines = text.split("\n")
     drop: set[int] = set()
-    for token in MarkdownIt("commonmark").parse(text):
+    tokens = MarkdownIt("commonmark").parse(text)
+    if sum(token.type == "fence" for token in tokens) > 1:
+        return text
+    for token in tokens:
         if token.type != "fence" or token.map is None:
             continue
         info = token.info.strip()
