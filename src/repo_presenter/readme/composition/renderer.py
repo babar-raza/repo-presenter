@@ -318,13 +318,16 @@ class RenderContext:
             remembered, self._unplaced, self.rendered_ids = self.rendered_ids, True, None
             try:
                 body = "\n".join(_section_body(self, section))
+                closing = _enterprise_paragraph(self) if section_id == "scope_limitations" else ""
             finally:
                 self._unplaced, self.rendered_ids = False, remembered
-            return (
-                body.split(ENTERPRISE_SENTENCE_LEAD, 1)[0]
-                if section_id == "scope_limitations"
-                else body
-            )
+            # The paragraph is appended as the final line. Remove that exact suffix only;
+            # splitting on a generic lead such as "See" can discard earlier scope text.
+            if closing and body == closing:
+                return ""
+            if closing and body.endswith("\n" + closing):
+                return body[: -len(closing) - 1]
+            return body
 
         return Destinations(unplaced, tuple(sections))
 
