@@ -1,0 +1,75 @@
+name: Mirror GitHub to GitLab
+
+on:
+  push:
+  delete:
+  workflow_dispatch:
+  # Reconcile workflow-token pushes and custom state refs, which may emit no push workflow.
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitlab-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    if: github.repository == 'babar-raza/repo-presenter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      # No checkout: branch-provided scripts and Git hooks are never executed.
+      - name: Replace managed GitLab refs with a fresh GitHub snapshot
+        shell: bash
+        env:
+          GH_MIRROR_TOKEN: ${{ github.token }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GIT_TERMINAL_PROMPT: "0"
+          GIT_CONFIG_NOSYSTEM: "1"
+        run: |
+          set -euo pipefail
+          if [[ -z "$GITLAB_TOKEN" ]]; then
+            echo '::error::Repository Actions secret GITLAB_TOKEN is missing or empty.'
+            exit 1
+          fi
+          scratch=$(mktemp -d "$RUNNER_TEMP/gitlab-mirror.XXXXXXXX")
+          trap 'rm -rf -- "$scratch"' EXIT
+          export GIT_CONFIG_GLOBAL=/dev/null
+          export GIT_ASKPASS="$scratch/askpass"
+          cat > "$GIT_ASKPASS" <<'ASKPASS'
+          #!/usr/bin/env bash
+          set -eu
+          case "$1" in
+            *Username*github.com*) printf '%s\n' x-access-token ;;
+            *Password*github.com*) printf '%s\n' "$GH_MIRROR_TOKEN" ;;
+            *Username*gitlab.recruitize.ai*) printf '%s\n' oauth2 ;;
+            *Password*gitlab.recruitize.ai*) printf '%s\n' "$GITLAB_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          ASKPASS
+          chmod 700 "$GIT_ASKPASS"
+          git init --bare "$scratch/repo.git"
+          cd "$scratch/repo.git"
+          git remote add github https://github.com/babar-raza/repo-presenter.git
+          git remote add gitlab https://gitlab.recruitize.ai/sialkot/cantt-smallize/repository-presenter.git
+          git -c credential.helper= fetch --no-tags github \
+            '+refs/heads/*:refs/heads/*' \
+            '+refs/tags/*:refs/tags/*' \
+            '+refs/repository-presenter-state/*:refs/repository-presenter-state/*'
+          git show-ref --verify --quiet refs/heads/main
+          git for-each-ref --format='%(objectname)%09%(refname)' \
+            refs/heads/ refs/tags/ refs/repository-presenter-state/ \
+            | LC_ALL=C sort > "$scratch/expected"
+          # Atomic is required: a protected ref rejection must not leave a partial snapshot.
+          git -c credential.helper= push --atomic --prune gitlab \
+            '+refs/heads/*:refs/heads/*' \
+            '+refs/tags/*:refs/tags/*' \
+            '+refs/repository-presenter-state/*:refs/repository-presenter-state/*'
+          git -c credential.helper= ls-remote --refs gitlab \
+            'refs/heads/*' 'refs/tags/*' 'refs/repository-presenter-state/*' \
+            | LC_ALL=C sort > "$scratch/actual"
+          diff -u "$scratch/expected" "$scratch/actual"
+          echo "Verified $(wc -l < "$scratch/expected") mirrored refs against the fetched GitHub snapshot."

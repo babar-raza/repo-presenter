@@ -6750,3 +6750,45 @@ sets are unchanged. The R10 gate is OK on 53 seals.
 after the three asks, because no honest deletion exists. BL-170 records it as next action if it recurs.
 
 Backlog: BL-170
+
+
+## 2026-11-16 ? Owner requests GitLab replacement and automatic GitHub mirroring
+
+The owner explicitly authorized replacing the Git contents of
+`https://gitlab.recruitize.ai/sialkot/cantt-smallize/repository-presenter` with this
+project and keeping it synchronized whenever GitHub receives pushes. This is a
+GitLab-only cutover authorization; it does not replace the old GitHub repository
+or widen product-repository write permissions.
+
+GitHub `babar-raza/repo-presenter` is the mirror source. At inspection, the local
+checkout `e552641d` was an ancestor 272 commits behind GitHub main `79ba48cc`;
+two untracked candidate directories were absent from GitHub. Prepare the change
+from current GitHub main in a separate worktree and preserve the local checkout.
+Mirror explicit heads, tags and durable `refs/repository-presenter-state/*`,
+excluding forge-owned pull-request refs. Serialize runs, fetch current source
+refs at execution time, and reconcile periodically to cover custom refs and
+pushes made with `GITHUB_TOKEN` that do not trigger another Actions workflow.
+
+Cutover requires backing up the old GitLab refs, disabling only the competing
+`mirror-gitlab.yml` workflow in `babar-raza/repository-presenter`, inspecting
+GitLab protections, synchronizing and comparing exact ref SHAs. Tokens belong
+only in environment variables and the GitHub Actions `GITLAB_TOKEN` secret.
+
+Credential inspection: both the inherited process token and Windows User-level
+`GITLAB_TOKEN` returned HTTP 401 from GitLab API on 2026-11-16; no Machine-level
+value exists. Git HTTPS `ls-remote` also failed authentication with that token. The GitLab replacement, secret installation and hosted verification
+remain pending a valid credential. The legacy mirror remains active until cutover.
+See `docs/GITLAB_MIRROR.md` for the repeatable execution and verification steps.
+
+Independent offline verification passed on 2026-11-16: the exact workflow
+shell, with only its two remote URLs substituted for temporary bare repositories,
+replicated branches/tags/state refs, removed stale destination refs, converged
+after force updates and additions/deletions, excluded pull-request refs and
+preserved service-owned merge-request refs. A server hook rejecting main proved
+atomic rollback of simultaneous updates/additions/deletions. Missing-token failure,
+YAML triggers/permissions/concurrency and Bash syntax checks also passed. Hosted
+execution and real GitLab ref equality remain unverified until authentication
+is restored. The existing backlog checker separately fails BL-057 because its
+cited commit e6aad6e is absent from this history; this change does not alter it.
+
+Backlog: BL-033 (GitLab portion; existing full cutover remains separately gated).
