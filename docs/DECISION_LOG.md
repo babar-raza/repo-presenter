@@ -6792,3 +6792,26 @@ is restored. The existing backlog checker separately fails BL-057 because its
 cited commit e6aad6e is absent from this history; this change does not alter it.
 
 Backlog: BL-033 (GitLab portion; existing full cutover remains separately gated).
+
+
+## 2026-11-16 ? Rotated GitLab credential verified; GitLab cutover prepared
+
+The rotated Windows User-level token authenticated as `babar.raza` against
+GitLab project 1161 (`sialkot/cantt-smallize/repository-presenter`). A complete
+advertised-ref mirror backup was cloned and `git fsck --full --no-dangling`
+passed at `C:/Users/babar/Documents/GitHub/repository-presenter-gitlab-backup-20261116T054821Z.git`;
+`pre-cutover-refs.txt` records the original refs. Original main is
+`494a8e0cf861e151d7eb0f621dc924580afd93eb`. GitHub repository Actions secret
+`GITLAB_TOKEN` was updated from that environment variable without logging it.
+
+GitLab main is protected, Maintainers may push/merge, and `allow_force_push`
+is false. The token has `read_api` and `write_repository`, but no `api` scope.
+A PATCH enabling force pushes was refused with HTTP 403 `insufficient_scope`;
+no GitLab protection setting changed. Owner action: enable force push on this
+project's main branch, or provide a mutation-capable token. All managed ref
+writes are atomic so a rejected main update cannot partially replace GitLab.
+The legacy GitHub mirror is disabled before activating the replacement writer.
+Hosted execution and final GitLab ref equality must be inspected before calling
+this cutover delivered.
+
+Backlog: BL-033 (GitLab portion; owner-requested on 2026-11-16).
