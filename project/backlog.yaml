@@ -1884,3 +1884,29 @@ items:
     evidence: []
     next_action: "independently verify worker f4adedfd, integrate and inspect hosted CI; do not claim the fix itself adds accepted candidates"
     updated: "2026-11-16"
+
+  - id: BL-186
+    title: "R24 external-block records lack complete reproducible evidence and follow-up ownership"
+    type: gap
+    source: "Independent R15 gate review 2026-11-16; R24 and delivery plan section 6.2"
+    priority: P0
+    status: active
+    implementation_path: "reproduce PSD Java at its pinned source, record actual command, result, evidence, named follow-up owner, issue draft and unblock check; validate the existing terminal record in the shared existing gate and scheduler, failing closed when evidence is missing"
+    acceptance: "only a reproduced, evidence-backed, owned, fresh and revision-pinned external defect is terminal; missing, malformed or unavailable evidence is not terminal; verify PSD Java without fabricating fields"
+    evidence:
+      - "Independent review 2026-11-16: recorded_terminal accepts an external-block mapping without evidence, owner, reproduction command, issue draft or unblock condition. Existing PSD Java record points to a narrative and issue draft but lacks structured follow-up owner and exact check/unblock commands."
+    next_action: "reproduce at the pinned revision; implement and independently verify a compatible fail-closed evidence contract"
+    updated: "2026-11-16"
+
+  - id: BL-187
+    title: "Stale Lane L no-action outcomes must be re-evaluated after relevant upstream change"
+    type: gap
+    source: "Independent R15 freshness review 2026-11-16; R5, R10, R20 and R44"
+    priority: P0
+    status: active
+    implementation_path: "reuse drift and consumed-scope checks in the existing cohort selector and counter to re-evaluate a no-action seal when upstream changes, fail closed when freshness cannot be established, preserve the old seal and avoid regeneration for irrelevant changes"
+    acceptance: "a changed or unreadable upstream cannot silently retain stale no-action coverage; a relevant change is re-evaluated, irrelevant changes do not force regeneration, and counter and publication gate agree"
+    evidence:
+      - "Independent zero-call reproduction 2026-11-16: portfolio_gate.evaluate counts a certified no-action at revision a as terminal when current upstream is b and never calls head_of; cohort selector skips recertified seals before checking drift."
+    next_action: "land and verify the gate freshness fix; then repair scheduler and counter consistency through the existing drift path"
+    updated: "2026-11-16"
