@@ -6815,3 +6815,26 @@ Hosted execution and final GitLab ref equality must be inspected before calling
 this cutover delivered.
 
 Backlog: BL-033 (GitLab portion; owner-requested on 2026-11-16).
+
+
+## 2026-11-16 ? Hosted GitLab mirror reached protected-main gate atomically
+
+The independently verified workflow and setup record landed on GitHub main
+at `8172175556e4968a9bd60ade0ce7545cce63f1e5`. GitHub reported that the admin
+push bypassed the expected `test` status check; this migration changes only
+workflow/documentation, with the independent offline mirror tests recorded above.
+The hosted mirror run https://github.com/babar-raza/repo-presenter/actions/runs/43812814584
+successfully fetched GitHub and authenticated to GitLab, then GitLab refused:
+"You are not allowed to force push code to a protected branch on this project."
+A fresh authenticated `ls-remote --refs` compared every advertised ref to the
+verified backup: all 36 refs were unchanged. Atomic replacement failed safely.
+
+The old repository's `mirror-gitlab.yml` is `disabled_manually`; the new
+`gitlab-mirror.yml` is also temporarily `disabled_manually` to avoid repeated
+scheduled failures pending the owner-only GitLab protection change. The rotated
+secret is installed. Next action after `main.allow_force_push=true`: enable
+`gitlab-mirror.yml`, dispatch, inspect hosted success and exact ref equality,
+then exercise disposable branch creation/deletion. Owner may instead supply an
+`api`-scoped token so the protection setting can be updated programmatically.
+
+Backlog: BL-033 (GitLab portion; blocked only on the protected-main setting).
