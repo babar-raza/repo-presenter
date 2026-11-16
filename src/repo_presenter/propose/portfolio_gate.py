@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
@@ -99,7 +100,26 @@ def load_terminal_cells(path: Path = TERMINAL_CELLS) -> list[dict[str, Any]]:
     cells = document.get("cells") if isinstance(document, dict) else None
     if not isinstance(cells, list):
         raise TypeError(f"{path}: 'cells' must be a list")
-    return [cell for cell in cells if isinstance(cell, dict)]
+    _validate_terminal_cells(cells)
+    return cells
+
+
+def _validate_terminal_cells(cells: Iterable[Any]) -> None:
+    """Reject ambiguous or malformed records; never silently select one duplicate."""
+    seen: set[tuple[str, str]] = set()
+    for cell in cells:
+        if not isinstance(cell, Mapping):
+            raise TypeError("terminal cell must be an object")
+        repo = cell.get("repository")
+        lane = cell.get("lane")
+        if not isinstance(repo, str) or not re.fullmatch(r"[^/\s]+/[^/\s]+", repo) or lane not in LANES:
+            raise ValueError("terminal cell requires a repository and a valid lane")
+        if cell.get("outcome") not in {BLOCKED_EXTERNAL, NOT_APPLICABLE}:
+            raise ValueError("terminal cell has an invalid outcome")
+        key = (repo, lane)
+        if key in seen:
+            raise ValueError(f"duplicate terminal cell: {repo} lane {lane}")
+        seen.add(key)
 
 
 def _iso(value: Any) -> date | None:
@@ -118,6 +138,10 @@ def recorded_terminal(
     if outcome not in {BLOCKED_EXTERNAL, NOT_APPLICABLE}:
         return None, f"terminal_cells.json outcome {outcome!r} is not a recognised terminal"
     if outcome == BLOCKED_EXTERNAL:
+        for name in ("decided", "rechecked"):
+            raw = cell.get(name)
+            if raw is not None and (_iso(raw) is None or _iso(raw) > today):
+                return None, f"R24 invalid or future {name}: not terminal"
         checked = max(
             (d for d in (_iso(cell.get("decided")), _iso(cell.get("rechecked"))) if d), default=None
         )
@@ -130,12 +154,13 @@ def recorded_terminal(
                 f"{recheck_by.isoformat()}): not terminal until re-verified"
             )
     pinned = str(cell.get("revision") or "")
-    if pinned:
-        head = head_of(str(cell.get("repository")))
-        if head is None:
-            return None, f"{outcome} pinned at {pinned[:12]}, upstream head unreadable: fail closed"
-        if not (head.startswith(pinned) or pinned.startswith(head)):
-            return None, f"{outcome} lapsed: upstream moved {pinned[:12]} -> {head[:12]}"
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
+        return None, f"{outcome} requires a full pinned revision: not terminal"
+    head = head_of(str(cell.get("repository")))
+    if not isinstance(head, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", head):
+        return None, f"{outcome} pinned at {pinned[:12]}, upstream head unreadable: fail closed"
+    if head.lower() != pinned.lower():
+        return None, f"{outcome} lapsed: upstream moved {pinned[:12]} -> {head[:12]}"
     return outcome, f"{outcome} ({cell.get('ruling')})"
 
 
@@ -169,6 +194,11 @@ def evaluate(
     """Pure apart from ``head_of``. ``outcomes`` are ``LaneOutcome``-shaped objects (only the
     CURRENT version set's are used); ``terminals`` are ``terminal_cells.json`` entries."""
     repos = sorted(set(active))
+    terminals = list(terminals)
+    try:
+        _validate_terminal_cells(terminals)
+    except (TypeError, ValueError) as exc:
+        return PortfolioReadiness(ready=False, active=len(repos), error=str(exc))
     current = {(o.repository, o.lane): o for o in outcomes if getattr(o, "current", True)}
     recorded = {(str(c.get("repository")), str(c.get("lane"))): c for c in terminals}
     closed: dict[tuple[str, str], str] = {}

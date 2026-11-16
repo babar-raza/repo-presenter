@@ -106,11 +106,51 @@ def test_a_recent_recheck_refreshes_an_old_r24_decision() -> None:
     assert evaluate(["o/a"], [outcome("o/a", "L")], [cell], today=TODAY, head_of=still_pinned).ready
 
 
-@pytest.mark.parametrize("head", ["b" * 40, None])
+@pytest.mark.parametrize("revision", [None, "", "a", "not-a-revision", "a" * 39])
+def test_r24_requires_a_full_pinned_revision(revision: str | None) -> None:
+    result = evaluate(["o/a"], [outcome("o/a", "L")], [r24("o/a", revision=revision)],
+                      today=TODAY, head_of=still_pinned)
+    assert not result.ready
+
+
+@pytest.mark.parametrize("dates", [
+    {"decided": "2026-11-14"},
+    {"rechecked": "2026-11-14"},
+    {"decided": "not-a-date", "rechecked": "2026-11-13"},
+    {"rechecked": "not-a-date"},
+])
+def test_r24_rejects_future_or_malformed_check_dates(dates: dict[str, str]) -> None:
+    result = evaluate(["o/a"], [outcome("o/a", "L")], [r24("o/a", **dates)],
+                      today=TODAY, head_of=still_pinned)
+    assert not result.ready
+
+
+def test_duplicate_terminal_records_fail_closed() -> None:
+    result = evaluate(["o/a"], [outcome("o/a", "L")], [r24("o/a"), r24("o/a")],
+                      today=TODAY, head_of=still_pinned)
+    assert not result.ready
+
+
+@pytest.mark.parametrize("bad_cell", [None, "bad", {}, {"repository": "o/a", "lane": "X"}])
+def test_malformed_terminal_file_fails_closed(tmp_path: Path, bad_cell: Any) -> None:
+    path = tmp_path / "terminal.json"
+    path.write_text(json.dumps({"cells": [bad_cell]}), encoding="utf-8")
+    result = portfolio_readiness(terminal_cells=path, collect=lambda: ([], None, None))
+    assert not result.ready
+    assert result.error
+
+
+@pytest.mark.parametrize("head", ["b" * 40, None, "a", "not-a-revision"])
 def test_a_moved_or_unreadable_upstream_lapses_a_terminal(head: str | None) -> None:
     readiness = evaluate(["o/a"], [outcome("o/a", "L")], [r24("o/a")], today=TODAY, head_of=lambda _: head)
     assert not readiness.ready
     assert "upstream" in readiness.missing[0][2]
+
+
+def test_not_applicable_also_requires_a_pinned_revision() -> None:
+    row = {"repository": "o/a", "lane": "L", "outcome": NOT_APPLICABLE}
+    readiness = evaluate(["o/a"], [outcome("o/a", "R")], [row], today=TODAY, head_of=still_pinned)
+    assert not readiness.ready
 
 
 def test_sealed_but_unattested_needs_repair_and_unsealed_cells_block_with_reasons() -> None:
