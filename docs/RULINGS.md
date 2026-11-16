@@ -19,8 +19,7 @@ becomes an accepted candidate. Report registered, active and applicable denomina
 
 **R44 (owner, 2026-11-16): supervisor continuity.** Codex uses the existing supervisor, agents, taskcards,
 leases, backlog, verification receipts and hosted production pipeline; Claude can resume from those same durable
-records. Unlimited assistant investigation effort does not alter the recorded product-provider budget or its
-owner-only controls. Full wording and provenance: consolidated goals Part B, R44.
+records. The owner explicitly authorized adjusting provider caps as needed and opening a bounded batch after fixes pass verification; measured batches and cost safeguards remain. Full wording and provenance: consolidated goals Part B, R44.
 
 ## Before you do anything, check
 

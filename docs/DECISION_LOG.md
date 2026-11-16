@@ -6900,3 +6900,10 @@ hardcoded-zero acceptance reporter. Worker receipts and independent verification
 integration; no new candidate acceptance is claimed from a code or reporting fix.
 
 Backlog: BL-019, BL-022, BL-025, BL-100, BL-103, BL-171, BL-172.
+
+
+## 2026-11-16: Provider budget authorization for R44
+
+The owner explicitly authorized: "Yes?adjust provider caps as needed, retain measured batches and cost safeguards" in response to opening a new bounded qwen3-next batch after fixes pass verification. This supersedes the earlier interpretation above. The rolling cost guard and verification prerequisite remain in force; no new batch has been opened by this decision.
+
+Backlog: BL-100, BL-103, BL-171.
