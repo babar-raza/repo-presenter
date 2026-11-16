@@ -6838,3 +6838,33 @@ then exercise disposable branch creation/deletion. Owner may instead supply an
 `api`-scoped token so the protection setting can be updated programmatically.
 
 Backlog: BL-033 (GitLab portion; blocked only on the protected-main setting).
+
+
+## 2026-11-16 ? GitLab replacement delivered and automatic mirroring exercised
+
+The owner enabled force pushes for GitLab main; the authenticated protection
+read confirmed `allow_force_push=true`. The new mirror was enabled and dispatched.
+Hosted run https://github.com/babar-raza/repo-presenter/actions/runs/43813403711
+succeeded: it replaced old GitLab main `494a8e0c` with GitHub `cf973372`, pruned
+stale managed refs and verified exact equality of 317 mirrored refs against its
+fresh source snapshot. A separate read-only verifier inspected this hosted receipt.
+
+A real GitHub push creating `codex/gitlab-mirror-smoke-20261116` automatically
+triggered successful run https://github.com/babar-raza/repo-presenter/actions/runs/43813465785.
+Independent authenticated `ls-remote` of source and destination returned identical
+maps: 318 refs (132 branches, seven tags and 179 project-state refs), with the
+smoke branch present on both. Deleting that source branch automatically triggered
+successful run https://github.com/babar-raza/repo-presenter/actions/runs/43813533092.
+The disposable branch is removed; no product content was changed for this test.
+
+`babar-raza/repo-presenter` workflow `gitlab-mirror.yml` is active and reconciles
+pushes/deletions plus a 15-minute scheduled fallback. The legacy
+`babar-raza/repository-presenter` workflow `mirror-gitlab.yml` remains disabled
+so it cannot write competing history. GitLab retains Maintainer-only push/merge
+access to protected main, with force push enabled for mirror replacement and
+future forced-source updates. The verified pre-cutover backup remains outside
+the source and destination repositories. GitLab issues/MRs/settings were not
+replaced; this delivery is Git content replication. Old GitHub repository
+replacement and the portfolio's release gates remain separate from this request.
+
+Backlog: BL-033 (owner-requested GitLab portion delivered; full legacy GitHub cutover separately gated).
