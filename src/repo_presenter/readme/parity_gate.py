@@ -454,6 +454,10 @@ class SealedCandidate:
     facts: tuple[Mapping[str, Any], ...]
     dispositions: tuple[Mapping[str, Any], ...] = ()
     edits: tuple[Mapping[str, Any], ...] = ()
+    #: The seal's ``FactsDocument`` when the caller has one (``validation.parity.sealed_view``,
+    #: ``load_revision_dir``): what :meth:`Accounting.printed_form` computes a kept unit's ONE
+    #: printable form from. ``None`` keeps the raw-text judgement only.
+    document: Any = field(default=None, compare=False, repr=False)
 
     def by_kind(self, kind: str) -> list[Mapping[str, Any]]:
         return [f for f in self.facts if f.get("kind") == kind]
@@ -478,12 +482,21 @@ def load_revision_dir(revision_dir: Path, lane: str) -> SealedCandidate:
         else dispositions
     )
     edits = (read("corrections.json") or {}).get("edits", [])
+    document = None
+    if (revision_dir / "facts.json").is_file():
+        from repo_presenter.core.facts import read_facts
+
+        try:
+            document = read_facts(revision_dir / "facts.json")
+        except (KeyError, TypeError, ValueError):
+            document = None  # an unreadable document keeps the raw-text judgement
     return SealedCandidate(
         lane,
         (revision_dir / "README.md").read_text(encoding="utf-8"),
         tuple(facts),
         tuple(rows or ()),
         tuple(edits or ()),
+        document,
     )
 
 
@@ -576,6 +589,87 @@ class Accounting:
         units = {str(f.get("id")): f for f in candidate.by_kind("inherited_unit")}
         self.units = units
         self.rows = {str(r.get("unit_id")): r for r in candidate.dispositions}
+        self._printed: dict[str, str | None] = {}
+
+    def printed_form(self, unit_id: str) -> str | None:
+        """The unit's ONE printable form, as placement prints it when the unit is kept
+        (``withheld_rows_form`` then ``surface_claims.kept_unit_form``: absent-type and stub rows
+        left out of a table, a dead link printed as its label, an OPEN register row's quote
+        withheld), or ``None`` when the seal hands over no facts document to compute it from."""
+        if unit_id in self._printed:
+            return self._printed[unit_id]
+        document = self.candidate.document
+        unit = self.units.get(unit_id)
+        printed: str | None = None
+        from repo_presenter.core.facts import FactsDocument
+
+        if isinstance(document, FactsDocument) and unit is not None:
+            from repo_presenter.readme.validation.must_correct import (
+                cited_finding_quotes,
+                withheld_rows_form,
+            )
+            from repo_presenter.readme.validation.surface_claims import (
+                fence_withheld_form,
+                kept_unit_form,
+            )
+
+            row = self.rows.get(unit_id) or {}
+            text = str(unit.get("value") or "")
+            quotes = cited_finding_quotes(row.get("fact_ids") or (), document.repository)
+            try:
+                printed = fence_withheld_form(
+                    unit_id,
+                    kept_unit_form(
+                        unit_id, withheld_rows_form(unit_id, text, quotes), document, quotes
+                    ),
+                    row,
+                    document,
+                )
+            except (KeyError, TypeError, ValueError):
+                printed = None
+        self._printed[unit_id] = printed
+        return printed
+
+    def withheld_on_evidence(self, unit_id: str, item: str, *, code: bool = False) -> bool:
+        """Whether ``unit_id`` holds ``item`` only in text its printable form leaves out on
+        evidence (BL-180): a stub row BC-14 (j) refuses, a row naming a type the public surface
+        lacks (BC-14 (i)), a dead link, a register-confirmed quote. That removal is the recorded
+        R14 decision (docs/DECISION_LOG.md 2026-11-13, ``surface_claims.without_stub_rows``);
+        keeping the unit can never print the item, so the unit does not owe it. Measured: hosted
+        Lane R run 43647239376, Aspose.3D-FOSS-for-Python: ``060.table``'s FbxExporter row
+        ("FbxExporter.save saves the given Scene ...", a stub the maintainers' own limitation says
+        raises ``NotImplementedError``) was named as losing ``FbxExporter.save()`` while it was
+        already kept PRESERVE_ATTRIBUTED, an unrepairable demand."""
+        printed = self.printed_form(unit_id)
+        if printed is None:
+            return False
+        return not self._holds(printed, item, code=code)
+
+    @staticmethod
+    def _boundary(item: str, *, code: bool) -> re.Pattern[str] | None:
+        if code:
+            return None
+        if _VERSION.fullmatch(item):
+            return re.compile(r"(?<![\w.])v?" + re.escape(item) + r"(?![\w.]*\d)")
+        if _IDENT_ITEM.match(item):
+            return re.compile(r"(?<![\w.])" + re.escape(item.removesuffix("()")) + r"(?![\w])")
+        return None
+
+    def _holds(self, value: str, item: str, *, code: bool) -> bool:
+        boundary = self._boundary(item, code=code)
+        if boundary is not None:
+            return boundary.search(value) is not None
+        return contains_code(value, item) if code else item in value
+
+    def _accounts(self, unit_id: str, item: str, *, code: bool) -> bool:
+        """Whether one unit holding ``item`` accounts for its absence from the candidate."""
+        if self.withheld_on_evidence(unit_id, item, code=code):
+            return True
+        row = self.rows.get(unit_id)
+        return row is not None and (
+            row_accounts_for_item(row, self.facts, code=code)
+            or withheld_by_finding(row, item, self.units.get(unit_id))
+        )
 
     def _units_containing(self, item: str, *, code: bool) -> list[str]:
         found = []
@@ -589,23 +683,8 @@ class Accounting:
         # held by "Required" / "registered" (measured on Email Cpp: five units falsely held it).
         # A trailing ``()`` is ignored, so ``Page.BeginLayer`` still matches ``Page.BeginLayer(``;
         # items with spaces, punctuation, URLs or paths keep the plain substring test.
-        if code:
-            boundary = None
-        elif _VERSION.fullmatch(item):
-            boundary = re.compile(r"(?<![\w.])v?" + re.escape(item) + r"(?![\w.]*\d)")
-        elif _IDENT_ITEM.match(item):
-            boundary = re.compile(
-                r"(?<![\w.])" + re.escape(item.removesuffix("()")) + r"(?![\w])"
-            )
-        else:
-            boundary = None
         for unit_id, unit in self.units.items():
-            value = str(unit.get("value") or "")
-            if boundary is not None:
-                hit = boundary.search(value) is not None
-            else:
-                hit = contains_code(value, item) if code else item in value
-            if hit:
+            if self._holds(str(unit.get("value") or ""), item, code=code):
                 found.append(unit_id)
         return found
 
@@ -621,18 +700,13 @@ class Accounting:
         unit_ids = self._units_containing(item, code=code)
         if not unit_ids:
             return None
-        rows = [self.rows.get(unit_id) for unit_id in unit_ids]
-        if all(
-            row is not None
-            and (
-                row_accounts_for_item(row, self.facts, code=code)
-                or withheld_by_finding(row, item, self.units.get(str(row.get("unit_id"))))
-            )
-            for row in rows
-        ):
-            return "disposition " + ",".join(
-                sorted({str(r.get("disposition")) for r in rows if r is not None})
-            )
+        if all(self._accounts(unit_id, item, code=code) for unit_id in unit_ids):
+            withheld = [u for u in unit_ids if self.withheld_on_evidence(u, item, code=code)]
+            rows = [self.rows.get(u) for u in unit_ids if u not in withheld]
+            reasons = sorted({str(r.get("disposition")) for r in rows if r is not None})
+            if withheld:
+                reasons.append("withheld on evidence from " + ",".join(withheld))
+            return "disposition " + "; ".join(reasons)
         return None
 
     def loss_units(self, item: str, *, code: bool = False) -> tuple[str, ...]:
@@ -644,11 +718,7 @@ class Accounting:
         return tuple(
             unit_id
             for unit_id in self._units_containing(item, code=code)
-            if (row := self.rows.get(unit_id)) is None
-            or not (
-                row_accounts_for_item(row, self.facts, code=code)
-                or withheld_by_finding(row, item, self.units.get(unit_id))
-            )
+            if not self._accounts(unit_id, item, code=code)
         )
 
     def _title(self) -> str | None:

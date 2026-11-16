@@ -41,7 +41,7 @@ from repo_presenter.readme.evidence.facts.commands import (
     RELEASE_WORKFLOW_FACT_ID,
 )
 from repo_presenter.readme.evidence.facts.links import heading_slug
-from repo_presenter.readme.validation.surface_claims import kept_unit_form
+from repo_presenter.readme.validation.surface_claims import fence_withheld_form, kept_unit_form
 
 #: The disposition that keeps maintainer-authored content no fact can confirm, printed as written
 #: with its attribution recorded internally only, never printed (docs/MAINTAINER_CONTENT_PRESERVATION.md, owner requirement
@@ -623,6 +623,8 @@ def placements(
         text = kept_unit_form(
             unit_id, withheld_rows_form(unit_id, text, false_quotes), facts, false_quotes
         )
+        # A kept unit that embeds an unverified code example prints without it (BL-180).
+        text = fence_withheld_form(unit_id, text, entry, facts)
         if (
             destinations is not None
             and destination == "api_reference"

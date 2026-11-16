@@ -1782,6 +1782,80 @@ items:
       - "recertify --all --json --remote origin, origin/main 2210711 vs branch: Lane R 11 RECERTIFIED / 8 NEEDS_REPAIR -> the same 11 / 8, Lane L 34 / 34 -> 34 / 34, no row's outcome or failing checks changed, 0 provider calls, version sets unchanged (R 75b35954c877, L 810f7969970a); recertify --gate --remote origin --base-baseline <origin/main data/recertification_baseline.json>: OK, 53 seals checked"
       - "tests/readme/composition/test_value_names_bl170.py (9): the five records' exact tokens in the sentences the facts spell them in; Code 128/39, PKCS#1/#7, PKCS#7, Word 2003 accepted; Java 8, since 2003, PDF 1.7, 'detects 14', 'Create 18 of the 25', an unspelled 'Code 93' and a dependency name still values; the Words Java opening loses only its value sentence; a parenthesised count goes with its parenthesis; a value-only unit fails closed; through run_job with the real manifest and scripted replies: the BarCode opening is accepted on the first reply, the Words Java opening raises OutputRejectedError without the recovery and completes with it (repaired record written); full suite -n auto: 6620 passed, 29 skipped, 1 failed: test_every_candidate_gets_an_honest_receipt (this container cannot build the package; passes on hosted CI)"
     next_action: "hosted proof: the next Lane R run of each of the 5 cells completes section_authoring (or fails for another class); then done. Residual: a single-sentence key-capability unit whose only sentence carries a genuine count ('supporting 22 functions') still fails closed after the three asks - no deletion is honest there; if it recurs on hosted runs, decide between a capability fallback (as R43(4) does for API rows) and the current fail-closed"
+  - id: BL-180
+    title: "BC-17|inherited_unit|technical_content (top Lane R class, 8 cells / 24 findings): fix the three roots measurable with zero calls"
+    type: defect
+    source: "hosted failure Pareto 2026-11-15 (`python -m repo_presenter.failures pareto --remote origin --text`, newest code 3b806de0e0ff); runs 43647239376 (3D Python), 43667477825 (Slides Java), 43654917831 (Slides .NET), 43664912460 (Slides C++)"
+    priority: P0
+    status: active
+    implementation_path: "parity_gate.Accounting judges a holding unit by its printed form (printed_form / withheld_on_evidence); restore_units keeps a resource-links list in documentation_resources (_link_list_home) and cascade._restore_plan / recertify's restore re-apply planning.missing_kept_list_links; surface_claims.fence_withheld_form prints a fence-marked kept prose unit without its unverified example (placement, independent_reviewer, parity_gate)"
+    acceptance: "(1) tests/readme/repair/test_bc17_technical_content_bl180.py from the real shapes, failing on origin/main; (2) recertify --all before/after: no Lane R or Lane L regression; R10 gate passes; (3) R41: after merge, recertify --write over every seal and hosted re-runs of the 8 BC-17 cells show 3D Python, Slides Java, Slides .NET and Slides C++ free of BC-17 technical_content (15 of the 24 findings) and of Slides C++'s BC-05 section_fit, with no new class"
+    evidence:
+      - "2026-11-15 zero-call replay of the 3D Python Lane R seal (revision 65b1f57, the hosted run's revision) with the hosted shape: origin/main names 'inherited_unit:060.table holds api_identifiers FbxExporter.save()'; this branch reports none, and with 067.list superseded names 067.list only"
+      - "2026-11-15 zero-call restore replay of the Cells TypeScript Lane R seal with 040.list DEFER_UNRESOLVED: origin/main restores it to scope_limitations and fails BC-05 section fit (the Slides C++ hosted shape); this branch restores it to documentation_resources, BC-05/BC-17 clear"
+      - "2026-11-15 restore of Slides Java 084.list / Slides .NET 083.list on their Lane L facts (same revisions as the hosted runs) -> documentation_resources, backstop owes link_target:035-037 / 012-014"
+      - "2026-11-15 `recertify --all --json --remote origin` before and after: Lane R 11/19 RECERTIFIED, Lane L 34/34 RECERTIFIED, no per-cell difference"
+    next_action: "supervisor integrates; then the R41 re-verification (recertify --write) and the hosted planner's re-runs of the 8 cells; close on (3)"
+    updated: "2026-11-15"
+
+  - id: BL-181
+    title: "3D TypeScript Lane R: the maintainers' Camera/Light API table (047.table, 6 BC-17 identifiers) is superseded and the zero-call restore does not keep it"
+    type: defect
+    source: "hosted Lane R run 43674579104 (restore: 10 unit(s) restored but BC-05 still names 047.table SUPERSEDE_REDUNDANT; model repair moved it to key_capabilities, refused)"
+    priority: P0
+    status: open
+    implementation_path: "diagnose from the run's present-typescript artifact (restored_units.json, dispositions.json): the restore either skipped 047.table or rolled it back; S4's _fold_uncovered/normalize supersede a kept API table when _supersession_gap finds none while BC-05 finds 5 identifiers unstated (the two disagree); fix the disagreement at S4"
+    acceptance: "a zero-call replay of the run's bundle keeps 047.table in api_reference with every Camera identifier printed and no new blocking failure"
+    evidence: []
+    next_action: "ASSUMPTION: the artifact holds the dispositions; download it from a session whose proxy allows the artifact blob host (this one refuses it)"
+    updated: "2026-11-15"
+
+  - id: BL-182
+    title: "Cells TypeScript Lane R: the model's BC-17 repair rewrote 037.table citing a register row and lost `Protection`"
+    type: defect
+    source: "hosted Lane R run 43657144056 ('repair repaired BC-17' VERIFIED_REWRITE of 037.table citing finding:8d5ed633dfaf; BC-17 Protection remains)"
+    priority: P1
+    status: open
+    implementation_path: "restore/S4: a kept table citing an OPEN register row prints through withheld_rows_form (the register row withheld, the rest kept); a repair reply that rewrites such a table should be refused for losing a row the printed form keeps"
+    acceptance: "a replay of the run's bundle prints the Protection row and passes BC-17"
+    evidence: []
+    next_action: "needs the run bundle (see BL-181)"
+    updated: "2026-11-15"
+
+  - id: BL-183
+    title: "PDF Go Lane R: 025.paragraph ('walks nearly every capability above') cannot be restored for its positional pointer, so `_examples/feature_showcase/main.go` and `go run ./_examples/feature_showcase` are lost (BC-17, BC-08)"
+    type: defect
+    source: "hosted Lane R run 43650795881"
+    priority: P1
+    status: open
+    implementation_path: "placement.pointer_free_form removes only 'listed above/below' and only in deterministic sections; decide whether a kept unit outside them drops a dangling 'above' word (R42: aspose.org prints it under its own Feature Showcase h2, after Key Capabilities)"
+    acceptance: "the restore keeps 025.paragraph without a dangling pointer and BC-08/BC-17 clear on a replay"
+    evidence: []
+    next_action: "decide the wording rule (report-only measurement over every seal first, checklist 13)"
+    updated: "2026-11-15"
+
+  - id: BL-184
+    title: "TeX Python Lane R: the published 'status: pre-alpha' badge has no renderer slot, so BC-17 reports it lost"
+    type: defect
+    source: "hosted Lane R run 43669801825 (inherited_unit:002.badge_row)"
+    priority: P2
+    status: open
+    implementation_path: "renderer badge row: a maintainer status badge whose target the facts support (pyproject 'Development Status' classifier), or an accounted exemption in parity_gate.badge_slot_of_url with a recorded R14 reason"
+    acceptance: "the replayed candidate carries or accounts for the status badge; R42: aspose.org prints it"
+    evidence: []
+    next_action: "check whether a fact records the development status"
+    updated: "2026-11-15"
+
+  - id: BL-185
+    title: "PDF Java sealed Lane R: BC-17 names the Maven/Gradle dependency snippets (stale 26.6.0) and the Maven package badge"
+    type: defect
+    source: "`recertify --all --json --remote origin` 2026-11-15 (seal 736ceda; 5 BC-17 rows beside 4 BC-18 and 3 BC-05)"
+    priority: P2
+    status: open
+    implementation_path: "Installation renders the verified Maven coordinate as a <dependency> block (R42: aspose.org does), or BC-17 accounts a superseded install snippet whose version a SUPPORTED package fact contradicts; the renderer's badge row gains the maven-central package badge when package:published_version is SUPPORTED"
+    acceptance: "PDF Java's re-certification shows no BC-17 row; no other seal regresses"
+    evidence: []
+    next_action: "after BC-18 on PDF Java is cleared (it does not count before then)"
     updated: "2026-11-15"
 
   - id: BL-171

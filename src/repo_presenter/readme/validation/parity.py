@@ -57,7 +57,9 @@ def _fact_rows(candidate: Candidate) -> tuple[dict[str, Any], ...]:
 def sealed_view(candidate: Candidate) -> SealedCandidate:
     """The candidate as the parity gate reads a sealed Lane R revision."""
     rows = candidate.dispositions.get("dispositions", []) if candidate.dispositions else []
-    return SealedCandidate(LANE_R, candidate.readme, _fact_rows(candidate), tuple(rows))
+    return SealedCandidate(
+        LANE_R, candidate.readme, _fact_rows(candidate), tuple(rows), document=candidate.facts
+    )
 
 
 def parity_failures(candidate: Candidate) -> list[Failure]:

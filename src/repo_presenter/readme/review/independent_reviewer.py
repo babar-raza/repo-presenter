@@ -113,7 +113,7 @@ from repo_presenter.readme.review.verdict_io import (
     write_review_verdict,
 )
 from repo_presenter.readme.validation.claims import claim_findings
-from repo_presenter.readme.validation.surface_claims import kept_unit_form
+from repo_presenter.readme.validation.surface_claims import fence_withheld_form, kept_unit_form
 from repo_presenter.readme.validation.text import section_texts
 
 #: The reviewer's public surface: callers import the finding model, verdict, fold and verdict-file
@@ -463,8 +463,13 @@ def unprinted_kept_units(
         # The renderer's own form (``placement.placements``): a kept code block citing an OPEN
         # findings-register row prints without the lines that row confirms false.
         false_quotes = cited_finding_quotes(row.get("fact_ids") or (), facts.repository)
-        text = kept_unit_form(
-            unit, withheld_rows_form(unit, raw[unit], false_quotes), facts, false_quotes
+        text = fence_withheld_form(
+            unit,
+            kept_unit_form(
+                unit, withheld_rows_form(unit, raw[unit], false_quotes), facts, false_quotes
+            ),
+            row,
+            facts,
         )
         destination = row.get("destination_section")
         if _kept_text_printed(
