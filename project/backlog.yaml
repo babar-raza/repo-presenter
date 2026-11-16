@@ -1908,5 +1908,18 @@ items:
     acceptance: "a changed or unreadable upstream cannot silently retain stale no-action coverage; a relevant change is re-evaluated, irrelevant changes do not force regeneration, and counter and publication gate agree"
     evidence:
       - "Independent zero-call reproduction 2026-11-16: portfolio_gate.evaluate counts a certified no-action at revision a as terminal when current upstream is b and never calls head_of; cohort selector skips recertified seals before checking drift."
-    next_action: "land and verify the gate freshness fix; then repair scheduler and counter consistency through the existing drift path"
+    next_action: "land and verify the gate freshness fix; then repair scheduler and counter consistency through the existing drift path. Investigation 2026-11-16: selector lacks persistent seal scope and skips recertified cells before checking drift; BL-188 tracks the missing R5 production trigger."
+    updated: "2026-11-16"
+
+  - id: BL-188
+    title: "Lane L production path does not wire the required R5 upstream-change trigger"
+    type: gap
+    source: "Independent call-graph review 2026-11-16; R5, R20, R38 and BL-187"
+    priority: P0
+    status: active
+    implementation_path: "integrate existing lane_l_trigger baseline/trigger and monitor.relevance logic into the governed cohort and Lane L production path; retain validated bundle scope through planning and use pinned source revisions"
+    acceptance: "real relevant upstream change plus verified defect is required for a Lane L edit; irrelevant changes do not cause provider calls or regeneration; unknown and unreachable changes fail closed; the production path demonstrably invokes the trigger through offline end-to-end tests and hosted proof"
+    evidence:
+      - "2026-11-16: lane_l_trigger.compute_trigger and compute_baseline have no production callers; lane_l_run.py documents deferred trigger wiring. select_scheduled_cohort.py skips recertified seals before assessing upstream drift; plan_cohort lacks retained bundle scope and changed paths."
+    next_action: "independently reproduce the production call graph, design minimal integration in the existing pipeline, and test relevance and trigger behavior before hosted execution"
     updated: "2026-11-16"
