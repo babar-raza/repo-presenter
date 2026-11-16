@@ -129,6 +129,18 @@ def _iso(value: Any) -> date | None:
         return None
 
 
+def _pin_problem(outcome: str, pinned: str, repository: str, head_of: HeadFn) -> str | None:
+    """A terminal observation applies only to the exact upstream revision it inspected."""
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
+        return f"{outcome} requires a full pinned revision: not terminal"
+    head = head_of(repository)
+    if not isinstance(head, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", head):
+        return f"{outcome} pinned at {pinned[:12]}, upstream head unreadable: fail closed"
+    if head.lower() != pinned.lower():
+        return f"{outcome} lapsed: upstream moved {pinned[:12]} -> {head[:12]}"
+    return None
+
+
 def recorded_terminal(
     cell: Mapping[str, Any], today: date, head_of: HeadFn
 ) -> tuple[str | None, str]:
@@ -154,13 +166,9 @@ def recorded_terminal(
                 f"{recheck_by.isoformat()}): not terminal until re-verified"
             )
     pinned = str(cell.get("revision") or "")
-    if not re.fullmatch(r"[0-9a-fA-F]{40}", pinned):
-        return None, f"{outcome} requires a full pinned revision: not terminal"
-    head = head_of(str(cell.get("repository")))
-    if not isinstance(head, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", head):
-        return None, f"{outcome} pinned at {pinned[:12]}, upstream head unreadable: fail closed"
-    if head.lower() != pinned.lower():
-        return None, f"{outcome} lapsed: upstream moved {pinned[:12]} -> {head[:12]}"
+    problem = _pin_problem(outcome, pinned, str(cell.get("repository")), head_of)
+    if problem:
+        return None, problem
     return outcome, f"{outcome} ({cell.get('ruling')})"
 
 
@@ -205,7 +213,12 @@ def evaluate(
     missing: list[tuple[str, str, str]] = []
     for repo in repos:
         for lane in LANES:
-            outcome, why = _outcome_terminal(current.get((repo, lane)))
+            row = current.get((repo, lane))
+            outcome, why = _outcome_terminal(row)
+            if outcome == NO_ACTION_JUSTIFIED:
+                problem = _pin_problem(outcome, str(getattr(row, "revision", "") or ""), repo, head_of)
+                if problem:
+                    outcome, why = None, problem
             if outcome is None and (repo, lane) in recorded:
                 outcome, recorded_why = recorded_terminal(recorded[(repo, lane)], today, head_of)
                 why = recorded_why if outcome is not None else f"{why}; {recorded_why}"

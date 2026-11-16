@@ -46,7 +46,7 @@ def outcome(repo: str, lane: str, **kw: Any) -> SimpleNamespace:
     row = {
         "repository": repo, "lane": lane, "current": True, "certification": "RECERTIFIED",
         "sealed_by_current": False, "failing_checks": [], "pipeline_good": True,
-        "independently_accepted": True, "bucket": "independently_accepted", "reason": "",
+        "independently_accepted": True, "bucket": "independently_accepted", "reason": "", "revision": PIN,
     }
     row.update(kw)
     return SimpleNamespace(**row)
@@ -85,6 +85,21 @@ def test_a_fully_terminal_synthetic_portfolio_is_ready() -> None:
         ("o/a", "R"): ACCEPTED, ("o/a", "L"): ACCEPTED, ("o/b", "R"): BLOCKED_EXTERNAL,
         ("o/b", "L"): NO_ACTION_JUSTIFIED, ("o/c", "R"): ACCEPTED, ("o/c", "L"): NOT_APPLICABLE,
     }
+
+
+@pytest.mark.parametrize("head", ["b" * 40, None])
+def test_no_action_at_stale_or_unreadable_upstream_is_not_terminal(head: str | None) -> None:
+    no_action = outcome("o/a", "L", independently_accepted=False, bucket="no_action_justified")
+    readiness = evaluate(["o/a"], [outcome("o/a", "R"), no_action], [],
+                         today=TODAY, head_of=lambda _: head)
+    assert not readiness.ready
+    assert ("o/a", "L") not in readiness.terminal
+
+
+def test_no_action_without_sealed_revision_is_not_terminal() -> None:
+    no_action = outcome("o/a", "L", independently_accepted=False, bucket="no_action_justified", revision="")
+    readiness = evaluate(["o/a"], [outcome("o/a", "R"), no_action], [], today=TODAY, head_of=still_pinned)
+    assert not readiness.ready
 
 
 @pytest.mark.parametrize(
