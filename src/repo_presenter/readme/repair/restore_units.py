@@ -51,6 +51,26 @@ _SHELL_RENDERED = frozenset({"heading", "badge_row", "html_block"})
 #: generated bullets already cover). Unlike ``api_reference`` (which does print a table), no unit
 #: kind ever prints here.
 _GENERATED_ONLY_DESTINATIONS = frozenset({"documentation_resources"})
+_DOCUMENTATION = "documentation_resources"
+
+
+def _link_list_home(unit_id: str, text: str, facts: FactsDocument, holdable: Collection[str]) -> bool:
+    """Whether this unit is a resource-links list Documentation and Resources carries in full
+    (BL-004, ``planning.link_list_targets``: every item links a plan-assignable SUPPORTED target),
+    so that section, through its own link lines, is where restore keeps it (BL-180).
+
+    S4 already keeps such a list there (``dispositions._rehome_unprintable_kind_units``) and the
+    planning backstop owes every one of its links to that section's lines; restore used to re-home
+    it to the "nearest" printable section instead, Scope and Limitations, where BC-05's section fit
+    refuses a resource link, so the restore was rolled back and the links stayed lost (hosted Lane
+    R runs 43667477825 Slides Java ``084.list``, 43654917831 Slides .NET ``083.list``: the sibling
+    editions' repository links; 43664912460 Slides C++: the docs/kb/reference list printed under
+    Scope and Limitations)."""
+    if not unit_id.endswith(".list") or _DOCUMENTATION not in holdable:
+        return False
+    from repo_presenter.readme.composition.planning import link_list_targets
+
+    return link_list_targets(text, facts) is not None
 
 
 def _printed_register_rows(unit_id: str, text: str, repository: str | None) -> list[str] | None:
@@ -303,17 +323,22 @@ def restore_lost_units(
         if entry.get("disposition") == "CORRECT_WITH_EVIDENCE":
             continue
         current_destination = entry.get("destination_section")
-        misrendered = current_destination in _GENERATED_ONLY_DESTINATIONS or (
-            current_destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table"
-        )
+        links_home = _link_list_home(unit_id, unit.value, facts, holdable_set)
+        misrendered = (
+            current_destination in _GENERATED_ONLY_DESTINATIONS and not links_home
+        ) or (current_destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table")
         if placed and not misrendered:
             # Already kept verbatim, and its destination is one that does render a placed unit:
             # nothing to change (the common case).
             continue
         destination = current_destination
-        if destination not in holdable_set:
+        if links_home:
+            # A resource-links list: Documentation and Resources prints it as its link lines.
+            destination = _DOCUMENTATION
+        elif destination not in holdable_set:
             destination = nearest_holdable(unit_id, attributes.get("section"), holdable_set)
-        if destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table":
+        is_table = unit_id.rsplit(".", 1)[-1] == "table"
+        if not links_home and destination == "api_reference" and not is_table:
             # api_reference prints the Core API table and its hubs from the verified surface; a
             # kept paragraph/list/code block "placed" there is never rendered (BC-05, measured on
             # Cells Cpp: 041.paragraph). This re-homes it whether it was just chosen here or was
@@ -321,7 +346,7 @@ def restore_lost_units(
             destination = nearest_holdable(
                 unit_id, attributes.get("section"), holdable_set - {"api_reference"}
             )
-        elif destination in _GENERATED_ONLY_DESTINATIONS:
+        elif not links_home and destination in _GENERATED_ONLY_DESTINATIONS:
             # Same reasoning for documentation_resources (see _GENERATED_ONLY_DESTINATIONS):
             # measured on Cells Go, a kept list already VERIFIED_MOVE'd there.
             destination = nearest_holdable(
