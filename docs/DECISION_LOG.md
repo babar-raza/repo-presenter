@@ -6977,3 +6977,15 @@ current scorer path. No actual natural collision or particular defective accepte
 established. The proposal does not authorize bypassing R27, R10 or existing acceptance gates.
 
 Backlog: BL-003, BL-024, BL-100, BL-160, BL-189, BL-192, BL-193, BL-194, BL-195, BL-196.
+
+## 2026-11-17: Clarify production review against the architecture freeze
+
+The owner restated the freeze on architecture expansion, new modules and infrastructure. The
+production review's target-design sections are desired properties and candidate approaches, not
+authorization to build a new platform or every described mechanism. R27 remains binding: reproduce a
+specific failure, fix it in the existing component where possible, and use only the smallest necessary
+exception when it cannot be fixed there. Universal provenance, a new immutable store and generic
+transaction infrastructure are not a standing implementation programme. Work continues on candidate
+blockers under the existing quality, no-regression and delivery gates.
+
+Backlog: BL-189, BL-193, BL-194, BL-195, BL-196.
