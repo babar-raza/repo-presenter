@@ -6965,3 +6965,15 @@ no candidate count is revised from this review. Existing BL-024 and BL-186–188
 canary, external-evidence and Lane L trigger work. No provider calls or upstream writes were made.
 
 Backlog: BL-003, BL-024, BL-100, BL-160, BL-171, BL-186, BL-187, BL-188, BL-189, BL-190, BL-191, BL-192.
+
+## 2026-11-17: Deeper repeatability and production design assessment
+
+At the owner's request the independent production review was expanded beyond failure signatures:
+it now traces snapshot volatility, cache and repair identity, seal-restoration error handling,
+factual common-mode failure and acceptance trust, and proposes staged changes within existing
+components with concrete falsifiers and limits. The review independently reproduced a forced
+short-hash cache alias and established that the accepted-defect metric is not computed by the
+current scorer path. No actual natural collision or particular defective accepted candidate was
+established. The proposal does not authorize bypassing R27, R10 or existing acceptance gates.
+
+Backlog: BL-003, BL-024, BL-100, BL-160, BL-189, BL-192, BL-193, BL-194, BL-195, BL-196.
