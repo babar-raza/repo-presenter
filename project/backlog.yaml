@@ -1924,3 +1924,99 @@ items:
       - "2026-11-16: lane_l_trigger.classify_outcome returns NO_ACTION_JUSTIFIED for no trigger and no findings without checking probes_clean, contrary to its documented contract; present._lane_l_and_seal does not call it. Counter infers no-action from byte equality alone."
     next_action: "independently reproduce the production call graph, design minimal integration in the existing pipeline, and test relevance and trigger behavior before hosted execution"
     updated: "2026-11-16"
+
+  - id: BL-189
+    title: "Bind M9 acceptance to the audited candidate bytes, not only upstream revision"
+    type: defect
+    source: "Independent acceptance review 2026-11-17; delivery plan sections 5.1–5.3; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "bind existing M9 seeder, attested writer, counter and publication consumers to the audited candidate digest and pinned source; preserve seals and re-audit only changed audited scope"
+    acceptance: "two different README bytes for the same repository, lane and source revision cannot share acceptance; missing or mismatched identity fails closed; identical audited bytes remain replayable; end-to-end negative controls and targeted recertification evidence"
+    evidence: ["2026-11-17 zero-call review: writer records repository/lane/revision; apply_attested accepts by those fields and has no candidate digest input. A real changed-seal incident has not been established."]
+    next_action: "reproduce through actual seeder/writer/counter chain and design identity binding under R10"
+    updated: "2026-11-17"
+
+  - id: BL-190
+    title: "R15 accepted-cell freshness must consider relevant upstream changes"
+    type: gap
+    source: "Independent portfolio-gate review 2026-11-17; R10 and R15; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "reuse existing consumed-scope relevance checks in the portfolio readiness path before treating accepted outcomes as current; preserve seals for irrelevant changes"
+    acceptance: "a relevant upstream change or unreadable current source cannot silently leave an outdated accepted cell publication-ready; irrelevant changes preserve certified seals without regeneration"
+    evidence: ["2026-11-17 zero-call synthetic evaluate: two accepted outcomes at revision A with head_of returning B yielded ready=True without invoking head_of. Real relevant upstream incident not established."]
+    next_action: "trace existing freshness contracts and build relevant/irrelevant/unreadable negative controls"
+    updated: "2026-11-17"
+
+  - id: BL-191
+    title: "Published README inheritance policy must not silently fall back on missing policy data"
+    type: defect
+    source: "Independent Lane R review 2026-11-17; R43 and docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P1
+    status: open
+    implementation_path: "make existing inherit-and-correct policy loader and publication provenance fail safely and observably on missing, malformed, unknown or stale data; preserve a legitimately empty map"
+    acceptance: "missing/corrupt/unknown policy cannot silently choose regeneration; authorized published repositories retain their intended policy; explicit empty valid input and unchanged seals remain safe"
+    evidence: ["2026-11-17 zero-call reproduction: inherit._load on an absent policy file returned regenerate with an empty published set; no claim current file is missing."]
+    next_action: "verify all consumers and publication-map freshness, then implement and independently test minimal correction"
+    updated: "2026-11-17"
+
+  - id: BL-192
+    title: "Prove every applicable mechanism is covered by the acceptance writer's aggregate verdict"
+    type: gap
+    source: "Independent acceptance review 2026-11-17; delivery plan section 5.2; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "trace responsibility matrix through existing recertification and attested writer; record and enforce per-applicable-class coverage without inventing verdicts"
+    acceptance: "every applicable certified mechanism is demonstrated to run and pass; deleting one required class fails the end-to-end acceptance path"
+    evidence: ["2026-11-17: writer emits a single recertify verdict while AcceptanceRecord accepts any nonempty all-true mapping. Actual aggregate coverage remains unproven."]
+    next_action: "trace mechanism matrix and build an end-to-end missing-class negative control"
+    updated: "2026-11-17"
+
+  - id: BL-193
+    title: "Measure the independent defective-accepted audit population required by the acceptance plan"
+    type: gap
+    source: "Independent production-assurance review 2026-11-17; delivery plan section 5.2; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "first establish whether the required accepted-population measure can be produced with existing M9 scorer/writer and available evidence; make only the smallest demonstrated correction under R27, with no new audit infrastructure by default; report raw and filtered denominators"
+    acceptance: "existing plan's first-five, ten and twenty-five defective-accepted bounds are measured per lane, with admissibility and uncertainty recorded; missing/insufficient audit evidence cannot silently pass"
+    evidence: ["2026-11-17: run_m9_scorer explicitly returns defective_accepted_rate null because it has no independent accepted population; writer evaluates recall, false flags and structural citations. No claim that any particular accepted README is defective."]
+    next_action: "trace all consumers; preregister population and implement missing-sample/known-defect negative controls"
+    updated: "2026-11-17"
+
+  - id: BL-194
+    title: "Audit seeder and acceptance counter must share verified candidate-specific trust semantics"
+    type: defect
+    source: "Independent production-assurance review 2026-11-17; R33 and BL-189"
+    priority: P0
+    status: open
+    implementation_path: "reuse existing verified hosted attestation and candidate-digest reader in M9 seeding; distinguish untrusted records and unreadable remote state from authoritative absence"
+    acceptance: "unattested or forged JSON cannot suppress required seeding; transient fetch failure cannot masquerade as an empty authoritative set; correctly attested identical candidates do not get redundant audits"
+    evidence: ["2026-11-17: run_m9_seeder.judged_controls reads branch JSON without the attestation verification used by the counter and keys by source revision; actual exploitation is unestablished."]
+    next_action: "reproduce forged/malformed/unavailable-record scenarios and integrate with BL-189 exact candidate identity"
+    updated: "2026-11-17"
+
+  - id: BL-195
+    title: "Distinguish unavailable or corrupt seals from confirmed absence before generation"
+    type: defect
+    source: "Independent repeatability review 2026-11-17; R10/P5; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "extend existing present/preflight and bundle export error outcomes so confirmed no seal, retryable restore, corrupt evidence and changed consumed input have distinct safe routes"
+    acceptance: "known seal plus restore/auth/corruption failure holds with zero provider calls and preserves the seal; proven no seal allows initial generation; irrelevant source changes do not regenerate"
+    evidence: ["2026-11-17 code inspection: present.restore_sealed_bundle catches export errors and leaves no local seal for preflight; recertify_instead catches exceptions and falls back to generation. A real regeneration caused by this path has not been established."]
+    next_action: "build full-pipeline falsifiers with provider-call interception and inspect consumed-scope drift call graph"
+    updated: "2026-11-17"
+
+  - id: BL-196
+    title: "Make cached stage responses and repair lineage content-verifiable and unambiguous"
+    type: defect
+    source: "Independent repeatability review 2026-11-17; R10/P5/R38; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "reproduce the actual replay/repair failure, then make the smallest necessary correction in the existing call store or repair route; validate full request identity where needed and preserve old seals. Do not build a new store or general lineage platform"
+    acceptance: "forced shared-prefix hashes cannot alias, corrupt data cannot pass as replay, original and repaired outputs have distinct identities, and a repair is consumed by the next recomposition; crash/concurrency and zero-call replay falsifiers pass"
+    evidence: ["2026-11-17 zero-call test: two distinct full hashes sharing the first 12 hexadecimal characters alias in CallStore. repair.loop._accept writes a revised output under the producer request key. No natural collision or wrong accepted candidate has been established."]
+    next_action: "inventory replay and historical-cache compatibility, reproduce repair lineage end to end, and design minimal transactional migration"
+    updated: "2026-11-17"
