@@ -318,13 +318,16 @@ class RenderContext:
             remembered, self._unplaced, self.rendered_ids = self.rendered_ids, True, None
             try:
                 body = "\n".join(_section_body(self, section))
+                closing = _enterprise_paragraph(self) if section_id == "scope_limitations" else ""
             finally:
                 self._unplaced, self.rendered_ids = False, remembered
-            return (
-                body.split(ENTERPRISE_SENTENCE_LEAD, 1)[0]
-                if section_id == "scope_limitations"
-                else body
-            )
+            # The paragraph is appended as the final line. Remove that exact suffix only;
+            # splitting on a generic lead such as "See" can discard earlier scope text.
+            if closing and body == closing:
+                return ""
+            if closing and body.endswith("\n" + closing):
+                return body[: -len(closing) - 1]
+            return body
 
         return Destinations(unplaced, tuple(sections))
 
@@ -1416,12 +1419,12 @@ def _api_reference(context: RenderContext) -> list[str]:
     return lines
 
 
-ENTERPRISE_SENTENCE_LEAD = "These limitations don't apply to"
+ENTERPRISE_SENTENCE_LEAD = "See"
 
 
 def enterprise_anchor(name: str) -> str:
     """The Enterprise Edition anchor text for the product ``name``."""
-    return f"full-featured {name} — Enterprise Edition"
+    return f"{name} — Enterprise Edition"
 
 
 def _enterprise_paragraph(context: RenderContext) -> str:
