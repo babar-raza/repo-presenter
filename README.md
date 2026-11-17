@@ -10,6 +10,8 @@ repositories' own READMEs directly; see `data/registry.json` for the portfolio i
 
 ## Where to start
 
+- **Current production-readiness audit and next-agent handoff:**
+  `docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md` (dated findings; verify live state before acting).
 - **What this project must do, for whom, with what quality bar:** `docs/MISSION_AUTHORITY.md`.
 - **What must get fixed before that counts as delivered:**
   `docs/AUDIT_2026-11-01_FIRST_PRINCIPLES_EVALUATION.md` — owner-adopted binding authority, not a

@@ -1924,3 +1924,51 @@ items:
       - "2026-11-16: lane_l_trigger.classify_outcome returns NO_ACTION_JUSTIFIED for no trigger and no findings without checking probes_clean, contrary to its documented contract; present._lane_l_and_seal does not call it. Counter infers no-action from byte equality alone."
     next_action: "independently reproduce the production call graph, design minimal integration in the existing pipeline, and test relevance and trigger behavior before hosted execution"
     updated: "2026-11-16"
+
+  - id: BL-189
+    title: "Bind M9 acceptance to the audited candidate bytes, not only upstream revision"
+    type: defect
+    source: "Independent acceptance review 2026-11-17; delivery plan sections 5.1–5.3; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "bind existing M9 seeder, attested writer, counter and publication consumers to the audited candidate digest and pinned source; preserve seals and re-audit only changed audited scope"
+    acceptance: "two different README bytes for the same repository, lane and source revision cannot share acceptance; missing or mismatched identity fails closed; identical audited bytes remain replayable; end-to-end negative controls and targeted recertification evidence"
+    evidence: ["2026-11-17 zero-call review: writer records repository/lane/revision; apply_attested accepts by those fields and has no candidate digest input. A real changed-seal incident has not been established."]
+    next_action: "reproduce through actual seeder/writer/counter chain and design identity binding under R10"
+    updated: "2026-11-17"
+
+  - id: BL-190
+    title: "R15 accepted-cell freshness must consider relevant upstream changes"
+    type: gap
+    source: "Independent portfolio-gate review 2026-11-17; R10 and R15; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "reuse existing consumed-scope relevance checks in the portfolio readiness path before treating accepted outcomes as current; preserve seals for irrelevant changes"
+    acceptance: "a relevant upstream change or unreadable current source cannot silently leave an outdated accepted cell publication-ready; irrelevant changes preserve certified seals without regeneration"
+    evidence: ["2026-11-17 zero-call synthetic evaluate: two accepted outcomes at revision A with head_of returning B yielded ready=True without invoking head_of. Real relevant upstream incident not established."]
+    next_action: "trace existing freshness contracts and build relevant/irrelevant/unreadable negative controls"
+    updated: "2026-11-17"
+
+  - id: BL-191
+    title: "Published README inheritance policy must not silently fall back on missing policy data"
+    type: defect
+    source: "Independent Lane R review 2026-11-17; R43 and docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P1
+    status: open
+    implementation_path: "make existing inherit-and-correct policy loader and publication provenance fail safely and observably on missing, malformed, unknown or stale data; preserve a legitimately empty map"
+    acceptance: "missing/corrupt/unknown policy cannot silently choose regeneration; authorized published repositories retain their intended policy; explicit empty valid input and unchanged seals remain safe"
+    evidence: ["2026-11-17 zero-call reproduction: inherit._load on an absent policy file returned regenerate with an empty published set; no claim current file is missing."]
+    next_action: "verify all consumers and publication-map freshness, then implement and independently test minimal correction"
+    updated: "2026-11-17"
+
+  - id: BL-192
+    title: "Prove every applicable mechanism is covered by the acceptance writer's aggregate verdict"
+    type: gap
+    source: "Independent acceptance review 2026-11-17; delivery plan section 5.2; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
+    priority: P0
+    status: open
+    implementation_path: "trace responsibility matrix through existing recertification and attested writer; record and enforce per-applicable-class coverage without inventing verdicts"
+    acceptance: "every applicable certified mechanism is demonstrated to run and pass; deleting one required class fails the end-to-end acceptance path"
+    evidence: ["2026-11-17: writer emits a single recertify verdict while AcceptanceRecord accepts any nonempty all-true mapping. Actual aggregate coverage remains unproven."]
+    next_action: "trace mechanism matrix and build an end-to-end missing-class negative control"
+    updated: "2026-11-17"

@@ -6952,3 +6952,16 @@ Backlog: BL-019, BL-022, BL-025, BL-100, BL-103, BL-171, BL-172.
 The owner explicitly authorized: "Yes—adjust provider caps as needed, retain measured batches and cost safeguards" in response to opening a new bounded qwen3-next batch after fixes pass verification. This supersedes the earlier interpretation above. The rolling cost guard and verification prerequisite remain in force; no new batch has been opened by this decision.
 
 Backlog: BL-100, BL-103, BL-171.
+
+## 2026-11-17: Independent project production-readiness review
+
+The owner requested a deep project-wide gap review, particularly why Lane R is not production-proven,
+and a durable next-agent handoff. `docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md` records the examined
+baseline, current and historical evidence, limitations, prioritized failures, negative controls and
+sequenced next work. Independent reviews identified an acceptance record bound to source revision
+rather than audited README bytes, unproven applicable-mechanism coverage, an accepted-cell freshness
+gap, and silent fallback on missing published-reference policy data. They are recorded as open work;
+no candidate count is revised from this review. Existing BL-024 and BL-186–188 retain their separate
+canary, external-evidence and Lane L trigger work. No provider calls or upstream writes were made.
+
+Backlog: BL-003, BL-024, BL-100, BL-160, BL-171, BL-186, BL-187, BL-188, BL-189, BL-190, BL-191, BL-192.
