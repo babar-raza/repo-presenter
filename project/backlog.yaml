@@ -1736,12 +1736,13 @@ items:
     type: task
     source: "BL-160 (the round's ~420 calls were never written to the ledger; its call ledger is only in artifact m9-audit-ledger-43620199171-43641838293, which the supervisor session's proxy cannot download)"
     priority: P0
-    status: open
+    status: done
     implementation_path: "after BL-160 merges: push run-requests/<id> holding only run-request.json {\"job\": \"audit-settle\", \"seed_run_id\": \"43620199171\", \"audit_run_id\": \"43641838293\", \"batch\": \"e2-011-audit-and-production\"} on current main; run-request-execute.yml's audit-settle job downloads the artifact and appends settle 'audit-43620199171-43641838293' (idempotent)"
     acceptance: "`python -m repo_presenter.core.llm.budget status` shows the audit's calls/tokens charged to e2-011 (the 'M9 audit (BL-160)' line), with the settle entry's run id 43641838293 and cases 46"
-    evidence: []
-    next_action: "trigger after merge (artifact retention 90 days)"
-    updated: "2026-11-14"
+    evidence:
+      - "Hosted run 43661988905 job 132653167925 settled audit 43620199171-43641838293: 428 provider calls and 8823615 tokens across 47 cases. The current provider-spend ledger has exactly one matching entry; effective_document includes that entry in the total. Independently checked 2026-11-16."
+    next_action: "none; BL-160 still requires reserve-before-call and settlement proof for a new hosted audit"
+    updated: "2026-11-16"
 
   - id: BL-162
     title: "Owner: set audit_reserve_calls / audit_reserve_tokens on the next committed batch that funds an M9 audit"
@@ -1882,4 +1883,44 @@ items:
     acceptance: "cold regression proves a valid attested acceptance counts and no-action, unaudited and noncurrent outcomes do not; independent review and hosted CI pass; official portfolio count remains authoritative"
     evidence: []
     next_action: "independently verify worker f4adedfd, integrate and inspect hosted CI; do not claim the fix itself adds accepted candidates"
+    updated: "2026-11-16"
+
+  - id: BL-186
+    title: "R24 external-block records lack complete reproducible evidence and follow-up ownership"
+    type: gap
+    source: "Independent R15 gate review 2026-11-16; R24 and delivery plan section 6.2"
+    priority: P0
+    status: active
+    implementation_path: "reproduce PSD Java at its pinned source, record actual command, result, evidence, named follow-up owner, issue draft and unblock check; validate the existing terminal record in the shared existing gate and scheduler, failing closed when evidence is missing"
+    acceptance: "only a reproduced, evidence-backed, owned, fresh and revision-pinned external defect is terminal; missing, malformed or unavailable evidence is not terminal; verify PSD Java without fabricating fields"
+    evidence:
+      - "Independent review 2026-11-16: recorded_terminal accepts an external-block mapping without evidence, owner, reproduction command, issue draft or unblock condition. Existing PSD Java record points to a narrative and issue draft but lacks structured follow-up owner and exact check/unblock commands."
+    next_action: "reproduce at the pinned revision; implement and independently verify a compatible fail-closed evidence contract"
+    updated: "2026-11-16"
+
+  - id: BL-187
+    title: "Stale Lane L no-action outcomes must be re-evaluated after relevant upstream change"
+    type: gap
+    source: "Independent R15 freshness review 2026-11-16; R5, R10, R20 and R44"
+    priority: P0
+    status: active
+    implementation_path: "reuse drift and consumed-scope checks in the existing cohort selector and counter to re-evaluate a no-action seal when upstream changes, fail closed when freshness cannot be established, preserve the old seal and avoid regeneration for irrelevant changes"
+    acceptance: "a changed or unreadable upstream cannot silently retain stale no-action coverage; a relevant change is re-evaluated, irrelevant changes do not force regeneration, and counter and publication gate agree"
+    evidence:
+      - "Independent zero-call reproduction 2026-11-16: portfolio_gate.evaluate counts a certified no-action at revision a as terminal when current upstream is b and never calls head_of; cohort selector skips recertified seals before checking drift."
+    next_action: "land and verify the gate freshness fix; then repair scheduler and counter consistency through the existing drift path. Investigation 2026-11-16: selector lacks persistent seal scope and skips recertified cells before checking drift; BL-188 tracks the missing R5 production trigger."
+    updated: "2026-11-16"
+
+  - id: BL-188
+    title: "Lane L production path does not wire the required R5 upstream-change trigger"
+    type: gap
+    source: "Independent call-graph review 2026-11-16; R5, R20, R38 and BL-187"
+    priority: P0
+    status: active
+    implementation_path: "integrate existing lane_l_trigger baseline/trigger and monitor.relevance logic into the governed cohort and Lane L production path; retain validated bundle scope through planning and use pinned source revisions"
+    acceptance: "real relevant upstream change plus verified defect is required for a Lane L edit; no-action requires clean applicable probes; irrelevant changes do not cause provider calls or regeneration; unknown and unreachable changes fail closed; the production path demonstrably invokes the trigger through offline end-to-end tests and hosted proof"
+    evidence:
+      - "2026-11-16: lane_l_trigger.compute_trigger and compute_baseline have no production callers; lane_l_run.py documents deferred trigger wiring. select_scheduled_cohort.py skips recertified seals before assessing upstream drift; plan_cohort lacks retained bundle scope and changed paths."
+      - "2026-11-16: lane_l_trigger.classify_outcome returns NO_ACTION_JUSTIFIED for no trigger and no findings without checking probes_clean, contrary to its documented contract; present._lane_l_and_seal does not call it. Counter infers no-action from byte equality alone."
+    next_action: "independently reproduce the production call graph, design minimal integration in the existing pipeline, and test relevance and trigger behavior before hosted execution"
     updated: "2026-11-16"
