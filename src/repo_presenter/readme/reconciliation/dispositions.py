@@ -1040,7 +1040,8 @@ API_LISTING_RATIONALE = "Kept in the collapsed API Reference: it lists public AP
 
 
 def _fold_api_listings(
-    output: dict[str, Any], facts: FactsDocument, listings: frozenset[str]
+    output: dict[str, Any], facts: FactsDocument, listings: frozenset[str],
+    inherited_tables: frozenset[str] = frozenset(),
 ) -> None:
     """Keep every API-member listing in the API Reference, in place: never superseded, never
     kept in a visible section.
@@ -1067,7 +1068,8 @@ def _fold_api_listings(
         if disposition in PLACED and entry.get("destination_section") == "api_reference":
             continue
         if disposition not in PLACED and not (
-            disposition == "SUPERSEDE_REDUNDANT" and _unit_kind(unit) == "list"
+            disposition == "SUPERSEDE_REDUNDANT"
+            and (_unit_kind(unit) == "list" or unit in inherited_tables)
         ):
             continue
         if disposition == "SUPERSEDE_REDUNDANT":
@@ -1525,7 +1527,26 @@ def normalize(
     }
     errors: list[str] = []
     api_listings = api_listing_units(facts)
-    _fold_api_listings(output, facts, api_listings)
+    from repo_presenter.readme.reconciliation.inherit import inherits
+
+    # A published member table carries notes and signatures the generated type rows do not.
+    # 3D TypeScript run 43723761530: table 047 kept Camera's type name but lost six members.
+    # Keep only ordinary supersessions; explicit omissions/corrections and forced removals stay.
+    inherited_api_tables = frozenset(
+        str(entry.get("unit_id", ""))
+        for entry in output.get("dispositions", [])
+        if inherits(facts.repository)
+        and str(entry.get("unit_id", "")) in api_listings
+        and str(entry.get("unit_id", "")).endswith(".table")
+        and (
+            _keepable_supersession(entry, facts, output)
+            or (
+                entry.get("disposition") == "VERIFIED_PRESERVE"
+                and str(entry.get("rationale") or "").startswith(API_LISTING_RATIONALE)
+            )
+        )
+    )
+    _fold_api_listings(output, facts, api_listings, inherited_api_tables)
     _fold_uncovered(output, facts, coverage)
     fold_inherited_published(output, facts)  # R43(3): before the register folds withhold
     fold_deterministic_sections(output, facts)  # R43(2)
@@ -1748,12 +1769,13 @@ def normalize(
             disposition in PLACING
             and destination == "api_reference"
             and unit.endswith(".table")
+            and unit not in inherited_api_tables
             and _supersession_gap(unit, "api_reference", cited, coverage) is None
         ):
             entry["disposition"] = "SUPERSEDE_REDUNDANT"
             entry["destination_section"] = "api_reference"
             continue
-        if disposition in PLACED and _is_row_table(
+        if disposition in PLACED and unit not in inherited_api_tables and _is_row_table(
             unit, entry, coverage
         ):
             entry["disposition"] = "VERIFIED_REWRITE"
