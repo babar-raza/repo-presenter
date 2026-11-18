@@ -418,10 +418,12 @@
       "unit_id": "inherited_unit:026.heading"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The paragraph describing the examples directory is superseded by the deterministic 'Additional Examples' section.",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "finding:45075809c21c"
+      ],
+      "rationale": "Omitted citing the findings register, which confirms it false: the whole unit is the false text (BL-210).",
       "unit_id": "inherited_unit:027.paragraph"
     },
     {
@@ -502,7 +504,9 @@
     {
       "destination_section": "api_reference",
       "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
+      "fact_ids": [
+        "finding:8d5ed633dfaf"
+      ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:037.table"
     },
@@ -524,14 +528,14 @@
     },
     {
       "destination_section": "documentation_resources",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "link_target:019",
         "link_target:020",
         "link_target:021",
         "link_target:022"
       ],
-      "rationale": "Not printed again: documentation resources already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Kept as written (inherit-and-correct, R43(3)). Not printed again: documentation resources already states this material from the facts it cites, so the kept unit",
       "unit_id": "inherited_unit:040.list"
     },
     {
@@ -543,14 +547,14 @@
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "install_command:npm",
         "public_symbol:workbook.tocsv",
         "public_symbol:workbook.tojson",
         "public_symbol:workbook.tomarkdown"
       ],
-      "rationale": "Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Kept as written (inherit-and-correct, R43(3)). Not printed again: scope limitations already states this material from the facts it cites, so the kept unit is re",
       "unit_id": "inherited_unit:042.list"
     },
     {

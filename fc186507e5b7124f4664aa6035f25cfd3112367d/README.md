@@ -29,32 +29,36 @@ exports to CSV, JSON, and Markdown for reporting and data-interchange scenarios.
 ## At a Glance
 
 ```mermaid
-flowchart LR
-Start["An existing HTM or HTML file"]
-Start --> Product["Aspose.Cells FOSS for TypeScript"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap1["Load and save Excel workbooks"]
-Cap2["Read and write cell data"]
-Cap3["Apply cell and worksheet formatting"]
-Cap4["Configure worksheet features"]
-Cap5["Add hyperlinks, comments, and data validation"]
-Cap6["Apply conditional formatting rules"]
-Cap7["Export to text formats"]
-Cap8["Import and export HTML"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap2["Read and write cell data"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap3["Apply cell and worksheet formatting"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap4["Configure worksheet features"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap5["Add hyperlinks, comments, and data validation"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap6["Apply conditional formatting rules"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap7["Export to text formats"]
-Product["Aspose.Cells FOSS for TypeScript"] --> Cap8["Import and export HTML"]
-Cap1["Load and save Excel workbooks"] --> Output["HTM or HTML file"]
-Cap2["Read and write cell data"] --> Output["HTM or HTML file"]
-Cap3["Apply cell and worksheet formatting"] --> Output["HTM or HTML file"]
-Cap4["Configure worksheet features"] --> Output["HTM or HTML file"]
-Cap5["Add hyperlinks, comments, and data validation"] --> Output["HTM or HTML file"]
-Cap6["Apply conditional formatting rules"] --> Output["HTM or HTML file"]
-Cap7["Export to text formats"] --> Output["HTM or HTML file"]
-Cap8["Import and export HTML"] --> Output["HTM or HTML file"]
+flowchart TB
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing HTM or<br/>HTML file"]
+  end
+  PRODUCT["Aspose.Cells FOSS for TypeScript"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Load and save Excel<br/>workbooks"]
+    c2["Read and write cell<br/>data"]
+    c3["Apply cell and<br/>worksheet formatting"]
+    c4["Configure worksheet<br/>features"]
+    c5["Add hyperlinks,<br/>comments, and data<br/>validation"]
+    c6["Apply conditional<br/>formatting rules"]
+    c7["Export to text formats"]
+    c8["Import and export HTML"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["HTM or HTML file"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
@@ -73,10 +77,6 @@ Cap8["Import and export HTML"] --> Output["HTM or HTML file"]
   coordinate.
 - Access embedded pictures and shapes through `Workbook.images` (`ImageInfo[]`) and
   `Worksheet.shapes` (`ShapeInfo[]`).
-- Import and export HTML — `Workbook.load()` recognizes `.html`/`.htm` files and converts
-  them into a workbook object, and `toHtml()` renders a workbook to a styled HTML document.
-- Export a workbook as text — `toCsv()`, `toJson()`, and `toMarkdown()` each return the
-  workbook's data as a string, ready to write to a file or hand to another process directly.
 
 ## Installation
 
@@ -160,14 +160,11 @@ const workbook = await Workbook.load("input.xlsx");
 await workbook.save("output.html", { saveFormat: undefined });
 ```
 
-Runnable examples for every major feature area are collected in
-[`examples/`](examples/), covering the full surface below.
-
 ## API Reference
 
 Aspose.Cells FOSS for TypeScript provides the `Workbook` class as the main entry point for working with Excel files, and the `Worksheet`, `Cell`, and `Style` classes for manipulating individual sheets, cells, and formatting. It supports loading and saving Excel files and converting them to other formats.
 
-The verified public surface has 31 types.
+The public API has 31 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -235,8 +232,7 @@ The `Style` class provides methods to configure font, fill, border, and alignmen
 |---|---|
 | `AllConnectorShapeInfo` | Class in the Cells TYPESCRIPT API. |
 | `AllShapeInfo` | Class in the Cells TYPESCRIPT API. |
-| `ArrowShapeType` | Class in the Cells TYPESCRIPT API. |
-| `AutoFilter` | Class with 5 methods and 2 properties. |
+| `AutoFilter` | Class that declares the methods addFilterColumn, clear, removeFilterColumn and toXml and the members columns and range. |
 | `BasicShapeInfoType` | Class with 1 property. |
 | `BasicShapeSubType` | Class in the Cells TYPESCRIPT API. |
 | `BentConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
@@ -251,15 +247,15 @@ The `Style` class provides methods to configure font, fill, border, and alignmen
 | `ChartRenderer` | Class with 1 method. |
 | `ChartType` | Class in the Cells TYPESCRIPT API. |
 | `CircleVariantShapeType` | Class in the Cells TYPESCRIPT API. |
-| `Comment` | Class with 2 methods and 7 properties. |
-| `CommentCollection` | Class with 6 methods and 1 property. |
-| `ConditionalFormat` | Class with 5 methods. |
-| `ConditionalFormatCollection` | Class with 5 methods and 1 property. |
+| `Comment` | Class that declares the method toXml and members including author, col, height, ref, row and text. |
+| `CommentCollection` | Class that declares the methods add, clear, get, getByCell, remove and toXml and the member count. |
+| `ConditionalFormat` | Class that declares the methods addArea, addRule, getRanges, getRules and toXml. |
+| `ConditionalFormatCollection` | Class that declares the methods add, clear, get, remove and toXml and the member count. |
 | `CurvedConnectorShapeType` | Class in the Cells TYPESCRIPT API. |
 | `DOMParser` | Class with 2 methods. |
 | `DataRelationship` | Class with 3 methods and 1 property. |
 | `DataValidation-validation` | Class with 3 methods and 12 properties. |
-| `DataValidationCollection` | Class with 5 methods and 1 property. |
+| `DataValidationCollection` | Class that declares the methods add, clear, get, remove and toXml and the member count. |
 | `EllipseShapeType` | Class in the Cells TYPESCRIPT API. |
 | `ExpDrawing` | Class with 9 methods. |
 | `HtmlDocument` | Loads and represents an HTML document for conversion into a `Workbook`. |
@@ -267,8 +263,8 @@ The `Style` class provides methods to configure font, fill, border, and alignmen
 | `HtmlReader` | Reads and parses raw HTML markup into a `HtmlDocument`. |
 | `HtmlTable` | Class with 10 methods and 14 properties. |
 | `HtmlWriter` | Serializes a `HtmlDocument` back to HTML markup. |
-| `Hyperlink` | Class with 2 methods and 8 properties. |
-| `HyperlinkCollection` | Class with 6 methods and 1 property. |
+| `Hyperlink` | Class that declares the method toXml and members including address, col, display, ref, row and target. |
+| `HyperlinkCollection` | Class that declares the methods add, clear, get, getByCell, remove and toXml and the member count. |
 | `ImpDrawing` | Class with 1 method and 5 properties. |
 | `LineShapeType` | Class in the Cells TYPESCRIPT API. |
 | `MathSymbolShapeType` | Class in the Cells TYPESCRIPT API. |
@@ -286,36 +282,36 @@ The `Style` class provides methods to configure font, fill, border, and alignmen
 | `Workbook` | The top-level container — `load()`/`save()`, `worksheets`, `images`, and `toHtml()`/`toCsv()`/`toJson()`/`toMarkdown()`. |
 | `Worksheet` | A single sheet — cell access via `Cells`, styling, images/shapes, and layout settings. |
 | `WorksheetCollection` | Iterable, array-like collection of `Worksheet` objects. |
-| `Alignment` | Interface with 3 properties. |
+| `Alignment` | Interface that declares the members horizontal, vertical and wrapText. |
 | `ArrowShapeInfo` | Interface with 1 property. |
 | `AxisInfo` | Interface with 8 properties. |
 | `BentConnectorShapeInfo` | Interface with 3 properties. |
-| `Border` | Interface with 4 properties. |
-| `BorderLine` | Interface with 2 properties. |
+| `Border` | Interface that declares the members bottom, left, right and top. |
+| `BorderLine` | Interface that declares the members color and style. |
 | `BraceShapeInfo` | Interface with 1 property. |
-| `CellCoordinates` | Interface with 2 properties. |
+| `CellCoordinates` | Interface that declares the members col and row. |
 | `CellCoordinates-util` | Interface with 2 properties. |
-| `CellRange` | Interface with 4 properties. |
+| `CellRange` | Interface that declares the members endCol, endRow, startCol and startRow. |
 | `CellRange-util` | Interface with 4 properties. |
 | `CellStyle` | Interface with 23 properties. |
 | `ChartArea` | Interface with 4 properties. |
 | `ChartInfo` | Interface with 21 properties. |
 | `ChartSeries` | Interface with 3 properties. |
 | `CircleVariantShapeInfo` | Interface with 1 property. |
-| `ColorScaleRule` | Interface with 3 properties. |
+| `ColorScaleRule` | Interface that declares the members maxColor, midColor and minColor. |
 | `Comment-types` | Interface with 4 properties. |
-| `ConditionalFormatRule` | Interface with 8 properties. |
+| `ConditionalFormatRule` | Interface that declares members including colorScale, dataBar, formula1, formula2, iconSet and operator. |
 | `CurvedConnectorShapeInfo` | Interface with 3 properties. |
-| `DataBarRule` | Interface with 4 properties. |
-| `DataValidation` | Interface with 12 properties. |
+| `DataBarRule` | Interface that declares the members color, direction, maxValue and minValue. |
+| `DataValidation` | Interface that declares the methods addArea, getRanges and toXml and members including allowBlank, errorMessage, errorStyle, errorTitle, formula1 and formula2. |
 | `EllipseShapeInfo` | Interface with 1 property. |
-| `Fill` | Interface with 3 properties. |
-| `FilterColumn` | Interface with 3 properties. |
-| `Font` | Interface with 7 properties. |
+| `Fill` | Interface that declares the members bgColor, fgColor and patternType. |
+| `FilterColumn` | Interface that declares the method filters and the members blank and col. |
+| `Font` | Interface that declares members including bold, color, italic, name, size and strikeout. |
 | `HtmlParseOptions` | Interface with 2 properties. |
 | `HtmlSaveOptions` | Interface with 2 properties. |
 | `Hyperlink-types` | Interface with 5 properties. |
-| `IconSetRule` | Interface with 2 properties. |
+| `IconSetRule` | Interface that declares the members iconSet and reverse. |
 | `ImageInfo` | Interface with 5 properties. |
 | `LegendInfo` | Interface with 2 properties. |
 | `LineShapeInfo` | Interface with 3 properties. |
@@ -324,7 +320,7 @@ The `Style` class provides methods to configure font, fill, border, and alignmen
 | `PictureShapeInfo` | Interface with 2 properties. |
 | `PlotArea` | Interface with 4 properties. |
 | `PolygonShapeInfo` | Interface with 1 property. |
-| `Protection` | Interface with 2 properties. |
+| `Protection` | Interface that declares the members hidden and locked. |
 | `QuadrilateralShapeInfo` | Interface with 1 property. |
 | `RectangleShapeInfo` | Interface with 1 property. |
 | `RectangleVariantShapeInfo` | Interface with 1 property. |
@@ -346,30 +342,24 @@ The `Style` class provides methods to configure font, fill, border, and alignmen
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/cells/typescript/)** — The getting started guide covers installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/cells/typescript/)** — The how-to guides and FAQ provide task-focused answers for common spreadsheet-processing questions.
-- **[Full API reference](https://reference.aspose.org/cells/typescript/)** — The full API reference offers the complete, browsable reference for every public class. It covers all 31 verified public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[Getting started guide](https://docs.aspose.org/cells/typescript/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/cells/typescript/)** — task-focused answers for common spreadsheet-processing questions.
+- **[Full API reference](https://reference.aspose.org/cells/typescript/)** — the complete, browsable reference for every public class. It covers all 31 public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[examples/](examples/)** — The `examples/` directory in this repository.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript/issues).
 
 ## Scope and Limitations
 
-Aspose.Cells FOSS for TypeScript reads and writes Excel files using the `Workbook` class, supporting export to CSV, JSON, and Markdown formats via `Workbook.toCsv`, `Workbook.toJson`, and `Workbook.toMarkdown`.
+The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and `Style` — `Workbook.worksheets` is a `WorksheetCollection` of `Worksheet` objects, each exposing a `Cells` collection for reading and writing values, formulas, and styles.
 
-- Text export is available as a returned string, not as a direct file-write helper — pass the result of `Workbook.toCsv`, `Workbook.toJson`, or `Workbook.toMarkdown` to your own file-writing code, and there is no corresponding import path back into a `Workbook`.
-- This limitation does not apply to Aspose.Cells for .NET — Enterprise Edition.
-- The package excel-cells version 1.0.0 is installed via git clone and npm install from the `aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript` repository.
+- Text export is available as a returned string, not as a direct file-write helper — pass the result of `toCsv()`, `toJson()`, or `toMarkdown()` to your own file-writing code.
+- Text export is one-way — there is no corresponding import path back into a `Workbook`.
 
-The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and
-`Style` — `Workbook.worksheets` is a `WorksheetCollection` of `Worksheet` objects, each
-exposing a `Cells` collection for reading and writing values, formulas, and styles.
-
-These limitations don't apply to [full-featured Aspose.Cells — Enterprise Edition](https://products.aspose.com/cells/). It adds a full commercial spreadsheet engine, broader format coverage, and active support beyond this FOSS TypeScript edition's own scope.
+See [Aspose.Cells — Enterprise Edition](https://products.aspose.com/cells/). It adds a full commercial spreadsheet engine, broader format coverage, and active support beyond this FOSS TypeScript edition's own scope.
 
 ## Development and Testing
 
-The toolchain requires Node.js 18 or later and TypeScript 5 or later, with dependencies handling ZIP containers, XML parsing, and ZIP entry operations. TypeScript compilation and type checking depend on type definitions and the TypeScript compiler, while running examples or tests directly uses runtime environments that support TypeScript execution. The package excel-cells version 1.0.0 is part of the `aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript` repository, and the examples/ directory contains test assets for validation.
-
-A npm package has not been published yet. Install from source:
+A npm package has not been published yet. Install from source.
 
 - `@zip.js/zip.js` ^2.8.21 — reads and writes the XLSX ZIP container.
 - `@xmldom/xmldom` ^0.8.10 — parses and serializes the OOXML part XML.
