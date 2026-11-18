@@ -2155,3 +2155,16 @@ items:
     evidence: ["5 PDF runs cancelled at the 90-minute timeout, 25 to 30 minute settle rounds"]
     next_action: "after BL-230"
     updated: "2026-11-18"
+
+  - id: BL-280
+    title: "Seal flips (good to bad): classify every recorded RECERTIFIED-to-failing change by cause, and make a flip impossible without a stated cause that the system can act on"
+    type: requirement
+    source: "owner request 2026-11-18: ideally there is no flip from positive to negative; how is it ensured"
+    priority: P0
+    status: open
+    implementation_path: "read-only analysis of data/recertification_baseline.json history and recertify records first; then the smallest change inside the existing R10 gate (recertify --gate) and baseline justification"
+    acceptance: "every recorded flip has a cause class (check made stricter, findings-register row added, upstream or registry change, reviewer variance, defect in the sealed text) with evidence; a frozen-code recertify repeat flips zero seals; a flip caused by a new register row or stricter check is corrected by the pipeline (BL-210 path) instead of being accepted as a justified demotion"
+    evidence: ["baseline history: 17 RECERTIFIED-to-NEEDS_REPAIR changes across 20 baseline revisions (2026-11-06 to 2026-11-14); 8 Lane R seals flipped at once in e917591 (findings register); the others follow BC-17 enforcement and individual defects"]
+    next_action: "classify the 17 by cause from each commit message and register; check reviewer-variance flips on a frozen-code repeat"
+    updated: "2026-11-18"
+
