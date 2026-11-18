@@ -13,11 +13,25 @@
    "run_id": "43669801825",
    "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T21:17:02+00:00",
+   "classes": [
+    "BC-05|unresolved|section_fit",
+    "BC-17|inherited_unit|technical_content",
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "44397293310",
+   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T03:17:16+00:00",
+  "at": "2026-11-18T21:17:02+00:00",
   "classes": {
    "BC-05|unresolved|section_fit": {
     "example": "section fit: Scope and Limitations states the project's license, which the License section states: 'This project is licensed under the [MIT License](https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/blob/main'",
@@ -27,7 +41,7 @@
      "-"
     ],
     "rule": "BC-05",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -43,28 +57,6 @@
     "sub_rule": "section_fit",
     "upstream": ""
    },
-   "BC-07|inherited_unit|id_is_kept_as": {
-    "example": "inherited_unit:072.list is kept as written but says 'examples above' but no code precedes it in this section: 'The examples above pass `load_format=False` to run a document from primitives alone; leave it out to use the plain macros. - LaTeX and the e'",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:072.list"
-    ],
-    "rule": "BC-07",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "id_is_kept_as",
-    "upstream": ""
-   },
    "BC-17|inherited_unit|technical_content": {
     "example": "inherited_unit:002.badge_row holds links 'https://img.shields.io/badge/status-pre--alpha-orange.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "findings": 1,
@@ -73,7 +65,7 @@
      "inherited_unit:002.badge_row"
     ],
     "rule": "BC-17",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -86,18 +78,56 @@
     ],
     "sub_rule": "technical_content",
     "upstream": ""
+   },
+   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
+    "example": "The primary entry point is `TeXJob`, which combines an `InputSource`, an `OutputDevice` (`PdfDevice`, `DviDevice`, or `SvgDevice`), and `TeXOptions` into one runnable job.",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.intro"
+    ],
+    "rule": "duplicate_paragraph",
+    "scope": "9db0aa91e6e597492bb73c8cf289f7e59dbec514f38d5a763adb79aa19874383",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
    }
   },
-  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-07, BC-17; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
+   {
+    "label": "duplicate_paragraph",
+    "message": "the candidate prints the same prose paragraph more than once",
+    "origin": {
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
+    },
+    "quote": "The primary entry point is `TeXJob`, which combines an `InputSource`, an `OutputDevice` (`PdfDevice`, `DviDevice`, or `SvgDevice`), and `TeXOptions` into one runnable job.",
+    "rule": "duplicate_paragraph",
+    "section_id": "",
+    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
+    "source": "review",
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   },
    {
     "label": "BC-05",
     "message": "section fit: Scope and Limitations states the project's license, which the License section states: 'This project is licensed under the [MIT License](https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/blob/main'",
@@ -111,21 +141,6 @@
     "signature": "BC-05|unresolved|section_fit",
     "source": "validation",
     "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "inherited_unit:072.list is kept as written but says 'examples above' but no code precedes it in this section: 'The examples above pass `load_format=False` to run a document from primitives alone; leave it out to use the plain macros. - LaTeX and the e'",
-    "origin": {
-     "id": "inherited_unit:072.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "scope_limitations",
-    "signature": "BC-07|inherited_unit|id_is_kept_as",
-    "source": "validation",
-    "sub_rule": "id_is_kept_as",
     "upstream": ""
    },
    {
@@ -145,15 +160,15 @@
    }
   ],
   "lane": "R",
-  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
     "label": "BC-07",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:072.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"- This is a Pre-Alpha release: the core engine and public API are under active development, and\\n  interfaces may change between releases.\\n- Plain TeX is the supported format. The default `load_format=\\\"plain",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": null,
     "stage": "S4"
    },
@@ -191,8 +206,8 @@
    }
   ],
   "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
-  "run_id": "43669801825",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43669801825",
+  "run_id": "44397293310",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44397293310",
   "schema_version": 1,
   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
