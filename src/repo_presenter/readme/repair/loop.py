@@ -813,8 +813,21 @@ def _cite_register_rows(
     if disposition in _CITATION_NEEDED and not cited:
         pass
     elif disposition in PLACED and unit.endswith(_WITHHOLDING_KINDS):
-        if all(cid in cited for cid in ids) or not holds:
+        if all(cid in cited for cid in ids):
             return False
+        if not holds:
+            # BL-210: the unit is nothing but the false text: omit it citing the row (the R14
+            # decision every reader accepts, ``must_correct.REGISTER_OMITTED_RATIONALE``) rather
+            # than refuse, as the S4 fold does (3D .NET ``028.code_block``, four hosted runs).
+            from repo_presenter.readme.validation.must_correct import REGISTER_OMITTED_RATIONALE
+
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = sorted(ids)
+            entry["rationale"] = (
+                REGISTER_OMITTED_RATIONALE + "the whole unit is the false text (BL-210)."
+            )[:_REWRITE_RATIONALE_LIMIT]
+            return True
     else:
         return False
     entry["fact_ids"] = [*cited, *(cid for cid in ids if cid not in cited)]

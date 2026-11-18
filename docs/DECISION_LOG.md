@@ -7052,3 +7052,31 @@ becomes its own backlog item and must name the property it improves.
 
 Backlog: BL-201, BL-202, BL-203.
 
+
+## 2026-11-18: The BC-18 correction is applied before the seal, not left to a repair (BL-210, R46: reliable, repeatable)
+
+**Evidence.** Zero-call `recertify --all` on main `5392781`: 8 of 19 Lane R seals fail, 5 of them on BC-18 alone.
+The register rows were added after those seals; nothing corrected the text. The repair loop refused when the false
+text was the whole unit (3D .NET `inherited_unit:028.code_block`, four hosted runs), the kept-unit fold skipped
+exactly those units, and several false claims were not inherited units at all: authored capability and opening
+sentences, a sealed plan's Quick Start example, an UNRESOLVED example reprinted by `retained_examples`, a quote
+whose printed text has its links flattened, and a fact-derived Dependencies sentence.
+
+**Decision.** Inside the existing BC-18 step and folds, withhold what a row confirms false and record each decision
+(R14, rule `BL-210`, citing the register row): (1) an inherited unit that is only false text is omitted citing the
+row (`OMIT_UNSUPPORTED` with the register rationale every reader already accepts), and any document link it carried
+is printed in Documentation and Resources; (2) an authored sentence is withheld (the sentences that print the quote;
+nothing else is edited), a capability or API hub that is only false text leaves the plan or falls back to the
+fact-true row, records in `units["register_corrections"]`; (3) a sealed plan's refuted example is replaced by the next
+unrefuted one with its already-authored lead-in; (4) an UNRESOLVED example block that prints a refuted line is omitted
+citing the row; (5) matching sees through links the renderer flattens; (6) a fact-derived line (not a table row) that
+prints a quote is withheld at render. Authored text is withheld, not rewritten to the row's `truth`: the truth is a
+maintainer-facing sentence with file evidence, and writing it into a README is an unverified claim (BC-04, R9).
+
+**Measured** (zero calls, same seals): 11 of 19 RECERTIFIED before, 15 after; 3D .NET, Cells C++, Cells TypeScript and
+HTML Python flip; no regression; the 11 certified seals re-render to byte-identical READMEs. Not flipped: Words .NET
+(a kept attributed API table row whose quote spans rows), 3D Python (BC-04), Cells .NET (BC-14), PDF Java (BC-05/17):
+none is BC-18 except Words, the others are their own classes. The investigation predicted about 6; the BC-18-alone
+count was 5, and 4 flipped.
+
+Backlog: BL-210.
