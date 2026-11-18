@@ -5,7 +5,7 @@
   "provider_repository_id": 1172529510,
   "registry_revision": null,
   "active_transaction_id": "e30e3b6a59824350b91569d9ef6de912",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "8c84e656423d4e90bb75c83b09cb3ec3",
-    "transaction_id": "749bc2a2789d44f4a06527e6fa5f431e",
+    "transition_id": "6aacf7a4fd53476a877ad4f6e438afbd",
+    "transaction_id": "e30e3b6a59824350b91569d9ef6de912",
     "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-30T23:26:36.993221+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-18T15:10:16.390581+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
     "output_manifest": "candidates/aspose-slides-foss__Aspose.Slides-FOSS-for-Python/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 22,
+  "state_version": 23,
   "recent_trigger_dedup_keys": {
     "run:41142575744:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "749bc2a2789d44f4a06527e6fa5f431e",
     "run:41162835931:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "d3043e1665a44495911e43ead88cd3bd",
