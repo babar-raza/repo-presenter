@@ -105,7 +105,9 @@ def _supported(facts: FactsDocument, kind: str) -> list[str]:
     return [fact.id for fact in facts.by_kind(kind) if fact.polarity == "SUPPORTED"]  # type: ignore[arg-type]
 
 
-def register_refuted_example_ids(facts: FactsDocument) -> frozenset[str]:
+def register_refuted_example_ids(
+    facts: FactsDocument, polarities: tuple[str, ...] = ("SUPPORTED",)
+) -> frozenset[str]:
     """The SUPPORTED example facts whose code prints a line a findings-register row of this
     repository confirms false (``readme_findings.regression_rows``, Lane R: OPEN or RESOLVED, never
     refuted), read from BC-18's own default register so the plan and the check agree.
@@ -130,7 +132,7 @@ def register_refuted_example_ids(facts: FactsDocument) -> frozenset[str]:
     return frozenset(
         fact.id
         for fact in facts.by_kind("example")
-        if fact.polarity == "SUPPORTED"
+        if fact.polarity in polarities
         and any(quote in " ".join(line.split()) for line in fact.value.splitlines() for quote in quotes)
     )
 
@@ -611,6 +613,12 @@ def _apply_links(output: dict[str, Any], missing: list[Any]) -> None:
 _CORRECTED_LIST_DISPOSITIONS = frozenset({"CORRECT_WITH_EVIDENCE"})
 
 
+def entry_is_register_omission(entry: dict[str, Any]) -> bool:
+    from repo_presenter.readme.validation.must_correct import is_register_omission
+
+    return is_register_omission(entry)
+
+
 def _kept_list_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> dict[str, str]:
@@ -713,11 +721,49 @@ def _missing_kept_list_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> list[dict[str, str]]:
     planned = {str(link.get("link_fact_id")) for link in output.get("links", [])}
-    return [
+    missing = [
         {"link_fact_id": fact_id, "section_id": section}
         for fact_id, section in _kept_list_links(output, facts, dispositions).items()
         if fact_id not in planned
     ]
+    return [*missing, *_register_omitted_links(output, facts, dispositions, missing)]
+
+
+def _register_omitted_links(
+    output: dict[str, Any],
+    facts: FactsDocument,
+    dispositions: dict[str, Any] | None,
+    already: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    """BL-210: a unit omitted on the findings register's evidence takes only its false text with
+    it. A document link it carried (TS ``027.paragraph``: ``examples/``) is printed as a
+    Documentation and Resources line unless that section already prints it, wherever else the plan
+    carries it (BC-17 loses the link otherwise)."""
+    if not dispositions:
+        return []
+    texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    by_value: dict[str, str] = {}
+    for fact in sorted(facts.by_kind("link_target"), key=lambda f: f.id):
+        if (
+            fact.polarity == "SUPPORTED"
+            and fact.id not in _SHELL_OWNED_LINKS
+            and not fact.value.startswith("#")
+        ):
+            by_value.setdefault(fact.value, fact.id)
+    here = {
+        str(link.get("link_fact_id"))
+        for link in output.get("links", [])
+        if link.get("section_id") == "documentation_resources"
+    } | {link["link_fact_id"] for link in already}
+    found: dict[str, str] = {}
+    for entry in dispositions.get("dispositions", []):
+        if not entry_is_register_omission(entry):
+            continue
+        for destination in item_links(texts.get(str(entry.get("unit_id", "")), "")):
+            fact_id = by_value.get(destination)
+            if fact_id and fact_id not in here:
+                found.setdefault(fact_id, "documentation_resources")
+    return [{"link_fact_id": i, "section_id": s} for i, s in found.items()]
 
 
 #: Public name of the link backstop for zero-call re-certification (``recertify.current_plan``).

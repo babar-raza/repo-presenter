@@ -874,7 +874,10 @@ def link_target_description(target: Fact) -> str:
         path = target.value.split("#", 1)[0].rstrip("/") or target.value
         last = path.rsplit("/", 1)[-1]
         if target.value.endswith("/") or "." not in last:
-            return f"The `{path}` directory in this repository."
+            # The span is the link fact's own value (BC-04: a code span must be a fact value), so a
+            # directory link "examples/" keeps its slash (BL-210, TS ``examples/``).
+            shown = target.value.split("#", 1)[0] or path
+            return f"The `{shown}` directory in this repository."
         # The line's own label already names it when the maintainers gave it a title.
         return "In this repository." if link_text(target) not in (path, last) else (
             f"`{path}` in this repository."
@@ -2129,8 +2132,16 @@ def render_readme(
             continue
         heading = [f"## {section.heading}", ""] if section.heading else []
         blocks.append("\n".join(heading + body).rstrip("\n"))
-    return correct_stated_type_counts(
-        collapse_document_blank_runs("\n\n".join(blocks) + "\n"), facts
+    from repo_presenter.readme.validation.must_correct import withheld_printed_text
+
+    # BL-210: last stop of the BC-18 correction, for text derived from facts (no unit to correct).
+    return collapse_document_blank_runs(
+        withheld_printed_text(
+            correct_stated_type_counts(
+                collapse_document_blank_runs("\n\n".join(blocks) + "\n"), facts
+            ),
+            facts.repository,
+        )
     )
 
 

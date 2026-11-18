@@ -59,6 +59,24 @@ def _squash(text: str) -> str:
     return " ".join(text.split())
 
 
+_MD_LINK = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+
+
+def prints_quote(text: str, quote: str) -> bool:
+    """Whether ``text`` prints ``quote`` (both squashed): as written, or with its markdown links
+    reduced to their labels (``flat_squash``), the two ways the README can print a kept unit."""
+    wanted = _squash(quote)
+    return bool(wanted) and (wanted in _squash(text) or wanted in flat_squash(text))
+
+
+def flat_squash(text: str) -> str:
+    """``text`` squashed, with each markdown link reduced to its label: the README prints a kept
+    unit's link as its label when its target is not printable (Words .NET ``013.paragraph``:
+    "(see [the story](#the-story-behind-this-code) below)" reads "(see the story below)"), and a
+    register quote is that printed text (BL-210)."""
+    return _squash(_MD_LINK.sub(r"\1", text))
+
+
 #: The rationale ``reconciliation.dispositions._fold_register_omitted_units`` writes on an
 #: inherited unit it omits citing the findings register rows that refute it (audit O4, BL-088).
 #: The register row is the recorded R14 decision; BC-17 (``parity_gate.disposition_is_non_loss``),
@@ -162,7 +180,7 @@ def without_quoted_sentences(text: str, quotes: Collection[str]) -> str:
         best: tuple[int, int] | None = None
         for first in range(len(spans)):
             for last in range(first, len(spans)):
-                if quote in _squash(text[spans[first][0] : spans[last][1]]):
+                if prints_quote(text[spans[first][0] : spans[last][1]], quote):
                     if best is None or last - first < best[1] - best[0]:
                         best = (first, last)
                     break
@@ -188,7 +206,19 @@ def without_quoted_rows(text: str, quotes: Collection[str]) -> str:
         for index, line in enumerate(lines)
         if index >= 2 and line.strip().startswith("|")
     ]
-    drop = {index for index in body if any(quote in _squash(lines[index]) for quote in wanted)}
+    drop = {index for index in body if any(prints_quote(lines[index], quote) for quote in wanted)}
+    # A quote that spans rows (Words .NET ``049.table``: a whole row and the start of the next)
+    # withholds the rows its lines print in full; the row it only begins stays.
+    for raw in quotes:
+        parts = [flat_squash(part) for part in raw.split("\n") if part.strip()]
+        if len(parts) < 2:
+            continue
+        for index in body:
+            if flat_squash(lines[index]) == parts[0] and all(
+                body_index in body and flat_squash(lines[body_index]).startswith(part)
+                for body_index, part in zip(range(index + 1, index + len(parts)), parts[1:])
+            ):
+                drop.add(index)
     if not drop or set(body) <= drop:
         return text
     return "\n".join(line for index, line in enumerate(lines) if index not in drop)
@@ -228,7 +258,7 @@ def without_quoted_items(text: str, quotes: Collection[str]) -> str:
         return end
 
     def joined(start: int, end: int) -> str:
-        return _squash("\n".join(line for _depth, lines in blocks[start:end] for line in lines))
+        return "\n".join(line for _depth, lines in blocks[start:end] for line in lines)
 
     # Each quote withholds the innermost item that prints it whole: a nested sub-item when the
     # quote sits inside it (Email C++ ``053.list``/``059.003.list``: a signature bullet under the
@@ -237,7 +267,7 @@ def without_quoted_items(text: str, quotes: Collection[str]) -> str:
     dropped = [False] * len(blocks)
     ends = [subtree_end(index) for index in range(len(blocks))]
     for quote in wanted:
-        holding = [quote in joined(index, ends[index]) for index in range(len(blocks))]
+        holding = [prints_quote(joined(index, ends[index]), quote) for index in range(len(blocks))]
         for index in range(len(blocks)):
             if not holding[index] or any(holding[child] for child in range(index + 1, ends[index])):
                 continue
@@ -284,9 +314,9 @@ def withheld_rows_form(unit_id: str, text: str, quotes: Collection[str]) -> str:
 def omission_holds(unit_id: str, text: str, quotes: Collection[str]) -> bool:
     """Whether keeping the unit while citing these quotes stops it printing every one of them,
     with something of it still left to print."""
-    printed = _squash(withheld_form(unit_id, text, quotes))
-    return bool(quotes) and bool(printed) and not any(
-        _squash(quote) in printed for quote in quotes
+    printed = withheld_form(unit_id, text, quotes)
+    return bool(quotes) and bool(_squash(printed)) and not any(
+        prints_quote(printed, quote) for quote in quotes
     )
 
 
@@ -364,3 +394,278 @@ def must_correct_failures(candidate: Candidate) -> list[Failure]:
             for name in (named or [None])
         )
     return failures
+
+
+# --- BL-210: the correction BC-18 owes, applied before the seal ----------------------------------
+#
+# BC-18 only ever *judged*: a sentence an OPEN register row confirms false stayed printed until a
+# model repair happened to drop it, and when the false text was the whole unit the repair refused
+# (3D .NET ``scene.Save("output.obj", FileFormat.WavefrontOBJ);``, four hosted runs running).
+# ``register_corrected`` is the deterministic, zero-call correction of the AUTHORED text: it
+# withholds exactly what a row confirms false (a sentence, or a whole capability / API hub when
+# nothing true is left of it) and returns an R14 record per change, citing the row. The inherited
+# half is ``reconciliation.dispositions._fold_register_kept_units``; the plan's examples are
+# ``corrected_plan_examples``. Measured on the 8 failing Lane R seals (``recertify --all``).
+
+#: The rule id every record of this correction carries (R14).
+REGISTER_CORRECTION_RULE = "BL-210"
+#: A register quote or unit text shorter than this (plain, squashed) is never matched by containment.
+_MIN_MATCH = 12
+
+
+def _plain(text: str) -> str:
+    return " ".join(text.replace("`", "").split())
+
+
+def _correction_rows(repository: str, path: Path | None) -> list[FindingRecord]:
+    try:
+        rows = regression_rows(repository, LANE_R, path if path is not None else DEFAULT_FINDINGS_PATH)
+    except (OSError, ValueError, FindingsRegisterError):
+        return []
+    return [row for row in rows if len(_plain(row.quote)) >= _MIN_MATCH]
+
+
+def _record(slot: str, section: str, rows: Collection[FindingRecord], action: str) -> dict[str, Any]:
+    return {
+        "rule": REGISTER_CORRECTION_RULE,
+        "slot": slot,
+        "section": section,
+        "action": action,
+        "findings": sorted(row.citation_id() for row in rows),
+    }
+
+
+def register_corrected(
+    plan: Mapping[str, Any],
+    units: Mapping[str, Any],
+    repository: str,
+    path: Path | None = None,
+) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    """``(plan, units, records)`` with the authored text a register row confirms false withheld.
+
+    * A unit whose text prints a row's quote loses the shortest run of sentences that prints it
+      (``without_quoted_sentences``); every other sentence is kept as written.
+    * A unit that is nothing but the false text (its text is the quote, or lies inside it) is
+      dropped when its slot can stand without it: a capability leaves the plan and the later ones
+      are renumbered; an API hub or type row falls back to the renderer's fact-true row (R43(4),
+      recorded the way that fallback already is). The opening and the other prose slots are never
+      dropped: they stay for BC-18 to judge.
+    * Pure and idempotent; with no register rows, or nothing printing one, the inputs come back
+      unchanged and ``records`` is empty. Each change is one R14 record naming the rule and the
+      register rows (also appended to ``units["register_corrections"]``).
+    """
+    import copy
+
+    rows = _correction_rows(repository, path)
+    unit_list = [u for u in units.get("units", []) if isinstance(u, Mapping)]
+    if not rows or not unit_list:
+        return dict(plan), dict(units), []
+    new_plan = copy.deepcopy(dict(plan))
+    new_units = copy.deepcopy(dict(units))
+    records: list[dict[str, Any]] = []
+    dropped_caps: list[int] = []
+    omitted = list(new_units.get("omitted") or [])
+    kept: list[dict[str, Any]] = []
+    for unit in new_units["units"]:
+        slot, section = str(unit.get("slot", "")), str(unit.get("section", ""))
+        text = str(unit.get("text", ""))
+        plain = _plain(text)
+        inside = [r for r in rows if _plain(r.quote) in plain]
+        covering = [r for r in rows if len(plain) >= _MIN_MATCH and plain in _plain(r.quote)]
+        if not inside and not covering:
+            kept.append(unit)
+            continue
+        # A quote that is the whole unit cannot be withheld sentence by sentence, but withholding the
+        # sentences the other rows confirm false changes the unit, so it no longer prints it
+        # (Cells C++ opening: one row quotes the whole paragraph, another its third sentence).
+        partial = [r for r in inside if _plain(r.quote) != plain]
+        if partial:
+            corrected = without_quoted_sentences(text, [_plain(r.quote) for r in partial]).strip()
+            if (
+                corrected
+                and corrected != text
+                and not any(_plain(r.quote) in _plain(corrected) for r in rows)
+            ):
+                unit["text"] = corrected
+                records.append(_record(slot, section, inside, "sentence_withheld"))
+                kept.append(unit)
+                continue
+        involved = [*inside, *covering]
+        if slot.startswith("capability:") and slot.split(":", 1)[1].isdigit():
+            dropped_caps.append(int(slot.split(":", 1)[1]))
+            records.append(_record(slot, section, involved, "capability_dropped"))
+            continue
+        if slot.startswith(("hub:", "type:")):
+            from repo_presenter.readme.composition.authoring import API_ROW_FALLBACK_REASON
+
+            omitted.append(
+                {
+                    "fact_id": slot.split(":", 1)[1],
+                    "reason": API_ROW_FALLBACK_REASON
+                    + f"; withheld by {REGISTER_CORRECTION_RULE}: the findings register "
+                    "confirms its text false",
+                    "section": section,
+                }
+            )
+            records.append(_record(slot, section, involved, "api_row_fallback"))
+            continue
+        kept.append(unit)
+    if dropped_caps:
+        gone = sorted(set(dropped_caps))
+        caps = new_plan.get("core_capabilities", [])
+        new_plan["core_capabilities"] = [c for i, c in enumerate(caps, start=1) if i not in gone]
+        renumbered: list[dict[str, Any]] = []
+        for unit in kept:
+            slot = str(unit.get("slot", ""))
+            if slot.startswith("capability:") and slot.split(":", 1)[1].isdigit():
+                index = int(slot.split(":", 1)[1])
+                unit["slot"] = f"capability:{index - sum(1 for g in gone if g < index)}"
+            renumbered.append(unit)
+        kept = renumbered
+    new_units["units"] = kept
+    if omitted != list(new_units.get("omitted") or []):
+        new_units["omitted"] = omitted
+    if records:
+        new_units["register_corrections"] = [*new_units.get("register_corrections", []), *records]
+    return new_plan, new_units, records
+
+
+def corrected_plan_examples(
+    plan: Mapping[str, Any], units: Mapping[str, Any], facts: Any
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """``(plan, units)`` without the planned examples whose code prints a line a register row
+    confirms false (``planning.register_refuted_example_ids``; a fresh plan can no longer select
+    them, a sealed plan still may - BL-210).
+
+    A refuted additional example leaves ``additional_example_ids`` with its ``workflow:`` unit. A
+    refuted Quick Start example is replaced by the next example that is not refuted: the second
+    Quick Start one, else an additional one. The replacement brings the text already authored
+    about it (``lead_in:2`` / its ``workflow:`` unit) as the slot's lead-in, so the lead-in always
+    describes the code printed under it; a refuted second Quick Start example with nothing to
+    replace it is dropped with its lead-in. A refuted first one with nothing to replace it stays
+    (the section must print code), for BC-18 to judge. One R14 record per change."""
+    from repo_presenter.readme.composition.planning import register_refuted_example_ids
+
+    refuted = register_refuted_example_ids(facts)
+    first = plan.get("quick_start_example_id")
+    second = plan.get("second_quick_start_example_id")
+    additional = list(plan.get("additional_example_ids", []))
+    if not refuted or not (first in refuted or second in refuted or any(i in refuted for i in additional)):
+        return dict(plan), dict(units)
+    new_plan = dict(plan)
+    new_units = dict(units)
+    all_units = [dict(u) for u in units.get("units", []) if isinstance(u, Mapping)]
+    records: list[dict[str, Any]] = []
+
+    def unit_of(slot: str) -> dict[str, Any] | None:
+        return next((u for u in all_units if u.get("slot") == slot), None)
+
+    def drop(slot: str) -> None:
+        all_units[:] = [u for u in all_units if u.get("slot") != slot]
+
+    def note(slot: str, example_id: str, action: str, replacement: str = "") -> None:
+        records.append(
+            {"rule": REGISTER_CORRECTION_RULE, "slot": slot, "section": "examples",
+             "action": action, "example": example_id, "replacement": replacement, "findings": []}
+        )
+
+    pool: list[tuple[str, str]] = []  # (example id, slot of the unit that introduces it)
+    if second and second not in refuted:
+        pool.append((str(second), "lead_in:2"))
+    for example_id in additional:
+        if example_id not in refuted and example_id not in (first, second):
+            pool.append((str(example_id), f"workflow:{example_id}"))
+
+    def replace(slot: str, old: Any) -> bool:
+        if not pool:
+            return False
+        example_id, source_slot = pool.pop(0)
+        source = unit_of(source_slot)
+        target = unit_of(slot)
+        if source is None or target is None:
+            return False
+        target["text"] = source.get("text", "")
+        target["fact_ids"] = list(dict.fromkeys([example_id, *source.get("fact_ids", [])]))
+        key = "quick_start_example_id" if slot == "lead_in" else "second_quick_start_example_id"
+        new_plan[key] = example_id
+        if source_slot == "lead_in:2":
+            new_plan["second_quick_start_example_id"] = None
+        else:
+            new_plan["additional_example_ids"] = [
+                i for i in new_plan.get("additional_example_ids", []) if i != example_id
+            ]
+        drop(source_slot)
+        note(key, str(old), "example_replaced", example_id)
+        return True
+
+    if first in refuted:
+        replace("lead_in", first)
+    if second in refuted:
+        if not replace("lead_in:2", second):
+            new_plan["second_quick_start_example_id"] = None
+            drop("lead_in:2")
+            note("second_quick_start_example_id", str(second), "example_withheld")
+    for example_id in [i for i in new_plan.get("additional_example_ids", []) if i in refuted]:
+        new_plan["additional_example_ids"] = [
+            i for i in new_plan["additional_example_ids"] if i != example_id
+        ]
+        drop(f"workflow:{example_id}")
+        if new_plan.get("flagship_example_id") == example_id:
+            new_plan["flagship_example_id"] = None
+        note(f"workflow:{example_id}", str(example_id), "example_withheld")
+    new_units["units"] = all_units
+    new_units["register_corrections"] = [*new_units.get("register_corrections", []), *records]
+    return new_plan, new_units
+
+
+def withheld_printed_text(readme: str, repository: str, path: Path | None = None) -> str:
+    """The rendered README without the lines and sentences an OPEN register row confirms false that
+    reach it from no unit this module can correct: text the renderer derives from facts (the
+    Dependencies sentence, an API table row), the last stop of BL-210's correction.
+
+    Outside code fences and tables only. A line that is the whole quote is dropped; otherwise the shortest run of sentences holding it
+    is withheld from its line. Anything a quote still matches afterwards stays for BC-18 to judge,
+    and a README no row is printed in is returned unchanged (so a passing seal never changes)."""
+    rows = _correction_rows(repository, path)
+    if not rows:
+        return readme
+    flat = flat_squash(readme)
+    quotes = [q for q in (flat_squash(r.quote) for r in rows) if q in flat]
+    if not quotes:
+        return readme
+    lines = readme.split("\n")
+    drop: set[int] = set()
+    inside = False
+    for index, line in enumerate(lines):
+        if line.strip().startswith(("```", "~~~")):
+            inside = not inside
+            continue
+        if inside or not line.strip():
+            continue
+        plain = flat_squash(line)
+        for raw in rows:
+            parts = [flat_squash(p) for p in raw.quote.split("\n") if p.strip()]
+            for part in parts:
+                if not part or len(part) < _MIN_MATCH:
+                    continue
+                if line.lstrip().startswith("|"):
+                    continue  # a table row is a unit's or the API table's: never dropped here
+                elif plain == part:
+                    drop.add(index)
+                elif part in plain and len(parts) == 1:
+                    kept = without_quoted_sentences(line, [part])
+                    if kept != line and part not in flat_squash(kept):
+                        lines[index] = kept
+    # A heading whose whole body was withheld goes with it (nothing is left under it to print).
+    for index, line in enumerate(lines):
+        if not line.startswith("#") or index in drop:
+            continue
+        body = []
+        for follow in range(index + 1, len(lines)):
+            if lines[follow].startswith("#"):
+                break
+            body.append(follow)
+        if any(i in drop for i in body) and all(i in drop or not lines[i].strip() for i in body):
+            drop.add(index)
+    kept_lines = [line for index, line in enumerate(lines) if index not in drop]
+    return "\n".join(kept_lines)

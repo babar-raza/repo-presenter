@@ -536,6 +536,44 @@ def current_plan(
     return updated
 
 
+def corrected_authored(
+    plan: Mapping[str, Any],
+    units: Mapping[str, Any],
+    document: FactsDocument,
+    investigation: Mapping[str, Any] | None = None,
+    dispositions: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """The plan and authored units with what an OPEN findings-register row confirms false
+    withheld (BL-210; ``must_correct.register_corrected`` and ``corrected_plan_examples``), and
+    each unit's citations narrowed to what its section may still cite once a capability or example
+    left the plan (BC-04). Pure; zero calls; unchanged when no row is printed."""
+    from repo_presenter.readme.composition.authoring import section_selections
+    from repo_presenter.readme.validation.must_correct import (
+        corrected_plan_examples,
+        register_corrected,
+    )
+
+    new_plan, new_units, _records = register_corrected(plan, units, document.repository)
+    new_plan, new_units = corrected_plan_examples(new_plan, new_units, document)
+    if new_plan == dict(plan) and new_units == dict(units):
+        return dict(plan), dict(units)
+    investigation = dict(investigation or {})
+    dispositions = dict(dispositions or {})
+
+    def allowed(section: str, which: Mapping[str, Any]) -> frozenset[str]:
+        return frozenset(section_selections(section, dict(which), investigation, dispositions, document)[0])
+
+    cache: dict[str, frozenset[str]] = {}
+    for unit in new_units.get("units", []):
+        section = str(unit.get("section", ""))
+        if section not in cache:
+            cache[section] = allowed(section, plan) - allowed(section, new_plan)
+        gone = cache[section]
+        if gone and any(fid in gone for fid in unit.get("fact_ids", [])):
+            unit["fact_ids"] = [fid for fid in unit["fact_ids"] if fid not in gone]
+    return dict(new_plan), dict(new_units)
+
+
 def _rerun_lane_r(
     bundle: Path, entry: Any, source: SourceSnapshot, *, restore: bool = False
 ) -> tuple[list[str], list[str], dict[str, bytes]]:
@@ -559,6 +597,12 @@ def _rerun_lane_r(
     )
     sealed_units = _load_json(bundle, units_name)
     current = current_units(sealed_units, document)
+    # BL-210: the authored text and planned examples a register row confirms false are withheld
+    # before judging, as BC-18 owes (R14 records ride in units["register_corrections"]).
+    investigation = (
+        _load_json(bundle, "investigation.json") if (bundle / "investigation.json").is_file() else {}
+    )
+    plan, current = corrected_authored(plan, current, document, investigation, dispositions)
     units_override: Mapping[str, Any] | None = current if current != sealed_units else None
     dispositions = settled_dispositions(entry, document, plan, current, dispositions)
     failing, details, artifacts = _evaluate_lane_r(

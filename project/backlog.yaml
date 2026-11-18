@@ -2070,15 +2070,15 @@ items:
     updated: "2026-11-18"
 
   - id: BL-210
-    title: "Register-driven correction before seal: a sentence matching an OPEN register row is omitted (inherited) or replaced by the row's truth text (authored)"
+    title: "Register-driven correction before seal: a sentence matching an OPEN register row is omitted (inherited) or withheld (authored) with an R14 record, instead of being left to a repair that refuses"
     type: defect
     source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
     priority: P0
     status: active
-    implementation_path: "the existing BC-18 step and the repair loop (readme/repair/loop.py, readme_findings.py, recertify.py); R14 record per drop"
-    acceptance: "zero-call recertify --all on the 8 failing Lane R seals flips at least 4 to RECERTIFIED with no new failing check and no Lane L change; R10 gate OK"
-    evidence: ["6 of the 8 failing seals fail on BC-18 alone (recertify on main 5bb37e3)"]
-    next_action: "worker started 2026-11-18"
+    implementation_path: "the existing BC-18 step and folds: readme/validation/must_correct.py (register_corrected, corrected_plan_examples, withheld_printed_text, flat_squash), readme/reconciliation/dispositions.py (_fold_register_kept_units omits a unit that is only false text), retained_examples.py, composition/planning.py (carried links), recertify.py (corrected_authored), repair/loop.py (_cite_register_rows)"
+    acceptance: "zero-call recertify --all on the 8 failing Lane R seals flips at least 4 to RECERTIFIED with no new failing check, no change to the 11 certified seals' READMEs and no Lane L change; R10 gate OK"
+    evidence: ["baseline (main 5392781, zero calls): 11 of 19 Lane R seals RECERTIFIED; 8 NEEDS_REPAIR, 5 of them on BC-18 alone", "after: 15 of 19 RECERTIFIED, 4 flipped (3D .NET, Cells C++, Cells TypeScript, HTML Python), 0 regressions, the 11 certified seals' re-rendered READMEs byte-identical (sha256) before and after; provider calls 0", "not flipped and why: Words .NET (BC-18 on a kept PRESERVE_ATTRIBUTED API table row whose quote spans rows), 3D Python (BC-04 format:output.obj demoted UNRESOLVED, not BC-18), Cells .NET (BC-14 PageOrientationType called a class), PDF Java (BC-05/BC-17, not BC-18)"]
+    next_action: "Words .NET table row spanning quote (kept PRESERVE_ATTRIBUTED table); BC-04/BC-14 residuals belong to their own classes; hosted re-run of the 4 flipped cells is the R41 proof"
     updated: "2026-11-18"
 
   - id: BL-220

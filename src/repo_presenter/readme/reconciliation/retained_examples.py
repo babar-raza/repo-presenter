@@ -32,6 +32,8 @@ from repo_presenter.readme.reconciliation.dispositions import (
     edition_labels,
 )
 
+from repo_presenter.readme.validation.must_correct import is_register_omission
+
 CODE_RATIONALE = (
     "Reprinted verbatim in {section} with a not-verified note: its example is UNRESOLVED, "
     "which is neither supported nor contradicted."
@@ -77,8 +79,8 @@ def retain_unverified_examples(
     hrefs = contradicted_link_hrefs(facts)
     for retained in retained_examples(facts):
         code = entries.get(retained.code_unit)
-        if code is None:
-            continue
+        if code is None or is_register_omission(code):
+            continue  # BL-210: omitted citing the findings register (S4 fold), never reprinted
         _hand_over(code, retained, CODE_RATIONALE)
         framing = [
             *retained.lead_units,
