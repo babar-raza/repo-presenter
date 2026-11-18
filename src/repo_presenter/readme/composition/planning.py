@@ -24,7 +24,7 @@ import copy
 import hashlib
 import json
 import re
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 from urllib.parse import unquote
@@ -1240,14 +1240,80 @@ def recover_duplicate_link_assignments(output: dict[str, Any]) -> dict[str, Any]
     return {**output, "links": kept}
 
 
-def recover_planning_output(output: dict[str, Any], facts: FactsDocument) -> dict[str, Any] | None:
-    """The single ``recover=`` combining both deterministic last resorts, in order."""
-    deduplicated = recover_duplicate_link_assignments(output)
-    base = output if deduplicated is None else deduplicated
+#: The key a recovery leaves its decision under, popped by ``run_job`` into the repair record
+#: (``authoring_retry.RECOVERY_NOTES_KEY``; repeated here so planning imports nothing new).
+_RECOVERY_NOTES_KEY = "_recovery_notes"
+
+
+def recover_uncitable_fact_ids(
+    output: dict[str, Any], citable: Collection[str]
+) -> dict[str, Any] | None:
+    """Terminal-safe correction for a plan that cites a fact id outside the offered enum after
+    every ask (BL-220, R46 robust; hosted PDF Python run 43691416767: ``$.api_hubs[8].fact_ids[9]``
+    'public_symbol:aspose_pdf.document.save_as_image' is not one of the offered ids): each id
+    outside ``citable`` is deleted from its array, nothing else touched. An array left with no id
+    falls back to its hub's own symbol when that is citable; any other emptied ``fact_ids`` array
+    (a capability with no evidence) fails closed. Each deletion is recorded (R14) with the rule id.
+    ``None`` when no id is outside the enum or nothing honest remains."""
+    allowed = set(citable)
+    if not allowed:
+        return None
+    notes: list[dict[str, Any]] = []
+    for property_name, field in _FACT_ID_ARRAYS:
+        items = output.get(property_name)
+        if not isinstance(items, list):
+            continue
+        for index, item in enumerate(items):
+            ids = item.get(field) if isinstance(item, dict) else None
+            if not isinstance(ids, list):
+                continue
+            kept = [i for i in ids if not isinstance(i, str) or i in allowed]
+            if len(kept) == len(ids):
+                continue
+            dropped = [i for i in ids if i not in kept]
+            if not kept and field == "fact_ids":
+                symbol = item.get("symbol_fact_id")
+                if property_name == "api_hubs" and symbol in allowed:
+                    kept = [symbol]
+                else:
+                    return None
+            item[field] = kept
+            notes.append(
+                {
+                    "fallback": "uncitable_fact_id_dropped",
+                    "rule": "BL-220",
+                    "path": f"$.{property_name}[{index}].{field}",
+                    "dropped": dropped,
+                }
+            )
+    if not notes:
+        return None
+    output[_RECOVERY_NOTES_KEY] = [*output.get(_RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
+def recover_planning_output(
+    output: dict[str, Any], facts: FactsDocument, citable: Collection[str] | None = None
+) -> dict[str, Any] | None:
+    """The single ``recover=`` combining the deterministic last resorts, in order: the offered-id
+    enum first (``citable``, the call schema's own enum), then link de-duplication and capability
+    titles."""
+    pinned = recover_uncitable_fact_ids(output, citable) if citable else None
+    current = output if pinned is None else pinned
+    deduplicated = recover_duplicate_link_assignments(current)
+    base = current if deduplicated is None else deduplicated
     retitled = recover_uncited_capability_titles(base, facts)
     if retitled is not None:
         return retitled
-    return deduplicated
+    return deduplicated if deduplicated is not None else pinned
+
+
+def citable_from_schema(call_schema: Mapping[str, Any] | None) -> list[str]:
+    """The fact ids the planning call schema offers (its ``citable_fact_id`` enum); empty when the
+    schema pins none."""
+    defs = (call_schema or {}).get("$defs", {})
+    enum = defs.get("citable_fact_id", {}).get("enum", [])
+    return [i for i in enum if isinstance(i, str)]
 
 
 def recover_visible_line_overage(

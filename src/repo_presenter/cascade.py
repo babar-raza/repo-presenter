@@ -92,6 +92,7 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    citable_from_schema,
     recover_planning_output,
     write_plan,
 )
@@ -297,7 +298,7 @@ def _run_planning(
         return plan_checks(output, document, dispositions=dispositions, ecosystem=ecosystem)
 
     def recover(output: dict) -> dict | None:
-        return recover_planning_output(output, document)
+        return recover_planning_output(output, document, citable_from_schema(call_schema))
 
     result = run_job(
         loaded, packet, config=config, facts=document, ledger=ledger, store=store,

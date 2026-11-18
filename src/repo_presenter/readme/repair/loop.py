@@ -86,6 +86,7 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    citable_from_schema,
     recover_planning_output,
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
@@ -555,8 +556,10 @@ def _regenerate_plan(rc: RepairContext, loaded: LoadedManifest) -> dict[str, Any
             output, rc.facts, dispositions=rc.dispositions, ecosystem=rc.entry.ecosystem
         )
 
+    call_schema = planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions)
+
     def recover(output: dict[str, Any]) -> dict[str, Any] | None:
-        return recover_planning_output(output, rc.facts)
+        return recover_planning_output(output, rc.facts, citable_from_schema(call_schema))
 
     try:
         result = run_job(
@@ -564,7 +567,7 @@ def _regenerate_plan(rc: RepairContext, loaded: LoadedManifest) -> dict[str, Any
             planning_packet(rc.entry, rc.facts, rc.investigation, rc.dispositions, loaded.manifest),
             config=rc.config, facts=rc.facts, ledger=rc.ledger, store=rc.store,
             context=rc.context,
-            call_schema=planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions),
+            call_schema=call_schema,
             checks=checks, recover=recover,
         )
     except JobError:

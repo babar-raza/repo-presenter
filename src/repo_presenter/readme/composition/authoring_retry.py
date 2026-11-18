@@ -61,12 +61,14 @@ from repo_presenter.readme.composition.authoring import (
     SectionTask,
     authoring_schema,
     citable,
+    preserved_section_text,
     recover_opening_duplicates_preserved,
     restated_command_lines,
     restates_own_title,
     slots_clause,
     value_tokens,
 )
+from repo_presenter.readme.composition.coverage import states_all
 from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
 
 _SLOT_SET_ERROR = "units must fill exactly these slots once each"
@@ -692,6 +694,91 @@ def recover_value_sentences(
     return output if changed else None
 
 
+#: The rule id a terminal-safe fallback (BL-220, R46) writes into the repair notes beside the call
+#: store (``.repaired-<attempt>.json``): R14, every deviation recorded with a rule id and evidence.
+TERMINAL_SAFE_RULE = "BL-220"
+
+
+def _fact_true_opening_unit(
+    unit: dict[str, Any], *, facts: FactsDocument, name: str
+) -> dict[str, Any] | None:
+    """The one sentence the format facts state about the product ("<name> reads A and writes B
+    files.", the words ``renderer._scope_statement`` prints) as an opening unit citing those facts,
+    or ``None`` when the facts hold no format."""
+    from repo_presenter.readme.composition.renderer import format_name
+
+    directions: dict[str, list[str]] = {"input": [], "output": []}
+    cited: list[str] = []
+    for fact in facts.by_kind("format"):
+        if fact.polarity != "SUPPORTED":
+            continue
+        direction = fact.id.split(":", 1)[-1].split(".", 1)[0]
+        label = format_name(fact.value)
+        if direction in directions:
+            cited.append(fact.id)
+            if label not in directions[direction]:
+                directions[direction].append(label)
+    reads, writes = directions["input"], directions["output"]
+
+    def listed(items: list[str]) -> str:
+        return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
+
+    if reads and writes:
+        text = f"{name} reads {listed(reads)} files and writes {listed(writes)} files."
+    elif reads:
+        text = f"{name} reads {listed(reads)} files."
+    elif writes:
+        text = f"{name} writes {listed(writes)} files."
+    else:
+        return None
+    return {**unit, "text": text, "fact_ids": cited}
+
+
+def recover_restated_opening(
+    output: dict[str, Any],
+    *,
+    task: SectionTask,
+    facts: FactsDocument,
+    dispositions: Mapping[str, Any],
+    name: str,
+) -> dict[str, Any] | None:
+    """Terminal-safe floor for an opening that, after the trim of ``recover_opening_output``, still
+    only restates the inherited paragraph the renderer preserves verbatim beside it (BL-220;
+    hosted Font Python run 44297210403): the unit becomes the format-facts sentence
+    (:func:`_fact_true_opening_unit`). The inherited paragraph is kept as it was (R14), the unit
+    is re-validated by ``run_job`` through the real checks, and the replacement is recorded in the
+    repair notes. ``None`` when the opening does not restate it or the facts state no format."""
+    preserved = preserved_section_text(dispositions, facts, "opening")
+    units = output.get("units")
+    if not preserved or not isinstance(units, list):
+        return None
+    notes: list[dict[str, Any]] = []
+    for index, unit in enumerate(units):
+        text = unit.get("text") if isinstance(unit, dict) else None
+        if not isinstance(text, str):
+            continue
+        if not (states_all(preserved, text) or states_all(text, preserved)):
+            continue
+        replaced = _fact_true_opening_unit(unit, facts=facts, name=name)
+        if replaced is None:
+            continue
+        units[index] = replaced
+        notes.append(
+            {
+                "fallback": "opening_fact_true_sentence",
+                "rule": TERMINAL_SAFE_RULE,
+                "slot": str(unit.get("slot")),
+                "rejected_text": text,
+                "rejection": "restates the inherited paragraph the renderer preserves verbatim",
+                "text": replaced["text"],
+            }
+        )
+    if not notes:
+        return None
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
 def recover_opening_output(
     output: dict[str, Any],
     *,
@@ -702,11 +789,138 @@ def recover_opening_output(
 ) -> dict[str, Any] | None:
     """The one ``recover=`` for the opening task: the preserved-paragraph trim
     (``authoring.recover_opening_duplicates_preserved``), then the no-values deletion
-    (:func:`recover_value_sentences`)."""
+    (:func:`recover_value_sentences`), then, for what still only restates the inherited paragraph,
+    the format-facts floor (:func:`recover_restated_opening`, BL-220)."""
     trimmed = recover_opening_duplicates_preserved(output, dispositions=dispositions, facts=facts)
     current = output if trimmed is None else trimmed
     valued = recover_value_sentences(current, task=task, facts=facts, name=name)
-    return valued if valued is not None else trimmed
+    best = valued if valued is not None else trimmed
+    floored = recover_restated_opening(
+        output if best is None else best,
+        task=task, facts=facts, dispositions=dispositions, name=name,
+    )
+    return floored if floored is not None else best
+
+
+_EDITION_NAME = "Enterprise Edition"
+#: Where a clause may be cut off before the edition name: a comma, semicolon, dash or bracket.
+_CLAUSE_CUT = re.compile(r"\s*(?:[,;(]|\s[\u2014\u2013-]\s)\s*")
+
+
+def _without_edition_name(text: str) -> str | None:
+    """``text`` with no mention of the Enterprise Edition, by deletion only: each sentence that
+    names it goes when another is left; otherwise the sentence is cut back before the clause
+    (comma, semicolon, dash, bracket) that names it, when four or more words stay. ``None`` when
+    nothing honest is left (fail closed), so no word is rewritten and no empty unit is shipped."""
+    if _EDITION_NAME not in text:
+        return None
+    kept = _without_sentences_naming(text, [_EDITION_NAME])
+    if kept is not None:
+        return kept
+    sentence = text.strip()
+    head = sentence[: sentence.find(_EDITION_NAME)]
+    for match in reversed(list(_CLAUSE_CUT.finditer(head))):
+        stem = head[: match.start()].rstrip()
+        if len(stem.split()) >= 4:
+            return stem if stem.endswith((".", "!", "?")) else stem + "."
+    return None
+
+
+def recover_edition_name(output: dict[str, Any], *, task: SectionTask) -> dict[str, Any] | None:
+    """Terminal-safe correction for the enterprise-relationship unit that still names the
+    Enterprise Edition after every ask (BL-220; hosted Cells C++ run 44291563956): the shell's
+    closing sentence names it once, so the sentence or clause that names it is deleted
+    (:func:`_without_edition_name`) and the rest is kept as written. Recorded in the repair notes;
+    ``run_job`` re-validates. ``None`` when nothing honest remains."""
+    if task.section_id != "enterprise_relationship":
+        return None
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    notes: list[dict[str, Any]] = []
+    for unit in units:
+        if not isinstance(unit, dict) or not isinstance(unit.get("text"), str):
+            continue
+        kept = _without_edition_name(unit["text"])
+        if kept is not None:
+            notes.append(
+                {
+                    "fallback": "edition_name_deleted",
+                    "rule": TERMINAL_SAFE_RULE,
+                    "slot": str(unit.get("slot")),
+                    "rejected_text": unit["text"],
+                    "text": kept,
+                }
+            )
+            unit["text"] = kept
+    if not notes:
+        return None
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
+def recover_failing_capabilities(
+    output: dict[str, Any],
+    *,
+    task: SectionTask,
+    facts: FactsDocument,
+    checks: Callable[[dict[str, Any]], Sequence[str]],
+) -> dict[str, Any] | None:
+    """Terminal-safe floor for a key-capability unit that still fails its checks after every ask
+    and every deletion (BL-170's residual; hosted PDF .NET run 43683719616, PDF C++ 43664910650):
+    the unit is replaced by the fact-true sentence of a public type its own slot cites
+    (:func:`fact_true_type_sentence`, the words the API-row fallback prints), the way R43(4) treats
+    an API row. Only when every rejection line belongs to a ``capability:`` slot, the slot cites no
+    inherited unit the section must carry (R14: that substance would lose its carrier), and the
+    slot cites such a type; otherwise ``None`` and the job fails as before, never hiding another
+    defect. ``run_job`` re-validates the result through the real checks."""
+    if task.section_id != "key_capabilities":
+        return None
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    rejection = list(checks(copy.deepcopy(output)))
+    if not rejection:
+        return None
+    failing: set[str] = set()
+    for error in rejection:
+        owned = _slots_of(task, error)
+        if owned is None or not owned[0].startswith("capability:"):
+            return None
+        failing.add(owned[0])
+    symbols = {
+        fact.id
+        for fact in facts.facts
+        if fact.polarity == "SUPPORTED" and (fact.attributes or {}).get("symbol_kind")
+    }
+    notes: list[dict[str, Any]] = []
+    for unit in units:
+        slot = str(unit.get("slot")) if isinstance(unit, dict) else ""
+        if slot not in failing:
+            continue
+        cited = [str(i) for i in unit.get("fact_ids") or []]
+        if any(i in task.must_carry for i in cited):
+            return None
+        symbol = next((i for i in sorted({*cited, *task.slot_facts.get(slot, ())}) if i in symbols), None)
+        if symbol is None:
+            return None
+        text = fact_true_type_sentence(symbol, facts)
+        notes.append(
+            {
+                "fallback": "capability_fact_true_sentence",
+                "rule": TERMINAL_SAFE_RULE,
+                "slot": slot,
+                "symbol_fact_id": symbol,
+                "rejected_text": str(unit.get("text", "")),
+                "text": text,
+            }
+        )
+        unit["text"] = text
+        unit["fact_ids"] = [symbol]
+    if not notes:
+        return None
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
 
 
 def recover_authoring_output(
@@ -729,10 +943,17 @@ def recover_authoring_output(
         output if restated is None else restated, task=task, facts=facts
     )
     recovered = withdrawn if withdrawn is not None else restated
+    edition = recover_edition_name(output if recovered is None else recovered, task=task)
+    recovered = edition if edition is not None else recovered
     if checks is not None:
         fallen = recover_failing_api_rows(
             output if recovered is None else recovered, task=task, facts=facts, checks=checks
         )
         if fallen is not None:
             return fallen
+        floored = recover_failing_capabilities(
+            output if recovered is None else recovered, task=task, facts=facts, checks=checks
+        )
+        if floored is not None:
+            return floored
     return recovered
