@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-18T17:56:11.210911+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44349034180",
     "acquired_at": "2026-11-18T16:37:56.623532+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 2
   },
-  "state_version": 85,
+  "state_version": 86,
   "recent_trigger_dedup_keys": {
     "run:41147002918:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "56267f90eb494405ba4c90f0c676ddb5",
     "run:41237173263:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "d5d729d6e59a4873bab302473952eea3"
