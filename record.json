@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member)",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-18T12:28:31.293999+00:00",
+    "occurred_at": "2026-11-18T16:53:07.987985+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 43,
+  "state_version": 44,
   "recent_trigger_dedup_keys": {
     "run:41133521004:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "d87fa8e49fcb4e54a1dced96c2933b26",
     "run:41236496887:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "f0e03721a98e4dc49dce5ae223574f3a",
