@@ -7016,3 +7016,18 @@ the seeder still trusts unattested record JSON (BL-194).
 
 Backlog: BL-189, BL-194.
 
+## 2026-11-18: Provider budgets measure usage and never block (R45)
+
+The owner ruled that LLM usage has no real limitation: every limit and budget exists to measure usage, not to
+block work, and the budget may be refreshed to any value and recorded uniformly. Implemented as the smallest
+change to the existing budget component (R27): a top-level `enforcement: "measure"` field in the budget document.
+In that mode `check_budget`, `ensure_open_batch`, `reserve` and `reserve_audit` never refuse for a cap, a batch,
+the programme envelope, the rolling window or an old committed `stop` entry; spend is still recorded and each
+run still receives a p90-sized allowance (its measurement and call-ceiling input). A fired rolling window or an
+overrun envelope is recorded once per batch as a `stop_notice` entry and `budget status` prints `NOTICE:` lines
+(never `STOPPED:`), the rolling notice naming cost per seal over the last 12 versus the previous 12 so the
+supervisor classifies the failures (R36). A missing or unparseable budget file and the hosted reservation
+requirement still raise (a mis-wired deployment stays visible); the per-process `Ledger(call_budget=...)`
+runaway guard is untouched. Without the field every behaviour is unchanged.
+
+Backlog: BL-200.

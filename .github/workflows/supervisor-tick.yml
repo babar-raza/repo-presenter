@@ -73,6 +73,7 @@ jobs:
             echo
             # BL-100 (2026-11-14): the engine sat STOPPED for 5h+ with nothing reporting it. The budget's
             # folded view comes right after the delivery numbers, and STOPPED fails the tick loudly.
+            # R45 (2026-11-18): under `enforcement: measure` status prints NOTICE lines, never STOPPED.
             echo "### Budget"
             echo '```'
             set +e

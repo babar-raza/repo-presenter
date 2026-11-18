@@ -126,6 +126,16 @@ def _open_batch(document: dict[str, Any]) -> tuple[int, dict[str, Any]] | None:
     return index, batch
 
 
+ENFORCEMENT_MEASURE = "measure"
+
+
+def measure_mode(document: Any) -> bool:
+    """R45 (owner, 2026-11-18): ``"enforcement": "measure"`` makes every cap, batch, envelope and stop
+    rule a MEASUREMENT: usage is recorded and reported, nothing is refused. Absent or any other value
+    keeps the enforcing behaviour unchanged."""
+    return isinstance(document, dict) and document.get("enforcement") == ENFORCEMENT_MEASURE
+
+
 def _hosted() -> bool:
     """True on a GitHub Actions runner (the hosted loop, R37)."""
     return os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
@@ -154,6 +164,18 @@ def check_budget(
     if inference_class is not InferenceClass.PRODUCT:
         return
     document = _load_document(budget_path)
+    if measure_mode(document):
+        # R45: a cap never refuses a product call; spend is still recorded by record_spend. A hosted
+        # runner must still hold a ledger reservation (a mis-wired deployment stays visible).
+        batches = document.get("batches")
+        last = batches[-1] if isinstance(batches, list) and batches else None
+        if _hosted() and not (isinstance(last, dict) and last.get("reservation")):
+            raise BudgetExceededError(
+                f"provider budget file {budget_path} holds no ledger reservation; a hosted PRODUCT call "
+                "is refused unless its job reserved from the durable provider-spend ledger first "
+                "(python -m repo_presenter.core.llm.budget reserve)"
+            )
+        return
     located = _open_batch(document)
     if located is None:
         raise BudgetExceededError(
@@ -269,6 +291,10 @@ def record_spend(budget_path: Path, calls: int, tokens: int) -> None:
         spent["calls"] = (_number(spent.get("calls")) or 0.0) + calls
         spent["tokens"] = (_number(spent.get("tokens")) or 0.0) + tokens
         located = _open_batch(document)
+        batches = document.get("batches")
+        if located is None and measure_mode(document) and isinstance(batches, list) and batches \
+                and isinstance(batches[-1], dict):
+            located = (len(batches) - 1, batches[-1])  # R45: past its cap, still measured
         if located is not None:
             index, batch = located
             batch["calls_spent"] = (_number(batch.get("calls_spent")) or 0.0) + calls
@@ -508,10 +534,52 @@ def effective_document(
         "current": _json_cost(window_cost_per_sealed(runs[-window:])) if len(runs) >= window else None,
         "previous": _json_cost(window_cost_per_sealed(runs[-2 * window:-window])) if len(runs) >= 2 * window else None,
     }
+    if measure_mode(document):
+        # R45: a recorded ``stop`` is ignored; notices (``stop_notice`` entries and the live overruns)
+        # are reported and never halt anything.
+        document["notices"] = measure_notices(document, entries, committed)
+        return document
     stops = [e for e in entries if e.get("kind") == "stop" and e.get("batch") == last_id]
     if stops:
         document["stop"] = stops[-1]
     return document
+
+
+def measure_notices(
+    document: dict[str, Any], entries: list[dict[str, Any]], committed: dict[str, Any]
+) -> list[str]:
+    """R45: the human-readable notices of a measure-mode document: the latest recorded ``stop_notice``
+    per cause, the rolling window when it is firing now (R43(1), cost per seal last 12 vs previous 12),
+    and any overrun of the programme envelope or of the last batch's caps."""
+    latest: dict[str, dict[str, Any]] = {}
+    for entry in entries:
+        if entry.get("kind") == "stop_notice":
+            latest[str(entry.get("cause") or "rolling")] = entry
+    notices = [str(e.get("reason")) for e in latest.values()]
+    multiplier = _number(committed.get("stop_rule_cost_per_sealed_candidate_multiplier")) or 2.0
+    live = rolling_stop_reason(entries, multiplier)
+    if live is not None and live not in notices:
+        notices.append(live)
+    calls, tokens = _spent(document)
+    total_calls, total_tokens = _number(document.get("total_calls_cap")), _number(document.get("total_tokens_cap"))
+    over = []
+    if total_calls is not None and calls > total_calls:
+        over.append(f"{calls:g} / {total_calls:g} calls")
+    if total_tokens is not None and tokens > total_tokens:
+        over.append(f"{tokens:g} / {total_tokens:g} tokens")
+    if over:
+        notices.append("programme envelope overrun (measured, not blocked): " + ", ".join(over))
+    batches = document.get("batches") or []
+    if batches and isinstance(batches[-1], dict):
+        last = batches[-1]
+        past = []
+        if _num(last.get("calls_spent")) > _num(last.get("calls_cap")):
+            past.append(f"{_num(last.get('calls_spent')):g} / {_num(last.get('calls_cap')):g} calls")
+        if _num(last.get("tokens_spent")) > _num(last.get("tokens_cap")):
+            past.append(f"{_num(last.get('tokens_spent')):g} / {_num(last.get('tokens_cap')):g} tokens")
+        if past:
+            notices.append(f"batch {last.get('id')} spent past its caps (measured, not blocked): " + ", ".join(past))
+    return notices
 
 
 #: R43(1) (owner, 2026-11-14): the stop rule judges the last this-many settled hosted runs against the
@@ -632,10 +700,13 @@ def per_cell_allowance(document: dict[str, Any], batch: dict[str, Any]) -> tuple
     if isinstance(measured, dict) and _num(measured.get("calls")) >= 1 and _num(measured.get("tokens")) >= 1:
         return _num(measured.get("calls")), _num(measured.get("tokens"))
     size = max(1, int(_num(document.get("batch_size_repositories")) or 6))
-    return (
+    calls, tokens = (
         float(math.ceil(_num(batch.get("calls_cap")) / size)),
         float(math.ceil(_num(batch.get("tokens_cap")) / size)),
     )
+    if measure_mode(document):  # R45: an allowance is a measurement, never zero
+        return max(1.0, calls), max(1.0, tokens)
+    return calls, tokens
 
 
 def _median(values: list[float]) -> float | None:
@@ -658,7 +729,11 @@ def cost_per_sealed(batch: dict[str, Any]) -> float | None:
 
 
 def batch_remaining(document: dict[str, Any], batch: dict[str, Any]) -> tuple[float, float]:
-    """What ``batch`` can still fund, never more than the programme envelope has left."""
+    """What ``batch`` can still fund, never more than the programme envelope has left (R45 measure mode:
+    the batch alone; the envelope is reported, not enforced)."""
+    if measure_mode(document):
+        return (_num(batch.get("calls_cap")) - _num(batch.get("calls_spent")),
+                _num(batch.get("tokens_cap")) - _num(batch.get("tokens_spent")))
     calls, tokens = _spent(document)
     total_calls = _number(document.get("total_calls_cap")) or 0.0
     total_tokens = _number(document.get("total_tokens_cap")) or 0.0
@@ -711,13 +786,14 @@ def ensure_open_batch(
     remaining_calls, remaining_tokens = production_remaining(document, last)
     if remaining_calls >= max(1.0, cell_calls) and remaining_tokens >= 1:
         return ledger, None
+    measure = measure_mode(document)
     if "stop" in document:
         return ledger, (
             f"stop rule fired on batch {last.get('id')} ({document['stop'].get('reason')}); "
             "a batch committed to data/provider_budget.json resumes spending"
         )
     hosted = last.get("hosted") or {}
-    if hosted.get("in_flight"):
+    if hosted.get("in_flight") and not measure:
         return ledger, (
             f"batch {last.get('id')} is spent down; waiting for {hosted['in_flight']} in-flight "
             "run(s) to settle before measuring it and opening the next"
@@ -726,7 +802,10 @@ def ensure_open_batch(
     # R43(1): a rolling window of settled hosted runs, never one batch (a single zero-seal batch of
     # six used to stop the loop for hours, BL-100).
     reason = rolling_stop_reason(ledger_entries(ledger, committed.get("epoch")), multiplier)
-    if reason is not None:
+    if reason is not None and measure:
+        # R45: the unproductive window is diagnosed, never waited on; one notice per batch.
+        _append_notice(ledger, committed, last, "rolling", reason, now)
+    elif reason is not None:
         ledger["entries"].append(
             {"kind": "stop", "epoch": committed.get("epoch"), "batch": last.get("id"),
              "reason": reason, "at": _iso(now)}
@@ -751,10 +830,24 @@ def ensure_open_batch(
             f"{last.get('id')} ({median_calls:g} calls, {median_tokens or 0:g} tokens) x {size}"
         )
     spent_calls, spent_tokens = _spent(document)
-    calls_cap = min(calls_cap, (_number(committed.get("total_calls_cap")) or 0.0) - spent_calls)
-    tokens_cap = min(tokens_cap, (_number(committed.get("total_tokens_cap")) or 0.0) - spent_tokens)
-    if calls_cap < 1 or tokens_cap < 1:
-        return ledger, "the programme envelope (total_calls_cap/total_tokens_cap) is spent"
+    envelope_calls = (_number(committed.get("total_calls_cap")) or 0.0) - spent_calls
+    envelope_tokens = (_number(committed.get("total_tokens_cap")) or 0.0) - spent_tokens
+    if measure:
+        # R45: sized from the measurement; the envelope's remainder is reported, never subtracted.
+        calls_cap, tokens_cap = max(1.0, calls_cap), max(1.0, tokens_cap)
+        if min(calls_cap, envelope_calls) < 1 or min(tokens_cap, envelope_tokens) < 1:
+            _append_notice(
+                ledger, committed, last, "envelope",
+                f"programme envelope overrun (measured, not blocked): {spent_calls:g} calls / "
+                f"{spent_tokens:g} tokens spent against total_calls_cap "
+                f"{_num(committed.get('total_calls_cap')):g} / total_tokens_cap "
+                f"{_num(committed.get('total_tokens_cap')):g}", now,
+            )
+    else:
+        calls_cap = min(calls_cap, envelope_calls)
+        tokens_cap = min(tokens_cap, envelope_tokens)
+        if calls_cap < 1 or tokens_cap < 1:
+            return ledger, "the programme envelope (total_calls_cap/total_tokens_cap) is spent"
     batch_id = f"e{committed.get('epoch')}-{len(batches) + 1:03d}-hosted"
     ledger["entries"].append(
         {"kind": "open_batch", "epoch": committed.get("epoch"), "id": batch_id,
@@ -762,6 +855,21 @@ def ensure_open_batch(
          "basis": basis, "at": _iso(now)}
     )
     return ledger, None
+
+
+def _append_notice(
+    ledger: dict[str, Any], committed: dict[str, Any], batch: dict[str, Any], cause: str, reason: str,
+    now: datetime,
+) -> None:
+    """R45: record a ``stop_notice`` (same fields as ``stop`` plus ``cause``) once per batch and cause."""
+    for entry in ledger_entries(ledger, committed.get("epoch")):
+        if (entry.get("kind") == "stop_notice" and entry.get("batch") == batch.get("id")
+                and entry.get("cause") == cause):
+            return
+    ledger["entries"].append(
+        {"kind": "stop_notice", "epoch": committed.get("epoch"), "batch": batch.get("id"),
+         "cause": cause, "reason": reason, "at": _iso(now)}
+    )
 
 
 def find_entry(ledger: Any, kind: str, entry_id: str) -> dict[str, Any] | None:
@@ -797,6 +905,10 @@ def reserve(
     remaining_calls, remaining_tokens = production_remaining(document, batch)
     calls = float(min(cell_calls * max(1, len(lanes)), remaining_calls))
     tokens = float(min(cell_tokens * max(1, len(lanes)), remaining_tokens))
+    if measure_mode(document):
+        # R45: the allowance is the measurement and the run's call-ceiling input; always granted.
+        calls = max(1.0, float(cell_calls * max(1, len(lanes))))
+        tokens = max(1.0, float(cell_tokens * max(1, len(lanes))))
     if calls < 1 or tokens < 1:
         return ledger, None, f"batch {batch.get('id')} cannot fund another cell"
     entry = {
@@ -858,7 +970,7 @@ def reserve_audit(
     held_calls, held_tokens = audit_reserve_unspent(batch)
     if "stop" in document and batch is batches[-1]:
         remaining_calls, remaining_tokens = min(remaining_calls, held_calls), min(remaining_tokens, held_tokens)
-    if calls > remaining_calls or tokens > remaining_tokens:
+    if (calls > remaining_calls or tokens > remaining_tokens) and not measure_mode(document):
         return ledger, None, (
             f"batch {batch.get('id')} cannot fund the audit of {cases} case(s): it needs {calls:g} calls / "
             f"{tokens:g} tokens ({per_calls:g} / {per_tokens:g} per case) and the durable ledger leaves "
@@ -1302,7 +1414,10 @@ def budget_summary_lines(document: dict[str, Any]) -> list[str]:
             f"stop rule (R43(1)): last {rolling.get('window')} of {rolling.get('runs')} settled runs "
             f"{_shown(rolling.get('current'))}; previous {rolling.get('window')} {_shown(rolling.get('previous'))}"
         )
-    if "stop" in document:
+    if measure_mode(document):
+        lines.insert(0, "enforcement: measure")
+        lines.extend(f"NOTICE: {notice}" for notice in document.get("notices") or [])
+    elif "stop" in document:
         lines.append(f"STOPPED: {document['stop'].get('reason')}")
     return lines
 
