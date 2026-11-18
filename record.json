@@ -56,11 +56,26 @@
    "run_id": "44291554413",
    "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T16:40:17+00:00",
+   "classes": [
+    "BC-14|unresolved|the_readme_calls_code",
+    "BC-14|unresolved|the_readme_claims_dae",
+    "claim_contradiction|authored_unit|member_kind",
+    "claim_contradiction|authored_unit|stub_format"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 10,
+   "outcome": "failure",
+   "run_id": "44349019101",
+   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T11:21:03+00:00",
+  "at": "2026-11-18T16:40:17+00:00",
   "classes": {
    "BC-14|unresolved|the_readme_calls_code": {
     "example": "the README calls `Scene.clear` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
@@ -70,7 +85,7 @@
      "-"
     ],
     "rule": "BC-14",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -94,7 +109,7 @@
      "-"
     ],
     "rule": "BC-14",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -118,7 +133,7 @@
      "api_reference.hub:public_symbol:aspose.threed.scene"
     ],
     "rule": "claim_contradiction",
-    "scope": "647ae956d83d7825eb2e052af4c21c59998f22108512bfb33165c1a220e79626",
+    "scope": "2c715cae57c525595e32be50ab78692a2e2d47a34f68f478d477c9a4825d1cea",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -142,7 +157,7 @@
      "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin"
     ],
     "rule": "claim_contradiction",
-    "scope": "647ae956d83d7825eb2e052af4c21c59998f22108512bfb33165c1a220e79626",
+    "scope": "2c715cae57c525595e32be50ab78692a2e2d47a34f68f478d477c9a4825d1cea",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -158,7 +173,7 @@
     "upstream": "source_stub"
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -320,7 +335,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -336,14 +351,14 @@
     "facts_defects": [],
     "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units.1.text' changed ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.library, Scene.animation_clips, Scene.sub_scenes, Scene.poses, Scene.asset_info, Scene.current_animation_clip, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units[1].text' changed ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.library, Scene.animation_clips, Scene.sub_scenes, Scene.poses, Scene.asset_info, Scene.current_animation_clip, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animatio",
     "section_id": "api_reference",
     "stage": "S6"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
-  "run_id": "44291554413",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44291554413",
+  "run_id": "44349019101",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349019101",
   "schema_version": 1,
   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
