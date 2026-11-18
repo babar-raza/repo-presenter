@@ -2038,11 +2038,11 @@ items:
     type: task
     source: "owner ruling R46 (2026-11-18): Lane R must be universal, robust, reliable, repeatable and proven on the hosted runner across the whole portfolio; idle time is investigation time"
     priority: P0
-    status: open
+    status: done
     implementation_path: "four independent read-only investigations, one per lens (universality, robustness, reliability, repeatability and hosted portfolio proof); findings consolidated in docs/investigations/ and every finding becomes its own backlog item; no per-candidate fixes"
     acceptance: "each lens reports measured evidence from hosted records and reproducible zero-call checks, a ranked list of failure classes, and the smallest existing-component fix per class (R27); each fix is a backlog item naming the property it improves"
-    evidence: ["baseline from the hosted ledger on 2026-11-18: 133 hosted runs, 10 sealed Lane R (7.5%); 4 of 40 cells sealed on their first hosted run; 9 cells ran 3-9 times without sealing"]
-    next_action: "supervisor consolidates the four reports and opens one backlog item per finding"
+    evidence: ["baseline from the hosted ledger on 2026-11-18: 133 hosted runs, 10 sealed Lane R (7.5%); 4 of 40 cells sealed on their first hosted run; 9 cells ran 3-9 times without sealing", "four lens reports and the 40-cell table in docs/investigations/2026-11-18-lane-r-trust/; consolidated in docs/investigations/2026-11-18-lane-r-trust.md; BL-210 to BL-270 opened"]
+    next_action: "none: consolidated in docs/investigations/2026-11-18-lane-r-trust.md; findings are BL-210 to BL-270"
     updated: "2026-11-18"
 
   - id: BL-202
@@ -2067,4 +2067,88 @@ items:
     acceptance: "a pass result records, per cell, the main SHA, run id and verdict (sealed, failed class, held); the repeat pass agreement is computed; the trust bar is stated met or not met"
     evidence: ["baseline from the hosted ledger on 2026-11-18: 133 hosted runs, 10 sealed Lane R (7.5%); 4 of 40 cells sealed on their first hosted run; 9 cells ran 3-9 times without sealing"]
     next_action: "decide the smallest pass design from the BL-201 repeatability findings; first pass after the current cohort settles"
+    updated: "2026-11-18"
+
+  - id: BL-210
+    title: "Register-driven correction before seal: a sentence matching an OPEN register row is omitted (inherited) or replaced by the row's truth text (authored)"
+    type: defect
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P0
+    status: active
+    implementation_path: "the existing BC-18 step and the repair loop (readme/repair/loop.py, readme_findings.py, recertify.py); R14 record per drop"
+    acceptance: "zero-call recertify --all on the 8 failing Lane R seals flips at least 4 to RECERTIFIED with no new failing check and no Lane L change; R10 gate OK"
+    evidence: ["6 of the 8 failing seals fail on BC-18 alone (recertify on main 5bb37e3)"]
+    next_action: "worker started 2026-11-18"
+    updated: "2026-11-18"
+
+  - id: BL-220
+    title: "Terminal-safe authoring and planning: a single failing slot never raises OutputRejectedError for a non-must-carry unit"
+    type: defect
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P0
+    status: active
+    implementation_path: "core/llm/jobs.py recover hooks, readme/composition/authoring.py, authoring_retry.py, planning recovery; must-carry slots fall to inherited text with an R14 record"
+    acceptance: "the stored rejection messages (Cells C++ edition name, PDF Python fact id outside the enum, Font opening restates the inherited paragraph, PDF .NET, PDF C++, Words Java) become tests that pass without a raise; no required slot lost"
+    evidence: ["6 cells end as OutputRejectedError; 22 of 73 failed runs were job errors"]
+    next_action: "worker started 2026-11-18"
+    updated: "2026-11-18"
+
+  - id: BL-230
+    title: "Terminal-safe disposition and placement: an unsatisfiable disposition applies the honest alternative deterministically; links in Scope re-home to Documentation and Resources"
+    type: defect
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P0
+    status: active
+    implementation_path: "readme/reconciliation/dispositions.py, placement and restore (readme/repair/restore_units.py), cascade._settle_s9; make kept-but-not-printable and superseded-but-unstated agree"
+    acceptance: "zero-call replay on the sealed dispositions of the 12 affected cells; unrepairable repairs fall from 54; recertify --all shows no lost seal"
+    evidence: ["12 cells fail BC-05, BC-08, BC-17, live_readme_loss or disposition_coverage; Cells .NET fails section_fit on three links in Scope"]
+    next_action: "worker started 2026-11-18"
+    updated: "2026-11-18"
+
+  - id: BL-240
+    title: "Repair asks the model only when the check cannot compute the answer"
+    type: debt
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P1
+    status: open
+    implementation_path: "readme/repair/loop.py reject_printed_quote and reject_still_failing: apply the named keep action on the first refusal"
+    acceptance: "replay the 10 logged cases where the model answered the same wrong disposition twice"
+    evidence: ["10 of 22 logged unrepairable outcomes"]
+    next_action: "after BL-230"
+    updated: "2026-11-18"
+
+  - id: BL-250
+    title: "A version set cannot under-report a rendering change"
+    type: defect
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P1
+    status: open
+    implementation_path: "a golden-render test that fails when rendered bytes change without a RENDERER_VERSION / component bump; no derived hash, so acceptances are not reset by every edit"
+    acceptance: "recertify readme_changed is false for every sealed-by-current Lane R seal; the test fails on the five known unbumped commits"
+    evidence: ["Imaging .NET: sealed version set equals current, fresh render differs at line 208"]
+    next_action: "design with BL-230"
+    updated: "2026-11-18"
+
+  - id: BL-260
+    title: "Preflight compares the facts that matter: volatile observations and host strings do not reopen extraction"
+    type: defect
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P1
+    status: open
+    implementation_path: "core/preflight.py INPUT_CHANGES and the facts digest; keep volatile data in facts.json"
+    acceptance: "rerunning a sealed cell twice on hosted gives preflight skip or recertify, zero provider calls"
+    evidence: ["68 of 68 sealed-cell preflights on hosted listed facts and toolchains as changed; 0 skips in 119"]
+    next_action: "after BL-210"
+    updated: "2026-11-18"
+
+  - id: BL-270
+    title: "Progress lines and a wall-clock time-box so the 90-minute cancel is a safety net, not the stop"
+    type: debt
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
+    priority: P1
+    status: open
+    implementation_path: "readme/cascade run_cascade and present.py: stage and per-call elapsed lines; stop repair rounds near 60 minutes and apply the degrade step"
+    acceptance: "no cancelled hosted run without a last-stage line; PDF cells end with a verdict, not a cancel"
+    evidence: ["5 PDF runs cancelled at the 90-minute timeout, 25 to 30 minute settle rounds"]
+    next_action: "after BL-230"
     updated: "2026-11-18"
