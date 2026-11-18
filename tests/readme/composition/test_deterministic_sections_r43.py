@@ -124,7 +124,7 @@ def test_link_descriptions_come_from_the_link_fact_when_no_maintainer_text_descr
         "Installation, walkthroughs, and feature guides"
     )
     assert link_target_description(link("https://kb.aspose.org/widget/python/")).startswith("Task-focused")
-    assert link_target_description(link("examples/")) == "The `examples` directory in this repository."
+    assert link_target_description(link("examples/")) == "The `examples/` directory in this repository."
     assert link_target_description(link("docs/releasing.md")) == "`docs/releasing.md` in this repository."
     assert link_target_description(link("https://pypi.org/project/x/")) == "On pypi.org."
     assert link_target_description(link("#additional-examples")) == "A section of this README."

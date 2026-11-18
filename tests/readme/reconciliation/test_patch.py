@@ -283,16 +283,19 @@ def test_the_real_first_reply_is_refused_for_the_destination_it_names() -> None:
     ), errors
 
 
-def test_the_real_second_reply_is_refused_because_it_defers_the_unit_again() -> None:
-    """Attempt 2 handed the same deferral back with a longer rationale. Its ledger was the reason it
-    was refused; the defect it left standing is the reason it cannot be accepted."""
+def test_the_real_second_reply_that_defers_the_unit_again_is_kept_deterministically() -> None:
+    """Attempt 2 handed the same deferral back with a longer rationale. BL-230: the check's own
+    message names the keep action, so it is applied on that refusal instead of asking a third time;
+    the unit is no longer deferred and no defect stands."""
     scope = _scope()
     assert scope is not None
-    errors, _ = _judge(REPAIR["reply_2"], scope)
-    assert [e for e in errors if "still DEFER_UNRESOLVED" in e], errors
-    assert not [
-        e for e in errors if "claims" in e and "changed" in e
-    ]  # no ledger complaint
+    errors, output = _judge(REPAIR["reply_2"], scope)
+    assert not [e for e in errors if "still DEFER_UNRESOLVED" in e], errors
+    entry = next(
+        e for e in output["revised_output"]["dispositions"] if e["unit_id"] == KOTLIN
+    )
+    assert entry["disposition"] in {"VERIFIED_PRESERVE", "PRESERVE_ATTRIBUTED"}
+    assert entry["destination_section"] == "development_testing"
 
 
 def _corrected(destination: str = "development_testing") -> dict[str, Any]:
@@ -375,8 +378,12 @@ def test_a_patch_that_changes_nothing_is_not_a_repair() -> None:
         },
         "changes": REPAIR["reply_1"]["changes"][:1],
     }
-    errors, _ = _judge(same, scope)
-    assert [e for e in errors if "still DEFER_UNRESOLVED" in e]
+    errors, output = _judge(same, scope)
+    # BL-230: restating the deferral is not accepted as a repair, and not asked again either: the
+    # keep the check names is applied, so the unit leaves the deferral.
+    assert not [e for e in errors if "still DEFER_UNRESOLVED" in e]
+    entry = next(e for e in output["revised_output"]["dispositions"] if e["unit_id"] == KOTLIN)
+    assert entry["disposition"] != "DEFER_UNRESOLVED"
     assert unit_changes(stored, stored) == []
 
 

@@ -27,7 +27,11 @@ from typing import Any
 
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.readme.composition.placement import ATTRIBUTED, PLACED, RESTORED_RATIONALE
-from repo_presenter.readme.reconciliation.destinations import nearest_holdable
+from repo_presenter.readme.reconciliation.destinations import (
+    GENERATED_ONLY_DESTINATIONS,
+    nearest_holdable,
+    prints_unit,
+)
 from repo_presenter.readme.validation.links import unsafe_html_failures
 from repo_presenter.readme.validation.surface_claims import absent_type_rows, kept_table_form
 
@@ -38,6 +42,7 @@ __all__ = [
     "owed_citations",
     "cite_owed_units",
     "vacated_sections",
+    "fit_misfiled_units",
 ]
 
 _UNIT = re.compile(r"inherited_unit:\d+(?:\.\d+)*\.[a-z_]+")
@@ -50,7 +55,7 @@ _SHELL_RENDERED = frozenset({"heading", "badge_row", "html_block"})
 #: rendered (BC-05, measured on Cells Go: a kept list of the same five documentation links the
 #: generated bullets already cover). Unlike ``api_reference`` (which does print a table), no unit
 #: kind ever prints here.
-_GENERATED_ONLY_DESTINATIONS = frozenset({"documentation_resources"})
+_GENERATED_ONLY_DESTINATIONS = GENERATED_ONLY_DESTINATIONS  # one source of truth (BL-230)
 _DOCUMENTATION = "documentation_resources"
 
 
@@ -326,7 +331,11 @@ def restore_lost_units(
         links_home = _link_list_home(unit_id, unit.value, facts, holdable_set)
         misrendered = (
             current_destination in _GENERATED_ONLY_DESTINATIONS and not links_home
-        ) or (current_destination == "api_reference" and unit_id.rsplit(".", 1)[-1] != "table")
+        ) or (
+            current_destination in holdable_set
+            and not prints_unit(str(current_destination), unit_id.rsplit(".", 1)[-1])
+            and not links_home
+        )
         if placed and not misrendered:
             # Already kept verbatim, and its destination is one that does render a placed unit:
             # nothing to change (the common case).
@@ -351,6 +360,14 @@ def restore_lost_units(
             # measured on Cells Go, a kept list already VERIFIED_MOVE'd there.
             destination = nearest_holdable(
                 unit_id, attributes.get("section"), holdable_set - _GENERATED_ONLY_DESTINATIONS
+            )
+        elif not links_home and destination is not None and not prints_unit(
+            str(destination), unit_id.rsplit(".", 1)[-1]
+        ):
+            # The same source of truth (``destinations.prints_unit``) for any other section that
+            # cannot print this kind: keep it in the nearest section that can (BL-230).
+            destination = nearest_holdable(
+                unit_id, attributes.get("section"), holdable_set - {str(destination)}
             )
         if destination is None:
             continue
@@ -508,3 +525,40 @@ def vacated_sections(changes: Sequence[Mapping[str, str]]) -> dict[str, set[str]
         if old_section and old_section != new_section:
             vacated.setdefault(old_section, set()).add(str(change["unit_id"]))
     return vacated
+
+
+def fit_misfiled_units(
+    dispositions: Mapping[str, Any], facts: FactsDocument, included: Collection[str] | None = None
+) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    """``(new dispositions, changes)``: the section-fit folds S4 applies (``dispositions.
+    fit_sealed_sections``: a resource-links list out of Scope and Limitations or Key Capabilities,
+    a license statement to the License section), applied zero-call to a settled candidate whose
+    BC-05 section fit still names Scope and Limitations (BL-230). The kept text moves, never drops:
+    a link list no link fact carries is kept as written in the nearest section that prints a list.
+    A move into a section the sealed plan omits is not made. Each change is ``{unit_id, was, now}``
+    like ``restore_lost_units``', so the caller records it (R14)."""
+    from repo_presenter.readme.reconciliation.dispositions import fit_sealed_sections
+
+    output = copy.deepcopy(dict(dispositions))
+    before = {
+        str(e.get("unit_id")): (e.get("disposition"), e.get("destination_section"))
+        for e in output.get("dispositions", [])
+    }
+    fit_sealed_sections(output, facts)
+    changes: list[dict[str, str]] = []
+    for entry in output.get("dispositions", []):
+        unit_id = str(entry.get("unit_id"))
+        was = before.get(unit_id)
+        now = (entry.get("disposition"), entry.get("destination_section"))
+        if was is None or was == now:
+            continue
+        if included is not None and now[1] not in set(included):
+            for source in dispositions.get("dispositions", []):
+                if str(source.get("unit_id")) == unit_id:
+                    entry.clear()
+                    entry.update(copy.deepcopy(dict(source)))
+            continue
+        changes.append(
+            {"unit_id": unit_id, "was": f"{was[0]} -> {was[1]}", "now": f"{now[0]} -> {now[1]}"}
+        )
+    return output, changes

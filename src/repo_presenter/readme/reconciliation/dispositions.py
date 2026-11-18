@@ -100,6 +100,7 @@ from repo_presenter.readme.composition.placement import (
     renderer_fact_ids,
     resolve_intra_document_anchors,
 )
+from repo_presenter.readme.composition.list_coverage import resource_link_items
 from repo_presenter.readme.composition.planning import (
     link_list_targets,
     section_conditions,
@@ -127,6 +128,7 @@ from repo_presenter.readme.reconciliation.destinations import (
     disposition_variants,
     holdable_sections,
     nearest_holdable,
+    prints_unit,
     rehomed,
 )
 from repo_presenter.readme.validation.claims import install_identity_findings
@@ -1180,6 +1182,11 @@ def _rehome_unprintable_kind_units(
 
 RESOURCE_FIT_RATIONALE = "Kept in documentation_resources: a list of resource links, not {old}. "
 LICENSE_FIT_RATIONALE = "Superseded by the License section, which states the license from facts. "
+#: BL-230: a kept list with resource-link items that Documentation and Resources cannot print as
+#: its own link lines (one of its links is no plan-assignable link fact) keeps its maintainer text
+#: as written in the nearest section that prints a list, never in Scope and Limitations.
+RESOURCE_KEPT_RATIONALE = "Kept as written in {home}: resource links, not {old}; no link fact carries them. "
+_RESOURCE_KEPT_HOMES = ("development_testing", "additional_examples", "quick_start")
 #: The sections a resource-links list or a license statement is never material of (BL-004): Scope
 #: and Limitations holds only what the product does not do; Key Capabilities only what it does.
 _NOT_RESOURCES = frozenset({"scope_limitations", "key_capabilities"})
@@ -1221,6 +1228,19 @@ def _fit_resource_and_license_units(
             reason = str(entry.get("rationale") or "").strip()
             entry["destination_section"] = "documentation_resources"
             entry["rationale"] = (lead + reason)[:_RATIONALE_LIMIT].strip()
+            continue
+        if kind == "list" and old == "scope_limitations" and resource_link_items(unit.value):
+            # BL-230 (a link list Documentation and Resources cannot print; only Scope and Limitations,
+            # where BC-05 section fit refuses it, so no passing seal changes): keep the maintainer
+            # text, move it to the nearest printable section, never leave it where BC-05 refuses it.
+            home = next(
+                (s for s in _RESOURCE_KEPT_HOMES if s in holdable and prints_unit(s, kind)), None
+            )
+            if home is not None:
+                lead = RESOURCE_KEPT_RATIONALE.format(home=home, old=old)
+                reason = str(entry.get("rationale") or "").strip()
+                entry["destination_section"] = home
+                entry["rationale"] = (lead + reason)[:_RATIONALE_LIMIT].strip()
             continue
         if kind != "paragraph" or not license_ids:
             continue
@@ -2223,6 +2243,7 @@ def _fold_register_kept_units(
     it as overlap. Without a plan (S4, before planning) the exclusion stands."""
     from repo_presenter.readme.validation.must_correct import (
         omission_holds,
+        prints_quote,
         open_finding_citations,
     )
 
@@ -2232,7 +2253,9 @@ def _fold_register_kept_units(
         for entry in output.get("dispositions", [])
         if entry.get("disposition") in _KEPT_AS_WRITTEN
         # An example block prints only through the plan: _fold_register_omitted_units decides it.
-        and str(entry.get("unit_id", "")) not in examples
+        # (BL-210: only a SUPPORTED example is decided there; an UNRESOLVED example's block,
+        # Words .NET 043.code_block, prints through its unit like any kept block.)
+        and examples.get(str(entry.get("unit_id", "")), ("", ""))[0] != "SUPPORTED"
         # Scope and Limitations re-authors such claims from the facts (the authoring packet now
         # carries the register row, BL-087): a withheld kept list there is covered by the plan's
         # own limitations and dropped as overlap, so it is left to BC-18 and the repair.
@@ -2255,22 +2278,29 @@ def _fold_register_kept_units(
         # A register row quotes the README as printed: a kept paragraph prints the facts' type
         # count, not the maintainers' stale one (``kept_unit_form``; Cells C++ ``041.paragraph``).
         printed = kept_unit_form(unit_id, text, facts) if unit_id.endswith(".paragraph") else text
-        squashed = " ".join(text.split())
-        printed_squashed = " ".join(printed.split())
         cited = [str(fid) for fid in entry.get("fact_ids") or []]
         ids = [
             cid
             for cid, row in rows.items()
-            if cid not in cited
-            and (
-                " ".join(row.quote.split()) in squashed
-                or " ".join(row.quote.split()) in printed_squashed
-            )
+            if cid not in cited and (prints_quote(text, row.quote) or prints_quote(printed, row.quote))
         ]
         if not ids:
             continue
         quotes = [rows[c].quote for c in (*ids, *(c for c in cited if c in rows))]
         if not (omission_holds(unit_id, text, quotes) or omission_holds(unit_id, printed, quotes)):
+            # BL-210: nothing of the unit is left once the false text is withheld (the unit IS the
+            # false sentence, row, item or line): it is omitted citing the register row, the same
+            # recorded R14 decision as ``_fold_register_omitted_units``, instead of being left for
+            # a repair that can only refuse (3D .NET inherited_unit:028.code_block, four hosted
+            # runs; Words .NET 009.list / 013.paragraph; PDF Java 117.001.list).
+            from repo_presenter.readme.validation.must_correct import REGISTER_OMITTED_RATIONALE
+
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = sorted(ids)
+            entry["rationale"] = (
+                REGISTER_OMITTED_RATIONALE + "the whole unit is the false text (BL-210)."
+            )[:_RATIONALE_LIMIT]
             continue
         entry["fact_ids"] = [*cited, *ids]
 
@@ -2315,7 +2345,8 @@ def _fold_register_omitted_units(output: dict[str, Any], facts: FactsDocument) -
         open_finding_citations,
     )
 
-    refuted = register_refuted_example_ids(facts)
+    # BL-210: an UNRESOLVED example's block (reprinted verbatim by retained_examples) is judged too.
+    refuted = register_refuted_example_ids(facts, ("SUPPORTED", "UNRESOLVED"))
     if not refuted:
         return
     rows = open_finding_citations(facts.repository)
@@ -2330,7 +2361,7 @@ def _fold_register_omitted_units(output: dict[str, Any], facts: FactsDocument) -
     }
     for unit_id, (polarity, example_id) in sorted(_example_status(facts).items()):
         entry = by_unit.get(unit_id)
-        if entry is None or polarity != "SUPPORTED" or example_id not in refuted:
+        if entry is None or polarity not in ("SUPPORTED", "UNRESOLVED") or example_id not in refuted:
             continue
         if entry.get("disposition") in _WITHHELD:
             continue

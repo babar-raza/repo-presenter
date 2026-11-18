@@ -24,7 +24,7 @@ import copy
 import hashlib
 import json
 import re
-from collections.abc import Callable, Iterable, Mapping, Sequence
+from collections.abc import Callable, Collection, Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 from urllib.parse import unquote
@@ -105,7 +105,9 @@ def _supported(facts: FactsDocument, kind: str) -> list[str]:
     return [fact.id for fact in facts.by_kind(kind) if fact.polarity == "SUPPORTED"]  # type: ignore[arg-type]
 
 
-def register_refuted_example_ids(facts: FactsDocument) -> frozenset[str]:
+def register_refuted_example_ids(
+    facts: FactsDocument, polarities: tuple[str, ...] = ("SUPPORTED",)
+) -> frozenset[str]:
     """The SUPPORTED example facts whose code prints a line a findings-register row of this
     repository confirms false (``readme_findings.regression_rows``, Lane R: OPEN or RESOLVED, never
     refuted), read from BC-18's own default register so the plan and the check agree.
@@ -130,7 +132,7 @@ def register_refuted_example_ids(facts: FactsDocument) -> frozenset[str]:
     return frozenset(
         fact.id
         for fact in facts.by_kind("example")
-        if fact.polarity == "SUPPORTED"
+        if fact.polarity in polarities
         and any(quote in " ".join(line.split()) for line in fact.value.splitlines() for quote in quotes)
     )
 
@@ -611,6 +613,12 @@ def _apply_links(output: dict[str, Any], missing: list[Any]) -> None:
 _CORRECTED_LIST_DISPOSITIONS = frozenset({"CORRECT_WITH_EVIDENCE"})
 
 
+def entry_is_register_omission(entry: dict[str, Any]) -> bool:
+    from repo_presenter.readme.validation.must_correct import is_register_omission
+
+    return is_register_omission(entry)
+
+
 def _kept_list_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> dict[str, str]:
@@ -713,11 +721,49 @@ def _missing_kept_list_links(
     output: dict[str, Any], facts: FactsDocument, dispositions: dict[str, Any] | None
 ) -> list[dict[str, str]]:
     planned = {str(link.get("link_fact_id")) for link in output.get("links", [])}
-    return [
+    missing = [
         {"link_fact_id": fact_id, "section_id": section}
         for fact_id, section in _kept_list_links(output, facts, dispositions).items()
         if fact_id not in planned
     ]
+    return [*missing, *_register_omitted_links(output, facts, dispositions, missing)]
+
+
+def _register_omitted_links(
+    output: dict[str, Any],
+    facts: FactsDocument,
+    dispositions: dict[str, Any] | None,
+    already: list[dict[str, str]],
+) -> list[dict[str, str]]:
+    """BL-210: a unit omitted on the findings register's evidence takes only its false text with
+    it. A document link it carried (TS ``027.paragraph``: ``examples/``) is printed as a
+    Documentation and Resources line unless that section already prints it, wherever else the plan
+    carries it (BC-17 loses the link otherwise)."""
+    if not dispositions:
+        return []
+    texts = {fact.id: fact.value for fact in facts.by_kind("inherited_unit")}
+    by_value: dict[str, str] = {}
+    for fact in sorted(facts.by_kind("link_target"), key=lambda f: f.id):
+        if (
+            fact.polarity == "SUPPORTED"
+            and fact.id not in _SHELL_OWNED_LINKS
+            and not fact.value.startswith("#")
+        ):
+            by_value.setdefault(fact.value, fact.id)
+    here = {
+        str(link.get("link_fact_id"))
+        for link in output.get("links", [])
+        if link.get("section_id") == "documentation_resources"
+    } | {link["link_fact_id"] for link in already}
+    found: dict[str, str] = {}
+    for entry in dispositions.get("dispositions", []):
+        if not entry_is_register_omission(entry):
+            continue
+        for destination in item_links(texts.get(str(entry.get("unit_id", "")), "")):
+            fact_id = by_value.get(destination)
+            if fact_id and fact_id not in here:
+                found.setdefault(fact_id, "documentation_resources")
+    return [{"link_fact_id": i, "section_id": s} for i, s in found.items()]
 
 
 #: Public name of the link backstop for zero-call re-certification (``recertify.current_plan``).
@@ -1194,14 +1240,80 @@ def recover_duplicate_link_assignments(output: dict[str, Any]) -> dict[str, Any]
     return {**output, "links": kept}
 
 
-def recover_planning_output(output: dict[str, Any], facts: FactsDocument) -> dict[str, Any] | None:
-    """The single ``recover=`` combining both deterministic last resorts, in order."""
-    deduplicated = recover_duplicate_link_assignments(output)
-    base = output if deduplicated is None else deduplicated
+#: The key a recovery leaves its decision under, popped by ``run_job`` into the repair record
+#: (``authoring_retry.RECOVERY_NOTES_KEY``; repeated here so planning imports nothing new).
+_RECOVERY_NOTES_KEY = "_recovery_notes"
+
+
+def recover_uncitable_fact_ids(
+    output: dict[str, Any], citable: Collection[str]
+) -> dict[str, Any] | None:
+    """Terminal-safe correction for a plan that cites a fact id outside the offered enum after
+    every ask (BL-220, R46 robust; hosted PDF Python run 43691416767: ``$.api_hubs[8].fact_ids[9]``
+    'public_symbol:aspose_pdf.document.save_as_image' is not one of the offered ids): each id
+    outside ``citable`` is deleted from its array, nothing else touched. An array left with no id
+    falls back to its hub's own symbol when that is citable; any other emptied ``fact_ids`` array
+    (a capability with no evidence) fails closed. Each deletion is recorded (R14) with the rule id.
+    ``None`` when no id is outside the enum or nothing honest remains."""
+    allowed = set(citable)
+    if not allowed:
+        return None
+    notes: list[dict[str, Any]] = []
+    for property_name, field in _FACT_ID_ARRAYS:
+        items = output.get(property_name)
+        if not isinstance(items, list):
+            continue
+        for index, item in enumerate(items):
+            ids = item.get(field) if isinstance(item, dict) else None
+            if not isinstance(ids, list):
+                continue
+            kept = [i for i in ids if not isinstance(i, str) or i in allowed]
+            if len(kept) == len(ids):
+                continue
+            dropped = [i for i in ids if i not in kept]
+            if not kept and field == "fact_ids":
+                symbol = item.get("symbol_fact_id")
+                if property_name == "api_hubs" and symbol in allowed:
+                    kept = [symbol]
+                else:
+                    return None
+            item[field] = kept
+            notes.append(
+                {
+                    "fallback": "uncitable_fact_id_dropped",
+                    "rule": "BL-220",
+                    "path": f"$.{property_name}[{index}].{field}",
+                    "dropped": dropped,
+                }
+            )
+    if not notes:
+        return None
+    output[_RECOVERY_NOTES_KEY] = [*output.get(_RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
+def recover_planning_output(
+    output: dict[str, Any], facts: FactsDocument, citable: Collection[str] | None = None
+) -> dict[str, Any] | None:
+    """The single ``recover=`` combining the deterministic last resorts, in order: the offered-id
+    enum first (``citable``, the call schema's own enum), then link de-duplication and capability
+    titles."""
+    pinned = recover_uncitable_fact_ids(output, citable) if citable else None
+    current = output if pinned is None else pinned
+    deduplicated = recover_duplicate_link_assignments(current)
+    base = current if deduplicated is None else deduplicated
     retitled = recover_uncited_capability_titles(base, facts)
     if retitled is not None:
         return retitled
-    return deduplicated
+    return deduplicated if deduplicated is not None else pinned
+
+
+def citable_from_schema(call_schema: Mapping[str, Any] | None) -> list[str]:
+    """The fact ids the planning call schema offers (its ``citable_fact_id`` enum); empty when the
+    schema pins none."""
+    defs = (call_schema or {}).get("$defs", {})
+    enum = defs.get("citable_fact_id", {}).get("enum", [])
+    return [i for i in enum if isinstance(i, str)]
 
 
 def recover_visible_line_overage(

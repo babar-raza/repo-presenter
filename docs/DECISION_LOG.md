@@ -7066,3 +7066,74 @@ per the owner's cadence. Three workers start on BL-210, BL-220 and BL-230.
 
 Backlog: BL-201, BL-202, BL-203, BL-210, BL-220, BL-230, BL-240, BL-250, BL-260, BL-270.
 
+
+## 2026-11-18: The BC-18 correction is applied before the seal, not left to a repair (BL-210, R46: reliable, repeatable)
+
+**Evidence.** Zero-call `recertify --all` on main `5392781`: 8 of 19 Lane R seals fail, 5 of them on BC-18 alone.
+The register rows were added after those seals; nothing corrected the text. The repair loop refused when the false
+text was the whole unit (3D .NET `inherited_unit:028.code_block`, four hosted runs), the kept-unit fold skipped
+exactly those units, and several false claims were not inherited units at all: authored capability and opening
+sentences, a sealed plan's Quick Start example, an UNRESOLVED example reprinted by `retained_examples`, a quote
+whose printed text has its links flattened, and a fact-derived Dependencies sentence.
+
+**Decision.** Inside the existing BC-18 step and folds, withhold what a row confirms false and record each decision
+(R14, rule `BL-210`, citing the register row): (1) an inherited unit that is only false text is omitted citing the
+row (`OMIT_UNSUPPORTED` with the register rationale every reader already accepts), and any document link it carried
+is printed in Documentation and Resources; (2) an authored sentence is withheld (the sentences that print the quote;
+nothing else is edited), a capability or API hub that is only false text leaves the plan or falls back to the
+fact-true row, records in `units["register_corrections"]`; (3) a sealed plan's refuted example is replaced by the next
+unrefuted one with its already-authored lead-in; (4) an UNRESOLVED example block that prints a refuted line is omitted
+citing the row; (5) matching sees through links the renderer flattens; (6) a fact-derived line (not a table row) that
+prints a quote is withheld at render. Authored text is withheld, not rewritten to the row's `truth`: the truth is a
+maintainer-facing sentence with file evidence, and writing it into a README is an unverified claim (BC-04, R9).
+
+**Measured** (zero calls, same seals): 11 of 19 RECERTIFIED before, 15 after; 3D .NET, Cells C++, Cells TypeScript and
+HTML Python flip; no regression; the 11 certified seals re-render to byte-identical READMEs. Not flipped: Words .NET
+(a kept attributed API table row whose quote spans rows), 3D Python (BC-04), Cells .NET (BC-14), PDF Java (BC-05/17):
+none is BC-18 except Words, the others are their own classes. The investigation predicted about 6; the BC-18-alone
+count was 5, and 4 flipped.
+
+Backlog: BL-210.
+
+## 2026-11-18: Terminal-safe authoring and planning (BL-220, R46 robust and universal)
+
+**Problem.** When one slot's authored or planned output kept failing the job's own checks after the bounded asks
+(`jobs.run_job`: ask 1, ask 2, narrowed ask 3, deterministic `recover`), the run raised `OutputRejectedError` and the
+whole candidate failed: 22 of 73 failed runs, six cells (Cells C++, Font Python, PDF Python, PDF .NET, PDF C++, Words
+Java). Unrecovered shapes: an edition-name sentence, an opening that only restates the preserved inherited paragraph,
+a planning fact id outside the offered enum, a single-sentence capability that is only a value.
+
+**Decision.** The last step before the raise becomes terminal-safe inside the existing recover hooks, by the one
+honest alternative each time (R36): delete the sentence or clause that names the Enterprise Edition; replace a
+restating opening by the format-facts sentence the renderer already prints in Scope; delete an uncitable fact id from
+a plan array (an emptied hub falls to its own symbol); replace a still-failing key-capability unit by the fact-true
+sentence of a type its slot cites, never when the slot cites a must-carry inherited unit (R14). Each fallback is
+recorded in the `.repaired-<attempt>.json` notes with rule `BL-220`, the rejected text and the replacement; no
+provenance wording enters a README (R9); `run_job` still re-validates every recovered reply, so a reply that fails
+after recovery is never accepted and nothing is silently dropped. Negative controls fail closed.
+
+**Not decided.** Whether the capability floor ("Public class.") reads well enough to stay once hosted runs show how
+often it fires; the model reviewer judges it as any other unit.
+
+Backlog: BL-220.
+## 2026-11-18: Terminal-safe disposition and placement (BL-230, R46, R14)
+
+Class: maintainer text the checks name as lost or misfiled (BC-05 section fit, BC-17, BC-08, `live_readme_loss`,
+`disposition_coverage`; 12 cells), always unit-local. Decisions, all inside existing components (R27), zero provider
+calls: (1) one source of truth for "can this section print this kind": `destinations.prints_unit`, now read by restore
+and the section-fit fold, so "kept but not printable" and "superseded but unstated" cannot disagree; (2) rule
+`BL-230/resource-links-kept`: a kept list with a link-led item that Documentation and Resources cannot print as link
+lines (a link no plan-assignable link fact carries, or a mixed list) filed under Scope and Limitations is kept as
+written in the nearest printable section (Development and Testing, else Additional Examples or Quick Start); the
+disposition and text are unchanged, only the destination moves, and the rationale records it (R14); (3) the zero-call
+settle restore now answers BC-05 section fit, which names no unit, with the S4 section-fit folds
+(`restore_units.fit_misfiled_units`), kept only when the blocking failures strictly shrink; (4) `reconciliation.patch`
+applies the keep the check's own message names (`keep_as_written`: VERIFIED_PRESERVE when every cited fact is
+SUPPORTED, else PRESERVE_ATTRIBUTED, into the nearest holdable section) on the first refusal instead of asking the
+model again; a unit citing a CONTRADICTED fact, a shell-rendered kind or one with no nearest section is still asked.
+No public README wording is added (R9); the fold fires only on a unit in Scope and Limitations that BC-05 already
+refuses, so no passing seal changes (R10). Not determined: the stored bundles of the failing cells are not
+reachable, so the 12 cells were not replayed; the evidence is the exact failure-record messages as tests and the
+`recertify --all` before/after on the 53 sealed bundles. Property improved: universal, robust.
+
+Backlog: BL-230.

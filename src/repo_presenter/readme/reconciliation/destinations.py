@@ -172,6 +172,19 @@ def _kinds(section: str) -> Collection[str]:
 
 
 
+def prints_unit(section: str, kind: str) -> bool:
+    """Whether ``section`` prints a kept unit of ``kind`` as written: the one source of truth for
+    "kept but not printable" (BL-230). A generated-only section prints none, ``api_reference``
+    prints only a table, any other section the kinds ``_PRINTS`` lists. Restore, the
+    reconciliation folds and the patch all ask this, so a unit they keep is one the renderer prints
+    and the "superseded but unstated" rule never has to take it back."""
+    if section in GENERATED_ONLY_DESTINATIONS:
+        return False
+    if section == "api_reference":
+        return kind == "table"
+    return kind in _kinds(section)
+
+
 def nearest_for_units(
     units: Sequence[Fact], holdable: Collection[str], context: Sequence[Fact] | None = None
 ) -> dict[str, str | None]:

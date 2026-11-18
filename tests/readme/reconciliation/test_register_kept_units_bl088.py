@@ -76,8 +76,11 @@ def test_negative_controls() -> None:
     output = {"dispositions": [_entry("inherited_unit:080.list", "SUPERSEDE_REDUNDANT")]}
     _fold_register_kept_units(output, _facts(HTML, {"inherited_unit:080.list": LIST}))
     assert output["dispositions"][0]["fact_ids"] == []
-    # a unit that is nothing but the false text: nothing would be left to print, so no citation
+    # a unit that is nothing but the false text: nothing would be left to print, so it is omitted
+    # citing the row (BL-210) instead of being kept uncited for a repair that can only refuse
     only = f"- {QUOTE}"
     output = {"dispositions": [_entry("inherited_unit:081.list")]}
     _fold_register_kept_units(output, _facts(HTML, {"inherited_unit:081.list": only}))
-    assert output["dispositions"][0]["fact_ids"] == []
+    entry = output["dispositions"][0]
+    assert entry["disposition"] == "OMIT_UNSUPPORTED" and entry["fact_ids"] == [FINDING]
+    assert entry["destination_section"] is None

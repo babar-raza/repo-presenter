@@ -86,6 +86,7 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    citable_from_schema,
     recover_planning_output,
 )
 from repo_presenter.readme.composition.policy import DEFAULT_POLICY
@@ -555,8 +556,10 @@ def _regenerate_plan(rc: RepairContext, loaded: LoadedManifest) -> dict[str, Any
             output, rc.facts, dispositions=rc.dispositions, ecosystem=rc.entry.ecosystem
         )
 
+    call_schema = planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions)
+
     def recover(output: dict[str, Any]) -> dict[str, Any] | None:
-        return recover_planning_output(output, rc.facts)
+        return recover_planning_output(output, rc.facts, citable_from_schema(call_schema))
 
     try:
         result = run_job(
@@ -564,7 +567,7 @@ def _regenerate_plan(rc: RepairContext, loaded: LoadedManifest) -> dict[str, Any
             planning_packet(rc.entry, rc.facts, rc.investigation, rc.dispositions, loaded.manifest),
             config=rc.config, facts=rc.facts, ledger=rc.ledger, store=rc.store,
             context=rc.context,
-            call_schema=planning_schema(loaded, rc.facts, rc.investigation, rc.dispositions),
+            call_schema=call_schema,
             checks=checks, recover=recover,
         )
     except JobError:
@@ -813,8 +816,21 @@ def _cite_register_rows(
     if disposition in _CITATION_NEEDED and not cited:
         pass
     elif disposition in PLACED and unit.endswith(_WITHHOLDING_KINDS):
-        if all(cid in cited for cid in ids) or not holds:
+        if all(cid in cited for cid in ids):
             return False
+        if not holds:
+            # BL-210: the unit is nothing but the false text: omit it citing the row (the R14
+            # decision every reader accepts, ``must_correct.REGISTER_OMITTED_RATIONALE``) rather
+            # than refuse, as the S4 fold does (3D .NET ``028.code_block``, four hosted runs).
+            from repo_presenter.readme.validation.must_correct import REGISTER_OMITTED_RATIONALE
+
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = sorted(ids)
+            entry["rationale"] = (
+                REGISTER_OMITTED_RATIONALE + "the whole unit is the false text (BL-210)."
+            )[:_REWRITE_RATIONALE_LIMIT]
+            return True
     else:
         return False
     entry["fact_ids"] = [*cited, *(cid for cid in ids if cid not in cited)]

@@ -92,6 +92,7 @@ from repo_presenter.readme.composition.planning import (
     plan_checks,
     planning_packet,
     planning_schema,
+    citable_from_schema,
     recover_planning_output,
     write_plan,
 )
@@ -126,6 +127,7 @@ from repo_presenter.readme.repair.accounting import (
 from repo_presenter.readme.repair.restore_units import (
     choose_units,
     failing_unit_ids,
+    fit_misfiled_units,
     restore_lost_units,
     vacated_sections,
 )
@@ -297,7 +299,7 @@ def _run_planning(
         return plan_checks(output, document, dispositions=dispositions, ecosystem=ecosystem)
 
     def recover(output: dict) -> dict | None:
-        return recover_planning_output(output, document)
+        return recover_planning_output(output, document, citable_from_schema(call_schema))
 
     result = run_job(
         loaded, packet, config=config, facts=document, ledger=ledger, store=store,
@@ -965,6 +967,20 @@ def _restore_lost_content(
     skipped: list[dict[str, str]] = []
     readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
     validation, verdict = settled.validation, settled.verdict
+    if any("section fit:" in str(d) for check in failing for d in check.get("details") or []):
+        # BL-230: BC-05 section fit names no unit, so the unit restore below never sees it. The
+        # S4 section-fit folds answer it zero-call: kept text moves to a section that prints it.
+        fitted, fit_changes = fit_misfiled_units(dispositions, document, included)
+        if fit_changes:
+            trial = _judge_restore(
+                fitted, composed=composed, entry=entry, document=document,
+                investigation=investigation, tree_paths=tree_paths, original=original,
+                out_dir=out_dir, restored=restored + fit_changes,
+            )
+            if _strictly_fewer_failures(failing, blocking_failures(trial[4])):
+                readme, tasks, accounted, dispositions, validation, verdict = trial
+                restored.extend(fit_changes)
+                failing = blocking_failures(validation)
     for _round in range(RESTORE_ROUNDS):
         details = [
             f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
