@@ -36,48 +36,84 @@
    "run_id": "43714978082",
    "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T13:12:16+00:00",
+   "classes": [
+    "BC-02|unresolved|id_is_unresolved_package",
+    "BC-14|unresolved|org_id_is_shown",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|inherited_unit|version"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 7,
+   "outcome": "failure",
+   "run_id": "44297186767",
+   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T13:56:56+00:00",
+  "at": "2026-11-18T13:12:16+00:00",
   "classes": {
-   "BC-05|inherited_unit|superseded_unstated": {
-    "example": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "findings": 3,
-    "origin_kind": "inherited_unit",
+   "BC-02|unresolved|id_is_unresolved_package": {
+    "example": "install_command:maven is UNRESOLVED: package registry: Maven Central was not read - the shared probe takes a package name, and `maven-metadata.xml` is addressed by group and artifact id",
+    "findings": 1,
+    "origin_kind": "unresolved",
     "origins": [
-     "inherited_unit:013.code_block",
-     "inherited_unit:015.code_block",
-     "inherited_unit:070.table"
+     "-"
     ],
-    "rule": "BC-05",
-    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
+    "rule": "BC-02",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
      "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "superseded_unstated",
+    "sub_rule": "id_is_unresolved_package",
+    "upstream": ""
+   },
+   "BC-14|unresolved|org_id_is_shown": {
+    "example": "org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
+    "findings": 2,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-14",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "org_id_is_shown",
     "upstream": ""
    },
    "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 5,
+    "example": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 2,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:013.code_block",
-     "inherited_unit:015.code_block",
-     "inherited_unit:070.table",
      "inherited_unit:002.badge_row"
     ],
     "rule": "BC-17",
-    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
+    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -90,106 +126,113 @@
     ],
     "sub_rule": "technical_content",
     "upstream": ""
+   },
+   "claim_contradiction|inherited_unit|version": {
+    "example": "implementation 'org.aspose:aspose-pdf-foss:26.9.0'",
+    "findings": 2,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:015.code_block",
+     "inherited_unit:013.code_block"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "58e88f3fab3a24361441159f8f27b47f09dad06e6d753afdaf459f35b7ef3d00",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "version",
+    "upstream": ""
    }
   },
-  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-05",
-    "message": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:013.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "inherited_unit:015.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (implementation 'org.aspose:aspose-pdf-foss:26.9.0'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "label": "claim_contradiction",
+    "message": "line 2478 (COMPOSING): org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
     "origin": {
      "id": "inherited_unit:015.code_block",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-05",
+    "quote": "implementation 'org.aspose:aspose-pdf-foss:26.9.0'",
+    "rule": "claim_contradiction",
     "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
+    "signature": "claim_contradiction|inherited_unit|version",
+    "source": "review",
+    "sub_rule": "version",
     "upstream": ""
    },
    {
-    "label": "BC-05",
-    "message": "inherited_unit:070.table is SUPERSEDE_REDUNDANT, but the README does not state 11 piece(s) of it (span '[a, , c]'; span '= += -= ...'; span '<xfa:datasets>'; span 'do body while (test)'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:070.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "claim_contradiction",
+    "message": "line 2471 (COMPOSING): org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
     "origin": {
      "id": "inherited_unit:013.code_block",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
+    "quote": "    <version>26.9.0</version>",
+    "rule": "claim_contradiction",
     "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "signature": "claim_contradiction|inherited_unit|version",
+    "source": "review",
+    "sub_rule": "version",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:015.code_block holds code_blocks 'implementation 'org.aspose:aspose-pdf-foss:26.9.0'', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "BC-02",
+    "message": "install_command:maven is UNRESOLVED: package registry: Maven Central was not read - the shared probe takes a package name, and `maven-metadata.xml` is addressed by group and artifact id",
     "origin": {
-     "id": "inherited_unit:015.code_block",
-     "kind": "inherited_unit"
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
-    "rule": "BC-17",
+    "rule": "BC-02",
     "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
+    "signature": "BC-02|unresolved|id_is_unresolved_package",
     "source": "validation",
-    "sub_rule": "technical_content",
+    "sub_rule": "id_is_unresolved_package",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:070.table holds api_identifiers '_Detail.addInstance()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "BC-14",
+    "message": "org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
     "origin": {
-     "id": "inherited_unit:070.table",
-     "kind": "inherited_unit"
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
+    "rule": "BC-14",
+    "section_id": "development_testing",
+    "signature": "BC-14|unresolved|org_id_is_shown",
     "source": "validation",
-    "sub_rule": "technical_content",
+    "sub_rule": "org_id_is_shown",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "development_testing",
+    "signature": "BC-14|unresolved|org_id_is_shown",
+    "source": "validation",
+    "sub_rule": "org_id_is_shown",
     "upstream": ""
    },
    {
@@ -224,7 +267,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
+  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -238,17 +281,9 @@
    },
    {
     "facts_defects": [],
-    "label": "disposition_coverage:0",
+    "label": "disposition_coverage:2",
     "outcome": "repaired",
     "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:015.code_block: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or ",
     "section_id": null,
     "stage": "S4"
    },
@@ -262,27 +297,11 @@
    },
    {
     "facts_defects": [],
-    "label": "BC-17",
+    "label": "BC-14",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:013.code_block: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or ",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:013.code_block: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into additional_examples, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, api_reference, documen",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:015.code_block: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into quick_start, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, additional_examples, api_reference, documen",
-    "section_id": null,
-    "stage": "S4"
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
    },
    {
     "facts_defects": [],
@@ -294,24 +313,24 @@
    },
    {
     "facts_defects": [],
-    "label": "BC-17",
+    "label": "claim_contradiction:2",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:070.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
-    "section_id": null,
-    "stage": "S4"
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
    },
    {
     "facts_defects": [],
-    "label": "BC-05",
+    "label": "claim_contradiction:0+claim_contradiction:1",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:070.table: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into api_reference, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, documentatio",
-    "section_id": null,
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:012.paragraph: OMIT_UNSUPPORTED takes no destination; got 'development_testing'; revised_output: inherited_unit:014.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Gradle:\". Cite the supporting fact IDs or place the unit; do not omit it without a cite",
+    "section_id": "development_testing",
     "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
-  "run_id": "43714978082",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43714978082",
+  "run_id": "44297186767",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297186767",
   "schema_version": 1,
   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
