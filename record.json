@@ -23,11 +23,23 @@
    "run_id": "44297210403",
    "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T18:13:24+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44366294766",
+   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T11:49:04+00:00",
+  "at": "2026-11-18T18:13:24+00:00",
   "classes": {
    "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph": {
     "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes",
@@ -37,7 +49,7 @@
      "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "018625213487405af3efd3bd888483c61b5eb749d6b3b3c0440b49b60cafe56d",
+    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -51,12 +63,12 @@
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again; recover's correction was rejected too: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again",
    "kind": "OutputRejectedError",
    "transient": true
   },
@@ -78,13 +90,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-  "run_id": "44297210403",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297210403",
+  "run_id": "44366294766",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44366294766",
   "schema_version": 1,
   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
