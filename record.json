@@ -69,390 +69,82 @@
    "run_id": "44330589268",
    "source_revision": "7c862a8a3c891c99c6cbe199bc700c6bde36529d",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T20:34:37+00:00",
+   "classes": [
+    "job_error|job_error|JobError:section_authoring_gateway_answered_http"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44384802232",
+   "source_revision": "b4fdd46724ab271205aa92e1ad7b3272346d657e",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T16:24:42+00:00",
+  "at": "2026-11-18T20:34:37+00:00",
   "classes": {
-   "BC-04|unresolved|code_span_q_is": {
-    "example": "code span 'docs/superpowers' is not a fact value",
+   "job_error|job_error|JobError:section_authoring_gateway_answered_http": {
+    "example": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 254789 input tokens (8000 > 262144 - 254789). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
     "findings": 1,
-    "origin_kind": "unresolved",
+    "origin_kind": "job_error",
     "origins": [
-     "-"
+     "JobError"
     ],
-    "rule": "BC-04",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "rule": "job_error",
+    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
      "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "code_span_q_is",
-    "upstream": ""
-   },
-   "BC-07|unresolved|example_heading_q_is": {
-    "example": "example heading 'Export a PDF to Multiple Formats' is reused",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-07",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "example_heading_q_is",
-    "upstream": ""
-   },
-   "BC-07|unresolved|heading_q_is_not": {
-    "example": "heading '#### Text Decoration' is not a shell heading in title case",
-    "findings": 7,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-07",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   "disposition_coverage|inherited_unit|id_is_kept_verified_preserve": {
-    "example": "```ts\nimport { openAiModel, type AiModel } from '@asposefoss/pdf';\n\nconst model: AiModel = openAiModel('https://api.openai.com/v1', {\n  model: 'gpt-4o-mini',\n  apiKey: process.env.OPENAI_API_KEY,\n});\n// A local server needs no key: openAiModel('http://localhost:11434/v1', { model: 'llama3.2' })\n\ncon",
-    "findings": 4,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:463.code_block",
-     "inherited_unit:520.code_block",
-     "inherited_unit:522.code_block",
-     "inherited_unit:528.code_block"
-    ],
-    "rule": "disposition_coverage",
-    "scope": "0a9a76f340624548badfd2ea434937127993dafa07a71b214a29c84617ee2b8b",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
-    ],
-    "sub_rule": "id_is_kept_verified_preserve",
+    "sub_rule": "JobError:section_authoring_gateway_answered_http",
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:463.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:520.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:522.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:528.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README)",
-   "kind": "PresentFailure",
+   "detail": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 254789 input tokens (8000 > 262144 - 254789). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
+   "kind": "JobError",
    "transient": false
   },
   "findings": [
    {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:463.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "label": "JobError",
+    "message": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 254789 input tokens (8000 > 262144 - 254789). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
     "origin": {
-     "id": "inherited_unit:463.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "```ts\nimport { openAiModel, type AiModel } from '@asposefoss/pdf';\n\nconst model: AiModel = openAiModel('https://api.openai.com/v1', {\n  model: 'gpt-4o-mini',\n  apiKey: process.env.OPENAI_API_KEY,\n});\n// A local server needs no key: openAiModel('http://localhost:11434/v1', { model: 'llama3.2' })\n\ncon",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:520.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:520.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "```ts\nimport { parseHtml } from '@asposefoss/pdf';\n\nconst doc = parseHtml('<p>Hello<p>World');\n// doc.children[0]            -> <html> element\n// html.children              -> [<head>, <body>]\n// body.children              -> [<p>Hello</p>, <p>World</p>]\n```",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:522.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:522.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "```ts\nimport { parseHtmlBytes } from '@asposefoss/pdf';\nimport { readFile } from 'node:fs/promises';\n\nconst doc = parseHtmlBytes(new Uint8Array(await readFile('legacy.html')));\n// A <meta charset=\"windows-1251\"> is honoured, and so is one sitting past the\n// 1024-byte window a browser's prescan give",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:528.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:528.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "```ts\nimport { parseMarkdown } from '@asposefoss/pdf';\n\nconst doc = parseMarkdown('# Title\\n\\nSome *emphasis* and a [link](/u).\\n');\n// doc.children[0] -> { type: 'heading', level: 1, children: [{ type: 'text', value: 'Title' }] }\n// doc.children[1] -> { type: 'paragraph', children: [ ... 'text', 'e",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "BC-04",
-    "message": "code span 'docs/superpowers' is not a fact value",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "JobError",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-04",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "BC-04|unresolved|code_span_q_is",
-    "source": "validation",
-    "sub_rule": "code_span_q_is",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "example heading 'Export a PDF to Multiple Formats' is reused",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|example_heading_q_is",
-    "source": "validation",
-    "sub_rule": "example_heading_q_is",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Text Decoration' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Embedding a Font (Arbitrary Unicode)' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Complex-text Shaping (Embedded OpenType Fonts)' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Multi-page Tables' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Tagged Tables' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Mark, Then Apply' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
-    "upstream": ""
-   },
-   {
-    "label": "BC-07",
-    "message": "heading '#### Field Styling' is not a shell heading in title case",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|heading_q_is_not",
-    "source": "validation",
-    "sub_rule": "heading_q_is_not",
+    "signature": "job_error|job_error|JobError:section_authoring_gateway_answered_http",
+    "source": "job",
+    "sub_rule": "JobError:section_authoring_gateway_answered_http",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:463.code_block: supported_omission: OMIT_UNSUPPORTED claims no fact supports this code block, but its example example:112 is verified. Supersede it into quick_start or additional_examples (the plan renders every verified example there) or place it; do not omit a verified example; the unit's exact text is \"```ts\\nimport { openAiModel, type AiModel } from '@asposefoss/pdf';\\n\\nconst model: AiModel = openAiModel(",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "live_readme_loss:5",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "additional_examples",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "disposition_coverage:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "additional_examples",
-    "stage": "S4"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44330589268",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44330589268",
+  "run_id": "44384802232",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44384802232",
   "schema_version": 1,
-  "source_revision": "7c862a8a3c891c99c6cbe199bc700c6bde36529d",
+  "source_revision": "b4fdd46724ab271205aa92e1ad7b3272346d657e",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
