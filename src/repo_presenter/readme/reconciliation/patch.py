@@ -113,6 +113,47 @@ class PatchScope:
     # The CONTRADICTED facts of the batch: an omission citing one is a non-loss (the parity gate's
     # own exemption, ``parity_gate.disposition_is_non_loss``).
     contradicted: frozenset[str] = frozenset()
+    # The SUPPORTED facts of the batch: a unit kept deterministically (:func:`keep_as_written`)
+    # that cites only these is VERIFIED_PRESERVE, any other PRESERVE_ATTRIBUTED (BL-230).
+    supported: frozenset[str] = frozenset()
+
+
+#: Dispositions a deterministic keep may replace: the ones that take a unit's content out.
+_KEEP_FROM = frozenset({"SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED", "OMIT_UNSUPPORTED"})
+_SHELL_UNIT_KINDS = frozenset({"heading", "badge_row", "html_block"})
+KEEP_RATIONALE = "Kept as written: the check names this unit as lost. "
+
+
+def keep_as_written(entry: dict[str, Any], scope: PatchScope) -> bool:
+    """Apply, in place, the keep action a refused disposition's own message names (BL-230): a unit
+    still ``SUPERSEDE_REDUNDANT`` / ``DEFER_UNRESOLVED`` / ``OMIT_UNSUPPORTED`` that the defect says
+    loses content is kept as written in the nearest section that can hold it, ``VERIFIED_PRESERVE``
+    when every fact it cites is SUPPORTED and ``PRESERVE_ATTRIBUTED`` otherwise (attribution is
+    internal, R9). Returns ``False`` and changes nothing when the unit cites a CONTRADICTED fact
+    (the check's own omit remedy applies), is a shell-rendered kind, or has no nearest section:
+    the refusal then stands and the model is asked again, as before. The one decision the check
+    computes is not asked of the model twice."""
+    unit = str(entry.get("unit_id", ""))
+    shown = next(
+        (e for e in scope.shown.get("dispositions", []) if e.get("unit_id") == unit), None
+    )
+    home = (shown or {}).get("nearest_section_that_can_hold_it")
+    cited = [str(f) for f in entry.get("fact_ids") or []]
+    if (
+        shown is None
+        or home is None
+        or home not in scope.holdable
+        or unit.rsplit(".", 1)[-1] in _SHELL_UNIT_KINDS
+        or entry.get("disposition") not in _KEEP_FROM
+        or any(fact in scope.contradicted for fact in cited)
+    ):
+        return False
+    supported = bool(cited) and all(fact in scope.supported for fact in cited)
+    entry["disposition"] = "VERIFIED_PRESERVE" if supported else "PRESERVE_ATTRIBUTED"
+    entry["destination_section"] = home
+    reason = str(entry.get("rationale") or "").strip()
+    entry["rationale"] = (KEEP_RATIONALE + reason)[:160].strip()
+    return True
 
 
 def patch_scope(
@@ -197,6 +238,9 @@ def patch_scope(
         contradicted=frozenset(
             fact.id for fact in batch_facts.facts if fact.polarity == "CONTRADICTED"
         ),
+        supported=frozenset(
+            fact.id for fact in batch_facts.facts if fact.polarity == "SUPPORTED"
+        ),
     )
 
 
@@ -250,6 +294,8 @@ def patch_checks(
         }
         for unit in sorted(scope.deferred):
             if by_unit.get(unit, {}).get("disposition") == "DEFER_UNRESOLVED":
+                if keep_as_written(by_unit[unit], scope):
+                    continue
                 errors.append(
                     f"{unit}: still DEFER_UNRESOLVED, which is the defect: deferring it loses its "
                     f"content. Keep it as written in a section that can hold it "
@@ -265,6 +311,15 @@ def patch_checks(
             for entry in revised.get("dispositions", [])
             if isinstance(entry, Mapping)
         }
+        for unit in sorted(scope.deferred - scope.superseded):
+            # A deterministic keep the normaliser turned back into a loss is still the defect.
+            if normalised.get(unit, {}).get("disposition") in {"SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED"}:
+                errors.append(
+                    f"{unit}: still {normalised[unit]['disposition']}, which is the defect: "
+                    f"deferring it loses its content. Keep it as written in a section that can "
+                    f"hold it ({', '.join(scope.holdable)}), or omit it citing the fact that "
+                    "contradicts it"
+                )
         for unit in sorted(scope.superseded):
             disposition = normalised.get(unit, {}).get("disposition")
             if disposition not in {"SUPERSEDE_REDUNDANT", "DEFER_UNRESOLVED"}:
@@ -277,6 +332,8 @@ def patch_checks(
                 else ""
             )
             others = [section for section in scope.holdable if section != where]
+            if keep_as_written(normalised[unit], scope):
+                continue
             errors.append(
                 f"{unit}: still {disposition}{overridden}, which is the defect: the README does "
                 "not state its substance, so not printing it loses content. Keep it "
@@ -292,6 +349,8 @@ def patch_checks(
             entry = normalised.get(unit, {})
             disposition = entry.get("disposition")
             if disposition not in _PARITY_LOSING or disposition_is_non_loss(entry, facts):
+                continue
+            if keep_as_written(entry, scope):
                 continue
             errors.append(
                 f"{unit}: still {disposition}, which is the defect: the published README prints "

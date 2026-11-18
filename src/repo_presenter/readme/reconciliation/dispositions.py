@@ -100,6 +100,7 @@ from repo_presenter.readme.composition.placement import (
     renderer_fact_ids,
     resolve_intra_document_anchors,
 )
+from repo_presenter.readme.composition.list_coverage import resource_link_items
 from repo_presenter.readme.composition.planning import (
     link_list_targets,
     section_conditions,
@@ -127,6 +128,7 @@ from repo_presenter.readme.reconciliation.destinations import (
     disposition_variants,
     holdable_sections,
     nearest_holdable,
+    prints_unit,
     rehomed,
 )
 from repo_presenter.readme.validation.claims import install_identity_findings
@@ -1180,6 +1182,11 @@ def _rehome_unprintable_kind_units(
 
 RESOURCE_FIT_RATIONALE = "Kept in documentation_resources: a list of resource links, not {old}. "
 LICENSE_FIT_RATIONALE = "Superseded by the License section, which states the license from facts. "
+#: BL-230: a kept list with resource-link items that Documentation and Resources cannot print as
+#: its own link lines (one of its links is no plan-assignable link fact) keeps its maintainer text
+#: as written in the nearest section that prints a list, never in Scope and Limitations.
+RESOURCE_KEPT_RATIONALE = "Kept as written in {home}: resource links, not {old}; no link fact carries them. "
+_RESOURCE_KEPT_HOMES = ("development_testing", "additional_examples", "quick_start")
 #: The sections a resource-links list or a license statement is never material of (BL-004): Scope
 #: and Limitations holds only what the product does not do; Key Capabilities only what it does.
 _NOT_RESOURCES = frozenset({"scope_limitations", "key_capabilities"})
@@ -1221,6 +1228,19 @@ def _fit_resource_and_license_units(
             reason = str(entry.get("rationale") or "").strip()
             entry["destination_section"] = "documentation_resources"
             entry["rationale"] = (lead + reason)[:_RATIONALE_LIMIT].strip()
+            continue
+        if kind == "list" and old == "scope_limitations" and resource_link_items(unit.value):
+            # BL-230 (a link list Documentation and Resources cannot print; only Scope and Limitations,
+            # where BC-05 section fit refuses it, so no passing seal changes): keep the maintainer
+            # text, move it to the nearest printable section, never leave it where BC-05 refuses it.
+            home = next(
+                (s for s in _RESOURCE_KEPT_HOMES if s in holdable and prints_unit(s, kind)), None
+            )
+            if home is not None:
+                lead = RESOURCE_KEPT_RATIONALE.format(home=home, old=old)
+                reason = str(entry.get("rationale") or "").strip()
+                entry["destination_section"] = home
+                entry["rationale"] = (lead + reason)[:_RATIONALE_LIMIT].strip()
             continue
         if kind != "paragraph" or not license_ids:
             continue

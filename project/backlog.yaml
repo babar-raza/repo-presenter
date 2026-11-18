@@ -2104,8 +2104,8 @@ items:
     status: active
     implementation_path: "readme/reconciliation/dispositions.py, placement and restore (readme/repair/restore_units.py), cascade._settle_s9; make kept-but-not-printable and superseded-but-unstated agree"
     acceptance: "zero-call replay on the sealed dispositions of the 12 affected cells; unrepairable repairs fall from 54; recertify --all shows no lost seal"
-    evidence: ["12 cells fail BC-05, BC-08, BC-17, live_readme_loss or disposition_coverage; Cells .NET fails section_fit on three links in Scope"]
-    next_action: "worker started 2026-11-18"
+    evidence: ["12 cells fail BC-05, BC-08, BC-17, live_readme_loss or disposition_coverage; Cells .NET fails section_fit on three links in Scope", "branch fix/bl230-disposition-terminal-safe: destinations.prints_unit single source of truth; dispositions section-fit fold keeps unprintable link lists in the nearest printable section; restore_units.fit_misfiled_units wired into cascade._restore_lost_content; patch.keep_as_written applies the named keep on the first refusal; tests/readme/reconciliation/test_terminal_safe_disposition_bl230.py; recertify --all before/after on 53 sealed bundles unchanged (see DECISION_LOG 2026-11-18 BL-230); 12 failing cells not replayed (bundles unreachable)"]
+    next_action: "merge, then hosted proof pass (BL-203) to confirm the 12 cells; BC-17 badge_row loss and register-false units remain unanswered"
     updated: "2026-11-18"
 
   - id: BL-240
