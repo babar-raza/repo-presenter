@@ -64,21 +64,33 @@
    "run_id": "44313168971",
    "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T18:14:11+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44366309808",
+   "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T13:31:13+00:00",
+  "at": "2026-11-18T18:14:11+00:00",
   "classes": {
    "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[6]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[4]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
      "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "018625213487405af3efd3bd888483c61b5eb749d6b3b3c0440b49b60cafe56d",
+    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -92,19 +104,19 @@
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[6]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', 'example:001', 'example:002', 'example:003', 'example:005', 'example:006', 'identity:ecosystem'] (and 614 more allowed values; cite only an offered ID); $.dispositions[12].fact_ids[7]: 'public_symbol:document.submitformaction' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', 'example:001', 'example:002', 'example:003', 'example:005', 'example:006', 'identity:ecosystem",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[4]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', 'example:001', 'example:002', 'example:003', 'example:005', 'example:006', 'identity:ecosystem'] (and 614 more allowed values; cite only an offered ID); unknown fact ID public_symbol:document.optimizeimageoptions",
    "kind": "OutputRejectedError",
    "transient": true
   },
   "findings": [
    {
     "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[6]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[4]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
     "origin": {
      "id": "OutputRejectedError",
      "kind": "job_error"
@@ -119,13 +131,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
-  "run_id": "44313168971",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44313168971",
+  "run_id": "44366309808",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44366309808",
   "schema_version": 1,
   "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
