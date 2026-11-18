@@ -47,6 +47,7 @@ def outcome(repo: str, lane: str, **kw: Any) -> SimpleNamespace:
         "repository": repo, "lane": lane, "current": True, "certification": "RECERTIFIED",
         "sealed_by_current": False, "failing_checks": [], "pipeline_good": True,
         "independently_accepted": True, "bucket": "independently_accepted", "reason": "", "revision": PIN,
+        "acceptance_binding": "content_bound", "acceptance_gap": "",
     }
     row.update(kw)
     return SimpleNamespace(**row)

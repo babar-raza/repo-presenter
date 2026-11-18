@@ -11,7 +11,9 @@ AND in Lane L, one terminal outcome:
 
 * ``ACCEPTED`` -- its latest seal re-certifies under current code (``recertify``) and holds an
   attested M9 acceptance record at that revision (R33), exactly as
-  ``ops/checks/portfolio_delivery_count.py`` counts ``independently_accepted``;
+  ``ops/checks/portfolio_delivery_count.py`` counts ``independently_accepted`` -- and (BL-189) that record
+  must be content-bound, i.e. carry the digest of the README bytes now sealed; a legacy revision-only record
+  counts there but is not publication-ready, and the cell's reason states the gap;
 * ``NO_ACTION_JUSTIFIED`` (Lane L only, R16) -- the certified seal equals the live README;
 * ``BLOCKED_EXTERNAL`` (R24) in ``data/terminal_cells.json`` with a FRESH re-check (the last
   verification at most :data:`R24_RECHECK_DAYS` days ago and ``recheck_by`` not passed) and the
@@ -180,7 +182,15 @@ def _outcome_terminal(outcome: Any) -> tuple[str | None, str]:
         getattr(outcome, "sealed_by_current", False) and not getattr(outcome, "failing_checks", [])
     )
     if certified and getattr(outcome, "independently_accepted", False):
-        return ACCEPTED, "re-certified and attested independently accepted (R33)"
+        # BL-189: publication needs an acceptance bound to the README bytes now sealed. A revision-only (legacy)
+        # record still COUNTS as accepted in the delivery count; here it fails closed and says why.
+        if getattr(outcome, "acceptance_binding", "") != "content_bound":
+            revision = str(getattr(outcome, "revision", "") or "")[:12] or "unknown"
+            return None, (
+                getattr(outcome, "acceptance_gap", "")
+                or f"acceptance covers revision {revision}, not the README bytes now sealed (no content-bound record)"
+            )
+        return ACCEPTED, "re-certified and attested independently accepted (R33), bound to the sealed README bytes"
     if certified and outcome.lane == "L" and getattr(outcome, "bucket", "") == "no_action_justified":
         return NO_ACTION_JUSTIFIED, "R16 NO_ACTION_JUSTIFIED"
     if getattr(outcome, "certification", "") == "NEEDS_REPAIR":

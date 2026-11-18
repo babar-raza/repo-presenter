@@ -68,6 +68,9 @@ def _every_fake_seal_recertifies(monkeypatch):
     """main() re-certifies the latest seals (BL-075); here every fake seal re-certifies, never the network."""
     keys = {(repo, lane, seals[-1].revision) for (repo, lane), seals in _fake_history(12).items()}
     monkeypatch.setattr(run_m9_seeder, "recertified_seals", lambda remote="origin": keys)
+    # BL-189: an unreadable record set raises instead of reading as empty, so a test that never reaches a remote
+    # states its (empty) record set explicitly.
+    monkeypatch.setattr(run_m9_seeder, "judged_controls", lambda remote="origin": {})
 
 
 def test_select_candidates_groups_by_lane_from_seal_history(monkeypatch):
