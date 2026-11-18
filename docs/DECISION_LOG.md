@@ -7052,3 +7052,25 @@ becomes its own backlog item and must name the property it improves.
 
 Backlog: BL-201, BL-202, BL-203.
 
+
+## 2026-11-18: Terminal-safe authoring and planning (BL-220, R46 robust and universal)
+
+**Problem.** When one slot's authored or planned output kept failing the job's own checks after the bounded asks
+(`jobs.run_job`: ask 1, ask 2, narrowed ask 3, deterministic `recover`), the run raised `OutputRejectedError` and the
+whole candidate failed: 22 of 73 failed runs, six cells (Cells C++, Font Python, PDF Python, PDF .NET, PDF C++, Words
+Java). Unrecovered shapes: an edition-name sentence, an opening that only restates the preserved inherited paragraph,
+a planning fact id outside the offered enum, a single-sentence capability that is only a value.
+
+**Decision.** The last step before the raise becomes terminal-safe inside the existing recover hooks, by the one
+honest alternative each time (R36): delete the sentence or clause that names the Enterprise Edition; replace a
+restating opening by the format-facts sentence the renderer already prints in Scope; delete an uncitable fact id from
+a plan array (an emptied hub falls to its own symbol); replace a still-failing key-capability unit by the fact-true
+sentence of a type its slot cites, never when the slot cites a must-carry inherited unit (R14). Each fallback is
+recorded in the `.repaired-<attempt>.json` notes with rule `BL-220`, the rejected text and the replacement; no
+provenance wording enters a README (R9); `run_job` still re-validates every recovered reply, so a reply that fails
+after recovery is never accepted and nothing is silently dropped. Negative controls fail closed.
+
+**Not decided.** Whether the capability floor ("Public class.") reads well enough to stay once hosted runs show how
+often it fires; the model reviewer judges it as any other unit.
+
+Backlog: BL-220.
