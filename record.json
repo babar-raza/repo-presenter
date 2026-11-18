@@ -52,149 +52,82 @@
    "run_id": "43650795881",
    "source_revision": "2eed1113e22902f24965bc7b10285fabef6278aa",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T13:31:13+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44313168971",
+   "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T23:14:34+00:00",
+  "at": "2026-11-18T13:31:13+00:00",
   "classes": {
-   "BC-08|inherited_unit|id_verified_rewrite_keeps_the": {
-    "example": "inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run ./_examples/feature_showcase' but the candidate does not render it",
+   "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[6]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
     "findings": 1,
-    "origin_kind": "inherited_unit",
+    "origin_kind": "job_error",
     "origins": [
-     "inherited_unit:025.paragraph"
+     "OutputRejectedError"
     ],
-    "rule": "BC-08",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "rule": "job_error",
+    "scope": "018625213487405af3efd3bd888483c61b5eb749d6b3b3c0440b49b60cafe56d",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "id_verified_rewrite_keeps_the",
-    "upstream": ""
-   },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:025.paragraph holds links '_examples/feature_showcase/main.go', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:025.paragraph"
-    ],
-    "rule": "BC-17",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "technical_content",
+    "sub_rule": "OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
     "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-08, BC-17; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[6]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', 'example:001', 'example:002', 'example:003', 'example:005', 'example:006', 'identity:ecosystem'] (and 614 more allowed values; cite only an offered ID); $.dispositions[12].fact_ids[7]: 'public_symbol:document.submitformaction' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', 'example:001', 'example:002', 'example:003', 'example:005', 'example:006', 'identity:ecosystem",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "BC-08",
-    "message": "inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run ./_examples/feature_showcase' but the candidate does not render it",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[6]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
     "origin": {
-     "id": "inherited_unit:025.paragraph",
-     "kind": "inherited_unit"
+     "id": "OutputRejectedError",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-08",
-    "section_id": "additional_examples",
-    "signature": "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
-    "source": "validation",
-    "sub_rule": "id_verified_rewrite_keeps_the",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:025.paragraph holds links '_examples/feature_showcase/main.go', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:025.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "signature": "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-08",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S5"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5+claim_contradiction:6+claim_contradiction:7",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units[2].text' changed ('The ai package exposes SummaryCopilot, OcrCopilot, ChatCopilot, and ImageDescriptionCopilot, each instantiated via NewSummaryCopilot, NewOcrCopilot, NewChatCopilot, and NewImageDescriptionCopilot respectively, and offering methods such as GetSummary, GetSummaryDocument, SaveSummary, GetTextRecognition, MakeSearchable, Ask, History, Reset, Describe, and FillAltTexts.' to 'The ai pac",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-08",
-    "outcome": "escalated",
-    "reason": "the revision would leave preview, workflow:example:002, workflow:example:003, workflow:example:005, workflow:example:006, workflow:feature_showcase where the plan assigned preview, workflow:example:002, workflow:example:003, workflow:example:005, workflow:example:006; escalated once to a plan-level repair at S5",
-    "section_id": "additional_examples",
-    "stage": "S6"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
-  "run_id": "43650795881",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43650795881",
+  "run_id": "44313168971",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44313168971",
   "schema_version": 1,
-  "source_revision": "2eed1113e22902f24965bc7b10285fabef6278aa",
+  "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
