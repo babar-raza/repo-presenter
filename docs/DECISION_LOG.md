@@ -7031,3 +7031,24 @@ requirement still raise (a mis-wired deployment stays visible); the per-process 
 runaway guard is untouched. Without the field every behaviour is unchanged.
 
 Backlog: BL-200.
+
+## 2026-11-18: Lane R trust becomes a governance rule, investigated in idle time (R46)
+
+**What the owner said.** Lane R is the most important lane and they have not been able to trust it: it is not
+universally acceptable (it fails on one candidate while it works for others), not robust (any failure halts the
+candidate and moving on means more coding and tuning), not reliable (confirmed through many runs), not repeatable
+in many senses, and they are not sure it was ever tested successfully on a hosted runner against the complete
+portfolio. These are to be investigated in idle time, and made a governance rule so time waste is reduced.
+
+**Evidence at the date of the rule** (hosted spend ledger, epoch 2): 133 hosted runs settled, 10 sealed Lane R
+(7.5%); 4 of the 40 active cells sealed on their first hosted run; 9 cells ran 3 to 9 times without sealing; all 40
+cells have been run on hosted at least once, but never as one frozen-code pass.
+
+**Decisions.** R46 records the five properties and makes idle time investigation time. Owner answers
+(interactive form, 2026-11-18): the trust bar is at least 85% of the 40 active cells sealing in one frozen-code
+hosted pass with a same-code repeat pass agreeing on at least 90% of cells; a proof pass plus one repeat runs after
+each batch of merged class fixes. Four independent read-only investigations (one per lens) start now; each finding
+becomes its own backlog item and must name the property it improves.
+
+Backlog: BL-201, BL-202, BL-203.
+
