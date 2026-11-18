@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: $.api_hubs[8].fact_ids[9]: 'public_symbol:aspose_pdf.document.save_as_image' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_test_asset:test-command', 'build_test_asset:tests', 'dependency:asn1crypto-1.5', 'dependency:cryptography-50', 'dependency:development.dev.brotli-1.2', 'dependency:development.dev.build-1.2', 'dependency:development.dev.fonttools-4.60.2'] (and 1868 more allowed values; cite only an offered ID)",
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `Form.fill` a field ('The aspose_pdf.Form class handles interactive forms with add_text_field, add_checkbox, and add_list_box for field creation, fill and reset for value management, flatten to lock answers, validate to inspect answers, and to_schema, export_schema, to_json_schema, and export_json_schema for template descriptions.'), but the facts record it as a method; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `Form.reset` a field ('The aspose_pdf.Form class handles interactive forms with add_text_field, add_checkbox, and add_list_box for field creation, fill and reset for value management, flatten to lock answers, validate to inspect answers, and to_schema, export_schema, to_json_schema, and export_json_schema for template descriptions.'), but the facts record it as a method; call it by its kind); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:220.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:244.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'with Document(\"report.pdf\") as document:')",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-15T08:28:28.848496+00:00",
+    "occurred_at": "2026-11-18T14:51:51.367839+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 27,
+  "state_version": 28,
   "recent_trigger_dedup_keys": {
     "run:41142404776:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "fbc76990855041eb8011727b165ee2bd",
     "run:41276313821:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "45c3f42e6a9d431991bc33f6963548a2",
