@@ -75,7 +75,9 @@ unless the result is in ``PUBLISHABLE_STATES`` (``publication-ready`` or later).
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 import subprocess
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
@@ -422,3 +424,40 @@ def classify(repository: str, lane: str, **signals: Any) -> AcceptanceState:
     ``ops/checks/portfolio_delivery_count.py``'s acceptance classification and
     ``ops/checks/calibration_status.py``'s ``--file``/``--matrix`` flags."""
     return classify_record(build_record(repository, lane, **signals))
+
+
+# --- BL-189: acceptance is bound to the audited README bytes, not only the upstream revision -------------
+#
+# An attested record names the SHA-256 of the exact bytes of the original (sealed) README the M9 auditor
+# judged, as ``candidate_sha256``. Every reader (the counter, the seeder's control selection, the R15
+# publication gate) classifies a record against the digest of the README bytes of the seal it is asked about
+# with :func:`acceptance_binding`, so one record can neither accept nor suppress the audit of other bytes that
+# happen to share a repository, lane and source revision. A record written before the field existed carries
+# none: it keeps counting exactly as before (R10) and is labelled ``REVISION_ONLY``, never ``CONTENT_BOUND``.
+
+CANDIDATE_DIGEST_FIELD = "candidate_sha256"
+CONTENT_BOUND = "content_bound"  # the record's digest equals the digest of the README bytes now sealed
+REVISION_ONLY = "revision_only"  # legacy record: no digest, so only the upstream revision binds it
+DIGEST_MISMATCH = "digest_mismatch"  # a well-formed digest of OTHER bytes: audited a different README
+DIGEST_MALFORMED = "digest_malformed"  # a digest field that is not 64 lowercase hex characters
+_SHA256 = re.compile(r"[0-9a-f]{64}")
+
+
+def candidate_sha256(data: bytes) -> str:
+    """SHA-256 (lowercase hex) of the exact bytes of a candidate README."""
+    return hashlib.sha256(data).hexdigest()
+
+
+def valid_candidate_digest(value: Any) -> bool:
+    return isinstance(value, str) and _SHA256.fullmatch(value) is not None
+
+
+def acceptance_binding(record_digest: Any, current_sha256: str) -> str:
+    """How an acceptance record relates to the README bytes now sealed (``current_sha256``): absent digest
+    (``None``) is ``REVISION_ONLY``; a malformed one ``DIGEST_MALFORMED``; otherwise equal digests are
+    ``CONTENT_BOUND`` and different ones ``DIGEST_MISMATCH``. Never raises."""
+    if record_digest is None:
+        return REVISION_ONLY
+    if not valid_candidate_digest(record_digest):
+        return DIGEST_MALFORMED
+    return CONTENT_BOUND if record_digest == current_sha256 else DIGEST_MISMATCH

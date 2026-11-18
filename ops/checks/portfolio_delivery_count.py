@@ -88,7 +88,7 @@ import tempfile
 from collections import Counter
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, NamedTuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO_ROOT / "src"))
@@ -148,6 +148,12 @@ class LaneOutcome:
     # and the candidate is never counted (fail closed, never assume an edit was made).
     live_unreadable: bool = False
     revision: str = ""  # the upstream revision the latest seal was made at; an audit binds to it
+    # BL-189: SHA-256 of the README bytes of the seal being counted, and how the attested record that accepted it
+    # relates to those bytes: "content_bound" (its candidate_sha256 equals this digest), "revision_only" (a legacy
+    # record without a digest: counted exactly as before, but proves only the upstream revision) or "" (not accepted).
+    readme_sha256: str = ""
+    acceptance_binding: str = ""
+    acceptance_gap: str = ""  # why the acceptance is not content-bound (revision-only), or why a record did not count
 
     @property
     def independently_accepted(self) -> bool:
@@ -239,6 +245,10 @@ def classify_lane(
             out.pipeline_good = True
             out.bucket, out.reason = classify_review(evidence.review, calibration)
     out.publication_ready = out.independently_accepted and allowlisted_for_pr(allowlist, repository)
+    if evidence is not None and evidence.readme is not None:
+        from repo_presenter.acceptance.record import candidate_sha256
+
+        out.readme_sha256 = candidate_sha256(evidence.readme)
 
     proposal = None if record is None else record.proposal
     if proposal is not None and proposal.number is not None:
@@ -406,6 +416,10 @@ def summarize(
             "records": sum(1 for o in rows if o.record_state != "NO_RECORD"),
             "pipeline_good": sum(1 for o in rows if o.pipeline_good),
             ACCEPTED: buckets[ACCEPTED],
+            # BL-189: of the accepted, how many are bound to the sealed README bytes (the rest are revision-only
+            # legacy records, counted unchanged but not proven to cover these bytes)
+            "content_bound": sum(1 for o in rows if o.independently_accepted and o.acceptance_binding == "content_bound"),
+            "revision_only": sum(1 for o in rows if o.independently_accepted and o.acceptance_binding == "revision_only"),
             UNCALIBRATED: buckets[UNCALIBRATED],
             UNREVIEWED: buckets[UNREVIEWED],
             NO_ACTION: buckets[NO_ACTION],
@@ -413,6 +427,8 @@ def summarize(
             "effect_executed": sum(1 for o in rows if o.effect_executed),
             "live_verified": sum(1 for o in rows if o.live_verified),
             "accepted_repositories": sorted(o.repository for o in rows if o.independently_accepted),
+            "acceptance_binding": {o.repository: o.acceptance_binding for o in sorted(rows, key=lambda r: r.repository)
+                                   if o.independently_accepted},
             "recertified": sum(1 for o in rows if o.certification == "RECERTIFIED"),
             "needs_repair": {
                 o.repository: o.failing_checks for o in rows if o.certification == "NEEDS_REPAIR"
@@ -586,17 +602,27 @@ def _gh_with_repo(args: list[str]) -> "subprocess.CompletedProcess[bytes]":
     return subprocess.run([*args, "--repo", ATTESTATION_REPO], capture_output=True, timeout=120, check=False)
 
 
-def read_attested_acceptances(
+class AttestedRecord(NamedTuple):
+    """One verified clean-control record that counts, as the counter keeps it (BL-189): the upstream
+    ``revision`` it audited and its ``candidate_sha256`` -- ``None`` for a legacy record that has no such field,
+    otherwise the field's raw value (validated against the sealed bytes only when applied)."""
+
+    revision: str
+    candidate_sha256: Any = None
+
+
+def read_attested_records(
     fetcher: RecordFetcher | None = None,
     gh_runner: Any = None,
     remote: str = "origin",
-) -> dict[tuple[str, str], str]:
-    """{(repository, lane): revision} for every clean-control record that is INDEPENDENTLY ACCEPTED
-    or higher under ``acceptance.record.classify`` with a VERIFIED attestation from the hosted
+) -> dict[tuple[str, str], list[AttestedRecord]]:
+    """{(repository, lane): every counting record} for every clean-control record that is INDEPENDENTLY
+    ACCEPTED or higher under ``acceptance.record.classify`` with a VERIFIED attestation from the hosted
     acceptance writer on ``main``. A missing branch, file, attestation or field is simply absent;
-    nothing here raises. A ``dry_run`` document or one with another schema is ignored."""
+    nothing here raises. A ``dry_run`` document or one with another schema is ignored. Every record is kept
+    (not just the last): two READMEs of one repository, lane and revision each have their own record."""
     from repo_presenter.acceptance.record import (
-        DELIVERED, INDEPENDENTLY_ACCEPTED, LIVE_VERIFIED, PUBLICATION_READY, classify,
+        CANDIDATE_DIGEST_FIELD, DELIVERED, INDEPENDENTLY_ACCEPTED, LIVE_VERIFIED, PUBLICATION_READY, classify,
     )
 
     counted = {INDEPENDENTLY_ACCEPTED, PUBLICATION_READY, DELIVERED, LIVE_VERIFIED}
@@ -604,7 +630,7 @@ def read_attested_acceptances(
         files = (fetcher or (lambda: fetch_record_files(remote)))()
     except Exception:  # noqa: BLE001 -- a broken fetch is "no records", never a crash or a pass
         return {}
-    accepted: dict[tuple[str, str], str] = {}
+    accepted: dict[tuple[str, str], list[AttestedRecord]] = {}
     with tempfile.TemporaryDirectory(prefix="acc-records-") as tmp:
         for index, (branch, name, blob) in enumerate(files):
             try:
@@ -629,18 +655,54 @@ def read_attested_acceptances(
                         gh_runner=gh_runner or _gh_with_repo,
                     )
                     if state in counted:
-                        accepted[(str(record["repository"]), str(record["lane"]))] = str(record.get("revision", ""))
+                        # absent field = legacy (None); an explicit null is a malformed digest, not a legacy record
+                        digest = record[CANDIDATE_DIGEST_FIELD] if CANDIDATE_DIGEST_FIELD in record else None
+                        if CANDIDATE_DIGEST_FIELD in record and digest is None:
+                            digest = ""
+                        accepted.setdefault((str(record["repository"]), str(record["lane"])), []).append(
+                            AttestedRecord(str(record.get("revision", "")), digest)
+                        )
             except Exception:  # noqa: BLE001 -- malformed record: contributes nothing
                 continue
     return accepted
 
 
+def read_attested_acceptances(
+    fetcher: RecordFetcher | None = None,
+    gh_runner: Any = None,
+    remote: str = "origin",
+) -> dict[tuple[str, str], str]:
+    """{(repository, lane): revision} -- the revision-keyed view of :func:`read_attested_records` (the last
+    counting record of a cell wins), kept for callers that only need to know which cells have a record."""
+    return {key: rows[-1].revision for key, rows in read_attested_records(fetcher, gh_runner, remote).items() if rows}
+
+
+def _records_for(attested: dict, key: tuple[str, str]) -> list[AttestedRecord]:
+    """The cell's records: ``read_attested_records``' lists, or the older ``{cell: revision}`` shape (a legacy,
+    digest-less record)."""
+    value = attested.get(key)
+    if value is None:
+        return []
+    if isinstance(value, str):
+        return [AttestedRecord(value)]
+    return [r if isinstance(r, AttestedRecord) else AttestedRecord(*r) for r in value]
+
+
 def apply_attested(
-    outcomes: list[LaneOutcome], attested: dict[tuple[str, str], str], allowlist: dict[str, Any]
+    outcomes: list[LaneOutcome], attested: dict[tuple[str, str], Any], allowlist: dict[str, Any]
 ) -> None:
     """Make an attested acceptance record the ONLY road into the accepted bucket. The frozen
     ``reviewer_calibration`` path may still have produced ACCEPTED in ``classify_lane``; that is
-    demoted here unless an attested record exists, and only the CURRENT version set can count."""
+    demoted here unless an attested record exists, and only the CURRENT version set can count.
+
+    BL-189: a record counts for a seal when it audited the same upstream revision AND either carries the digest
+    of this seal's README bytes (``content_bound``) or carries no digest at all (a legacy record, ``revision_only``:
+    counted exactly as before, never demoted -- R10 -- but labelled). A record whose digest is of other bytes, or is
+    not 64 lowercase hex, never counts: it audited a different README."""
+    from repo_presenter.acceptance.record import (
+        CONTENT_BOUND, DIGEST_MALFORMED, REVISION_ONLY, acceptance_binding,
+    )
+
     for o in outcomes:
         if not o.pipeline_good:
             continue
@@ -654,10 +716,19 @@ def apply_attested(
             o.reason = "R16 fail-closed: the live README could not be read, so a no-op seal cannot be ruled out"
             o.publication_ready = False
             continue
-        audited_revision = attested.get((o.repository, o.lane))
-        if o.current and audited_revision and audited_revision == o.revision:
+        at_revision = [r for r in _records_for(attested, (o.repository, o.lane)) if r.revision and r.revision == o.revision]
+        bindings = [acceptance_binding(r.candidate_sha256, o.readme_sha256) for r in at_revision]
+        binding = CONTENT_BOUND if CONTENT_BOUND in bindings else REVISION_ONLY if REVISION_ONLY in bindings else ""
+        o.acceptance_binding, o.acceptance_gap = "", ""
+        if o.current and binding:
             o.bucket = ACCEPTED
+            o.acceptance_binding = binding
             o.reason = "attested independently-accepted record from the hosted acceptance writer"
+            if binding == REVISION_ONLY:
+                o.acceptance_gap = (
+                    f"acceptance covers revision {o.revision[:12]}, not the README bytes now sealed: the record "
+                    "predates candidate digests (legacy); counted, but not content-bound"
+                )
         else:
             # R33: the attested M9 record is the only road in; the frozen reviewer calibration no
             # longer explains why a candidate is not counted, so its reason is replaced too.
@@ -666,8 +737,19 @@ def apply_attested(
                 "R33: no attested M9 acceptance record at this revision"
                 if o.current else "older version set: only the current seal can be accepted"
             )
+            if o.current and at_revision:
+                o.acceptance_gap = (
+                    f"attested record(s) at revision {o.revision[:12]} cover "
+                    + ("a malformed candidate digest" if DIGEST_MALFORMED in bindings else "other README bytes")
+                    + f", not the README bytes now sealed ({o.readme_sha256[:12] or 'none'}); a content-bound audit is required"
+                )
+                o.reason = f"R33: {o.acceptance_gap}"
             o.needs_review_only_pass = o.current
-        o.publication_ready = o.independently_accepted and allowlisted_for_pr(allowlist, o.repository)
+        # the static publication precondition: accepted, content-bound (BL-189) and allowlisted
+        o.publication_ready = (
+            o.independently_accepted and o.acceptance_binding == CONTENT_BOUND
+            and allowlisted_for_pr(allowlist, o.repository)
+        )
 
 
 def collect(remote: str = "origin", record_fetcher: RecordFetcher | None = None, gh_runner: Any = None) -> tuple[list[LaneOutcome], Any, Any]:
@@ -707,7 +789,7 @@ def collect(remote: str = "origin", record_fetcher: RecordFetcher | None = None,
         finally:
             for backend in backends.values():
                 backend.close()
-    apply_attested(outcomes, read_attested_acceptances(record_fetcher, gh_runner, remote), allowlist)
+    apply_attested(outcomes, read_attested_records(record_fetcher, gh_runner, remote), allowlist)
     return outcomes, calibration, acceptance_certificates
 
 
@@ -733,9 +815,11 @@ def main(argv: list[str]) -> int:
         for lane in ("r", "l"):
             row = dict(summary[f"lane_{lane}"])
             names = row.pop("accepted_repositories")
+            binding = row.pop("acceptance_binding")
             print(f"lane {lane.upper()}: " + "  ".join(f"{k}={v}" for k, v in row.items()))
             if names:
                 print(f"  accepted: {', '.join(names)}")
+                print("  acceptance_binding: " + ", ".join(f"{n}={binding.get(n) or '?'}" for n in names))
         for o in outcomes:
             if o.certification == "NEEDS_REPAIR":
                 print(f"  [{o.lane}] {o.repository}: NEEDS_REPAIR -- {', '.join(o.failing_checks)}")

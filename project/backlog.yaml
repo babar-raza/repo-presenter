@@ -1930,12 +1930,12 @@ items:
     type: defect
     source: "Independent acceptance review 2026-11-17; delivery plan sections 5.1–5.3; docs/PROJECT_PRODUCTION_REVIEW_2026-11-17.md"
     priority: P0
-    status: open
+    status: active
     implementation_path: "bind existing M9 seeder, attested writer, counter and publication consumers to the audited candidate digest and pinned source; preserve seals and re-audit only changed audited scope"
     acceptance: "two different README bytes for the same repository, lane and source revision cannot share acceptance; missing or mismatched identity fails closed; identical audited bytes remain replayable; end-to-end negative controls and targeted recertification evidence"
-    evidence: ["2026-11-17 zero-call review: writer records repository/lane/revision; apply_attested accepts by those fields and has no candidate digest input. A real changed-seal incident has not been established."]
-    next_action: "reproduce through actual seeder/writer/counter chain and design identity binding under R10"
-    updated: "2026-11-17"
+    evidence: ["2026-11-17 zero-call review: writer records repository/lane/revision; apply_attested accepts by those fields and has no candidate digest input. A real changed-seal incident has not been established.", "2026-11-18 implemented on branch fix/bl189-content-bound-acceptance (not pushed): seeder commits original_sha256 (SHA-256 of the sealed README bytes) into each encrypted-manifest entry; writer records candidate_sha256 (clean control: sealed bytes, cross-checked against the bytes the auditor read; seeded copy: the ORIGINAL's digest, never the mutated copy's; a control whose audited bytes differ cannot pass); counter keeps every record per cell and counts a record for a seal only when revision matches and its digest equals the seal's README digest (content_bound) or is absent (legacy, revision_only, counted exactly as before); different/malformed digest never counts; R15 gate refuses a non-content-bound accepted cell with the reason; seeder control selection and fresh_candidates are digest-aware and a failed git listing/fetch/tree/blob read raises instead of reading as no records. tests/acceptance/test_content_bound_acceptance.py (28 tests, end to end seeder main -> writer main -> counter reader -> apply_attested -> R15 evaluate). Zero-call shadow count on current data (attestation verify stubbed because sigstore hosts are refused here; the same stub before and after): Lane R independently_accepted 1 -> 1 (content_bound 0, revision_only 1), Lane L 0 -> 0 (all 34 L cells unreadable-live in this session, an environment limit), publication_ready R 1 -> 0 (the one accepted cell is legacy). Open: legacy inventory/re-audit of the revision_only cells, hosted verification of the first content-bound batch, review page still shows a cell-level audited flag."]
+    next_action: "supervisor integrates the branch; the next hosted M9 batch writes content-bound records (candidate_sha256); compare each legacy revision_only cell's audited input artifact with its current seal bytes (inventory) or re-audit it; then close once a hosted content-bound acceptance is counted"
+    updated: "2026-11-18"
 
   - id: BL-190
     title: "R15 accepted-cell freshness must consider relevant upstream changes"

@@ -6989,3 +6989,30 @@ transaction infrastructure are not a standing implementation programme. Work con
 blockers under the existing quality, no-regression and delivery gates.
 
 Backlog: BL-189, BL-193, BL-194, BL-195, BL-196.
+
+## 2026-11-18: Bind M9 acceptance to the audited README bytes (BL-189)
+
+An acceptance record named only repository, lane and upstream revision, so a different README at the same
+source revision (a re-render after a code change, a targeted repair) inherited an audit of other bytes. Fixed
+inside the existing components, no new module, stage, workflow or record type (R27): the seeder writes the
+SHA-256 of the original sealed README bytes into each entry of its encrypted manifest (public case index
+unchanged, so blinding holds: a digest beside a seeded copy would reveal which texts were mutated); the
+acceptance writer records `candidate_sha256` per record (a clean control: the sealed bytes, which must equal the
+bytes the auditor read, otherwise it cannot pass; a seeded copy: the original's digest, never the mutated copy's);
+the counter keeps every record of a cell and counts a record for a seal only when the revision matches and the
+digest equals the seal's README digest (`content_bound`) or the record is a legacy one with no digest
+(`revision_only`, counted exactly as before so no count drops, R10, but labelled per cell and totalled per lane
+next to `independently_accepted`); a record of other bytes or with a malformed digest never counts. Publication
+fails closed: the R15 portfolio gate and `publication_ready` accept only a content-bound acceptance, and say
+"acceptance covers revision X, not the README bytes now sealed" otherwise. The M9 seeder's control selection
+and fresh-candidate count use the same digest rule, and a failed git listing, fetch, tree or blob read raises
+instead of being read as an empty record set. Decision (owner-visible gap): every currently counted
+acceptance is a legacy revision-only record, so counts are unchanged but R15 cannot become ready from them until a
+content-bound audit covers the sealed bytes (the next hosted M9 batch writes them) or a legacy inventory proves the
+audited bytes equal the current seal. No version constant changed, no seal touched, no provider call, no upstream
+write. Zero-call shadow count on current data: Lane R accepted 1 -> 1 (content_bound 0, revision_only 1), Lane L
+0 -> 0, `publication_ready` Lane R 1 -> 0. Open: the review page's per-cell "audited" flag is still cell-level;
+the seeder still trusts unattested record JSON (BL-194).
+
+Backlog: BL-189, BL-194.
+

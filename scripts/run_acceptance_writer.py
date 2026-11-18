@@ -42,6 +42,11 @@ from typing import Any, NamedTuple
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
+from repo_presenter.acceptance.record import (  # noqa: E402
+    CANDIDATE_DIGEST_FIELD,
+    candidate_sha256,
+    valid_candidate_digest,
+)
 from repo_presenter.acceptance.audit.score import (  # noqa: E402
     FLAGGED_VERDICTS,
     ScoringError,
@@ -313,6 +318,32 @@ def evaluate_gates(
     return gates, reasons
 
 
+#: The seeder commits the digest of the ORIGINAL sealed README bytes into each manifest entry under this key
+#: (inside the encrypted, commitment-hashed manifest: a public digest beside a seeded copy would tell the
+#: auditor which texts were mutated).
+ORIGINAL_DIGEST_KEY = "original_sha256"
+
+
+def candidate_identity(clean: bool, manifest_digest: Any, audited: bytes | None) -> tuple[str | None, str]:
+    """(``candidate_sha256`` for the record, the reason identity could not be established) for one case (BL-189).
+
+    The digest is that of the ORIGINAL sealed README, never of a mutated seeded copy. The writer sees two
+    things: the manifest's committed ``original_sha256`` (every case, written by the seeder before
+    mutation) and the exact bytes the auditor read (``candidates/<case_id>.md``). For a clean control the two
+    must agree -- the auditor then judged the sealed bytes; a disagreement means the auditor did not see the
+    sealed README, so the case has no identity and cannot pass. For a seeded copy only the manifest's digest
+    can name the original. A batch seeded before the field existed gives a clean control the digest of the
+    bytes the auditor read (a clean control is the unmodified seal) and a seeded copy none."""
+    if manifest_digest is not None and not valid_candidate_digest(manifest_digest):
+        return None, f"manifest {ORIGINAL_DIGEST_KEY} is not a SHA-256 digest"
+    seen = candidate_sha256(audited) if audited is not None else None
+    if not clean:
+        return manifest_digest, ""
+    if manifest_digest is not None and seen is not None and manifest_digest != seen:
+        return None, "the bytes the auditor read are not the sealed README the seeder committed"
+    return manifest_digest or seen, ""
+
+
 def build_records_document(
     seed_run_id: str,
     case_index: Sequence[Mapping[str, Any]],
@@ -323,7 +354,9 @@ def build_records_document(
     dry_run: bool = False,
     adjudications: Sequence[Mapping[str, Any]] = (),
     verbatim_baseline: Callable[[str, int], bool] | None = None,
+    audited: Mapping[str, bytes] | None = None,
 ) -> dict[str, Any]:
+    originals = {str(m.get("candidate_id")): m.get(ORIGINAL_DIGEST_KEY) for m in manifest}
     shapes = {str(m.get("candidate_id")): m.get("shape") for m in manifest}
     not_recertified = []
     for entry in case_index:
@@ -363,13 +396,16 @@ def build_records_document(
         clean = shapes.get(case_id) == CLEAN_SHAPE
         seal_revision, certified = recertified.get((repository, lane), ("", False))
         validated = bool(certified) and seal_revision == revision
+        digest, identity_problem = candidate_identity(clean, originals.get(case_id), (audited or {}).get(case_id))
         records.append({
             "case_id": case_id, "repository": repository, "lane": lane, "revision": revision,
             "role": "clean_control" if clean else "seeded",
             "deterministically_validated": validated,
             "mechanism_verdicts": {"recertify": validated},
             "canaries": {},
-            "audit_passed": bool(batch_passed and clean and case_id not in flagged),
+            "audit_passed": bool(batch_passed and clean and case_id not in flagged and not identity_problem),
+            **({CANDIDATE_DIGEST_FIELD: digest} if digest else {}),
+            **({"identity_problem": identity_problem} if identity_problem else {}),
             **({"residual_lines": sorted(set(residuals[case_id]))} if case_id in residuals else {}),
         })
     # Post-audit diagnostics: this document is written only AFTER the findings are frozen, so
@@ -446,6 +482,14 @@ def read_texts(case_index: Sequence[Mapping[str, Any]], candidates_dir: Path) ->
     return texts
 
 
+def read_audited_bytes(case_index: Sequence[Mapping[str, Any]], candidates_dir: Path) -> dict[str, bytes]:
+    """The audited case files' exact bytes (no newline translation), for the candidate digest."""
+    return {
+        str(e["case_id"]): (candidates_dir / f"{e['case_id']}.md").read_bytes()
+        for e in case_index if (candidates_dir / f"{e['case_id']}.md").is_file()
+    }
+
+
 def main(
     argv: Sequence[str] | None = None,
     *,
@@ -494,7 +538,7 @@ def main(
     adjudications = [*adjudications, *derived]
     document = build_records_document(
         args.seed_run_id, case_index, manifest, findings, recertified, dry_run=args.dry_run,
-        adjudications=adjudications,
+        adjudications=adjudications, audited=read_audited_bytes(case_index, args.case_index.parent / "candidates"),
         verbatim_baseline=None if args.dry_run else baseline_checker(case_index, args.case_index.parent / "candidates"),
     )
     args.out.write_text(json.dumps(document, indent=2, sort_keys=True), encoding="utf-8")

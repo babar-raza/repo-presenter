@@ -120,7 +120,10 @@ def test_the_frozen_calibration_path_can_no_longer_produce_an_accepted_count():
 def test_an_attested_record_moves_a_current_outcome_into_the_accepted_bucket():
     outcomes = [_outcome(pdc.UNCALIBRATED)]
     pdc.apply_attested(outcomes, {(REPO, "R"): "rev1"}, ALLOW)
-    assert outcomes[0].independently_accepted and outcomes[0].publication_ready is True
+    # a legacy record (no candidate digest) still counts exactly as before (R10) ...
+    assert outcomes[0].independently_accepted and outcomes[0].acceptance_binding == "revision_only"
+    # ... but is not publication-ready until a content-bound record covers the sealed bytes (BL-189)
+    assert outcomes[0].publication_ready is False
 
 
 def test_an_audit_of_an_older_revision_does_not_count_after_the_repository_is_resealed():

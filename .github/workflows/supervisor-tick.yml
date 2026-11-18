@@ -65,7 +65,7 @@ jobs:
             timeout 25m python ops/checks/portfolio_delivery_count.py --per-lane 25 > "$RUNNER_TEMP/count.txt" 2>&1
             count_rc=$?
             set -e
-            grep -E '^(reviewer_calibration|acceptance_calibration|lane [RL]:|  accepted:)' "$RUNNER_TEMP/count.txt" || true
+            grep -E '^(reviewer_calibration|acceptance_calibration|lane [RL]:|  accepted:|  acceptance_binding:)' "$RUNNER_TEMP/count.txt" || true
             echo "..."
             tail -8 "$RUNNER_TEMP/count.txt"
             if [ "$count_rc" -eq 124 ]; then echo "delivery count timed out after 25 minutes"; fi

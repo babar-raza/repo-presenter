@@ -45,6 +45,13 @@ from repo_presenter.acceptance.audit.seed import (  # noqa: E402
     encrypt_seed_manifest,
     seed_shape,
 )
+from repo_presenter.acceptance.record import (  # noqa: E402
+    CANDIDATE_DIGEST_FIELD,
+    CONTENT_BOUND,
+    REVISION_ONLY,
+    acceptance_binding,
+    candidate_sha256,
+)
 from repo_presenter.core.state.bundle_store import seal_history  # noqa: E402
 
 import importlib.util  # noqa: E402
@@ -83,42 +90,87 @@ def is_noop(lane: str, seal: Any) -> bool:
     return lane == "L" and bool(new) and bool(old) and new.get("sha256") == old.get("sha256")
 
 
+class RecordsUnavailable(RuntimeError):
+    """The acceptance-record branches could not be read: NOT the same as "no records" (BL-189)."""
+
+
+#: ``judged_controls`` key: (repository, lane, revision, candidate_sha256 or ``""`` for a legacy record).
+JudgedKey = tuple[str, str, str, str]
+
+
 def already_accepted(remote: str = "origin") -> set[tuple[str, str, str]]:
     """(repository, lane, revision) of every clean control any acceptance-record branch marks
-    audit-passed. Public data; only used to avoid spending a control slot on them again."""
-    return {key for key, passed in judged_controls(remote).items() if passed}
+    audit-passed. Public data; only used to avoid spending a control slot on them again. A record bound to
+    other README bytes than the current seal's is NOT excluded by this revision-keyed view -- use
+    ``judged_for(judged, repository, lane, seal)`` for the seal-specific answer."""
+    return {key[:3] for key, passed in judged_controls(remote).items() if passed}
 
 
-def judged_controls(remote: str = "origin") -> dict[tuple[str, str, str], bool]:
-    """{(repository, lane, revision): audit_passed} for every candidate any non-dry-run acceptance
-    record already judged AS A CLEAN CONTROL (passed if any record passed it). A seeded copy is
-    audit material, not a judgement of the candidate, so it is not listed."""
+def _git(remote_args: list[str], what: str) -> bytes:
     import subprocess
 
-    found: dict[tuple[str, str, str], bool] = {}
-    listed = subprocess.run(["git", "ls-remote", "--heads", remote, "refs/heads/acceptance-record/*"],
-                            capture_output=True, text=True, check=False).stdout
+    done = subprocess.run(["git", *remote_args], capture_output=True, check=False)
+    if done.returncode != 0:
+        raise RecordsUnavailable(f"{what} failed (git exit {done.returncode}): {done.stderr.decode('utf-8', 'replace').strip()[:200]}")
+    return done.stdout
+
+
+def judged_controls(remote: str = "origin") -> dict[JudgedKey, bool]:
+    """{(repository, lane, revision, candidate_sha256 or ""): audit_passed} for every candidate any non-dry-run
+    acceptance record already judged AS A CLEAN CONTROL (passed if any record passed it). A seeded copy is
+    audit material, not a judgement of the candidate, so it is not listed. A legacy record (no digest field)
+    is keyed with ``""``; a record whose digest is not 64 lowercase hex judges nothing.
+
+    A git failure (listing, fetch, tree or blob read) raises :class:`RecordsUnavailable`: an unreadable
+    record set is not an empty one (BL-189), so a transient failure can never make every candidate look
+    unjudged. A readable file that is not valid JSON, or has no records, simply judges nothing."""
+    found: dict[JudgedKey, bool] = {}
+    listed = _git(["ls-remote", "--heads", remote, "refs/heads/acceptance-record/*"], "listing the acceptance-record branches").decode("utf-8", "replace")
     branches = [ln.split("refs/heads/", 1)[1] for ln in listed.splitlines() if "refs/heads/" in ln]
     if branches:
-        subprocess.run(["git", "fetch", "-q", remote, *[f"+refs/heads/{b}:refs/remotes/{remote}/{b}" for b in branches]],
-                       capture_output=True, check=False)
+        _git(["fetch", "-q", remote, *[f"+refs/heads/{b}:refs/remotes/{remote}/{b}" for b in branches]], "fetching the acceptance-record branches")
     for branch in branches:
-        names = subprocess.run(["git", "ls-tree", "--name-only", f"{remote}/{branch}"], capture_output=True, text=True, check=False).stdout
+        names = _git(["ls-tree", "--name-only", f"{remote}/{branch}"], f"listing {branch}").decode("utf-8", "replace")
         for name in names.split():
             if not (name.startswith("acceptance-records-") and name.endswith(".json")):
                 continue
-            blob = subprocess.run(["git", "show", f"{remote}/{branch}:{name}"], capture_output=True, check=False).stdout
+            blob = _git(["show", f"{remote}/{branch}:{name}"], f"reading {branch}:{name}")
             try:
                 doc = json.loads(blob)
                 if doc.get("dry_run") is not False:
                     continue
                 for r in doc["records"]:
                     if r.get("role") == "clean_control":
-                        key = (str(r["repository"]), str(r["lane"]), str(r["revision"]))
+                        digest = r.get(CANDIDATE_DIGEST_FIELD)
+                        if digest is not None and acceptance_binding(digest, digest) != CONTENT_BOUND:
+                            continue  # malformed digest: judges nothing
+                        key = (str(r["repository"]), str(r["lane"]), str(r["revision"]), digest or "")
                         found[key] = found.get(key, False) or r.get("audit_passed") is True
             except (ValueError, KeyError, TypeError, AttributeError):
                 continue
     return found
+
+
+def judged_for(judged: dict, repository: str, lane: str, seal: Any) -> tuple[bool | None, str]:
+    """(was this EXACT seal judged as a clean control -- passed? None when never --, binding label).
+
+    A record judges the seal when its digest equals the digest of the seal's README bytes (``content_bound``),
+    or when it is a legacy record without a digest at the same revision (``revision_only``: still eligible,
+    reported as such). A record bound to other README bytes at the same revision judges nothing. Keys of the
+    older 3-tuple shape (repository, lane, revision) are legacy records."""
+    digest = candidate_sha256(seal.readme or b"")
+    verdict: bool | None = None
+    label = REVISION_ONLY
+    for key, passed in judged.items():
+        if tuple(key[:3]) != (repository, lane, seal.revision):
+            continue
+        recorded = key[3] if len(key) > 3 else ""
+        if recorded and recorded != digest:
+            continue
+        if recorded:
+            label = CONTENT_BOUND
+        verdict = (verdict or False) or bool(passed)
+    return verdict, label if verdict is not None else ""
 
 
 # --- the scheduled round's gate (owner R37: the system runs itself on GitHub Actions) -------------------
@@ -139,7 +191,7 @@ def fresh_candidates(by_lane: dict[str, list], judged: dict[tuple[str, str, str]
     for lane, entries in sorted(by_lane.items()):
         for repository, seal in entries:
             key = (repository, lane, seal.revision)
-            if getattr(seal, "counted", False) and not is_noop(lane, seal) and key not in judged:
+            if getattr(seal, "counted", False) and not is_noop(lane, seal) and judged_for(judged, repository, lane, seal)[0] is None:
                 fresh.append(key)
     return fresh
 
@@ -197,8 +249,16 @@ def recertified_seals(remote: str = "origin") -> set[tuple[str, str, str]]:
     return {(r.repository, r.lane, r.revision) for r in results if r.recertified}
 
 
+def _accepted_seal(accepted: Any, repository: str, lane: str, seal: Any) -> bool:
+    """Is THIS seal (its README bytes, not just its revision) already accepted? ``accepted`` is either the
+    judged-controls mapping (digest-aware) or a legacy set of (repository, lane, revision) triples."""
+    if isinstance(accepted, dict):
+        return judged_for(accepted, repository, lane, seal)[0] is True
+    return (repository, lane, seal.revision) in accepted
+
+
 def build_seed_plan(
-    by_lane: dict[str, list], salt: int = 0, accepted: set[tuple[str, str, str]] = frozenset(),
+    by_lane: dict[str, list], salt: int = 0, accepted: set[tuple[str, str, str]] | dict = frozenset(),
     recertified: set[tuple[str, str, str]] | None = None,
 ) -> tuple[list[dict], list[dict]]:
     """(case_index_entries, manifest_records) -- deterministic, ordered, so a dry run and the
@@ -216,7 +276,7 @@ def build_seed_plan(
         shape_i = salt  # a burned batch's seeds must not repeat: rotate shapes and controls by salt
         unfit = {
             i for i, (repository, seal) in enumerate(entries)
-            if is_noop(lane, seal) or (repository, lane, seal.revision) in accepted
+            if is_noop(lane, seal) or _accepted_seal(accepted, repository, lane, seal)
             or (recertified is not None and (repository, lane, seal.revision) not in recertified)
         }
         fit = [i for i in range(len(entries)) if i not in unfit]
@@ -252,7 +312,9 @@ def build_seed_plan(
                 "case_id": case_id, "repository": repository, "lane": lane,
                 "revision": seal.revision, "text": result.seeded_readme,
             })
-            manifest.append({"case_id": case_id, **result.record.as_dict()})
+            # BL-189: the digest of the ORIGINAL sealed bytes, committed before any mutation, inside the encrypted
+            # manifest only (a digest beside a seeded copy would reveal which texts were mutated).
+            manifest.append({"case_id": case_id, "original_sha256": candidate_sha256(seal.readme), **result.record.as_dict()})
     return case_index, manifest
 
 
@@ -279,7 +341,11 @@ def main() -> int:
         def count() -> int:
             return len(fresh_candidates(select_candidates(remote=args.remote), judged_controls(args.remote)))
 
-        outputs = gate(heads, run_id=args.run_id, require_fresh=args.require_fresh, count_fresh=count)
+        try:
+            outputs = gate(heads, run_id=args.run_id, require_fresh=args.require_fresh, count_fresh=count)
+        except RecordsUnavailable as error:
+            print(f"FAIL: the acceptance records could not be read (not the same as none): {error}", file=sys.stderr)
+            return 1
         for key, value in outputs.items():
             print(f"{key}={value}")
         print(f"gate: {outputs['action']}: {outputs['reason']}", file=sys.stderr)
@@ -307,7 +373,12 @@ def main() -> int:
         print(f"FAIL: zero-call re-certification of the latest seals failed: {type(error).__name__}: {error}",
               file=sys.stderr)
         return 1
-    case_index, manifest = build_seed_plan(by_lane, args.salt, already_accepted(args.remote), recertified)
+    try:
+        judged = judged_controls(args.remote)
+    except RecordsUnavailable as error:
+        print(f"FAIL: the acceptance records could not be read (not the same as none): {error}", file=sys.stderr)
+        return 1
+    case_index, manifest = build_seed_plan(by_lane, args.salt, judged, recertified)
     seeded_count = sum(1 for m in manifest if m["shape"] != CLEAN_SHAPE)
     stale = sum(1 for lane, entries in by_lane.items() for repository, seal in entries
                 if (repository, lane, seal.revision) not in recertified)
