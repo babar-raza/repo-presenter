@@ -23,23 +23,28 @@ Aspose.HTML FOSS for Python reads and writes HTML documents, parses HTML fragmen
 ## At a Glance
 
 ```mermaid
-flowchart LR
-Product["Aspose.HTML FOSS for Python"]
-Product["Aspose.HTML FOSS for Python"] --> Cap1["Parse HTML into DOM"]
-Cap2["DOM manipulation"]
-Cap3["CSSOM styling"]
-Cap4["URL handling"]
-Cap5["Encoding detection"]
-Cap6["JavaScript execution"]
-Cap7["Serialization"]
-Cap8["Tokenizer control"]
-Product["Aspose.HTML FOSS for Python"] --> Cap2["DOM manipulation"]
-Product["Aspose.HTML FOSS for Python"] --> Cap3["CSSOM styling"]
-Product["Aspose.HTML FOSS for Python"] --> Cap4["URL handling"]
-Product["Aspose.HTML FOSS for Python"] --> Cap5["Encoding detection"]
-Product["Aspose.HTML FOSS for Python"] --> Cap6["JavaScript execution"]
-Product["Aspose.HTML FOSS for Python"] --> Cap7["Serialization"]
-Product["Aspose.HTML FOSS for Python"] --> Cap8["Tokenizer control"]
+flowchart TB
+  PRODUCT["Aspose.HTML FOSS for Python"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Parse HTML into DOM"]
+    c2["DOM manipulation"]
+    c3["CSSOM styling"]
+    c4["URL handling"]
+    c5["Encoding detection"]
+    c6["JavaScript execution"]
+    c7["Serialization"]
+    c8["Tokenizer control"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
+  end
+  PRODUCT --> Capabilities
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
@@ -49,13 +54,10 @@ Product["Aspose.HTML FOSS for Python"] --> Cap8["Tokenizer control"]
 - **CSSOM styling.** It matches `CSS` selectors and stylesheets against elements and resolves the cascade including specificity, inline-vs-author rules, !important, and inheritance using `Element.get_computed_style`; the CSSOM surface models stylesheets structurally with `CSSStyleSheet`, `CSSStyleRule`, `CSSMediaRule`, and related rule types.
 - **URL handling.** It validates and manipulates URLs with `aspose_html.url.URL`, reads and edits query strings with `aspose_html.url.URLSearchParams`, and detects byte-stream character encodings using `aspose_html.encoding.detect_encoding`.
 - **Encoding detection.** It detects byte-stream character encodings including BOM and content sniffing with `aspose_html.encoding.detect_encoding`, returning results via `aspose_html.encoding.EncodingDetectionResult` and raising `aspose_html.encoding.UnsupportedEncodingError` for unsupported encodings.
-- **JavaScript execution.** It executes JavaScript against a parsed DOM through `aspose_html.js.JSContext`, an optional QuickJS-backed bridge exposing read-only DOM proxies to script code; requires the js extra.
 - **Serialization.** It serializes complete documents, fragments, and individual elements back to an HTML string with the `aspose_html.serialise` function or `aspose_html.XMLSerializer`, and provides `aspose_html.serialiser.inner_html` and `aspose_html.serialiser.outer_html` for granular output control.
 - **Tokenizer control.** It exposes the tokenizer's token stream through `aspose_html.tokenizer.Tokenizer.tokenize`, producing token types including `aspose_html.tokenizer.StartTagToken`, `aspose_html.tokenizer.EndTagToken`, `aspose_html.tokenizer.CharacterToken`, `aspose_html.tokenizer.CommentToken`, and `aspose_html.tokenizer.DoctypeToken` for callers who need fine-grained parsing control.
 
-- Parse HTML strings, bytes, fragments, and files into a DOM document with `HTMLDocument.parse()`, `HTMLDocument.parse_fragment()`, and `HTMLDocument.load()`; the lower-level `Tokenizer` and `TreeBuilder` classes implement the WHATWG tokenization and tree-construction algorithms directly, for callers who need that level of control.
 - Work with a broad set of specialized HTML element classes — `HTMLFormElement`, `HTMLInputElement`, `HTMLSelectElement`, `HTMLTableElement`, `HTMLMediaElement`, and dozens more — each exposing the element-specific properties defined by its HTML interface.
-- Validate and manipulate URLs with `URL`, read and edit query strings with `URLSearchParams`, and detect byte-stream character encodings (BOM and content sniffing) with `detect_encoding()`.
 
 ## Installation
 
@@ -73,7 +75,7 @@ Verify the install:
 python -c "import aspose_html.tokenizer"
 ```
 
-The package declares `python_requires` as `>=3.10`.
+Requires Python 3.10 or later.
 
 ## Dependencies
 
@@ -87,7 +89,7 @@ The package declares `python_requires` as `>=3.10`.
 
 ### Native and System Requirements
 
-- Requires Python 3.10 or later (`python_requires=">=3.10"` in `pyproject.toml`).
+- Requires Python 3.10 or later.
 
 ### Development Dependencies
 
@@ -203,7 +205,7 @@ Runnable scripts are available in the [`examples`](examples/) directory.
 
 Aspose.HTML FOSS for Python provides the `aspose_html.HTMLDocument` class as its primary entry point for parsing HTML into a `Document` tree. The `Document` tree is built from `aspose_html.dom.Document`, `aspose_html.dom.Element`, and `aspose_html.dom.Text` nodes, and can be styled through the CSSOM surface, serialized back to markup, and optionally scripted through `aspose_html.js.JSContext`.
 
-The verified public surface has 303 types.
+The public API has 303 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -561,7 +563,6 @@ The `aspose_html.tokenizer.Tokenizer` class exposes the lower-level HTML parsing
 
 | Class | Description |
 |---|---|
-| `CSS` | Namespace class for CSS static utilities (CSS Conditional Rules §6). |
 | `CSSCounterStyleRule` | A `@counter-style` rule (CSS Counter Styles Level 3 §3, CSSOM §5.4 type 11). |
 | `CSSFontFaceRule` | A `@font-face` rule holding font descriptor declarations (CSS Fonts §4.4). |
 | `CSSImportRule` | An `@import` statement rule (CSSOM §6.7). |
@@ -805,7 +806,6 @@ The `aspose_html.tokenizer.Tokenizer` class exposes the lower-level HTML parsing
 
 - `Element` — `get_attribute`/`set_attribute`/`remove_attribute`, `class_list` (`DOMTokenList`), `dataset` (`DOMStringMap`), `text_content`, `get_computed_style()`, `style` (`CSSStyleDeclaration`).
 
-- `css.parse` — parse selector and declaration text; selector AST classes (`ClassSelector`, `TypeSelector`, `AttributeSelector`, `PseudoClassSelector`, `ComplexSelector`, `CompoundSelector`, and others) model the parsed grammar.
 - `CSSStyleSheet`, `CSSStyleRule`, `CSSMediaRule`, `CSSFontFaceRule`, `CSSKeyframesRule`, and the other `CSSRule` subclasses — structural CSSOM stylesheet/rule objects.
 - `CSSStyleDeclaration`, `ComputedStyleDeclaration` — live inline styles and read-only resolved (cascade-computed) styles.
 
@@ -813,42 +813,34 @@ The `aspose_html.tokenizer.Tokenizer` class exposes the lower-level HTML parsing
 
 ## Documentation & Resources
 
-- **[Getting started guide](https://docs.aspose.org/html/python/)** — The Getting started guide covers installation, walkthroughs, and feature guides for this library.
-- **[How-to guides & FAQ](https://kb.aspose.org/html/python/)** — The How-to guides & FAQ provide task-focused answers for common HTML, DOM, and `CSS`-processing questions.
-- **[Full API reference](https://reference.aspose.org/html/python/)** — The Full API reference offers the complete, browsable reference for all 303 public types. It covers all 303 verified public types; the [API Reference](#api-reference) section above covers the essentials.
-- **[Public API surface](PUBLIC_API.md)** — The Public API surface documents the stable top-level entry points covered by this library's compatibility guarantees.
-- **[examples](examples/)** — The examples directory contains real, scenario-focused scripts beyond the Quick Start.
-- **[Contributing guide](CONTRIBUTING.md)** — The Contributing guide describes development setup, test commands, and contribution guidelines.
-- **[Security policy](SECURITY.md)** — The Security policy explains how to report a vulnerability.
-- **[Changelog](CHANGELOG.md)** — The Changelog lists notable changes to this package by version.
+- **[Getting started guide](https://docs.aspose.org/html/python/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/html/python/)** — task-focused answers for common HTML/DOM/CSS-processing questions.
+- **[Full API reference](https://reference.aspose.org/html/python/)** — the complete, browsable reference for all 303 public types.
+- **[Public API surface](PUBLIC_API.md)** — the stable top-level entry points this library's compatibility guarantees cover.
+- **[examples](examples/)** — real, scenario-focused scripts beyond Quick Start.
+- **[Contributing guide](CONTRIBUTING.md)** — development setup, test commands, and contribution guidelines.
+- **[Security policy](SECURITY.md)** — how to report a vulnerability.
+- **[Changelog](CHANGELOG.md)** — notable changes to this package by version.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/issues).
 
 ## Scope and Limitations
-
-Aspose.HTML FOSS for Python reads and writes HTML documents, supports `CSS` selector matching, CSSOM parsing, DOM manipulation, and layout structure building, and provides `JavaScript` execution via an optional QuickJS dependency.
-
-- `CSS` selector matching supports the core `CSS` Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise `NotImplementedError` in the matcher and parser, and single-colon legacy pseudo-element forms are not parsed.
-- `CSSRule.type` and `CSSRule.css_text` are not implemented; concrete rule subclasses such as `CSSStyleRule` and `CSSMediaRule` expose their own real properties instead.
-- Form constraint validation (validity-state computation) and `HTMLImageElement.decode()` are present on the API surface but not yet implemented.
-- The library builds internal layout structures (`BoxNode`, `FragmentRoot`, and related classes, using skia-python for text-run metrics) but does not yet expose a public API for rendering documents to an image or PDF.
-- `JavaScript` execution (`JSContext`) requires the optional quickjs extra and exposes a read-only DOM proxy to script code; its dynamic `import()` bridge is not implemented, though static module registration via `ModuleRegistry` works.
-- The library does not implement rendering to image or PDF formats.
 
 - `URL` — `parse(input, base)`, `can_parse(input, base)`; `href`, `protocol`, `host`, `pathname`, `search`, `search_params` (`URLSearchParams`).
 - `URLSearchParams` — ordered query-string pairs with duplicate-key support.
 - `detect_encoding(data, *, override_encoding=None) -> EncodingDetectionResult` — WHATWG-sequence BOM/meta-charset/UTF-8-default sniffing; `get_canonical_name(label)` normalizes an encoding label.
 
-These limitations don't apply to [full-featured Aspose.HTML for Python — Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.
+- CSS selector matching supports the core CSS Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise `NotImplementedError` in the matcher and parser (`_matches_pseudo_class`, `_pseudo_not`), and single-colon legacy pseudo-element forms are not parsed.
+- `CSSRule.type` and `CSSRule.css_text` (the CSSOM base-rule stubs) are not implemented; concrete rule subclasses such as `CSSStyleRule` and `CSSMediaRule` expose their own real properties instead.
+- The library builds internal layout structures (`BoxNode`, `FragmentRoot`, and related classes, using `skia-python` for text-run metrics) but does not yet expose a public API for rendering documents to an image or PDF.
+- JavaScript execution (`JSContext`) requires the optional `quickjs` extra and exposes a read-only DOM proxy to script code; its dynamic `import()` bridge is not implemented, though static module registration via `ModuleRegistry` works.
+
+See [Aspose.HTML for Python — Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.
 
 ## Development and Testing
 
-Aspose.HTML FOSS for Python requires Python 3.10 or later and uses skia-python for text-layout metrics as its only runtime dependency. The test suite resides in tests/ and uses pytest to run assertions against the local source checkout; JavaScript-bridge tests and doctests in src/`aspose_html`/js/ require quickjs to run, otherwise they are skipped automatically. To build and test, clone the repository, install the required dependencies, and run pytest directly from the checkout root.
+The suite covers 178 test files under `tests/`. Example programs live under `examples/`.
 
-The suite covers 178 test files under `tests/`.
-
-Install from a source checkout by putting the source tree on `PYTHONPATH` directly — the same
-mechanism the repository's own test suite already relies on (`pyproject.toml`'s
-`[tool.pytest.ini_options]` sets `pythonpath = ["src"]`):
+Install from a source checkout by putting the source tree on `PYTHONPATH` directly — the same mechanism the repository's own test suite already relies on (`pyproject.toml`'s `[tool.pytest.ini_options]` sets `pythonpath = ["src"]`):
 
 ```bash
 git clone https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python.git
@@ -856,20 +848,15 @@ cd Aspose.HTML-FOSS-for-Python
 pip install "skia-python>=87.0,<145"
 ```
 
-Then add `src/` to `PYTHONPATH` (Linux/macOS: `export PYTHONPATH="$PWD/src:$PYTHONPATH"`;
-Windows: `set PYTHONPATH=%cd%\src;%PYTHONPATH%`).
+Then add `src/` to `PYTHONPATH` (Linux/macOS: `export PYTHONPATH="$PWD/src:$PYTHONPATH"`; Windows: `set PYTHONPATH=%cd%\src;%PYTHONPATH%`).
 
-The distribution is named `aspose-html-foss`; the import package is `aspose_html`. The package
-requires Python 3.10 or later; `skia-python` (used internally for text-layout metrics) is its one
-real runtime dependency. JavaScript execution is optional — install `quickjs` directly to use it:
+The distribution is named `aspose-html-foss`; the import package is `aspose_html`. The package requires Python 3.10 or later; `skia-python` (used internally for text-layout metrics) is its one real runtime dependency. JavaScript execution is optional — install `quickjs` directly to use it:
 
 ```bash
 pip install "quickjs>=1.19,<2"
 ```
 
-The package needs no separate install step for testing — it uses the same source-checkout setup
-as [Installation](#installation) above, with `pytest` already configured to run directly against
-the local checkout. Install the test and runtime dependencies, then run the suite:
+The package needs no separate install step for testing — it uses the same source-checkout setup as [Installation](#installation) above, with `pytest` already configured to run directly against the local checkout. Install the test and runtime dependencies, then run the suite:
 
 ```bash
 pip install "skia-python>=87.0,<145" "pytest>=8"
@@ -882,10 +869,7 @@ Install `quickjs` to also exercise the JavaScript-bridge tests and doctests:
 pip install "quickjs>=1.19,<2"
 ```
 
-Without `quickjs` installed, `src/aspose_html/js/` is skipped automatically from doctest
-collection and the tests under `tests/test_js/` skip via `pytest.importorskip("quickjs")`; the
-Skia rendering-backend smoke test (`tests/test_render/test_skia_smoke.py`) is skipped the same way
-when `skia-python` is unavailable.
+Without `quickjs` installed, `src/aspose_html/js/` is skipped automatically from doctest collection and the tests under `tests/test_js/` skip via `pytest.importorskip("quickjs")`; the Skia rendering-backend smoke test (`tests/test_render/test_skia_smoke.py`) is skipped the same way when `skia-python` is unavailable.
 
 ## License
 

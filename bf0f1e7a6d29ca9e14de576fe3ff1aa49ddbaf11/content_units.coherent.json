@@ -20,6 +20,17 @@
       "section": "enterprise_relationship"
     }
   ],
+  "register_corrections": [
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "finding:91e4d1711e4c"
+      ],
+      "rule": "BL-210",
+      "section": "key_capabilities",
+      "slot": "capability:6"
+    }
+  ],
   "schema_version": 1,
   "units": [
     {
@@ -28,7 +39,6 @@
         "example:002",
         "example:003",
         "example:005",
-        "example:006",
         "example:007",
         "public_symbol:aspose_html.htmldocument.parse",
         "public_symbol:aspose_html.htmldocument.parse_fragment",
@@ -121,17 +131,6 @@
     },
     {
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "example:006",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.js.moduleregistry"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:6",
-      "text": "It executes JavaScript against a parsed DOM through aspose_html.js.JSContext, an optional QuickJS-backed bridge exposing read-only DOM proxies to script code; requires the js extra."
-    },
-    {
-      "fact_ids": [
         "example:001",
         "public_symbol:aspose_html.serialise",
         "public_symbol:aspose_html.serialiser.inner_html",
@@ -139,7 +138,7 @@
         "public_symbol:aspose_html.xmlserializer"
       ],
       "section": "key_capabilities",
-      "slot": "capability:7",
+      "slot": "capability:6",
       "text": "It serializes complete documents, fragments, and individual elements back to an HTML string with the aspose_html.serialise function or aspose_html.XMLSerializer, and provides aspose_html.serialiser.inner_html and aspose_html.serialiser.outer_html for granular output control."
     },
     {
@@ -153,7 +152,7 @@
         "public_symbol:aspose_html.tokenizer.tokenizer"
       ],
       "section": "key_capabilities",
-      "slot": "capability:8",
+      "slot": "capability:7",
       "text": "It exposes the tokenizer's token stream through aspose_html.tokenizer.Tokenizer.tokenize, producing token types including aspose_html.tokenizer.StartTagToken, aspose_html.tokenizer.EndTagToken, aspose_html.tokenizer.CharacterToken, aspose_html.tokenizer.CommentToken, and aspose_html.tokenizer.DoctypeToken for callers who need fine-grained parsing control."
     },
     {
@@ -404,206 +403,6 @@
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose_html.tokenizer.tokenizer",
       "text": "The aspose_html.tokenizer.Tokenizer class exposes the lower-level HTML parsing pipeline, producing tokens such as aspose_html.tokenizer.StartTagToken during tokenization."
-    },
-    {
-      "fact_ids": [
-        "link_target:019"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:019",
-      "text": "The Getting started guide covers installation, walkthroughs, and feature guides for this library."
-    },
-    {
-      "fact_ids": [
-        "link_target:020"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:020",
-      "text": "The How-to guides & FAQ provide task-focused answers for common HTML, DOM, and CSS-processing questions."
-    },
-    {
-      "fact_ids": [
-        "link_target:021"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:021",
-      "text": "The Full API reference offers the complete, browsable reference for all 243 public types."
-    },
-    {
-      "fact_ids": [
-        "link_target:022"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:022",
-      "text": "The Public API surface documents the stable top-level entry points covered by this library's compatibility guarantees."
-    },
-    {
-      "fact_ids": [
-        "link_target:018"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:018",
-      "text": "The examples directory contains real, scenario-focused scripts beyond the Quick Start."
-    },
-    {
-      "fact_ids": [
-        "link_target:023"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:023",
-      "text": "The Contributing guide describes development setup, test commands, and contribution guidelines."
-    },
-    {
-      "fact_ids": [
-        "link_target:024"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:024",
-      "text": "The Security policy explains how to report a vulnerability."
-    },
-    {
-      "fact_ids": [
-        "link_target:025"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:025",
-      "text": "The Changelog lists notable changes to this package by version."
-    },
-    {
-      "fact_ids": [
-        "link_target:026"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:026",
-      "text": "The issue tracker on GitHub allows users to report bugs or submit feature requests."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:088.heading",
-        "inherited_unit:089.list",
-        "install_command:pip",
-        "package:license",
-        "package:name",
-        "package:python_requires",
-        "package:version",
-        "public_symbol:aspose_html.css.element_matches",
-        "public_symbol:aspose_html.css.select",
-        "public_symbol:aspose_html.cssom.cssmediarule",
-        "public_symbol:aspose_html.cssom.cssrule",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.dom.htmlimageelement",
-        "public_symbol:aspose_html.dom.validitystate",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.js.moduleregistry",
-        "public_symbol:aspose_html.layout.blockfragment",
-        "public_symbol:aspose_html.layout.build_box_tree",
-        "public_symbol:aspose_html.layout.pagefragment",
-        "public_symbol:aspose_html.layout.paginate_fragments"
-      ],
-      "section": "scope_limitations",
-      "slot": "scope",
-      "text": "Aspose.HTML FOSS for Python reads and writes HTML documents, supports CSS selector matching, CSSOM parsing, DOM manipulation, and layout structure building, and provides JavaScript execution via an optional QuickJS dependency."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:089.list",
-        "public_symbol:aspose_html.css.element_matches",
-        "public_symbol:aspose_html.css.select"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:1",
-      "text": "CSS selector matching supports the core CSS Selectors Level 3 grammar, but several dynamic and legacy pseudo-classes are out of scope and raise NotImplementedError in the matcher and parser, and single-colon legacy pseudo-element forms are not parsed."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:089.list",
-        "public_symbol:aspose_html.cssom.cssmediarule",
-        "public_symbol:aspose_html.cssom.cssrule",
-        "public_symbol:aspose_html.cssom.cssstylerule"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:2",
-      "text": "CSSRule.type and CSSRule.css_text are not implemented; concrete rule subclasses such as CSSStyleRule and CSSMediaRule expose their own real properties instead."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:089.list",
-        "public_symbol:aspose_html.dom.htmlimageelement",
-        "public_symbol:aspose_html.dom.validitystate"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:3",
-      "text": "Form constraint validation (validity-state computation) and HTMLImageElement.decode() are present on the API surface but not yet implemented."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:089.list",
-        "public_symbol:aspose_html.layout.blockfragment",
-        "public_symbol:aspose_html.layout.build_box_tree",
-        "public_symbol:aspose_html.layout.pagefragment"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:4",
-      "text": "The library builds internal layout structures (BoxNode, FragmentRoot, and related classes, using skia-python for text-run metrics) but does not yet expose a public API for rendering documents to an image or PDF."
-    },
-    {
-      "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "example:006",
-        "inherited_unit:089.list",
-        "public_symbol:aspose_html.js.jscontext"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:5",
-      "text": "JavaScript execution (JSContext) requires the optional quickjs extra and exposes a read-only DOM proxy to script code; its dynamic import() bridge is not implemented, though static module registration via ModuleRegistry works."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:089.list",
-        "package:license",
-        "package:name",
-        "package:python_requires",
-        "package:version",
-        "public_symbol:aspose_html.layout.blockfragment",
-        "public_symbol:aspose_html.layout.build_box_tree",
-        "public_symbol:aspose_html.layout.pagefragment",
-        "public_symbol:aspose_html.layout.paginate_fragments"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:6",
-      "text": "The library does not implement rendering to image or PDF formats."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:platform",
-        "identity:repository",
-        "package:python_requires",
-        "package:name",
-        "build_test_asset:tests",
-        "build_test_asset:test-command",
-        "inherited_unit:014.paragraph",
-        "inherited_unit:015.paragraph",
-        "inherited_unit:016.code_block",
-        "inherited_unit:092.paragraph",
-        "inherited_unit:093.code_block",
-        "inherited_unit:094.paragraph",
-        "inherited_unit:095.code_block",
-        "inherited_unit:096.paragraph"
-      ],
-      "section": "development_testing",
-      "slot": "summary",
-      "text": "Aspose.HTML FOSS for Python requires Python 3.10 or later and uses skia-python for text-layout metrics as its only runtime dependency. The test suite resides in tests/ and uses pytest to run assertions against the local source checkout; JavaScript-bridge tests and doctests in src/aspose_html/js/ require quickjs to run, otherwise they are skipped automatically. To build and test, clone the repository, install the required dependencies, and run pytest directly from the checkout root."
     },
     {
       "fact_ids": [
