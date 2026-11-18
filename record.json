@@ -27,11 +27,24 @@
    "run_id": "43714980171",
    "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T11:58:51+00:00",
+   "classes": [
+    "BC-18|inherited_unit|false_claim",
+    "BC-18|renderer_fact|misleading_claim"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44297190761",
+   "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T12:49:42+00:00",
+  "at": "2026-11-18T11:58:51+00:00",
   "classes": {
    "BC-18|inherited_unit|false_claim": {
     "example": "Chart chart = doc.FirstSection.Body.Shapes[0].Chart;",
@@ -41,7 +54,7 @@
      "inherited_unit:043.code_block"
     ],
     "rule": "BC-18",
-    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
+    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -63,7 +76,7 @@
      "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil"
     ],
     "rule": "BC-18",
-    "scope": "be95f638d311ec774dd200ddede7e7c7ecfd59c2f51f1a1d972a0e67667affaf",
+    "scope": "49aff2b0bc4786d0bfed801ca6bce81c6cfb5653c1c6d6c65d25301efdaafeb0",
     "scope_paths": [
      "data/readme_findings.json",
      "src/repo_presenter/cascade.py",
@@ -76,33 +89,9 @@
     ],
     "sub_rule": "misleading_claim",
     "upstream": ""
-   },
-   "BC-18|unresolved|unsupported_claim": {
-    "example": "These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition]",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-18",
-    "scope": "affc91cc0a96ca773ce8a905bebf5d7fc81646a7095eac41f6788024d0feb9ad",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "unsupported_claim",
-    "upstream": ""
    }
   },
-  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -141,25 +130,10 @@
     "source": "validation",
     "sub_rule": "misleading_claim",
     "upstream": ""
-   },
-   {
-    "label": "BC-18",
-    "message": "open finding (confirmed unsupported claim: These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition) still printed: The README text \"These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition]\" is false (confirmed unsupported claim: These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition). Correct it: Neither the repository nor the nuspec mentions an 'Enterprise Edition'; the upstream README just",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "These limitations don't apply to [full-featured Aspose.Words for .NET \u2014 Enterprise Edition]",
-    "rule": "BC-18",
-    "section_id": "scope_limitations",
-    "signature": "BC-18|unresolved|unsupported_claim",
-    "source": "validation",
-    "sub_rule": "unsupported_claim",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
+  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -180,8 +154,8 @@
    }
   ],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
-  "run_id": "43714980171",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43714980171",
+  "run_id": "44297190761",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297190761",
   "schema_version": 1,
   "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
