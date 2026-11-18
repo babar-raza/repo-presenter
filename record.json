@@ -51,45 +51,59 @@
    "run_id": "44297186767",
    "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T17:56:27+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-14|unresolved|the_readme_states_q",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|authored_unit|the_readme_states_q"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 8,
+   "outcome": "failure",
+   "run_id": "44349034180",
+   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T13:12:16+00:00",
+  "at": "2026-11-18T17:56:27+00:00",
   "classes": {
-   "BC-02|unresolved|id_is_unresolved_package": {
-    "example": "install_command:maven is UNRESOLVED: package registry: Maven Central was not read - the shared probe takes a package name, and `maven-metadata.xml` is addressed by group and artifact id",
+   "BC-05|inherited_unit|superseded_unstated": {
+    "example": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "findings": 2,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:013.code_block",
+     "inherited_unit:015.code_block"
+    ],
+    "rule": "BC-05",
+    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "superseded_unstated",
+    "upstream": ""
+   },
+   "BC-14|unresolved|the_readme_states_q": {
+    "example": "the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none",
     "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
-    "rule": "BC-02",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "id_is_unresolved_package",
-    "upstream": ""
-   },
-   "BC-14|unresolved|org_id_is_shown": {
-    "example": "org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
-    "findings": 2,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
     "rule": "BC-14",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -102,18 +116,20 @@
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "org_id_is_shown",
+    "sub_rule": "the_readme_states_q",
     "upstream": ""
    },
    "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 2,
+    "example": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 4,
     "origin_kind": "inherited_unit",
     "origins": [
+     "inherited_unit:013.code_block",
+     "inherited_unit:015.code_block",
      "inherited_unit:002.badge_row"
     ],
     "rule": "BC-17",
-    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
+    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -127,112 +143,128 @@
     "sub_rule": "technical_content",
     "upstream": ""
    },
-   "claim_contradiction|inherited_unit|version": {
-    "example": "implementation 'org.aspose:aspose-pdf-foss:26.9.0'",
-    "findings": 2,
-    "origin_kind": "inherited_unit",
+   "claim_contradiction|authored_unit|the_readme_states_q": {
+    "example": "The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades \u2014 `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, a",
+    "findings": 1,
+    "origin_kind": "authored_unit",
     "origins": [
-     "inherited_unit:015.code_block",
-     "inherited_unit:013.code_block"
+     "api_reference.intro"
     ],
     "rule": "claim_contradiction",
-    "scope": "58e88f3fab3a24361441159f8f27b47f09dad06e6d753afdaf459f35b7ef3d00",
+    "scope": "2c715cae57c525595e32be50ab78692a2e2d47a34f68f478d477c9a4825d1cea",
     "scope_paths": [
-     "prompts",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/review/independent_reviewer.py",
      "src/repo_presenter/readme/validation/claims.py"
     ],
-    "sub_rule": "version",
+    "sub_rule": "the_readme_states_q",
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "claim_contradiction",
-    "message": "line 2478 (COMPOSING): org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
+    "message": "line 317 (COMPOSING): the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none",
     "origin": {
-     "id": "inherited_unit:015.code_block",
-     "kind": "inherited_unit"
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
     },
-    "quote": "implementation 'org.aspose:aspose-pdf-foss:26.9.0'",
+    "quote": "The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades \u2014 `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, a",
     "rule": "claim_contradiction",
     "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|version",
+    "signature": "claim_contradiction|authored_unit|the_readme_states_q",
     "source": "review",
-    "sub_rule": "version",
+    "sub_rule": "the_readme_states_q",
     "upstream": ""
    },
    {
-    "label": "claim_contradiction",
-    "message": "line 2471 (COMPOSING): org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
+    "label": "BC-05",
+    "message": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "origin": {
      "id": "inherited_unit:013.code_block",
      "kind": "inherited_unit"
     },
-    "quote": "    <version>26.9.0</version>",
-    "rule": "claim_contradiction",
+    "quote": "",
+    "rule": "BC-05",
     "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|version",
-    "source": "review",
-    "sub_rule": "version",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
+    "source": "validation",
+    "sub_rule": "superseded_unstated",
     "upstream": ""
    },
    {
-    "label": "BC-02",
-    "message": "install_command:maven is UNRESOLVED: package registry: Maven Central was not read - the shared probe takes a package name, and `maven-metadata.xml` is addressed by group and artifact id",
+    "label": "BC-05",
+    "message": "inherited_unit:015.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (implementation 'org.aspose:aspose-pdf-foss:26.9.0'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "inherited_unit:015.code_block",
+     "kind": "inherited_unit"
     },
     "quote": "",
-    "rule": "BC-02",
+    "rule": "BC-05",
     "section_id": "",
-    "signature": "BC-02|unresolved|id_is_unresolved_package",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
     "source": "validation",
-    "sub_rule": "id_is_unresolved_package",
+    "sub_rule": "superseded_unstated",
     "upstream": ""
    },
    {
     "label": "BC-14",
-    "message": "org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
+    "message": "the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none",
     "origin": {
      "id": "-",
      "kind": "unresolved"
     },
     "quote": "",
     "rule": "BC-14",
-    "section_id": "development_testing",
-    "signature": "BC-14|unresolved|org_id_is_shown",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_states_q",
     "source": "validation",
-    "sub_rule": "org_id_is_shown",
+    "sub_rule": "the_readme_states_q",
     "upstream": ""
    },
    {
-    "label": "BC-14",
-    "message": "org.aspose:aspose-pdf-foss is shown at version 26.9.0, but the manifest's version is 26.11.0",
+    "label": "BC-17",
+    "message": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "inherited_unit:013.code_block",
+     "kind": "inherited_unit"
     },
     "quote": "",
-    "rule": "BC-14",
-    "section_id": "development_testing",
-    "signature": "BC-14|unresolved|org_id_is_shown",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
     "source": "validation",
-    "sub_rule": "org_id_is_shown",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:015.code_block holds code_blocks 'implementation 'org.aspose:aspose-pdf-foss:26.9.0'', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:015.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
     "upstream": ""
    },
    {
@@ -267,13 +299,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-18",
+    "label": "disposition_coverage:1",
     "outcome": "repaired",
     "reason": "",
     "section_id": null,
@@ -281,7 +313,7 @@
    },
    {
     "facts_defects": [],
-    "label": "disposition_coverage:2",
+    "label": "BC-17",
     "outcome": "repaired",
     "reason": "",
     "section_id": null,
@@ -289,9 +321,9 @@
    },
    {
     "facts_defects": [],
-    "label": "BC-18",
-    "outcome": "repaired",
-    "reason": "",
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
     "section_id": null,
     "stage": "S4"
    },
@@ -305,6 +337,22 @@
    },
    {
     "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
     "label": "BC-17",
     "outcome": "repaired",
     "reason": "",
@@ -313,24 +361,16 @@
    },
    {
     "facts_defects": [],
-    "label": "claim_contradiction:2",
+    "label": "claim_contradiction:0",
     "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:012.paragraph: OMIT_UNSUPPORTED takes no destination; got 'development_testing'; revised_output: inherited_unit:014.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"Gradle:\". Cite the supporting fact IDs or place the unit; do not omit it without a cite",
-    "section_id": "development_testing",
-    "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
-  "run_id": "44297186767",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297186767",
+  "run_id": "44349034180",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349034180",
   "schema_version": 1,
   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
