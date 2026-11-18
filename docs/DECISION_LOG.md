@@ -7066,3 +7066,25 @@ per the owner's cadence. Three workers start on BL-210, BL-220 and BL-230.
 
 Backlog: BL-201, BL-202, BL-203, BL-210, BL-220, BL-230, BL-240, BL-250, BL-260, BL-270.
 
+
+## 2026-11-18: Terminal-safe disposition and placement (BL-230, R46, R14)
+
+Class: maintainer text the checks name as lost or misfiled (BC-05 section fit, BC-17, BC-08, `live_readme_loss`,
+`disposition_coverage`; 12 cells), always unit-local. Decisions, all inside existing components (R27), zero provider
+calls: (1) one source of truth for "can this section print this kind": `destinations.prints_unit`, now read by restore
+and the section-fit fold, so "kept but not printable" and "superseded but unstated" cannot disagree; (2) rule
+`BL-230/resource-links-kept`: a kept list with a link-led item that Documentation and Resources cannot print as link
+lines (a link no plan-assignable link fact carries, or a mixed list) filed under Scope and Limitations is kept as
+written in the nearest printable section (Development and Testing, else Additional Examples or Quick Start); the
+disposition and text are unchanged, only the destination moves, and the rationale records it (R14); (3) the zero-call
+settle restore now answers BC-05 section fit, which names no unit, with the S4 section-fit folds
+(`restore_units.fit_misfiled_units`), kept only when the blocking failures strictly shrink; (4) `reconciliation.patch`
+applies the keep the check's own message names (`keep_as_written`: VERIFIED_PRESERVE when every cited fact is
+SUPPORTED, else PRESERVE_ATTRIBUTED, into the nearest holdable section) on the first refusal instead of asking the
+model again; a unit citing a CONTRADICTED fact, a shell-rendered kind or one with no nearest section is still asked.
+No public README wording is added (R9); the fold fires only on a unit in Scope and Limitations that BC-05 already
+refuses, so no passing seal changes (R10). Not determined: the stored bundles of the failing cells are not
+reachable, so the 12 cells were not replayed; the evidence is the exact failure-record messages as tests and the
+`recertify --all` before/after on the 53 sealed bundles. Property improved: universal, robust.
+
+Backlog: BL-230.
