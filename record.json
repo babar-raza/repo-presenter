@@ -35,11 +35,23 @@
    "run_id": "44297206476",
    "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T18:28:00+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 13,
+   "outcome": "failure",
+   "run_id": "44366290226",
+   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T12:39:30+00:00",
+  "at": "2026-11-18T18:28:00+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
     "example": "The `aspose_barcode_foss` package exposes the `Barcode` class as the main entry point for barcode generation, which provides methods to render barcodes to PNG, SVG, and PDF formats. The package also provides symbology-specific helpers and encoding options for Code 128, Code 39, EAN-13, EAN-8, and QR",
@@ -53,7 +65,7 @@
      "api_reference.type:public_symbol:aspose_barcode_foss.options.qroptions"
     ],
     "rule": "llm:factuality",
-    "scope": "03a3af873dc7f2214d0870226cec44202bca05fe00be1f370c5b16577566ecad",
+    "scope": "03f582d5896b02050efaf55359d5b682bc45406eba8ebaebe387fdef3fd8769a",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -69,7 +81,7 @@
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -276,30 +288,22 @@
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15+F16+F17+F18+F19",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'core_capabilities.5.fact_ids' changed ('public_symbol:aspose_barcode_foss.barcodeerror, public_symbol:aspose_barcode_foss.encodingerror, public_symbol:aspose_barcode_foss.renderingerror, public_symbol:aspose_barcode_foss.invalidinputerror, public_symbol:aspose_barcode_foss.symbologynotfounderror' to 'public_symbol:aspose_barcode_foss.barcodeerror, public_symbol:aspose_barcode_foss.encodingerror, public_sym",
-    "section_id": null,
-    "stage": "S5"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15+F16+F17+F18+F19",
+    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15+F16+F17+F18+F19+F20+F21+F22+F23+F24+F25+F26+F27",
     "outcome": "repaired",
-    "reason": "api_reference: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: revised_output: unit hub:public_symbol:aspose_barcode_foss.barcode is not the finding's own unit; a targeted repair may not rewrite unrelated units; revised_output: revised_output: unit hub:public_symbol:aspose_barcode_foss.renderers.svgrenderer is not the finding's own unit; a targeted repair may not rewrite unrelated units; revised_output: revised_output: unit hub:public_symbol:aspose_barcode_f",
+    "reason": "api_reference: repaired; api_reference#types-1: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change); api_reference#types-2: repaired",
     "section_id": "api_reference",
     "stage": "S6"
    }
   ],
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-  "run_id": "44297206476",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297206476",
+  "run_id": "44366290226",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44366290226",
   "schema_version": 1,
   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
