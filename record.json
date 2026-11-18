@@ -37,62 +37,191 @@
    "run_id": "44297199610",
    "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T16:53:14+00:00",
+   "classes": [
+    "BC-14|inherited_unit|the_readme_names_code",
+    "BC-14|unresolved|the_readme_names_code",
+    "claim_contradiction|authored_unit|member_owner",
+    "claim_contradiction|inherited_unit|member_owner"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 4,
+   "outcome": "failure",
+   "run_id": "44349049455",
+   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T12:28:37+00:00",
+  "at": "2026-11-18T16:53:14+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+   "BC-14|inherited_unit|the_readme_names_code": {
+    "example": "the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "inherited_unit",
     "origins": [
-     "OutputRejectedError"
+     "inherited_unit:047.table"
     ],
-    "rule": "job_error",
-    "scope": "018625213487405af3efd3bd888483c61b5eb749d6b3b3c0440b49b60cafe56d",
+    "rule": "BC-14",
+    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "the_readme_names_code",
+    "upstream": ""
+   },
+   "BC-14|unresolved|the_readme_names_code": {
+    "example": "the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-14",
+    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "the_readme_names_code",
+    "upstream": ""
+   },
+   "claim_contradiction|authored_unit|member_owner": {
+    "example": "| `Transform` | Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access. |",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.type:public_symbol:transform"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "2c715cae57c525595e32be50ab78692a2e2d47a34f68f478d477c9a4825d1cea",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   "claim_contradiction|inherited_unit|member_owner": {
+    "example": "| `Camera` | A viewpoint node entity with `moveForward` and `getBoundingBox` methods, and `nearPlane`, `farPlane`, `aspect`, `orthoHeight`, `fieldOfView`, `fieldOfViewX`/`Y`, `projectionType`, and `apertureMode` properties. |",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:047.table"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "8a9f2cf406a1181874967928a4d5f231ea419c5cb2fb198de13902d1b5f3a744",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "sub_rule": "member_owner",
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+    "label": "claim_contradiction",
+    "message": "line 234 (COMPOSING): the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "api_reference.type:public_symbol:transform",
+     "kind": "authored_unit"
+    },
+    "quote": "| `Transform` | Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|authored_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 354 (COMPOSING): the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `Camera` | A viewpoint node entity with `moveForward` and `getBoundingBox` methods, and `nearPlane`, `farPlane`, `aspect`, `orthoHeight`, `fieldOfView`, `fieldOfViewX`/`Y`, `projectionType`, and `apertureMode` properties. |",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "source": "review",
+    "sub_rule": "member_owner",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_names_code",
+    "source": "validation",
+    "sub_rule": "the_readme_names_code",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member",
+    "origin": {
+     "id": "inherited_unit:047.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|inherited_unit|the_readme_names_code",
+    "source": "validation",
+    "sub_rule": "the_readme_names_code",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -101,36 +230,20 @@
     "label": "BC-14",
     "outcome": "repaired",
     "reason": "",
-    "section_id": "api_reference",
-    "stage": "S6"
+    "section_id": null,
+    "stage": "S4"
    },
    {
     "facts_defects": [],
     "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
+    "outcome": "unrepairable",
+    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
     "section_id": null,
     "stage": "S4"
    },
    {
     "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:047.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0",
+    "label": "claim_contradiction:1",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
@@ -138,8 +251,8 @@
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
-  "run_id": "44297199610",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297199610",
+  "run_id": "44349049455",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349049455",
   "schema_version": 1,
   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
