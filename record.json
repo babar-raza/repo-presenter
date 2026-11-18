@@ -25,21 +25,33 @@
    "run_id": "44330613797",
    "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T21:17:41+00:00",
+   "classes": [
+    "BC-06|unresolved|id_is_unresolved_unchecked"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44397289254",
+   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T15:30:25+00:00",
+  "at": "2026-11-18T21:17:41+00:00",
   "classes": {
    "BC-06|unresolved|id_is_unresolved_unchecked": {
-    "example": "https://central.sonatype.com/artifact/org.aspose/aspose-slides-foss is UNRESOLVED: UNCHECKED",
-    "findings": 5,
+    "example": "https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api is UNRESOLVED: UNCHECKED",
+    "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "BC-06",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -54,55 +66,18 @@
     ],
     "sub_rule": "id_is_unresolved_unchecked",
     "upstream": ""
-   },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-slides-foss.s', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:002.badge_row"
-    ],
-    "rule": "BC-17",
-    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "technical_content",
-    "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-06, BC-17; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-06; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
-   {
-    "label": "BC-06",
-    "message": "https://central.sonatype.com/artifact/org.aspose/aspose-slides-foss is UNRESOLVED: UNCHECKED",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-06",
-    "section_id": "",
-    "signature": "BC-06|unresolved|id_is_unresolved_unchecked",
-    "source": "validation",
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   },
    {
     "label": "BC-06",
     "message": "https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api is UNRESOLVED: UNCHECKED",
@@ -117,93 +92,25 @@
     "source": "validation",
     "sub_rule": "id_is_unresolved_unchecked",
     "upstream": ""
-   },
-   {
-    "label": "BC-06",
-    "message": "https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-engine is UNRESOLVED: UNCHECKED",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-06",
-    "section_id": "",
-    "signature": "BC-06|unresolved|id_is_unresolved_unchecked",
-    "source": "validation",
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   },
-   {
-    "label": "BC-06",
-    "message": "https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-params is UNRESOLVED: UNCHECKED",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-06",
-    "section_id": "",
-    "signature": "BC-06|unresolved|id_is_unresolved_unchecked",
-    "source": "validation",
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   },
-   {
-    "label": "BC-06",
-    "message": "https://central.sonatype.com/artifact/org.assertj/assertj-core is UNRESOLVED: UNCHECKED",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-06",
-    "section_id": "",
-    "signature": "BC-06|unresolved|id_is_unresolved_unchecked",
-    "source": "validation",
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-slides-foss.s', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:002.badge_row",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "disposition_coverage:0",
+    "label": "duplicate_opening_paragraph:0",
     "outcome": "repaired",
     "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
+    "section_id": "opening",
+    "stage": "S6"
    }
   ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-  "run_id": "44330613797",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44330613797",
+  "run_id": "44397289254",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44397289254",
   "schema_version": 1,
   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
