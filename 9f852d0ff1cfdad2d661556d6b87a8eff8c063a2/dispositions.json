@@ -453,7 +453,8 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose.cells_foss"
+        "public_symbol:aspose.cells_foss",
+        "finding:57d915bd38f3"
       ],
       "rationale": "The paragraph accurately describes the namespace, root entry point, and primary object graph, all of which are verified by the public symbols and example.",
       "unit_id": "inherited_unit:041.paragraph"
@@ -534,7 +535,8 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "identity:product-knowledge-refresh"
+        "identity:product-knowledge-refresh",
+        "finding:412e7cfe92f8"
       ],
       "rationale": "The member reference list is superseded by the API Reference section, which deterministically renders the public surface.",
       "unit_id": "inherited_unit:050.list"
@@ -561,7 +563,7 @@
       "unit_id": "inherited_unit:052.heading"
     },
     {
-      "destination_section": "scope_limitations",
+      "destination_section": "documentation_resources",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "link_target:021",
@@ -570,7 +572,7 @@
         "link_target:024",
         "link_target:025"
       ],
-      "rationale": "Kept in scope_limitations: documentation_resources prints nothing from a placed unit. The list contains verified links to official documentation, knowledge b...",
+      "rationale": "Kept in documentation_resources: a list of resource links, not scope_limitations. Kept in scope_limitations: documentation_resources prints nothing from a place",
       "unit_id": "inherited_unit:053.list"
     },
     {
@@ -682,13 +684,13 @@
       "unit_id": "inherited_unit:064.heading"
     },
     {
-      "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "license:file",
         "license:spdx"
       ],
-      "rationale": "Describes the MIT license terms; facts confirm the SPDX identifier and file location, and the paragraph adds useful detail about permissions and disclaimer.",
+      "rationale": "Superseded by the License section, which states the license from facts. Describes the MIT license terms; facts confirm the SPDX identifier and file location, an",
       "unit_id": "inherited_unit:065.paragraph"
     }
   ]

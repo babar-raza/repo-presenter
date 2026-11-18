@@ -202,6 +202,28 @@
       "section": "scope_limitations"
     }
   ],
+  "register_corrections": [
+    {
+      "action": "sentence_withheld",
+      "findings": [
+        "finding:d46f82dc4e59",
+        "finding:ddc57412d183"
+      ],
+      "rule": "BL-210",
+      "section": "opening",
+      "slot": "opening"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "finding:1c2ff7b430ef",
+        "finding:6547a5b482d4"
+      ],
+      "rule": "BL-210",
+      "section": "key_capabilities",
+      "slot": "capability:2"
+    }
+  ],
   "schema_version": 1,
   "units": [
     {
@@ -227,8 +249,6 @@
         "public_symbol:aspose.cells_foss.pagesetup",
         "public_symbol:aspose.cells_foss.workbooksaveexception",
         "public_symbol:aspose.cells_foss.loadoptions",
-        "public_symbol:aspose.cells_foss.cellvalue",
-        "public_symbol:aspose.cells_foss.formulaexception",
         "public_symbol:aspose.cells_foss.font",
         "public_symbol:aspose.cells_foss.color",
         "public_symbol:aspose.cells_foss.fillpattern",
@@ -248,7 +268,7 @@
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Cells FOSS for Cpp reads and writes Excel files in the .xlsx format. It provides classes such as Workbook, Worksheet, and Cell to create, modify, and save spreadsheets programmatically. The product supports styling with Style, Font, Color, FillPattern, and Borders, and includes features like formula calculation, validation, hyperlinks, and page setup. It is implemented in C++ using C++17 and requires CMake 3.16 or later."
+      "text": "Aspose.Cells FOSS for Cpp reads and writes Excel files in the .xlsx format. It provides classes such as Workbook, Worksheet, and Cell to create, modify, and save spreadsheets programmatically. It is implemented in C++ using C++17 and requires CMake 3.16 or later."
     },
     {
       "fact_ids": [
@@ -264,17 +284,6 @@
     {
       "fact_ids": [
         "example:001",
-        "public_symbol:aspose.cells_foss.cell",
-        "public_symbol:aspose.cells_foss.cellvalue",
-        "public_symbol:aspose.cells_foss.formulaexception"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:2",
-      "text": "It writes values of multiple types—including strings, integers, doubles, and booleans—via Cell.PutValue, retrieves them as a variant-typed CellValue, and sets or reads formulas with Cell.SetFormula and Cell.GetFormula, throwing FormulaException for invalid formulas."
-    },
-    {
-      "fact_ids": [
-        "example:001",
         "public_symbol:aspose.cells_foss.borders",
         "public_symbol:aspose.cells_foss.color",
         "public_symbol:aspose.cells_foss.fillpattern",
@@ -282,7 +291,7 @@
         "public_symbol:aspose.cells_foss.style"
       ],
       "section": "key_capabilities",
-      "slot": "capability:3",
+      "slot": "capability:2",
       "text": "It applies styling to cells through Style, which bundles Font (bold, color), FillPattern, foreground and background Color, Borders, and alignment into a single cloneable object retrieved and set via Cell.GetStyle and Cell.SetStyle."
     },
     {
@@ -292,7 +301,7 @@
         "public_symbol:aspose.cells_foss.worksheetprotection"
       ],
       "section": "key_capabilities",
-      "slot": "capability:4",
+      "slot": "capability:3",
       "text": "It controls worksheet visibility via VisibilityType, manages gridlines and headers, and applies protection settings through WorksheetProtection, all exposed directly on Worksheet."
     },
     {
@@ -303,7 +312,7 @@
         "public_symbol:aspose.cells_foss.validationcollection"
       ],
       "section": "key_capabilities",
-      "slot": "capability:5",
+      "slot": "capability:4",
       "text": "It applies rule-driven formatting to cell ranges using ConditionalFormattingCollection and FormatCondition, and enforces input constraints via ValidationCollection and Validation scoped to one or more CellArea ranges."
     },
     {
@@ -313,7 +322,7 @@
         "public_symbol:aspose.cells_foss.papersizetype"
       ],
       "section": "key_capabilities",
-      "slot": "capability:6",
+      "slot": "capability:5",
       "text": "It configures print settings through PageSetup, supporting PaperSizeType, PageOrientationType, margins, scaling, print area, print titles, headers, footers, and page breaks."
     },
     {
@@ -324,7 +333,7 @@
         "public_symbol:aspose.cells_foss.hyperlinkcollection"
       ],
       "section": "key_capabilities",
-      "slot": "capability:7",
+      "slot": "capability:6",
       "text": "It attaches hyperlinks to cell ranges via HyperlinkCollection and Hyperlink, supporting external, internal, and mailto links, and manages workbook- or sheet-scoped named ranges through DefinedNameCollection and DefinedName with optional comment strings."
     },
     {
@@ -498,109 +507,6 @@
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.cells_foss.xlsxworkbookserializer",
       "text": "The XlsxWorkbookSerializer class provides functionality to serialize workbook content to XLSX format, with supporting classes for styles, XML handling, and archive operations."
-    },
-    {
-      "fact_ids": [
-        "link_target:021"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:021",
-      "text": "The getting started guide covers how to set up and use Aspose.Cells FOSS for Cpp to read, write, and manipulate Excel files."
-    },
-    {
-      "fact_ids": [
-        "link_target:024"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:024",
-      "text": "The contributor guide explains how to set up the development environment and contribute changes to Aspose.Cells FOSS for Cpp."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:distribution.aspose.cells.cpp.foss",
-        "package:name"
-      ],
-      "section": "scope_limitations",
-      "slot": "scope",
-      "text": "Aspose.Cells FOSS for Cpp reads and writes Excel workbooks in the .xlsx format using the C++ programming language."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:055.paragraph",
-        "inherited_unit:056.list",
-        "license:file"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:1",
-      "text": "Only .xlsx (OOXML) is supported for load and save. LoadFormat and SaveFormat each declare a single Xlsx member, and saving to any other format throws UnsupportedFeatureException. There is no .xls, .xlsb, .ods, or .csv read/write support. Legacy SpreadsheetML is not implemented. Cell-level comments/notes are not modeled as a distinct object. Some advanced conditional-formatting rule types are recognized on load but not preserved. AutoFilter date-group filters using certain patterns are rejected as unsupported during load."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:056.list"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:2",
-      "text": "Legacy SpreadsheetML (the pre-OOXML Excel 2003 XML dialect) is not implemented."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:056.list"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:3",
-      "text": "Cell-level comments/notes are not modeled as a distinct object."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:056.list"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:4",
-      "text": "Some advanced conditional-formatting rule types are recognized on load but not preserved."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:056.list"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:5",
-      "text": "AutoFilter date-group filters using certain patterns are rejected as unsupported during load rather than approximated."
-    },
-    {
-      "fact_ids": [
-        "build_test_asset:examples",
-        "build_test_asset:tests",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:013.code_block",
-        "inherited_unit:014.paragraph",
-        "inherited_unit:015.code_block",
-        "inherited_unit:016.paragraph",
-        "inherited_unit:017.code_block",
-        "inherited_unit:018.paragraph",
-        "inherited_unit:019.code_block",
-        "inherited_unit:058.heading",
-        "inherited_unit:061.paragraph",
-        "inherited_unit:062.paragraph",
-        "inherited_unit:063.code_block",
-        "package:cmake_minimum",
-        "package:cxx_standard",
-        "package:distribution.aspose.cells.cpp.foss",
-        "package:name"
-      ],
-      "section": "development_testing",
-      "slot": "summary",
-      "text": "Aspose.Cells FOSS for Cpp requires CMake 3.16 or later and targets C++17 across MSVC, GCC, and Clang. The test suite resides in Aspose.Cells.Foss.Cpp.Tests/ and uses GoogleTest v1.14.0, which is downloaded automatically via FetchContent unless -DASPOSE_CELLS_FOSS_TESTS_USE_SYSTEM_GTEST=ON is passed. The samples/ directory provides a standalone executable example built with CMake, and the library itself is dependency-free."
     },
     {
       "fact_ids": [
