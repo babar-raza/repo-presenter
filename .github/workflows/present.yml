@@ -151,7 +151,8 @@ jobs:
             --plan .cohort/plan.json --summary .cohort/plan.md >> "$GITHUB_OUTPUT"
 
       # Opens the next batch when the last one cannot fund a cell (R25 sizing; the stop rule
-      # refuses to when cost per sealed candidate exceeded its multiplier) and reserves each run's
+      # refuses to when cost per sealed candidate exceeded its multiplier; R45: under enforcement
+      # measure it only records a notice) and reserves each run's
       # allowance before it is dispatched, so concurrent runs can never overspend a batch.
       - name: Reserve each run's provider budget
         if: steps.plan.outputs.authorized == 'true'

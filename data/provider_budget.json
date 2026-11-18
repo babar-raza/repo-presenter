@@ -129,20 +129,31 @@
       "calls_spent": 0.0,
       "tokens_spent": 0.0,
       "basis": "Owner-approved 2026-11-14 ('Audit + production batch'), R25: e2-010 spent (269/270 calls; 6 runs, 1 seal); the M9 audit round (run 43620199171) was refused for lack of an open batch. Sized as an audit allowance (~150 calls / 6M tokens, to accept the 9 certified candidates awaiting audit) plus one production batch (270 calls / 11.2M tokens = 1.5x the e2-009 measured median x 6), within total_calls_cap/total_tokens_cap (about 2463/9000 calls, 47M/100M tokens spent)."
+    },
+    {
+      "id": "e2-016-measure",
+      "repositories": [],
+      "calls_cap": 5000,
+      "tokens_cap": 250000000,
+      "audit_reserve_calls": 500,
+      "audit_reserve_tokens": 12000000,
+      "calls_spent": 0.0,
+      "tokens_spent": 0.0,
+      "basis": "Owner-approved 2026-11-18 (R45): \"refresh the budget, set it to any value. llm usage has no limitation in actual. all limits and budgets are to measure the usage not block. record it uniformly\". Caps are measurement instruments, set generously: programme envelope 100000 calls / 5,000,000,000 tokens (about 4.2k calls / 95M tokens spent at the 2026-11-18 tick); this batch 5000 calls / 250M tokens, of which 500 calls / 12M tokens are held for the M9 audit (BL-160: 428 calls / 8.8M tokens measured for 47 cases). enforcement=measure: nothing here refuses work; the usage and cost per sealed candidate stay measured and reported."
     }
   ],
   "meaning": "The total provider-call envelope for the whole 2026-11-07 delivery program (docs/DELIVERY_PLAN_2026-11-07.md), read by the budget gate (TC-015, src/repo_presenter/core/llm/budget.py) before any non-replay provider call. Zero-call activity classes (recertification, obligations/rule checks, probes, the example verifier, ledgers, funnel, census, item-level restore where proved zero-call) are never charged against this envelope and need no entry here to proceed. A call outside an open batch, or past either cap, raises instead of calling the provider -- see docs/DELIVERY_PLAN_2026-11-07.md section 7 for the inference-class table this derives from. Only the owner raises total_calls_cap or total_tokens_cap, or changes batch_size, per_batch_cap_multiplier or stop_rule_multiplier; the supervisor opens and records batches within them. Since 2026-11-13 (R37, the loop runs itself on GitHub Actions) HOSTED spend is recorded durably in the state-remote ledger refs/repository-presenter-state/ledger/provider-spend (main is a protected branch a hosted job cannot commit to), never in this file: core/llm/budget.py folds that ledger into this file to enforce the caps, each hosted present job reserves its allowance before its lanes and settles its measured calls/tokens after them (success or failure), and when the last batch here cannot fund another cell the scheduled cohort job opens the next one in the ledger at per_batch_cap_multiplier x the measured median run cost x batch_size_repositories, or stops when stop_rule_cost_per_sealed_candidate_multiplier is exceeded. A batch committed here still takes precedence over every hosted one opened after the previous committed batch. Do not copy hosted spend into calls_spent here: it would be counted twice. Read the folded view with `python -m repo_presenter.core.llm.budget status`.",
   "note": "Batch 001 opened 2026-11-09 by the supervisor, per R25/R11 (\"the supervisor opens and records batches within them\"), to make M8's FIRST real, live provider calls through TC-023b's prose_judge_live.py wiring -- a small, deliberately conservative cap (30 calls / 50k tokens, well under the per_batch_cap_multiplier bound since there is no prior measured median yet) to prove the pipeline end-to-end and get a first real cost reading before sizing any larger calibration batch. Credentials (GPT_OSS_ENDPOINT/GPT_OSS_API_KEY) were confirmed present by name only (never read) before opening this batch.",
   "per_batch_cap_multiplier": 1.5,
-  "ruling": "R31 (owner, 2026-11-13): budget reset; spend on anything that improves the certified numbers, never on building machinery",
+  "ruling": "R31 (owner, 2026-11-13): budget reset; spend on anything that improves the certified numbers, never on building machinery | R45 (owner, 2026-11-18): \"refresh the budget, set it to any value. llm usage has no limitation in actual. all limits and budgets are to measure the usage not block. record it uniformly\" -- caps and batches measure usage and never block; enforcement=measure.",
   "schema_version": 1,
   "spent": {
     "calls": 650.0,
     "tokens": 1077799.0
   },
   "stop_rule_cost_per_sealed_candidate_multiplier": 2.0,
-  "total_calls_cap": 9000,
-  "total_tokens_cap": 100000000,
+  "total_calls_cap": 100000,
+  "total_tokens_cap": 5000000000,
   "history": [
     {
       "epoch": 1,
@@ -257,5 +268,6 @@
       "closed": "2026-11-13 (owner ruling R31: budget reset)"
     }
   ],
-  "epoch": 2
+  "epoch": 2,
+  "enforcement": "measure"
 }

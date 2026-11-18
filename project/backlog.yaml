@@ -2020,3 +2020,15 @@ items:
     evidence: ["2026-11-17 zero-call test: two distinct full hashes sharing the first 12 hexadecimal characters alias in CallStore. repair.loop._accept writes a revised output under the producer request key. No natural collision or wrong accepted candidate has been established."]
     next_action: "inventory replay and historical-cache compatibility, reproduce repair lineage end to end, and design minimal transactional migration"
     updated: "2026-11-17"
+
+  - id: BL-200
+    title: "Provider budgets measure usage and never block work (enforcement: measure)"
+    type: requirement
+    source: "owner ruling R45 (2026-11-18): refresh the budget, set it to any value; llm usage has no limitation in actual; all limits and budgets are to measure the usage, not block; record it uniformly"
+    priority: P0
+    status: active
+    implementation_path: "src/repo_presenter/core/llm/budget.py only (R27): one top-level data/provider_budget.json field enforcement=measure; check_budget, ensure_open_batch, reserve, reserve_audit, record_spend, effective_document and budget status honour it; absent field keeps today's behaviour"
+    acceptance: "in measure mode no cap, batch, envelope, rolling window or committed stop entry refuses check_budget, ensure_open_batch, reserve or reserve_audit; spend is still recorded; a fired rolling window and an overrun envelope are written once per batch as stop_notice entries and shown by budget status as NOTICE (never STOPPED) naming cost per seal over the last 12 versus the previous 12; a missing or unparseable file still raises; local_budget_document keeps enforcement; default mode unchanged"
+    evidence: ["tests/core/llm/test_budget_measure_r45.py (measure mode, zero provider calls); existing tests/core/llm budget tests unchanged and passing"]
+    next_action: "supervisor sets enforcement in data/provider_budget.json and records R45 in docs/RULINGS.md; hosted supervisor tick shows no STOPPED"
+    updated: "2026-11-18"
