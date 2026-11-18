@@ -48,21 +48,37 @@
    "run_id": "43654917831",
    "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T15:14:40+00:00",
+   "classes": [
+    "BC-06|unresolved|n_aspose_com_links",
+    "BC-07|inherited_unit|id_is_kept_as",
+    "BC-17|inherited_unit|section_coverage",
+    "BC-17|inherited_unit|technical_content",
+    "live_readme_loss|inherited_unit|link_https"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 9,
+   "outcome": "failure",
+   "run_id": "44330603196",
+   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T00:01:25+00:00",
+  "at": "2026-11-18T15:14:40+00:00",
   "classes": {
    "BC-06|unresolved|n_aspose_com_links": {
-    "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1806 visible words and 7 verified examples)",
+    "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1797 visible words and 7 verified examples)",
     "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "BC-06",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -86,7 +102,7 @@
      "inherited_unit:080.paragraph"
     ],
     "rule": "BC-07",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -108,7 +124,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -130,7 +146,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "9fdb5cdcac105f65e6279b1f663465b129e6e080e35f04f5087d8c6888d44834",
+    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -152,7 +168,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "live_readme_loss",
-    "scope": "dc0e260fc3d2fd79c4512866f8a89326c3cfe80727f80de410780d001f6182b3",
+    "scope": "0a9a76f340624548badfd2ea434937127993dafa07a71b214a29c84617ee2b8b",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -166,7 +182,7 @@
     "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -223,7 +239,7 @@
    },
    {
     "label": "BC-06",
-    "message": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1806 visible words and 7 verified examples)",
+    "message": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1797 visible words and 7 verified examples)",
     "origin": {
      "id": "-",
      "kind": "unresolved"
@@ -245,7 +261,7 @@
     },
     "quote": "",
     "rule": "BC-07",
-    "section_id": "scope_limitations",
+    "section_id": "additional_examples",
     "signature": "BC-07|inherited_unit|id_is_kept_as",
     "source": "validation",
     "sub_rule": "id_is_kept_as",
@@ -313,7 +329,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -329,39 +345,7 @@
     "facts_defects": [],
     "label": "BC-17",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:067.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:022.code_block: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into quick_start, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, additional_examples, api_reference, documentation",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:083.list: still DEFER_UNRESOLVED, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_UNSU",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "repaired",
-    "reason": "",
     "section_id": null,
     "stage": "S4"
    },
@@ -372,19 +356,11 @@
     "reason": "",
     "section_id": null,
     "stage": "S5"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
    }
   ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
-  "run_id": "43654917831",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43654917831",
+  "run_id": "44330603196",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44330603196",
   "schema_version": 1,
   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
