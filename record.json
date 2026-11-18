@@ -47,110 +47,35 @@
    "run_id": "44291560040",
    "source_revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T16:40:47+00:00",
+   "classes": [],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "44349026907",
+   "source_revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T11:12:06+00:00",
-  "classes": {
-   "BC-05|unresolved|section_fit": {
-    "example": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Local documentation landing page](documentation/_site/index.html)'",
-    "findings": 3,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-05",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "section_fit",
-    "upstream": ""
-   }
-  },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
-  "durable_state": "INVALIDATED",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Local documentation landing page](documentation/_site/index.html)'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Samples overview](samples/README.md)'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[Contributor and agent instructions](agents.md)'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-18T16:40:47+00:00",
+  "classes": {},
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
-  "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
-    "section_id": null,
-    "stage": "S4"
-   }
-  ],
+  "outcome": "success",
+  "repairs": [],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-.NET",
-  "run_id": "44291560040",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44291560040",
+  "run_id": "44349026907",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349026907",
   "schema_version": 1,
   "source_revision": "f71fe5595ebdaf16e2e0a7d7c8224f399b54c4e2",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
