@@ -7052,3 +7052,17 @@ becomes its own backlog item and must name the property it improves.
 
 Backlog: BL-201, BL-202, BL-203.
 
+## 2026-11-18: Lane R trust investigation consolidated (R46, BL-201)
+
+Four independent read-only investigations (universality, robustness, reliability and repeatability, hosted
+portfolio proof) are recorded in `docs/investigations/2026-11-18-lane-r-trust.md` and its directory. Agreed finding:
+the hosted runner is not the problem (115 failures, none from runner infrastructure except five 90-minute cancels);
+one unit-local defect costs the whole candidate because there is no recorded last-resort degrade step; failures
+repeat by class; no frozen-code portfolio pass has ever run; and a version set can equal while rendered bytes differ.
+Decisions: fix by class in this order inside existing components, each naming the property it improves: BL-210
+register-driven correction before seal, BL-220 terminal-safe authoring and planning, BL-230 terminal-safe
+disposition and placement, then BL-240 to BL-270; BL-203 (proof pass and repeat) runs after the first merged batch
+per the owner's cadence. Three workers start on BL-210, BL-220 and BL-230.
+
+Backlog: BL-201, BL-202, BL-203, BL-210, BL-220, BL-230, BL-240, BL-250, BL-260, BL-270.
+

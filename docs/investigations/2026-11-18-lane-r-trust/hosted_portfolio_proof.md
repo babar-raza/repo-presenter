@@ -1,0 +1,78 @@
+# R46 lens: hosted portfolio proof (read-only; zero provider calls)
+
+## 1. Measured (source: durable ledger `budget.read_ledger('origin')`, saved as inv-r46/ledger_entries.json; `gh run list`)
+- Ledger epoch 2: 140 reserve, 138 settle (137 cell runs + 1 `m9-audit`; owner's 133 not reproduced, filter unknown), 8 open_batch, 2 stop. 0 budget_refused.
+- 17 settle entries carry `sealed` (10 Lane R, 7 Lane L); owner's 10 R / 7.5% reproduced.
+- 55 reservation groups = cohorts (id prefix `cohort-<run>-<attempt>`), ALL via `scheduled cohort`; no run-request `present` or manual run appears in the ledger. Cohort size histogram: max 6 (3 cohorts of 6), 17 cohorts of 1, median 2-3. Sum of all 55 = 137 runs. Cohort span (reserve to last settle): 4 to 97 min, typical 15-35 min.
+- Per run (reserve to settle): median 16 min, p90 42 min, max 97 min. Calls/run mean 23.1, median 20, p90 46; tokens/run mean 0.63M. Totals 3,159 calls, 86.9M tokens over 137 runs.
+- Concurrency ever observed: 6 simultaneous present runs (cohort cap MAX_CELLS=6). Never more.
+- Code fingerprints: 13 distinct, 17 distinct main SHAs across settles. Largest same-fingerprint set: 22 repos in 23 runs (955aa8ce, 2026-11-13 23:57Z to 11-14 07:05Z, 3 main SHAs, 5 sealed) and 21 repos in 30 runs (3b806de0, 11-15 01:37Z to 08:45Z, 1 main SHA, 6 sealed, 4 R). So the best "same code" pass covered 21-22 of 40 cells, interleaved over 7 h, not a frozen one-shot pass. No fingerprint covers 40.
+- First hosted run of each cell: 5 of 41 sealed (4 Lane R) - matches owner's "4 of 40".
+- Activity gaps: no settle between 2026-11-15 14:35Z and 2026-11-18 11:05Z. Stop rule entries: 11-14 09:04Z (cost/sealed inf) and 11-15 15:21Z (R43 rolling 12, 20.6 calls/seal). Hourly schedule fires 11-15 15:42 to 11-18 03:10 all succeeded as planner-only (no dispatch). R45 (11-18) lifted measure-only; cohorts resumed 11:05Z (6 runs, 0 sealed, all failure) and 11:42Z (6 reserved, 3 settled when read, 0 sealed).
+- Other workflows: recertify ran on every pipeline push (8 shown, 11-15 to 11-18, 5-22 min each, zero-call). run-request-execute: 8 recent runs, only the 11-18 10:47Z one is `cohort`-type (it started cohort-44288680005); earlier ones are present/audit/count/mint.
+- NOT measured: my zero-call `recertify --all --json --remote origin` (started 12:05Z) had not finished after ~12 min in this container (output is written only at the end), so current certified counts are taken from the owner's facts, not reproduced. Partial file inv-r46/recertify_all.json is empty.
+
+## 2. Has a full-portfolio hosted pass ever happened? No. (confirmed)
+Planner policy (scripts/select_scheduled_cohort.py docstring + plan_cohort; scripts/scheduled_execution_gate.py; present.yml `cohort` job L110-205):
+1. Selects only cells that "need work": no seal, or latest seal re-certifies NEEDS_REPAIR. A certified sealed cell is skipped by design, so sealed cells can never appear in a pass.
+2. Further skips: inactive/unlisted, terminal (R24/R20), in flight, idempotent (same code fingerprint + upstream rev, not sealed), diagnose (3 consecutive failures on current code), held-on-known-failure (BL-084), capped (2 hosted failures without a changed class scope, BL-086).
+3. MAX_CELLS=6 per fire (R25), one cohort at a time (`held` while any `cohort-` reservation is unsettled), next cohort chained by present.yml `chain` job / cohort-chain.yml; ranking by fix-landed > needs-repair > never-attempted > retry; lagging-lane first (LANE_TARGET 25).
+4. Code changes mid-flight: every push to src/prompts/pyproject/data triggers recertify.yml, then cohort-chain, which re-plans. 13 fingerprints in 5 days: the "code" under test changes about every 10 hours.
+So by construction: the planner drains failures six at a time, repeating the same failing cells (9 cells ran 3-9 times), never exercises passing cells, and never holds code fixed. This is a work queue, not a proof harness. Per-run success is also not "sealed": 102 of 137 runs ended R=failure, 9 R=success.
+
+## 3. Smallest design: ONE frozen-code pass over 40 cells + one repeat, using existing paths
+### 3a. Freeze (no new code)
+- Pick F = a main SHA. Declare a merge freeze on src/, prompts/, pyproject.toml, data/ (non-operational) for the duration. Files `data/provider_budget.json`, `scheduled_execution_policy.json`, `terminal_cells.json`, `recertification_baseline.json`, `registry_observations.json`, `issue_pilot.json` are outside the fingerprint (budget.OPERATIONAL_DATA_FILES), so they may change without breaking "frozen".
+- Quiesce the engine: set `scheduled_execution_authorized=false` in data/scheduled_execution_policy.json for the pass (operational file; gate then prints authorized=false and the hourly cohort planner and cohort-chain dispatch nothing). Otherwise the chain (workflow_run of present, event workflow_dispatch) launches extra planner cohorts into the same per-repo concurrency groups and contaminates the pass.
+- Record `code_fingerprint(F)` as the pass id; a settle entry belongs to the pass iff its `code` equals it and `main_sha`==F.
+### 3b. Dispatch (existing path)
+- Manual `workflow_dispatch` of present.yml is its own authorization and has no idempotent/diagnose/capped skip (those live only in plan_cohort). 40 dispatches `gh workflow run present.yml -f repository=<r> -f ecosystem=<e> -f lane=R` (lane both if L is also wanted; for R-only proof use R) from the registry (40 active, ecosystem from data/registry.json). Needs a token with actions:write (supervisor session or a run-request job; run-request allows exactly one `present` per request branch, so 40 branches/runs - viable but slower; the gh loop is what the planner itself does at present.yml L180-190).
+- No dispatch_id means no `chain` job and the run reserves `run-<id>-a1` (reserve step exists for non-cohort runs; under R45 measure mode it cannot refuse). Smallest code change if wanted (R27, existing component): `plan_cohort(..., full_pass=True)` / `--max-cells 40 --no-skip idempotent,diagnose,capped,held` in scripts/select_scheduled_cohort.py, which keeps `terminal` and `in_flight` skips and uses the same reserve-cohort/dispatch/dispatch_id logging. Not needed if the gh loop is accepted; add only because the owner wants the planner path reproducible (R38).
+### 3c. How a sealed cell is re-exercised (R10)
+present.py `_cascade_and_seal`: preflight, then `can_skip_provider_call` (sealed bundle byte-identical, zero calls) or `recertify_instead` (re-render + full validation + reviewer rules from stored outputs, zero provider calls; writes a NEW seal commit on the same ref only when it passes; original kept). Dispatching present for a certified sealed cell therefore costs 0 calls and never regenerates. NEEDS_REPAIR seals fall to generation (that is the normal repair path, not a violation). `restore_sealed_bundle` rebuilds the local bundle from the bundle ref on a cache miss, so a cold runner also takes the zero-call path.
+### 3d. Verdict per cell (computed from hosted records only)
+For cell c at pass P (code fingerprint FP, main F):
+- run_outcome: the settle entry with `code==FP`, its `outcomes.R` (success/failure/cancelled) and run_id/run_url.
+- standing: after the pass, `recertify --all --json --remote origin` at F (zero calls, minutes) gives each cell's latest seal CERTIFIED / NEEDS_REPAIR (this is where BC-18 register-confirmed false claims make a seal fail) and the bundle-ref head commit.
+- provenance of the seal: FRESH (bundle head commit time inside the pass window and settle.sealed contains R), REPLAYED (head unchanged or recertified-only, zero calls), NONE.
+- PASS iff run_outcome==success AND standing==CERTIFIED at F. Report three numbers: PASS total, PASS-FRESH, PASS-REPLAYED. The owner's "seal in one pass" bar should be stated on PASS total but the report must always show the FRESH/REPLAYED split, because REPLAYED cells prove only that a prior seal still certifies, not that generation works on frozen code. Honest framing: today ~11 cells are REPLAYED-certifiable; the bar (34 of 40) needs about 23 more cells to be FRESH-or-repaired at F.
+- Failing cells carry their failure record (`python -m repo_presenter.failures show --remote origin`) class so repeat agreement can compare classes.
+### 3e. Repeat pass
+Re-dispatch the same 40 at the same F immediately after pass 1 settles (code unchanged, so same fingerprint). Agreement for a cell = PASS/FAIL verdict equal; for FAIL/FAIL also the same top failure class. Agreement bar 90% = at least 36 of 40. Weakness to state: cells PASS-FRESH in pass 1 are REPLAYED in pass 2 (zero-call skip), so their agreement is trivially true and only shows idempotence and recertify determinism. Real generation repeatability is evidenced only by cells that generate in both passes (FAIL then FAIL or FAIL then SEAL). Report agreement split into "generated twice" vs "replayed" and call the bar met only when the generated-twice subset is non-trivial (at least 8 cells, hypothesis to tune). For a cold repeat that never touches seals, the existing workflow could be run in a scratch state remote (all state refs are keyed by `--remote`; present.yml uses `${{ github.repository }}`, so this means a fork with secrets: a new repo/setup, not recommended unless a cold-generation measure is demanded; say why: only way to regenerate a sealed cell without violating R10).
+
+## 4. Cost and wall time (measured per-run numbers; budgets measure only, R45)
+- Pass 1 worst case = every cell generates: 40 x 23.1 calls = ~924 calls, 40 x 0.63M = ~25M tokens (mean); p90 case 40 x 46 = 1,840 calls. But only the ~29 non-certified cells generate (11 replay at ~0 calls): ~29 x 23 = ~670 calls, ~18M tokens. Prior 9 heavy cells ran 5-9 times, so repeat of 29 failing cells costs about the same again. Pass 1 + repeat: roughly 1,300-1,900 calls, 35-50M tokens, at most 2-3% of the 5B-token envelope (measured since R45).
+- Wall: per run median 16 min, p90 42, max 97 (timeout 90 min present job, 60 facts). If all 40 run in parallel: wall ~ slowest run, 1.5-2 h per pass; if GitHub concurrency is lower (below), pass wall = ceil(40/limit) x ~40 min. Recertify + count afterwards ~10-20 min. Two passes: roughly 4-6 h unattended.
+## 5. Hosted constraints and what breaks at 40 scale (hypotheses unless noted)
+- Concurrency: never above 6 parallel so far (confirmed). GitHub plan limit unknown to me (Free 20, Pro 40, Team 60 concurrent jobs); each run is facts then present (sequential), so 40 runs = 40 concurrent jobs at peak; excess queue. Per-repository concurrency group `present-<repo>` serialises same-repo runs: a repeat dispatched before pass 1 settles will queue behind it (fine) but a stray planner run would too (hence the quiesce).
+- Ledger ref CAS: reserve/settle append by compare-and-swap on one git ref; 40 near-simultaneous reserves and settles contend. Observed at 6; at 40 expect retry storms or lost writes (hypothesis; check the CAS retry count in core/llm/budget.py, I found no explicit retry constant by grep). Mitigation inside component: stagger dispatches 20-30 s apart (loop sleep), no code change.
+- Provider rate limits (LLM 429s) at 40 simultaneous runs are unmeasured; the gateway's retry behaviour needs checking. The 11-18 11:06Z cohort had failures on 6 of 6, cause outside my lens.
+- GitHub API/state refs: 40 clones plus state-ref pushes fine at 5k/h; cache `actions/cache` key presenter-state-<slug>-* is per repo, 10 GB repo limit across 40 slugs x bundle+call store could evict (hypothesis; sizes unmeasured).
+- Secrets/proxy: present job uses the LLM secret; no fork access issue for main-branch dispatch. This container's proxy blocks artifacts, so evidence must come from ledger, bundle refs and `gh run view --log` only.
+- Toolchains: .NET/Java/others installed per ecosystem inside facts; 40 distinct ecosystems builds each cost setup minutes (accounted in wall).
+- recertify.yml and cohort-chain fire on every push to main under src/prompts/data: freeze must include no merges there; docs-only merges are fine.
+- Cancelled runs: present has no cancel-in-progress, but 3 recent runs show `cancelled` (manual cancels or timeouts); a cancelled run must count as FAIL-INFRA and be re-dispatched, not silently dropped (pass is incomplete until 40 verdicts).
+
+## 6. Root causes of "never proven on hosted" (lens)
+1. confirmed: The planner is a failure-queue drain (6/fire, skips certified cells, idempotent/diagnose/capped/held skips) so cells never share one code state and certified cells are never re-exercised on hosted.
+2. confirmed: Code churn: 13 fingerprints, 17 main SHAs in 5 days; best same-code coverage 22 of 40; recertify+chain re-plans on every push.
+3. confirmed: Run history is scored per run, not per cell/pass: `outcomes.R=success` (9 runs) and `sealed` (17) are different; "success" can be a skip, and no record says which fingerprint certified each cell at pass end.
+4. probable: scale untested above 6 concurrency (ledger CAS, GH concurrency, rate limits).
+5. hypothesis: engine idle gaps (11-15 15:21Z to 11-18 11:05Z, 67 h) came from the R43 stop rule; R45 removed it, so the loop resumed, but hourly schedule fires still produce planner-only successes that look green.
+Fix for 1-3 inside existing components: the dispatch loop plus freeze above (no code), optional `full_pass` flag on plan_cohort. Properties improved: portfolio proof (direct), repeatability (repeat pass), reliability (it measures the failure rate per cell on fixed code).
+
+## 7. Supervisor tick scorecard (computable from existing records, zero calls)
+Inputs per tick: ledger settles (`budget.read_ledger`), `recertify --all --json`, `failures list/pareto --remote origin`, `portfolio_delivery_count.py` (acceptance). Define active cells A=40, current pass P = latest fingerprint with >= 30 distinct repos settled (else "no pass yet", show best fingerprint coverage).
+- Portfolio proof = distinct active repos with a settle at fingerprint FP / 40; and FP == current main fingerprint; target 100% in one pass window (max main_sha count == 1). Today: 22/40 (stale).
+- Reliability = PASS total / 40 at FP (bar 85%, i.e. 34); plus run-success rate per run = settles with outcomes.R=='success' / settles (today 9/137 = 6.6%) and infra-failure share (failure records classed transient).
+- Repeatability = agreement between the last two passes at the same FP over cells with both verdicts, reported split generated-twice vs replayed (bar 90%).
+- Universality = cells with PASS across ecosystems: count of the 8 ecosystems (python, net, java, cpp, go, rust, typescript, nodejs) each with >= 85% PASS, and the minimum per-ecosystem rate; plus number of cells with >= 3 consecutive failing hosted runs on the current FP (today 9 cells with 3-9 runs unsealed).
+- Robustness = for failing cells at FP, the share whose failure record class is in the fixed set vs unknown (`failures pareto`), and the share of runs that ended failure with no failure record; plus the repair convergence count (repairs succeeded / attempts) if available in the failure record (not verified).
+Emit the five numbers plus FRESH/REPLAYED split as one line in the tick summary; write nothing.
+
+## 8. Could not determine
+- Current certified counts (my recertify --all did not finish in time); used owner's numbers.
+- 133 vs 137/138 settle discrepancy.
+- GitHub plan concurrency limit; LLM provider rate limit headroom; ledger CAS retry behaviour at 40; Actions cache sizes.
+- Why the 11-18 cohort runs failed (other lens); which of the 40 would be FRESH on a frozen pass.
+- Whether a run-request `present` branch flow has any rate limits for 40 requests.
