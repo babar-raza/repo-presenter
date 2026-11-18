@@ -18,10 +18,10 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit capability:5: spells '1', '7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-15T06:17:30.244998+00:00",
+    "occurred_at": "2026-11-18T13:54:17.340314+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 14,
+  "state_version": 15,
   "recent_trigger_dedup_keys": {
     "run:41298091280:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "448eb341fb514700bc5945502a805a20",
     "run:41303579390:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "f3097cd8c67844ca981292e0e2abf2a7",
