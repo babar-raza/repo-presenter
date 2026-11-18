@@ -54,11 +54,26 @@
    "run_id": "43652850518",
    "source_revision": "034594822f58194a9ae937237090a60161f57055",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T16:24:42+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is",
+    "BC-07|unresolved|example_heading_q_is",
+    "BC-07|unresolved|heading_q_is_not",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 13,
+   "outcome": "failure",
+   "run_id": "44330589268",
+   "source_revision": "7c862a8a3c891c99c6cbe199bc700c6bde36529d",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T23:46:08+00:00",
+  "at": "2026-11-18T16:24:42+00:00",
   "classes": {
    "BC-04|unresolved|code_span_q_is": {
     "example": "code span 'docs/superpowers' is not a fact value",
@@ -68,7 +83,7 @@
      "-"
     ],
     "rule": "BC-04",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -84,15 +99,39 @@
     "sub_rule": "code_span_q_is",
     "upstream": ""
    },
-   "BC-07|unresolved|heading_q_is_not": {
-    "example": "heading '#### Complex-text Shaping (Embedded OpenType Fonts)' is not a shell heading in title case",
-    "findings": 5,
+   "BC-07|unresolved|example_heading_q_is": {
+    "example": "example heading 'Export a PDF to Multiple Formats' is reused",
+    "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "BC-07",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "example_heading_q_is",
+    "upstream": ""
+   },
+   "BC-07|unresolved|heading_q_is_not": {
+    "example": "heading '#### Text Decoration' is not a shell heading in title case",
+    "findings": 7,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-07",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -109,18 +148,17 @@
     "upstream": ""
    },
    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve": {
-    "example": "```ts\nimport { Document } from '@asposefoss/pdf';\nimport { readFileSync, writeFileSync } from 'node:fs';\n\nconst doc = Document.Open(new Uint8Array(readFileSync('xfa-form.pdf')));\nconst report = doc.ConvertXfaToAcroForm();\n\nconsole.log('packets:', report.packets.join(', '));\nfor (const f of report.fi",
-    "findings": 5,
+    "example": "```ts\nimport { openAiModel, type AiModel } from '@asposefoss/pdf';\n\nconst model: AiModel = openAiModel('https://api.openai.com/v1', {\n  model: 'gpt-4o-mini',\n  apiKey: process.env.OPENAI_API_KEY,\n});\n// A local server needs no key: openAiModel('http://localhost:11434/v1', { model: 'llama3.2' })\n\ncon",
+    "findings": 4,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:308.code_block",
-     "inherited_unit:456.code_block",
-     "inherited_unit:517.code_block",
-     "inherited_unit:519.code_block",
-     "inherited_unit:525.code_block"
+     "inherited_unit:463.code_block",
+     "inherited_unit:520.code_block",
+     "inherited_unit:522.code_block",
+     "inherited_unit:528.code_block"
     ],
     "rule": "disposition_coverage",
-    "scope": "dc0e260fc3d2fd79c4512866f8a89326c3cfe80727f80de410780d001f6182b3",
+    "scope": "0a9a76f340624548badfd2ea434937127993dafa07a71b214a29c84617ee2b8b",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -132,47 +170,26 @@
     ],
     "sub_rule": "id_is_kept_verified_preserve",
     "upstream": ""
-   },
-   "live_readme_loss|inherited_unit|code_block": {
-    "example": "import { Document } from '@asposefoss/pdf';\n\nconst doc = Document.OpenFile('in.pdf');\nconst svg = doc.Pages[0].ToSvg();          // standalone <svg> string\n// fs.writeFileSync('page1.svg', svg);\nconst png = doc.Pages[0].ToImage({ scale: 2 }); // Uint8Array of PNG bytes @144 DPI\n// fs.writeFileSync('",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:015.code_block"
-    ],
-    "rule": "live_readme_loss",
-    "scope": "dc0e260fc3d2fd79c4512866f8a89326c3cfe80727f80de410780d001f6182b3",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
-    ],
-    "sub_rule": "code_block",
-    "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:308.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:456.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:517.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:519.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds i",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:463.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:520.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:522.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:528.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "disposition_coverage",
-    "message": "inherited_unit:308.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "message": "inherited_unit:463.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "inherited_unit:308.code_block",
+     "id": "inherited_unit:463.code_block",
      "kind": "inherited_unit"
     },
-    "quote": "```ts\nimport { Document } from '@asposefoss/pdf';\nimport { readFileSync, writeFileSync } from 'node:fs';\n\nconst doc = Document.Open(new Uint8Array(readFileSync('xfa-form.pdf')));\nconst report = doc.ConvertXfaToAcroForm();\n\nconsole.log('packets:', report.packets.join(', '));\nfor (const f of report.fi",
+    "quote": "```ts\nimport { openAiModel, type AiModel } from '@asposefoss/pdf';\n\nconst model: AiModel = openAiModel('https://api.openai.com/v1', {\n  model: 'gpt-4o-mini',\n  apiKey: process.env.OPENAI_API_KEY,\n});\n// A local server needs no key: openAiModel('http://localhost:11434/v1', { model: 'llama3.2' })\n\ncon",
     "rule": "disposition_coverage",
     "section_id": "",
     "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
@@ -182,24 +199,9 @@
    },
    {
     "label": "disposition_coverage",
-    "message": "inherited_unit:456.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "message": "inherited_unit:520.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "inherited_unit:456.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "```ts\nimport { Document } from '@asposefoss/pdf';\n\nconst doc = Document.OpenFile('in.pdf');\nconst svg = doc.Pages[0].ToSvg();          // standalone <svg> string\n// fs.writeFileSync('page1.svg', svg);\nconst png = doc.Pages[0].ToImage({ scale: 2 }); // Uint8Array of PNG bytes @144 DPI\n// fs.writeFile",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:517.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:517.code_block",
+     "id": "inherited_unit:520.code_block",
      "kind": "inherited_unit"
     },
     "quote": "```ts\nimport { parseHtml } from '@asposefoss/pdf';\n\nconst doc = parseHtml('<p>Hello<p>World');\n// doc.children[0]            -> <html> element\n// html.children              -> [<head>, <body>]\n// body.children              -> [<p>Hello</p>, <p>World</p>]\n```",
@@ -212,9 +214,9 @@
    },
    {
     "label": "disposition_coverage",
-    "message": "inherited_unit:519.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "message": "inherited_unit:522.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "inherited_unit:519.code_block",
+     "id": "inherited_unit:522.code_block",
      "kind": "inherited_unit"
     },
     "quote": "```ts\nimport { parseHtmlBytes } from '@asposefoss/pdf';\nimport { readFile } from 'node:fs/promises';\n\nconst doc = parseHtmlBytes(new Uint8Array(await readFile('legacy.html')));\n// A <meta charset=\"windows-1251\"> is honoured, and so is one sitting past the\n// 1024-byte window a browser's prescan give",
@@ -227,9 +229,9 @@
    },
    {
     "label": "disposition_coverage",
-    "message": "inherited_unit:525.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "message": "inherited_unit:528.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "inherited_unit:525.code_block",
+     "id": "inherited_unit:528.code_block",
      "kind": "inherited_unit"
     },
     "quote": "```ts\nimport { parseMarkdown } from '@asposefoss/pdf';\n\nconst doc = parseMarkdown('# Title\\n\\nSome *emphasis* and a [link](/u).\\n');\n// doc.children[0] -> { type: 'heading', level: 1, children: [{ type: 'text', value: 'Title' }] }\n// doc.children[1] -> { type: 'paragraph', children: [ ... 'text', 'e",
@@ -238,21 +240,6 @@
     "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
     "source": "review",
     "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: code block \"import { Document } from '@asposefoss/pdf';\"",
-    "origin": {
-     "id": "inherited_unit:015.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "import { Document } from '@asposefoss/pdf';\n\nconst doc = Document.OpenFile('in.pdf');\nconst svg = doc.Pages[0].ToSvg();          // standalone <svg> string\n// fs.writeFileSync('page1.svg', svg);\nconst png = doc.Pages[0].ToImage({ scale: 2 }); // Uint8Array of PNG bytes @144 DPI\n// fs.writeFileSync('",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|code_block",
-    "source": "review",
-    "sub_rule": "code_block",
     "upstream": ""
    },
    {
@@ -268,6 +255,51 @@
     "signature": "BC-04|unresolved|code_span_q_is",
     "source": "validation",
     "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "example heading 'Export a PDF to Multiple Formats' is reused",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|example_heading_q_is",
+    "source": "validation",
+    "sub_rule": "example_heading_q_is",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Text Decoration' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "heading '#### Embedding a Font (Arbitrary Unicode)' is not a shell heading in title case",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|heading_q_is_not",
+    "source": "validation",
+    "sub_rule": "heading_q_is_not",
     "upstream": ""
    },
    {
@@ -347,24 +379,80 @@
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "disposition_coverage:0+disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:308.code_block: supported_omission: OMIT_UNSUPPORTED claims no fact supports this code block, but its example example:080 is verified. Supersede it into quick_start or additional_examples (the plan renders every verified example there) or place it; do not omit a verified example; the unit's exact text is \"```ts\\nimport { Document } from '@asposefoss/pdf';\\nimport { readFileSync, writeFileSync } from 'node:fs';",
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:463.code_block: supported_omission: OMIT_UNSUPPORTED claims no fact supports this code block, but its example example:112 is verified. Supersede it into quick_start or additional_examples (the plan renders every verified example there) or place it; do not omit a verified example; the unit's exact text is \"```ts\\nimport { openAiModel, type AiModel } from '@asposefoss/pdf';\\n\\nconst model: AiModel = openAiModel(",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "live_readme_loss:5",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "additional_examples",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:0",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "additional_examples",
     "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "43652850518",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43652850518",
+  "run_id": "44330589268",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44330589268",
   "schema_version": 1,
-  "source_revision": "034594822f58194a9ae937237090a60161f57055",
+  "source_revision": "7c862a8a3c891c99c6cbe199bc700c6bde36529d",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
