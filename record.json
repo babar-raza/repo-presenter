@@ -24,140 +24,91 @@
    "run_id": "44330608498",
    "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T20:06:02+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|opening"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44384816089",
+   "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T15:10:01+00:00",
+  "at": "2026-11-18T20:06:02+00:00",
   "classes": {
-   "BC-05|unresolved|section_fit": {
-    "example": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Getting started guide](https://docs.aspose.org/slides/cpp/)** \u2014 installation, walkthroughs, and feature guides for th'",
-    "findings": 5,
-    "origin_kind": "unresolved",
+   "llm:factuality|authored_unit|opening": {
+    "example": "Aspose.Slides FOSS for Cpp reads PowerPoint presentations in formats including `.ppt`, `.pptx`, `.pptm`, `.pps`, `.ppsx`, `.ppsm`, `.pot`, `.potx`, and `.potm`. It saves presentations to formats including `.pptx`, `.pptm`, `.ppsx`, `.ppsm`, `.potx`, `.potm`, `.fodp`, `.gif`, `.htm`, `.html`, `.html5",
+    "findings": 1,
+    "origin_kind": "authored_unit",
     "origins": [
-     "-"
+     "opening.opening"
     ],
-    "rule": "BC-05",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "rule": "llm:factuality",
+    "scope": "03f582d5896b02050efaf55359d5b682bc45406eba8ebaebe387fdef3fd8769a",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "section_fit",
+    "sub_rule": "opening",
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Getting started guide](https://docs.aspose.org/slides/cpp/)** \u2014 installation, walkthroughs, and feature guides for th'",
+    "label": "F01",
+    "message": "Aspose.Slides FOSS for Cpp reads PowerPoint presentations in formats including `.ppt`, `.pptx`, `.pptm`, `.pps`, `.ppsx`, `.ppsm`, `.pot`, `.potx`, and `.potm`. It saves presentations to formats including `.pptx`, `.pptm`, `.ppsx`, `.ppsm`, `.potx`, `.potm`, `.fodp`, `.gif`, `.htm`, `.html`, `.html5`, `.md`, `.odp`, `.otp`, `.pdf`, `.pot`, `.pps`, `.swf`, `.tiff`, `.xml`, and `.xps`. (+1 identical findings merged)",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "opening.opening",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[How-to guides & FAQ](https://kb.aspose.org/slides/cpp/)** \u2014 task-focused answers for common PowerPoint-processing que'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Full API reference](https://reference.aspose.org/slides/cpp/)** \u2014 the complete, browsable reference for the public AP'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '**[Publishing guide](PUBLISHING.md)** \u2014 how a release of `Aspose.Slides.Cpp.FOSS` reaches nuget.org, and what to do when'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "section fit: Scope and Limitations prints a resource link, which belongs in Documentation and Resources: '[GitHub repository](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp)'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "scope_limitations",
-    "signature": "BC-05|unresolved|section_fit",
-    "source": "validation",
-    "sub_rule": "section_fit",
+    "quote": "Aspose.Slides FOSS for Cpp reads PowerPoint presentations in formats including `.ppt`, `.pptx`, `.pptm`, `.pps`, `.ppsx`, `.ppsm`, `.pot`, `.potx`, and `.potm`. It saves presentations to formats including `.pptx`, `.pptm`, `.ppsx`, `.ppsm`, `.potx`, `.potm`, `.fodp`, `.gif`, `.htm`, `.html`, `.html5",
+    "rule": "llm:factuality",
+    "section_id": "opening",
+    "signature": "llm:factuality|authored_unit|opening",
+    "source": "review",
+    "sub_rule": "opening",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
-    "section_id": null,
-    "stage": "S4"
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "the causing section was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
+    "section_id": "opening",
+    "stage": "S6"
    }
   ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
-  "run_id": "44330608498",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44330608498",
+  "run_id": "44384816089",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44384816089",
   "schema_version": 1,
   "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
