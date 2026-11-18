@@ -48,168 +48,283 @@
    "run_id": "44313179220",
    "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T20:54:10+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|inherited_unit|development_testing",
+    "llm:factuality|unresolved|documentation_resources",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 5,
+   "outcome": "failure",
+   "run_id": "44384792818",
+   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T13:54:28+00:00",
+  "at": "2026-11-18T20:54:10+00:00",
   "classes": {
-   "BC-05|inherited_unit|superseded_unstated": {
-    "example": "inherited_unit:072.table is SUPERSEDE_REDUNDANT, but the README does not state 4 piece(s) of it (span 'onenter'; span 'onformat'; span 'onvalidate'; span 'measure.numberformatlist'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "| `WarichuWTElement` | Warichu text (WT) content element. |",
     "findings": 1,
-    "origin_kind": "inherited_unit",
+    "origin_kind": "authored_unit",
     "origins": [
-     "inherited_unit:072.table"
+     "api_reference.type:public_symbol:aspose.pdf.logicalstructure.warichuwtelement"
     ],
-    "rule": "BC-05",
-    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
+    "rule": "llm:factuality",
+    "scope": "03f582d5896b02050efaf55359d5b682bc45406eba8ebaebe387fdef3fd8769a",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "superseded_unstated",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:072.table holds api_identifiers 'OnEnter', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 4,
+   "llm:factuality|inherited_unit|development_testing": {
+    "example": "No optional third-party package dependencies.",
+    "findings": 2,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:072.table"
+     "inherited_unit:024.paragraph",
+     "inherited_unit:228.paragraph"
     ],
-    "rule": "BC-17",
-    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
+    "rule": "llm:factuality",
+    "scope": "83aaaef71fd035b627b361595daddc4b5294d8fac91c10838d57adf73d43ca72",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
      "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "technical_content",
+    "sub_rule": "development_testing",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|documentation_resources": {
+    "example": "- **[Full API reference](https://reference.aspose.org/pdf/net/)** \u2014 the complete, browsable reference for all 968 public types (the API Reference section above covers the essentials).",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "d647a0e42475b8fdb8a2b5e0fb471a696f44137aa4a8c6d327ab3edd0a42fabb",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "documentation_resources",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "See [Aspose.PDF for .NET \u2014 Enterprise Edition](https://products.aspose.com/pdf/net/). The commercial product adds features not implemented in this package, including digital signing, encryption, form filling, and advanced rendering to image and office formats.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "d647a0e42475b8fdb8a2b5e0fb471a696f44137aa4a8c6d327ab3edd0a42fabb",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-05",
-    "message": "inherited_unit:072.table is SUPERSEDE_REDUNDANT, but the README does not state 4 piece(s) of it (span 'onenter'; span 'onformat'; span 'onvalidate'; span 'measure.numberformatlist'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "label": "F01",
+    "message": "The table includes `WarichuWTElement` with description 'Warichu text (WT) content element.'",
     "origin": {
-     "id": "inherited_unit:072.table",
-     "kind": "inherited_unit"
+     "id": "api_reference.type:public_symbol:aspose.pdf.logicalstructure.warichuwtelement",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
+    "quote": "| `WarichuWTElement` | Warichu text (WT) content element. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:072.table holds api_identifiers 'OnEnter', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F02",
+    "message": "The list states '[Full API reference](https://reference.aspose.org/pdf/net/) \u2014 the complete, browsable reference for all 968 public types (the API Reference section above covers the essentials).'",
     "origin": {
-     "id": "inherited_unit:072.table",
-     "kind": "inherited_unit"
+     "id": "-",
+     "kind": "unresolved"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "- **[Full API reference](https://reference.aspose.org/pdf/net/)** \u2014 the complete, browsable reference for all 968 public types (the API Reference section above covers the essentials).",
+    "rule": "llm:factuality",
+    "section_id": "documentation_resources",
+    "signature": "llm:factuality|unresolved|documentation_resources",
+    "source": "review",
+    "sub_rule": "documentation_resources",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:072.table holds api_identifiers 'OnFormat', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F03",
+    "message": "The commercial product adds features not implemented in this package, including digital signing, encryption, form filling, and advanced rendering to image and office formats.",
     "origin": {
-     "id": "inherited_unit:072.table",
-     "kind": "inherited_unit"
+     "id": "-",
+     "kind": "unresolved"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "See [Aspose.PDF for .NET \u2014 Enterprise Edition](https://products.aspose.com/pdf/net/). The commercial product adds features not implemented in this package, including digital signing, encryption, form filling, and advanced rendering to image and office formats.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:072.table holds api_identifiers 'OnValidate', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F04",
+    "message": "No optional third-party package dependencies.",
     "origin": {
-     "id": "inherited_unit:072.table",
+     "id": "inherited_unit:024.paragraph",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "No optional third-party package dependencies.",
+    "rule": "llm:factuality",
+    "section_id": "development_testing",
+    "signature": "llm:factuality|inherited_unit|development_testing",
+    "source": "review",
+    "sub_rule": "development_testing",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:072.table holds api_identifiers 'Measure.NumberFormatList', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F05",
+    "message": "The test project (`Aspose.Pdf.Foss.Tests`) is an xUnit suite that runs on net8.0, net10.0 and net48 (add `-f net8.0` to run one target); every runnable example in this README traces back to a real test method in `tests/` \u2014 including `tests/AnnotationCreationTests.cs`, `tests/Actions/PdfActionTests.cs`, `tests/ChoiceFieldOptionsTests.cs`, and `tests/Content/ContentExtractionTests.cs`. CI runs the same restore/build/test sequence on Windows via [`.github/workflows/build.yml`](.github/workflows/bui",
     "origin": {
-     "id": "inherited_unit:072.table",
+     "id": "inherited_unit:228.paragraph",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "The test project (`Aspose.Pdf.Foss.Tests`) is an xUnit suite that runs on net8.0, net10.0 and net48 (add `-f net8.0` to run one target); every runnable example in this README traces back to a real test method in `tests/` \u2014 including `tests/AnnotationCreationTests.cs`, `tests/Actions/PdfActionTests.c",
+    "rule": "llm:factuality",
+    "section_id": "development_testing",
+    "signature": "llm:factuality|inherited_unit|development_testing",
+    "source": "review",
+    "sub_rule": "development_testing",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
+    "label": "F04",
+    "outcome": "unrepairable",
+    "reason": "section development_testing is deterministic; its blocks change only when facts change",
+    "section_id": "development_testing",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F02",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "unrepairable",
+    "reason": "section documentation_resources is deterministic; its blocks change only when facts change",
+    "section_id": "documentation_resources",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
     "label": "BC-05",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:072.table: still SUPERSEDE_REDUNDANT (you answered VERIFIED_MOVE into documentation_resources, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, api_reference, scope_limitations, developm",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: this revision makes BC-14 fail: the API table row for `NumberFormatList` names `Measure.NumberFormatList`, but `Aspose.Pdf.Annotations.Measure` has no member `NumberFormatList`",
     "section_id": null,
     "stage": "S4"
    },
    {
     "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1",
+    "outcome": "repaired",
+    "reason": "plan-level drop of hub:public_symbol:aspose.pdf.tagged, hub:public_symbol:aspose.pdf.comparison (blanked by the repair)",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F03",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "development_testing",
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
     "label": "BC-17",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:072.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_UNSUPPORTED only citing the CONTRA",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": null,
     "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
-  "run_id": "44313179220",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44313179220",
+  "run_id": "44384792818",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44384792818",
   "schema_version": 1,
   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
