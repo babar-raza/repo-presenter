@@ -1,0 +1,1528 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:registry_lag",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered from facts in the identity section.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028",
+        "link_target:029",
+        "link_target:030",
+        "link_target:031",
+        "link_target:032",
+        "link_target:033",
+        "link_target:034",
+        "link_target:035",
+        "link_target:badge.ci",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The badge row is rendered from facts in the badges section.",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:008",
+        "link_target:009",
+        "link_target:product.banner",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image is rendered from facts in the banner section.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The Navigation heading is rendered by deterministic code in the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "rationale": "The navigation list is rendered by deterministic code in the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The At a Glance heading is rendered by deterministic code in the at_a_glance section.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version"
+      ],
+      "rationale": "The Mermaid diagram is rendered by deterministic code in the at_a_glance section.",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Key Capabilities heading is rendered by deterministic code in the key_capabilities section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:009",
+        "example:010",
+        "example:011",
+        "example:012",
+        "example:013",
+        "example:014",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.charts.charttype",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "The list items are supported by examples and public symbols and provide essential capability details.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The Installation heading is rendered by deterministic code in the installation section.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The installation paragraph is superseded by the installation command rendered from facts.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The pip install command is rendered exactly from facts in the installation section.",
+      "unit_id": "inherited_unit:013.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:lxml-4.9",
+        "import_path:aspose.slides_foss",
+        "package:python_requires",
+        "public_symbol:slides_foss"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001",
+        "import_path:aspose.slides_foss"
+      ],
+      "rationale": "The import example is supported by facts and provides the minimal import needed to start using the library.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:published_version",
+        "package:version",
+        "package:registry_lag",
+        "link_target:021"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The warning about PyPI release lag is supported by package and changelog facts and...",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:release-workflow",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "install_command:pip"
+      ],
+      "rationale": "The git install command is unsupported; the only verified install command is pip install.",
+      "unit_id": "inherited_unit:017.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:aspose.slides_foss",
+        "public_symbol:slides_foss"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The namespace conflict warning is supported by the import path and public symbol fa...",
+      "unit_id": "inherited_unit:018.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.test.pytest-7",
+        "dependency:development.test.python-pptx-1.0",
+        "dependency:lxml-4.9"
+      ],
+      "rationale": "The Dependencies heading is rendered by deterministic code in the dependencies section.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.test.pytest-7",
+        "dependency:development.test.python-pptx-1.0",
+        "dependency:lxml-4.9"
+      ],
+      "rationale": "The Required Package Dependencies heading is rendered by deterministic code in the dependencies section.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.test.pytest-7",
+        "dependency:development.test.python-pptx-1.0",
+        "dependency:lxml-4.9"
+      ],
+      "rationale": "The lxml dependency is already covered in the dependencies section rendered from facts.",
+      "unit_id": "inherited_unit:021.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Native and System Requirements' is not placeable and its content is superseded by the dependencies and scope_limitations sections.",
+      "unit_id": "inherited_unit:022.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:ci-matrix",
+        "package:python_requires"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:023.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Development Dependencies' is not placeable and its content is superseded by the dependencies section.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.test.pytest-7",
+        "dependency:development.test.python-pptx-1.0",
+        "dependency:lxml-4.9"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:025.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Quick Start' is not placeable and its content is superseded by the quick_start section.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The quick start code block is verified by example:002 and placeable in quick_start.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Additional Examples' is not placeable and its content is superseded by the additional_examples section.",
+      "unit_id": "inherited_unit:029.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:030.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The 'Add a Shape With Text' code block is verified by example:003 and placeable.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The HTML block is promotional, not supported by facts, and adds no verifiable value.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The 'Format Text' code block is verified by example:004 and placeable.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:035.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The 'Add a Table' code block is verified by example:005 and placeable.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The 'Connect Two Shapes' code block is verified by example:006 and placeable.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:039.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The 'Fill a Shape' code block is verified by example:007 and placeable.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:041.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:042.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "The code block matches example:008 and demonstrates image embedding; it is kept as written.",
+      "unit_id": "inherited_unit:043.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:044.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "The code block matches example:009 and demonstrates speaker notes; it is kept as written.",
+      "unit_id": "inherited_unit:045.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:010"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:046.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:010"
+      ],
+      "rationale": "The code block matches example:010 and demonstrates threaded comments; it is kept as written.",
+      "unit_id": "inherited_unit:047.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:011"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:048.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:011"
+      ],
+      "rationale": "The code block matches example:011 and demonstrates document properties; it is kept as written.",
+      "unit_id": "inherited_unit:049.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:012"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:012"
+      ],
+      "rationale": "The code block matches example:012 and demonstrates chart building; it is kept as written.",
+      "unit_id": "inherited_unit:052.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph explaining wb.get_cell is valuable context not contradicted by facts.",
+      "unit_id": "inherited_unit:053.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:013"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:054.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:013"
+      ],
+      "rationale": "The code block matches example:013 and demonstrates slide transitions; it is kept as written.",
+      "unit_id": "inherited_unit:055.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:014"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:056.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:014"
+      ],
+      "rationale": "The code block matches example:014 and demonstrates grouping shapes; it is kept as written.",
+      "unit_id": "inherited_unit:057.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:015",
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:058.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:015",
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:059.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describing Markdown export scope is valuable context not contradicted by facts.",
+      "unit_id": "inherited_unit:060.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The closing </details> tag is part of a collapsible section that is superseded by the API reference section.",
+      "unit_id": "inherited_unit:061.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The '## API Reference' heading is superseded by the API reference section.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The paragraph describes the primary entry point and core object model, which is supported by the public symbols.",
+      "unit_id": "inherited_unit:063.paragraph"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [],
+      "rationale": "The opening <details> tag is part of a collapsible section that is superseded by the API reference section.",
+      "unit_id": "inherited_unit:064.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The '### Core API' heading is superseded by the API reference section.",
+      "unit_id": "inherited_unit:065.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.adjustvalue",
+        "public_symbol:slides_foss.adjustvaluecollection",
+        "public_symbol:slides_foss.autoshape",
+        "public_symbol:slides_foss.background",
+        "public_symbol:slides_foss.basehandoutnotesslideheaderfootermanager",
+        "public_symbol:slides_foss.baseportionformat",
+        "public_symbol:slides_foss.baseshapelock",
+        "public_symbol:slides_foss.baseslide",
+        "public_symbol:slides_foss.bulletformat",
+        "public_symbol:slides_foss.camera",
+        "public_symbol:slides_foss.cell",
+        "public_symbol:slides_foss.cellcollection",
+        "public_symbol:slides_foss.cellformat",
+        "public_symbol:slides_foss.colorformat",
+        "public_symbol:slides_foss.column",
+        "public_symbol:slides_foss.columncollection"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists core API classes with descriptions that match the public symbols and their doc",
+      "unit_id": "inherited_unit:066.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The '#### Enumerations' heading is preserved as it introduces a distinct subsection of the API reference.",
+      "unit_id": "inherited_unit:067.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.backgroundtype",
+        "public_symbol:slides_foss.bevelpresettype",
+        "public_symbol:slides_foss.bullettype",
+        "public_symbol:slides_foss.camerapresettype",
+        "public_symbol:slides_foss.colortype",
+        "public_symbol:slides_foss.fillblendmode",
+        "public_symbol:slides_foss.filltype",
+        "public_symbol:slides_foss.fontalignment",
+        "public_symbol:slides_foss.gradientdirection",
+        "public_symbol:slides_foss.gradientshape"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists core API enumerations with descriptions that match the public symbols and thei",
+      "unit_id": "inherited_unit:068.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss",
+        "public_symbol:slides_foss.animation.sequence",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.export.saveformat",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:069.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.animation.animationtimeline",
+        "public_symbol:slides_foss.animation.behavior",
+        "public_symbol:slides_foss.animation.behaviorcollection",
+        "public_symbol:slides_foss.animation.behaviorfactory",
+        "public_symbol:slides_foss.animation.behaviorproperty",
+        "public_symbol:slides_foss.animation.behaviorpropertycollection",
+        "public_symbol:slides_foss.animation.coloreffect",
+        "public_symbol:slides_foss.animation.coloroffset",
+        "public_symbol:slides_foss.animation.commandeffect",
+        "public_symbol:slides_foss.animation.effect"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists animation API classes with descriptions that match the public symbols and thei",
+      "unit_id": "inherited_unit:070.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The '#### Enumerations' heading is preserved as it introduces a distinct subsection of the animation API reference.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.animation.afteranimationtype",
+        "public_symbol:slides_foss.animation.animatetexttype",
+        "public_symbol:slides_foss.animation.behavioraccumulatetype",
+        "public_symbol:slides_foss.animation.behavioradditivetype",
+        "public_symbol:slides_foss.animation.buildtype",
+        "public_symbol:slides_foss.animation.colordirection",
+        "public_symbol:slides_foss.animation.coloreffect",
+        "public_symbol:slides_foss.animation.colorspace",
+        "public_symbol:slides_foss.animation.commandeffecttype",
+        "public_symbol:slides_foss.animation.effectchartmajorgroupingtype"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists animation API enumerations with descriptions that match the public symbols and",
+      "unit_id": "inherited_unit:072.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss",
+        "public_symbol:slides_foss.animation.sequence",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.export.saveformat",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:073.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.charts.axesmanager",
+        "public_symbol:slides_foss.charts.axis",
+        "public_symbol:slides_foss.charts.basechartvalue",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.charts.chartcategory",
+        "public_symbol:slides_foss.charts.chartcategorycollection",
+        "public_symbol:slides_foss.charts.chartdata",
+        "public_symbol:slides_foss.charts.chartdatacell",
+        "public_symbol:slides_foss.charts.chartdatapoint",
+        "public_symbol:slides_foss.charts.chartdatapointcollection"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists chart API classes with descriptions that match the public symbols and their do",
+      "unit_id": "inherited_unit:074.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The '#### Enumerations' heading is preserved as it introduces a distinct subsection of the chart API reference.",
+      "unit_id": "inherited_unit:075.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.charts.axispositiontype",
+        "public_symbol:slides_foss.charts.bubblesizerepresentationtype",
+        "public_symbol:slides_foss.charts.categoryaxistype",
+        "public_symbol:slides_foss.charts.chartdatasourcetype",
+        "public_symbol:slides_foss.charts.charttype",
+        "public_symbol:slides_foss.charts.combinableseriestypesgroup",
+        "public_symbol:slides_foss.charts.crossestype",
+        "public_symbol:slides_foss.charts.datasourcetype",
+        "public_symbol:slides_foss.charts.displayblanksastype",
+        "public_symbol:slides_foss.charts.displayunittype"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists chart API enumerations with descriptions that match the public symbols and the",
+      "unit_id": "inherited_unit:076.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss",
+        "public_symbol:slides_foss.animation.sequence",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.export.saveformat",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:077.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.drawing.color",
+        "public_symbol:slides_foss.drawing.pointf",
+        "public_symbol:slides_foss.drawing.size",
+        "public_symbol:slides_foss.drawing.sizef"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists drawing API classes with descriptions that match the public symbols and their ",
+      "unit_id": "inherited_unit:078.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss",
+        "public_symbol:slides_foss.animation.sequence",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.export.saveformat",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:079.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.effects.blur",
+        "public_symbol:slides_foss.effects.filloverlay",
+        "public_symbol:slides_foss.effects.glow",
+        "public_symbol:slides_foss.effects.imagetransformoperation",
+        "public_symbol:slides_foss.effects.innershadow",
+        "public_symbol:slides_foss.effects.outershadow",
+        "public_symbol:slides_foss.effects.presetshadow",
+        "public_symbol:slides_foss.effects.reflection",
+        "public_symbol:slides_foss.effects.softedge"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists effects API classes with descriptions that match the public symbols and their ",
+      "unit_id": "inherited_unit:080.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Export' heading and its table are superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:081.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The SaveFormat table is superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:082.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Slideshow' heading and its table are superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:083.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The transition effect classes table is superseded by the API reference section's public surfac",
+      "unit_id": "inherited_unit:084.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Theme' heading and its table are superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:085.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The theme-related classes table is superseded by the API reference section's public surface in",
+      "unit_id": "inherited_unit:086.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Detailed Member Reference' heading is superseded by the API reference section's structure.",
+      "unit_id": "inherited_unit:087.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Presentation and Slides' heading and its lists are superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:088.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Presentation members list is superseded by the API reference section's public surface inve",
+      "unit_id": "inherited_unit:089.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The SlideCollection members list is superseded by the API reference section's public surface i",
+      "unit_id": "inherited_unit:089.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The BaseSlide members list is superseded by the API reference section's public surface invento",
+      "unit_id": "inherited_unit:089.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Slide members list is superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:089.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Shapes' heading and its lists are superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:090.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ShapeCollection members list is superseded by the API reference section's public surface i",
+      "unit_id": "inherited_unit:091.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Shape members list is superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:091.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The AutoShape members list is superseded by the API reference section's public surface invento",
+      "unit_id": "inherited_unit:091.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Text' heading and its lists are superseded by the API reference section's public surface inventory.",
+      "unit_id": "inherited_unit:092.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The TextFrame members list is superseded by the API reference section's public surface invento",
+      "unit_id": "inherited_unit:093.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Paragraph members list is superseded by the API reference section's public surface invento",
+      "unit_id": "inherited_unit:093.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ParagraphFormat members list is superseded by the API reference section's public surface i",
+      "unit_id": "inherited_unit:093.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Portion and PortionFormat members listed are already covered by the API reference section'",
+      "unit_id": "inherited_unit:093.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The PortionFormat members listed are already covered by the API reference section's public sym",
+      "unit_id": "inherited_unit:093.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Charts' heading is superseded by the API reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:094.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Chart members listed are already covered by the API reference section's public symbol inve",
+      "unit_id": "inherited_unit:095.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ChartData members listed are already covered by the API reference section's public symbol ",
+      "unit_id": "inherited_unit:095.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ChartDataWorkbook members listed are already covered by the API reference section's public",
+      "unit_id": "inherited_unit:095.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ChartSeries members listed are already covered by the API reference section's public symbo",
+      "unit_id": "inherited_unit:095.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Animation' heading is superseded by the API reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:096.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Sequence members listed are already covered by the API reference section's public symbol i",
+      "unit_id": "inherited_unit:097.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.animation.behaviorfactory",
+        "public_symbol:slides_foss.animation.coloreffect",
+        "public_symbol:slides_foss.animation.motioneffect",
+        "public_symbol:slides_foss.animation.rotationeffect",
+        "public_symbol:slides_foss.animation.scaleeffect",
+        "public_symbol:slides_foss.animation.propertyeffect"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The BehaviorFactory members listed are already covered by the API reference section's public s",
+      "unit_id": "inherited_unit:097.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MotionPath members listed are already covered by the API reference section's public symbol",
+      "unit_id": "inherited_unit:097.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Slide Transitions' heading is superseded by the API reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:098.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The SlideShowTransition members listed are already covered by the API reference section's publ",
+      "unit_id": "inherited_unit:099.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MorphTransition members listed are already covered by the API reference section's public s",
+      "unit_id": "inherited_unit:099.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Styling' heading is superseded by the API reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:100.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The FillFormat members listed are already covered by the API reference section's public symbol",
+      "unit_id": "inherited_unit:101.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The LineFormat members listed are already covered by the API reference section's public symbol",
+      "unit_id": "inherited_unit:101.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The EffectFormat members listed are already covered by the API reference section's public symb",
+      "unit_id": "inherited_unit:101.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.theme"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Theme members listed are already covered by the API reference section's public symbol inve",
+      "unit_id": "inherited_unit:101.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ColorScheme members listed are already covered by the API reference section's public symbo",
+      "unit_id": "inherited_unit:101.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The FontScheme members listed are covered by the public symbol and API reference section.",
+      "unit_id": "inherited_unit:101.006.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The FormatScheme members listed are covered by the public symbol and API reference section.",
+      "unit_id": "inherited_unit:101.007.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MasterThemeManager members listed are covered by the public symbol and API reference secti",
+      "unit_id": "inherited_unit:101.008.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 3D heading is superseded by the API reference section that covers public symbols.",
+      "unit_id": "inherited_unit:102.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ThreeDFormat members listed are covered by the public symbol and API reference section.",
+      "unit_id": "inherited_unit:103.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Document Properties, Notes, and Comments heading is superseded by the API reference section.",
+      "unit_id": "inherited_unit:104.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The DocumentProperties members listed are covered by the public symbol and API reference secti",
+      "unit_id": "inherited_unit:105.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The NotesSlideManager members listed are covered by the public symbol and API reference sectio",
+      "unit_id": "inherited_unit:105.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The NotesSlide members listed are covered by the public symbol and API reference section.",
+      "unit_id": "inherited_unit:105.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CommentAuthorCollection members listed are covered by the public symbol and API reference ",
+      "unit_id": "inherited_unit:105.004.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CommentAuthor members listed are covered by the public symbol and API reference section.",
+      "unit_id": "inherited_unit:105.005.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CommentCollection members listed are covered by the public symbol and API reference sectio",
+      "unit_id": "inherited_unit:105.006.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Images heading is superseded by the API reference section.",
+      "unit_id": "inherited_unit:106.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The Images static factory members listed are covered by the public symbol and API reference se",
+      "unit_id": "inherited_unit:107.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The ImageCollection members listed are covered by the public symbol and API reference section.",
+      "unit_id": "inherited_unit:107.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Enums heading is superseded by the API reference section.",
+      "unit_id": "inherited_unit:108.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The SaveFormat enum values and note about non-exportable values align with the limitations on ",
+      "unit_id": "inherited_unit:109.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.shapetype"
+      ],
+      "rationale": "The ShapeType enum values are supported by the public symbol and should be preserved in API reference.",
+      "unit_id": "inherited_unit:109.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.charts.charttype"
+      ],
+      "rationale": "The ChartType enum values are supported by the public symbol and should be preserved in API reference.",
+      "unit_id": "inherited_unit:109.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss.slideshow.transitiontype"
+      ],
+      "rationale": "The TransitionType enum values are supported by the public symbol and should be preserved in API reference.",
+      "unit_id": "inherited_unit:109.004.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "HTML closing tag without context; non-content separator.",
+      "unit_id": "inherited_unit:110.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028"
+      ],
+      "rationale": "The 'Documentation & Resources' heading is superseded by the 'Documentation & Resources' section which is rendered from facts.",
+      "unit_id": "inherited_unit:111.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:022",
+        "link_target:023",
+        "link_target:024",
+        "link_target:025",
+        "link_target:026",
+        "link_target:027",
+        "link_target:028"
+      ],
+      "rationale": "The list items are verified links to documentation resources and are moved to the 'Documentation & Resources' section.",
+      "unit_id": "inherited_unit:112.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss"
+      ],
+      "rationale": "The 'Scope and Limitations' heading is superseded by the 'Scope and Limitations' section which is rendered from facts.",
+      "unit_id": "inherited_unit:113.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:slides_foss"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:114.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:slides_foss",
+        "format:input.pptx",
+        "format:output.pptx"
+      ],
+      "rationale": "The list of limitations is preserved as it provides detailed information not fully covered by the facts.",
+      "unit_id": "inherited_unit:115.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The paragraph about unknown XML parts preservation is preserved as it provides additional context.",
+      "unit_id": "inherited_unit:116.paragraph"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:029",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "The paragraph about the Enterprise Edition is moved to the 'Enterprise Relationship' section.",
+      "unit_id": "inherited_unit:117.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "rationale": "The 'Development and Testing' heading is superseded by the 'Development and Testing' section which is rendered from facts.",
+      "unit_id": "inherited_unit:118.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The paragraph about installing in editable mode and running tests is preserved as it provides context.",
+      "unit_id": "inherited_unit:119.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command"
+      ],
+      "rationale": "The code block for installing and testing is preserved as it provides a verified test command.",
+      "unit_id": "inherited_unit:120.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:release-workflow"
+      ],
+      "rationale": "The paragraph about CI and release workflows is preserved as it provides additional context.",
+      "unit_id": "inherited_unit:121.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:025",
+        "link_target:032",
+        "link_target:033",
+        "link_target:034",
+        "link_target:035"
+      ],
+      "rationale": "Kept in development_testing: documentation_resources prints nothing from a placed unit. The paragraph about agents.md, CONTRIBUTING.md, CHANGELOG.md, SECURIT...",
+      "unit_id": "inherited_unit:122.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "rationale": "The 'License' heading is superseded by the 'License' section which is rendered from facts.",
+      "unit_id": "inherited_unit:123.heading"
+    },
+    {
+      "destination_section": "enterprise_relationship",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:product.enterprise"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:124.paragraph"
+    }
+  ]
+}

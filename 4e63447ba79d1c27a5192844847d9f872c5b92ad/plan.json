@@ -1,0 +1,368 @@
+{
+  "additional_example_ids": [
+    "example:003",
+    "example:004",
+    "example:005",
+    "example:006",
+    "example:007",
+    "example:008",
+    "example:009",
+    "example:010",
+    "example:011",
+    "example:012",
+    "example:013",
+    "example:014",
+    "example:001"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.slideshow.transitiontype",
+        "public_symbol:slides_foss.animation.sequence",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "symbol_fact_id": "public_symbol:slides_foss"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Presentation creation and editing",
+      "Shape and text manipulation",
+      "Chart building",
+      "Animations and transitions",
+      "Styling and effects",
+      "Document properties and notes",
+      "Image embedding",
+      "Markdown export"
+    ],
+    "input_format_ids": [
+      "format:input.pptx"
+    ],
+    "output_format_ids": [
+      "format:output.pptx"
+    ]
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "format:input.pptx",
+        "format:output.pptx",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.presentation.save"
+      ],
+      "shared_fact_ids": [],
+      "title": "Presentation creation and editing"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:014",
+        "public_symbol:slides_foss.autoshape",
+        "public_symbol:slides_foss.table",
+        "public_symbol:slides_foss.portionformat"
+      ],
+      "shared_fact_ids": [],
+      "title": "Shape and text manipulation"
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.charts.charttype"
+      ],
+      "shared_fact_ids": [],
+      "title": "Chart building"
+    },
+    {
+      "fact_ids": [
+        "example:013",
+        "public_symbol:slides_foss.slideshow.transitiontype",
+        "public_symbol:slides_foss.animation.sequence"
+      ],
+      "shared_fact_ids": [],
+      "title": "Animations and transitions"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:slides_foss.fillformat",
+        "public_symbol:slides_foss.lineformat",
+        "public_symbol:slides_foss.effectformat"
+      ],
+      "shared_fact_ids": [],
+      "title": "Styling and effects"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "example:010",
+        "example:011",
+        "public_symbol:slides_foss.documentproperties",
+        "public_symbol:slides_foss.notesslidemanager",
+        "public_symbol:slides_foss.commentauthorcollection"
+      ],
+      "shared_fact_ids": [],
+      "title": "Document properties and notes"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:slides_foss.images",
+        "public_symbol:slides_foss.imagecollection.add_image"
+      ],
+      "shared_fact_ids": [],
+      "title": "Image embedding"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "shared_fact_ids": [],
+      "title": "Markdown export"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository"
+      ],
+      "section_id": "identity",
+      "text": "The H1 product name is rendered from facts in the identity section."
+    },
+    {
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:006"
+      ],
+      "section_id": "badges",
+      "text": "The badge row is rendered from facts in the badges section."
+    },
+    {
+      "fact_ids": [
+        "link_target:008",
+        "link_target:009"
+      ],
+      "section_id": "banner",
+      "text": "The banner image is rendered from facts in the banner section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version"
+      ],
+      "section_id": "opening",
+      "text": "The opening paragraph is supported by facts and provides essential product context."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform"
+      ],
+      "section_id": "navigation",
+      "text": "The Navigation heading is rendered by deterministic code in the navigation section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The At a Glance heading is rendered by deterministic code in the at_a_glance section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The Key Capabilities heading is rendered by deterministic code in the key_capabilities section."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "section_id": "installation",
+      "text": "The Installation heading is rendered by deterministic code in the installation section."
+    },
+    {
+      "fact_ids": [
+        "dependency:lxml-4.9"
+      ],
+      "section_id": "dependencies",
+      "text": "The Dependencies heading is rendered by deterministic code in the dependencies section."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section_id": "quick_start",
+      "text": "The Quick Start heading is rendered by deterministic code in the quick_start section."
+    }
+  ],
+  "flagship_example_id": "example:012",
+  "links": [
+    {
+      "link_fact_id": "link_target:022",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:023",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:024",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:026",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:027",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:029",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:030",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:031",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:033",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:034",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:035",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:025",
+      "section_id": "documentation_resources"
+    }
+  ],
+  "material_limitations": [],
+  "quick_start_example_id": "example:002",
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

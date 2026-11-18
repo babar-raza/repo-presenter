@@ -1,0 +1,232 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform"
+    ],
+    "text": "Python developers building applications that need to generate, modify, or process PowerPoint presentations programmatically."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:002",
+        "format:input.pptx",
+        "format:output.pptx",
+        "public_symbol:slides_foss.presentation",
+        "public_symbol:slides_foss.presentation.save"
+      ],
+      "text": "Create new presentations and open existing .pptx files using `slides.Presentation` as a context manager, then save to various Office Open XML formats.",
+      "title": "Presentation creation and editing"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:014",
+        "public_symbol:slides_foss.autoshape",
+        "public_symbol:slides_foss.table",
+        "public_symbol:slides_foss.portionformat"
+      ],
+      "text": "Add and format auto shapes, tables, connectors, groups, and picture frames; style text at portion, paragraph, and frame levels with bullets and font properties.",
+      "title": "Shape and text manipulation"
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "public_symbol:slides_foss.charts.chart",
+        "public_symbol:slides_foss.charts.charttype"
+      ],
+      "text": "Insert 74 chart types backed by an embedded XLSX workbook, define series and categories, and configure titles, legends, data labels, and trendlines.",
+      "title": "Chart building"
+    },
+    {
+      "fact_ids": [
+        "example:013",
+        "public_symbol:slides_foss.slideshow.transitiontype",
+        "public_symbol:slides_foss.animation.sequence"
+      ],
+      "text": "Apply slide transitions with timing and advance settings, and create animation sequences with behaviors, motion paths, and triggers.",
+      "title": "Animations and transitions"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:slides_foss.fillformat",
+        "public_symbol:slides_foss.lineformat",
+        "public_symbol:slides_foss.effectformat"
+      ],
+      "text": "Apply solid, gradient, pattern, and picture fills to shapes and backgrounds; style lines with arrowheads and dash patterns; add shadow, glow, blur, reflection, and soft edge effects.",
+      "title": "Styling and effects"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "example:010",
+        "example:011",
+        "public_symbol:slides_foss.documentproperties",
+        "public_symbol:slides_foss.notesslidemanager",
+        "public_symbol:slides_foss.commentauthorcollection"
+      ],
+      "text": "Set built-in and custom document properties, add speaker notes with header/footer visibility control, and manage threaded comments with authors and positions.",
+      "title": "Document properties and notes"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "public_symbol:slides_foss.images",
+        "public_symbol:slides_foss.imagecollection.add_image"
+      ],
+      "text": "Embed images from file handles or bytes using `Images.from_file`, `Images.from_stream`, or `ImageCollection.add_image`.",
+      "title": "Image embedding"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss.export.saveformat"
+      ],
+      "text": "Export presentation text, tables, lists, headings, comments, and chart data to Markdown in 24 dialects via `SaveFormat.MD`.",
+      "title": "Markdown export"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "text": "No rendering or conversion to PDF, HTML, XPS, or image formats is supported; the library only writes OOXML."
+    },
+    {
+      "fact_ids": [
+        "format:input.pptx",
+        "format:output.pptx"
+      ],
+      "text": "Reading is limited to .pptx; only specific save formats (Pptx, Pptm, Ppsx, Ppsm, Potx, Potm, MD) are supported, others raise ValueError."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss"
+      ],
+      "text": "SmartArt, OLE objects, mathematical text, VBA macros, and digital signatures are not implemented and raise NotImplementedError."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss"
+      ],
+      "text": "Presentation sections and slide size APIs are not exposed; new decks use the bundled template's 16:9 size."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss"
+      ],
+      "text": "Comment threads are written using the classic schema; modern thread features are not represented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:slides_foss"
+      ],
+      "text": "Action settings other than external hyperlinks are not implemented."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "package:python_requires"
+      ],
+      "text": "Enables programmatic PowerPoint file manipulation in Python without installing Microsoft Office or using COM interop."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "text": "Supports round-trip preservation of unknown XML parts in .pptx files during load and save operations."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:003",
+        "example:005",
+        "example:008",
+        "example:010",
+        "example:012",
+        "example:013"
+      ],
+      "text": "Provides a native Python API to build presentations with shapes, text, tables, charts, images, animations, transitions, and speaker notes."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:product-knowledge-refresh",
+      "identity:repository",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.Slides FOSS for Python is an open-source Python library for creating, reading, and editing PowerPoint .pptx presentations without requiring Microsoft Office."
+  },
+  "uncertainties": [
+    "Whether the library supports saving to .pptm, .ppsx, .ppsm, .potx, and .potm formats beyond .pptx is implied but not explicitly confirmed by examples.",
+    "The exact set of SaveFormat values that raise ValueError at save time is not listed in the facts.",
+    "Whether TextAnimation.add_effect is the only explicitly stubbed method is not fully confirmed beyond the README claim.",
+    "The behavior when assigning to a non-existent property on a shape or formatting object is described in the README but not directly verified by examples.",
+    "Whether unknown XML parts are preserved verbatim on save for all possible unknown parts is not exhaustively tested in the examples.",
+    "The exact Python version support beyond 3.10-3.14 is not specified in the facts.",
+    "Whether the library supports reading or writing .ppt (legacy PowerPoint format) is not confirmed.",
+    "The exact set of public symbols that raise NotImplementedError is not fully listed in the facts."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:002",
+        "format:input.pptx",
+        "format:output.pptx"
+      ],
+      "name": "Open and save presentations",
+      "text": "Use `slides.Presentation` as a context manager to open an existing .pptx file and save it, optionally with a different format."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004"
+      ],
+      "name": "Add shapes and text",
+      "text": "Create new presentations, access the first slide, add auto shapes, and insert text frames with formatted content."
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "format:input.png"
+      ],
+      "name": "Embed images",
+      "text": "Load images from file handles or bytes and add them as picture frames to slides."
+    },
+    {
+      "fact_ids": [
+        "example:012"
+      ],
+      "name": "Build charts",
+      "text": "Add charts with embedded workbooks, define series and categories, and populate data points."
+    },
+    {
+      "fact_ids": [
+        "example:013"
+      ],
+      "name": "Apply slide transitions",
+      "text": "Set transition types, timing, and click advance for slides using `slide_show_transition`."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "name": "Run tests",
+      "text": "Execute the test suite using `python -m pytest -q` on Python 3.10 through 3.14 across Ubuntu, Windows, and macOS."
+    }
+  ]
+}
