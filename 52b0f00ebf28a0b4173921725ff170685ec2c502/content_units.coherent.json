@@ -77,6 +77,53 @@
       "section": "additional_examples"
     }
   ],
+  "register_corrections": [
+    {
+      "action": "sentence_withheld",
+      "findings": [
+        "finding:ec039cfd6b22"
+      ],
+      "rule": "BL-210",
+      "section": "opening",
+      "slot": "opening"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "finding:397892260c40"
+      ],
+      "rule": "BL-210",
+      "section": "key_capabilities",
+      "slot": "capability:3"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "finding:6307f0698b3d"
+      ],
+      "rule": "BL-210",
+      "section": "key_capabilities",
+      "slot": "capability:4"
+    },
+    {
+      "action": "example_replaced",
+      "example": "example:001",
+      "findings": [],
+      "replacement": "example:004",
+      "rule": "BL-210",
+      "section": "examples",
+      "slot": "quick_start_example_id"
+    },
+    {
+      "action": "example_replaced",
+      "example": "example:002",
+      "findings": [],
+      "replacement": "example:005",
+      "rule": "BL-210",
+      "section": "examples",
+      "slot": "second_quick_start_example_id"
+    }
+  ],
   "schema_version": 1,
   "units": [
     {
@@ -106,7 +153,7 @@
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.3D FOSS for .NET reads and writes 3D formats including .fbx, .gltf, .obj, .stl, .dae, .3mf, .3ds, and .ply. It converts scenes between these formats and supports scene graph construction with Scene, Node hierarchy, primitive geometry, and material assignment. The product handles skeletal animation with bones, keyframes, and morph targets, and provides NURBS curve and surface definition capabilities."
+      "text": "Aspose.3D FOSS for .NET reads and writes 3D formats including .fbx, .gltf, .obj, .stl, .dae, .3mf, .3ds, and .ply. It converts scenes between these formats and supports scene graph construction with Scene, Node hierarchy, primitive geometry, and material assignment."
     },
     {
       "fact_ids": [
@@ -131,39 +178,10 @@
     },
     {
       "fact_ids": [
-        "format:input.fbx",
-        "format:input.gltf",
-        "format:input.obj",
-        "format:input.stl",
-        "format:input.dae",
-        "format:input.3mf",
-        "format:output.fbx",
-        "format:output.gltf",
-        "format:output.obj",
-        "format:output.stl",
-        "format:output.dae",
-        "format:output.3mf"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:3",
-      "text": "Format conversion supports reading and writing .fbx, .gltf, .obj, .stl, .dae, and .3mf files through Scene.Open, Scene.FromFile, Scene.Save, and Scene.FromStream with full round-trip fidelity."
-    },
-    {
-      "fact_ids": [
-        "example:005",
-        "example:006",
-        "public_symbol:aspose.threed.formats"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:4",
-      "text": "Per-format load/save options supports configuring behavior for each format through dedicated types such as ObjLoadOptions, ColladaSaveOptions, and their equivalents for FBX, glTF, STL, and 3MF."
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.threed.entities"
       ],
       "section": "key_capabilities",
-      "slot": "capability:5",
+      "slot": "capability:3",
       "text": "Mesh and vertex data control supports defining primitives like Box, Cylinder, Sphere, and IFC-compatible 2D profiles, as well as custom meshes with normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data via VertexDeclaration and VertexElement."
     },
     {
@@ -172,51 +190,33 @@
         "public_symbol:aspose.threed.deformers"
       ],
       "section": "key_capabilities",
-      "slot": "capability:6",
+      "slot": "capability:4",
       "text": "Animation support supports creating and managing animation clips with AnimationClip and AnimationChannel, skinning meshes with Bone, Skeleton, and SkinDeformer, and morph-target animation via MorphTargetDeformer and MorphTargetChannel."
-    },
-    {
-      "fact_ids": [
-        "example:001"
-      ],
-      "section": "quick_start",
-      "slot": "lead_in",
-      "text": "The first example creates a new scene, adds a box primitive with a Lambert material, and saves it as an FBX file."
-    },
-    {
-      "fact_ids": [
-        "example:002"
-      ],
-      "section": "quick_start",
-      "slot": "lead_in:2",
-      "text": "The second example loads a GLTF file and converts it to OBJ format."
-    },
-    {
-      "fact_ids": [
-        "example:004",
-        "example:005",
-        "example:006",
-        "example:007"
-      ],
-      "section": "additional_examples",
-      "slot": "preview",
-      "text": "The following examples demonstrate converting materials, loading files with custom options, saving scenes to streams, and handling unrecognized formats in Aspose.3D FOSS for .NET."
     },
     {
       "fact_ids": [
         "example:004"
       ],
-      "section": "additional_examples",
-      "slot": "workflow:example:004",
+      "section": "quick_start",
+      "slot": "lead_in",
       "text": "Convert a Lambert material to PBR using Aspose.3D FOSS for .NET."
     },
     {
       "fact_ids": [
         "example:005"
       ],
-      "section": "additional_examples",
-      "slot": "workflow:example:005",
+      "section": "quick_start",
+      "slot": "lead_in:2",
       "text": "Load OBJ with custom options and export to STL."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following examples demonstrate converting materials, loading files with custom options, saving scenes to streams, and handling unrecognized formats in Aspose.3D FOSS for .NET."
     },
     {
       "fact_ids": [
@@ -306,152 +306,6 @@
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.threed.entities",
       "text": "The Entities module includes geometric primitives such as Box and provides the Node class for building the scene hierarchy, supporting child nodes, entities, and transformation properties."
-    },
-    {
-      "fact_ids": [
-        "link_target:023"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:023",
-      "text": "Implementation progress notes describe the current state of the Aspose.3D FOSS for .NET library's feature coverage and remaining work."
-    },
-    {
-      "fact_ids": [
-        "link_target:024"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:024",
-      "text": "Release 26.2.0 notes summarize changes, improvements, and fixes introduced in that version of Aspose.3D FOSS for .NET."
-    },
-    {
-      "fact_ids": [
-        "link_target:025"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:025",
-      "text": "AGENTS.md outlines the project's contribution guidelines and expectations for community participants."
-    },
-    {
-      "fact_ids": [
-        "link_target:026"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:026",
-      "text": "The issues and feature requests page tracks reported bugs, enhancement suggestions, and their status for Aspose.3D FOSS for .NET."
-    },
-    {
-      "fact_ids": [
-        "format:input.3mf",
-        "format:input.ply",
-        "format:output.3mf",
-        "format:output.ply",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:059.list",
-        "inherited_unit:060.heading",
-        "inherited_unit:061.list",
-        "inherited_unit:070.paragraph",
-        "install_command:dotnet",
-        "license:file",
-        "license:spdx",
-        "package:name",
-        "package:published_version",
-        "package:target_framework",
-        "package:version",
-        "public_symbol:aspose",
-        "public_symbol:aspose.threed"
-      ],
-      "section": "scope_limitations",
-      "slot": "scope",
-      "text": "Aspose.3D FOSS for .NET reads and writes .ply and .3mf files through the Scene.Open and Scene.Save methods, supporting the netcoreapp3.1, net6.0, net8.0, and net10.0 target frameworks."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:061.list",
-        "install_command:dotnet"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:1",
-      "text": "Rendering is not implemented in this FOSS build — Scene.Render, RenderFactory, and the IRenderTarget/IRenderWindow rendering pipeline all throw NotImplementedException."
-    },
-    {
-      "fact_ids": [
-        "format:input.ply",
-        "format:output.ply",
-        "inherited_unit:061.list"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:2",
-      "text": "PLY import and export work through Scene.Open and Scene.Save, but the public FileFormat.PLY field and its Encode/Decode methods throw NotImplementedException and should not be called directly."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:061.list",
-        "public_symbol:aspose.threed"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:3",
-      "text": "PolygonModifier, TriMesh helpers, NurbsCurve.Evaluate/EvaluateAt, and NurbsSurface.ToMesh throw NotImplementedException, and Microsoft3MFFormat metadata and RvmFormat.LoadAttributes are not implemented."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:061.list",
-        "public_symbol:aspose"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:4",
-      "text": "Text watermarking is not currently functional, and License and Metered APIs are present for API-surface compatibility but are not applicable to this open-source edition."
-    },
-    {
-      "fact_ids": [
-        "format:input.3mf",
-        "format:output.3mf",
-        "inherited_unit:061.list"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:5",
-      "text": "Core 3MF geometry import/export works, but Microsoft3MFFormat build-instruction metadata including IsBuildable, GetTransformForBuild, and SetBuildable is not implemented."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:061.list",
-        "license:file",
-        "license:spdx"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:6",
-      "text": "This project is licensed under the MIT License, as stated in the LICENSE file."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:name",
-        "package:published_version",
-        "package:target_framework",
-        "package:version",
-        "build_test_asset:docs",
-        "build_test_asset:tests",
-        "inherited_unit:014.paragraph",
-        "inherited_unit:017.paragraph",
-        "inherited_unit:019.list",
-        "inherited_unit:064.paragraph",
-        "inherited_unit:065.code_block",
-        "inherited_unit:066.paragraph",
-        "inherited_unit:067.code_block",
-        "inherited_unit:068.paragraph"
-      ],
-      "section": "development_testing",
-      "slot": "summary",
-      "text": "Aspose.3D FOSS for .NET targets netcoreapp3.1, net6.0, net8.0, and net10.0 in Release builds and requires no third-party package dependencies. The test suite resides in src/test/ and is executed using the dotnet test command against the test project file. The console converter tool, located at src/converter/Converter.csproj, builds separately as a project reference to the library and is not published to NuGet. Development guidelines and current implementation status are documented in AGENTS.md."
     },
     {
       "fact_ids": [

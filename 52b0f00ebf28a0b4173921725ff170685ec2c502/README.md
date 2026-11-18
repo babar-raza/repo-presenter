@@ -4,7 +4,7 @@
 
 [![Aspose.3D FOSS for .NET](https://products.aspose.org/media/3d/net/banner-readme.png)](https://products.aspose.org/3d/net/)
 
-Aspose.3D FOSS for .NET reads and writes 3D formats including `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, `.3mf`, `.3ds`, and `.ply`. It converts scenes between these formats and supports scene graph construction with `Scene`, `Node` hierarchy, primitive geometry, and material assignment. The product handles skeletal animation with bones, keyframes, and morph targets, and provides NURBS curve and surface definition capabilities.
+Aspose.3D FOSS for .NET reads and writes 3D formats including `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, `.3mf`, `.3ds`, and `.ply`. It converts scenes between these formats and supports scene graph construction with `Scene`, `Node` hierarchy, primitive geometry, and material assignment.
 
 ## Navigation
 
@@ -23,34 +23,37 @@ Aspose.3D FOSS for .NET reads and writes 3D formats including `.fbx`, `.gltf`, `
 ## At a Glance
 
 ```mermaid
-flowchart LR
-Start["An existing 3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
-Start --> Product["Aspose.3D FOSS for .NET"]
-Product["Aspose.3D FOSS for .NET"] --> Cap1["Scene graph construction"]
-Cap2["Material assignment and conversion"]
-Cap3["Format conversion"]
-Cap4["Per-format load/save options"]
-Cap5["Mesh and vertex data control"]
-Cap6["Animation support"]
-Product["Aspose.3D FOSS for .NET"] --> Cap2["Material assignment and conversion"]
-Product["Aspose.3D FOSS for .NET"] --> Cap3["Format conversion"]
-Product["Aspose.3D FOSS for .NET"] --> Cap4["Per-format load/save options"]
-Product["Aspose.3D FOSS for .NET"] --> Cap5["Mesh and vertex data control"]
-Product["Aspose.3D FOSS for .NET"] --> Cap6["Animation support"]
-Cap1["Scene graph construction"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
-Cap2["Material assignment and conversion"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
-Cap3["Format conversion"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
-Cap4["Per-format load/save options"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
-Cap5["Mesh and vertex data control"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
-Cap6["Animation support"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or STL file"]
+flowchart TB
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing 3DS, 3MF,<br/>COLLADA, FBX, glTF,<br/>OBJ, PLY, or STL file"]
+  end
+  PRODUCT["Aspose.3D FOSS for .NET"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Scene graph<br/>construction"]
+    c2["Material assignment<br/>and conversion"]
+    c3["Format conversion"]
+    c4["Per-format load/save<br/>options"]
+    c5["Mesh and vertex data<br/>control"]
+    c6["Animation support"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["3DS, 3MF, COLLADA,<br/>FBX, glTF, OBJ, PLY,<br/>or STL file"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
 ```
 
 ## Key Capabilities
 
 - **Scene graph construction.** `Scene` graph construction with `Aspose.ThreeD.Scene` and `Aspose.ThreeD.Node` supports creating a root node, attaching child nodes via `CreateChildNode` or `AddChildNode`, and managing entities, transforms, and materials on each node.
 - **Material assignment and conversion.** `Material` assignment and conversion supports assigning `LambertMaterial`, `PhongMaterial`, `PbrMaterial`, `PbrSpecularMaterial`, and `ShaderMaterial` to nodes, and converting standard materials to physically based rendering materials via `PbrMaterial.FromMaterial`.
-- **Format conversion.** Format conversion supports reading and writing `.fbx`, `.gltf`, `.obj`, `.stl`, `.dae`, and `.3mf` files through `Scene.Open`, `Scene.FromFile`, `Scene.Save`, and `Scene.FromStream` with full round-trip fidelity.
-- **Per-format load/save options.** Per-format load/save options supports configuring behavior for each format through dedicated types such as `ObjLoadOptions`, `ColladaSaveOptions`, and their equivalents for FBX, glTF, STL, and 3MF.
 - **Mesh and vertex data control.** `Mesh` and vertex data control supports defining primitives like `Box`, `Cylinder`, `Sphere`, and IFC-compatible 2D profiles, as well as custom meshes with normals, UVs, vertex color, tangent/binormal, smoothing groups, and user data via `VertexDeclaration` and `VertexElement`.
 - **Animation support.** Animation support supports creating and managing animation clips with `AnimationClip` and `AnimationChannel`, skinning meshes with `Bone`, `Skeleton`, and `SkinDeformer`, and morph-target animation via `MorphTargetDeformer` and `MorphTargetChannel`.
 
@@ -59,6 +62,13 @@ Cap6["Animation support"] --> Output["3DS, 3MF, COLLADA, FBX, glTF, OBJ, PLY, or
   entities, transforms, and materials.
 - Define NURBS curves and surfaces with `NurbsCurve` and `NurbsSurface`, specifying control
   points, weights, and knot vectors directly.
+- Convert 3D scenes by reading and writing FBX, glTF, Wavefront OBJ, STL, COLLADA, and Universal
+  3D (U3D) — including FBX-to-OBJ and glTF-to-OBJ conversions — with full round-trip fidelity,
+  plus Microsoft 3MF and AVEVA PDMS RVM models, AMF, and an HTML5/Aspose 3D Web viewer export,
+  through `Scene.FromFile()`/`Scene.Save()` and the matching `FileFormat` constants.
+- Configure per-format load/save behavior through dedicated options types (`FbxLoadOptions`/
+  `FbxSaveOptions`, `GltfLoadOptions`/`GltfSaveOptions`, `ObjLoadOptions`/`ObjSaveOptions`,
+  `StlLoadOptions`/`StlSaveOptions`, and their COLLADA/3MF/RVM/U3D counterparts).
 
 ## Installation
 
@@ -80,33 +90,28 @@ No required third-party package dependencies; in `src/main/Aspose.ThreeD/Aspose.
 
 ## Quick Start
 
-The first example creates a new scene, adds a box primitive with a Lambert material, and saves it as an FBX file.
+Convert a Lambert material to PBR using Aspose.3D FOSS for .NET.
 
 ```csharp
-using Aspose.ThreeD.Utilities;
-using Aspose.ThreeD;
-using Aspose.ThreeD.Entities;
 using Aspose.ThreeD.Shading;
 
-// Create a new scene and add a box primitive to the root node
-var scene = new Scene();
-var material = new LambertMaterial("Body")
-{
-    DiffuseColor = new Vector3(0.6, 0.6, 0.6),
-};
-scene.RootNode.CreateChildNode("Box", new Box(2, 2, 2), material);
-
-// Save to FBX
-scene.Save("output.fbx", FileFormat.FBX7400Binary);
+var lambert = new LambertMaterial("Body");
+var pbr = PbrMaterial.FromMaterial(lambert);
 ```
 
-The second example loads a GLTF file and converts it to OBJ format.
+Load OBJ with custom options and export to STL.
 
 ```csharp
 using Aspose.ThreeD;
+using Aspose.ThreeD.Formats;
 
-var scene = Scene.FromFile("input.gltf");
-scene.Save("output.obj", FileFormat.WavefrontOBJ);
+var scene = new Scene();
+var opts = new ObjLoadOptions();
+opts.FlipCoordinateSystem = true;
+opts.NormalizeNormal = true;
+scene.Open("mesh.obj", opts);
+
+scene.Save("mesh.stl");
 ```
 
 ## Additional Examples
@@ -132,30 +137,6 @@ scene.Save(stream, options);
 <details>
 <summary>View Additional Examples</summary>
 
-### Convert a Lambert Material to PBR Using Aspose.3D FOSS for .NET
-
-```csharp
-using Aspose.ThreeD.Shading;
-
-var lambert = new LambertMaterial("Body");
-var pbr = PbrMaterial.FromMaterial(lambert);
-```
-
-### Load OBJ with Custom Options and Export to STL
-
-```csharp
-using Aspose.ThreeD;
-using Aspose.ThreeD.Formats;
-
-var scene = new Scene();
-var opts = new ObjLoadOptions();
-opts.FlipCoordinateSystem = true;
-opts.NormalizeNormal = true;
-scene.Open("mesh.obj", opts);
-
-scene.Save("mesh.stl");
-```
-
 ### Handle an Unrecognized 3D File Format
 
 ```csharp
@@ -178,7 +159,7 @@ catch (ArgumentException)
 
 Aspose.3D FOSS for .NET provides core 3D scene management through the `Scene` class, which owns a hierarchy of `Node` objects and supports loading and saving via static and instance methods. The library organizes functionality into modules including Entities for geometric primitives, Shading for materials, Formats for file I/O, Animation for keyframe data, and Deformers for mesh modification.
 
-The verified public surface has 293 types.
+The public API has 292 types.
 
 <details>
 <summary>View the Complete Public API Surface</summary>
@@ -188,28 +169,28 @@ The verified public surface has 293 types.
 | Class | Description |
 | --- | --- |
 | `A3DObject` | The base class of all Aspose.ThreeD objects, all sub classes will support dynamic properties. |
-| `AnimationChannel` | Aspose.ThreeD.Animation.AnimationChannel is a public symbol with members Add, BindPoint, ComponentType, DefaultValue, FindProperty, GetEnumerator, GetProperty, and KeyFrames; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `AnimationChannel` | Has members Add, BindPoint, ComponentType, DefaultValue, FindProperty, GetEnumerator, GetProperty, and KeyFrames; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `AnimationClip` | The Animation clip is a collection of animations. |
 | `AnimationNode` | Aspose.3D's supports animation hierarchy, each animation can be composed by several animations and animation's key-frame definition. |
 | `BindPoint` | A BindPoint is usually created on an object's property, some property types contains multiple component fields(like a Vector3 field), will generate channel for each component field and connects the field to one or more keyframe sequence instance(s) through the channels. |
-| `Extrapolation` | Aspose.ThreeD.Animation.Extrapolation is a public symbol with members RepeatCount and Type. |
-| `KeyFrame` | Aspose.ThreeD.Animation.KeyFrame is a public symbol with members Bias, Continuity, Flat, IndependentTangent, Interpolation, KeyFrame, NextInTangent, and NextInWeight. |
-| `KeyframeSequence` | Aspose.ThreeD.Animation.KeyframeSequence is a public symbol with members Add, BindPoint, FindProperty, GetEnumerator, GetProperty, KeyFrames, KeyframeSequence, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `Extrapolation` | Has members RepeatCount and Type. |
+| `KeyFrame` | Has members Bias, Continuity, Flat, IndependentTangent, Interpolation, KeyFrame, NextInTangent, and NextInWeight. |
+| `KeyframeSequence` | Has members Add, BindPoint, FindProperty, GetEnumerator, GetProperty, KeyFrames, KeyframeSequence, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `AssetInfo` | Information of asset. |
 | `AxisSystem` | Axis system is an combination of coordinate system, up vector and front vector. |
-| `BonePose` | Aspose.ThreeD.BonePose is a public symbol with members BonePose, FindProperty, GetProperty, IsLocal, Matrix, Name, Node, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `BonePose` | Has members BonePose, FindProperty, GetProperty, IsLocal, Matrix, Name, Node, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `CustomObject` | Represents custom object data. |
 | `Bone` | A bone defines the subset of the geometry's control point, and defined blend weight for each control point. |
-| `Deformer` | Aspose.ThreeD.Deformers.Deformer is a public symbol with members Deformer, FindProperty, GetProperty, Name, Owner, Properties, RemoveProperty, and SetProperty; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally) and Owner throws InvalidOperationException (conditionally). |
-| `MorphTargetChannel` | Aspose.ThreeD.Deformers.MorphTargetChannel is a public symbol with members ChannelWeight, DefaultWeight, FindProperty, GetProperty, GetWeight, MorphTargetChannel, Name, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `Deformer` | Has members Deformer, FindProperty, GetProperty, Name, Owner, Properties, RemoveProperty, and SetProperty; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally) and Owner throws InvalidOperationException (conditionally). |
+| `MorphTargetChannel` | Has members ChannelWeight, DefaultWeight, FindProperty, GetProperty, GetWeight, MorphTargetChannel, Name, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `MorphTargetDeformer` | MorphTargetDeformer provides per-vertex animation. |
 | `SkinDeformer` | A skin deformer contains multiple bones to work, each bone blends a part of the geometry by control point's weights. |
 | `BooleanOperand` | Not implemented. |
 | `BooleanOperator` | Not implemented. |
 | `Box` | Box. |
 | `Camera` | The camera describes the eye point of the viewer looking at the scene. |
-| `Circle` | Aspose.ThreeD.Entities.Circle is a public symbol with members Circle, Color, Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
-| `CompositeCurve` | Aspose.ThreeD.Entities.CompositeCurve is a public symbol with members AddSegment, Color, CompositeCurve, Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, and GetProperty; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `Circle` | Has members Circle, Color, Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `CompositeCurve` | Has members AddSegment, Color, CompositeCurve, Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, and GetProperty; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `Curve` | The base class of all curve implementations. |
 | `Cylinder` | Parameterized Cylinder. |
 | `Dish` | Parameterized dish. |
@@ -217,7 +198,7 @@ The verified public surface has 293 types.
 | `EndPoint` | The end point to trim the curve, can be a parameter value or a Cartesian point. |
 | `Frustum` | The base class of Camera and Light. |
 | `Geometry` | The base class of all renderable geometric objects (like Mesh, Box, Cylinder and etc.). |
-| `HalfSpace` | Aspose.ThreeD.Entities.HalfSpace is a public symbol with members Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, HalfSpace, Name, and Normal; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `HalfSpace` | Has members Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, HalfSpace, Name, and Normal; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `IIndexedVertexElement` | VertexElement with indices data. |
 | `IMeshConvertible` | Entities that implemented this interface can be converted to mesh. |
 | `IOrientable` | Orientable entities shall implement this interface. |
@@ -227,12 +208,12 @@ The verified public surface has 293 types.
 | `Mesh` | A mesh is made of many n-sided polygons. |
 | `NurbsCurve` | NURBS curve is a curve represented by NURBS(Non-uniform rational basis spline), A NURBS curve is defined by its control points, a set of weighted control points and a knot vector The w component in control point is used as control point's weight, whatever it is a 2D or 3D (some members not implemented). |
 | `NurbsDirection` | A 3D surface has two direction, the U and V, the NurbsDirection defines data for each direction. |
-| `NurbsSurface` | Aspose.ThreeD.Entities.NurbsSurface is a public symbol with members AddElement, CastShadows, ControlPoints, CreateElement, CreateElementUV, Deformers, Excluded, and FindProperty; AddElement, FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally) (some members not implemented). |
-| `Patch` | Aspose.ThreeD.Entities.Patch is a public symbol with members AddElement, CastShadows, ControlPoints, CreateElement, CreateElementUV, Deformers, Excluded, and FindProperty; AddElement, FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `NurbsSurface` | Has members AddElement, CastShadows, ControlPoints, CreateElement, CreateElementUV, Deformers, Excluded, and FindProperty; AddElement, FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally) (some members not implemented). |
+| `Patch` | Has members AddElement, CastShadows, ControlPoints, CreateElement, CreateElementUV, Deformers, Excluded, and FindProperty; AddElement, FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `PatchDirection` | Patch's U and V direction. |
 | `Plane` | Parameterized plane. |
 | `PointCloud` | The point cloud contains no topology information but only the control points and the vertex elements. |
-| `PolygonBuilder` | Aspose.ThreeD.Entities.PolygonBuilder is a public symbol with members AddVertex, Begin, End, and PolygonBuilder; AddVertex throws InvalidOperationException (conditionally) and End throws InvalidOperationException (conditionally). |
+| `PolygonBuilder` | Has members AddVertex, Begin, End, and PolygonBuilder; AddVertex throws InvalidOperationException (conditionally) and End throws InvalidOperationException (conditionally). |
 | `PolygonModifier` | Not implemented. |
 | `Primitive` | Base class for all primitives. |
 | `Pyramid` | Parameterized pyramid. |
@@ -248,18 +229,18 @@ The verified public surface has 293 types.
 | `TriMesh` | A TriMesh contains raw data that can be used by GPU directly. |
 | `TrimmedCurve` | A bounded curve that trimmed the basis curve at both ends. |
 | `VertexElement` | Base class of vertex elements. |
-| `VertexElementBinormal` | Aspose.ThreeD.Entities.VertexElementBinormal is a public symbol with members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally). |
+| `VertexElementBinormal` | Has members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally). |
 | `VertexElementDoublesTemplate` | A helper class for defining concrete implementations. |
 | `VertexElementEdgeCrease` | Defines the edge crease for specified components. |
 | `VertexElementFVector` | A helper class for defining concrete implementations. |
 | `VertexElementHole` | Defines if specified polygon is hole. |
 | `VertexElementIntsTemplate` | A helper class for defining concrete implementations. |
 | `VertexElementMaterial` | Defines material index for specified components. |
-| `VertexElementNormal` | Aspose.ThreeD.Entities.VertexElementNormal is a public symbol with members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally). |
+| `VertexElementNormal` | Has members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally). |
 | `VertexElementPolygonGroup` | Defines polygon group for specified components to group related polygons together. |
 | `VertexElementSmoothingGroup` | A smoothing group is a group of polygons in a polygon mesh which should appear to form a smooth surface. |
 | `VertexElementSpecular` | Defines specular color for specified components. |
-| `VertexElementTangent` | Aspose.ThreeD.Entities.VertexElementTangent is a public symbol with members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally). |
+| `VertexElementTangent` | Has members Clear, CopyTo, Data, Indices, MappingMode, Name, ReferenceMode, and SetData; CopyTo throws ArgumentNullException (conditionally). |
 | `VertexElementTemplate` | A helper class for defining concrete implementations. |
 | `VertexElementUV` | Defines the UV coordinates for specified components. |
 | `VertexElementUserData` | Defines custom user data for specified components. |
@@ -274,7 +255,6 @@ The verified public surface has 293 types.
 | `FileFormatType` | File format type. |
 | `A3dwSaveOptions` | Not implemented. |
 | `AmfSaveOptions` | Save options for AMF. |
-| `Chunk` | Represents a 3DS chunk header. |
 | `ColladaSaveOptions` | Save options for Collada format. |
 | `Discreet3dsLoadOptions` | Load options for 3DS file. |
 | `Discreet3dsSaveOptions` | Save options for 3DS file. |
@@ -282,11 +262,11 @@ The verified public surface has 293 types.
 | `DracoSaveOptions` | Save options for Google draco files. |
 | `FbxLoadOptions` | Load options for FBX format. |
 | `FbxSaveOptions` | Save options for FBX format. |
-| `ClassType` | Aspose.ThreeD.Formats.GLTF.ClassType is a public symbol with members AddProperty, ClassType, Description, DisplayName, Name, Properties, and ToString; AddProperty and ToString throw NotImplementedException. |
-| `EnumType` | Aspose.ThreeD.Formats.GLTF.EnumType is a public symbol with members AddValue, EnumType, Name, ToString, and Values; AddValue and ToString throw NotImplementedException. |
-| `EnumValue` | Aspose.ThreeD.Formats.GLTF.EnumValue is a public symbol with members EnumValue, Name, ToString, and Value; ToString throws NotImplementedException. |
-| `GLTF.Property` | Aspose.ThreeD.Formats.GLTF.Property is a public symbol with members Count, Description, DisplayName, EnumType, Name, Normalized, Property, and ToString; ToString throws NotImplementedException. |
-| `PropertyTable` | Aspose.ThreeD.Formats.GLTF.PropertyTable is a public symbol with members AddValue, Attach, From, GetValue, MetaClass, Name, PropertyTable, and Values; AddValue, Attach, From, and GetValue throw NotImplementedException. |
+| `ClassType` | Has members AddProperty, ClassType, Description, DisplayName, Name, Properties, and ToString; AddProperty and ToString throw NotImplementedException. |
+| `EnumType` | Has members AddValue, EnumType, Name, ToString, and Values; AddValue and ToString throw NotImplementedException. |
+| `EnumValue` | Has members EnumValue, Name, ToString, and Value; ToString throws NotImplementedException. |
+| `GLTF.Property` | Has members Count, Description, DisplayName, EnumType, Name, Normalized, Property, and ToString; ToString throws NotImplementedException. |
+| `PropertyTable` | Has members AddValue, Attach, From, GetValue, MetaClass, Name, PropertyTable, and Values; AddValue, Attach, From, and GetValue throw NotImplementedException. |
 | `StructuralMetadata` | This class provides support for EXT_structural_metadata, only used in glTF. |
 | `GltfLoadOptions` | Load options for glTF format. |
 | `GltfSaveOptions` | Save options for glTF format. |
@@ -295,15 +275,15 @@ The verified public surface has 293 types.
 | `JtLoadOptions` | Not implemented. |
 | `LoadOptions` | The base class to configure options in file loading for different types. |
 | `Microsoft3MFFormat` | File format instance for Microsoft 3MF with 3MF related utilities. |
-| `Microsoft3MFSaveOptions` | Aspose.ThreeD.Formats.Microsoft3MFSaveOptions is a public symbol with members BuildAll, EnableCompression, Encoding, ExportTextures, FileFormat, FileName, FileSystem, and FileSystemFactory. |
+| `Microsoft3MFSaveOptions` | Has members BuildAll, EnableCompression, Encoding, ExportTextures, FileFormat, FileName, FileSystem, and FileSystemFactory. |
 | `ObjLoadOptions` | Load options for Wavefront OBJ format. |
 | `ObjSaveOptions` | Save options for Wavefront OBJ format. |
 | `PdfFormat` | Adobe's Portable Document Format. |
 | `PdfLoadOptions` | Options for PDF loading. |
 | `PdfSaveOptions` | The save options in PDF exporting. |
 | `PlyFormat` | Not implemented. |
-| `PlyLoadOptions` | Aspose.ThreeD.Formats.PlyLoadOptions is a public symbol with members Encoding, FileFormat, FileName, FileSystem, FileSystemFactory, FlipCoordinateSystem, LookupPaths, and PlyLoadOptions. |
-| `PlySaveOptions` | Aspose.ThreeD.Formats.PlySaveOptions is a public symbol with members AxisSystem, ColorComponents, Encoding, ExportTextures, FaceElement, FaceProperty, FileFormat, and FileName. |
+| `PlyLoadOptions` | Has members Encoding, FileFormat, FileName, FileSystem, FileSystemFactory, FlipCoordinateSystem, LookupPaths, and PlyLoadOptions. |
+| `PlySaveOptions` | Has members AxisSystem, ColorComponents, Encoding, ExportTextures, FaceElement, FaceProperty, FileFormat, and FileName. |
 | `RvmFormat` | The RVM Format (some members not implemented). |
 | `RvmLoadOptions` | Load options for AVEVA Plant Design Management System's RVM file. |
 | `RvmSaveOptions` | Save options for Aveva PDMS RVM file. |
@@ -314,10 +294,10 @@ The verified public surface has 293 types.
 | `U3dSaveOptions` | Save options for universal 3d. |
 | `UsdSaveOptions` | Not implemented. |
 | `XLoadOptions` | The Load options for DirectX X files. |
-| `GlobalTransform` | Aspose.ThreeD.GlobalTransform is a public symbol with members EulerAngles, Rotation, Scale, TransformMatrix, and Translation. |
-| `Group` | Aspose.ThreeD.Group is a public symbol with members Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, Group, Groups, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `GlobalTransform` | Has members EulerAngles, Rotation, Scale, TransformMatrix, and Translation. |
+| `Group` | Has members Excluded, FindProperty, GetBoundingBox, GetEntityRendererKey, GetProperty, Group, Groups, and Name; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `INamedObject` | Object that has a name. |
-| `ImageRenderOptions` | Aspose.ThreeD.ImageRenderOptions is a public symbol with members AssetDirectories, BackgroundColor, EnableShadows, FindProperty, GetProperty, ImageRenderOptions, Name, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `ImageRenderOptions` | Has members AssetDirectories, BackgroundColor, EnableShadows, FindProperty, GetProperty, ImageRenderOptions, Name, and Properties; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `ImportException` | Import exception. |
 | `License` | License management class (not available in FOSS version). |
 | `Metered` | Metered license management class (not available in FOSS version). |
@@ -329,7 +309,7 @@ The verified public surface has 293 types.
 | `CircleShape` | IFC compatible circle profile, which can be used to construct a mesh through. |
 | `EllipseShape` | IFC compatible ellipse profile. |
 | `FontFile` | Font file contains definitions for glyphs, this is used to create text profile. |
-| `HShape` | Aspose.ThreeD.Profiles.HShape is a public symbol with members BottomFlangeEdgeRadius, BottomFlangeFilletRadius, BottomFlangeThickness, BottomFlangeWidth, Excluded, FindProperty, GetBoundingBox, and GetEntityRendererKey; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
+| `HShape` | Has members BottomFlangeEdgeRadius, BottomFlangeFilletRadius, BottomFlangeThickness, BottomFlangeWidth, Excluded, FindProperty, GetBoundingBox, and GetEntityRendererKey; FindProperty, GetProperty, RemoveProperty, and SetProperty throw ArgumentNullException (conditionally). |
 | `HollowCircleShape` | IFC compatible hollow circle profile. |
 | `HollowRectangleShape` | IFC compatible hollow rectangular shape with both inner/outer rounding corners. |
 | `LShape` | IFC compatible L-shape profile that defined by parameters. |
@@ -345,7 +325,7 @@ The verified public surface has 293 types.
 | `ThreeD.Property` | Class to hold user-defined properties. |
 | `PropertyCollection` | The collection of properties. |
 | `CubeFaceData` | Data for each face of the cube map texture. |
-| `DescriptorSetUpdater` | Aspose.ThreeD.Render.DescriptorSetUpdater is a public symbol with members Bind and Dispose. |
+| `DescriptorSetUpdater` | Has members Bind and Dispose. |
 | `DriverException` | The exception raised by internal rendering drivers. |
 | `EntityRenderer` | Subclass this to implement rendering for different kind of entities. |
 | `EntityRendererKey` | The key of registered entity renderer. |
@@ -365,10 +345,10 @@ The verified public surface has 293 types.
 | `ITextureCubemap` | Cube map texture. |
 | `ITextureDecoder` | External texture decoder should implement this interface for decoding. |
 | `ITextureEncoder` | External texture encoder should implement this interface for encoding. |
-| `ITextureUnit` | Aspose.ThreeD.Render.ITextureUnit is a public symbol with members Depth, Dispose, Height, Magnification, Minification, Mipmap, Scale, and Scroll. |
+| `ITextureUnit` | Has members Depth, Dispose, Height, Magnification, Minification, Mipmap, Scale, and Scroll. |
 | `IVertexBuffer` | The vertex buffer holds the polygon vertex data that will be sent to rendering pipeline. |
 | `InitializationException` | Initialization exception. |
-| `PixelMapping` | Aspose.ThreeD.Render.PixelMapping is a public symbol with members Data, Dispose, Height, Stride, and Width. |
+| `PixelMapping` | Has members Data, Dispose, Height, Stride, and Width. |
 | `PostProcessing` | The post-processing effects. |
 | `PushConstant` | A utility to provide data to shader through push constant. |
 | `RenderFactory` | Not implemented. |
@@ -386,7 +366,7 @@ The verified public surface has 293 types.
 | `StencilState` | Stencil states per face. |
 | `TextureCodec` | Class to manage encoders and decoders for textures. |
 | `TextureData` | This class contains the raw data and format definition of a texture. |
-| `Viewport` | Aspose.ThreeD.Render.Viewport is a public symbol with members Area, BackgroundColor, DepthClear, Enabled, Frustum, RenderTarget, and ZOrder. |
+| `Viewport` | Has members Area, BackgroundColor, DepthClear, Enabled, Frustum, RenderTarget, and ZOrder. |
 | `WindowHandle` | Encapsulated window handle for different platforms. |
 | `Scene` | A scene is a top-level object that contains the nodes, geometries, materials, textures, animation, poses, sub-scenes and etc (some members not implemented). |
 | `SceneObject` | The root class of objects that will be stored inside a scene. |
@@ -403,28 +383,28 @@ The verified public surface has 293 types.
 | `Transform` | A transform contains information that allow access to object's translate/scale/rotation or transform matrix at minimum cost This is used by local transform. |
 | `TrialException` | Trial exception. |
 | `BoundingBox` | The axis-aligned bounding box. |
-| `BoundingBox2D` | Aspose.ThreeD.Utilities.BoundingBox2D is a public symbol with members BoundingBox2D, Extent, Infinite, Maximum, Merge, Minimum, Null, and ToString. |
-| `FMatrix4` | Aspose.ThreeD.Utilities.FMatrix4 is a public symbol with members Concatenate, FMatrix4, Identity, Inverse, and Transpose. |
-| `FVector2` | Aspose.ThreeD.Utilities.FVector2 is a public symbol with members CompareTo, Equals, FVector2, GetHashCode, and ToString. |
+| `BoundingBox2D` | Has members BoundingBox2D, Extent, Infinite, Maximum, Merge, Minimum, Null, and ToString. |
+| `FMatrix4` | Has members Concatenate, FMatrix4, Identity, Inverse, and Transpose. |
+| `FVector2` | Has members CompareTo, Equals, FVector2, GetHashCode, and ToString. |
 | `FVector3` | Represents a 3D vector. |
-| `FVector4` | Aspose.ThreeD.Utilities.FVector4 is a public symbol with members CompareTo, FVector4, and ToString. |
+| `FVector4` | Has members CompareTo, FVector4, and ToString. |
 | `FileSystem` | File system encapsulation. |
 | `IArrayList` | Aspose.3D has its own highly optimized implementation of List for better loading/saving performance Only this interface is exposed for user with IList compatible and similar interfaces. |
-| `IOExtension` | Aspose.ThreeD.Utilities.IOExtension is a public symbol with member Write. |
-| `MathUtils` | Aspose.ThreeD.Utilities.MathUtils is a public symbol with members CalcNormal, Clamp, FindIntersection, PointInsideTriangle, RayIntersect, ToDegree, and ToRadian; Aspose.ThreeD.Utilities.MathUtils.CalcNormal throws ArgumentException (conditionally). |
-| `Matrix4` | Aspose.ThreeD.Utilities.Matrix4 is a public symbol with members Concatenate, Decompose, Determinant, Identity, Inverse, Matrix4, Normalize, and Rotate; Aspose.ThreeD.Utilities.Matrix4.Determinant always returns 1.0. |
-| `ParseException` | Aspose.ThreeD.Utilities.ParseException is a public symbol with member ParseException. |
+| `IOExtension` | Has member Write. |
+| `MathUtils` | Has members CalcNormal, Clamp, FindIntersection, PointInsideTriangle, RayIntersect, ToDegree, and ToRadian; Aspose.ThreeD.Utilities.MathUtils.CalcNormal throws ArgumentException (conditionally). |
+| `Matrix4` | Has members Concatenate, Decompose, Determinant, Identity, Inverse, Matrix4, Normalize, and Rotate; Aspose.ThreeD.Utilities.Matrix4.Determinant always returns 1.0. |
+| `ParseException` | Has member ParseException. |
 | `Quaternion` | Quaternion is usually used to perform rotation in computer graphics. |
-| `Rect` | Aspose.ThreeD.Utilities.Rect is a public symbol with members Bottom, Contains, Height, Left, Rect, Right, Top, and Width. |
-| `RelativeRectangle` | Aspose.ThreeD.Utilities.RelativeRectangle is a public symbol with members FromScale, OffsetHeight, OffsetWidth, OffsetX, OffsetY, RelativeRectangle, ScaleHeight, and ScaleWidth. |
-| `SemanticAttribute` | Aspose.ThreeD.Utilities.SemanticAttribute is a public symbol with members Alias, Semantic, and SemanticAttribute. |
-| `TransformBuilder` | Aspose.ThreeD.Utilities.TransformBuilder is a public symbol with members Append, Compose, ComposeOrder, Matrix, Prepend, Rearrange, Reset, and Rotate. |
-| `Vector2` | Aspose.ThreeD.Utilities.Vector2 is a public symbol with members CompareTo, Cross, Dot, Equals, GetHashCode, Length, Normalize, and ToString. |
-| `Vector3` | Aspose.ThreeD.Utilities.Vector3 is a public symbol with members AngleBetween, CompareTo, Cos, Cross, Dot, Equals, GetHashCode, and Item; Aspose.ThreeD.Utilities.Vector3.Parse throws ParseException (conditionally). |
-| `Vector4` | Aspose.ThreeD.Utilities.Vector4 is a public symbol with members CompareTo, Equals, GetHashCode, Length, Set, ToString, and Vector4. |
-| `Vertex` | Aspose.ThreeD.Utilities.Vertex is a public symbol with members CompareTo, ReadDouble, ReadFVector2, ReadFVector3, ReadFVector4, ReadFloat, ReadVector2, and ReadVector3. |
-| `VertexDeclaration` | Aspose.ThreeD.Utilities.VertexDeclaration is a public symbol with members AddField, Clear, CompareTo, Count, Equals, FromGeometry, FromType, and GetEnumerator; Aspose.ThreeD.Utilities.VertexDeclaration.AddField throws InvalidOperationException (conditionally) and Aspose.ThreeD.Utilities.VertexDeclaration.Clear throws InvalidOperationException (conditionally). |
-| `VertexField` | Aspose.ThreeD.Utilities.VertexField is a public symbol with members Alias, CompareTo, DataType, Equals, GetHashCode, Index, Offset, and Semantic. |
+| `Rect` | Has members Bottom, Contains, Height, Left, Rect, Right, Top, and Width. |
+| `RelativeRectangle` | Has members FromScale, OffsetHeight, OffsetWidth, OffsetX, OffsetY, RelativeRectangle, ScaleHeight, and ScaleWidth. |
+| `SemanticAttribute` | Has members Alias, Semantic, and SemanticAttribute. |
+| `TransformBuilder` | Has members Append, Compose, ComposeOrder, Matrix, Prepend, Rearrange, Reset, and Rotate. |
+| `Vector2` | Has members CompareTo, Cross, Dot, Equals, GetHashCode, Length, Normalize, and ToString. |
+| `Vector3` | Has members AngleBetween, CompareTo, Cos, Cross, Dot, Equals, GetHashCode, and Item; Aspose.ThreeD.Utilities.Vector3.Parse throws ParseException (conditionally). |
+| `Vector4` | Has members CompareTo, Equals, GetHashCode, Length, Set, ToString, and Vector4. |
+| `Vertex` | Has members CompareTo, ReadDouble, ReadFVector2, ReadFVector3, ReadFVector4, ReadFloat, ReadVector2, and ReadVector3. |
+| `VertexDeclaration` | Has members AddField, Clear, CompareTo, Count, Equals, FromGeometry, FromType, and GetEnumerator; Aspose.ThreeD.Utilities.VertexDeclaration.AddField throws InvalidOperationException (conditionally) and Aspose.ThreeD.Utilities.VertexDeclaration.Clear throws InvalidOperationException (conditionally). |
+| `VertexField` | Has members Alias, CompareTo, DataType, Equals, GetHashCode, Index, Offset, and Semantic. |
 | `Watermark` | Not implemented. |
 
 #### Enumerations
@@ -448,7 +428,7 @@ The verified public surface has 293 types.
 | `ProjectionType` | Camera's projection types. |
 | `ReferenceMode` | defines how mapping information is stored and referenced by. |
 | `RotationMode` | The frustum's rotation mode. |
-| `SkeletonType` | Aspose.ThreeD.Entities.SkeletonType is a public symbol. |
+| `SkeletonType` | Enumerates Bone and Skeleton. |
 | `SplitMeshPolicy` | Share vertex/control point data between sub-meshes or each sub-mesh has its own compacted data. |
 | `TextureMapping` | The texture mapping type for Describes which kind of texture mapping is used. |
 | `VertexElementType` | The type of the vertex element, defined how it will be used in modeling. |
@@ -469,14 +449,14 @@ The verified public surface has 293 types.
 | `FrontFace` | Front face winding. |
 | `IndexDataType` | The data type of the elements in. |
 | `PixelFormat` | The pixel's format used in texture unit. |
-| `PixelMapMode` | Aspose.ThreeD.Render.PixelMapMode is a public symbol. |
+| `PixelMapMode` | Enumerates ReadOnly, ReadWrite and WriteOnly. |
 | `PolygonMode` | Polygon mode. |
 | `PresetShaders` | This defines the preset internal shaders used by the renderer. |
 | `RenderQueueGroupId` | The group id of render queue. |
 | `RenderStage` | The render stage. |
 | `ShaderStage` | Shader stage. |
 | `StencilAction` | Stencil action. |
-| `TextureType` | Aspose.ThreeD.Render.TextureType is a public symbol. |
+| `TextureType` | Enumerates Array2D, CubeMap, Texture1D, Texture2D and Texture3D. |
 | `AlphaSource` | Defines whether the texture contains the alpha channel. |
 | `TextureFilter` | Filter options during texture sampling. |
 | `WrapMode` | Texture's wrap mode. |
@@ -512,7 +492,6 @@ The `Scene` class serves as the primary entry point, owning a `RootNode` hierarc
 - `Save`: Saves the scene to stream using specified file format.
 - `SetProperty`: Sets the value of specified property.
 - `SubScenes`: Gets all sub-scenes.
-- `Version`: Version of the Aspose.3D library.
 
 ### Shading
 
@@ -581,14 +560,12 @@ saving via the `FileFormat` registry.
 | `Extrapolation` | Controls the extrapolation mode (via `ExtrapolationType`) applied outside a keyframe sequence's range. |
 | `FbxLoadOptions` | Load options for FBX format. |
 | `FbxSaveOptions` | Save options for FBX format. |
-| `FileFormat` | File format registry — `Detect`/`GetFormatByExtension` plus per-format static members (`WavefrontOBJ`, `STLBinary`, `GLTF2`, `Collada`, `Discreet3DS`, `Microsoft3MF`) used with `Scene.Save()`/`FromFile()`. |
 | `FileFormatType` | File format family type. |
 | `FileSystem` | File system encapsulation used during load/save. |
 | `FontFile` | Font glyph definitions, used to create a `Text` profile. |
 | `Frustum` | Base class of `Camera` and `Light`. |
 | `GLSLSource` | Shader source code in GLSL. |
 | `Geometry` | The base class of all renderable geometric objects (`Mesh`, `Box`, `Cylinder`, and similar). |
-| `GlobalTransform` | The immutable final evaluated transformation, similar to `Transform` but read-only. |
 | `GltfLoadOptions` | Load options for glTF format. |
 | `GltfSaveOptions` | Save options for glTF format. |
 | `Group` | Represents the logical relationships between entities. |
@@ -596,7 +573,6 @@ saving via the `FileFormat` registry.
 | `HalfSpace` | An infinite space split by a plane. |
 | `HollowCircleShape` | IFC-compatible hollow circle profile. |
 | `HollowRectangleShape` | IFC-compatible hollow rectangular profile with inner/outer rounding. |
-| `Html5SaveOptions` | Save options for HTML5 (Aspose 3D Web viewer) export. |
 | `IOConfig` | IO configuration for serialization/deserialization. |
 | `IOExtension` | Writes a `Matrix4` value to a `BinaryWriter`. |
 | `ImageRenderOptions` | Options for image rendering (rendering itself is out of scope in this FOSS build). |
@@ -649,10 +625,8 @@ saving via the `FileFormat` registry.
 | `PostProcessing` | Post-processing effect settings (rendering is out of scope in this FOSS build). |
 | `Primitive` | Base class for all parameterized primitives (`Box`, `Cylinder`, `Sphere`, and similar). |
 | `Profile` | A 2D profile in the XY plane. |
-| `Property-GLTF` | Exposes `GetExtra`/`SetExtra` for arbitrary user data and `GetBindPoint` for animation bind points. |
 | `Property-ThreeD` | Holds user-defined properties. |
 | `PropertyCollection` | A collection of `Property` instances. |
-| `PropertyTable` | A table of `PropertyCollection` entries indexed by name. |
 | `PushConstant` | Provides data to a shader through a push constant. |
 | `Pyramid` | Parameterized pyramid primitive. |
 | `RectangleShape` | IFC-compatible rectangular profile with rounded corners. |
@@ -664,7 +638,6 @@ saving via the `FileFormat` registry.
 | `Renderer` | Rendering context. |
 | `RendererVariableManager` | Manages variables used during rendering. |
 | `RevolvedAreaSolid` | A solid built by revolving a profile's cross-section around an axis. |
-| `RvmFormat` | AVEVA PDMS RVM format registration — core geometry import/export works; attribute loading is not implemented (see Scope and Limitations). |
 | `RvmLoadOptions` | Load options for AVEVA PDMS RVM files. |
 | `RvmSaveOptions` | Save options for AVEVA PDMS RVM files. |
 | `SPIRVSource` | A shader compiled to SPIR-V. |
@@ -722,7 +695,6 @@ saving via the `FileFormat` registry.
 | `VertexElementPolygonGroup` | Groups related polygons together. |
 | `VertexElementSmoothingGroup` | Groups polygons that should appear to form a smooth surface. |
 | `VertexElementSpecular` | Per-vertex specular color. |
-| `VertexElementTangent` | Per-vertex tangent data, exposed via `Tangents`. |
 | `VertexElementTemplate` | Generic helper base for typed vertex elements. |
 | `VertexElementUV` | Per-vertex UV coordinates. |
 | `VertexElementUserData` | Custom user data for specified components. |
@@ -741,44 +713,45 @@ saving via the `FileFormat` registry.
 
 ## Documentation & Resources
 
-- **[Implementation progress notes](docs/foss-net-progress.md)** — Implementation progress notes describe the current state of the Aspose.3D FOSS for .NET library's feature coverage and remaining work.
-- **[Release 26.2.0 notes](docs/release-26.2.0.md)** — Release 26.2.0 notes summarize changes, improvements, and fixes introduced in that version of Aspose.3D FOSS for .NET.
-- **[AGENTS.md](AGENTS.md)** — `AGENTS.md` outlines the project's contribution guidelines and expectations for community participants.
+- **[Implementation progress notes](docs/foss-net-progress.md)** — current FOSS-edition implementation status, in the repository.
+- **[Release 26.2.0 notes](docs/release-26.2.0.md)** — In this repository.
+- **[AGENTS.md](AGENTS.md)** — implementation status and development guidelines for contributors.
+- **[Getting started guide](https://docs.aspose.org/3d/net/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to articles and FAQ](https://kb.aspose.org/3d/net/)** — task-focused how-tos and answers to common questions.
+- **[Full API reference](https://reference.aspose.org/3d/net/)** — complete, generated reference documentation for every public type. It covers all 292 public types; the [API Reference](#api-reference) section above covers the essentials.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-.NET/issues).
 
 ## Scope and Limitations
 
-Aspose.3D FOSS for .NET reads and writes `.ply` and `.3mf` files through the `Scene.Open` and `Scene.Save` methods, supporting the netcoreapp3.1, net6.0, net8.0, and net10.0 target frameworks.
+- PLY import and export both work through the standard `Scene.Open()`/`Scene.Save()` API (backed by `PlyReader`/`PlyWriter`, registered in the format dispatcher) — confirmed by round-tripping a constructed scene and independently loading a hand-authored PLY fixture through the public API. The confusable `PlyFormat` class exposed as the public `FileFormat.PLY` field is a separate, non-dispatched type whose own `Encode`/`Decode` methods do throw `NotImplementedException` — do not call them directly; use `Scene.Open("model.ply")` / `Scene.Save("model.ply")` instead. `PdfFormat` and `DracoFormat`, by contrast, have no reader/writer implementation anywhere in the codebase — PDF and Google Draco import/export are genuinely not functional. `UsdSaveOptions`/`A3dwSaveOptions`/`JtLoadOptions` exist as option types but have no wired-up encoder/decoder behind them either.
+- `PolygonModifier` (triangulation, normal/UV generation, mesh merge, boolean operations via `BooleanOperand`/`BooleanOperator`) and most of `TriMesh`'s raw-buffer conversion helpers throw `NotImplementedException` in this FOSS build — mesh post-processing utilities beyond basic scene-graph construction are not currently functional.
+- `Microsoft3MFFormat`'s build-instruction metadata (`IsBuildable`, `GetTransformForBuild`, `SetBuildable`, object type accessors) is not implemented — core 3MF geometry import/export works, production-extension metadata does not.
+- `RvmFormat.LoadAttributes` is not implemented — core RVM geometry import/export works, RVM attribute data does not load.
+- Text watermarking is not currently functional in this FOSS build.
+- License and trial-management APIs (`License`, `Metered`) are present for API-surface compatibility but are not applicable to this open-source edition.
 
-- Rendering is not implemented in this FOSS build — `Scene.Render`, `RenderFactory`, and the `IRenderTarget`/`IRenderWindow` rendering pipeline all throw `NotImplementedException`.
-- PLY import and export work through `Scene.Open` and `Scene.Save`, but the public `FileFormat.PLY` field and its Encode/Decode methods throw `NotImplementedException` and should not be called directly.
-- `PolygonModifier`, `TriMesh` helpers, `NurbsCurve.Evaluate`/`EvaluateAt`, and `NurbsSurface.ToMesh` throw `NotImplementedException`, and `Microsoft3MFFormat` metadata and `RvmFormat.LoadAttributes` are not implemented.
-- `Text` watermarking is not currently functional, and `License` and `Metered` APIs are present for API-surface compatibility but are not applicable to this open-source edition.
-- Core 3MF geometry import/export works, but `Microsoft3MFFormat` build-instruction metadata including `IsBuildable`, `GetTransformForBuild`, and `SetBuildable` is not implemented.
-- This project is licensed under the MIT `License`, as stated in the LICENSE file.
+<details>
+<summary>View Other Unimplemented Members</summary>
 
-- **[Getting started guide](https://docs.aspose.org/3d/net/)** — installation, walkthroughs, and feature guides for this library.
-- **[How-to articles and FAQ](https://kb.aspose.org/3d/net/)** — task-focused how-tos and answers to common questions.
-- **[Full API reference](https://reference.aspose.org/3d/net/)** — complete, generated reference documentation for every public type.
-- **[Implementation progress notes](docs/foss-net-progress.md)** — current FOSS-edition implementation status, in the repository.
-- **[Release 26.2.0 notes](docs/release-26.2.0.md)** — change log for this release, in the repository.
-- **[AGENTS.md](AGENTS.md)** — implementation status and development guidelines for contributors.
-- **[Issues and feature requests](https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-.NET/issues)** — report a bug or request a feature on GitHub.
+- `StructuralMetadata`: `Attach`, `CreateClass`, `CreateEnum`, `CreatePropertyTable` and 1 more throw NotImplementedException.
+- `TextureData`: `FromFile`, `FromStream`, `MapPixels`, `Save` and 1 more throw NotImplementedException.
+- `PropertyTable`: `AddValue`, `Attach`, `From` and `GetValue` throw NotImplementedException.
 
-These limitations don't apply to [full-featured Aspose.3D for .NET — Enterprise Edition](https://products.aspose.com/3d/net/). It adds the full commercial rendering pipeline, additional proprietary format support, and license management on top of this FOSS API surface.
+</details>
+
+See [Aspose.3D for .NET — Enterprise Edition](https://products.aspose.com/3d/net/). It adds the full commercial rendering pipeline, additional proprietary format support, and license management on top of this FOSS API surface.
 
 ## Development and Testing
 
-Aspose.3D FOSS for .NET targets netcoreapp3.1, net6.0, net8.0, and net10.0 in Release builds and requires no third-party package dependencies. The test suite resides in src/test/ and is executed using the dotnet test command against the test project file. The console converter tool, located at `src/converter/Converter.csproj`, builds separately as a project reference to the library and is not published to NuGet. Development guidelines and current implementation status are documented in `AGENTS.md`.
-
-The suite covers 16 test files under `src/test/`.
+The suite covers 16 test files under `src/test/`. Project documentation lives under `docs/`.
 
 ```bash
 dotnet add package Aspose.3D.FOSS --version 26.1.0
 ```
 
-- Targets `netcoreapp3.1`, `net6.0`, `net8.0`, and `net10.0` in Release builds — runs on any
-  compatible .NET Core 3.1 or later .NET/.NET Core runtime.
+The repository also contains a separate console conversion tool (`src/converter/Converter.csproj`, package id `Aspose.3D.Converter`) that references the library as a project; it is not published to NuGet.
+
+- Targets `netcoreapp3.1`, `net6.0`, `net8.0`, and `net10.0` in Release builds — runs on any compatible .NET Core 3.1 or later .NET/.NET Core runtime.
 
 Clone the repository and run the test suite with the .NET SDK:
 
@@ -794,8 +767,7 @@ The console converter tool builds separately as a project reference to the libra
 dotnet build src/converter/Converter.csproj
 ```
 
-See [AGENTS.md](AGENTS.md) in the repository root for current implementation status and
-development guidelines.
+See [AGENTS.md](AGENTS.md) in the repository root for current implementation status and development guidelines.
 
 ## License
 

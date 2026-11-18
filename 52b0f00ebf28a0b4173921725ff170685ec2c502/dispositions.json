@@ -229,12 +229,12 @@
     },
     {
       "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:tests",
         "package:target_framework"
       ],
-      "rationale": "Not printed again: development testing already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Kept as written (inherit-and-correct, R43(3)). Not printed again: development testing already states this material from the facts it cites, so the kept unit is ",
       "unit_id": "inherited_unit:014.paragraph"
     },
     {
@@ -310,21 +310,36 @@
       "unit_id": "inherited_unit:022.heading"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": "at_a_glance",
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:001"
+        "format:input.3ds",
+        "format:input.3mf",
+        "format:input.dae",
+        "format:input.fbx",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.ply",
+        "format:input.stl",
+        "format:output.3ds",
+        "format:output.3mf",
+        "format:output.dae",
+        "format:output.fbx",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.ply",
+        "format:output.stl"
       ],
-      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "rationale": "Omitted citing the findings register, which confirms it false: lead-in of the omitted inherited_unit:024.code_block.",
       "unit_id": "inherited_unit:023.paragraph"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:001"
+        "finding:217a2d1f0c99"
       ],
-      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "rationale": "Omitted citing the findings register, which confirms it false: its example example:001 prints a refuted line.",
       "unit_id": "inherited_unit:024.code_block"
     },
     {
@@ -348,21 +363,36 @@
       "unit_id": "inherited_unit:026.paragraph"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": "at_a_glance",
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:002"
+        "format:input.3ds",
+        "format:input.3mf",
+        "format:input.dae",
+        "format:input.fbx",
+        "format:input.gltf",
+        "format:input.obj",
+        "format:input.ply",
+        "format:input.stl",
+        "format:output.3ds",
+        "format:output.3mf",
+        "format:output.dae",
+        "format:output.fbx",
+        "format:output.gltf",
+        "format:output.obj",
+        "format:output.ply",
+        "format:output.stl"
       ],
-      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "rationale": "Omitted citing the findings register, which confirms it false: lead-in of the omitted inherited_unit:028.code_block.",
       "unit_id": "inherited_unit:027.paragraph"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:002"
+        "finding:aaf7448455dc"
       ],
-      "rationale": "The code block matches the verified example fact and is supported.",
+      "rationale": "Omitted citing the findings register, which confirms it false: its example example:002 prints a refuted line.",
       "unit_id": "inherited_unit:028.code_block"
     },
     {
@@ -428,11 +458,11 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:005"
       ],
-      "rationale": "The heading is preserved; the example fact is SUPPORTED and matches the code block.",
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
       "unit_id": "inherited_unit:036.heading"
     },
     {
@@ -547,7 +577,15 @@
     {
       "destination_section": "api_reference",
       "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
+      "fact_ids": [
+        "finding:910793f8154f",
+        "finding:085d8ca158e5",
+        "finding:7b632236a7c0",
+        "finding:c45259ee4612",
+        "finding:041f6ff8b531",
+        "finding:a92b880accf9",
+        "finding:9ec8a999e70c"
+      ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:050.table"
     },
@@ -614,7 +652,7 @@
       "unit_id": "inherited_unit:058.heading"
     },
     {
-      "destination_section": "scope_limitations",
+      "destination_section": "documentation_resources",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "link_target:020",
@@ -623,9 +661,10 @@
         "link_target:023",
         "link_target:024",
         "link_target:025",
-        "link_target:026"
+        "link_target:026",
+        "finding:3b2d1a53861c"
       ],
-      "rationale": "Kept in scope_limitations: documentation_resources prints nothing from a placed unit. The list items are all verified links to documentation, release notes,...",
+      "rationale": "Kept in documentation_resources: a list of resource links, not scope_limitations. Kept in scope_limitations: documentation_resources prints nothing from a place",
       "unit_id": "inherited_unit:059.list"
     },
     {
@@ -649,7 +688,9 @@
         "format:input.3mf",
         "format:output.3mf",
         "license:file",
-        "license:spdx"
+        "license:spdx",
+        "finding:1fda1c22013f",
+        "finding:374080c2149a"
       ],
       "rationale": "The list enumerates specific limitations confirmed by public symbols and format facts; all claims are supported.",
       "unit_id": "inherited_unit:061.list"
@@ -726,13 +767,13 @@
       "unit_id": "inherited_unit:069.heading"
     },
     {
-      "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "license:file",
         "license:spdx"
       ],
-      "rationale": "The paragraph describes the MIT license, which is verified; it is kept as written for completeness.",
+      "rationale": "Superseded by the License section, which states the license from facts. The paragraph describes the MIT license, which is verified; it is kept as written for co",
       "unit_id": "inherited_unit:070.paragraph"
     }
   ]
