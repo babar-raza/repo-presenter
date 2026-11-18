@@ -41,21 +41,60 @@
    "run_id": "43712100927",
    "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T11:21:03+00:00",
+   "classes": [
+    "BC-14|unresolved|the_readme_calls_code",
+    "BC-14|unresolved|the_readme_claims_dae",
+    "claim_contradiction|authored_unit|member_kind",
+    "claim_contradiction|authored_unit|stub_format"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 10,
+   "outcome": "failure",
+   "run_id": "44291554413",
+   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T12:10:28+00:00",
+  "at": "2026-11-18T11:21:03+00:00",
   "classes": {
-   "BC-14|unresolved|the_readme_claims_dae": {
-    "example": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+   "BC-14|unresolved|the_readme_calls_code": {
+    "example": "the README calls `Scene.clear` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
     "findings": 3,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "BC-14",
-    "scope": "affc91cc0a96ca773ce8a905bebf5d7fc81646a7095eac41f6788024d0feb9ad",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "the_readme_calls_code",
+    "upstream": ""
+   },
+   "BC-14|unresolved|the_readme_claims_dae": {
+    "example": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "findings": 2,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-14",
+    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -71,39 +110,39 @@
     "sub_rule": "the_readme_claims_dae",
     "upstream": ""
    },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:060.table holds api_identifiers 'FbxExporter.save()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:060.table"
-    ],
-    "rule": "BC-17",
-    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   "claim_contradiction|authored_unit|stub_format": {
-    "example": "Aspose.3D FOSS for Python reads and writes 3D scenes in `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` formats. It constructs scenes using `Scene`, creates entities such as `Mesh`, and manages transforms, materials, and animation clips through its public API.",
+   "claim_contradiction|authored_unit|member_kind": {
+    "example": "The `Scene` class provides high-level methods such as `Scene.open()` and `Scene.save()` to load and write 3D content, and exposes properties like `Scene.root_node`, `Scene.animation_clips`, `Scene.asset_info`, `Scene.clear`, `Scene.create_animation_clip`, and `Scene.get_animation_clip` for scene gra",
     "findings": 3,
     "origin_kind": "authored_unit",
     "origins": [
-     "opening.opening",
+     "api_reference.hub:public_symbol:aspose.threed.scene"
+    ],
+    "rule": "claim_contradiction",
+    "scope": "647ae956d83d7825eb2e052af4c21c59998f22108512bfb33165c1a220e79626",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
+    ],
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   "claim_contradiction|authored_unit|stub_format": {
+    "example": "| `ColladaExporter` | ColladaExporter class provides methods to export scenes to COLLADA format and to check format support, where export raises TypeError conditionally. |",
+    "findings": 2,
+    "origin_kind": "authored_unit",
+    "origins": [
      "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaexporter.colladaexporter",
      "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin"
     ],
     "rule": "claim_contradiction",
-    "scope": "1e5c878cc76e3b7b0d192067e294550f72ea325aef7f46901ede54038f76939a",
+    "scope": "647ae956d83d7825eb2e052af4c21c59998f22108512bfb33165c1a220e79626",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -119,34 +158,64 @@
     "upstream": "source_stub"
    }
   },
-  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `Scene.clear` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `Scene.create_animation_clip` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "claim_contradiction",
-    "message": "line 6 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "message": "line 707 (COMPOSING): the README calls `Scene.clear` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
     "origin": {
-     "id": "opening.opening",
+     "id": "api_reference.hub:public_symbol:aspose.threed.scene",
      "kind": "authored_unit"
     },
-    "quote": "Aspose.3D FOSS for Python reads and writes 3D scenes in `.3mf`, `.dae`, `.fbx`, `.glb`, `.gltf`, `.obj`, and `.stl` formats. It constructs scenes using `Scene`, creates entities such as `Mesh`, and manages transforms, materials, and animation clips through its public API.",
+    "quote": "The `Scene` class provides high-level methods such as `Scene.open()` and `Scene.save()` to load and write 3D content, and exposes properties like `Scene.root_node`, `Scene.animation_clips`, `Scene.asset_info`, `Scene.clear`, `Scene.create_animation_clip`, and `Scene.get_animation_clip` for scene gra",
     "rule": "claim_contradiction",
     "section_id": "",
-    "signature": "claim_contradiction|authored_unit|stub_format",
+    "signature": "claim_contradiction|authored_unit|member_kind",
     "source": "review",
-    "sub_rule": "stub_format",
-    "upstream": "source_stub"
+    "sub_rule": "member_kind",
+    "upstream": ""
    },
    {
     "label": "claim_contradiction",
-    "message": "line 551 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "message": "line 707 (COMPOSING): the README calls `Scene.create_animation_clip` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose.threed.scene",
+     "kind": "authored_unit"
+    },
+    "quote": "The `Scene` class provides high-level methods such as `Scene.open()` and `Scene.save()` to load and write 3D content, and exposes properties like `Scene.root_node`, `Scene.animation_clips`, `Scene.asset_info`, `Scene.clear`, `Scene.create_animation_clip`, and `Scene.get_animation_clip` for scene gra",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|authored_unit|member_kind",
+    "source": "review",
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 707 (COMPOSING): the README calls `Scene.get_animation_clip` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:aspose.threed.scene",
+     "kind": "authored_unit"
+    },
+    "quote": "The `Scene` class provides high-level methods such as `Scene.open()` and `Scene.save()` to load and write 3D content, and exposes properties like `Scene.root_node`, `Scene.animation_clips`, `Scene.asset_info`, `Scene.clear`, `Scene.create_animation_clip`, and `Scene.get_animation_clip` for scene gra",
+    "rule": "claim_contradiction",
+    "section_id": "",
+    "signature": "claim_contradiction|authored_unit|member_kind",
+    "source": "review",
+    "sub_rule": "member_kind",
+    "upstream": ""
+   },
+   {
+    "label": "claim_contradiction",
+    "message": "line 545 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
     "origin": {
      "id": "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaexporter.colladaexporter",
      "kind": "authored_unit"
@@ -161,7 +230,7 @@
    },
    {
     "label": "claim_contradiction",
-    "message": "line 555 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "message": "line 549 (COMPOSING): the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
     "origin": {
      "id": "api_reference.type:public_symbol:aspose.threed.formats.collada.colladaplugin.colladaplugin",
      "kind": "authored_unit"
@@ -176,17 +245,47 @@
    },
    {
     "label": "BC-14",
-    "message": "the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "message": "the README calls `Scene.clear` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
     "origin": {
      "id": "-",
      "kind": "unresolved"
     },
     "quote": "",
     "rule": "BC-14",
-    "section_id": "",
-    "signature": "BC-14|unresolved|the_readme_claims_dae",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_calls_code",
     "source": "validation",
-    "sub_rule": "the_readme_claims_dae",
+    "sub_rule": "the_readme_calls_code",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README calls `Scene.create_animation_clip` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_calls_code",
+    "source": "validation",
+    "sub_rule": "the_readme_calls_code",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README calls `Scene.get_animation_clip` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.animation_clips, Scene.asset_info, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation handling.'), but the facts record it as a method; call it by its kind",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_calls_code",
+    "source": "validation",
+    "sub_rule": "the_readme_calls_code",
     "upstream": ""
    },
    {
@@ -217,57 +316,34 @@
     "signature": "BC-14|unresolved|the_readme_claims_dae",
     "source": "validation",
     "sub_rule": "the_readme_claims_dae",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:060.table holds api_identifiers 'FbxExporter.save()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:060.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
+  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "claim_contradiction:0",
+    "label": "BC-14",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
-    "section_id": "opening",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: this revision makes BC-14 fail: the README calls `Scene.clear` a property ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.library, Scene.animation_clips, Scene.sub_scenes, Scene.poses, Scene.asset_info, Scene.current_animation_clip, Scene.clear(), Scene.create_animation_clip(), and Scene.get_an",
+    "section_id": "api_reference",
     "stage": "S6"
    },
    {
     "facts_defects": [],
-    "label": "BC-17",
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:060.table: still SUPERSEDE_REDUNDANT, which is the defect: the published README prints this content and the candidate must not lose it. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), PRESERVE_ATTRIBUTED when no fact confirms it, or OMIT_",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README claims .dae output, but format:output.dae is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .dae from the output formats",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units.1.text' changed ('The Scene class provides high-level methods such as Scene.open() and Scene.save() to load and write 3D content, and exposes properties like Scene.root_node, Scene.library, Scene.animation_clips, Scene.sub_scenes, Scene.poses, Scene.asset_info, Scene.current_animation_clip, Scene.clear, Scene.create_animation_clip, and Scene.get_animation_clip for scene graph management and animation",
     "section_id": "api_reference",
     "stage": "S6"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Python",
-  "run_id": "43712100927",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43712100927",
+  "run_id": "44291554413",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44291554413",
   "schema_version": 1,
   "source_revision": "65b1f577c0f16d0d9112bb6c1153d3024543ac02",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
