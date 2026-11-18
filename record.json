@@ -37,11 +37,25 @@
    "run_id": "43652852534",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T15:11:30+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|development_testing",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 13,
+   "outcome": "failure",
+   "run_id": "44330597617",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-14T23:38:13+00:00",
+  "at": "2026-11-18T15:11:30+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
     "example": "The `aspose_psd_foss.PsdImage.has_icc_profile` property indicates whether the document contains an ICC profile, and `aspose_psd_foss.resources.imageresourceids` and `aspose_psd_foss.resources.psdresourcekind` support ICC profile resource identification and kind.",
@@ -55,7 +69,7 @@
      "api_reference.hub:public_symbol:aspose_psd_foss.psdimage.layers"
     ],
     "rule": "llm:factuality",
-    "scope": "ced5df1023ce34a9ee1c031299fc76d0a001f2ee9101e76f24ad410da0f1f263",
+    "scope": "03a3af873dc7f2214d0870226cec44202bca05fe00be1f370c5b16577566ecad",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -78,7 +92,7 @@
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope": "242ca23738667b62b42d1ee2ace90c999e324f7637cd5d6b5a79aa28393aff46",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -93,14 +107,14 @@
     "upstream": ""
    },
    "llm:factuality|unresolved|scope_limitations": {
-    "example": "These limitations don't apply to [full-featured Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment laye",
+    "example": "See [Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment layers, and enterprise-grade features such as m",
     "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "ba0fdc7fc5720493ef694a2d1c18cc32cc90959deae8aee0bc9bdc204f3d44d4",
+    "scope": "242ca23738667b62b42d1ee2ace90c999e324f7637cd5d6b5a79aa28393aff46",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -115,7 +129,7 @@
     "upstream": ""
    }
   },
-  "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -297,7 +311,7 @@
      "id": "-",
      "kind": "unresolved"
     },
-    "quote": "These limitations don't apply to [full-featured Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment laye",
+    "quote": "See [Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment layers, and enterprise-grade features such as m",
     "rule": "llm:factuality",
     "section_id": "scope_limitations",
     "signature": "llm:factuality|unresolved|scope_limitations",
@@ -322,13 +336,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "554032fd6ca68ad19f8e5ea07ff1a560fdc8663b",
+  "main_sha": "26247cadf9c9dc8f7b0b57b447aab892d0a8b468",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F12",
+    "label": "F04",
     "outcome": "unrepairable",
     "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
     "section_id": "scope_limitations",
@@ -336,7 +350,7 @@
    },
    {
     "facts_defects": [],
-    "label": "F01+F02+F03+F04",
+    "label": "F01+F02+F03",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
@@ -352,8 +366,8 @@
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "43652852534",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43652852534",
+  "run_id": "44330597617",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44330597617",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
