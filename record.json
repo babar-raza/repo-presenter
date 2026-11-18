@@ -11,103 +11,80 @@
    "run_id": "43672435697",
    "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T21:11:47+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44397297056",
+   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T03:49:26+00:00",
+  "at": "2026-11-18T21:11:47+00:00",
   "classes": {
-   "BC-04|unresolved|code_span_q_is": {
-    "example": "code span 'aspose-words' is not a fact value",
-    "findings": 2,
-    "origin_kind": "unresolved",
+   "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple formats', 'PDF export with built-in renderer']",
+    "findings": 1,
+    "origin_kind": "job_error",
     "origins": [
-     "-"
+     "OutputRejectedError"
     ],
-    "rule": "BC-04",
-    "scope": "f66112efd7cf468fa1cad2b25e832de3814f48824a788bea25856203e0893da6",
+    "rule": "job_error",
+    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
      "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "code_span_q_is",
+    "sub_rule": "OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
     "upstream": ""
    }
   },
-  "code": "3b806de0e0ff1aeaa816c035c7ed95101a93a17ed266f9d1c9d92c136cfd6de1",
+  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-04; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple formats', 'PDF export with built-in renderer']",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "BC-04",
-    "message": "code span 'aspose-words' is not a fact value",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple formats', 'PDF export with built-in renderer']",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "OutputRejectedError",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-04",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "BC-04|unresolved|code_span_q_is",
-    "source": "validation",
-    "sub_rule": "code_span_q_is",
-    "upstream": ""
-   },
-   {
-    "label": "BC-04",
-    "message": "code span 'aspose.words' is not a fact value",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-04",
-    "section_id": "",
-    "signature": "BC-04|unresolved|code_span_q_is",
-    "source": "validation",
-    "sub_rule": "code_span_q_is",
+    "signature": "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "bb43103b2c648a4959a777303f62811483a0a0ac",
+  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
-  "run_id": "43672435697",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43672435697",
+  "run_id": "44397297056",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44397297056",
   "schema_version": 1,
   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
