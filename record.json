@@ -27,34 +27,25 @@
    "run_id": "43722640931",
    "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-18T12:00:01+00:00",
+   "classes": [
+    "BC-14|inherited_unit|the_readme_claims_fbx",
+    "claim_contradiction|inherited_unit|stub_format"
+   ],
+   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+   "findings": 4,
+   "outcome": "failure",
+   "run_id": "44297194324",
+   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-15T14:11:50+00:00",
+  "at": "2026-11-18T12:00:01+00:00",
   "classes": {
-   "BC-05|inherited_unit|superseded_unstated": {
-    "example": "inherited_unit:050.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('| Created by lexchou on 12/14/2016.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:050.table"
-    ],
-    "rule": "BC-05",
-    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
    "BC-14|inherited_unit|the_readme_claims_fbx": {
     "example": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
     "findings": 2,
@@ -63,7 +54,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "BC-14",
-    "scope": "5ad777c196447405b359675e2ee2e00161221a3af3ed0501a0527a5c56343149",
+    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -85,7 +76,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "claim_contradiction",
-    "scope": "62c7fd334dbefe036098a00e7e9bc98ba9868ae8f2a5b70ee928e2c5fb7b0123",
+    "scope": "58e88f3fab3a24361441159f8f27b47f09dad06e6d753afdaf459f35b7ef3d00",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -99,7 +90,7 @@
     "upstream": "source_stub"
    }
   },
-  "code": "abf7a6fb648c81eed19f7ed82a63733cfe5e1312526507ba503a70d669afcd72",
+  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -140,21 +131,6 @@
     "upstream": "source_stub"
    },
    {
-    "label": "BC-05",
-    "message": "inherited_unit:050.table is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('| Created by lexchou on 12/14/2016.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:050.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
     "label": "BC-14",
     "message": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
     "origin": {
@@ -186,16 +162,24 @@
    }
   ],
   "lane": "R",
-  "main_sha": "79ba48cc1c1f63987760bfd333ae69331b287e3b",
+  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-05",
+    "label": "BC-14",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:050.table: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into api_reference, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, documentatio",
+    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
     "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5+claim_contradiction:6+claim_contradiction:7+claim_contradiction:8+claim_contradiction:9+claim_contradiction:10+claim_contradiction:11+claim_contradiction:12+claim_contradiction:13+claim_contradiction:14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
     "stage": "S4"
    },
    {
@@ -208,8 +192,8 @@
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
-  "run_id": "43722640931",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/43722640931",
+  "run_id": "44297194324",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44297194324",
   "schema_version": 1,
   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
