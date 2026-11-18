@@ -19,9 +19,9 @@
   "proposal": null,
   "failure": {
     "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:463.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:520.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:522.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:528.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README)",
+    "detail": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 254789 input tokens (8000 > 262144 - 254789). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-18T16:24:35.045224+00:00",
+    "occurred_at": "2026-11-18T20:34:30.137601+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 26,
+  "state_version": 27,
   "recent_trigger_dedup_keys": {
     "run:41304473088:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "f2dd0b321c364d5f8a3b3aaa734b701e",
     "run:42685713384:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "3b81377c7b004742bf823317e960e501",
