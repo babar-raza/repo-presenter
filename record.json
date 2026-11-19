@@ -53,11 +53,23 @@
    "run_id": "44349039315",
    "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:07:36+00:00",
+   "classes": [
+    "BC-18|inherited_unit|false_claim"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44559353210",
+   "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T16:45:22+00:00",
+  "at": "2026-11-19T16:07:36+00:00",
   "classes": {
    "BC-18|inherited_unit|false_claim": {
     "example": "Chart chart = doc.FirstSection.Body.Shapes[0].Chart;",
@@ -67,7 +79,7 @@
      "inherited_unit:043.code_block"
     ],
     "rule": "BC-18",
-    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
+    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -80,31 +92,9 @@
     ],
     "sub_rule": "false_claim",
     "upstream": ""
-   },
-   "BC-18|renderer_fact|misleading_claim": {
-    "example": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |",
-    "findings": 1,
-    "origin_kind": "renderer_fact",
-    "origins": [
-     "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil"
-    ],
-    "rule": "BC-18",
-    "scope": "e2ac35bf7f061d229713a308bb55b669745ac148d74d814316ba960179be0355",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition/renderer.py",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "misleading_claim",
-    "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -128,47 +118,16 @@
     "source": "validation",
     "sub_rule": "false_claim",
     "upstream": ""
-   },
-   {
-    "label": "BC-18",
-    "message": "open finding (confirmed misleading claim: | `DigitalSignatureUtil` | Provides methods for signing document. | | `SignOptions` |) still printed: The README text '| `DigitalSignatureUtil` | Provides methods for signing document. |\\n| `SignOptions` |' is false (confirmed misleading claim: | `DigitalSignatureUtil` | Provides methods for signing document. | | `SignOptions` |). Correct it: DigitalSignatureUtil.Sign exists, but for DOCX/DOTX/DOCM/DOTM, DOC and ODT it throws NotSupportedException(\"FOSS\"",
-    "origin": {
-     "id": "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil",
-     "kind": "renderer_fact"
-    },
-    "quote": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |",
-    "rule": "BC-18",
-    "section_id": "api_reference",
-    "signature": "BC-18|renderer_fact|misleading_claim",
-    "source": "validation",
-    "sub_rule": "misleading_claim",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [
-     {
-      "fact_ids": [
-       "public_symbol:aspose.words.digitalsignatures.digitalsignatureutil"
-      ],
-      "quote": "| `DigitalSignatureUtil` | Provides methods for signing document. |\n| `SignOptions` |"
-     }
-    ],
-    "label": "BC-18",
-    "outcome": "unrepairable",
-    "reason": "facts defect: '| `DigitalSignatureUtil` | Provides methods for signing document. |\\n| `SignOptions` |' is printed by the renderer from fact public_symbol:aspose.words.digitalsignatures.digitalsignatureutil, not by any authored or inherited unit; fix the facts (a repair cannot change renderer-printed text)",
-    "section_id": "api_reference",
-    "stage": "S6"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-.NET",
-  "run_id": "44349039315",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349039315",
+  "run_id": "44559353210",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44559353210",
   "schema_version": 1,
   "source_revision": "0d3f1add920f5294d726b4f286c2d6ba7c3ae22c",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
