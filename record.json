@@ -52,68 +52,40 @@
    "run_id": "44349049455",
    "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T15:53:15+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|api_reference"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 16,
+   "outcome": "failure",
+   "run_id": "44556434801",
+   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T16:53:14+00:00",
+  "at": "2026-11-19T15:53:15+00:00",
   "classes": {
-   "BC-14|inherited_unit|the_readme_names_code": {
-    "example": "the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:047.table"
-    ],
-    "rule": "BC-14",
-    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_names_code",
-    "upstream": ""
-   },
-   "BC-14|unresolved|the_readme_names_code": {
-    "example": "the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-14",
-    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_names_code",
-    "upstream": ""
-   },
-   "claim_contradiction|authored_unit|member_owner": {
-    "example": "| `Transform` | Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access. |",
-    "findings": 1,
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "| `VertexElement` | VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented. |",
+    "findings": 14,
     "origin_kind": "authored_unit",
     "origins": [
-     "api_reference.type:public_symbol:transform"
+     "opening.opening",
+     "api_reference.type:public_symbol:vertexelementfvector",
+     "api_reference.type:public_symbol:vertexelementintstemplate",
+     "api_reference.type:public_symbol:vertexelementsmoothinggroup",
+     "api_reference.type:public_symbol:vertexfield"
     ],
-    "rule": "claim_contradiction",
-    "scope": "2c715cae57c525595e32be50ab78692a2e2d47a34f68f478d477c9a4825d1cea",
+    "rule": "llm:factuality",
+    "scope": "b5e8056b406bdb67158619f6eabbd3c343bf592499bdd8e66a1d772970f29b73",
     "scope_paths": [
+     "prompts",
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
      "src/repo_presenter/readme/composition/authoring.py",
@@ -121,110 +93,299 @@
      "src/repo_presenter/readme/composition/coherence.py",
      "src/repo_presenter/readme/composition/text_hygiene.py",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "member_owner",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
-   "claim_contradiction|inherited_unit|member_owner": {
-    "example": "| `Camera` | A viewpoint node entity with `moveForward` and `getBoundingBox` methods, and `nearPlane`, `farPlane`, `aspect`, `orthoHeight`, `fieldOfView`, `fieldOfViewX`/`Y`, `projectionType`, and `apertureMode` properties. |",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
+   "llm:factuality|unresolved|api_reference": {
+    "example": "| `VertexElementTangent` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "findings": 2,
+    "origin_kind": "unresolved",
     "origins": [
-     "inherited_unit:047.table"
+     "api_table_row:VertexElementTangent",
+     "api_table_row:Watermark"
     ],
-    "rule": "claim_contradiction",
-    "scope": "8a9f2cf406a1181874967928a4d5f231ea419c5cb2fb198de13902d1b5f3a744",
+    "rule": "llm:factuality",
+    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "member_owner",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 16 blocking finding(s) of 16; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "claim_contradiction",
-    "message": "line 234 (COMPOSING): the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member",
+    "label": "F01",
+    "message": "VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented.",
     "origin": {
-     "id": "api_reference.type:public_symbol:transform",
+     "id": "opening.opening",
      "kind": "authored_unit"
     },
-    "quote": "| `Transform` | Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access. |",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|authored_unit|member_owner",
+    "quote": "| `VertexElement` | VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
-    "sub_rule": "member_owner",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "claim_contradiction",
-    "message": "line 354 (COMPOSING): the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member",
+    "label": "F02",
+    "message": "VertexElementFVector class provides floating-point vector element data with copy, data, indices, mapping mode, name, and reference mode; setData is not implemented.",
     "origin": {
-     "id": "inherited_unit:047.table",
-     "kind": "inherited_unit"
+     "id": "api_reference.type:public_symbol:vertexelementfvector",
+     "kind": "authored_unit"
     },
-    "quote": "| `Camera` | A viewpoint node entity with `moveForward` and `getBoundingBox` methods, and `nearPlane`, `farPlane`, `aspect`, `orthoHeight`, `fieldOfView`, `fieldOfViewX`/`Y`, `projectionType`, and `apertureMode` properties. |",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|member_owner",
+    "quote": "| `VertexElementFVector` | VertexElementFVector class provides floating-point vector element data with copy, data, indices, mapping mode, name, and reference mode; setData is not implemented. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
-    "sub_rule": "member_owner",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-14",
-    "message": "the README names `Euler` as a property of `Transform` ('Transform class provides transformation properties including Euler angles, geometric rotation, scaling, translation, and property access.'), but `Transform` has no such member",
+    "label": "F03",
+    "message": "VertexElementIntsTemplate class provides integer element data with copy, data, indices, mapping mode, name, and reference mode.",
     "origin": {
-     "id": "-",
+     "id": "api_reference.type:public_symbol:vertexelementintstemplate",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexElementIntsTemplate` | VertexElementIntsTemplate class provides integer element data with copy, data, indices, mapping mode, name, and reference mode. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F04",
+    "message": "VertexElementNormal class inherits from VertexElementFVector and declares a public constructor.",
+    "origin": {
+     "id": "opening.opening",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexElementNormal` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F05",
+    "message": "VertexElementSmoothingGroup class provides smoothing group element data with copy, data, indices, mapping mode, name, and reference mode.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:vertexelementsmoothinggroup",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexElementSmoothingGroup` | VertexElementSmoothingGroup class provides smoothing group element data with copy, data, indices, mapping mode, name, and reference mode. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F06",
+    "message": "VertexElementTangent class inherits from VertexElementFVector and declares a public constructor.",
+    "origin": {
+     "id": "api_table_row:VertexElementTangent",
      "kind": "unresolved"
     },
-    "quote": "",
-    "rule": "BC-14",
+    "quote": "| `VertexElementTangent` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_names_code",
-    "source": "validation",
-    "sub_rule": "the_readme_names_code",
+    "signature": "llm:factuality|unresolved|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-14",
-    "message": "the README names `Y` as a property of `Camera` ('A viewpoint node entity with moveForward and getBoundingBox methods, and nearPlane, farPlane, aspect, orthoHeight, fieldOfView, fieldOfViewX/Y, projectionType, and apertureMode properties.'), but `Camera` has no such member",
+    "label": "F07",
+    "message": "VertexElementUV class provides UV element data with add data, copy, data, indices, mapping mode, and name; addData and setData are not implemented.",
     "origin": {
-     "id": "inherited_unit:047.table",
-     "kind": "inherited_unit"
+     "id": "opening.opening",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "BC-14",
+    "quote": "| `VertexElementUV` | VertexElementUV class provides UV element data with add data, copy, data, indices, mapping mode, and name; addData and setData are not implemented. |",
+    "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "BC-14|inherited_unit|the_readme_names_code",
-    "source": "validation",
-    "sub_rule": "the_readme_names_code",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F08",
+    "message": "VertexElementVertexColor class inherits from VertexElementFVector and declares a public constructor.",
+    "origin": {
+     "id": "opening.opening",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexElementVertexColor` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F09",
+    "message": "VertexField class provides vertex field properties including alias, data type, index, offset, semantic, and size.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:vertexfield",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexField` | VertexField class provides vertex field properties including alias, data type, index, offset, semantic, and size. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F10",
+    "message": "VertexFieldDataType enum lists the BYTE_VECTOR4, DOUBLE, FLOAT, F_VECTOR2, F_VECTOR3, F_VECTOR4, INT16, and INT32 data types.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:vertexfielddatatype",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexFieldDataType` | VertexFieldDataType enum lists the BYTE_VECTOR4, DOUBLE, FLOAT, F_VECTOR2, F_VECTOR3, F_VECTOR4, INT16, and INT32 data types. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F11",
+    "message": "VertexFieldSemantic enum lists the BINORMAL, EDGE_CREASE, MORPH_NORMAL, MORPH_POSITION, NORMAL, POSITION, SPECULAR, and TANGENT semantics.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:vertexfieldsemantic",
+     "kind": "authored_unit"
+    },
+    "quote": "| `VertexFieldSemantic` | VertexFieldSemantic enum lists the BINORMAL, EDGE_CREASE, MORPH_NORMAL, MORPH_POSITION, NORMAL, POSITION, SPECULAR, and TANGENT semantics. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F12",
+    "message": "Watermark class is not implemented.",
+    "origin": {
+     "id": "api_table_row:Watermark",
+     "kind": "unresolved"
+    },
+    "quote": "| `Watermark` | Not implemented. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|unresolved|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F13",
+    "message": "The `Scene` class loads files or buffers via `Scene.fromFile` or `Scene.openFromBuffer`, saves output via `Scene.save` or `Scene.saveToBuffer`, and exposes the node hierarchy through its rootNode property.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:scene",
+     "kind": "authored_unit"
+    },
+    "quote": "The `Scene` class loads files or buffers via `Scene.fromFile` or `Scene.openFromBuffer`, saves output via `Scene.save` or `Scene.saveToBuffer`, and exposes the node hierarchy through its rootNode property.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F14",
+    "message": "The `Node` class represents an element in the scene graph, supporting child nodes via `Node.addChildNode` and `Node.childNodes`, entities via `Node.addEntity` and `Node.entities`, and world-space transform computation via `Node.globalTransform`.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:node",
+     "kind": "authored_unit"
+    },
+    "quote": "The `Node` class represents an element in the scene graph, supporting child nodes via `Node.addChildNode` and `Node.childNodes`, entities via `Node.addEntity` and `Node.entities`, and world-space transform computation via `Node.globalTransform`.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F15",
+    "message": "The `Mesh` class manages polygon geometry through its controlPoints array and polygon definitions created via `Mesh.createPolygon`, and converts polygons to triangles via `Mesh.triangulate` before export.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:mesh",
+     "kind": "authored_unit"
+    },
+    "quote": "The `Mesh` class manages polygon geometry through its controlPoints array and polygon definitions created via `Mesh.createPolygon`, and converts polygons to triangles via `Mesh.triangulate` before export.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F16",
+    "message": "The `Material` class and its subclasses `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` provide surface appearance definitions, with `Material.getTexture` and `Material.setTexture` supporting texture assignment.",
+    "origin": {
+     "id": "api_reference.hub:public_symbol:material",
+     "kind": "authored_unit"
+    },
+    "quote": "The `Material` class and its subclasses `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` provide surface appearance definitions, with `Material.getTexture` and `Material.setTexture` supporting texture assignment.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
    {
     "facts_defects": [],
     "label": "BC-14",
@@ -251,8 +412,8 @@
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
-  "run_id": "44349049455",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349049455",
+  "run_id": "44556434801",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556434801",
   "schema_version": 1,
   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
