@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "8fac8aeb8c2a421288c5a4e6b7b5db3b",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-19T18:01:28.582707+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44581487597",
     "acquired_at": "2026-11-19T17:51:59.653929+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "7a311e4a1034480abc948fec06823fc8",
+    "transition_id": "9a585d6982c5485b99303be11e26f3eb",
     "transaction_id": "8fac8aeb8c2a421288c5a4e6b7b5db3b",
     "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-19T15:51:36.527786+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-19T18:01:28.091220+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
     "output_manifest": "candidates/aspose-barcode-foss__Aspose.BarCode-FOSS-for-Python/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 49,
+  "state_version": 50,
   "recent_trigger_dedup_keys": {
     "run:41130099384:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "d6359e88b22f4a22b5dccadc051b4f39",
     "run:41295852203:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "81a03b4a7a3e42c682358a2960d2fa81",
