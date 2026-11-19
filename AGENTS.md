@@ -286,3 +286,12 @@ Two tiers, by kind of work, not by size:
 This mechanism already existed (`ops/gatecli.py`, `ops/gateverify.py`, built 2026-10-21) and was
 exercised exactly once (`TC-000`, a smoke test) before going dormant — the gap was data, not
 code. `project/taskcards/TC-001.yaml` through `TC-012.yaml` are the first real use of it since.
+
+## Worktree trap: verify the tree you think you are verifying (2026-11-19)
+
+`repo-presenter` is installed editable and points at the main checkout. Inside a git worktree,
+`python -m repo_presenter...` therefore imports the **main checkout's** `src`, not the worktree's, unless
+`PYTHONPATH=$PWD/src` is set. `pytest` is not affected (`pyproject.toml` sets `pythonpath = ["src"]`). Every
+`recertify`, `gatecli` or other `python -m repo_presenter` run in a worktree must export `PYTHONPATH=$PWD/src`, and
+a verification report must name the tree it ran against (check `python -c "import repo_presenter; print(repo_presenter.__file__)"`).
+Found when a supervisor recertify of the BL-240 fix imported main's code and reported the opposite of the truth.
