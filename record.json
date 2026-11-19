@@ -44,254 +44,80 @@
    "run_id": "44291568502",
    "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:23:18+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44557177660",
+   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T11:36:40+00:00",
+  "at": "2026-11-19T16:23:18+00:00",
   "classes": {
-   "BC-04|unresolved|code_span_q_is": {
-    "example": "code span 'examples' is not a fact value",
+   "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
     "findings": 1,
-    "origin_kind": "unresolved",
+    "origin_kind": "job_error",
     "origins": [
-     "-"
+     "OutputRejectedError"
     ],
-    "rule": "BC-04",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
+    "rule": "job_error",
+    "scope": "cc9dc0080ae9f3e3c61a7594cbfc7376e1c01b14e250fc72f868653238793283",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
      "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "code_span_q_is",
-    "upstream": ""
-   },
-   "BC-14|unresolved|the_readme_calls_code": {
-    "example": "the README calls `Workbook.LoadDiagnostics` a method ('The Workbook class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via DefinedNames, document properties via DocumentProperties, workbook-level settings via Settings, and utility methods such as EnsureUniqueDefinedName, EnsureUniqueSheetName, LoadDiagnostics, and Dispose.'), but the facts record it as a property, field or constant; call it by its kind",
-    "findings": 3,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-14",
-    "scope": "06d129873c642b1c7bcccb792288c7754a55ad7907deae387f08172f3f083725",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_calls_code",
-    "upstream": ""
-   },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:037.table holds api_identifiers 'Protection', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:037.table"
-    ],
-    "rule": "BC-17",
-    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   "claim_contradiction|authored_unit|member_kind": {
-    "example": "The `Workbook` class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via `DefinedNames`, document properties via `DocumentProperties`, workbook-level settings via Settings, and utility methods such as `EnsureUniqueDe",
-    "findings": 3,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "api_reference.hub:public_symbol:workbook",
-     "api_reference.hub:public_symbol:legacyworksheet.setrowheight"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "647ae956d83d7825eb2e052af4c21c59998f22108512bfb33165c1a220e79626",
-    "scope_paths": [
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "member_kind",
+    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `Workbook.LoadDiagnostics` a method ('The Workbook class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via DefinedNames, document properties via DocumentProperties, workbook-level settings via Settings, and utility methods such as EnsureUniqueDefinedName, EnsureUniqueSheetName, LoadDiagnostics, and Dispose.'), but the facts record it as a property, field or constant; call it by its kind); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README calls `LegacyWorksheet.defaultRowHeight` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout m",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "claim_contradiction",
-    "message": "line 304 (COMPOSING): the README calls `Workbook.LoadDiagnostics` a method ('The Workbook class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via DefinedNames, document properties via DocumentProperties, workbook-level settings via Settings, and utility methods such as EnsureUniqueDefinedName, EnsureUniqueSheetName, LoadDiagnostics, and Dispose.'), but the facts record it as a property, field or constant; call ",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
     "origin": {
-     "id": "api_reference.hub:public_symbol:workbook",
-     "kind": "authored_unit"
-    },
-    "quote": "The `Workbook` class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via `DefinedNames`, document properties via `DocumentProperties`, workbook-level settings via Settings, and utility methods such as `EnsureUniqueDe",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|authored_unit|member_kind",
-    "source": "review",
-    "sub_rule": "member_kind",
-    "upstream": ""
-   },
-   {
-    "label": "claim_contradiction",
-    "message": "line 374 (COMPOSING): the README calls `LegacyWorksheet.defaultRowHeight` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, and setAutoFilter.'), but the facts record it as a property, field or constant; call it by its kind",
-    "origin": {
-     "id": "api_reference.hub:public_symbol:legacyworksheet.setrowheight",
-     "kind": "authored_unit"
-    },
-    "quote": "The `LegacyWorksheet.setRowHeight` method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, ",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|authored_unit|member_kind",
-    "source": "review",
-    "sub_rule": "member_kind",
-    "upstream": ""
-   },
-   {
-    "label": "claim_contradiction",
-    "message": "line 374 (COMPOSING): the README calls `LegacyWorksheet.defaultColumnWidth` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, and setAutoFilter.'), but the facts record it as a property, field or constant; call it by its kind",
-    "origin": {
-     "id": "api_reference.hub:public_symbol:legacyworksheet.setrowheight",
-     "kind": "authored_unit"
-    },
-    "quote": "The `LegacyWorksheet.setRowHeight` method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, ",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|authored_unit|member_kind",
-    "source": "review",
-    "sub_rule": "member_kind",
-    "upstream": ""
-   },
-   {
-    "label": "BC-04",
-    "message": "code span 'examples' is not a fact value",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "OutputRejectedError",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-04",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "BC-04|unresolved|code_span_q_is",
-    "source": "validation",
-    "sub_rule": "code_span_q_is",
-    "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README calls `Workbook.LoadDiagnostics` a method ('The Workbook class serves as the top-level container, providing load and save methods, access to worksheets via the Worksheets property, defined names via DefinedNames, document properties via DocumentProperties, workbook-level settings via Settings, and utility methods such as EnsureUniqueDefinedName, EnsureUniqueSheetName, LoadDiagnostics, and Dispose.'), but the facts record it as a property, field or constant; call it by its kind",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_calls_code",
-    "source": "validation",
-    "sub_rule": "the_readme_calls_code",
-    "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README calls `LegacyWorksheet.defaultRowHeight` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, and setAutoFilter.'), but the facts record it as a property, field or constant; call it by its kind",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_calls_code",
-    "source": "validation",
-    "sub_rule": "the_readme_calls_code",
-    "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README calls `LegacyWorksheet.defaultColumnWidth` a method ('The LegacyWorksheet.setRowHeight method sets the height of a specific row, with additional row and column layout methods including setColumnWidth, isRowHidden, setRowHidden, getRowHeight, getColumnWidth, defaultRowHeight, defaultColumnWidth, mergeCells, unmergeCells, autoFilter, removeAutoFilter, and setAutoFilter.'), but the facts record it as a property, field or constant; call it by its kind",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_calls_code",
-    "source": "validation",
-    "sub_rule": "the_readme_calls_code",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:037.table holds api_identifiers 'Protection', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:037.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R02 claims 'api_hubs.0.fact_ids' changed ('  ,  ' to '  '), but the causal stage's own input and this revision hold the identical value there; revised_output: change R03 claims 'api_hubs.0.fact_ids' changed ('  ,  ' to '  '), but the causal stage's own input and this revision hold the identical value there; revised_output: change R04 claims 'api_hubs.0.fact_ids' changed ('  ,  ' to '  '), but the causal stage's own in",
-    "section_id": null,
-    "stage": "S5"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
+    "label": "BC-05",
     "outcome": "repaired",
     "reason": "",
     "section_id": null,
@@ -307,16 +133,16 @@
    },
    {
     "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
-    "outcome": "escalated",
-    "reason": "the revision cites public_symbol:legacyworksheet.addhyperlink outside the slot's planned facts; escalated once to a plan-level repair at S5",
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5+claim_contradiction:6+claim_contradiction:7+claim_contradiction:8+claim_contradiction:9+claim_contradiction:10+claim_contradiction:11+claim_contradiction:12",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": "api_reference",
-    "stage": "S6"
+    "stage": "S4"
    }
   ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
-  "run_id": "44291568502",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44291568502",
+  "run_id": "44557177660",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44557177660",
   "schema_version": 1,
   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
