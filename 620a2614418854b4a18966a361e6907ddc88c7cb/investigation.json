@@ -1,0 +1,305 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "example:001",
+      "example:002",
+      "example:003",
+      "example:004",
+      "example:005",
+      "example:006",
+      "example:008",
+      "example:010",
+      "example:011",
+      "example:012"
+    ],
+    "text": "Developers who generate or modify PowerPoint presentations on servers or in build pipelines and need a lightweight, MIT-licensed dependency that operates entirely within the Office Open XML format."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Create new presentations or load existing .pptx files using Presentation, then modify slides, shapes, and content before saving in PPTX, PPSX, or POTX formats.",
+      "title": "Create and edit presentations"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:012"
+      ],
+      "text": "Insert AutoShapes, PictureFrames, Tables, and Connectors via ShapeCollection methods, with 190 ShapeType values supported and full formatting control.",
+      "title": "Add and format shapes"
+    },
+    {
+      "fact_ids": [
+        "example:011"
+      ],
+      "text": "Apply character, paragraph, and text frame formatting via PortionFormat, ParagraphFormat, and TextFrameFormat to control font, size, color, alignment, and spacing.",
+      "title": "Format text content"
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "text": "Enable eight visual effects—outer shadow, inner shadow, glow, soft edge, reflection, blur, preset shadow, and fill overlay—via EffectFormat methods.",
+      "title": "Apply visual effects"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:006"
+      ],
+      "text": "Add threaded comments with authors, timestamps, and positions via CommentAuthor and CommentCollection; manage speaker notes via NotesSlideManager.",
+      "title": "Manage comments and notes"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Embed images from files, byte arrays, or InputStreams via ImageCollection.addImage() and attach them to slides using addPictureFrame().",
+      "title": "Embed images"
+    },
+    {
+      "fact_ids": [
+        "example:008"
+      ],
+      "text": "Add, insert, remove, and clone slides via SlideCollection methods including addClone(), addEmptySlide(), insertEmptySlide(), and removeAt().",
+      "title": "Clone and manage slides"
+    },
+    {
+      "fact_ids": [
+        "example:004"
+      ],
+      "text": "Configure core, app, and custom document properties via DocumentProperties including title, author, subject, keywords, and category.",
+      "title": "Set document properties"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "No support for charts, SmartArt, OLE objects, video, audio, animations, slide transitions, group shapes, hyperlinks, sections, slide backgrounds, themes, or slide size configuration."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Save() only supports PPTX, PPSX, and POTX; all other SaveFormat values raise UnsupportedOperationException with a clear message."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Cloning a master slide via getMasters().addClone() has a known defect: the clone does not persist to the saved package despite the collection size increasing."
+    },
+    {
+      "fact_ids": [
+        "example:012"
+      ],
+      "text": "Table.mergeCells() requires an XML-backed table and cannot merge cells on tables built without a backing OOXML element."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Text language attributes are not written to the package; PowerPoint applies the authoring machine's default language instead."
+    },
+    {
+      "fact_ids": [
+        "package:published_version",
+        "package:version"
+      ],
+      "text": "Version 26.7.0 lacks secure XML parsing; builds from source are recommended for untrusted input due to potential XXE vulnerabilities."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Enables server-side PowerPoint presentation generation and modification without Microsoft Office, COM automation, or native code dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Preserves unknown XML content during round-trip operations, ensuring no silent data loss when loading and saving presentations."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "text": "Provides a pure Java API for manipulating slides, shapes, text, comments, notes, and document properties with full control over formatting and layout."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "package:name",
+      "package:published_version",
+      "package:version"
+    ],
+    "text": "Aspose.Slides FOSS for Java is a pure Java, open-source library for creating, reading, and editing PowerPoint .pptx presentations without requiring Microsoft Office or native dependencies."
+  },
+  "uncertainties": [
+    "The exact set of XML parts preserved during round-tripping beyond the measured 41-part deck is not specified.",
+    "Whether the library supports reading or writing VBA macros is not explicitly stated beyond refusal to write macro-enabled formats.",
+    "The behavior of save() with invalid or missing output paths beyond IOException is not detailed.",
+    "Whether Table.mergeCells() works with tables created programmatically without XML backing is unclear.",
+    "The exact behavior of clone operations on layout slides beyond master slides is not described.",
+    "Whether threaded comment replies beyond setParentComment() are fully supported is not detailed.",
+    "The handling of embedded fonts or custom font substitution is not described.",
+    "Whether the library supports reading or writing digital signatures is not specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "name": "Build and test",
+      "text": "Run `mvn package` to build the jar, sources jar, javadoc jar, and CycloneDX SBOM; run `mvn test` to execute all unit, integration, and conformance tests."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix"
+      ],
+      "name": "Continuous integration",
+      "text": "CI runs on Ubuntu, Windows, and macOS with Java 21 and 25 on every push and pull request using workflows in .github/workflows/."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow",
+        "package:name",
+        "package:published_version",
+        "package:version"
+      ],
+      "name": "Release to Maven Central",
+      "text": "Releases are published via .github/workflows/maven-central-release.yml and published as org.aspose:aspose-slides-foss:26.7.0."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012"
+      ],
+      "name": "Create a presentation",
+      "text": "Instantiate Presentation, add shapes and formatting, then save to .pptx, .ppsx, or .potx using save(path, format) or save(stream, format)."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "name": "Add threaded comments",
+      "text": "Create CommentAuthor instances, add comments with timestamps and positions via CommentCollection.addComment(), and support replies via setParentComment()."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:005",
+        "example:011"
+      ],
+      "name": "Format text and shapes",
+      "text": "Apply solid, gradient, pattern, or picture fills via FillFormat; configure line properties via LineFormat; and enable visual effects via EffectFormat."
+    }
+  ]
+}
