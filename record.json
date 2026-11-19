@@ -77,11 +77,23 @@
    "run_id": "44366304864",
    "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T15:39:57+00:00",
+   "classes": [
+    "BC-08|inherited_unit|id_verified_preserve_keeps_the"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44556840215",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T18:10:48+00:00",
+  "at": "2026-11-19T15:39:57+00:00",
   "classes": {
    "BC-08|inherited_unit|id_verified_preserve_keeps_the": {
     "example": "inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command 'make\\nbuild' but the candidate does not render it",
@@ -91,7 +103,7 @@
      "inherited_unit:092.paragraph"
     ],
     "rule": "BC-08",
-    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
+    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -104,76 +116,18 @@
     ],
     "sub_rule": "id_verified_preserve_keeps_the",
     "upstream": ""
-   },
-   "BC-14|inherited_unit|the_readme_says_its": {
-    "example": "the README says its count of public types is listed in what follows, but the table rows that follow list only 74; state the count of what is listed, or list every type",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:058.paragraph"
-    ],
-    "rule": "BC-14",
-    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
-   "claim_contradiction|inherited_unit|the_readme_says_its": {
-    "example": "`RenderDocument` model. The public API surface includes 139 types, organized by module below.",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:058.paragraph"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "8a9f2cf406a1181874967928a4d5f231ea419c5cb2fb198de13902d1b5f3a744",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says its count of public types is listed in what follows, but the table rows that follow list only 74; state the count of what is listed, or list every type)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-08; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
-   {
-    "label": "claim_contradiction",
-    "message": "line 430 (COMPOSING): the README says its count of public types is listed in what follows, but the table rows that follow list only 74; state the count of what is listed, or list every type",
-    "origin": {
-     "id": "inherited_unit:058.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "`RenderDocument` model. The public API surface includes 139 types, organized by module below.",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|the_readme_says_its",
-    "source": "review",
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
    {
     "label": "BC-08",
     "message": "inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command 'make\\nbuild' but the candidate does not render it",
@@ -188,25 +142,10 @@
     "source": "validation",
     "sub_rule": "id_verified_preserve_keeps_the",
     "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README says its count of public types is listed in what follows, but the table rows that follow list only 74; state the count of what is listed, or list every type",
-    "origin": {
-     "id": "inherited_unit:058.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|inherited_unit|the_readme_says_its",
-    "source": "validation",
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -228,8 +167,8 @@
    }
   ],
   "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-  "run_id": "44366304864",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44366304864",
+  "run_id": "44556840215",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556840215",
   "schema_version": 1,
   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
