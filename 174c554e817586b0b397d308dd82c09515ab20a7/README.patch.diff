@@ -1,0 +1,315 @@
+--- a/README.md
++++ b/README.md
+@@ -1,36 +1,96 @@
+-# Aspose.PSD FOSS Java
+-
+-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.aspose.psd/aspose-psd-foss-java/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.aspose.psd/aspose-psd-foss-java)
+-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+-
+-FOSS implementation of Aspose.PSD for Java - A high-performance API for working with PSD and PSB files.
+-
+-## Getting started
++# Aspose.PSD FOSS for Java
++
++![Java](https://img.shields.io/badge/java-11%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
++
++It reads and writes PSD and PSB files, and preserves their structure during save operations.
+ 
+ This project is a FOSS (Free and Open Source Software) implementation of Aspose.PSD for Java, providing a high-performance API for working with PSD and PSB files.
+ 
+-### Prerequisites
+-
+-- Java 11 or higher
+-- Maven 3.6 or higher
++## Navigation
++
++- [At a Glance](#at-a-glance)
++- [Key Capabilities](#key-capabilities)
++- [Installation](#installation)
++- [Dependencies](#dependencies)
++- [Quick Start](#quick-start)
++- [API Reference](#api-reference)
++- [Documentation & Resources](#documentation--resources)
++- [Scope and Limitations](#scope-and-limitations)
++- [Development and Testing](#development-and-testing)
++- [License](#license)
++
++## At a Glance
++
++```mermaid
++flowchart TB
++  PRODUCT["Aspose.PSD FOSS for Java"]
++  subgraph Capabilities["Core Capabilities"]
++    direction TB
++    c1["PSD/PSB file parsing"]
++    c2["Layer and resource<br/>handling"]
++    c3["Compression support"]
++    c4["Color mode support"]
++    c5["Byte-exact round-trip"]
++    c6["Maven-based build"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++  end
++  PRODUCT --> Capabilities
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
++```
++
++## Key Capabilities
++
++- **PSD/PSB file parsing.** It parses PSD and PSB files, reading their structure and metadata to prepare them for inspection or modification.
++- **Layer and resource handling.** It exposes layer and resource objects through the `org.aspose.psd` namespace, enabling programmatic access to layer properties and embedded resources.
++- **Compression support.** It supports multiple compression types used in PSD and PSB files, including RLE, ZIP, and no compression, preserving the original encoding during load and save operations.
++- **Color mode support.** It handles various color modes such as RGB, CMYK, Grayscale, and Indexed, maintaining color integrity throughout the processing pipeline.
++- **Byte-exact round-trip.** It preserves all unmodified sections of the file during save, ensuring that only changed data is rewritten while the rest remains identical.
++- **Maven-based build.** It uses Maven for building and testing, with mvn package for compilation and packaging and mvn test for running the test suite.
++
++This example demonstrates loading, basic inspection, a simple modification, and saving.
+ 
+ ## Installation
+ 
+-### Maven
+-
+-Add the following dependency to your `pom.xml`:
++Install the published package from Maven Central (`org.aspose:aspose-psd-foss`, version 26.11.0):
++
++```bash
++mvn dependency:get -Dartifact=org.aspose:aspose-psd-foss:26.11.0
++```
++
++Or declare it in Maven:
+ 
+ ```xml
+ <dependency>
+-    <groupId>org.aspose.psd</groupId>
+-    <artifactId>aspose-psd-foss-java</artifactId>
+-    <version>1.0.0</version>
++  <groupId>org.aspose</groupId>
++  <artifactId>aspose-psd-foss</artifactId>
++  <version>26.11.0</version>
+ </dependency>
+ ```
+ 
++Or declare it in Gradle:
++
++```groovy
++implementation 'org.aspose:aspose-psd-foss:26.11.0'
++```
++
++## Dependencies
++
++### Required Package Dependencies
++
++No required third-party package dependencies; in `pom.xml`, every `<dependency>` the POM declares is `test`, `provided` or optional.
++
++### Native and System Requirements
++
++- Requires Java `11` (`maven.compiler.release` in `pom.xml`).
++
++### Development Dependencies
++
++- `org.junit.jupiter:junit-jupiter 5.10.2`
++
+ ## Quick Start
+-
+-Below is a simple example of how to load a PSD file, inspect its layers, and save it back preserving all original data.
+ 
+ ```java
+ import org.aspose.psd.ImageLoadOptions;
+@@ -63,14 +123,106 @@
+ }
+ ```
+ 
+-This example demonstrates loading, basic inspection, a simple modification, and saving. The library preserves all unmodified sections, ensuring a byte‑exact round‑trip.
++## API Reference
++
++Aspose.PSD FOSS for Java provides the `org.aspose.psd` package as its primary entry point for reading, writing, and manipulating PSD files. The package exposes core classes such as `PsdImage` for loading and saving documents and `Layer` for working with individual layers.
++
++The public API has 60 types.
++
++<details>
++<summary>View the Complete Public API Surface</summary>
++
++### Core API
++
++| Class | Description |
++| --- | --- |
++| `BigEndianReader` | Reads big-endian data from a stream. |
++| `BigEndianWriter` | Writes big-endian data to a stream. |
++| `Image` | Provides the Aspose.PSD-compatible base image entry point for loading PSD/PSB documents. |
++| `ImageLoader` | Provides the Load functionality for Images |
++| `LayerAndMaskSectionReader` | Reads PSD/PSB Layer and Mask Information sections. |
++| `LayerAndMaskSectionWriter` | Writes PSD/PSB Layer and Mask Information sections. |
++| `Point` | Represents an ordered pair of integer x- and y-coordinates that defines a point in a two-dimensional plane. |
++| `PsdImage` | Represents a PSD image that can be loaded, inspected, and saved without rendering. |
++| `PsdSectionReader` | Provides bounded reads for PSD/PSB sections that are stored in memory by this implementation. |
++| `Rectangle` | Stores a set of four integers that represent the location and size of a rectangle. |
++| `RectangleF` | Stores a set of four floating-point numbers that represent the location and size of a rectangle. |
++| `ResourceBlock` | Represents a PSD image resource block. |
++| `Size` | Represents an ordered pair of integer width and height values that defines a size. |
++| `StreamContainer` | Represents a stream container used by resource save APIs. |
++| `PsdLoadException` | Exception that is thrown when an error occurs while loading a PSD file. |
++| `PsdSaveException` | Exception that is thrown when an error occurs while saving a PSD file. |
++| `BlendRange` | Represents a PSD layer blend range. |
++| `ChannelInformation` | ChannelInformation class holds the channel identifier, compression method, and length of a channel. |
++| `GlobalLayerMaskInfo` | Represents global layer mask information. |
++| `Layer` | Represents a single PSD layer with basic metadata used by the FOSS library. |
++| `LayerBlendModeMapper` | LayerBlendModeMapper class provides the NORMAL_BLEND_MODE_KEY constant and methods to get and parse blend mode keys. |
++| `LayerBlendingRangesData` | Represents PSD layer blending ranges data. |
++| `LayerBlendingRangesInfo` | Provides a read-only summary of the parsed layer blending ranges subsection. |
++| `LayerChannelInfo` | Stores one channel metadata entry from a layer record. |
++| `LayerMaskData` | Defines the base class for PSD layer mask data. |
++| `LayerMaskDataShort` | Defines layer mask data for layers that have only a raster or vector mask. |
++| `LayerMaskInfo` | Provides a read-only summary of the parsed layer mask subsection. |
++| `LayerRawData` | Holds raw layer data parsed from a PSD file. |
++| `LayerRecordReader` | LayerRecordReader class provides a load method that reads layer records and throws PsdLoadException conditionally. |
++| `LayerRecordWriter` | Writes PSD/PSB layer records from the in-memory Layer model. |
++| `LayerResource` | Represents a PSD layer resource. |
++| `PsdLayerChannelInfo` | Provides a read-only summary of one parsed layer channel record. |
++| `RawLayerMaskSection` | RawLayerMaskSection class provides the EMPTY field, a constructor, an empty method, load method, rawBytes and rawData properties, getRawBytes and getRawData methods that return a defensive copy of the raw mask section bytes, and throws PsdLoadException and RuntimeException conditionally. |
++| `PsdImageLoader` | PsdImageLoader class provides a load method that throws PsdLoadException conditionally. |
++| `ImageResourceIds` | Provides common PSD image resource identifiers used by tests and fixtures. |
++| `IndexedColorPalette` | IndexedColorPalette class provides the EXPECTED_RAW_LENGTH field, a constructor, entries property, getEntries method, parse method that throws IllegalArgumentException conditionally, and toPublicInfo method. |
++| `IndexedColorPaletteInfo` | Provides a read-only view over an indexed-color PSD palette. |
++| `PreservedResourceBlock` | Adapts a raw-preserved image resource to the official ResourceBlock surface. |
++| `PsdResourceInfo` | Provides a read-only summary of one parsed PSD image resource block. |
++| `UnknownResource` | Represents a parsed PSD image resource block without any ID-specific semantics. |
++| `ColorData` | Represents the Color Mode Data section of a PSD file. |
++| `ImageData` | Stores the PSD Image Data section as a compression header plus raw payload bytes. |
++| `ImageDataStructure` | Describes the validated structural layout of the PSD Image Data payload. |
++| `ImageResourcesSection` | ImageResourcesSection class provides the EMPTY field, rawData and resources properties, getRawData, getResources, hasResources, load, and save methods. |
++| `LayerAndMaskSection` | Represents the PSD/PSB Layer and Mask Information section and its raw-preserved save state. |
++| `PsdColorDataInfo` | Provides a read-only view over the Color Mode Data section. |
++| `PsdHeader` | Contains the header information of a Photoshop document. |
++| `PsdImageDataInfo` | Provides a read-only summary of the PSD merged image data structure. |
++| `PsdImageDocumentState` | Stores parsed PSD/PSB document sections used by PsdImage. |
++| `PsdImageWriter` | PsdImageWriter class provides a save method that throws IOException and RuntimeException conditionally. |
++
++#### Enumerations
++
++| Enumeration | Description |
++| --- | --- |
++| `ColorModes` | Defines the color modes supported by PSD files. |
++| `CompressionMethod` | Defines the compression methods used for image data in PSD files. |
++| `PsdVersion` | Represents the supported PSD container versions. |
++| `ResourceBlockState` | Represents resource block state. |
++| `BlendMode` | Defines the blend modes used for layers in PSD files. |
++| `LayerMaskFlags` | LayerMaskFlags enum lists the Disabled, InvertedWhenBlending, None, RelativeToLayer, UserMaskFromRenderingOtherData, and UserOrVectorMasksHaveParameters flag values. |
++| `PsdResourceKind` | Identifies the semantic classification exposed for an image resource block. |
++| `ImageDataKind` | Identifies the structural shape of the PSD Image Data payload. |
++| `PsdColorDataKind` | Describes how the Color Mode Data payload was interpreted for the loaded document. |
++| `SeekOrigin` | SeekOrigin enum lists the BEGIN, CURRENT, and END seek origin values. |
++
++#### Detailed Member Reference
++
++### org
++
++The org namespace serves as the root package for Aspose.PSD FOSS for Java and contains the `org.aspose` subpackage.
++
++### aspose
++
++The `org.aspose` namespace organizes Aspose product families and includes the `org.aspose.psd` subpackage for PSD file processing.
++
++### psd
++
++The `org.aspose.psd` namespace provides classes for working with Adobe Photoshop PSD files, including `PsdImage` for document loading and saving, and `Layer` for layer management.
++
++</details>
+ 
+ ## Documentation & Resources
+ 
+-* **[API Reference (Javadoc)](https://javadoc.io/doc/org.aspose.psd/aspose-psd-foss-java/latest/index.html)** – Detailed Javadoc for all public classes and methods.
+-* **[Getting Started Guide](https://products.aspose.org/psd/java/)** – Overview of loading, inspection and saving in Java.
+-* **[Knowledge Base](https://kb.aspose.org/psd/java/)** – FAQs, troubleshooting and how‑to articles.
+-* **[GitHub Repository](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)** – Source code, issue tracker and contribution guide.
++- **[API Reference (Javadoc)](https://javadoc.io/doc/org.aspose.psd/aspose-psd-foss-java/latest/index.html)** — Detailed Javadoc for all public classes and methods.
++- **[GitHub Repository](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)** — Source code, issue tracker and contribution guide.
++- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java/issues).
+ 
+ ## Scope and Limitations
+ 
+@@ -80,7 +232,43 @@
+ * **Color mode support** – Indexed palette, RGB and CMYK payloads are parsed; other modes are preserved as raw data.
+ * **Compression** – RAW, RLE and ZIP (with/without prediction) image data structures are supported.
+ 
++ - Project URL: [https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)
++- Email: psd@aspose.com
++
++<details>
++<summary>View Other Unimplemented Members</summary>
++
++- `PsdImage`: `setActiveLayer`, `setGlobalLayerResources`, `setHasTransparencyData` and `setImageResources` throw UnsupportedOperationException.
++- `Layer`: `setChannelInformation`, `setLayerBlendingRangesData` and `setLayerMaskData` throw UnsupportedOperationException.
++- `BigEndianWriter`: `seek` throws UnsupportedOperationException.
++
++</details>
++
++See [Aspose.PSD for Java — Enterprise Edition](https://products.aspose.com/psd/java/). The commercial product adds support for additional file formats, advanced layer editing, and export options not implemented in this package.
++
+ ## Development and Testing
++
++The suite covers 10 test files under `test/`. Releases run through the [maven-central-release workflow](.github/workflows/maven-central-release.yml).
++
++To build and run the tests from a clone, run:
++
++```bash
++mvn package
++mvn test
++```
++
++- Java 11 or higher
++- Maven 3.6 or higher
++
++```xml
++<dependency>
++    <groupId>org.aspose.psd</groupId>
++    <artifactId>aspose-psd-foss-java</artifactId>
++    <version>1.0.0</version>
++</dependency>
++```
++
++Below is a simple example of how to load a PSD file, inspect its layers, and save it back preserving all original data.
+ 
+ To build and run the test suite locally:
+ 
+@@ -94,28 +282,19 @@
+ ```
+ 
+ The test suite includes unit tests for header parsing, color data, image data structures, layer handling, resource parsing, and byte‑exact round‑trip verification.
+-## Building from source
+-
+-### Clone the repository
+ 
+ ```bash
+  git clone https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java.git
+  cd Aspose.PSD-FOSS-for-Java
+ ```
+ 
+-### Build the project
+-
+ ```bash
+ mvn clean install
+ ```
+ 
+-### Build Javadoc
+-
+ ```bash
+ mvn javadoc:javadoc
+ ```
+-
+-## Contributing
+ 
+ We welcome contributions! Please follow these steps:
+ 
+@@ -127,9 +306,4 @@
+ 
+ ## License
+ 
+-This project is licensed under the MIT License.
+-
+-## Contact
+-
+- - Project URL: [https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Java)
+-- Email: psd@aspose.com
++This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.

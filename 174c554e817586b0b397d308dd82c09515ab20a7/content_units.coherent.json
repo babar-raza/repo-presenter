@@ -1,0 +1,224 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "opening/opening"
+    ]
+  },
+  "omitted": [],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:005.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It reads and writes PSD and PSB files, and preserves their structure during save operations."
+    },
+    {
+      "fact_ids": [
+        "identity:family",
+        "package:name",
+        "package:version"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It parses PSD and PSB files, reading their structure and metadata to prepare them for inspection or modification."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It exposes layer and resource objects through the org.aspose.psd namespace, enabling programmatic access to layer properties and embedded resources."
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It supports multiple compression types used in PSD and PSB files, including RLE, ZIP, and no compression, preserving the original encoding during load and save operations."
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It handles various color modes such as RGB, CMYK, Grayscale, and Indexed, maintaining color integrity throughout the processing pipeline."
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It preserves all unmodified sections of the file during save, ensuring that only changed data is rewritten while the rest remains identical."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "install_command:maven"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It uses Maven for building and testing, with mvn package for compilation and packaging and mvn test for running the test suite."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:java_release",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.PSD FOSS for Java provides the org.aspose.psd package as its primary entry point for reading, writing, and manipulating PSD files. The package exposes core classes such as PsdImage for loading and saving documents and Layer for working with individual layers."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:org",
+      "text": "The org namespace serves as the root package for Aspose.PSD FOSS for Java and contains the org.aspose subpackage."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:org.aspose",
+      "text": "The org.aspose namespace organizes Aspose product families and includes the org.aspose.psd subpackage for PSD file processing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:org.aspose.psd",
+      "text": "The org.aspose.psd namespace provides classes for working with Adobe Photoshop PSD files, including PsdImage for document loading and saving, and Layer for layer management."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:java_release",
+        "package:name",
+        "package:published_version",
+        "package:version"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "The commercial product adds support for additional file formats, advanced layer editing, and export options not implemented in this package."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.layers.channelinformation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.channelinformation",
+      "text": "ChannelInformation class holds the channel identifier, compression method, and length of a channel."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.layers.layerblendmodemapper"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layerblendmodemapper",
+      "text": "LayerBlendModeMapper class provides the NORMAL_BLEND_MODE_KEY constant and methods to get and parse blend mode keys."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.layers.layermaskflags"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layermaskflags",
+      "text": "LayerMaskFlags enum lists the Disabled, InvertedWhenBlending, None, RelativeToLayer, UserMaskFromRenderingOtherData, and UserOrVectorMasksHaveParameters flag values."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.layers.layerrecordreader.load.body.psdloadexception",
+        "public_symbol:org.aspose.psd.layers.layerrecordreader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layerrecordreader",
+      "text": "LayerRecordReader class provides a load method that reads layer records and throws PsdLoadException conditionally."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.layers.rawlayermasksection.load.body.psdloadexception",
+        "implementation:throws.org.aspose.psd.layers.rawlayermasksection.load.body.runtimeexception",
+        "public_symbol:org.aspose.psd.layers.rawlayermasksection",
+        "public_symbol:org.aspose.psd.layers.rawlayermasksection.getrawbytes",
+        "public_symbol:org.aspose.psd.layers.rawlayermasksection.rawbytes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.rawlayermasksection",
+      "text": "RawLayerMaskSection class provides the EMPTY field, a constructor, an empty method, load method, rawBytes and rawData properties, getRawBytes and getRawData methods that return a defensive copy of the raw mask section bytes, and throws PsdLoadException and RuntimeException conditionally."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.loaders.psdimageloader.load.body.psdloadexception",
+        "public_symbol:org.aspose.psd.loaders.psdimageloader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.loaders.psdimageloader",
+      "text": "PsdImageLoader class provides a load method that throws PsdLoadException conditionally."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.resources.indexedcolorpalette.parse.body.illegalargumentexception",
+        "public_symbol:org.aspose.psd.resources.indexedcolorpalette"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.resources.indexedcolorpalette",
+      "text": "IndexedColorPalette class provides the EXPECTED_RAW_LENGTH field, a constructor, entries property, getEntries method, parse method that throws IllegalArgumentException conditionally, and toPublicInfo method."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.sections.imageresourcessection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.sections.imageresourcessection",
+      "text": "ImageResourcesSection class provides the EMPTY field, rawData and resources properties, getRawData, getResources, hasResources, load, and save methods."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.sections.seekorigin"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.sections.seekorigin",
+      "text": "SeekOrigin enum lists the BEGIN, CURRENT, and END seek origin values."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.writedescriptors.psdimagewriter.save.body.ioexception",
+        "implementation:throws.org.aspose.psd.writedescriptors.psdimagewriter.save.body.runtimeexception",
+        "public_symbol:org.aspose.psd.writedescriptors.psdimagewriter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.writedescriptors.psdimagewriter",
+      "text": "PsdImageWriter class provides a save method that throws IOException and RuntimeException conditionally."
+    }
+  ]
+}

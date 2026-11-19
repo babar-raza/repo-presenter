@@ -1,0 +1,133 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:java_release",
+      "install_command:maven"
+    ],
+    "text": "Java developers building applications that require structural access to PSD and PSB files, especially those needing byte-exact round-trip preservation of file contents."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "identity:family",
+        "package:name",
+        "package:version"
+      ],
+      "text": "The library parses Adobe Photoshop PSD and PSB file formats up to 30,000 px and 300,000 px respectively.",
+      "title": "PSD/PSB file parsing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.psd"
+      ],
+      "text": "Supports reading and writing layer structures and embedded resources while preserving file integrity.",
+      "title": "Layer and resource handling"
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "Handles RAW, RLE, and ZIP (with/without prediction) compression schemes used in image data.",
+      "title": "Compression support"
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "Parses Indexed palette, RGB, and CMYK color modes; other modes are preserved as raw data.",
+      "title": "Color mode support"
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "Modifications preserve unmodified sections to ensure byte-exact round-trip file output.",
+      "title": "Byte-exact round-trip"
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "install_command:maven"
+      ],
+      "text": "Uses Maven for building, testing, and dependency management with standard commands.",
+      "title": "Maven-based build"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "No pixel rendering or rasterization functionality is included; only structural and metadata access is provided."
+    },
+    {
+      "fact_ids": [
+        "identity:family"
+      ],
+      "text": "Mask data and blending ranges are read-only; modification of these elements is not supported."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:family",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Enables parsing and modification of PSD/PSB file structure—including layers, resources, and image data—while preserving original compression and metadata."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "identity:family",
+      "identity:ecosystem",
+      "identity:platform",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.PSD FOSS for Java is a free and open-source Java library for parsing and manipulating Adobe Photoshop PSD and PSB files without pixel rendering."
+  },
+  "uncertainties": [
+    "The exact set of public classes and methods in the org.aspose.psd package is not detailed in the facts.",
+    "Whether PSB files beyond 300,000 px are partially supported is not stated.",
+    "The behavior of the library when encountering unsupported compression types is not specified.",
+    "The extent of resource parsing (e.g., layer effects, styles) is not detailed.",
+    "Whether the library supports multi-threading or concurrent access is not stated.",
+    "The minimum Java version required beyond Java 11 is not confirmed.",
+    "The exact test coverage areas beyond header parsing and layer handling are not detailed.",
+    "Whether the library supports streaming or incremental I/O is not stated."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:build-command",
+        "build_test_asset:tests"
+      ],
+      "name": "Build and test",
+      "text": "Developers run 'mvn test' to execute the test suite and 'mvn package' to build the JAR artifact."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow",
+        "build_test_asset:ci"
+      ],
+      "name": "Release workflow",
+      "text": "The project uses a GitHub Actions workflow at .github/workflows/maven-central-release.yml to publish releases to Maven Central."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven",
+        "package:published_version"
+      ],
+      "name": "Dependency installation",
+      "text": "Developers install the library using Maven with the command 'mvn dependency:get -Dartifact=org.aspose:aspose-psd-foss:26.11.0'."
+    }
+  ]
+}
