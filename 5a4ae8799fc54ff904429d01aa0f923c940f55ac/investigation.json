@@ -1,0 +1,221 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:java_release",
+      "dependency:none"
+    ],
+    "text": "Java developers building server-side or desktop applications that require PDF document generation, manipulation, and conversion without third-party runtime dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:org.aspose.pdf",
+        "public_symbol:org.aspose"
+      ],
+      "text": "Create new documents, add pages, and modify content using Document, Page, and Paragraphs APIs.",
+      "title": "Create and edit PDF documents"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:007",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Create and manipulate AcroForm fields including text boxes, checkboxes, radio buttons, and combo boxes.",
+      "title": "Work with interactive forms"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:008",
+        "example:009",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Add widget annotations, set their border and background colors, and configure border styles.",
+      "title": "Add and manage annotations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose"
+      ],
+      "text": "Render PDF pages to raster formats including BMP, GIF, JPEG, PNG, and multi-page TIFF.",
+      "title": "Render pages to images"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose"
+      ],
+      "text": "Extract plain text from pages using TextAbsorber and images using PdfExtractor.",
+      "title": "Extract text and images"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose"
+      ],
+      "text": "Apply AES or RC4 encryption with user and owner passwords, and sign documents with PKCS#7 signatures.",
+      "title": "Encrypt and sign documents"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose"
+      ],
+      "text": "Reduce file size through stream recompression, duplicate linking, and resource subsetting.",
+      "title": "Optimize document size"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose"
+      ],
+      "text": "Convert PDF to HTML, XML, DOCX, XLSX, Markdown, or raster formats and import from supported sources.",
+      "title": "Convert documents"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "No OCR support; use a dedicated OCR library for text recognition in scanned images."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Concurrency is not supported for a single Document instance; use one instance per thread."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "PdfFileSecurity.setAllowExceptions throws UnsupportedOperationException for legacy toolkit paths."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Text replacement with non-Latin scripts may differ from reference renderers in complex bidi cases."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Resource optimization has limited advanced strategies like image downsampling and font merging."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "text": "Tagged PDF structure is readable and constructible but not fully covered for well-formed trees."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:family",
+        "dependency:none",
+        "package:java_release"
+      ],
+      "text": "Enables programmatic PDF creation, editing, and conversion using a pure Java API with no external runtime dependencies."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:008",
+        "example:009",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "text": "Supports interactive forms, annotations, and document security features including encryption and digital signatures."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:tests",
+        "example:001"
+      ],
+      "text": "Provides page-level operations such as splitting, merging, inserting, extracting, and reordering pages via PdfFileEditor."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:org.aspose"
+      ],
+      "text": "Offers rendering to raster images (BMP, GIF, JPEG, PNG, TIFF) and text extraction per page."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:product-knowledge-refresh",
+      "identity:repository",
+      "license:spdx",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.PDF FOSS for Java is a free, open-source, pure-Java library for creating, reading, and modifying PDF documents compliant with ISO 32000-1:2008."
+  },
+  "uncertainties": [
+    "The exact set of public symbols beyond org.aspose.pdf is not fully enumerated in the facts.",
+    "The full list of supported conversion formats beyond those explicitly mentioned is unclear.",
+    "Whether PDF/X validation and conversion has dedicated test coverage is not confirmed by facts.",
+    "The behavior of XFA form rendering beyond flattening is not detailed in the facts.",
+    "The scope of 3D annotations and PRC/U3D streams support is not specified in the facts.",
+    "The thread-safety guarantees for facades like PdfFileEditor are not explicitly stated.",
+    "The exact Java runtime modules used beyond java.*, javax.crypto, javax.imageio, and javax.xml.* are not listed.",
+    "The version compatibility with Java versions newer than 17 is not confirmed by facts."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:ci",
+        "dependency:development.org.junit.jupiter-junit-jupiter"
+      ],
+      "name": "Build and test",
+      "text": "Build the project with `mvn package` and run tests with `mvn -B clean test` using JUnit 5."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven",
+        "package:published_version"
+      ],
+      "name": "Install from Maven Central",
+      "text": "Install the library using Maven with `mvn dependency:get -Dartifact=org.aspose:aspose-pdf-foss:26.11.0`."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Create and save a PDF",
+      "text": "Create a new document, add a page, insert a text fragment, and save to output.pdf using the Document API."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:007",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Add form fields to a cell",
+      "text": "Create a table cell, add text and radio button option fields, and preserve insertion order in the cell's paragraphs."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:008",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Configure widget annotation appearance",
+      "text": "Create a widget annotation, set its border color and background color, then read back the color values."
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "name": "Set annotation border style",
+      "text": "Create a radio button option field, construct a Border object, set its style to dashed, and verify round-trip."
+    }
+  ]
+}
