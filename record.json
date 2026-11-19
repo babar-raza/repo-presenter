@@ -23,21 +23,33 @@
    "run_id": "44397297056",
    "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:23:37+00:00",
+   "classes": [
+    "job_error|job_error|JobError:section_authoring_output_truncated_at"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44559622585",
+   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T21:11:47+00:00",
+  "at": "2026-11-19T16:23:37+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple formats', 'PDF export with built-in renderer']",
+   "job_error|job_error|JobError:section_authoring_output_truncated_at": {
+    "example": "attempt under version set 75b35954c877: JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000); raise the budget or bound the output, never retry",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "OutputRejectedError"
+     "JobError"
     ],
     "rule": "job_error",
-    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
+    "scope": "cc9dc0080ae9f3e3c61a7594cbfc7376e1c01b14e250fc72f868653238793283",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -47,44 +59,44 @@
      "src/repo_presenter/readme/composition",
      "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
+    "sub_rule": "JobError:section_authoring_output_truncated_at",
     "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple formats', 'PDF export with built-in renderer']",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000); raise the budget or bound the output, never retry",
+   "kind": "JobError",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple formats', 'PDF export with built-in renderer']",
+    "label": "JobError",
+    "message": "attempt under version set 75b35954c877: JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000); raise the budget or bound the output, never retry",
     "origin": {
-     "id": "OutputRejectedError",
+     "id": "JobError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
+    "signature": "job_error|job_error|JobError:section_authoring_output_truncated_at",
     "source": "job",
-    "sub_rule": "OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
+    "sub_rule": "JobError:section_authoring_output_truncated_at",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
-  "run_id": "44397297056",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44397297056",
+  "run_id": "44559622585",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44559622585",
   "schema_version": 1,
   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
