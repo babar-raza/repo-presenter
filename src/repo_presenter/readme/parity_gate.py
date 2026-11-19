@@ -84,6 +84,7 @@ from repo_presenter.readme.evidence.facts.links import (
     check_anchor,
     extract_links,
     heading_slugs,
+    is_unverified_external,
 )
 from repo_presenter.readme.validation.public_text import internal_markers
 
@@ -1005,6 +1006,17 @@ def technical_content(
         for f in cand.by_kind("link_target")
         if f.get("polarity") == "CONTRADICTED"
     }
+    # Lane R prints an UNCHECKED http(s) target as a label or an image alone (BL-360); the omitted
+    # link is accounted for on its UNRESOLVED fact. Lane L keeps the live README byte for byte.
+    unverified_links = (
+        {
+            str(f.get("value"))
+            for f in cand.by_kind("link_target")
+            if is_unverified_external(f.get("value"), f.get("polarity"))
+        }
+        if cand.lane == LANE_R
+        else set()
+    )
     contradicted_examples = [
         str(f.get("value") or "")
         for f in cand.by_kind("example")
@@ -1067,6 +1079,8 @@ def technical_content(
                 why = "its example fact is CONTRADICTED"
             if why is None and category == "links" and item in contradicted_links:
                 why = "its link_target fact is CONTRADICTED"
+            if why is None and category == "links" and item in unverified_links:
+                why = "its link_target fact is UNRESOLVED (unchecked): printed without the link"
             if why is None and category == "links":
                 why = badge_slot_replaced(
                     item, bench.text, cand.readme, frozenset(contradicted_links)

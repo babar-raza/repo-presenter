@@ -73,6 +73,7 @@ from pathlib import Path
 from typing import Any
 
 from repo_presenter.core.facts import Fact, FactKind, FactsDocument
+from repo_presenter.readme.evidence.facts.links import unverified_external_hrefs
 from repo_presenter.readme.validation import line_provenance
 from repo_presenter.readme.validation.claims import (
     ClaimFinding,
@@ -678,6 +679,9 @@ def without_contradicted_links(text: str, facts: FactsDocument) -> str:
         for fact in facts.by_kind("link_target")
         if fact.polarity == "CONTRADICTED" and fact.value
     }
+    # A target nothing could verify (UNCHECKED) is not printed as a link either: BC-06 blocks it
+    # the same way, and the label is the maintainers' own words (BL-360).
+    dead |= unverified_external_hrefs(facts)
     if not dead or "](" not in text:
         return text
     return _INLINE_LINK.sub(

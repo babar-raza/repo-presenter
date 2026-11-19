@@ -87,7 +87,7 @@ from repo_presenter.readme.evidence.facts.commands import (
     commands_in_text,
     matrix_axes,
 )
-from repo_presenter.readme.evidence.facts.links import link_text
+from repo_presenter.readme.evidence.facts.links import link_text, unverified_external_hrefs
 from repo_presenter.readme.evidence.facts.product_pages import banner_target, enterprise_target
 from repo_presenter.readme.evidence.facts.unpublished import README_STATEMENT_PHRASE
 
@@ -623,6 +623,10 @@ def _carried_extra_badges(
         for fact in context.facts.by_kind("link_target")
         if fact.polarity == "CONTRADICTED" and fact.value
     }
+    # A target nothing could verify (UNCHECKED: a host that refuses the runner, BL-360) is not
+    # linked: the maintainers' badge image stays as written, the link goes (R43(2); BC-06 blocks
+    # an unverified target and BC-17 accounts for the omitted link on the same fact).
+    unverified = {_badge_target(href) for href in unverified_external_hrefs(context.facts)}
     extras: list[str] = []
     verified = {
         _badge_target(fact.value)
@@ -640,10 +644,16 @@ def _carried_extra_badges(
         if badge_slot(markdown) in _LINK_VERIFIED_SLOTS and _badge_target(href) not in verified:
             continue
         carried.add(key)
+        if _badge_target(href) in unverified:
+            image_only = _UNLINK_BADGE.match(markdown)
+            if image_only is not None:
+                markdown = image_only.group(1)
         extras.append(_alt_without_edition_name(markdown))
     return extras
 
 
+#: A linked badge ``[![alt](image)](target)`` read as its image ``![alt](image)`` and its link.
+_UNLINK_BADGE = re.compile(r"^\[(!\[[^\]]*\]\([^)]*\))\]\([^)]*\)$")
 _BADGE_ALT = re.compile(r"^(\[!\[)([^\]]*)(\])")
 
 

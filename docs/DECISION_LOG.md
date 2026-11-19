@@ -7379,3 +7379,28 @@ TypeScript, BarCode); Cells C++ `names the Enterprise Edition` (nothing honest i
 withholding as (a) in the authoring recover hook is the next step); the PDF TypeScript lane-step cancel.
 
 Backlog: BL-350
+
+## 2026-11-19: A link nothing could verify is printed without the link (BL-360, R36, R43)
+
+Frozen-code pass 3 left PDF C++ Lane R on one blocking finding, `BC-06 https://en.cppreference.com/w/cpp/20 is UNRESOLVED:
+UNCHECKED` (Slides Java had the same shape on `central.sonatype.com`, 5 findings, and passed on the next run). Root cause
+by first principles: the link check answers UNCHECKED when the host refuses or does not answer the runner (HTTP 401/403
+access gate, 429 or 5xx after the link_check retries, a transport error); that is neither "alive" nor "gone". The
+maintainers' C++20 badge is carried as written (`_carried_extra_badges`) whenever its target is not CONTRADICTED, so a
+host that blocks datacenter addresses failed the whole cell, run after run, though nothing about the README was wrong.
+Honest alternatives (R36), all but one rejected: (1) check it harder (a browser User-Agent, an archive lookup): cannot be
+proven offline (this container's proxy blocks both hosts), and an archive proves history, not liveness; (2) allow a host
+class: names no evidence and invites exactly the unverified claim BC-06 forbids; (3) leave it blocking: the cell never
+seals on a third party's bot policy; (4) print only verified targets (R43(2), already the rule for the renderer's own
+links): chosen. Decision: an http(s) `link_target` that is UNRESOLVED is printed as its label alone in a kept unit
+(`without_contradicted_links`, the form a CONTRADICTED link already takes) and as its image alone in a carried maintainers'
+badge; BC-17 and the independent reviewer account for the omitted link on the UNRESOLVED fact (Lane R only in BC-17).
+R14 record: nothing but the unverifiable destination goes, the label and the badge image stay, and the link returns by
+itself on any run where the host answers (a SUPPORTED fact prints it as before). mailto and other non-web targets are
+untouched. R9: no wording is added. R10: a SUPPORTED or CONTRADICTED link renders exactly as before and no check was
+tightened (a loss is exempted, never added), so no seal can newly fail. Property improved: reliable (a cell's verdict no
+longer depends on a third-party host's reaction to the runner), measured by the pareto count of
+`BC-06|unresolved|id_is_unresolved_unchecked` on the next frozen-code pass. Not a Lane R-wide fix for the Slides .NET
+`BC-06|unresolved|n_aspose_com_links` (4 aspose.com links over a ceiling of 2, a different class, not addressed here).
+
+Backlog: BL-360
