@@ -1112,9 +1112,11 @@ def _restore_lost_content(
     )
 
 
-#: Passes of the last-resort degrade after the repair loops (BL-240): the second answers a finding
-#: the model reviewer raises only once the first has withheld what the checks flagged.
-MAX_DEGRADE_PASSES = 2
+#: Passes of the last-resort degrade after the repair loops (BL-240): each later pass answers findings
+#: the model reviewer raises only once the pass before has withheld what was flagged (BL-350: hosted
+#: PSD Python and 3D TypeScript still ended on fresh findings after two passes; every pass is kept
+#: only when it strictly lowers the blocking load, so four is a bound, not a target).
+MAX_DEGRADE_PASSES = 4
 
 
 def _blocking_load(validation: dict[str, Any], verdict: ReviewVerdict) -> tuple[frozenset[str], int]:
@@ -1175,6 +1177,10 @@ def _degrade_settled(
             investigation=investigation, tree_paths=tree_paths, original=original,
             out_dir=out_dir, restored=[],
         )
+        if result[0] == composed.readme:
+            # A flag that prints nowhere (or a lever that changed no printed byte) buys nothing and
+            # would only spend a model re-review on the same README (BL-350).
+            return False, None
         ids, load = _blocking_load(result[4], result[5])
         # Strictly fewer blocking failures; or, when the deterministic gates were already clean
         # and only the model reviewer objected, no new one (its verdict is then asked afresh).

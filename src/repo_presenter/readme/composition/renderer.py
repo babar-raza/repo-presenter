@@ -936,7 +936,14 @@ def _documentation_resources(context: RenderContext) -> list[str]:
                 f" It covers all {count} public types; the "
                 "[API Reference](#api-reference) section above covers the essentials."
             )
-        lines.append(f"- **[{link_text(target)}]({target.value})** — {sentence}")
+        line = f"- **[{link_text(target)}]({target.value})** — {sentence}"
+        if described.get(target.id) and _register_refuted(context, line):
+            # BL-350: the maintainers' description of this link is the text a check or the findings
+            # register flags (the last-resort degrade records it in ``degraded_quotes``): the line
+            # keeps its link and prints the description of the link's own target, the fact-true
+            # form every link without a description gets, instead of being dropped whole.
+            line = f"- **[{link_text(target)}]({target.value})** — {link_target_description(target)}"
+        lines.append(line)
     if issues is not None:
         lines.append(f"- Found a bug or have a feature request? [Open an issue]({issues}).")
     return lines
