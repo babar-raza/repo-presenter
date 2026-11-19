@@ -77,6 +77,8 @@ from markdown_it import MarkdownIt
 from repo_presenter.core.package_registry import (
     is_unconfirmed_registry_install,
     unconfirmed_registry_packages,
+    verified_package_version,
+    with_verified_version,
 )
 from repo_presenter.readme.evidence.facts.links import (
     check_anchor,
@@ -389,6 +391,61 @@ def badge_slot_replaced(
             if slot is not None and slot in filled:
                 return f"link of a {slot} badge the candidate replaces with its verified one"
     return None
+
+
+_REGISTRY_BADGE = re.compile(
+    r"/(?:pypi|npm|nuget|crates|maven-central|gem)/v/(?P<coords>[^?#\s]+?)(?:\.svg|\.png)?(?:[?#].*)?$",
+    re.IGNORECASE,
+)
+
+
+def _badge_package(image: str) -> str:
+    """The package coordinate a registry-version badge image names, as ``group/artifact`` or
+    ``name`` in lower case (``https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg``
+    -> ``org.aspose/aspose-pdf-foss``), or ``""`` for any other image."""
+    if badge_slot_of_url(image) != "package":
+        return ""
+    match = _REGISTRY_BADGE.search(image.strip())
+    return match["coords"].lower() if match else ""
+
+
+def registry_badge_stated(
+    href: str,
+    benchmark_text: str,
+    candidate_text: str,
+    facts: Mapping[str, Mapping[str, Any]],
+) -> str | None:
+    """Why ``href`` (the image of a registry-version badge of the benchmark, or the link target of
+    one) is replaced rather than lost, or ``None``: the badge only shows the version of the
+    benchmark's own package, and the candidate states that package's verified version in its text.
+
+    An ecosystem with no version-badge template (Java: ``EcosystemSpec.version_badge`` is empty)
+    prints no package badge, so ``badge_slot_replaced`` finds the package slot empty and BC-17 named
+    the maintainers' Maven Central badge and its ``search.maven.org`` link as lost (hosted Lane R run
+    44349034180, Aspose.PDF-FOSS-for-Java ``002.badge_row``). The badge conveys nothing but the
+    current version, which Installation states from the registry fact; the badge's package must be
+    this repository's verified ``package:name``, so a badge of any other package stays a loss, and
+    so does a candidate that does not print the verified version (R14: the rule is this reason)."""
+    image = _badge_package(href) and href
+    if not image:
+        for badge_image, target in _LINKED_BADGE.findall(benchmark_text):
+            if target.strip().rstrip("/") == href.strip().rstrip("/") and _badge_package(badge_image):
+                image = badge_image
+                break
+    if not image:
+        return None
+    name = facts.get("package:name")
+    if name is None or name.get("polarity") != "SUPPORTED":
+        return None
+    wanted = re.sub(r"[:/]", "/", str(name.get("value") or "").strip().lower())
+    if not wanted or re.sub(r"[:/]", "/", _badge_package(image)) != wanted:
+        return None
+    version = verified_package_version(facts.values())
+    if not version or re.search(
+        r"(?<![\w.])v?" + re.escape(version.removeprefix("v")) + r"(?![\w.]*\d)", candidate_text
+    ) is None:
+        return None
+    return f"its registry version badge is replaced by the verified version {version} the README states"
 
 
 def badge_row_replaced(
@@ -965,6 +1022,7 @@ def technical_content(
             )
         ),
     )
+    verified_version = verified_package_version(cand.facts)
     numbers: dict[str, Any] = {}
     details: list[str] = []
     losses: list[Loss] = []
@@ -1013,6 +1071,20 @@ def technical_content(
                 why = badge_slot_replaced(
                     item, bench.text, cand.readme, frozenset(contradicted_links)
                 )
+            if (
+                why is None
+                and cand.lane == LANE_R  # Lane L edits the live README byte-for-byte: no stand-in
+                and category == "links"
+                and item not in contradicted_links
+            ):
+                why = registry_badge_stated(item, bench.text, cand.readme, cand.facts_by_id)
+            if why is None and cand.lane == LANE_R and category == "code_blocks" and verified_version:
+                # A maintainers' pinned snippet whose only difference is a stale version the
+                # verified install replaces (the Maven ``<dependency>`` block at 26.6.0 where the
+                # registry lists 26.9.0): printed with the verified version, it is carried.
+                swapped = with_verified_version(item, verified_version)
+                if swapped != item and any(contains_code(f.code, swapped) for f in cand_doc.fences):
+                    why = "replaced by the verified package version"
             if why is None and category == "install_commands":
                 tool = " ".join(item.split()[:2]).lower()
                 if any(

@@ -7192,3 +7192,51 @@ imports the main checkout's `src` unless `PYTHONPATH=$PWD/src` is set.
 
 Backlog: BL-203, BL-290.
 
+
+## 2026-11-19: BC-17 technical_content leftovers: a stale pinned version, a registry badge no template prints, a kept unit that never prints, a restore that forgot the correction (BL-310, R46, R14)
+
+Pareto of the hosted failure records (newest code e4a80219e2aa): `BC-17|inherited_unit|technical_content` is still the top
+Lane R class (7 cells, 20 findings), with `BC-05 superseded_unstated` (2 cells) and `disposition_coverage ... kept_verified_preserve`
+(1 cell, 10 findings) beside it. Zero-call replay of the one affected seal that exists (Aspose.PDF-FOSS-for-Java Lane R, the
+cell of hosted run 44349034180) found the shared root of its eight findings: the registry lists 26.9.0, the maintainers' Maven and
+Gradle snippets pin 26.6.0, and the candidate prints the same snippets at 26.9.0 (BC-14 forbids any other version). BC-17
+compared a whole code block and BC-05 the literal piece, so a version-only difference was a loss; restoring the unit as the
+checks ask printed the stale version back and traded BC-05/BC-17 for BC-14. The Maven Central badge and its search.maven.org link
+could never be a slot replacement either: Java's ecosystem spec has no version badge. Decisions, each inside an existing
+component (R27):
+
+1. Rule `BL-310/version`: a maintainers' pinned snippet whose only difference from what the README prints is a stale version
+   the verified install replaces is carried, not lost. `package_registry.with_verified_version` swaps a version number of the
+   verified version's shape for the verified one (`verified_package_version`: the registry's `package:published_version`, else
+   the manifest's, when SUPPORTED); BC-17 (`technical_content`, code blocks, Lane R only) and BC-05
+   (`supersession.superseded_failures`, the missing piece only) judge the swapped text. A snippet that differs in anything else,
+   or a README that does not print the verified version, is still a loss. The accounting reason is "replaced by the verified
+   package version", the same standing BC-17 already gives a version or an install command.
+2. Rule `BL-310/registry_badge`: a maintainers' registry-version badge (image, or the link of one) is replaced, not lost, when
+   its package is the repository's verified `package:name`, the version is SUPPORTED and the README states it
+   (`parity_gate.registry_badge_stated`, Lane R only). A badge of another package, or a README without the version, stays a loss.
+   Nothing is printed differently: the renderer is unchanged, so no sealed README changes (R10).
+3. Rule `BL-310/unprinted`: the reviewer's deterministic "kept but its text is not printed" finding names a keep that never
+   took effect (a section that does not print the kind, or one the plan omits). The existing restore re-home answers it, so
+   `cascade._restore_lost_content` adds those units (shell-rendered kinds excluded) to the ones BC-05/BC-08/BC-17 name, only
+   while the reviewer is blocking, and keeps the result only when its blocking findings shrink; `restore_units` now also re-homes
+   a unit kept into a section outside the holdable or included set. The text is unchanged and every change is the restore's
+   `{unit_id, was, now}` record (R14).
+4. Defect found on the same seal: `recertify._rerun_lane_r`'s restore re-derived the plan from the sealed one, which forgot the
+   BL-210 register correction, so the corrected units no longer filled a capability slot and the restored candidate failed BC-04
+   (`units must fill exactly these slots once each ... capability:6; got capability:1 ... capability:5`). The plan is now derived
+   from the units as they were before the correction, then the link backstop is applied.
+
+Verified zero-call: the PDF Java seal names 8 findings on origin/main and 2 on this branch (070.table, which the restore
+answers); `--restore-lost-units` ends NEEDS_REPAIR on main (BC-04, BC-14) and RECERTIFIED on this branch. Not reproduced (no seal
+or artifact, the proxy blocks run artifacts): TeX Python BC-05 license in Scope (the finding names no unit, so the text is
+authored or rewritten, not a kept paragraph the BL-089 fold covers), the TeX `status-pre--alpha` static badge (no fact
+verifies a maintainers' status badge; carrying it would trade BC-17 for the badge contract), Cells TypeScript 037.table
+`Protection` (its sealed form prints it), Go 025.paragraph (restore declines a unit whose text carries a dangling pointer on
+purpose). They stay on BL-310's next action. No public README wording is added (R9); a passing README is never touched
+(R10): the new rules only turn a loss into an accounted replacement and the restore only runs while a check fails. Properties
+improved: reliable and universal (a version-only difference no longer fails a candidate whose source drifted behind its
+registry; Java, Go, C++ and any ecosystem without a version badge template), repeatable (the restore replay judges the same
+plan as the dry count).
+
+Backlog: BL-310
