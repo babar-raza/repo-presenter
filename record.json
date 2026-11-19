@@ -47,49 +47,69 @@
    "run_id": "44560188661",
    "source_revision": "f804cfe3c7c269f3a578b3c4650dad76ac6b8b9b",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-19T19:13:59+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_text_contains_a_markdown"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44590092142",
+   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T17:32:31+00:00",
+  "at": "2026-11-19T19:13:59+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "job_error|job_error|OutputRejectedError:section_authoring_text_contains_a_markdown": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: text contains a Markdown heading ('#')",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepFailure"
+     "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "scope": "cc9dc0080ae9f3e3c61a7594cbfc7376e1c01b14e250fc72f868653238793283",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_text_contains_a_markdown",
     "upstream": ""
    }
   },
   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
-  "durable_state": "",
-  "exit_code": null,
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
-   "kind": "LaneStepFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: text contains a Markdown heading ('#')",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: text contains a Markdown heading ('#')",
     "origin": {
-     "id": "LaneStepFailure",
+     "id": "OutputRejectedError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_text_contains_a_markdown",
     "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "OutputRejectedError:section_authoring_text_contains_a_markdown",
     "upstream": ""
    }
   ],
@@ -99,11 +119,11 @@
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
-  "run_id": "44560188661",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44560188661",
+  "run_id": "44590092142",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44590092142",
   "schema_version": 1,
-  "source_revision": "f804cfe3c7c269f3a578b3c4650dad76ac6b8b9b",
-  "version_set": ""
+  "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
  "schema_version": 1
