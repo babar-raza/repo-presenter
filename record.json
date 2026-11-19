@@ -5,7 +5,7 @@
   "provider_repository_id": 1332915817,
   "registry_revision": null,
   "active_transaction_id": "66295dd1073d41ea9dcf89a58630a4f7",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-19T21:37:00.135841+00:00",
+    "resume_predicate": null,
+    "recovery_count": 6
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "fd749f1db33c4c3c94f90b4d5ea7c89e",
@@ -33,11 +40,11 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 47,
+  "state_version": 48,
   "recent_trigger_dedup_keys": {
     "run:41290980069:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "420a41ac7b7b4ee8a4282def04b3cee9",
     "run:41294881468:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "a46cdcf117be4c239142b216c9a17ef6",
     "run:42687354651:aspose-psd-foss/Aspose.PSD-FOSS-for-.NET": "66295dd1073d41ea9dcf89a58630a4f7"
   },
-  "recovery_count": 5
+  "recovery_count": 6
 }
