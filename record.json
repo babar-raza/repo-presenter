@@ -60,11 +60,23 @@
    "run_id": "44556166528",
    "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T17:52:43+00:00",
+   "classes": [
+    "BC-18|inherited_unit|false_claim"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44581154967",
+   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T15:37:24+00:00",
+  "at": "2026-11-19T17:52:43+00:00",
   "classes": {
    "BC-18|inherited_unit|false_claim": {
     "example": "scene.Save(\"output.obj\", FileFormat.WavefrontOBJ);",
@@ -123,15 +135,15 @@
    {
     "facts_defects": [],
     "label": "BC-18",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'revised_output.units[2].text' changed ('Handle an unsupported file format during scene loading.' to 'Handle an unsupported file format during scene loading. (scene.Save(path, FileFormat.WavefrontOBJ) throws; use extension-based scene.Save(path) instead.)'), but the causal stage's own input and this revision hold the identical value there",
+    "outcome": "repaired",
+    "reason": "plan-level drop of workflow:example:007 (blanked by the repair)",
     "section_id": "additional_examples",
     "stage": "S6"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
-  "run_id": "44556166528",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556166528",
+  "run_id": "44581154967",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44581154967",
   "schema_version": 1,
   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
