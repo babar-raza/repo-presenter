@@ -154,41 +154,39 @@
    "run_id": "44558173256",
    "source_revision": "0c756ef942fb4c39ed602a02aba4be60b82f03c4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T19:58:40+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-07|unresolved|dangling_reference_points_q",
+    "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
+    "BC-14|unresolved|the_readme_says_its",
+    "BC-17|inherited_unit|technical_content",
+    "claim_contradiction|unresolved|the_readme_says_its",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "live_readme_loss|inherited_unit|code_block"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 23,
+   "outcome": "failure",
+   "run_id": "44588918976",
+   "source_revision": "aa648d79d0df7f985b0a0d7c6396d6dde94e4f30",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T17:20:24+00:00",
+  "at": "2026-11-19T19:58:40+00:00",
   "classes": {
-   "BC-05|inherited_unit|id_was_placed_in": {
-    "example": "inherited_unit:258.paragraph was placed in api_reference but the candidate does not render it there",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:258.paragraph"
-    ],
-    "rule": "BC-05",
-    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "id_was_placed_in",
-    "upstream": ""
-   },
    "BC-05|inherited_unit|superseded_unstated": {
     "example": "inherited_unit:024.list is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (span 'requires-python = \">=3.11\"'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "findings": 3,
+    "findings": 4,
     "origin_kind": "inherited_unit",
     "origins": [
      "inherited_unit:024.list",
      "inherited_unit:051.paragraph",
+     "inherited_unit:056.paragraph",
      "inherited_unit:304.paragraph"
     ],
     "rule": "BC-05",
@@ -252,6 +250,30 @@
     "sub_rule": "id_verified_rewrite_keeps_the",
     "upstream": ""
    },
+   "BC-14|unresolved|the_readme_says_its": {
+    "example": "the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-14",
+    "scope": "a41087b3b4293f6e22b053ad2deedfbc6c26169b6cb1e8c903a10d23e21c795f",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "the_readme_says_its",
+    "upstream": ""
+   },
    "BC-17|inherited_unit|technical_content": {
     "example": "inherited_unit:042.paragraph holds api_identifiers 'Document.closed', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "findings": 9,
@@ -276,40 +298,39 @@
     "sub_rule": "technical_content",
     "upstream": ""
    },
-   "disposition_coverage|inherited_unit|id_is_kept_verified_move": {
-    "example": "### Exchange Bookmarks as JSON",
-    "findings": 4,
-    "origin_kind": "inherited_unit",
+   "claim_contradiction|unresolved|the_readme_says_its": {
+    "example": "and delete workflows. 388 public types are organized by module below.",
+    "findings": 1,
+    "origin_kind": "unresolved",
     "origins": [
-     "inherited_unit:138.heading",
-     "inherited_unit:141.heading",
-     "inherited_unit:146.heading",
-     "inherited_unit:150.heading"
+     "COMPOSING"
     ],
-    "rule": "disposition_coverage",
-    "scope": "f84688c5fead6d3a246ec6a0d156c89dfdfdf7acaf520ff873982b7b1f06e03f",
+    "rule": "claim_contradiction",
+    "scope": "0a59c0bcd3683a054a81edeb0237f83327b528f35cadefe57ebe475907a1b3a6",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
+     "src/repo_presenter/readme/review/independent_reviewer.py",
+     "src/repo_presenter/readme/validation/claims.py"
     ],
-    "sub_rule": "id_is_kept_verified_move",
+    "sub_rule": "the_readme_says_its",
     "upstream": ""
    },
    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve": {
     "example": "```python\nwith Document(\"manual.pdf\") as document:\n    document.export_bookmarks_csv(\"bookmarks.csv\", encoding=\"utf-8-sig\")\n\nwith Document(\"updated-manual.pdf\") as document:\n    added = document.import_bookmarks_csv(\"bookmarks.csv\", replace=True)\n    document.save(\"with-bookmarks.pdf\")\n```",
-    "findings": 11,
+    "findings": 5,
     "origin_kind": "inherited_unit",
     "origins": [
      "inherited_unit:142.code_block",
-     "inherited_unit:158.heading",
-     "inherited_unit:161.heading",
-     "inherited_unit:165.heading",
-     "inherited_unit:170.heading"
+     "inherited_unit:196.code_block",
+     "inherited_unit:199.code_block",
+     "inherited_unit:220.code_block",
+     "inherited_unit:244.code_block"
     ],
     "rule": "disposition_coverage",
     "scope": "f84688c5fead6d3a246ec6a0d156c89dfdfdf7acaf520ff873982b7b1f06e03f",
@@ -345,31 +366,6 @@
     ],
     "sub_rule": "code_block",
     "upstream": ""
-   },
-   "live_readme_loss|inherited_unit|heading": {
-    "example": "Exchange Bookmarks as JSON",
-    "findings": 11,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:138.heading",
-     "inherited_unit:141.heading",
-     "inherited_unit:146.heading",
-     "inherited_unit:150.heading",
-     "inherited_unit:158.heading"
-    ],
-    "rule": "live_readme_loss",
-    "scope": "f84688c5fead6d3a246ec6a0d156c89dfdfdf7acaf520ff873982b7b1f06e03f",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
-    ],
-    "sub_rule": "heading",
-    "upstream": ""
    }
   },
   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
@@ -377,39 +373,24 @@
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 27 blocking finding(s) of 27; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:138.heading is kept (VERIFIED_MOVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:141.heading is kept (VERIFIED_MOVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:146.heading is kept (VERIFIED_MOVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:1",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 7 blocking finding(s) of 7; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:196.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:199.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_cove",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:138.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "label": "claim_contradiction",
+    "message": "line 2819 (COMPOSING): the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
     "origin": {
-     "id": "inherited_unit:138.heading",
-     "kind": "inherited_unit"
+     "id": "COMPOSING",
+     "kind": "unresolved"
     },
-    "quote": "### Exchange Bookmarks as JSON",
-    "rule": "disposition_coverage",
+    "quote": "and delete workflows. 388 public types are organized by module below.",
+    "rule": "claim_contradiction",
     "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "signature": "claim_contradiction|unresolved|the_readme_says_its",
     "source": "review",
-    "sub_rule": "id_is_kept_verified_move",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:141.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:141.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Edit Simple Bookmarks as CSV",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_move",
+    "sub_rule": "the_readme_says_its",
     "upstream": ""
    },
    {
@@ -429,42 +410,12 @@
    },
    {
     "label": "disposition_coverage",
-    "message": "inherited_unit:146.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "message": "inherited_unit:196.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "inherited_unit:146.heading",
+     "id": "inherited_unit:196.code_block",
      "kind": "inherited_unit"
     },
-    "quote": "### Inventory PDF Links",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_move",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:150.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:150.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Update URLs Across a PDF",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_move",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:158.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:158.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Check Internal Links",
+    "quote": "```python\nwith Document(\"input.pdf\") as document:\n    document.export_words_json(\"words.json\", pages=[1, 3], skip_artifacts=True)\n    document.export_words_csv(\"words.csv\", pages=[1, 3], encoding=\"utf-8-sig\")\n    payload = document.pages[1].export_words_json()\n```",
     "rule": "disposition_coverage",
     "section_id": "",
     "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
@@ -474,72 +425,12 @@
    },
    {
     "label": "disposition_coverage",
-    "message": "inherited_unit:161.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "message": "inherited_unit:199.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "inherited_unit:161.heading",
+     "id": "inherited_unit:199.code_block",
      "kind": "inherited_unit"
     },
-    "quote": "### Clean Up Review Annotations by Author or Date",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:165.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:165.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Exchange Annotations for Review",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:170.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:170.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Export Review Comments as XFDF",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:176.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:176.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Choose the First Visible List Option",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:185.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:185.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Merge PDF Files",
+    "quote": "```python\nwith Document(\"input.pdf\") as document:\n    matches = document.search_text(\"Invoice\", context_chars=50, pages=[1, 3])\n    document.export_search_json(\"Invoice\", \"invoice-matches.json\")\n    document.export_search_csv(r\"INV-\\d+\", \"invoice-matches.csv\", regex=True)\n```",
     "rule": "disposition_coverage",
     "section_id": "",
     "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
@@ -575,201 +466,6 @@
     "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
     "source": "review",
     "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:246.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:246.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "### Measure Visible Content Without Cropping",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "disposition_coverage",
-    "message": "inherited_unit:258.paragraph is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
-    "origin": {
-     "id": "inherited_unit:258.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "The `Document` class is the central entry point \u2014 it exposes `pages`, `form`, `outlines`, and\n`tagged_content` for structural editing alongside `encrypt`, `decrypt`, `merge`, `optimize`, and\n`flatten` operations. `PdfExtractor` handles text, image, and attachment extraction, and\n`PdfFileEditor` prov",
-    "rule": "disposition_coverage",
-    "section_id": "",
-    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "source": "review",
-    "sub_rule": "id_is_kept_verified_preserve",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Exchange Bookmarks as JSON'",
-    "origin": {
-     "id": "inherited_unit:138.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Exchange Bookmarks as JSON",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Edit Simple Bookmarks as CSV'",
-    "origin": {
-     "id": "inherited_unit:141.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Edit Simple Bookmarks as CSV",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Inventory PDF Links'",
-    "origin": {
-     "id": "inherited_unit:146.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Inventory PDF Links",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Update URLs Across a PDF'",
-    "origin": {
-     "id": "inherited_unit:150.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Update URLs Across a PDF",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Check Internal Links'",
-    "origin": {
-     "id": "inherited_unit:158.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Check Internal Links",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Clean Up Review Annotations by Author or Date'",
-    "origin": {
-     "id": "inherited_unit:161.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Clean Up Review Annotations by Author or Date",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Exchange Annotations for Review'",
-    "origin": {
-     "id": "inherited_unit:165.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Exchange Annotations for Review",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Export Review Comments as XFDF'",
-    "origin": {
-     "id": "inherited_unit:170.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Export Review Comments as XFDF",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Choose the First Visible List Option'",
-    "origin": {
-     "id": "inherited_unit:176.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Choose the First Visible List Option",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Merge PDF Files'",
-    "origin": {
-     "id": "inherited_unit:185.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Merge PDF Files",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
-    "upstream": ""
-   },
-   {
-    "label": "live_readme_loss",
-    "message": "live README content lost without an accounting disposition: heading 'Measure Visible Content Without Cropping'",
-    "origin": {
-     "id": "inherited_unit:246.heading",
-     "kind": "inherited_unit"
-    },
-    "quote": "Measure Visible Content Without Cropping",
-    "rule": "live_readme_loss",
-    "section_id": "",
-    "signature": "live_readme_loss|inherited_unit|heading",
-    "source": "review",
-    "sub_rule": "heading",
     "upstream": ""
    },
    {
@@ -819,9 +515,9 @@
    },
    {
     "label": "BC-05",
-    "message": "inherited_unit:304.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('Copyright \u00a9 2026 Aspose Pty Ltd.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "message": "inherited_unit:056.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 3 piece(s) of it (span 'reverse=true'; span 'gutter=6'; span 'pages=[2, 3]'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "origin": {
-     "id": "inherited_unit:304.paragraph",
+     "id": "inherited_unit:056.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -834,17 +530,17 @@
    },
    {
     "label": "BC-05",
-    "message": "inherited_unit:258.paragraph was placed in api_reference but the candidate does not render it there",
+    "message": "inherited_unit:304.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it ('Copyright \u00a9 2026 Aspose Pty Ltd.'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "origin": {
-     "id": "inherited_unit:258.paragraph",
+     "id": "inherited_unit:304.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
     "rule": "BC-05",
     "section_id": "",
-    "signature": "BC-05|inherited_unit|id_was_placed_in",
+    "signature": "BC-05|inherited_unit|superseded_unstated",
     "source": "validation",
-    "sub_rule": "id_was_placed_in",
+    "sub_rule": "superseded_unstated",
     "upstream": ""
    },
    {
@@ -875,6 +571,21 @@
     "signature": "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
     "source": "validation",
     "sub_rule": "id_verified_rewrite_keeps_the",
+    "upstream": ""
+   },
+   {
+    "label": "BC-14",
+    "message": "the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-14",
+    "section_id": "api_reference",
+    "signature": "BC-14|unresolved|the_readme_says_its",
+    "source": "validation",
+    "sub_rule": "the_readme_says_its",
     "upstream": ""
    },
    {
@@ -1022,13 +733,13 @@
     "facts_defects": [],
     "label": "BC-05",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:304.paragraph: still SUPERSEDE_REDUNDANT (you answered PRESERVE_ATTRIBUTED into enterprise_relationship, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:304.paragraph: still SUPERSEDE_REDUNDANT (you answered VERIFIED_PRESERVE into scope_limitations, but that section prints its own content, so the unit is superseded there; name another section), which is the defect: the README does not state its substance, so not printing it loses content. Keep it (VERIFIED_PRESERVE or VERIFIED_MOVE into one of opening, key_capabilities, quick_start, additional_examples, api_re",
     "section_id": null,
     "stage": "S4"
    },
    {
     "facts_defects": [],
-    "label": "disposition_coverage:2+disposition_coverage:3+disposition_coverage:4",
+    "label": "disposition_coverage:2+disposition_coverage:3+disposition_coverage:4+disposition_coverage:5+disposition_coverage:6",
     "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:142.code_block: uncited_prose_omit: OMIT_UNSUPPORTED on a code_block needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"```python\\nwith Document(\\\"manual.pdf\\\") as document:\\n    document.export_bookmarks_csv(\\\"bookmarks.csv\\\", encoding=\\\"utf-8-sig\\\")\\n\\nwith Document(\\\"updated-manual.pdf\\\") as document:\\n    added ",
     "section_id": null,
@@ -1036,7 +747,31 @@
    },
    {
     "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
     "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-08",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S5"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
     "outcome": "repaired",
     "reason": "",
     "section_id": null,
@@ -1054,15 +789,31 @@
     "facts_defects": [],
     "label": "BC-14",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README says its count of public types is listed in what follows, but the table rows that follow list only 1; state the count of what is listed, or list every type",
     "section_id": "api_reference",
     "stage": "S6"
    },
    {
     "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
     "label": "claim_contradiction:1",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": "api_reference",
     "stage": "S6"
    },
@@ -1078,15 +829,23 @@
     "facts_defects": [],
     "label": "BC-17",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:042.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"The `Document` class supports the context manager protocol, so it can be used with the `with`\\nstatement. After the context exits, the document is closed and cannot be used further. The\\n`Document.cl",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": null,
     "stage": "S4"
    },
    {
     "facts_defects": [],
     "label": "BC-07",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "outcome": "repaired",
+    "reason": "plan-level drop of hub:public_symbol:aspose_pdf.lowcode (blanked by the repair)",
     "section_id": "api_reference",
     "stage": "S6"
    },
@@ -1100,18 +859,34 @@
    },
    {
     "facts_defects": [],
-    "label": "BC-08",
+    "label": "BC-05",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: unit intro: identifiers that are not accepted fact values: block.page_index, structure.json",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:261.table: supported_omission: OMIT_UNSUPPORTED claims no fact supports this table, but its text spells SUPPORTED facts: import_path:aspose_pdf, public_symbol:aspose_pdf. Cite the facts that support it and place it, or choose DEFER_UNRESOLVED if no fact settles its claim; the unit's exact text is \"| Class | Description |\\n|---|---|\\n| `Action` | Base class for an interactive action. |\\n| `AsposePdfException` |",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-08",
+    "outcome": "escalated",
+    "reason": "the revision cites inherited_unit:280.list outside the slot's planned facts; escalated once to a plan-level repair at S5",
     "section_id": "api_reference",
     "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:271.table: supported_omission: OMIT_UNSUPPORTED claims no fact supports this table, but its text spells SUPPORTED facts: import_path:aspose_pdf, public_symbol:aspose_pdf, public_symbol:aspose_pdf.document. Cite the facts that support it and place it, or choose DEFER_UNRESOLVED if no fact settles its claim; the unit's exact text is \"| Class | Description |\\n|---|---|\\n| `Document-generated_document` | Re-export",
+    "section_id": null,
+    "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
-  "run_id": "44558173256",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44558173256",
+  "run_id": "44588918976",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44588918976",
   "schema_version": 1,
-  "source_revision": "0c756ef942fb4c39ed602a02aba4be60b82f03c4",
+  "source_revision": "aa648d79d0df7f985b0a0d7c6396d6dde94e4f30",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
