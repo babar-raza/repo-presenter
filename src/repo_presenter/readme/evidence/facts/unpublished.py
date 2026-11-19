@@ -17,7 +17,10 @@ An install fact becomes a source checkout when, and only when, all three hold:
    package is absent, and the fact stays UNRESOLVED so the extraction is read again; a name some
    other project holds (``ownership_unconfirmed``) admits nothing either;
 2. the maintainers' own README says the package is not published, so two independent sources
-   agree and the README states what the registry shows rather than contradicting it; and
+   agree and the README states what the registry shows rather than contradicting it - or (BL-340)
+   its own install steps are a clone and a build and it prints no registry install and no registry
+   listing, which agrees with the registry as a statement does (Aspose.Imaging FOSS for .NET), and
+   no build this pipeline measured at this revision failed; and
 3. the repository documents a build: the ``build_test_asset:build-command`` fact the clone's own CI
    workflow, script or toolchain manifest yields (read, never composed), else the ecosystem's
    standard command when the checkout root holds the manifest that command starts from.
@@ -62,6 +65,12 @@ from repo_presenter.readme.evidence.facts.commands import (
 # the writer and the judge cannot drift apart.
 README_STATEMENT_PHRASE = "the maintainers' README states the package is not published"
 DOCUMENTED_BUILD_PHRASE = "documented source build, not run for this revision"
+# The second corroboration (BL-340): the maintainers' README does not use the word "unpublished" but
+# its own Installation steps are a clone and a build, and it prints no registry install and claims
+# no registry listing, so it agrees with a registry that lists nothing.
+README_SOURCE_BUILD_PHRASE = (
+    "the maintainers' README directs a source build from a clone and prints no registry install"
+)
 
 _SOURCE_INSTALL_KINDS = frozenset({"source", "source_checkout"})
 
@@ -129,6 +138,89 @@ def unpublished_statement(readme: str) -> str | None:
                     else text[: _MAX_STATEMENT - 3] + "..."
                 )
     return None
+
+
+_CLONE_LINE = re.compile(r"^\s*(?:[$>]\s*)?git\s+clone\s+\S+")
+# Anything that tells a reader the package can be fetched from a registry: a badge or link into one,
+# or a sentence saying it is available there.
+_REGISTRY_LISTING = re.compile(
+    r"""(?ix)
+    (?: img\.shields\.io/(?:nuget|pypi|npm|maven-central|crates|go-mod|packagist|gem)/
+      | nuget\.org/packages | pypi\.org/project | npmjs\.com/package | crates\.io/crates/
+      | search\.maven\.org | mvnrepository\.com | repo1?\.maven\.org | pkg\.go\.dev/
+      | \b(?:available|published|released|listed|hosted)\s+(?:on|to|in|at|from)\s+
+        (?:the\s+)?(?:nuget|pypi|npm|maven|crates\.io)
+    )"""
+)
+_REGISTRY_TOOL_INSTALL = re.compile(
+    r"""(?ix)
+    \bdotnet\s+add\s+(?:[\w./\\-]+\s+)?package\b | \bInstall-Package\b | \bnuget\s+install\b
+  | <PackageReference\s+Include | <dependency> | \b(?:implementation|compile|api)\s*[('"]
+  | \bmvn\b.*dependency:get | \bnpm\s+(?:i|install|add)\b | \byarn\s+add\b | \bpnpm\s+(?:i|add|install)\b
+  | \bcargo\s+add\b | \bgo\s+get\b | \bgem\s+install\b | \bcomposer\s+require\b"""
+)
+_PIP_INSTALL = re.compile(r"(?i)\bpip3?\s+install\b(.*)|\bpython3?\s+-m\s+pip\s+install\b(.*)")
+_FLAG_WITH_PATH = frozenset({"-e", "--editable", "-r", "--requirement", "-c", "--constraint"})
+
+
+def _pip_targets_a_registry(arguments: str) -> bool:
+    """Whether ``pip install <arguments>`` names a package to fetch (not the checkout, a path or a
+    requirements file)."""
+    tokens = arguments.replace("`", " ").split()
+    skip = False
+    for token in tokens:
+        if skip:
+            skip = False
+            continue
+        if token in _FLAG_WITH_PATH:
+            skip = True
+            continue
+        if token.startswith("-"):
+            continue
+        if token in (".", "..") or token.startswith(("./", "../", "/", "~")) or "/" in token:
+            continue
+        if token.endswith((".whl", ".tar.gz", ".txt", ".toml")):
+            continue
+        return True
+    return False
+
+
+def _prints_a_registry_install(readme: str) -> bool:
+    for line in readme.splitlines():
+        if _REGISTRY_TOOL_INSTALL.search(line):
+            return True
+        match = _PIP_INSTALL.search(line)
+        if match and _pip_targets_a_registry(match.group(1) or match.group(2) or ""):
+            return True
+    return False
+
+
+def readme_directs_source_build(readme: str) -> str | None:
+    """The clone command the maintainers' README gives as how to install, or None.
+
+    The README counts only when it is a source-build README end to end: a fenced ``git clone`` is
+    how it says to get the library, and nowhere does it print a registry install or point at a
+    registry listing (a README that offers both a registry install and a clone is one that says the
+    package is published, and stays refused). The returned line is the evidence quoted on the fact.
+    """
+    if _REGISTRY_LISTING.search(readme) or _prints_a_registry_install(readme):
+        return None
+    inside = False
+    for line in readme.splitlines():
+        if line.strip().startswith("```"):
+            inside = not inside
+            continue
+        if inside and _CLONE_LINE.match(line):
+            return " ".join(line.split())
+    return None
+
+
+def _measured_build_failed(fact: Fact) -> bool:
+    """Whether the facts stage drove the repository's build and it did not exit 0 (``failed (...)``
+    in the unverified record, Aspose.GIS FOSS for .NET: 381 compile errors). "Not attempted" is not
+    a failure: nothing was measured, which is what a documented source build says it is."""
+    reason = (fact.attributes or {}).get(SOURCE_CHECKOUT_UNVERIFIED_ATTRIBUTE, "")
+    return reason.startswith("no build exited 0: failed")
 
 
 def _has_root_manifest(spec: EcosystemSpec, tree_paths: Sequence[str]) -> bool:
@@ -233,8 +325,17 @@ def documented_source_install(
     ):
         return fact
     statement = unpublished_statement(readme_text)
-    if statement is None:
-        return fact
+    corroboration = (
+        f"{README_STATEMENT_PHRASE}: {statement!r}" if statement is not None else None
+    )
+    if corroboration is None:
+        # BL-340: the registry lists nothing and the README says nothing of publication, but its
+        # own install steps are a clone and a build and it never offers a registry install. A build
+        # this machine measured and watched fail is never told to a reader as the way to install.
+        clone = readme_directs_source_build(readme_text)
+        if clone is None or _measured_build_failed(fact):
+            return fact
+        corroboration = f"{README_SOURCE_BUILD_PHRASE}: {clone!r}"
     documented = documented_steps(spec, facts, tree_paths)
     if documented is None:
         return fact
@@ -266,7 +367,7 @@ def documented_source_install(
         attributes=attributes,
         evidence=(
             *fact.evidence,
-            Evidence(readme_path, f"{README_STATEMENT_PHRASE}: {statement!r}"),
+            Evidence(readme_path, corroboration),
             Evidence(path, f"{DOCUMENTED_BUILD_PHRASE}: {how}"),
         ),
     )
