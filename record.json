@@ -105,63 +105,83 @@
    "run_id": "44589184972",
    "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-19T21:49:57+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition"
+   ],
+   "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44620155157",
+   "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T20:05:39+00:00",
+  "at": "2026-11-19T21:49:57+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepFailure"
+     "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "scope": "b5330def249946decf79b750eab7630daee508d5ddf874e0ec8a56b881b2fc23",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "upstream": ""
    }
   },
-  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
-  "durable_state": "",
-  "exit_code": null,
+  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
-   "kind": "LaneStepFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
     "origin": {
-     "id": "LaneStepFailure",
+     "id": "OutputRejectedError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44589184972",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44589184972",
+  "run_id": "44620155157",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44620155157",
   "schema_version": 1,
   "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
-  "version_set": ""
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
  "schema_version": 1
