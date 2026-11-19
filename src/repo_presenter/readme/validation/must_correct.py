@@ -1026,7 +1026,11 @@ def degrade_claims(
     new_plan, new_units, records, status = _withhold_flagged(
         plan, units, rows, rule=DEGRADE_RULE, guard_inherited=True
     )
-    records.extend(_opening_fact_true(new_units, flags, status, facts))
+    # A duplicate_paragraph flag (BL-320) never rewrites the opening (BL-350's fact-true opening is for a
+    # model-judged claim, not for a repeated paragraph).
+    records.extend(
+        _opening_fact_true(new_units, [flag for flag in flags if flag.check != "duplicate_paragraph"], status, facts)
+    )
     new_disp = copy.deepcopy(dict(dispositions))
     by_unit = {str(row.get("unit_id")): row for row in new_disp.get("dispositions", [])}
     cited = {
