@@ -250,6 +250,7 @@ def _cascade_and_seal(
         candidates_root=candidates_root, prompts_path=prompts_path, registry_path=registry_path,
     ):
         return  # re-certified under current code with zero provider calls
+    print("present progress: Lane R cascade start", file=sys.stderr, flush=True)
     result = run_cascade(
         repository,
         ecosystem,
@@ -259,6 +260,10 @@ def _cascade_and_seal(
         config=config,
         prompts_path=prompts_path,
         registry_path=registry_path,
+    )
+    print(
+        f"present progress: Lane R cascade end (review {result.review_verdict.verdict})",
+        file=sys.stderr, flush=True,
     )
     verdict = result.review_verdict
     if verdict.verdict != "ACCEPT":
@@ -291,6 +296,7 @@ def _cascade_and_seal(
         raise PresentFailure(
             "M8 prose judge rejected unit(s): " + ", ".join(m8_blocked) + "; nothing sealed"
         )
+    print("present progress: Lane R seal start", file=sys.stderr, flush=True)
     seal_candidate(
         SealInputs(
             entry=result.entry,

@@ -47,7 +47,8 @@ from __future__ import annotations
 import copy
 import json
 import sys
-from collections.abc import Collection, Mapping
+import time
+from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -59,7 +60,7 @@ from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import PromptRegistry, load_manifests
-from repo_presenter.core.noop_proof import Invocation, measure_invocation
+from repo_presenter.core.noop_proof import Invocation, count_provider_calls, measure_invocation
 from repo_presenter.core.preflight import PreflightDecision, preflight_decision
 from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
@@ -658,12 +659,23 @@ class _Settled:
     rounds: int
 
 
+def _no_progress(_line: str) -> None:
+    """The default ``progress`` of the settle loop: silent (direct callers and tests)."""
+
+
+def _never_expired() -> bool:
+    """The default ``expired`` of the settle loop: no time-box."""
+    return False
+
+
 def _settle_s9(
     *, entry: RegistryEntry, document: FactsDocument, investigation: dict, ecosystem: str,
     tree_paths: list[str], original_bytes: bytes, original: str, out_dir: Path,
     prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger, store: CallStore,
     context: JobContext, repairs: RepairLedger, max_rounds: int,
     dispositions_override: dict[str, Any] | None = None,
+    progress: Callable[[str], None] = _no_progress,
+    expired: Callable[[], bool] = _never_expired,
 ) -> _Settled:
     """Compose, validate and review deterministically, repairing S4 defects, until nothing fresh
     is repairable or ``max_rounds`` passes have been made. No model reviews here (S10 follows).
@@ -673,11 +685,16 @@ def _settle_s9(
     call's own loop (below) genuinely changes dispositions, so a round after one that repaired
     anything but the plan or a section goes back to a fresh ``_run_reconciliation``, exactly as
     before this parameter existed; after plan/section repairs only, the next round recomposes from
-    the dispositions this round's calls were made from, so those repairs' keys are looked up."""
+    the dispositions this round's calls were made from, so those repairs' keys are looked up.
+
+    ``progress`` receives one line per round and repair (BL-270); ``expired`` is the cascade's
+    wall-clock time-box: once true no further repair starts, so the loop ends with the candidate
+    it has (the round already paid for is still composed and judged)."""
     rounds = 0
     override = dispositions_override
     while True:
         rounds += 1
+        progress(f"S9 settle round {rounds} of {max_rounds}: compose start")
         composed = _compose(
             entry=entry, document=document, investigation=investigation, ecosystem=ecosystem,
             tree_paths=tree_paths, original_bytes=original_bytes, out_dir=out_dir,
@@ -697,7 +714,15 @@ def _settle_s9(
             facts=document, dispositions=composed.dispositions, original_readme=original,
         )
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+        progress(
+            f"S9 settle round {rounds} of {max_rounds}: judged, "
+            f"{len(blocking_failures(validation))} blocking check(s) failing, "
+            f"{len(verdict.blocking_findings)} blocking finding(s)"
+        )
         if rounds >= max_rounds:
+            break
+        if expired():
+            progress(f"S9 settle round {rounds}: time-box reached, no further repair round starts")
             break
         # Zero-call restore BEFORE any model repair: when the only blocking failures are content
         # the restore keeps verbatim, the candidate is settled without asking the model anything.
@@ -729,12 +754,14 @@ def _settle_s9(
         # 3D Python and Cells C++ found "the causing section was not in the call store" -- the
         # signature of a key the round's own calls never made -- and spent a fresh
         # section_authoring call). The final ``_restore_lost_content`` re-applies the restore.
+        progress(f"S9 settle round {rounds}: repair start ({len(defects)} defect(s))")
         if not defects or not _repair_defects(
             defects=defects, composed=base, investigation=investigation, entry=entry,
             document=document, prompts=prompts, config=config, ledger=ledger, store=store,
             context=context, repairs=repairs, benchmark=original,
         ):
             break
+        progress(f"S9 settle round {rounds}: repair end")
         # Only an S4 repair changes what reconciliation returns: after plan and section repairs the
         # next round recomposes from the same dispositions this round's did, so the repairs' keys
         # match; after anything else it goes back to a fresh reconciliation, as before.
@@ -1116,6 +1143,14 @@ def _restore_lost_content(
 #: the model reviewer raises only once the first has withheld what the checks flagged.
 MAX_DEGRADE_PASSES = 2
 
+#: BL-270: the wall-clock time-box of one cascade, in seconds from its start. A measurement of time,
+#: not a spend budget (R45 is unaffected): once it has passed no new repair round starts and the
+#: recorded degrade (BL-240) runs, so the run ends with a verdict -- a seal or a failure record --
+#: before the 90-minute ``present`` job timeout cancels it with nothing recorded. Hosted settle
+#: rounds took 25 to 30 minutes each, so 50 minutes leaves the last round it may still start,
+#: the degrade and the final review inside the job timeout.
+CASCADE_TIMEBOX_SECONDS = 3000.0
+
 
 def _blocking_load(validation: dict[str, Any], verdict: ReviewVerdict) -> tuple[frozenset[str], int]:
     """The blocking check ids still failing and how many failures plus deterministic findings that
@@ -1310,6 +1345,8 @@ def run_cascade(
     registry_path: Path = DEFAULT_REGISTRY_PATH,
     max_rounds: int = MAX_SETTLE_ROUNDS,
     review_repair_rounds: int = MAX_REVIEW_REPAIR_ROUNDS,
+    timebox_seconds: float = CASCADE_TIMEBOX_SECONDS,
+    clock: Callable[[], float] = time.monotonic,
 ) -> CascadeResult:
     """Run S3 (investigation) through S8 (coherence), the S9 validation and the independent
     review, for one repository, as one process under one invocation. Writes the same artifact
@@ -1331,8 +1368,15 @@ def run_cascade(
     candidate (one provider call, two when it needed the one re-ask). Its blocking findings are
     repaired by their causal stage and the candidate re-composed and re-reviewed, at most
     ``review_repair_rounds`` times; ``0`` leaves the repair to the caller (``repair.loop``).
+
+    BL-270: every stage and settle round prints one ``cascade progress`` line (elapsed seconds on
+    ``clock``, provider calls so far) so a run the job timeout cancels still shows its last stage;
+    ``timebox_seconds`` after the cascade's start no new repair round (S9 or S10) begins and the
+    degrade step then runs. ``clock`` is injectable for tests.
     """
     from repo_presenter.readme.repair.loop import composition_hash
+
+    started = clock()
 
     plugin_for(ecosystem)
     base_document = read_facts(facts_path)
@@ -1350,12 +1394,27 @@ def run_cascade(
     store = CallStore(workspace / "calls")
     context = JobContext(repository=repository, source_revision=source_revision)
 
+    def progress(event: str) -> None:
+        try:
+            calls = count_provider_calls(ledger_path, invocation.invocation_id)
+        except Exception:  # noqa: BLE001 -- a progress line never fails the run
+            calls = -1
+        print(
+            f"cascade progress: {event} | elapsed {clock() - started:.0f}s | provider calls {calls}",
+            file=sys.stderr, flush=True,
+        )
+
+    def expired() -> bool:
+        return clock() - started >= timebox_seconds
+
+    progress(f"S3 investigation start (time-box {timebox_seconds:.0f}s)")
     investigation = _run_investigation(
         entry=entry, document=document, prompts=prompts, config=config, ledger=ledger,
         store=store, context=context,
     )
     out_dir.mkdir(parents=True, exist_ok=True)
     write_investigation(investigation, out_dir / "investigation.json")
+    progress("S3 investigation end")
 
     original_bytes = _original_readme_bytes(clone_path)
     original = original_bytes.decode("utf-8", errors="replace")
@@ -1370,7 +1429,7 @@ def run_cascade(
         "ecosystem": ecosystem, "tree_paths": tree_paths, "original_bytes": original_bytes,
         "original": original, "out_dir": out_dir, "prompts": prompts, "config": config,
         "ledger": ledger, "store": store, "context": context, "repairs": repairs,
-        "max_rounds": max_rounds,
+        "max_rounds": max_rounds, "progress": progress, "expired": expired,
     }
     restoring = {
         "entry": entry, "document": document, "investigation": investigation,
@@ -1384,6 +1443,7 @@ def run_cascade(
         # S10 (plan D7): the model reviews only a candidate no deterministic rule or blocking
         # check rejects, once per candidate version. ReviewUnavailable propagates: no valid
         # review, no verdict that could be sealed.
+        progress(f"S10 review start (repair round {review_rounds} of {review_repair_rounds})")
         verdict = review_with_model(
             prompts=prompts, config=config, ledger=ledger, store=store, context=context,
             candidate_readme=settled.composed.readme, original_readme=original, facts=document,
@@ -1391,7 +1451,11 @@ def run_cascade(
             validation=settled.validation, deterministic_findings=verdict.findings,
         )
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+        progress(f"S10 review end: {verdict.verdict}")
         if verdict.verdict == "ACCEPT" or review_rounds >= review_repair_rounds:
+            break
+        if expired():
+            progress("S10: time-box reached, no review repair round starts")
             break
         defects = _review_defects(
             settled=settled, verdict=verdict, entry=entry, document=document, prompts=prompts,
@@ -1422,10 +1486,12 @@ def run_cascade(
         )
         rounds += settled.rounds
         verdict = settled.verdict
+    progress(f"S9/S10 end after {rounds} settle round(s): {verdict.verdict}")
     for _degrade in range(MAX_DEGRADE_PASSES):
         # The last resort (BL-240): only after repair has ended with the candidate still failing.
         if verdict.verdict == "ACCEPT" and not blocking_failures(settled.validation):
             break
+        progress(f"degrade pass {_degrade + 1} start")
         try:
             degraded = _degrade_settled(
                 settled, verdict, entry=entry, document=document, investigation=investigation,
@@ -1446,6 +1512,7 @@ def run_cascade(
                 deterministic_findings=verdict.findings,
             )
             write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
+    progress(f"cascade end: {verdict.verdict}")
     composed, validation = settled.composed, settled.validation
     (out_dir / "validation.json").write_text(
         json.dumps(validation, indent=2, sort_keys=True, ensure_ascii=False) + "\n",

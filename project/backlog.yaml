@@ -2153,12 +2153,12 @@ items:
     type: debt
     source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
     priority: P1
-    status: open
+    status: active
     implementation_path: "readme/cascade run_cascade and present.py: stage and per-call elapsed lines; stop repair rounds near 60 minutes and apply the degrade step"
     acceptance: "no cancelled hosted run without a last-stage line; PDF cells end with a verdict, not a cancel"
-    evidence: ["5 PDF runs cancelled at the 90-minute timeout, 25 to 30 minute settle rounds"]
-    next_action: "after BL-230"
-    updated: "2026-11-18"
+    evidence: ["5 PDF runs cancelled at the 90-minute timeout, 25 to 30 minute settle rounds", "2026-11-19 branch fix/bl270-progress-timebox: cascade.py run_cascade/_settle_s9 print 'cascade progress' lines (stage, round n of N, elapsed, provider calls); CASCADE_TIMEBOX_SECONDS=3000 on an injectable clock stops new S9/S10 repair rounds and the BL-240 degrade then runs; present.py prints cascade start/end and seal start; tests/test_cascade_timebox.py (4 tests, zero provider calls): expired box starts no repair and the degrade runs, no deadline is behaviour-identical, progress order. Not hosted-proven"]
+    next_action: "after the frozen-code proof pass: merge, then confirm on hosted that no PDF cell is cancelled and every cancelled-or-slow run shows a last-stage line"
+    updated: "2026-11-19"
 
   - id: BL-280
     title: "Seal flips (good to bad): classify every recorded RECERTIFIED-to-failing change by cause, and make a flip impossible without a stated cause that the system can act on"

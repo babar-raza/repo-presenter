@@ -7192,3 +7192,22 @@ imports the main checkout's `src` unless `PYTHONPATH=$PWD/src` is set.
 
 Backlog: BL-203, BL-290.
 
+
+## 2026-11-19: Lane R progress lines and a wall-clock time-box inside the cascade (BL-270, R46)
+
+Five of 134 hosted Lane R runs (PDF Python x3, Java, .NET) were cancelled at the 90-minute `present` job timeout after settle
+rounds of 25 to 30 minutes on the same findings; a cancelled run leaves no verdict and no last-stage line. Decided and built
+as the smallest change inside `cascade.py` and `present.py` (no new module, stage or record type, R27): (1) `run_cascade`
+prints one `cascade progress: <event> | elapsed <s>s | provider calls <n>` line to stderr at each stage and settle round
+(S3 start/end, S9 round compose and judged, repair start/end, S10 review start/end, degrade passes, cascade end), and
+`present.py` prints the Lane R cascade start/end and seal start, so the hosted log always ends on the last stage reached;
+(2) `CASCADE_TIMEBOX_SECONDS = 3000` measured on an injectable clock from the cascade start: once passed no new S9 repair
+or S10 review-repair round starts (a round already paid for is still composed and judged), and the existing BL-240
+`_degrade_settled` then runs, so the run ends with a seal or a failure record before the job timeout. 3000 rather than 3600
+because hosted rounds take up to 30 minutes: the last round started just inside the box ends near 80 minutes. It measures
+time, not spend; R45 is unaffected. Property improved: robust and repeatable (a run always ends with a verdict and a
+diagnosable last stage). Unchanged: behaviour when the box is not reached (only extra stderr lines); no seal changes (R10);
+no README wording (R9). Not determined: whether 3000 s is the right value on hosted (only a hosted run shows), and the
+cancel path itself, which only GitHub's runner can exercise.
+
+Backlog: BL-270
