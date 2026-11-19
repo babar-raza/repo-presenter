@@ -56,31 +56,45 @@
    "run_id": "44557177660",
    "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T18:41:21+00:00",
+   "classes": [
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44588128813",
+   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T16:23:18+00:00",
+  "at": "2026-11-19T18:41:21+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
+    "example": "The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and `Style` \u2014 `Workbook.Worksheets` is a `WorksheetCollection` of `Worksheet` objects, each exposing a `Cells` collection for reading and writing values, formulas, and styles.",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "authored_unit",
     "origins": [
-     "OutputRejectedError"
+     "api_reference.intro"
     ],
-    "rule": "job_error",
-    "scope": "cc9dc0080ae9f3e3c61a7594cbfc7376e1c01b14e250fc72f868653238793283",
+    "rule": "duplicate_paragraph",
+    "scope": "1e0aa55a2ea165ad56b00a61418426c18d820a7c291769f28a6062bb7edbddd1",
     "scope_paths": [
-     "prompts",
-     "pyproject.toml",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "sub_rule": "the_candidate_prints_the",
     "upstream": ""
    }
   },
@@ -88,25 +102,25 @@
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+    "label": "duplicate_paragraph",
+    "message": "the candidate prints the same prose paragraph more than once",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
+    "quote": "The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and `Style` \u2014 `Workbook.Worksheets` is a `WorksheetCollection` of `Worksheet` objects, each exposing a `Cells` collection for reading and writing values, formulas, and styles.",
+    "rule": "duplicate_paragraph",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
+    "source": "review",
+    "sub_rule": "the_candidate_prints_the",
     "upstream": ""
    }
   ],
@@ -117,32 +131,32 @@
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
+    "label": "duplicate_paragraph:2",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units[0].text' changed ('The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and `Style` \u2014 `Workbook.Worksheets` is a `WorksheetCollection` of `Worksheet` objects, each exposing a `Cells` collection for reading and writing values, formulas, and styles.' to 'Aspose.Cells FOSS for TypeScript provides a real class surface centered on Workbook, Worksheet, Cell, and Style \u2014 Workb",
     "section_id": "api_reference",
     "stage": "S6"
    },
    {
     "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5+claim_contradiction:6+claim_contradiction:7+claim_contradiction:8+claim_contradiction:9+claim_contradiction:10+claim_contradiction:11+claim_contradiction:12",
+    "label": "BC-14",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
-    "stage": "S4"
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units[1].text' changed ('The Workbook class serves as the primary entry point for working with Excel files, offering a constructor to create new workbooks, Save and LoadDiagnostics methods for file operations, Worksheets and DefinedNames collections for navigating content, DocumentProperties and Properties for metadata, Settings for configuration, and utility methods like EnsureUniqueDefinedName and Ensure",
+    "section_id": "api_reference",
+    "stage": "S6"
    }
   ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
-  "run_id": "44557177660",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44557177660",
+  "run_id": "44588128813",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44588128813",
   "schema_version": 1,
   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
