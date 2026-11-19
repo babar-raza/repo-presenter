@@ -48,11 +48,23 @@
    "run_id": "44291549909",
    "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T15:37:24+00:00",
+   "classes": [
+    "BC-18|inherited_unit|false_claim"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44556166528",
+   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T11:22:08+00:00",
+  "at": "2026-11-19T15:37:24+00:00",
   "classes": {
    "BC-18|inherited_unit|false_claim": {
     "example": "scene.Save(\"output.obj\", FileFormat.WavefrontOBJ);",
@@ -62,7 +74,7 @@
      "inherited_unit:028.code_block"
     ],
     "rule": "BC-18",
-    "scope": "69e3021022d57c5abcb3ad3033fbb1c26b383b5f7b199c890f1c820fce3667a0",
+    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -77,7 +89,7 @@
     "upstream": ""
    }
   },
-  "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -104,22 +116,22 @@
    }
   ],
   "lane": "R",
-  "main_sha": "5bb37e3810dff55b89c6e49bbd8ef7ce08db3f53",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
     "label": "BC-18",
-    "outcome": "repaired",
-    "reason": "plan-level drop of workflow:example:007 (blanked by the repair)",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'revised_output.units[2].text' changed ('Handle an unsupported file format during scene loading.' to 'Handle an unsupported file format during scene loading. (scene.Save(path, FileFormat.WavefrontOBJ) throws; use extension-based scene.Save(path) instead.)'), but the causal stage's own input and this revision hold the identical value there",
     "section_id": "additional_examples",
     "stage": "S6"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-.NET",
-  "run_id": "44291549909",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44291549909",
+  "run_id": "44556166528",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556166528",
   "schema_version": 1,
   "source_revision": "52b0f00ebf28a0b4173921725ff170685ec2c502",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
