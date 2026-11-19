@@ -65,11 +65,24 @@
    "run_id": "44556434801",
    "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T17:53:46+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|api_reference"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 16,
+   "outcome": "failure",
+   "run_id": "44581401200",
+   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T15:53:15+00:00",
+  "at": "2026-11-19T17:53:46+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
     "example": "| `VertexElement` | VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented. |",
@@ -385,35 +398,11 @@
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "no stored disposition of an inherited unit is named by this defect; a whole-batch revision would regenerate unrelated units",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:1",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
-    "stage": "S4"
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
-  "run_id": "44556434801",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556434801",
+  "run_id": "44581401200",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44581401200",
   "schema_version": 1,
   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
