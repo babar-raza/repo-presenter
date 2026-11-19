@@ -713,21 +713,42 @@
         "public_symbol:alignment",
         "public_symbol:border",
         "public_symbol:cell",
+        "public_symbol:cellnotfounderror",
         "public_symbol:cells",
+        "public_symbol:cells.get",
         "public_symbol:chart",
+        "public_symbol:chartanchor",
+        "public_symbol:chartaxis",
+        "public_symbol:chartlegend",
+        "public_symbol:chartseries",
+        "public_symbol:charttype",
+        "public_symbol:colorscale",
         "public_symbol:conditionalformatting",
+        "public_symbol:conditionalformattingrule",
+        "public_symbol:condthreshold",
+        "public_symbol:databar",
         "public_symbol:datavalidation",
         "public_symbol:errorvalue",
         "public_symbol:fill",
         "public_symbol:font",
+        "public_symbol:formulaerror",
         "public_symbol:hyperlink",
+        "public_symbol:iconset",
+        "public_symbol:invalidreferror",
+        "public_symbol:legendposition",
         "public_symbol:picture",
+        "public_symbol:pivotdatafield",
         "public_symbol:pivottable",
+        "public_symbol:rowcallback",
+        "public_symbol:sheetnotfounderror",
+        "public_symbol:streamingreader",
+        "public_symbol:streamingreader.processrows",
+        "public_symbol:streamoptions",
         "public_symbol:style",
         "public_symbol:table",
         "public_symbol:vbaproject"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table listing public API surface is superseded by the 'API Reference' section which alread",
       "unit_id": "inherited_unit:052.table"
     },
     {
@@ -752,13 +773,13 @@
       "destination_section": "documentation_resources",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "link_target:011",
         "link_target:039",
         "link_target:040",
         "link_target:041",
+        "link_target:011",
         "link_target:042"
       ],
-      "rationale": "Kept as written (inherit-and-correct, R43(3)). Not printed again: documentation resources already states this material from the facts it cites, so the kept unit",
+      "rationale": "The list of documentation resources is preserved as written and matches verified targets.",
       "unit_id": "inherited_unit:055.list"
     },
     {
@@ -915,13 +936,13 @@
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "dependency:none",
         "public_symbol:cells.get",
         "public_symbol:cells.set",
         "public_symbol:workbook.save",
-        "public_symbol:workbook.sourcexml"
+        "public_symbol:workbook.sourcexml",
+        "dependency:none"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "The list items are supported limitations: A1-style references only, XML regeneration, no third-party dependencies, and output file exclusion guidance.",
       "unit_id": "inherited_unit:073.list"
     },
     {

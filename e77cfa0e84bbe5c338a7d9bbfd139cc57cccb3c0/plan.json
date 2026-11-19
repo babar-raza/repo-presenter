@@ -32,11 +32,22 @@
     },
     {
       "fact_ids": [
+        "public_symbol:style.font",
+        "public_symbol:style.fill",
+        "public_symbol:style.border",
+        "public_symbol:style.alignment",
+        "public_symbol:style.numberformat"
+      ],
+      "symbol_fact_id": "public_symbol:style"
+    },
+    {
+      "fact_ids": [
         "public_symbol:newworkbook",
         "public_symbol:loadworkbook",
         "public_symbol:workbook.worksheets",
         "public_symbol:workbook.save",
         "public_symbol:workbook.saveto",
+        "public_symbol:loadfrom",
         "public_symbol:workbook.exporttocsv",
         "public_symbol:workbook.importfromcsv"
       ],
@@ -51,22 +62,12 @@
         "public_symbol:worksheet.setautofilter",
         "public_symbol:worksheet.insertrow",
         "public_symbol:worksheet.deleterow",
-        "public_symbol:worksheet.setcolumnwidth",
-        "public_symbol:worksheet.setrowheight",
-        "public_symbol:worksheet.addhyperlink"
+        "public_symbol:worksheet.addtable",
+        "public_symbol:worksheet.adddatavalidation",
+        "public_symbol:worksheet.addchart",
+        "public_symbol:worksheet.addpicture"
       ],
       "symbol_fact_id": "public_symbol:worksheet"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:newstyle",
-        "public_symbol:style.font",
-        "public_symbol:style.fill",
-        "public_symbol:style.border",
-        "public_symbol:style.alignment",
-        "public_symbol:style.numberformat"
-      ],
-      "symbol_fact_id": "public_symbol:style"
     },
     {
       "fact_ids": [
@@ -87,15 +88,6 @@
     },
     {
       "fact_ids": [
-        "public_symbol:newtable",
-        "public_symbol:table.hasheaderrow",
-        "public_symbol:table.stylename",
-        "public_symbol:worksheet.addtable"
-      ],
-      "symbol_fact_id": "public_symbol:table"
-    },
-    {
-      "fact_ids": [
         "public_symbol:chart.type",
         "public_symbol:chart.series",
         "public_symbol:chart.title",
@@ -106,22 +98,22 @@
     },
     {
       "fact_ids": [
+        "public_symbol:table.hasheaderrow",
+        "public_symbol:table.stylename",
+        "public_symbol:worksheet.addtable"
+      ],
+      "symbol_fact_id": "public_symbol:table"
+    },
+    {
+      "fact_ids": [
         "public_symbol:pivottable.ref",
+        "public_symbol:pivottable.sourceref",
         "public_symbol:pivottable.rowfields",
         "public_symbol:pivottable.colfields",
         "public_symbol:pivottable.datafields",
         "public_symbol:worksheet.addpivottable"
       ],
       "symbol_fact_id": "public_symbol:pivottable"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:newpicture",
-        "public_symbol:picture.data",
-        "public_symbol:picture.setanchor",
-        "public_symbol:worksheet.addpicture"
-      ],
-      "symbol_fact_id": "public_symbol:picture"
     },
     {
       "fact_ids": [
@@ -132,6 +124,15 @@
         "public_symbol:streamingreader.processrowswithrange"
       ],
       "symbol_fact_id": "public_symbol:streamingreader"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:newpicture",
+        "public_symbol:picture.data",
+        "public_symbol:picture.setanchor",
+        "public_symbol:worksheet.addpicture"
+      ],
+      "symbol_fact_id": "public_symbol:picture"
     }
   ],
   "at_a_glance": {
@@ -266,11 +267,7 @@
         "identity:repository",
         "package:go_version",
         "package:name",
-        "package:published_version",
-        "format:input.xlsx",
-        "format:output.xlsx",
-        "dependency:none",
-        "identity:product-knowledge-refresh"
+        "package:published_version"
       ],
       "section_id": "identity",
       "text": "The H1 product name is rendered deterministically from identity and package facts."
@@ -286,9 +283,7 @@
         "link_target:007",
         "link_target:008",
         "link_target:009",
-        "link_target:010",
-        "link_target:011",
-        "link_target:012"
+        "link_target:010"
       ],
       "section_id": "badges",
       "text": "The badge row is rendered deterministically from verified link targets."
@@ -296,98 +291,107 @@
     {
       "fact_ids": [
         "link_target:009",
-        "link_target:010",
-        "link_target:product.banner",
-        "link_target:product.homepage"
+        "link_target:010"
       ],
       "section_id": "banner",
       "text": "The banner image links to the product homepage and is moved to the enterprise relationship section."
     },
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:go_version",
+        "package:name",
+        "package:published_version",
+        "format:input.xlsx",
+        "format:output.xlsx",
+        "dependency:none"
+      ],
+      "section_id": "opening",
+      "text": "The paragraph describes the library's purpose, problems solved, and target audience."
+    },
+    {
+      "fact_ids": [
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021"
+      ],
+      "section_id": "navigation",
+      "text": "Navigation is rendered deterministically; this heading is redundant and unsupported by facts."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:008",
+        "example:009",
+        "example:010",
+        "example:007",
+        "public_symbol:cells.get",
+        "public_symbol:cells.set"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram illustrates core capabilities and is preserved as a visual summary in key_capabilities."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:008",
+        "example:009",
+        "example:010",
+        "example:007",
+        "public_symbol:calculateformula",
+        "public_symbol:cell.asfloat64"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The list of capabilities is superseded by the key_capabilities section, which is rendered from facts."
+    },
+    {
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "section_id": "installation",
+      "text": "The 'Installation' heading is rendered deterministically from the install_command fact."
+    },
+    {
+      "fact_ids": [
         "dependency:none"
       ],
       "section_id": "dependencies",
-      "text": "The dependency fact states zero third-party dependencies."
-    },
-    {
-      "fact_ids": [
-        "build_test_asset:examples",
-        "build_test_asset:test-command"
-      ],
-      "section_id": "development_testing",
-      "text": "The examples module is its own Go module with a replace directive pointing back at the repository root."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:alignment",
-        "public_symbol:border",
-        "public_symbol:cell",
-        "public_symbol:cells",
-        "public_symbol:chart",
-        "public_symbol:conditionalformatting",
-        "public_symbol:datavalidation",
-        "public_symbol:errorvalue",
-        "public_symbol:fill",
-        "public_symbol:font",
-        "public_symbol:hyperlink",
-        "public_symbol:picture"
-      ],
-      "section_id": "api_reference",
-      "text": "The API reference section includes the complete verified public surface."
-    },
-    {
-      "fact_ids": [
-        "example:004",
-        "public_symbol:calculateformula",
-        "public_symbol:chart",
-        "public_symbol:formulaerror",
-        "public_symbol:pivottable",
-        "public_symbol:serialtotime",
-        "public_symbol:timetoserial",
-        "public_symbol:vbaproject",
-        "public_symbol:workbook.save"
-      ],
-      "section_id": "scope_limitations",
-      "text": "The scope and limitations section includes every material limitation from evidence and inherited units."
-    },
-    {
-      "fact_ids": [
-        "link_target:product.enterprise"
-      ],
-      "section_id": "enterprise_relationship",
-      "text": "The Enterprise Edition relationship is stated in one or two sentences."
-    },
-    {
-      "fact_ids": [
-        "license:file",
-        "license:spdx"
-      ],
-      "section_id": "license",
-      "text": "The license section states the license from facts."
+      "text": "The 'Dependencies' heading is rendered deterministically from the dependency fact."
     }
   ],
   "flagship_example_id": "example:004",
   "links": [
     {
       "link_fact_id": "link_target:001",
-      "section_id": "badges"
+      "section_id": "dependencies"
     },
     {
       "link_fact_id": "link_target:003",
-      "section_id": "badges"
+      "section_id": "license"
     },
     {
       "link_fact_id": "link_target:005",
-      "section_id": "badges"
+      "section_id": "api_reference"
     },
     {
-      "link_fact_id": "link_target:007",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:009",
-      "section_id": "banner"
+      "link_fact_id": "link_target:006",
+      "section_id": "api_reference"
     },
     {
       "link_fact_id": "link_target:039",
@@ -399,11 +403,19 @@
     },
     {
       "link_fact_id": "link_target:041",
-      "section_id": "documentation_resources"
+      "section_id": "api_reference"
     },
     {
       "link_fact_id": "link_target:045",
       "section_id": "api_reference"
+    },
+    {
+      "link_fact_id": "link_target:043",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "enterprise_relationship"
     },
     {
       "link_fact_id": "link_target:011",
@@ -411,10 +423,6 @@
     },
     {
       "link_fact_id": "link_target:042",
-      "section_id": "documentation_resources"
-    },
-    {
-      "link_fact_id": "link_target:043",
       "section_id": "documentation_resources"
     }
   ],

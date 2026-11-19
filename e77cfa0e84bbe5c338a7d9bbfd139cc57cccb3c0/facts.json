@@ -12289,6 +12289,8 @@
     {
       "attributes": {
         "docstring_full": "Horizontal alignment: AlignLeft, AlignCenter, AlignRight, or \"\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -12307,6 +12309,8 @@
     {
       "attributes": {
         "docstring_full": "Vertical alignment: AlignTop, AlignMiddle, AlignBottom, or \"\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -12325,6 +12329,8 @@
     {
       "attributes": {
         "docstring_full": "WrapText enables automatic line-wrapping when the cell content is wider than the column.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -12360,6 +12366,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -12377,6 +12385,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -12394,6 +12404,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -12411,6 +12423,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -12428,6 +12442,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -12445,6 +12461,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "CalculateFormula evaluates a formula expression against the data in ws and returns the computed result.",
         "docstring_full": "CalculateFormula evaluates a formula expression against the data in ws and returns the computed result. Only a limited set of aggregation functions is supported; other formulas return an error. Supported functions: - SUM(ref, \u2026) - AVERAGE(ref, \u2026) - MAX(ref, \u2026) - MIN(ref, \u2026) - COUNT(ref, \u2026) - CONCAT(ref, \u2026) - IF(condition, true_val, false_val) - COUNTIF(range, criteria) - VLOOKUP(value, range, col_index, [match]) - ROUND(number, decimals) - ABS(number) - POWER(base, exponent) - SQRT(number) - LEN(text_or_cell) - LEFT(text_or_cell, num_chars) - RIGHT(text_or_cell, num_chars) - MID(text_or_cell, start_num, num_chars) - UPPER(text_or_cell) - LOWER(text_or_cell) - AND(condition1, condition2, ...) - OR(condition1, condition2, ...) - NOT(condition) References may be single cells (\"A1\"), ranges (\"A1:A10\" / \"A1:C1\"), or comma-separated combinations of both. Numeric and string literals may be used anywhere a reference is accepted. Non-numeric cells are silently ignored. Empty ranges produce an error. Formulas that are not a single function call are evaluated as arithmetic expressions, e.g. \"1+1\", \"A1*2\", \"SUM(A1:A3)+10\", \"(A1+A2)/2\", \"-B3\". Supported operators: + - * / ^ (power) and & (string concatenation). References may be qualified with a sheet name (\"Sheet2!A1\", \"'My Sheet'!B2:C10\"); the sheet is looked up in the workbook the passed worksheet belongs to. A reference to a sheet that does not exist produces an error. Evaluation follows Excel's error-value semantics: dividing by zero yields the ErrorValue #DIV/0! (not a Go error), SQRT of a negative number yields #NUM!, arithmetic on text yields #VALUE!, and error values propagate through arithmetic and aggregation.",
         "symbol_kind": "function"
@@ -12482,8 +12499,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AsFloat64 returns the cell value as float64.",
         "docstring_full": "AsFloat64 returns the cell value as float64. It returns (0, false) if the cell is empty or the value cannot be converted to a number.",
+        "member_kind": "method",
         "signature": "(float64, bool) AsFloat64()",
         "symbol_kind": "method"
       },
@@ -12501,8 +12520,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AsInt returns the cell value as int.",
         "docstring_full": "AsInt returns the cell value as int. It returns (0, false) if the cell is empty or the value cannot be converted to an integer.",
+        "member_kind": "method",
         "signature": "(int, bool) AsInt()",
         "symbol_kind": "method"
       },
@@ -12520,8 +12541,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AsString returns the cell value as a string.",
         "docstring_full": "AsString returns the cell value as a string. It returns \"\" for nil (empty) cells and formats numeric/boolean values using the same conventions as CellToString.",
+        "member_kind": "method",
         "signature": "string AsString()",
         "symbol_kind": "method"
       },
@@ -12539,6 +12562,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "`xml:\"f,omitempty\"`",
         "symbol_kind": "method"
       },
@@ -12556,7 +12581,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "GetFormula returns the formula expression stored in this cell, or an empty string when the cell contains no formula.",
+        "member_kind": "method",
         "signature": "string GetFormula()",
         "symbol_kind": "method"
       },
@@ -12574,7 +12601,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "GetStyle returns the Style currently applied to this cell, or nil when the cell has no parent Workbook or the StyleID cannot be resolved.",
+        "member_kind": "method",
         "signature": "*Style GetStyle()",
         "symbol_kind": "method"
       },
@@ -12592,6 +12621,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "`xml:\"r,attr\"`",
         "symbol_kind": "method"
       },
@@ -12609,8 +12640,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetFormula stores a formula expression in this cell and marks the owning worksheet and workbook as modified.",
         "docstring_full": "SetFormula stores a formula expression in this cell and marks the owning worksheet and workbook as modified. The formula is written as-is into the element during save; no parsing or validation is performed at write time.",
+        "member_kind": "method",
         "signature": "SetFormula(string formula)",
         "symbol_kind": "method"
       },
@@ -12628,8 +12661,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetStyle assigns the given Style to this cell.",
         "docstring_full": "SetStyle assigns the given Style to this cell. When the owning Workbook is available the style is automatically registered (or deduplicated) and the cell's StyleID is updated. If the cell has no parent Workbook (e.g. it was created outside of a workbook context) the call returns an error.",
+        "member_kind": "method",
         "signature": "error SetStyle(*Style style)",
         "symbol_kind": "method"
       },
@@ -12647,6 +12682,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "`xml:\"s,attr,omitempty\"`",
         "symbol_kind": "method"
       },
@@ -12665,6 +12702,8 @@
     {
       "attributes": {
         "docstring_full": "Value holds the cell's data. After loading, numeric cells contain float64, boolean cells contain bool, and string cells contain string. Deprecated: Use AsFloat64, AsInt, or AsString for type-safe access. The concrete type of Value may vary (e.g. float64 for numeric cells loaded from .xlsx), so direct type assertions like Value.(string) may panic.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "`xml:\"v,omitempty\"`",
         "symbol_kind": "method"
       },
@@ -12682,6 +12721,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "`xml:\"c\"`",
         "symbol_kind": "method"
       },
@@ -12717,6 +12758,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "string Error()",
         "symbol_kind": "method"
       },
@@ -12734,6 +12777,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -12770,8 +12815,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "All returns the underlying map of all cells keyed by A1 reference.",
         "docstring_full": "All returns the underlying map of all cells keyed by A1 reference. Callers may safely range over the returned map.",
+        "member_kind": "method",
         "signature": "map[string]*Cell All()",
         "symbol_kind": "method"
       },
@@ -12789,8 +12836,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Get returns the Cell at the given A1 reference.",
         "docstring_full": "Get returns the Cell at the given A1 reference. An error is returned when no cell exists at that reference.",
+        "member_kind": "method",
         "signature": "(*Cell, error) Get(string ref)",
         "symbol_kind": "method"
       },
@@ -12808,8 +12857,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Remove deletes the cell at the given A1 reference.",
         "docstring_full": "Remove deletes the cell at the given A1 reference. An error is returned when no cell exists at that reference. A successful removal marks the owning Workbook as modified.",
+        "member_kind": "method",
         "signature": "error Remove(string ref)",
         "symbol_kind": "method"
       },
@@ -12827,8 +12878,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Set stores a value at the given A1 reference.",
         "docstring_full": "Set stores a value at the given A1 reference. If a cell already exists at ref its Value is updated; otherwise a new Cell is created with its Ref field set to ref. Every call to Set marks the owning Workbook as modified so that subsequent calls to Save will regenerate (rather than reuse cached) XML.",
+        "member_kind": "method",
         "signature": "error Set(string ref, interface{} value)",
         "symbol_kind": "method"
       },
@@ -12846,6 +12899,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "CellToString converts a cell value to its CSV string representation.",
         "symbol_kind": "function"
       },
@@ -12882,6 +12936,8 @@
     {
       "attributes": {
         "docstring_full": "Anchor specifies the position of the chart on the worksheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "ChartAnchor",
         "symbol_kind": "method"
       },
@@ -12900,6 +12956,8 @@
     {
       "attributes": {
         "docstring_full": "Height is the chart height in pixels.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -12918,6 +12976,8 @@
     {
       "attributes": {
         "docstring_full": "Legend adds a legend to the chart. Nil omits the legend element.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*ChartLegend",
         "symbol_kind": "method"
       },
@@ -12936,6 +12996,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the internal name used in drawing XML.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -12954,6 +13016,8 @@
     {
       "attributes": {
         "docstring_full": "Series holds the data series to plot. For scatter charts, each series' Categories range supplies the numeric X values and Values supplies the Y values.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*ChartSeries",
         "symbol_kind": "method"
       },
@@ -12972,6 +13036,8 @@
     {
       "attributes": {
         "docstring_full": "Title is the chart title displayed above the chart.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -12990,6 +13056,8 @@
     {
       "attributes": {
         "docstring_full": "Type is the chart type: \"bar\", \"line\", \"pie\", \"scatter\", or \"area\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "ChartType",
         "symbol_kind": "method"
       },
@@ -13008,6 +13076,8 @@
     {
       "attributes": {
         "docstring_full": "Width is the chart width in pixels.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13026,6 +13096,8 @@
     {
       "attributes": {
         "docstring_full": "XAxis configures the category axis (scatter: the bottom value axis). Nil uses Excel defaults. Ignored by pie charts.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*ChartAxis",
         "symbol_kind": "method"
       },
@@ -13044,6 +13116,8 @@
     {
       "attributes": {
         "docstring_full": "YAxis configures the value axis. Nil uses Excel defaults. Ignored by pie charts.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*ChartAxis",
         "symbol_kind": "method"
       },
@@ -13080,6 +13154,8 @@
     {
       "attributes": {
         "docstring_full": "Col is the 0-based column index of the anchor position.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13098,6 +13174,8 @@
     {
       "attributes": {
         "docstring_full": "ColOff is the horizontal offset from the left of the anchor column, in EMUs.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int64",
         "symbol_kind": "method"
       },
@@ -13116,6 +13194,8 @@
     {
       "attributes": {
         "docstring_full": "Row is the 0-based row index of the anchor position.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13134,6 +13214,8 @@
     {
       "attributes": {
         "docstring_full": "RowOff is the vertical offset from the top of the anchor row, in EMUs.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int64",
         "symbol_kind": "method"
       },
@@ -13170,6 +13252,8 @@
     {
       "attributes": {
         "docstring_full": "Hidden writes , suppressing the axis in Excel.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13188,6 +13272,8 @@
     {
       "attributes": {
         "docstring_full": "Title is the axis title; empty omits the title element.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13224,6 +13310,8 @@
     {
       "attributes": {
         "docstring_full": "Overlay draws the legend over the plot area instead of beside it.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13242,6 +13330,8 @@
     {
       "attributes": {
         "docstring_full": "Position is where the legend is drawn; empty means LegendRight. Unknown values are saved as LegendRight.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "LegendPosition",
         "symbol_kind": "method"
       },
@@ -13278,6 +13368,8 @@
     {
       "attributes": {
         "docstring_full": "Categories is the A1-style range for category labels (e.g., \"A1:A10\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13296,6 +13388,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the series name displayed in the legend.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13314,6 +13408,8 @@
     {
       "attributes": {
         "docstring_full": "Values is the A1-style range for data values (e.g., \"B1:B10\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13331,6 +13427,7 @@
     },
     {
       "attributes": {
+        "bases": "string",
         "declaration": "type ChartType string",
         "docstring": "ChartType enumerates the supported chart types.",
         "member_count": "5",
@@ -13371,6 +13468,8 @@
     {
       "attributes": {
         "docstring_full": "Colors holds one ARGB color per threshold.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]string",
         "symbol_kind": "method"
       },
@@ -13389,6 +13488,8 @@
     {
       "attributes": {
         "docstring_full": "Thresholds holds 2 or 3 stops, typically min/max or min/percent(50)/max.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]CondThreshold",
         "symbol_kind": "method"
       },
@@ -13406,6 +13507,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ColToNum converts a column letter (or letters) to a zero-based index.",
         "docstring_full": "ColToNum converts a column letter (or letters) to a zero-based index. \"A\" \u2192 0, \"B\" \u2192 1, \u2026, \"Z\" \u2192 25, \"AA\" \u2192 26.",
         "symbol_kind": "function"
@@ -13443,6 +13545,8 @@
     {
       "attributes": {
         "docstring_full": "Ref is the A1-style range this conditional formatting applies to, e.g. \"A1:A10\" or \"A1:B10 D1:D20\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13461,6 +13565,8 @@
     {
       "attributes": {
         "docstring_full": "Rules holds the conditional formatting rules in priority order.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*ConditionalFormattingRule",
         "symbol_kind": "method"
       },
@@ -13497,6 +13603,8 @@
     {
       "attributes": {
         "docstring_full": "Bottom makes a top10 rule format the lowest-ranked cells instead of the highest.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13515,6 +13623,8 @@
     {
       "attributes": {
         "docstring_full": "ColorScale carries the configuration of a colorScale rule; nil for all other types.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*ColorScale",
         "symbol_kind": "method"
       },
@@ -13533,6 +13643,8 @@
     {
       "attributes": {
         "docstring_full": "DataBar carries the configuration of a dataBar rule; nil for all other types.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*DataBar",
         "symbol_kind": "method"
       },
@@ -13551,6 +13663,8 @@
     {
       "attributes": {
         "docstring_full": "Formula is the condition formula or value. For cellIs rules this is the comparison value; for expression rules this is the formula.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13569,6 +13683,8 @@
     {
       "attributes": {
         "docstring_full": "Formula2 is the second formula for \"between\" operators.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13587,6 +13703,8 @@
     {
       "attributes": {
         "docstring_full": "IconSet carries the configuration of an iconSet rule; nil for all other types.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*IconSet",
         "symbol_kind": "method"
       },
@@ -13605,6 +13723,8 @@
     {
       "attributes": {
         "docstring_full": "Operator is the comparison operator for cellIs rules, e.g. \"greaterThan\", \"lessThan\", \"between\". Empty for other rule types.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13623,6 +13743,8 @@
     {
       "attributes": {
         "docstring_full": "Percent interprets a top10 rule's Rank as a percentage.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13641,6 +13763,8 @@
     {
       "attributes": {
         "docstring_full": "Priority controls the evaluation order. Lower numbers have higher priority. Rules are evaluated in ascending priority order.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13659,6 +13783,8 @@
     {
       "attributes": {
         "docstring_full": "Rank is how many cells a top10 rule formats; 0 saves Excel's default of 10. Ignored by other rule types.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13677,6 +13803,8 @@
     {
       "attributes": {
         "docstring_full": "StopIfTrue controls whether subsequent rules are evaluated when this rule's condition is met.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13695,6 +13823,8 @@
     {
       "attributes": {
         "docstring_full": "Style is the formatting to apply when the condition is met. This is used for DXF (Differential Formatting) in conditional formatting.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*Style",
         "symbol_kind": "method"
       },
@@ -13713,6 +13843,8 @@
     {
       "attributes": {
         "docstring_full": "StyleID is the internal DXF style index used during save. It is automatically assigned and should not be set manually.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13731,6 +13863,8 @@
     {
       "attributes": {
         "docstring_full": "Text is the text to match for containsText, beginsWith, endsWith rules.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13749,6 +13883,8 @@
     {
       "attributes": {
         "docstring_full": "Type is the rule type: \"cellIs\", \"containsText\", \"beginsWith\", \"endsWith\", \"expression\", \"colorScale\", \"dataBar\", \"iconSet\", or \"top10\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13785,6 +13921,8 @@
     {
       "attributes": {
         "docstring_full": "Type is one of CondValueMin, CondValueMax, CondValueNum, CondValuePercent, or CondValueFormula.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13803,6 +13941,8 @@
     {
       "attributes": {
         "docstring_full": "Val is the threshold value: a number for num, \"0\"\u2013\"100\" for percent, an expression for formula. Ignored for min/max.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13839,6 +13979,8 @@
     {
       "attributes": {
         "docstring_full": "Color is the ARGB bar color; required.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -13857,6 +13999,8 @@
     {
       "attributes": {
         "docstring_full": "HideValue draws only the bar, suppressing the cell value (showValue=\"0\"). The zero value keeps Excel's default of showing both.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13875,6 +14019,8 @@
     {
       "attributes": {
         "docstring_full": "Max is the value where the bar fills the cell.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "CondThreshold",
         "symbol_kind": "method"
       },
@@ -13892,6 +14038,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13910,6 +14058,8 @@
     {
       "attributes": {
         "docstring_full": "Min is the value where the bar length is zero.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "CondThreshold",
         "symbol_kind": "method"
       },
@@ -13928,6 +14078,8 @@
     {
       "attributes": {
         "docstring_full": "MinLength and MaxLength bound the bar length as a percentage of the cell width. Zero uses Excel's defaults (10 and 90).",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -13964,6 +14116,8 @@
     {
       "attributes": {
         "docstring_full": "AllowBlank controls whether empty cells pass validation.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -13982,6 +14136,8 @@
     {
       "attributes": {
         "docstring_full": "ErrorMessage is the body text of the error dialog.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14000,6 +14156,8 @@
     {
       "attributes": {
         "docstring_full": "ErrorStyle controls the severity of the validation alert: \"stop\", \"warning\", or \"information\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14018,6 +14176,8 @@
     {
       "attributes": {
         "docstring_full": "ErrorTitle is the caption of the error dialog.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14036,6 +14196,8 @@
     {
       "attributes": {
         "docstring_full": "Formula1 is the primary formula or value used by the validation rule. For list validations this can be a range reference (\"$A$1:$A$10\") or a double-quoted comma-separated list (`\"Yes,No\"`).",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14054,6 +14216,8 @@
     {
       "attributes": {
         "docstring_full": "Formula2 is the secondary formula (used for \"between\" / \"notBetween\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14072,6 +14236,8 @@
     {
       "attributes": {
         "docstring_full": "Operator is the comparison applied by value-comparing types (whole, decimal, date, time, textLength): one of the DataValidationOp* constants. Empty means \"between\" (the schema default). Ignored by list and custom validations.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14090,6 +14256,8 @@
     {
       "attributes": {
         "docstring_full": "Ref is the A1-style range (or space-separated list of ranges) this validation rule applies to, e.g. \"A1:A10\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14108,6 +14276,8 @@
     {
       "attributes": {
         "docstring_full": "ShowErrorMessage controls whether an error alert is shown on invalid input.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -14126,6 +14296,8 @@
     {
       "attributes": {
         "docstring_full": "Type is the validation type (e.g. \"list\", \"whole\", \"decimal\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14143,6 +14315,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "DefaultStyle returns the implicit style applied to every cell that has not been assigned an explicit Style.",
         "docstring_full": "DefaultStyle returns the implicit style applied to every cell that has not been assigned an explicit Style. It matches the Excel default of Calibri 11 with no special formatting.",
         "symbol_kind": "function"
@@ -14161,6 +14334,7 @@
     },
     {
       "attributes": {
+        "bases": "string",
         "declaration": "type ErrorValue string",
         "docstring": "ErrorValue represents an Excel error value such as #DIV/0!.",
         "docstring_full": "ErrorValue represents an Excel error value such as #DIV/0!. Error values are produced by formula evaluation (e.g. division by zero) and can be stored in cells like any other value: v, err := cells_foss.CalculateFormula(\"1/0\", ws) // v == cells_foss.ErrDiv0, err == nil ws.Cells().Set(\"A1\", v) // saved as #DIV/0! A cell holding an error value reports it through AsString; AsFloat64 and AsInt return ok=false. In formulas, error values propagate: an operation with an error operand yields that error, matching Excel. (Not to be confused with the FormulaError struct, which reports Go-level formula parse/evaluation failures.)",
@@ -14182,7 +14356,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Error implements the error interface so an ErrorValue can travel through error-returning evaluation paths; errors.As recovers it as a value.",
+        "member_kind": "method",
         "signature": "string Error()",
         "symbol_kind": "method"
       },
@@ -14219,6 +14395,8 @@
     {
       "attributes": {
         "docstring_full": "Color is the foreground colour for solid fills as an ARGB hex string.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14237,6 +14415,8 @@
     {
       "attributes": {
         "docstring_full": "Type is the fill pattern: \"none\", \"solid\", or \"gray125\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14273,6 +14453,8 @@
     {
       "attributes": {
         "docstring_full": "Bold controls whether the text is rendered in bold weight.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -14291,6 +14473,8 @@
     {
       "attributes": {
         "docstring_full": "Color is the font colour as an ARGB hex string (e.g. \"FF000000\" for black). An empty string means the default colour.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14309,6 +14493,8 @@
     {
       "attributes": {
         "docstring_full": "Italic controls whether the text is rendered in italic style.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -14327,6 +14513,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the font family name (e.g. \"Calibri\", \"Arial\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14345,6 +14533,8 @@
     {
       "attributes": {
         "docstring_full": "Size is the font height in points.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "float64",
         "symbol_kind": "method"
       },
@@ -14380,6 +14570,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "string Error()",
         "symbol_kind": "method"
       },
@@ -14397,6 +14589,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14414,6 +14608,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14451,6 +14647,8 @@
     {
       "attributes": {
         "docstring_full": "Display is the optional friendly name stored in the file. The visible cell text is the cell value, set separately.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14469,6 +14667,8 @@
     {
       "attributes": {
         "docstring_full": "Location is an in-workbook destination, e.g. \"Sheet2!A1\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14487,6 +14687,8 @@
     {
       "attributes": {
         "docstring_full": "Ref is the A1 reference of the cell carrying the link.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14505,6 +14707,8 @@
     {
       "attributes": {
         "docstring_full": "Target is an external URL or file path, e.g. \"https://example.com\" or \"reports/q1.xlsx\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14523,6 +14727,8 @@
     {
       "attributes": {
         "docstring_full": "Tooltip is the optional screen tip shown on hover.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14560,6 +14766,8 @@
     {
       "attributes": {
         "docstring_full": "HideValue draws only the icon, suppressing the cell value.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -14578,6 +14786,8 @@
     {
       "attributes": {
         "docstring_full": "IconSet is an ST_IconSetType name, e.g. IconSet3Arrows. The name's leading digit is how many thresholds are required.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14596,6 +14806,8 @@
     {
       "attributes": {
         "docstring_full": "Reverse flips the icon order.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -14614,6 +14826,8 @@
     {
       "attributes": {
         "docstring_full": "Thresholds holds one cutoff per icon.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]CondThreshold",
         "symbol_kind": "method"
       },
@@ -14649,6 +14863,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "string Error()",
         "symbol_kind": "method"
       },
@@ -14666,6 +14882,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -14683,6 +14901,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "IsErrorValue reports whether s is one of Excel's seven error codes.",
         "symbol_kind": "function"
       },
@@ -14700,6 +14919,7 @@
     },
     {
       "attributes": {
+        "bases": "string",
         "declaration": "type LegendPosition string",
         "docstring": "LegendPosition enumerates where a chart legend is drawn (ST_LegendPos).",
         "member_count": "4",
@@ -14720,6 +14940,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Load opens the .xlsx file at path and returns the populated Workbook.",
         "docstring_full": "Load opens the .xlsx file at path and returns the populated Workbook. It is a convenience wrapper around LoadWorkbook that reads all sheets, resolves shared strings, and caches the raw XML of the first worksheet.",
         "symbol_kind": "function"
@@ -14738,6 +14959,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "LoadFrom reads an .xlsx package from r and returns the populated Workbook.",
         "docstring_full": "LoadFrom reads an .xlsx package from r and returns the populated Workbook. It is the stream counterpart of LoadWorkbook: encrypted packages are rejected \u2014 use LoadFromWithPassword for those. The returned Workbook has an empty FilePath since a stream has no file name.",
         "symbol_kind": "function"
@@ -14756,6 +14978,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "LoadFromWithPassword reads a possibly encrypted .xlsx package from r using the given password.",
         "docstring_full": "LoadFromWithPassword reads a possibly encrypted .xlsx package from r using the given password. It is the stream counterpart of LoadWithPassword: unencrypted packages load directly, encrypted ones are decrypted first. On success the returned Workbook has its password field set so that subsequent saves preserve encryption.",
         "symbol_kind": "function"
@@ -14774,6 +14997,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "LoadWithPassword opens an encrypted .xlsx file using the given password.",
         "docstring_full": "LoadWithPassword opens an encrypted .xlsx file using the given password. On success the returned Workbook has its password field set so that subsequent saves preserve encryption.",
         "symbol_kind": "function"
@@ -14792,6 +15016,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "LoadWorkbook opens the .xlsx file at path, parses its XML parts, and returns a populated *Workbook.",
         "docstring_full": "LoadWorkbook opens the .xlsx file at path, parses its XML parts, and returns a populated *Workbook. Shared strings are resolved automatically when xl/sharedStrings.xml is present; cells with t=\"s\" receive the corresponding string value rather than the numeric index. When the file is encrypted (detected by the OLE/CFB magic header or the legacy \"ECRX\" magic header), LoadWorkbook returns an error directing the caller to use LoadWithPassword.",
         "symbol_kind": "function"
@@ -14810,6 +15035,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "MinimalPNG returns a valid 1\u00d71 red PNG image as raw bytes.",
         "docstring_full": "MinimalPNG returns a valid 1\u00d71 red PNG image as raw bytes. Deprecated: This is a test helper, not part of the stable public API.",
         "symbol_kind": "function"
@@ -14828,6 +15054,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "NewPicture creates a Picture value from raw image bytes.",
         "docstring_full": "NewPicture creates a Picture value from raw image bytes. The format parameter must be \"png\" or \"jpeg\". Callers must attach the picture to a worksheet with Worksheet.AddPicture before saving.",
         "symbol_kind": "function"
@@ -14846,6 +15073,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "NewStreamingReader creates a StreamingReader for the .xlsx file at path.",
         "docstring_full": "NewStreamingReader creates a StreamingReader for the .xlsx file at path. The file is not opened until ProcessRows is called.",
         "symbol_kind": "function"
@@ -14864,6 +15092,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "NewStyle returns a Style initialised with sensible defaults:",
         "docstring_full": "NewStyle returns a Style initialised with sensible defaults: Font: Calibri 11, black, no bold / italic Fill: none Alignment: (not set) Border: (not set)",
         "symbol_kind": "function"
@@ -14882,6 +15111,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "NewTable creates a Table value initialised with sensible defaults.",
         "docstring_full": "NewTable creates a Table value initialised with sensible defaults. The caller should use Worksheet.AddTable() to attach the table to a sheet.",
         "symbol_kind": "function"
@@ -14900,6 +15130,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "NewWorkbook creates an empty Workbook containing a single blank worksheet named \"Sheet1\".",
         "docstring_full": "NewWorkbook creates an empty Workbook containing a single blank worksheet named \"Sheet1\". The workbook is marked as modified so that the first Save call generates fresh XML.",
         "symbol_kind": "function"
@@ -14918,6 +15149,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "NumToCol converts a zero-based column index to letters.",
         "docstring_full": "NumToCol converts a zero-based column index to letters. 0 \u2192 \"A\", 25 \u2192 \"Z\", 26 \u2192 \"AA\".",
         "symbol_kind": "function"
@@ -14956,6 +15188,8 @@
     {
       "attributes": {
         "docstring_full": "Col is the 0-based column index where the top-left corner of the picture is anchored.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -14974,6 +15208,8 @@
     {
       "attributes": {
         "docstring_full": "ColOff is the horizontal offset from the left of the anchor column, in EMUs.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int64",
         "symbol_kind": "method"
       },
@@ -14992,6 +15228,8 @@
     {
       "attributes": {
         "docstring_full": "Data holds the raw image bytes (PNG or JPEG).",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]byte",
         "symbol_kind": "method"
       },
@@ -15010,6 +15248,8 @@
     {
       "attributes": {
         "docstring_full": "Format is the lower-case image format: \"png\" or \"jpeg\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15028,6 +15268,8 @@
     {
       "attributes": {
         "docstring_full": "Height is the display height of the picture in pixels.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -15046,6 +15288,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the display name used in the drawing XML (e.g. \"Picture 1\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15064,6 +15308,8 @@
     {
       "attributes": {
         "docstring_full": "Row is the 0-based row index where the top-left corner of the picture is anchored.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -15082,6 +15328,8 @@
     {
       "attributes": {
         "docstring_full": "RowOff is the vertical offset from the top of the anchor row, in EMUs.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int64",
         "symbol_kind": "method"
       },
@@ -15099,7 +15347,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetAnchor positions the picture at the given 0-based row and column.",
+        "member_kind": "method",
         "signature": "SetAnchor(int row, int col)",
         "symbol_kind": "method"
       },
@@ -15118,6 +15368,8 @@
     {
       "attributes": {
         "docstring_full": "Width is the display width of the picture in pixels.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -15154,6 +15406,8 @@
     {
       "attributes": {
         "docstring_full": "Aggregation is the aggregation function: \"sum\", \"count\", \"average\", \"max\", \"min\". Default is \"sum\".",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15172,6 +15426,8 @@
     {
       "attributes": {
         "docstring_full": "DisplayName is the custom name shown in the pivot table. If empty, Name is used.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15190,6 +15446,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the source field name.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15226,6 +15484,8 @@
     {
       "attributes": {
         "docstring_full": "ColFields lists the field names to use as column labels.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]string",
         "symbol_kind": "method"
       },
@@ -15244,6 +15504,8 @@
     {
       "attributes": {
         "docstring_full": "DataFields lists the value fields with aggregation settings.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*PivotDataField",
         "symbol_kind": "method"
       },
@@ -15262,6 +15524,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the display name of the pivot table.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15280,6 +15544,8 @@
     {
       "attributes": {
         "docstring_full": "Ref is the A1-style range where the pivot table is placed (e.g., \"F1\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15298,6 +15564,8 @@
     {
       "attributes": {
         "docstring_full": "RowFields lists the field names to use as row labels.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]string",
         "symbol_kind": "method"
       },
@@ -15316,6 +15584,8 @@
     {
       "attributes": {
         "docstring_full": "SourceRef is the A1-style range of the source data (e.g., \"A1:D100\").",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15333,6 +15603,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ReadTestZipEntry opens an .xlsx file and returns the raw bytes of the named ZIP entry.",
         "docstring_full": "ReadTestZipEntry opens an .xlsx file and returns the raw bytes of the named ZIP entry (e.g. \"xl/worksheets/sheet1.xml\"). Deprecated: This is a test helper, not part of the stable public API.",
         "symbol_kind": "function"
@@ -15370,6 +15641,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SaveWorkbook writes the workbook to an .xlsx file at path.",
         "docstring_full": "SaveWorkbook writes the workbook to an .xlsx file at path. When nothing has been modified since the workbook was loaded (or last saved), the original package bytes are written back verbatim, preserving every part byte-for-byte \u2014 including parts this library does not model. Otherwise the package is rebuilt: unmodified sheets re-emit their cached XML plus the original companion parts (rels, drawings, media, charts, tables, pivot tables and caches, comments, \u2026), while modified sheets are regenerated from the in-memory model with globally unique part names. [Content_Types].xml and the workbook relationships are derived from the parts actually written.",
         "symbol_kind": "function"
@@ -15388,6 +15660,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SerialToTime converts an Excel serial date number (1900 date system) to a time.Time in UTC.",
         "docstring_full": "SerialToTime converts an Excel serial date number (1900 date system) to a time.Time in UTC. The fraction of the serial is the time of day and is resolved to the nearest second. Serials must be >= 61 (1900-03-01) and <= 2958465 (9999-12-31).",
         "symbol_kind": "function"
@@ -15424,6 +15697,8 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
+        "member_kind": "method",
         "signature": "string Error()",
         "symbol_kind": "method"
       },
@@ -15441,6 +15716,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15477,8 +15754,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ProcessRows opens the workbook, resolves the named sheet to its XML part, loads the shared-strings table (if present), and then streams through the sheet data one row at a time, calling callback for each row.",
         "docstring_full": "ProcessRows opens the workbook, resolves the named sheet to its XML part, loads the shared-strings table (if present), and then streams through the sheet data one row at a time, calling callback for each row. When sheetName is empty the first sheet in the workbook is used. The shared-strings table is held in memory, but the sheet XML is never fully buffered \u2014 peak memory is proportional to the widest row, not the file size.",
+        "member_kind": "method",
         "signature": "error ProcessRows(string sheetName, RowCallback callback)",
         "symbol_kind": "method"
       },
@@ -15496,8 +15775,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ProcessRowsWithColumns streams through all rows but only returns cells from the specified columns.",
         "docstring_full": "ProcessRowsWithColumns streams through all rows but only returns cells from the specified columns. Each column is a letter string (e.g., \"A\", \"B\", \"AA\").",
+        "member_kind": "method",
         "signature": "error ProcessRowsWithColumns(string sheetName, []string columns, RowCallback callback)",
         "symbol_kind": "method"
       },
@@ -15515,8 +15796,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ProcessRowsWithFilter opens the workbook and streams through the named sheet, applying the filters specified in opts.",
         "docstring_full": "ProcessRowsWithFilter opens the workbook and streams through the named sheet, applying the filters specified in opts. Only rows and columns matching the filter criteria are passed to the callback. When sheetName is empty the first sheet in the workbook is used. When opts is nil, all rows and columns are processed (equivalent to ProcessRows).",
+        "member_kind": "method",
         "signature": "error ProcessRowsWithFilter(string sheetName, *StreamOptions opts, RowCallback callback)",
         "symbol_kind": "method"
       },
@@ -15534,8 +15817,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ProcessRowsWithRange streams through rows in the specified range [startRow, endRow].",
         "docstring_full": "ProcessRowsWithRange streams through rows in the specified range [startRow, endRow]. Both bounds are 1-based and inclusive. startRow <= 0 means from the beginning; endRow <= 0 means to the end.",
+        "member_kind": "method",
         "signature": "error ProcessRowsWithRange(string sheetName, int startRow, int endRow, RowCallback callback)",
         "symbol_kind": "method"
       },
@@ -15573,6 +15858,8 @@
     {
       "attributes": {
         "docstring_full": "Columns limits which columns are returned. Each entry is a column letter (e.g., \"A\", \"B\", \"AA\"). nil or empty means all columns.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]string",
         "symbol_kind": "method"
       },
@@ -15591,6 +15878,8 @@
     {
       "attributes": {
         "docstring_full": "EndRow is the 1-based row number to stop processing at (inclusive). Rows after this are skipped. <=0 means to the end.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -15609,6 +15898,8 @@
     {
       "attributes": {
         "docstring_full": "StartRow is the 1-based row number to start processing from. Rows before this are skipped. <=0 means from the beginning.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -15645,6 +15936,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*Alignment",
         "symbol_kind": "method"
       },
@@ -15662,6 +15955,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*Border",
         "symbol_kind": "method"
       },
@@ -15679,6 +15974,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*Fill",
         "symbol_kind": "method"
       },
@@ -15696,6 +15993,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "*Font",
         "symbol_kind": "method"
       },
@@ -15714,6 +16013,8 @@
     {
       "attributes": {
         "docstring_full": "NumberFormat is the number format code applied to the cell, e.g. \"0.00\", \"#,##0.00\", \"0%\" or \"yyyy-mm-dd\". Codes known to Excel as built-ins are stored under their standard numFmtId; any other code is written as a custom entry in styles.xml. Empty (or \"General\") means the General format. Dates and times are stored as Excel serial numbers \u2014 see TimeToSerial and SerialToTime.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15750,6 +16051,8 @@
     {
       "attributes": {
         "docstring_full": "HasHeaderRow controls whether the first row of the table is formatted as a header row with auto-filter dropdowns.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -15768,6 +16071,8 @@
     {
       "attributes": {
         "docstring_full": "Name is the internal table name (e.g. \"Table1\"). It must be unique within the worksheet and is automatically assigned by AddTable.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15786,6 +16091,8 @@
     {
       "attributes": {
         "docstring_full": "Range is the A1-style reference that defines the table area, e.g. \"A1:D10\". The first row is treated as a header when HasHeaderRow is true.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15804,6 +16111,8 @@
     {
       "attributes": {
         "docstring_full": "StyleName is the name of the built-in table style to apply (e.g. \"TableStyleMedium9\"). Excel ships with many predefined styles; an empty string means the default style.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15821,6 +16130,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "TimeToSerial converts a time to an Excel serial date number (1900 date system): whole days since 1899-12-30 plus a fraction for the time of day.",
         "docstring_full": "TimeToSerial converts a time to an Excel serial date number (1900 date system): whole days since 1899-12-30 plus a fraction for the time of day. Only the wall-clock fields of t are used; its location is ignored, and the result is UTC-neutral. Times before 1900-03-01 (serial 61) or after 9999-12-31 (serial 2958465) are rejected. Store the result in a cell and apply a date Style (e.g. NumberFormat NumFmtDate) so Excel renders it as a date.",
         "symbol_kind": "function"
@@ -15859,6 +16169,8 @@
     {
       "attributes": {
         "docstring_full": "Data holds the raw VBA project binary data (vbaProject.bin content).",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]byte",
         "symbol_kind": "method"
       },
@@ -15895,8 +16207,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddWorksheet appends a new worksheet with the given name to the workbook and returns it.",
         "docstring_full": "AddWorksheet appends a new worksheet with the given name to the workbook and returns it. The returned sheet is fully wired for cell access and marked modified, so Save writes it as a new sheet part. The name must satisfy Excel's worksheet naming rules: 1\u201331 characters, none of the characters []:*?/\\, no leading or trailing apostrophe, not the reserved name \"History\", and unique within the workbook (case-insensitive). An error is returned for invalid or duplicate names.",
+        "member_kind": "method",
         "signature": "(*Worksheet, error) AddWorksheet(string name)",
         "symbol_kind": "method"
       },
@@ -15914,8 +16228,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "CheckPassword returns true if the workbook is password-protected and the provided password matches.",
         "docstring_full": "CheckPassword returns true if the workbook is password-protected and the provided password matches. It returns false if no password is set, or if the password does not match. Uses constant-time comparison to prevent timing attacks.",
+        "member_kind": "method",
         "signature": "bool CheckPassword(string pw)",
         "symbol_kind": "method"
       },
@@ -15933,7 +16249,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ClearVBAProject removes the VBA project from the workbook.",
+        "member_kind": "method",
         "signature": "ClearVBAProject()",
         "symbol_kind": "method"
       },
@@ -15951,8 +16269,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ExportToCSV writes the worksheet at sheetIndex to a CSV file using the given delimiter.",
         "docstring_full": "ExportToCSV writes the worksheet at sheetIndex to a CSV file using the given delimiter (e.g. ',', '\\t', ';'). Cells are ordered left\u2192right, top\u2192bottom; empty cells are written as empty fields.",
+        "member_kind": "method",
         "signature": "error ExportToCSV(int sheetIndex, string path, rune delimiter)",
         "symbol_kind": "method"
       },
@@ -15971,6 +16291,8 @@
     {
       "attributes": {
         "docstring_full": "FilePath is the on-disk path from which the workbook was loaded, or the path to which it was last saved.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -15988,7 +16310,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "GetVBAProject returns the VBA project data attached to the workbook, or nil if no VBA project is present.",
+        "member_kind": "method",
         "signature": "*VBAProject GetVBAProject()",
         "symbol_kind": "method"
       },
@@ -16006,7 +16330,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "HasVBAProject reports whether the workbook has an attached VBA project.",
+        "member_kind": "method",
         "signature": "bool HasVBAProject()",
         "symbol_kind": "method"
       },
@@ -16024,8 +16350,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ImportFromCSV reads a CSV file and imports its contents into a new worksheet with the given name.",
         "docstring_full": "ImportFromCSV reads a CSV file and imports its contents into a new worksheet with the given name. The worksheet is appended to the workbook.",
+        "member_kind": "method",
         "signature": "error ImportFromCSV(string path, string sheetName, rune delimiter)",
         "symbol_kind": "method"
       },
@@ -16044,6 +16372,8 @@
     {
       "attributes": {
         "docstring_full": "Modified is set to true whenever cell data or styles change. The saver uses this flag to decide whether to regenerate XML or reuse cached XML.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -16061,8 +16391,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Save writes the workbook to the given file path in .xlsx format.",
         "docstring_full": "Save writes the workbook to the given file path in .xlsx format. When the workbook was loaded from a file and has not been modified, the original sheet XML is reused verbatim. Otherwise, all XML parts are regenerated from the in-memory model.",
+        "member_kind": "method",
         "signature": "error Save(string path)",
         "symbol_kind": "method"
       },
@@ -16080,8 +16412,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SaveTo writes the workbook in .xlsx format to w \u2014 an HTTP response, a zip entry, a network connection, or any other stream.",
         "docstring_full": "SaveTo writes the workbook in .xlsx format to w \u2014 an HTTP response, a zip entry, a network connection, or any other stream. It behaves exactly like Save (byte-identical round-trip of unmodified packages, password encryption when one is set, cache refresh afterwards) but leaves FilePath unchanged, since the bytes were not written to a file.",
+        "member_kind": "method",
         "signature": "error SaveTo(io.Writer w)",
         "symbol_kind": "method"
       },
@@ -16099,8 +16433,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetPassword configures an open password for the workbook.",
         "docstring_full": "SetPassword configures an open password for the workbook. Subsequent calls to Save will produce an encrypted .xlsx file that requires this password to open. Pass an empty string to remove password protection. The encrypted output uses the standard OLE/CFB container format with ECMA-376 Agile Encryption, compatible with Microsoft Excel.",
+        "member_kind": "method",
         "signature": "error SetPassword(string password)",
         "symbol_kind": "method"
       },
@@ -16118,8 +16454,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetVBAProject attaches a VBA project to the workbook.",
         "docstring_full": "SetVBAProject attaches a VBA project to the workbook. The data parameter should be the raw bytes of a vbaProject.bin file from an existing .xlsm workbook. **Limitation**: This library cannot create or modify VBA code. It only stores the binary data for round-trip preservation. data, err := os.ReadFile(\"path/to/vbaProject.bin\") if err != nil { log.Fatal(err) } wb.SetVBAProject(data) wb.Save(\"output.xlsm\") // Use .xlsm extension for macro-enabled workbooks",
+        "member_kind": "method",
         "signature": "error SetVBAProject([]byte data)",
         "symbol_kind": "method"
       },
@@ -16138,6 +16476,8 @@
     {
       "attributes": {
         "docstring_full": "SourceXML caches the raw XML bytes of the first worksheet as read from the .xlsx file. When the workbook has not been modified this payload is written back verbatim to preserve round-trip fidelity.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]byte",
         "symbol_kind": "method"
       },
@@ -16156,6 +16496,8 @@
     {
       "attributes": {
         "docstring_full": "StylesXML caches the raw bytes of xl/styles.xml from the loaded file. When the workbook is unmodified this payload is reused verbatim.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]byte",
         "symbol_kind": "method"
       },
@@ -16173,8 +16515,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "VerifyPassword reports whether pw matches the password that was used to encrypt this workbook (as set by SetPassword, or read from an encrypted file).",
         "docstring_full": "VerifyPassword reports whether pw matches the password that was used to encrypt this workbook (as set by SetPassword, or read from an encrypted file). When the workbook was not loaded from an encrypted file and SetPassword has not been called, VerifyPassword returns true for any input. Deprecated: Returns true for any input when no password is set, and uses non-constant-time comparison. Use CheckPassword instead.",
+        "member_kind": "method",
         "signature": "bool VerifyPassword(string pw)",
         "symbol_kind": "method"
       },
@@ -16193,6 +16537,8 @@
     {
       "attributes": {
         "docstring_full": "Worksheets holds every sheet in the workbook in display order.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*Worksheet",
         "symbol_kind": "method"
       },
@@ -16229,8 +16575,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddChart adds a chart to the worksheet.",
         "docstring_full": "AddChart adds a chart to the worksheet. The chart must have at least one series with valid data ranges. chart := &cells_foss.Chart{ Type: cells_foss.ChartTypeBar, Title: \"Sales Data\", Series: []*cells_foss.ChartSeries{ { Name: \"Revenue\", Categories: \"A2:A10\", Values: \"B2:B10\", }, }, Anchor: cells_foss.ChartAnchor{Row: 0, Col: 2}, Width: 400, Height: 300, } ws.AddChart(chart)",
+        "member_kind": "method",
         "signature": "error AddChart(*Chart chart)",
         "symbol_kind": "method"
       },
@@ -16248,8 +16596,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddConditionalFormatting adds a conditional formatting rule set to the worksheet.",
         "docstring_full": "AddConditionalFormatting adds a conditional formatting rule set to the worksheet. The Ref field on the ConditionalFormatting specifies the range. cf := &cells_foss.ConditionalFormatting{ Ref: \"A1:A10\", Rules: []*cells_foss.ConditionalFormattingRule{ { Type: cells_foss.CondTypeCellIs, Operator: cells_foss.CondOpGreaterThan, Formula: \"100\", Style: &cells_foss.Style{Font: &cells_foss.Font{Bold: true}}, }, }, } ws.AddConditionalFormatting(cf)",
+        "member_kind": "method",
         "signature": "error AddConditionalFormatting(*ConditionalFormatting cf)",
         "symbol_kind": "method"
       },
@@ -16267,8 +16617,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddDataValidation appends a data-validation rule to the worksheet.",
         "docstring_full": "AddDataValidation appends a data-validation rule to the worksheet. The ref parameter (e.g. \"A1:A10\") is stored on the DataValidation so it can be serialised as the sqref attribute. dv := &DataValidation{ Type: cells_foss.DataValidationTypeList, Formula1: `\"Yes,No\"`, } ws.AddDataValidation(\"A2:A10\", dv)",
+        "member_kind": "method",
         "signature": "error AddDataValidation(string ref, *DataValidation dv)",
         "symbol_kind": "method"
       },
@@ -16286,8 +16638,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddHyperlink attaches an external link (URL or file path) to a cell.",
         "docstring_full": "AddHyperlink attaches an external link (URL or file path) to a cell. Excel allows one link per cell; a second AddHyperlink for the same cell is refused. The cell's visible text is not changed \u2014 set the cell value separately when you want a display label.",
+        "member_kind": "method",
         "signature": "error AddHyperlink(string ref, string target)",
         "symbol_kind": "method"
       },
@@ -16305,8 +16659,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddInternalHyperlink attaches a link to a location inside the same workbook.",
         "docstring_full": "AddInternalHyperlink attaches a link to a location inside the same workbook (e.g. \"Sheet2!A1\") to a cell.",
+        "member_kind": "method",
         "signature": "error AddInternalHyperlink(string ref, string location)",
         "symbol_kind": "method"
       },
@@ -16324,8 +16680,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddMergedCells merges the cells of an A1 range (\"A1:B2\").",
         "docstring_full": "AddMergedCells merges the cells of an A1 range (\"A1:B2\"). The range is normalized (upper-case, corners ordered) before it is stored. Excel rejects files whose merged ranges overlap, so overlapping and duplicate ranges are refused here as well.",
+        "member_kind": "method",
         "signature": "error AddMergedCells(string ref)",
         "symbol_kind": "method"
       },
@@ -16343,8 +16701,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddPicture attaches pic to the worksheet, assigns it a unique name, and marks the workbook as modified.",
         "docstring_full": "AddPicture attaches pic to the worksheet, assigns it a unique name, and marks the workbook as modified. The picture data must be PNG or JPEG.",
+        "member_kind": "method",
         "signature": "error AddPicture(*Picture pic)",
         "symbol_kind": "method"
       },
@@ -16362,8 +16722,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddPivotTable adds a pivot table to the worksheet.",
         "docstring_full": "AddPivotTable adds a pivot table to the worksheet. The pivot table must have a valid source range and at least one data field. pt := &cells_foss.PivotTable{ Name: \"SalesPivot\", Ref: \"F1\", SourceRef: \"A1:D100\", RowFields: []string{\"Region\"}, DataFields: []*cells_foss.PivotDataField{ {Name: \"Revenue\", Aggregation: cells_foss.PivotAggregationSum}, }, } ws.AddPivotTable(pt)",
+        "member_kind": "method",
         "signature": "error AddPivotTable(*PivotTable pt)",
         "symbol_kind": "method"
       },
@@ -16381,8 +16743,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "AddTable creates a new Table covering the given range, assigns it a unique auto-generated name (\"Table1\", \"Table2\", \u2026), appends it to the worksheet, and returns it for further configuration.",
         "docstring_full": "AddTable creates a new Table covering the given range, assigns it a unique auto-generated name (\"Table1\", \"Table2\", \u2026), appends it to the worksheet, and returns it for further configuration. Table names must be unique across the whole workbook, so numbering skips names already used on other sheets.",
+        "member_kind": "method",
         "signature": "*Table AddTable(string rangeRef)",
         "symbol_kind": "method"
       },
@@ -16401,6 +16765,8 @@
     {
       "attributes": {
         "docstring_full": "AutoFilterRange is the range carrying the sheet's autofilter buttons (\"A1:C10\"); empty means none. See SetAutoFilter.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -16418,7 +16784,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "Cells returns the Cells collection for this worksheet, enabling cell-level read and write operations via A1-style references.",
+        "member_kind": "method",
         "signature": "*Cells Cells()",
         "symbol_kind": "method"
       },
@@ -16437,6 +16805,8 @@
     {
       "attributes": {
         "docstring_full": "Charts holds the charts embedded on this worksheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*Chart",
         "symbol_kind": "method"
       },
@@ -16455,6 +16825,8 @@
     {
       "attributes": {
         "docstring_full": "ColumnWidths maps column letters (\"A\") to widths in Excel character units. SetColumnWidth maintains it.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "map[string]float64",
         "symbol_kind": "method"
       },
@@ -16473,6 +16845,8 @@
     {
       "attributes": {
         "docstring_full": "ConditionalFormattings holds the conditional formatting rules applied to this worksheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*ConditionalFormatting",
         "symbol_kind": "method"
       },
@@ -16491,6 +16865,8 @@
     {
       "attributes": {
         "docstring_full": "DataValidations holds the data-validation rules applied to this sheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*DataValidation",
         "symbol_kind": "method"
       },
@@ -16508,8 +16884,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "DeleteRow removes the row at the given 1-based row number, shifting everything below it up by one.",
         "docstring_full": "DeleteRow removes the row at the given 1-based row number, shifting everything below it up by one. Cells on the deleted row are dropped, and hyperlinks anchored to them are removed. The same set of features InsertRow shifts is shifted here. Ranges spanning the deleted row shrink by one row; ranges lying entirely within it (including single-row merged cells) are dropped. Formula text is not rewritten: formulas keep their original references even when the cells they point at move or disappear.",
+        "member_kind": "method",
         "signature": "error DeleteRow(int row)",
         "symbol_kind": "method"
       },
@@ -16527,8 +16905,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "FreezePanes freezes the top row rows and the leftmost col columns of the sheet, keeping them visible while scrolling.",
         "docstring_full": "FreezePanes freezes the top row rows and the leftmost col columns of the sheet, keeping them visible while scrolling. FreezePanes(0, 0) removes the freeze. For example FreezePanes(1, 0) freezes the header row.",
+        "member_kind": "method",
         "signature": "error FreezePanes(int row, int col)",
         "symbol_kind": "method"
       },
@@ -16546,8 +16926,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "FromCSV populates the worksheet with data from a 2D string slice.",
         "docstring_full": "FromCSV populates the worksheet with data from a 2D string slice. Row 0 of the slice maps to worksheet row 1, column 0 maps to column A. Values that are exactly representable as numbers or booleans are stored as float64 or bool (see inferCSVValue); everything else stays a string.",
+        "member_kind": "method",
         "signature": "error FromCSV([][]string data, rune delimiter)",
         "symbol_kind": "method"
       },
@@ -16565,6 +16947,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -16583,6 +16967,8 @@
     {
       "attributes": {
         "docstring_full": "FrozenRow and FrozenCol are the number of rows frozen at the top and columns frozen at the left of the sheet (see FreezePanes). Both zero means no freeze.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -16600,7 +16986,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "GetTable returns the Table with the given name, or nil when no match is found.",
+        "member_kind": "method",
         "signature": "*Table GetTable(string name)",
         "symbol_kind": "method"
       },
@@ -16619,6 +17007,8 @@
     {
       "attributes": {
         "docstring_full": "Hyperlinks holds the links attached to cells of this worksheet. Use AddHyperlink / AddInternalHyperlink / RemoveHyperlink to maintain it.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*Hyperlink",
         "symbol_kind": "method"
       },
@@ -16636,6 +17026,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "int",
         "symbol_kind": "method"
       },
@@ -16653,8 +17045,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "InsertRow inserts an empty row at the given 1-based row number, shifting that row and everything below it down by one.",
         "docstring_full": "InsertRow inserts an empty row at the given 1-based row number, shifting that row and everything below it down by one. The inserted row starts out blank. Cells (values, formulas, styles), merged ranges, row heights, hyperlinks, the autofilter range, data-validation ranges, conditional-formatting ranges, table and pivot-table ranges, chart data ranges, and picture and chart anchors all move with the data. Ranges that span the insertion point expand to cover the new row, matching Excel's behavior. Formula text is not rewritten: a formula such as \"=SUM(A1:A5)\" keeps its original references even when the cells they point at move. Inserting fails with an error when sheet content already reaches the last row (1048576), since the shift would push cells off the sheet area.",
+        "member_kind": "method",
         "signature": "error InsertRow(int row)",
         "symbol_kind": "method"
       },
@@ -16673,6 +17067,8 @@
     {
       "attributes": {
         "docstring_full": "MergedCells holds merged cell ranges in normalized A1 form (\"A1:B2\"). Use AddMergedCells / RemoveMergedCells to maintain it.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]string",
         "symbol_kind": "method"
       },
@@ -16691,6 +17087,8 @@
     {
       "attributes": {
         "docstring_full": "Modified is set to true when this sheet's content changes (cells, data validations, tables, pictures). The saver uses this flag to decide whether to regenerate this sheet's XML or reuse its cached sourceXML.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "bool",
         "symbol_kind": "method"
       },
@@ -16708,6 +17106,8 @@
     },
     {
       "attributes": {
+        "member_kind": "field",
+        "settable": "true",
         "signature": "string",
         "symbol_kind": "method"
       },
@@ -16726,6 +17126,8 @@
     {
       "attributes": {
         "docstring_full": "Pictures holds the images embedded on this worksheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*Picture",
         "symbol_kind": "method"
       },
@@ -16744,6 +17146,8 @@
     {
       "attributes": {
         "docstring_full": "PivotTables holds the pivot tables defined on this worksheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*PivotTable",
         "symbol_kind": "method"
       },
@@ -16761,7 +17165,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "RemoveChart removes the chart at the specified index.",
+        "member_kind": "method",
         "signature": "error RemoveChart(int index)",
         "symbol_kind": "method"
       },
@@ -16779,8 +17185,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "RemoveConditionalFormatting removes the first conditional formatting rule set whose Ref exactly matches the given ref string.",
         "docstring_full": "RemoveConditionalFormatting removes the first conditional formatting rule set whose Ref exactly matches the given ref string. An error is returned when no matching rule set is found.",
+        "member_kind": "method",
         "signature": "error RemoveConditionalFormatting(string ref)",
         "symbol_kind": "method"
       },
@@ -16798,8 +17206,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "RemoveDataValidation removes the first data-validation rule whose Ref exactly matches the given ref string.",
         "docstring_full": "RemoveDataValidation removes the first data-validation rule whose Ref exactly matches the given ref string. An error is returned when no matching rule is found.",
+        "member_kind": "method",
         "signature": "error RemoveDataValidation(string ref)",
         "symbol_kind": "method"
       },
@@ -16817,8 +17227,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "RemoveHyperlink detaches the link from a cell.",
         "docstring_full": "RemoveHyperlink detaches the link from a cell. An error is returned when the cell carries no link.",
+        "member_kind": "method",
         "signature": "error RemoveHyperlink(string ref)",
         "symbol_kind": "method"
       },
@@ -16836,8 +17248,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "RemoveMergedCells un-merges a previously merged range.",
         "docstring_full": "RemoveMergedCells un-merges a previously merged range. The reference is matched after normalization; an error is returned when the range is not merged.",
+        "member_kind": "method",
         "signature": "error RemoveMergedCells(string ref)",
         "symbol_kind": "method"
       },
@@ -16855,7 +17269,9 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "RemovePivotTable removes the pivot table with the given name.",
+        "member_kind": "method",
         "signature": "error RemovePivotTable(string name)",
         "symbol_kind": "method"
       },
@@ -16874,6 +17290,8 @@
     {
       "attributes": {
         "docstring_full": "RowHeights maps 1-based row numbers to heights in points. SetRowHeight maintains it.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "map[int]float64",
         "symbol_kind": "method"
       },
@@ -16891,8 +17309,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetAutoFilter enables the drop-down filter buttons over an A1 range (\"A1:C10\"); the range is normalized before it is stored.",
         "docstring_full": "SetAutoFilter enables the drop-down filter buttons over an A1 range (\"A1:C10\"); the range is normalized before it is stored. Pass \"\" to remove the filter.",
+        "member_kind": "method",
         "signature": "error SetAutoFilter(string ref)",
         "symbol_kind": "method"
       },
@@ -16910,8 +17330,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetColumnWidth sets the width of a column, identified by its letter (\"A\", \"BC\"), in Excel character units (the default width is 8.43).",
         "docstring_full": "SetColumnWidth sets the width of a column, identified by its letter (\"A\", \"BC\"), in Excel character units (the default width is 8.43). Widths must be in (0, 255].",
+        "member_kind": "method",
         "signature": "error SetColumnWidth(string col, float64 width)",
         "symbol_kind": "method"
       },
@@ -16929,8 +17351,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "SetRowHeight sets the height of a 1-based row in points (the default height is 15).",
         "docstring_full": "SetRowHeight sets the height of a 1-based row in points (the default height is 15). Heights must be in (0, 409.5].",
+        "member_kind": "method",
         "signature": "error SetRowHeight(int row, float64 height)",
         "symbol_kind": "method"
       },
@@ -16949,6 +17373,8 @@
     {
       "attributes": {
         "docstring_full": "Tables holds the structured tables defined on this worksheet.",
+        "member_kind": "field",
+        "settable": "true",
         "signature": "[]*Table",
         "symbol_kind": "method"
       },
@@ -16966,8 +17392,10 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "ToCSV converts the worksheet's cells into a 2D string slice suitable for writing with encoding/csv.",
         "docstring_full": "ToCSV converts the worksheet's cells into a 2D string slice suitable for writing with encoding/csv. Rows and columns are ordered; empty cells produce empty strings. Leading and trailing empty rows and columns are trimmed to the bounding box of the populated cells.",
+        "member_kind": "method",
         "signature": "([][]string, error) ToCSV(rune delimiter)",
         "symbol_kind": "method"
       },
@@ -16985,6 +17413,7 @@
     },
     {
       "attributes": {
+        "body_throws": "no",
         "docstring": "WriteTestXLSX creates a minimal valid .xlsx file at dst by writing the given sheet XML and optional shared-strings XML into the appropriate ZIP entries.",
         "docstring_full": "WriteTestXLSX creates a minimal valid .xlsx file at dst by writing the given sheet XML and optional shared-strings XML into the appropriate ZIP entries. It is intended for use by integration tests that need to construct specific edge-case .xlsx files without depending on the saver. Deprecated: This is a test helper, not part of the stable public API. Use NewWorkbook + Cells().Set + Save for production code.",
         "symbol_kind": "function"

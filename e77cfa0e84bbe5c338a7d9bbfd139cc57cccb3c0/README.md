@@ -4,7 +4,7 @@
 
 [![Aspose.Cells FOSS for Go](https://products.aspose.org/media/cells/go/banner-readme.png)](https://products.aspose.org/cells/go/)
 
-Aspose.Cells FOSS for Go reads and writes `.xlsx` files, reads and writes `.csv` files, and reads `.withpassword` files. It supports streaming row processing via `NewStreamingReader` and `StreamingReader.ProcessRows`, formula calculation via `CalculateFormula`, and password-protected workbook operations via `LoadWithPassword`, `LoadFromWithPassword`, `Workbook.SetPassword`, and `Workbook.CheckPassword`.
+Aspose.Cells FOSS for Go reads and writes `.xlsx` files and reads and writes `.csv` files. It supports streaming row-by-row reading of `.xlsx` files using `NewStreamingReader` and `StreamingReader.ProcessRows`. It supports loading password-protected workbooks with `LoadWithPassword` and `LoadFromWithPassword`, and setting or checking workbook passwords with `Workbook.SetPassword` and `Workbook.CheckPassword`.
 
 ## Navigation
 
@@ -57,14 +57,14 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Cell data read/write.** `Cell` data read/write uses `Cells.Get` and `Cells.Set` with A1-style references to handle string, float64, int, and bool values, and provides type-safe `Cell.AsString`, `Cell.AsFloat64`, and `Cell.AsInt` accessors for reading.
-- **Formula evaluation.** Formula evaluation stores formulas with `Cell.SetFormula`, retrieves them with `Cell.GetFormula`, and evaluates them using `CalculateFormula`, supporting 22 functions, cross-sheet references, and Excel error values.
-- **Styling and formatting.** Styling and formatting creates `Style` objects with `NewStyle`, configures `Font`, `Fill`, `Border`, and `Alignment` properties, applies them to cells via `Cell.SetStyle`, and retrieves them with `Cell.GetStyle`.
-- **Worksheet layout features.** `Worksheet` layout features support merged cells via `Worksheet.AddMergedCells`, frozen panes with `Worksheet.FrozenCol` and `Worksheet.FrozenRow`, auto-filters with `Worksheet.SetAutoFilter`, row operations with `Worksheet.InsertRow` and `Worksheet.DeleteRow`, and dimension control via `Worksheet.SetColumnWidth` and `Worksheet.SetRowHeight`.
-- **Structured data features.** Structured data features create tables with `NewTable` and `Worksheet.AddTable`, add data validation rules via `Worksheet.AddDataValidation`, apply conditional formatting with `Worksheet.AddConditionalFormatting`, and build pivot tables using `PivotTable` and `Worksheet.AddPivotTable`.
-- **Charting and embedding.** Charting and embedding adds `Chart` objects such as bar, line, pie, scatter, and area charts via `Worksheet.AddChart`, and embeds `Picture` objects from PNG or JPEG images using `Worksheet.AddPicture`.
-- **CSV import/export.** CSV import/export moves data between `.csv` files and workbooks using `Workbook.ImportFromCSV` and `Workbook.ExportToCSV`, supporting caller-supplied delimiters and converting types as Excel does.
-- **Streaming and I/O.** Streaming and I/O loads workbooks from a source path with `LoadFrom`, saves workbooks with `SaveWorkbook`, and processes large files row-by-row using `NewStreamingReader` and `StreamingReader.ProcessRows` to keep memory usage proportional to one row.
+- **Cell data read/write.** `Cell` data read/write operations use `Cells.Get` and `Cells.Set` with A1-style references to handle string, float64, int, and bool values, while `Cell.AsString`, `Cell.AsFloat64`, and `Cell.AsInt` provide type-safe accessors for reading cell contents.
+- **Formula evaluation.** Formula evaluation uses `Cell.SetFormula` to store formulas, `Cell.GetFormula` to retrieve them, and `CalculateFormula` to compute results with support for multiple functions including SUM, AVERAGE, MAX, MIN, and cross-sheet references, while `FormulaError` values propagate through evaluation.
+- **Styling and formatting.** Styling and formatting create `Style` objects via `NewStyle` that combine `Font`, `Fill`, `Border`, and `Alignment` properties, apply them to cells with `Cell.SetStyle`, and retrieve them with `Cell.GetStyle`, with automatic deduplication during save.
+- **Worksheet layout features.** `Worksheet` layout features include `Worksheet.AddMergedCells` for combining cells, `Worksheet.FrozenCol` and `Worksheet.FrozenRow` for freeze panes, `Worksheet.SetAutoFilter` for filtering, `Worksheet.InsertRow` and `Worksheet.DeleteRow` for row manipulation, and `Worksheet.SetColumnWidth` and `Worksheet.SetRowHeight` for dimension control, plus `Worksheet.AddHyperlink` for link insertion.
+- **Structured data features.** Structured data features include `NewTable` and `Worksheet.AddTable` for creating tables with headers and styles, `Worksheet.AddDataValidation` for dropdown lists and range restrictions, `Worksheet.AddConditionalFormatting` for color scales and icon sets, and `PivotTable` with `Worksheet.AddPivotTable` for summarizing data.
+- **Charting and embedding.** Charting and embedding support `Chart` objects for bar, line, pie, scatter, and area charts via `Worksheet.AddChart`, and `Picture` objects for PNG or JPEG images via `Worksheet.AddPicture`, both with configurable dimensions and positioning.
+- **CSV import/export.** CSV import/export uses `Workbook.ImportFromCSV` to read `.csv` files with a caller-supplied delimiter and `Workbook.ExportToCSV` to write `.csv` files, converting typed cell values to their CSV string form and applying UTF-8 BOM with CRLF line endings for Excel compatibility.
+- **Streaming and I/O.** Streaming and I/O operations use `LoadFrom` and `SaveWorkbook` for stream-based workbook handling, `NewStreamingReader` to create a `StreamingReader` that processes large files row-by-row via `StreamingReader.ProcessRows` without building the full workbook model, and support for reading and writing streams without touching disk.
 
 - Font, fill, alignment, and borders combine into a `Style` applied to any cell via
   `Cell.SetStyle`, with automatic deduplication of identical styles during save. Styles carry
@@ -74,6 +74,9 @@ flowchart TB
   caller-supplied delimiter; export converts typed cell values to their CSV string form via
   `CellToString` and writes a UTF-8 BOM with CRLF line endings for Excel, while import infers
   numeric and boolean types the way Excel does.
+- `Workbook.SetPassword` adds ECMA-376 Agile Encryption (SHA-512 key derivation, AES-256-CBC,
+  HMAC-SHA512 integrity) in a standard OLE/CFB container that Microsoft Excel opens directly;
+  `Workbook.CheckPassword` verifies a password in constant time.
 
 ## Installation
 
@@ -101,7 +104,7 @@ No required third-party package dependencies; in `go.mod`, no `require` directiv
 
 ## Quick Start
 
-Create a new workbook, write values to cells, and save the file as Excel XLSX by importing the module and calling `NewWorkbook`, `Cells.Set`, and Save.
+Create a new workbook, write values to cells, and save the file as an Excel workbook.
 
 ```go
 package main
@@ -122,7 +125,7 @@ func main() {
 }
 ```
 
-`Load` an existing workbook, read a cell value, update it, and save the changes by calling `LoadWorkbook`, `Cells.Get`, `AsString`, `Cells.Set`, and Save.
+`Load` an existing workbook, read a cell value, update it, and save the changes to a new file.
 
 ```go
 wb, _ := cells_foss.LoadWorkbook("input.xlsx")
@@ -139,9 +142,9 @@ Run `go run main.go` to produce `hello.xlsx`.
 
 ## Additional Examples
 
-The following examples demonstrate workflows for formulas, data validation, streaming, styling, tables, and CSV import.
+The following workflows demonstrate core tasks: creating formulas, applying data validation, streaming large files, styling cells, building structured tables, and importing CSV data.
 
-### Create a Spreadsheet with SUM and AVERAGE Formulas and Evaluate Them
+### Create Formulas and Evaluate Them with the Calculation Engine
 
 ```go
 func main() {
@@ -199,7 +202,7 @@ func main() {
 <details>
 <summary>View Additional Examples</summary>
 
-### Apply List-Type Data Validation to Restrict Cell Input to Predefined Options
+### Apply List-Type Data Validation to a Cell Range
 
 ```go
 func main() {
@@ -230,7 +233,7 @@ func main() {
 }
 ```
 
-### Stream Large Excel Files Row by Row to Compute Totals Efficiently
+### Stream Rows from a Large Excel File Efficiently
 
 ```go
 func main() {
@@ -255,7 +258,7 @@ func main() {
 }
 ```
 
-### Apply Bold Font and Solid Fill Styling to Header Cells
+### Apply Bold and Solid-Fill Styles to Header Cells
 
 ```go
 func main() {
@@ -309,7 +312,7 @@ func main() {
 }
 ```
 
-### Import Data from a CSV File into a New Excel Workbook
+### Import Data from a CSV File into a New Workbook
 
 ```go
 func main() {
@@ -336,7 +339,7 @@ import cells_foss "github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/v26/asp
 
 ## API Reference
 
-Aspose.Cells FOSS for Go provides workbook and worksheet management through the `Workbook` and `Worksheet` types, with `Cells` offering A1-keyed cell access. The `Workbook` type supports loading from files or streams and saving to files or buffers, while `Worksheet` exposes cell collections and layout operations.
+Aspose.Cells FOSS for Go provides workbook and worksheet management through the `Workbook` and `Worksheet` types, with cell-level access via the `Cells` collection and individual `Cell` objects.
 
 The public API has 37 types.
 
@@ -389,7 +392,7 @@ The public API has 37 types.
 
 ### Cells
 
-The `Cells` collection provides A1-keyed access to cells with `Cells.Get` to retrieve a `Cell`, `Cells.Set` to assign a value, `Cells.All` to enumerate all cells, and `Cells.Remove` to delete a cell.
+The `Cells` collection provides A1-keyed access to cells using `Cells.Get` to retrieve a cell, `Cells.Set` to assign a value, `Cells.All` to enumerate all cells, and `Cells.Remove` to delete a cell.
 
 - `All`: All returns the underlying map of all cells keyed by A1 reference.
 - `Get`: Get returns the Cell at the given A1 reference.
@@ -398,7 +401,7 @@ The `Cells` collection provides A1-keyed access to cells with `Cells.Get` to ret
 
 ### Cell
 
-A `Cell` represents a single cell with type-safe accessors including `Cell.AsString`, `Cell.AsFloat64`, and `Cell.AsInt`, along with `Cell.Formula`, `Cell.GetFormula`, `Cell.SetFormula`, `Cell.GetStyle`, and `Cell.SetStyle` for formula and style management.
+A `Cell` represents a single cell and exposes its value via `Cell.AsString`, `Cell.AsFloat64`, and `Cell.AsInt`, its formula via `Cell.Formula`, `Cell.GetFormula`, and `Cell.SetFormula`, and its formatting via `Cell.GetStyle` and `Cell.SetStyle`.
 
 - `AsFloat64`: AsFloat64 returns the cell value as float64.
 - `AsInt`: AsInt returns the cell value as int.
@@ -408,9 +411,13 @@ A `Cell` represents a single cell with type-safe accessors including `Cell.AsStr
 - `SetFormula`: SetFormula stores a formula expression in this cell and marks the owning worksheet and workbook as modified.
 - `SetStyle`: SetStyle assigns the given Style to this cell.
 
+### Style
+
+`Style` groups formatting settings including `Style.Font`, `Style.Fill`, `Style.Border`, `Style.Alignment`, and `Style.NumberFormat` for consistent cell appearance.
+
 ### Workbook
 
-A `Workbook` is created with `NewWorkbook` or loaded with `LoadWorkbook`, exposes its worksheets via `Workbook.Worksheets`, and supports saving to files with `Workbook.Save` or to streams with `Workbook.SaveTo`, as well as CSV import and export via `Workbook.ImportFromCSV` and `Workbook.ExportToCSV`.
+A `Workbook` represents an Excel workbook, created with `NewWorkbook` or `LoadWorkbook`, and exposes its worksheets via `Workbook.Worksheets`, supports saving with `Workbook.Save` and `Workbook.SaveTo`, and handles CSV via `Workbook.ExportToCSV` and `Workbook.ImportFromCSV`.
 
 - `AddWorksheet`: AddWorksheet appends a new worksheet with the given name to the workbook and returns it.
 - `CheckPassword`: CheckPassword returns true if the workbook is password-protected and the provided password matches.
@@ -427,7 +434,7 @@ A `Workbook` is created with `NewWorkbook` or loaded with `LoadWorkbook`, expose
 
 ### Worksheet
 
-A `Worksheet` provides access to its cells via `Worksheet.Cells`, supports merged cells with `Worksheet.AddMergedCells`, freeze panes via `Worksheet.FrozenCol` and `Worksheet.FrozenRow`, auto-filter with `Worksheet.SetAutoFilter`, row operations with `Worksheet.InsertRow` and `Worksheet.DeleteRow`, column width and row height control via `Worksheet.SetColumnWidth` and `Worksheet.SetRowHeight`, and hyperlinks with `Worksheet.AddHyperlink`.
+A `Worksheet` provides access to its cells via `Worksheet.Cells`, supports layout operations like `Worksheet.AddMergedCells`, `Worksheet.FrozenCol`, `Worksheet.FrozenRow`, `Worksheet.SetAutoFilter`, `Worksheet.InsertRow`, and `Worksheet.DeleteRow`, and allows adding tables, data validation, charts, and pictures via `Worksheet.AddTable`, `Worksheet.AddDataValidation`, `Worksheet.AddChart`, and `Worksheet.AddPicture`.
 
 - `AddChart`: AddChart adds a chart to the worksheet.
 - `AddConditionalFormatting`: AddConditionalFormatting adds a conditional formatting rule set to the worksheet.
@@ -455,44 +462,40 @@ A `Worksheet` provides access to its cells via `Worksheet.Cells`, supports merge
 - `SetRowHeight`: SetRowHeight sets the height of a 1-based row in points (the default height is 15).
 - `ToCSV`: ToCSV converts the worksheet's cells into a 2D string slice suitable for writing with encoding/CSV.
 
-### Style
-
-A `Style` is created with `NewStyle` and exposes formatting properties including `Style.Font`, `Style.Fill`, `Style.Border`, `Style.Alignment`, and `Style.NumberFormat`.
-
 ### DataValidation
 
-`DataValidation` is configured with `DataValidation.Type`, `DataValidation.Formula1`, and `DataValidation.Operator`, and added to a worksheet using `Worksheet.AddDataValidation`.
+`DataValidation` represents a validation rule applied to a range, configured with `DataValidation.Type`, `DataValidation.Formula1`, and `DataValidation.Operator`, and added to a worksheet via `Worksheet.AddDataValidation`.
 
 ### ConditionalFormatting
 
-`ConditionalFormatting` is defined with `ConditionalFormatting.Ref` and `ConditionalFormatting.Rules`, and added to a worksheet using `Worksheet.AddConditionalFormatting`.
-
-### Table
-
-A `Table` is created with `NewTable` and configured with `Table.HasHeaderRow` and `Table.StyleName`, then added to a worksheet using `Worksheet.AddTable`.
+`ConditionalFormatting` groups formatting rules applied to a range, defined by `ConditionalFormatting.Ref` and `ConditionalFormatting.Rules`, and added to a worksheet via `Worksheet.AddConditionalFormatting`.
 
 ### Chart
 
-A `Chart` is created with `Chart.Type`, `Chart.Series`, `Chart.Title`, and `Chart.Legend`, and added to a worksheet using `Worksheet.AddChart`.
+A `Chart` represents an embedded chart with `Chart.Type`, `Chart.Series`, `Chart.Title`, and `Chart.Legend`, added to a worksheet via `Worksheet.AddChart`.
+
+### Table
+
+A `Table` represents a structured data range with `Table.HasHeaderRow` and `Table.StyleName`, added to a worksheet via `Worksheet.AddTable`.
 
 ### PivotTable
 
-A `PivotTable` is defined with `PivotTable.Ref`, `PivotTable.RowFields`, `PivotTable.ColFields`, and `PivotTable.DataFields`, and added to a worksheet using `Worksheet.AddPivotTable`.
-
-### Picture
-
-A `Picture` is created with `NewPicture`, configured with `Picture.Data` and `Picture.SetAnchor`, and added to a worksheet using `Worksheet.AddPicture`.
-
-- `SetAnchor`: SetAnchor positions the picture at the given 0-based row and column.
+A `PivotTable` represents a pivot table with `PivotTable.Ref`, `PivotTable.SourceRef`, `PivotTable.RowFields`, `PivotTable.ColFields`, and `PivotTable.DataFields`, added to a worksheet via `Worksheet.AddPivotTable`.
 
 ### StreamingReader
 
-A `StreamingReader` is created with `NewStreamingReader` and processes rows using `StreamingReader.ProcessRows`, `StreamingReader.ProcessRowsWithColumns`, `StreamingReader.ProcessRowsWithFilter`, or `StreamingReader.ProcessRowsWithRange`.
+A `StreamingReader` reads large workbooks row by row without loading all XML into memory, created with `NewStreamingReader` and processing rows via `StreamingReader.ProcessRows`, `StreamingReader.ProcessRowsWithColumns`, `StreamingReader.ProcessRowsWithFilter`, and `StreamingReader.ProcessRowsWithRange`.
 
 - `ProcessRows`: ProcessRows opens the workbook, resolves the named sheet to its XML part, loads the shared-strings table (if present), and then streams through the sheet data one row at a time, calling callback for each row.
 - `ProcessRowsWithColumns`: ProcessRowsWithColumns streams through all rows but only returns cells from the specified columns.
 - `ProcessRowsWithFilter`: ProcessRowsWithFilter opens the workbook and streams through the named sheet, applying the filters specified in opts.
 - `ProcessRowsWithRange`: ProcessRowsWithRange streams through rows in the specified range [startRow, endRow].
+
+### Picture
+
+A `Picture` represents an embedded image with `Picture.Data` and `Picture.SetAnchor`, created with `NewPicture` and added to a worksheet via `Worksheet.AddPicture`.
+
+- `SetAnchor`: SetAnchor positions the picture at the given 0-based row and column.
 
 The library source lives under `aspose/cells_foss/`, with runnable examples, tests, a
 verification tool, and a usage guide alongside it at the repository root:
@@ -597,10 +600,11 @@ For the complete API reference and usage guide, see **[docs/usage.md](docs/usage
 
 - **[Getting started guide](https://docs.aspose.org/cells/go/)** — Go documentation for Aspose.Cells FOSS for Go: loading, editing, styling, and saving spreadsheets.
 - **[How-to guides & FAQ](https://kb.aspose.org/cells/go/)** — Go knowledge base for Aspose.Cells FOSS for Go: how-to articles, FAQ, and troubleshooting guides.
-- **[Full API reference](https://reference.aspose.org/cells/go/)** — the complete, browsable reference for the public API (the [API reference](#api-reference) section above covers the essentials). It covers all 37 public types; the [API Reference](#api-reference) section above covers the essentials.
 - **[CHANGELOG.md](CHANGELOG.md)** — release history; the current release is **26.11**.
 - **[AGENTS.md](AGENTS.md)** — the repository's own contribution guide for AI-assisted development, covering source-of-truth conventions and areas to avoid changing without review.
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Go/issues).
+
+- **[Full API reference](https://reference.aspose.org/cells/go/)** — the complete, browsable reference for the public API (the [API reference](#api-reference) section above covers the essentials).
 
 ## Scope and Limitations
 
@@ -620,7 +624,7 @@ For the complete API reference and usage guide, see **[docs/usage.md](docs/usage
 - No third-party dependencies — Go standard library only
 - Do not commit generated `.xlsx` files or contents of `outputfiles/`
 
-These limitations don't apply to [full-featured Aspose.Cells for Go — Enterprise Edition](https://products.aspose.com/cells/go-cpp/). It adds the complete Excel formula function library, additional file-format coverage, and commercial support.
+See [Aspose.Cells for Go — Enterprise Edition](https://products.aspose.com/cells/go-cpp/). It adds the complete Excel formula function library, additional file-format coverage, and commercial support.
 
 ## Development and Testing
 
