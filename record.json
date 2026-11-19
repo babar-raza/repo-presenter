@@ -35,68 +35,167 @@
    "run_id": "44366294766",
    "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:28:03+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|opening",
+    "llm:factuality|unresolved|key_capabilities"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 4,
+   "outcome": "failure",
+   "run_id": "44556829847",
+   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T18:13:24+00:00",
+  "at": "2026-11-19T16:28:03+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes",
+   "llm:factuality|authored_unit|opening": {
+    "example": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `TtfFont.smart_instancer.instantiate`, subsets ",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "authored_unit",
     "origins": [
-     "OutputRejectedError"
+     "opening.opening"
     ],
-    "rule": "job_error",
-    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
+    "rule": "llm:factuality",
+    "scope": "b5e8056b406bdb67158619f6eabbd3c343bf592499bdd8e66a1d772970f29b73",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "sub_rule": "opening",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|key_capabilities": {
+    "example": "- **Multi-format font loading.** It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `",
+    "findings": 3,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "key_capabilities",
     "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again; recover's correction was rejected too: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes",
+    "label": "F01",
+    "message": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `TtfFont.smart_instancer.instantiate`, subsets fonts by text or script presets using `FontSubsetter.subset_by_text`, `FontSubsetter.subset_by_presets`, and `FontSubsetter.subset_for_web`, and generates QA reports using `FontQaReporter.build_packag",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "opening.opening",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "quote": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `TtfFont.smart_instancer.instantiate`, subsets ",
+    "rule": "llm:factuality",
+    "section_id": "opening",
+    "signature": "llm:factuality|authored_unit|opening",
+    "source": "review",
+    "sub_rule": "opening",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `aspose_font.WoffFont` objects.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- **Multi-format font loading.** It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `",
+    "rule": "llm:factuality",
+    "section_id": "key_capabilities",
+    "signature": "llm:factuality|unresolved|key_capabilities",
+    "source": "review",
+    "sub_rule": "key_capabilities",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "It generates QA reports in JSON, HTML, Markdown, and PDF formats by calling `aspose_font.FontQaReporter.build_package` and writing the report using `aspose_font.FontQaReport.write_json`, `aspose_font.FontQaReport.write_html`, `aspose_font.FontQaReport.write_markdown`, and `aspose_font.FontQaReport.write_pdf`.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- **QA reporting and diagnostics.** It generates QA reports in JSON, HTML, Markdown, and PDF formats by calling `aspose_font.FontQaReporter.build_package` and writing the report using `aspose_font.FontQaReport.write_json`, `aspose_font.FontQaReport.write_html`, `aspose_font.FontQaReport.write_markdo",
+    "rule": "llm:factuality",
+    "section_id": "key_capabilities",
+    "signature": "llm:factuality|unresolved|key_capabilities",
+    "source": "review",
+    "sub_rule": "key_capabilities",
+    "upstream": ""
+   },
+   {
+    "label": "F04",
+    "message": "It renders color glyphs, SVG glyphs, and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph`, `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png`, and converts rasterized content to PNG using `aspose_font.Rasterizer.to_png` or animated PNG using `aspose_font.rasterizer.encode_apng_from_rgb`.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- **Visual proofing and rendering.** It renders color glyphs, SVG glyphs, and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph`, `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png`, and converts rasterized",
+    "rule": "llm:factuality",
+    "section_id": "key_capabilities",
+    "signature": "llm:factuality|unresolved|key_capabilities",
+    "source": "review",
+    "sub_rule": "key_capabilities",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F02+F03+F04+F05",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: unit capability:1: identifiers that are not accepted fact values: e.g",
+    "section_id": "key_capabilities",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "opening",
+    "stage": "S6"
+   }
+  ],
   "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-  "run_id": "44366294766",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44366294766",
+  "run_id": "44556829847",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556829847",
   "schema_version": 1,
   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
