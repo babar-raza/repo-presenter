@@ -7178,3 +7178,17 @@ paragraph holding one false clause is the best loss for the maintainer text (a s
 register-free citation channel through BC-05/BC-17 and was not built, R27); the hosted outcome of the 6 cohort cells.
 
 Backlog: BL-240
+
+## 2026-11-19: Planner quiesced for the frozen-code portfolio proof pass (BL-203, R46, R49)
+
+BL-210, BL-220, BL-230 and BL-240 are merged (PR #98, PR #100); zero-call recertify on the merged code: Lane R 18 of 20
+sealed cells recertify (was 11 of 19), Lane L 34 of 34, R10 gate OK (54 seals). R46 cadence: a frozen-code proof pass
+over all 40 active cells plus one repeat after each batch of merged class fixes. `scheduled_execution_authorized` is set
+to false in `data/scheduled_execution_policy.json` so the hourly planner and the cohort chain launch nothing while the
+supervisor dispatches the 40 runs by hand through the existing `present.yml` path; it is set back to true when both
+passes have settled. Code is frozen at the merge SHA of this change: only docs and backlog may merge until then; fixes
+are developed in worktrees and land after the pass. Also recorded in `AGENTS.md`: recertify run inside a git worktree
+imports the main checkout's `src` unless `PYTHONPATH=$PWD/src` is set.
+
+Backlog: BL-203, BL-290.
+
