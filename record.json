@@ -37,80 +37,35 @@
    "run_id": "44397289254",
    "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:09:54+00:00",
+   "classes": [],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "44559591368",
+   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T21:17:41+00:00",
-  "classes": {
-   "BC-06|unresolved|id_is_unresolved_unchecked": {
-    "example": "https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api is UNRESOLVED: UNCHECKED",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-06",
-    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   }
-  },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-06; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "BC-06",
-    "message": "https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api is UNRESOLVED: UNCHECKED",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-06",
-    "section_id": "",
-    "signature": "BC-06|unresolved|id_is_unresolved_unchecked",
-    "source": "validation",
-    "sub_rule": "id_is_unresolved_unchecked",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-19T16:09:54+00:00",
+  "classes": {},
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
-  "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "duplicate_opening_paragraph:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "opening",
-    "stage": "S6"
-   }
-  ],
+  "outcome": "success",
+  "repairs": [],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-  "run_id": "44397289254",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44397289254",
+  "run_id": "44559591368",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44559591368",
   "schema_version": 1,
   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
