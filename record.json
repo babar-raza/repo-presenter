@@ -76,31 +76,67 @@
    "run_id": "44366309808",
    "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T11:21:13+00:00",
+   "classes": [
+    "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44510076221",
+   "source_revision": "8620f75b5fbafbf1f7aa46ea63e6ace7e471ff96",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T18:14:11+00:00",
+  "at": "2026-11-19T11:21:13+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[4]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
+   "BC-08|inherited_unit|id_verified_rewrite_keeps_the": {
+    "example": "inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run ./_examples/feature_showcase' but the candidate does not render it",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "inherited_unit",
     "origins": [
-     "OutputRejectedError"
+     "inherited_unit:025.paragraph"
     ],
-    "rule": "job_error",
-    "scope": "2604faf60942e54d59363eaede2afc79089ec42f9ee4c82d23c7cb62bbfdfc4e",
+    "rule": "BC-08",
+    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
     "scope_paths": [
+     "data/readme_findings.json",
      "prompts",
-     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
+    "sub_rule": "id_verified_rewrite_keeps_the",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:025.paragraph holds links '_examples/feature_showcase/main.go', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:025.paragraph"
+    ],
+    "rule": "BC-17",
+    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   },
@@ -108,25 +144,40 @@
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[4]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', 'example:001', 'example:002', 'example:003', 'example:005', 'example:006', 'identity:ecosystem'] (and 614 more allowed values; cite only an offered ID); unknown fact ID public_symbol:document.optimizeimageoptions",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-08, BC-17; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[12].fact_ids[4]: 'public_symbol:document.optimizeimageoptions' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:docs', 'build_test_asset:test-command', 'dependency:none', ",
+    "label": "BC-08",
+    "message": "inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run ./_examples/feature_showcase' but the candidate does not render it",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "inherited_unit:025.paragraph",
+     "kind": "inherited_unit"
     },
     "quote": "",
-    "rule": "job_error",
+    "rule": "BC-08",
+    "section_id": "key_capabilities",
+    "signature": "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
+    "source": "validation",
+    "sub_rule": "id_verified_rewrite_keeps_the",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:025.paragraph holds links '_examples/feature_showcase/main.go', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:025.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   ],
@@ -134,12 +185,29 @@
   "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-08",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "key_capabilities",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
-  "run_id": "44366309808",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44366309808",
+  "run_id": "44510076221",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44510076221",
   "schema_version": 1,
-  "source_revision": "f997c5f85d5532f1cf272fbd4c8db1bcc6879b8f",
+  "source_revision": "8620f75b5fbafbf1f7aa46ea63e6ace7e471ff96",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
