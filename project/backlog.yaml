@@ -2196,3 +2196,19 @@ items:
     next_action: "first live cycle on the next feedback entry; consider a shorter interval if the scheduler allows"
     updated: "2026-11-19"
 
+
+  - id: BL-330
+    title: "BC-08 reads a kept unit's commands as a reader of the README does: a fenced block inside a list is not an inline span, and a span wrapped across lines reads with a space"
+    type: defect
+    source: "owner ruling R46 (2026-11-19); frozen-code hosted pass 1 and 2 on main 9476c1b: Page Python (44588774041) and PDF Python (44588918976) fail BC-08, PDF Go (44588843128) fails BC-08 + BC-17"
+    priority: P0
+    status: active
+    implementation_path: "readme/validation/text.py inline_spans (fenced regions are not spans; span whitespace squashed as Markdown renders it), used by validation/units.py protected_fragments and protected_failures (span commands compare whitespace-squashed) and by reconciliation/dispositions._fold_register_corrections"
+    acceptance: "(1) tests/readme/validation/test_protected_command_spans_bl330.py from the exact finding texts, with negative controls (an unprinted real command still fails); (2) recertify --all before/after: no row changes, every Lane R seal certified on main re-renders byte-identical, Lane L unchanged; recertify --gate OK; (3) hosted: Page Python and PDF Python no longer fail BC-08 on these units (they may fail other classes); (4) PDF Go: separate root, see next_action"
+    evidence:
+      - "Page Python: 'inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command make\\nbuild' - an inline span wrapped across two source lines (the unit prints on one line in a deterministic section, unwrapped_form), compared with the line break kept"
+      - "PDF Python: 'inherited_unit:280.list: VERIFIED_REWRITE keeps the command python\\n  with Document(...' - the fenced block inside a list item was read as one inline span because its info string 'python' matches COMMAND, so no rewrite could ever print it"
+      - "PDF Go (not fixed here): 'inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command go run ./_examples/feature_showcase'; the unit holds the sentence 'encryption ... is covered in Encryption and Signing below' (a section this README does not have, BC-07 dangling_references, reproduced offline on the published text), so restore_lost_units skips it (dangling_pointer) and the rewrite prints no command"
+      - "2026-11-19 zero-call recertify --all --json --remote origin, origin/main 9476c1b vs branch (separate worktrees, PYTHONPATH each): 57 rows, outcome, failing checks and readme_changed identical row by row; sha256 of the re-rendered README identical on all 57 (22 Lane R RECERTIFIED, 34 Lane L); recertify --gate --base-baseline <origin/main baseline>: OK, 57 seals checked; full suite -n 3: 6752 passed, 2 failed (test_every_candidate_gets_an_honest_receipt container-only; test_gate_guard_tc005 failed on a full disk, passes alone); ops/gatecli.py validate OK; the 3 failing cells have no stored bundle here so the hosted outcome is unproven"
+    next_action: "hosted re-run of Page Python and PDF Python (R41); PDF Go needs a recorded sentence-level withhold of a kept unit's dangling pointer that BC-05/BC-07/BC-17 and parity_gate all read the same way (not built: R27, unverifiable offline without the stored bundle)"
+    updated: "2026-11-19"
