@@ -2,99 +2,79 @@
   "coherence": {
     "applied": true,
     "revised": [
-      "opening/opening"
+      "api_reference/intro"
     ]
   },
   "omitted": [
     {
       "fact_id": "identity:product-knowledge-refresh",
-      "reason": "provenance metadata, not a product capability",
-      "section": "opening"
+      "reason": "provenance metadata, not a capability",
+      "section": "key_capabilities"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "provenance metadata, not a product capability",
-      "section": "opening"
+      "reason": "provenance metadata, not a capability",
+      "section": "key_capabilities"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "provenance metadata, not a product capability",
-      "section": "opening"
+      "reason": "provenance metadata, not a capability",
+      "section": "key_capabilities"
     },
     {
-      "fact_id": "package:name",
-      "reason": "provenance identifier, not a product capability",
-      "section": "opening"
+      "fact_id": "package:java_release",
+      "reason": "runtime version is printed by the renderer, not described in prose",
+      "section": "key_capabilities"
     },
     {
       "fact_id": "package:published_version",
-      "reason": "provenance identifier, not a product capability",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "provenance identifier, not a product capability",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:org.aspose.cells_foss",
-      "reason": "provenance identifier, not a product capability",
-      "section": "opening"
-    },
-    {
-      "fact_id": "dependency:development.org.apache.poi-poi-ooxml",
-      "reason": "development-time dependency, not a runtime capability",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:002",
-      "reason": "contradicted example, not accepted",
-      "section": "opening"
-    },
-    {
-      "fact_id": "finding:bc53a18ea34b",
-      "reason": "confirmed false claim, not a capability",
-      "section": "opening"
-    },
-    {
-      "fact_id": "finding:cb66691e4f5b",
-      "reason": "confirmed false claim, not a capability",
-      "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:008.code_block",
-      "reason": "The renderer prints the Mermaid diagram separately; this unit is not prose and is excluded from the key capabilities section.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:010.list",
-      "reason": "The renderer prints the list separately; this unit is not prose and is excluded from the key capabilities section.",
+      "reason": "version is printed by the renderer, not described in prose",
       "section": "key_capabilities"
     },
     {
       "fact_id": "example:002",
-      "reason": "The example is contradicted and not used to describe capabilities.",
+      "reason": "contradicted example, not used",
       "section": "key_capabilities"
     },
     {
       "fact_id": "format:input.xlsx",
-      "reason": "The format value is unresolved and not used to describe capabilities.",
+      "reason": "unresolved format, not used",
       "section": "key_capabilities"
     },
     {
       "fact_id": "format:output.xlsx",
-      "reason": "The format value is unresolved and not used to describe capabilities.",
+      "reason": "unresolved format, not used",
       "section": "key_capabilities"
     },
     {
       "fact_id": "finding:bc53a18ea34b",
-      "reason": "The finding contradicts a claim about protection passwords and is not used to describe capabilities.",
+      "reason": "confirmed false claim, not used",
       "section": "key_capabilities"
     },
     {
       "fact_id": "finding:cb66691e4f5b",
-      "reason": "The finding contradicts a claim about javadoc output and is not used to describe capabilities.",
+      "reason": "confirmed false claim, not used",
       "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "inherited list is not cited in any capability slot",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:039.table",
+      "reason": "The table of classes is already present in the rendered document under the API Reference section; this unit's prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:041.table",
+      "reason": "The table of interfaces is already present in the rendered document under the API Reference section; this unit's prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:043.table",
+      "reason": "The table of enumerations is already present in the rendered document under the API Reference section; this unit's prose must not repeat it.",
+      "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:057.paragraph",
@@ -106,16 +86,11 @@
   "units": [
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:platform",
-        "package:java_release",
-        "dependency:none",
-        "example:001",
-        "example:003"
+        "inherited_unit:004.paragraph"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format. It creates and manipulates workbooks, worksheets, cells, and cell styles, including formatting and conditional formatting rules. It supports adding data validation and applying style properties such as bold font and custom number formats. The library runs on Java with no external runtime dependencies."
+      "text": "It creates, loads, modifies, and saves Excel workbooks using the Workbook and Worksheet classes. It supports cell values and formulas, styling, page setup, data validation, conditional formatting, auto filters, comments, embedded pictures and charts, drawing shapes, and Excel tables (ListObjects). Saving is currently limited to .xlsx."
     },
     {
       "fact_ids": [
@@ -126,7 +101,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It reads and writes Excel workbooks by loading from file paths or streams into a Workbook that owns a WorksheetCollection of Worksheet objects, and saves the result back to file paths or binary streams."
+      "text": "It reads, writes, and edits Excel workbooks through the Workbook class, which owns a WorksheetCollection of Worksheet objects, and exposes Cells collections of Cell objects for reading and writing string, numeric, boolean, date/time, and formula values."
     },
     {
       "fact_ids": [
@@ -135,7 +110,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It applies cell styling and formatting through Style objects that carry font, borders, fill, alignment, number format, and protection flags, set via Cell.getStyle() and Cell.setStyle()."
+      "text": "It applies full cell formatting through the Style class, which controls font, borders, fill, alignment, number format, and protection flags, and supports custom number formats and built-in Excel format codes."
     },
     {
       "fact_ids": [
@@ -144,7 +119,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It enforces data validation and conditional formatting on worksheet ranges using ValidationCollection and ConditionalFormattingCollection, both scoped to CellArea."
+      "text": "It enforces data validation and applies conditional formatting to worksheet ranges via ValidationCollection and ConditionalFormattingCollection, both scoped to CellArea, supporting whole-number, operator-based, and value-based rules."
     },
     {
       "fact_ids": [
@@ -152,7 +127,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It creates charts programmatically and preserves chart types loaded from workbooks, and adds drawing shapes with preset geometries."
+      "text": "It creates charts programmatically and supports drawing objects with preset geometries, while preserving additional chart and shape types loaded from XLSX files verbatim."
     },
     {
       "fact_ids": [
@@ -160,7 +135,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It configures print layout and page setup via PageSetup, freezes rows and/or columns by coordinate or cell name, and applies worksheet and workbook protection with passwords."
+      "text": "It configures print layout and page setup via PageSetup, freezes rows and/or columns by coordinate or cell name, and controls visibility of gridlines, row/column headers, zero values, and right-to-left layout on each worksheet."
     },
     {
       "fact_ids": [
@@ -168,7 +143,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It manages cell comments with author, text, visibility, and size via CommentCollection, embeds images from bytes, streams, or file paths via PictureCollection, and handles hyperlinks through HyperlinkCollection."
+      "text": "It manages cell comments with author, text, visibility, and size via CommentCollection, embeds images from bytes, streams, or file paths with two-cell anchor positioning via PictureCollection, and supports hyperlinks that round-trip through load and save."
     },
     {
       "fact_ids": [
@@ -176,24 +151,15 @@
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "This example creates a new workbook, names the first worksheet Report, writes a text label and a numeric value into the first row, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as report.xlsx."
+      "text": "This example creates a new workbook, names the first worksheet Report, writes a text value and a formatted numeric value into cells A1 and B1, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as report.xlsx."
     },
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:java_release",
-        "package:name",
-        "package:published_version",
-        "package:version"
+        "example:003"
       ],
       "section": "additional_examples",
       "slot": "preview",
-      "text": "The following examples demonstrate validation rules and conditional formatting workflows using Aspose.Cells FOSS for Java."
+      "text": "The library supports data validation and conditional formatting workflows. Example 003 demonstrates adding validation rules and applying conditional formatting to a worksheet."
     },
     {
       "fact_ids": [
@@ -201,46 +167,25 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:003",
-      "text": "Create data validation and conditional formatting rules for a range."
+      "text": "Create a validation and conditional formatting rule for cells B2 through B11."
     },
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:035.heading",
         "inherited_unit:036.paragraph",
-        "inherited_unit:038.heading",
-        "package:java_release",
-        "package:name",
-        "package:published_version",
-        "package:version",
+        "inherited_unit:041.table",
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "The public entry point is org.aspose.cells_foss. The classes below cover the full supported public API surface — 183 public types organized into one module."
+      "text": "The public entry point is org.aspose.cells_foss. The classes below cover the full supported public API surface — 183 public types organized into one module. Interfaces and enumerations are also included."
     },
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:java_release",
-        "package:name",
-        "package:published_version",
-        "package:version",
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:org.aspose.cells_foss",
-      "text": "The org.aspose.cells_foss package serves as the single public entry point for the Aspose.Cells FOSS for Java library."
+      "text": "The org.aspose.cells_foss package provides core classes for reading, writing, and manipulating Excel workbooks, including workbook, worksheet, cell, style, chart, shape, table, validation, conditional formatting, auto-filter, page setup, hyperlink, comment, picture, defined name, document properties, workbook settings, workbook properties, load options, save options, diagnostics, exceptions, and XML mapping utilities."
     },
     {
       "fact_ids": [

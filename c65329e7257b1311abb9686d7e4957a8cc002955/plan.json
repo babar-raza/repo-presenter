@@ -87,38 +87,33 @@
   "deviations": [
     {
       "fact_ids": [
-        "link_target:009"
+        "link_target:009",
+        "link_target:010",
+        "link_target:product.enterprise"
       ],
       "section_id": "banner",
-      "text": "The banner image link was moved from the badges section to the banner section per disposition."
-    },
-    {
-      "fact_ids": [
-        "link_target:010"
-      ],
-      "section_id": "enterprise_relationship",
-      "text": "The banner image alt text and link target were moved to the enterprise relationship section per disposition."
+      "text": "The banner image link in the inherited README points to the enterprise product page; moved to enterprise_relationship where product relationships are described."
     },
     {
       "fact_ids": [
         "example:001"
       ],
       "section_id": "quick_start",
-      "text": "The second Quick Start example (LoadWorkbook) was omitted because its example fact is CONTRADICTED per dispositions."
+      "text": "The second Quick Start example (Load workbook with options) is CONTRADICTED and omitted."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
+        "example:003"
       ],
-      "section_id": "api_reference",
-      "text": "The Interfaces and Enumerations headings were omitted per dispositions; the Core API table already covers all public symbols."
+      "section_id": "additional_examples",
+      "text": "The Additional Examples section includes only the verified example; the second example (Load workbook) is omitted as CONTRADICTED."
     },
     {
       "fact_ids": [
         "inherited_unit:044.html_block"
       ],
       "section_id": "api_reference",
-      "text": "The orphaned closing HTML tag was omitted per disposition."
+      "text": "The orphaned closing HTML tag (</details>) is omitted as it adds no value and may break rendering."
     }
   ],
   "flagship_example_id": "example:003",
@@ -138,10 +133,6 @@
     {
       "link_fact_id": "link_target:007",
       "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:009",
-      "section_id": "banner"
     },
     {
       "link_fact_id": "link_target:023",

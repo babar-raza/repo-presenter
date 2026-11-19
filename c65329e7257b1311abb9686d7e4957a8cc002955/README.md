@@ -4,7 +4,7 @@
 
 [![Aspose.Cells FOSS for Java](https://products.aspose.org/media/cells/java/banner-readme.png)](https://products.aspose.org/cells/java/)
 
-Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format. It creates and manipulates workbooks, worksheets, cells, and cell styles, including formatting and conditional formatting rules. It supports adding data validation and applying style properties such as bold font and custom number formats. The library runs on Java with no external runtime dependencies.
+It creates, loads, modifies, and saves Excel workbooks using the `Workbook` and `Worksheet` classes. It supports cell values and formulas, styling, page setup, data validation, conditional formatting, auto filters, comments, embedded pictures and charts, drawing shapes, and Excel tables (ListObjects). Saving is currently limited to .xlsx.
 
 Aspose.Cells FOSS for Java is a free, open-source, pure-Java spreadsheet library for creating,
 loading, modifying, and saving Excel `.xlsx` workbooks. It targets Java 17, and keeps OOXML
@@ -52,12 +52,12 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Read and write Excel workbooks.** It reads and writes Excel workbooks by loading from file paths or streams into a `Workbook` that owns a `WorksheetCollection` of `Worksheet` objects, and saves the result back to file paths or binary streams.
-- **Cell styling and formatting.** It applies cell styling and formatting through `Style` objects that carry font, borders, fill, alignment, number format, and protection flags, set via `Cell.getStyle()` and `Cell.setStyle()`.
-- **Data validation and conditional formatting.** It enforces data validation and conditional formatting on worksheet ranges using `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`.
-- **Chart and shape support.** It creates charts programmatically and preserves chart types loaded from workbooks, and adds drawing shapes with preset geometries.
-- **Page setup and print layout.** It configures print layout and page setup via `PageSetup`, freezes rows and/or columns by coordinate or cell name, and applies worksheet and workbook protection with passwords.
-- **Comments, pictures, and hyperlinks.** It manages cell comments with author, text, visibility, and size via `CommentCollection`, embeds images from bytes, streams, or file paths via `PictureCollection`, and handles hyperlinks through `HyperlinkCollection`.
+- **Read and write Excel workbooks.** It reads, writes, and edits Excel workbooks through the `Workbook` class, which owns a `WorksheetCollection` of `Worksheet` objects, and exposes `Cells` collections of `Cell` objects for reading and writing string, numeric, boolean, date/time, and formula values.
+- **Cell styling and formatting.** It applies full cell formatting through the `Style` class, which controls font, borders, fill, alignment, number format, and protection flags, and supports custom number formats and built-in Excel format codes.
+- **Data validation and conditional formatting.** It enforces data validation and applies conditional formatting to worksheet ranges via `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`, supporting whole-number, operator-based, and value-based rules.
+- **Chart and shape support.** It creates charts programmatically and supports drawing objects with preset geometries, while preserving additional chart and shape types loaded from XLSX files verbatim.
+- **Page setup and print layout.** It configures print layout and page setup via `PageSetup`, freezes rows and/or columns by coordinate or cell name, and controls visibility of gridlines, row/column headers, zero values, and right-to-left layout on each worksheet.
+- **Comments, pictures, and hyperlinks.** It manages cell comments with author, text, visibility, and size via `CommentCollection`, embeds images from bytes, streams, or file paths with two-cell anchor positioning via `PictureCollection`, and supports hyperlinks that round-trip through load and save.
 
 - Read, write, and edit Excel `.xlsx` workbooks through `Workbook`, which owns a
   `WorksheetCollection` of `Worksheet` objects — add, remove, and rename sheets, select the
@@ -68,6 +68,9 @@ flowchart TB
   package/XML repair, and `Workbook.getLoadDiagnostics()` returns a load diagnostics report —
   repair details and preservation notes for unsupported package parts encountered during the
   load/save flow.
+- `Style` carries a cell's full formatting — font, borders, fill, alignment, number format, and
+  protection flags — set through `Cell.getStyle()`/`setStyle()`; `NumberFormat` looks up and
+  resolves built-in Excel number-format codes.
 - Merged cells, defined names (`DefinedNameCollection`), and hyperlinks (`HyperlinkCollection`)
   round-trip through load and save.
 - `AutoFilter` supports color filters, dynamic filters, top-10 filters, custom filters, and sort
@@ -121,7 +124,7 @@ No required third-party package dependencies; in `pom.xml`, every `<dependency>`
 
 ## Quick Start
 
-This example creates a new workbook, names the first worksheet Report, writes a text label and a numeric value into the first row, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as `report.xlsx`.
+This example creates a new workbook, names the first worksheet Report, writes a text value and a formatted numeric value into cells A1 and B1, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as `report.xlsx`.
 
 ```java
 import java.io.*;
@@ -158,9 +161,9 @@ public class Main {
 
 ## Additional Examples
 
-The following examples demonstrate validation rules and conditional formatting workflows using Aspose.Cells FOSS for Java.
+The library supports data validation and conditional formatting workflows. Example 003 demonstrates adding validation rules and applying conditional formatting to a worksheet.
 
-### Create Data Validation and Conditional Formatting Rules for a Range
+### Create a Validation and Conditional Formatting Rule for Cells B2 Through B11
 
 ```java
 import java.io.*;
@@ -211,7 +214,7 @@ public class RulesExample {
 
 ## API Reference
 
-The public entry point is `org.aspose.cells_foss`. The classes below cover the full supported public API surface — 183 public types organized into one module.
+The public entry point is `org.aspose.cells_foss`. The classes below cover the full supported public API surface — 183 public types organized into one module. Interfaces and enumerations are also included.
 
 The public API has 183 types.
 
@@ -415,7 +418,12 @@ The public API has 183 types.
 
 ### cells_foss
 
-The `org.aspose.cells_foss` package serves as the single public entry point for the Aspose.Cells FOSS for Java library.
+The `org.aspose.cells_foss` package provides core classes for reading, writing, and manipulating Excel workbooks, including workbook, worksheet, cell, style, chart, shape, table, validation, conditional formatting, auto-filter, page setup, hyperlink, comment, picture, defined name, document properties, workbook settings, workbook properties, load options, save options, diagnostics, exceptions, and XML mapping utilities.
+
+| Class | Description |
+|---|---|
+| `WorkbookView` | Represents the view / window settings stored in &lt;bookViews&gt;. |
+| `XlsxWorkbookSerializer` | Serializer for XLSX workbook files — thin coordinator that delegates to helper classes. |
 
 | Enumeration | Description |
 |---|---|
