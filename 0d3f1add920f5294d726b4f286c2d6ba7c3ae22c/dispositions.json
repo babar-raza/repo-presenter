@@ -156,7 +156,8 @@
         "public_symbol:aspose.words.drawing",
         "public_symbol:aspose.words.fields",
         "public_symbol:aspose.words.tables",
-        "public_symbol:aspose.words.digitalsignatures"
+        "public_symbol:aspose.words.digitalsignatures",
+        "finding:19489e761147"
       ],
       "rationale": "The list of capabilities is supported by public symbols and adds actionable detail for developers.",
       "unit_id": "inherited_unit:009.list"
@@ -195,7 +196,8 @@
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose.words"
+        "public_symbol:aspose.words",
+        "finding:8967f5e3b9e2"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:013.paragraph"
@@ -482,22 +484,21 @@
       "unit_id": "inherited_unit:041.heading"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "finding:7aecab985f7a"
+      ],
+      "rationale": "Omitted citing the findings register, which confirms it false: lead-in of the omitted inherited_unit:043.code_block.",
       "unit_id": "inherited_unit:042.paragraph"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:005",
-        "public_symbol:aspose.words.drawing.charts.chart",
-        "public_symbol:aspose.words.drawing.charts.chartdatalabel",
-        "public_symbol:aspose.words.drawing.charts.chartseries"
+        "finding:7aecab985f7a"
       ],
-      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "rationale": "Omitted citing the findings register, which confirms it false: its example example:005 prints a refuted line.",
       "unit_id": "inherited_unit:043.code_block"
     },
     {
@@ -925,7 +926,7 @@
       "unit_id": "inherited_unit:079.heading"
     },
     {
-      "destination_section": "scope_limitations",
+      "destination_section": "documentation_resources",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "link_target:022",
@@ -936,7 +937,7 @@
         "link_target:028",
         "public_symbol:aspose.words"
       ],
-      "rationale": "Kept in scope_limitations: documentation_resources prints nothing from a placed unit. Verified documentation and resource links with working targets, support...",
+      "rationale": "Kept in documentation_resources: a list of resource links, not scope_limitations. Kept in scope_limitations: documentation_resources prints nothing from a place",
       "unit_id": "inherited_unit:080.list"
     },
     {
@@ -962,7 +963,8 @@
       "destination_section": "enterprise_relationship",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose.words"
+        "public_symbol:aspose.words",
+        "finding:25d5069fc171"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:083.list"

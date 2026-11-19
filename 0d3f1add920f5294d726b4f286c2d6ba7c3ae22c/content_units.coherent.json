@@ -72,6 +72,17 @@
       "section": "enterprise_relationship"
     }
   ],
+  "register_corrections": [
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "finding:9563ef9ab742"
+      ],
+      "rule": "BL-210",
+      "section": "key_capabilities",
+      "slot": "capability:7"
+    }
+  ],
   "schema_version": 1,
   "units": [
     {
@@ -96,7 +107,6 @@
         "public_symbol:aspose.words.drawing",
         "public_symbol:aspose.words.fields",
         "public_symbol:aspose.words.tables",
-        "public_symbol:aspose.words.digitalsignatures",
         "public_symbol:aspose.words.protectiontype",
         "public_symbol:aspose.words.vba"
       ],
@@ -171,21 +181,12 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.words.digitalsignatures",
-        "public_symbol:aspose.words.document"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:7",
-      "text": "Verify digital signatures by checking whether a DOCX is signed and untampered, inspecting the certificates, or removing signatures using DigitalSignatures."
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.words.document",
         "public_symbol:aspose.words.protectiontype",
         "public_symbol:aspose.words.vba"
       ],
       "section": "key_capabilities",
-      "slot": "capability:8",
+      "slot": "capability:7",
       "text": "Protect documents using ProtectionType to apply different protection modes and round-trip macro-enabled files with their VBA projects intact using Vba."
     },
     {
@@ -240,100 +241,6 @@
     },
     {
       "fact_ids": [
-        "link_target:009"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:009",
-      "text": "Additional examples demonstrate practical usage scenarios for Aspose.Words FOSS for .NET."
-    },
-    {
-      "fact_ids": [
-        "link_target:014"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:014",
-      "text": "Documentation & resources provides guidance and supporting materials for Aspose.Words FOSS for .NET."
-    },
-    {
-      "fact_ids": [
-        "link_target:028"
-      ],
-      "section": "documentation_resources",
-      "slot": "link:link_target:028",
-      "text": "Open an issue to report bugs or request features for Aspose.Words FOSS for .NET."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:012.table",
-        "inherited_unit:013.paragraph",
-        "package:name",
-        "package:published_version",
-        "package:target_framework"
-      ],
-      "section": "scope_limitations",
-      "slot": "scope",
-      "text": "Aspose.Words FOSS for .NET reads and writes DOCX, DOCM, DOTX, DOTM, Flat OPC, Markdown, and plain text formats, and supports .NET Standard 2.0, .NET 8.0, and .NET Framework 4.62."
-    },
-    {
-      "fact_ids": [
-        "install_command:dotnet"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:1",
-      "text": "It does not save to PDF, XPS, or images, nor does it support printing, and layout-dependent field values such as page numbers in a table of contents or NUMPAGES evaluate to zero."
-    },
-    {
-      "fact_ids": [
-        "install_command:dotnet"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:2",
-      "text": "Additional formats such as DOC, RTF, ODT, HTML, and EPUB are not read or written in this edition."
-    },
-    {
-      "fact_ids": [
-        "install_command:dotnet"
-      ],
-      "section": "scope_limitations",
-      "slot": "limitation:3",
-      "text": "Mail merge, LINQ Reporting, document comparison, document signing, and embedded-font subsetting are not included."
-    },
-    {
-      "fact_ids": [
-        "build_test_asset:build-command",
-        "build_test_asset:test-command",
-        "build_test_asset:tests",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:017.paragraph",
-        "inherited_unit:018.paragraph",
-        "inherited_unit:019.code_block",
-        "inherited_unit:020.paragraph",
-        "inherited_unit:070.heading",
-        "inherited_unit:071.paragraph",
-        "inherited_unit:072.code_block",
-        "inherited_unit:073.paragraph",
-        "inherited_unit:085.paragraph",
-        "package:name",
-        "package:published_version",
-        "package:target_framework"
-      ],
-      "section": "development_testing",
-      "slot": "summary",
-      "text": "The toolchain requires a recent .NET SDK and uses the dotnet CLI to build the solution and run tests. Tests are implemented with NUnit 3 and reside in the Aspose.Words.Tests/ directory, where many compare generated output against gold files under TestGold/ and report mismatches with diff-style failure messages. The project layout includes Aspose.Words/ as the engine, Aspose.Foundation/ as supporting infrastructure, and Aspose.Words.Tests/ as the test suite, with code-style conventions documented in AGENTS.md."
-    },
-    {
-      "fact_ids": [
         "inherited_unit:069.paragraph"
       ],
       "section": "enterprise_relationship",
@@ -359,14 +266,6 @@
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.words.document",
       "text": "Aspose.Words.Document is a public symbol with members Accept, AcceptAllRevisions, AcceptEnd, AcceptStart, AppendChild, AppendDocument, AttachedTemplate, and AutomaticallyUpdateStyles, and its BackgroundShape setter throws ArgumentException conditionally, its DefaultTabStop setter throws ArgumentOutOfRangeException conditionally, and its Remove method throws InvalidOperationException conditionally."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.words.documentpositionmovement"
-      ],
-      "section": "api_reference",
-      "slot": "type:public_symbol:aspose.words.documentpositionmovement",
-      "text": "Aspose.Words.DocumentPositionMovement is a public symbol."
     },
     {
       "fact_ids": [
@@ -404,27 +303,11 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.words.inodecollection"
-      ],
-      "section": "api_reference",
-      "slot": "type:public_symbol:aspose.words.inodecollection",
-      "text": "Aspose.Words.INodeCollection is a public symbol."
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.words.lists.list"
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.words.lists.list",
       "text": "Aspose.Words.Lists.List is a public symbol with members CompareTo, Document, Equals, GetHashCode, HasSameTemplate, IsListStyleDefinition, IsListStyleReference, and IsMultiLevel."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.words.nodeenumerator"
-      ],
-      "section": "api_reference",
-      "slot": "type:public_symbol:aspose.words.nodeenumerator",
-      "text": "Aspose.Words.NodeEnumerator is a public symbol with members Current, Dispose, MoveNext, and Reset."
     },
     {
       "fact_ids": [
