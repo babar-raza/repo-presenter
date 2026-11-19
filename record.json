@@ -79,112 +79,61 @@
    "run_id": "44556823530",
    "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T18:32:19+00:00",
+   "classes": [
+    "job_error|job_error|LaneStepFailure:the_lane_step_ended"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44558488639",
+   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+   "version_set": ""
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T17:00:21+00:00",
+  "at": "2026-11-19T18:32:19+00:00",
   "classes": {
-   "BC-02|unresolved|id_is_contradicted_package": {
-    "example": "install_command:maven is CONTRADICTED: package registry: distribution not found on maven; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
+   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
+    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
     "findings": 1,
-    "origin_kind": "unresolved",
+    "origin_kind": "job_error",
     "origins": [
-     "-"
+     "LaneStepFailure"
     ],
-    "rule": "BC-02",
-    "scope": "a41087b3b4293f6e22b053ad2deedfbc6c26169b6cb1e8c903a10d23e21c795f",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "id_is_contradicted_package",
-    "upstream": "package"
-   },
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 2,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:002.badge_row"
-    ],
-    "rule": "BC-17",
-    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "technical_content",
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
     "upstream": ""
    }
   },
   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
-  "durable_state": "INVALIDATED",
-  "exit_code": 1,
+  "durable_state": "",
+  "exit_code": null,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02, BC-17; nothing sealed",
-   "kind": "PresentFailure",
+   "classification": "unknown",
+   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "kind": "LaneStepFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-02",
-    "message": "install_command:maven is CONTRADICTED: package registry: distribution not found on maven; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
+    "label": "LaneStepFailure",
+    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "LaneStepFailure",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-02",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "BC-02|unresolved|id_is_contradicted_package",
-    "source": "validation",
-    "sub_rule": "id_is_contradicted_package",
-    "upstream": "package"
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:002.badge_row",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:002.badge_row holds links 'https://search.maven.org/artifact/org.aspose/aspose-pdf-foss', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:002.badge_row",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "source": "job",
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
     "upstream": ""
    }
   ],
@@ -192,38 +141,13 @@
   "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "disposition_coverage:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "development_testing",
-    "stage": "S4"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
-  "run_id": "44556823530",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556823530",
+  "run_id": "44558488639",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44558488639",
   "schema_version": 1,
   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
-  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  "version_set": ""
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
  "schema_version": 1
