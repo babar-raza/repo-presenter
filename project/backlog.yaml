@@ -2168,3 +2168,27 @@ items:
     next_action: "classify the 17 by cause from each commit message and register; check reviewer-variance flips on a frozen-code repeat"
     updated: "2026-11-18"
 
+  - id: BL-290
+    title: "End-of-week delivery plan: every component running on GitHub Actions by 2026-11-22, status reported daily"
+    type: requirement
+    source: "owner ruling R49 (2026-11-19): finalize this app ASAP and deploy it to the GitHub runner with all components, achievable by the end of this week"
+    priority: P0
+    status: active
+    implementation_path: "plan backwards from 2026-11-22; components: planner and cohort chain, Lane R and Lane L present, recertify gate, M9 audit chain, supervisor tick, issue management (R39), review-page refresh (R47), state mirror; draft PRs only after every candidate of both lanes passes (R15)"
+    acceptance: "each component demonstrated on the hosted runner with evidence; the BL-203 frozen-code 40-cell proof pass and repeat run (R46 bar: 85 percent seal in one pass, 90 percent repeat agreement); Lane L 100 percent handled; daily status reported first (R12); if the date and the bar conflict the supervisor says so first and asks through the interactive form"
+    evidence: ["2026-11-19 start: Lane R 15 of 19 sealed cells recertify, about 21 of 40 never sealed (PSD Java blocked externally); Lane L 34 of 34 recertify, 24 accepted, 5 awaiting audit"]
+    next_action: "BL-240 last-resort authored-claim fix (interrupted, unreviewed); BL-203 frozen-code proof pass; Lane L audit of the 5 awaiting"
+    updated: "2026-11-19"
+
+  - id: BL-300
+    title: "Feedback cycle automation: investigation > execution > verification at once, then automatic review-page refresh"
+    type: requirement
+    source: "owner ruling R47 (2026-11-19)"
+    priority: P0
+    status: active
+    implementation_path: "the standing feedback watcher prompt (runs the cycle in the same turn it finds feedback, then rebuilds and republishes the page with scripts/review_page/build.py); docs/REVIEW_PAGE.md"
+    acceptance: "a new feedback entry is picked up at the next watcher fire, carried to verified evidence, and the page is republished in the same cycle; the owner sees the result without asking"
+    evidence: ["watcher prompt updated 2026-11-19; page republished version 8 after the manual refresh"]
+    next_action: "first live cycle on the next feedback entry; consider a shorter interval if the scheduler allows"
+    updated: "2026-11-19"
+

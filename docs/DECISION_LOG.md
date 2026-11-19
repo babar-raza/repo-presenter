@@ -7137,3 +7137,17 @@ reachable, so the 12 cells were not replayed; the evidence is the exact failure-
 `recertify --all` before/after on the 53 sealed bundles. Property improved: universal, robust.
 
 Backlog: BL-230.
+
+## 2026-11-19: Owner rulings R47, R48 and R49 recorded (feedback cycle, supervisor conduct, end-of-week deployment)
+
+R47: feedback starts investigation > execution > verification at once, and the README Candidate Review page is rebuilt
+and republished when a feedback is honored. R48: the supervisor never idles while processes run (R46 investigation),
+asks the owner only through the interactive form, and briefs every agent with the goal and `docs/RULINGS.md`. R49: all
+components running on the GitHub runner by 2026-11-22 without lowering the R44 and R46 bars. Written into
+`docs/RULINGS.md` (paragraphs, checklist items 18 to 20, table, index), `CLAUDE.md`, `AGENTS.md`,
+`docs/CONSOLIDATED_GOALS_2026-11-06.md` Part B, `docs/REVIEW_PAGE.md`, and guarded by `tests/test_rulings_in_focus.py`.
+Rules already present before this change: idle-time investigation (R46), decide-don't-ask (R11), goals in focus (R27,
+R31 and the checklist); R48 states them once and makes the interactive form and agent briefing explicit.
+
+Backlog: BL-290, BL-300.
+

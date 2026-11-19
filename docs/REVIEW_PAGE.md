@@ -10,3 +10,8 @@
 - **Owner feedback:** the artifact's `feedback` collection (doc id = candidate id; fields verdict, note, repository,
   lane, revision, seal, updatedAt). An hourly scheduled check in the supervisor session reads it; every entry becomes a
   `project/backlog.yaml` item (treated as a global requirement unless it says otherwise).
+- **Feedback cycle (R47, owner 2026-11-19):** a new or changed feedback entry starts investigation > execution >
+  verification immediately (the standing watcher runs it in the same turn it finds it). When the feedback is honored
+  and verified, the supervisor rebuilds this page with the command above and republishes it to the same URL, so the
+  owner can review the result against their own feedback. The page is never left stale after a honored feedback; the
+  refresh is part of the cycle's definition of done.
