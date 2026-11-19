@@ -7349,3 +7349,33 @@ Measured: see BL-340 evidence. R9 (no attribution wording), R10 (no seal changes
 only a previously refused fact is now admitted) are respected; a passing README re-renders byte-identical.
 
 Backlog: BL-340.
+
+## 2026-11-19: The degrade reaches the single-claim shapes BL-240 left standing (BL-350, R46, R14)
+
+Class: after frozen-code hosted passes 1 and 2 (main 9476c1b, which contains BL-240) about eight Lane R cells ended on one or
+two model-reviewer findings the degrade did not remove. Read from the hosted logs and reproduced offline from the exact
+texts (zero provider calls; each shape returned `None` from `cascade._degrade_settled` before the change): (1) the closing
+Scope sentence `See [X - Enterprise Edition](url). It adds ...` (OMR, HTML, PSD Python): the quote spans the renderer's
+sentence and the authored clause, and the lever refused any slot that is not a capability or API row; (2) a Documentation
+and Resources line the maintainers describe (HTML Python, PDF .NET): the degrade dropped the whole line, BC-05 then failed
+on the kept list, so the state was not kept and no degrade line was logged; (3) an opening that is only the flagged text
+(Slides C++, Font Python); (4) findings that appear only after the second pass (PSD Python, 3D TypeScript); (5) Words Java
+failed three asks on `unit opening: text contains a Markdown heading ('#')`: the check matched `# ` anywhere, so `C# ` in
+the opening of the port of Words .NET (R28) counts as a heading. Decisions, all inside existing components (R27): (a)
+`must_correct._withhold_flagged` withholds the authored Enterprise clause (matched by its printed form, `which adds` prints
+`It adds`) and the renderer prints its own sentence alone, never when the unit cites an inherited unit (R14 must-carry);
+(b) `degrade_claims` replaces an authored opening that is only the flagged statement by the format-facts sentence
+(`authoring_retry._fact_true_opening_unit`, the words BL-220's floor and the scope statement already print; nothing
+invented), never when it cites an inherited unit or the facts state no format; (c) `renderer._documentation_resources`: a
+described resource line the degrade or the register flags keeps its link and prints the target's own fact-true
+description; (d) `cascade._degrade_settled` keeps a lever only if it changes a printed byte, and `MAX_DEGRADE_PASSES` goes
+from 2 to 4 (each pass is still kept only when it adds no failing check and strictly lowers the blocking load; cost is
+measured, never a block, R45); (e) the `# ` marker is anchored at the start of a unit, as `- ` and `* ` already are
+(`#`..`######` at the start still fails). Each change is an R14 record (`degrade_records`, rule `BL-240`, actions
+`enterprise_context_withheld`, `opening_fact_true`, `printed_text_withheld`); no public README wording is added (R9); a
+passing README never reaches the step (R10). Property improved: robust, universal. Not determined: the hosted outcome; why
+the second Font Python pass kept nothing; whether the model reviewer keeps faulting the renderer's own fact-true rows (3D
+TypeScript, BarCode); Cells C++ `names the Enterprise Edition` (nothing honest is left for BL-220's deletion; the same
+withholding as (a) in the authoring recover hook is the next step); the PDF TypeScript lane-step cancel.
+
+Backlog: BL-350

@@ -418,6 +418,21 @@ def _plain(text: str) -> str:
     return " ".join(text.replace("`", "").split())
 
 
+#: The one authored clause the renderer prints after its own Enterprise Edition sentence (BL-350).
+_ENTERPRISE_SLOT = ("enterprise_relationship", "context")
+
+
+def _printed_text(unit: Mapping[str, Any]) -> str:
+    """The text of an authored unit as the README prints it: the Enterprise clause is raised to the
+    start of a sentence by the renderer (``it adds ...`` prints ``It adds ...``)."""
+    text = str(unit.get("text", ""))
+    if (str(unit.get("section", "")), str(unit.get("slot", ""))) == _ENTERPRISE_SLOT:
+        from repo_presenter.readme.composition.renderer import _sentence_start
+
+        return _sentence_start(text.strip())
+    return text
+
+
 def _correction_rows(repository: str, path: Path | None) -> list[FindingRecord]:
     try:
         rows = regression_rows(repository, LANE_R, path if path is not None else DEFAULT_FINDINGS_PATH)
@@ -515,7 +530,7 @@ def _withhold_flagged(
         return [i for i, r in enumerate(rows) if any(r is m for m in matched)]
 
     def prints(row: Any, unit: Mapping[str, Any]) -> bool:
-        plain = _plain(str(unit.get("text", "")))
+        plain = _plain(_printed_text(unit))
         quote = _plain(row.quote)
         return (len(quote) >= _MIN_MATCH and quote in plain) or (
             len(plain) >= _MIN_MATCH and plain in quote
@@ -532,7 +547,7 @@ def _withhold_flagged(
     for unit in new_units["units"]:
         slot, section = str(unit.get("slot", "")), str(unit.get("section", ""))
         text = str(unit.get("text", ""))
-        plain = _plain(text)
+        plain = _plain(_printed_text(unit))
         inside = [r for r in rows if len(_plain(r.quote)) >= _MIN_MATCH and _plain(r.quote) in plain]
         covering = [r for r in rows if len(plain) >= _MIN_MATCH and plain in _plain(r.quote)]
         if not inside and not covering:
@@ -578,6 +593,13 @@ def _withhold_flagged(
             for i in index_of(involved):
                 status.setdefault(i, "refused")
             kept.append(unit)
+            continue
+        if rule == DEGRADE_RULE and (section, slot) == _ENTERPRISE_SLOT:
+            # BL-350: the closing sentence of Scope names the Enterprise Edition and links it from
+            # the facts; only the "it adds ..." clause is authored. Without it the renderer prints
+            # the fact-true sentence alone (its own fallback when no unit is authored).
+            records.append(_record(slot, section, involved, "enterprise_context_withheld", rule))
+            status.update({i: "handled" for i in index_of(involved)})
             continue
         if slot.startswith("capability:") and slot.split(":", 1)[1].isdigit():
             dropped_caps.append(int(slot.split(":", 1)[1]))
@@ -936,6 +958,54 @@ def _cited_facts(detail: str, facts: Any) -> list[str]:
     return [fid for fid in ("package:name", "identity:repository") if fid in known][:1]
 
 
+def _opening_fact_true(
+    units: dict[str, Any], flags: Sequence[ClaimFlag], status: Mapping[int, str], facts: Any
+) -> list[dict[str, Any]]:
+    """BL-350: an authored opening whose whole text is the flagged statement (the quote covers every
+    sentence, so none can be withheld alone) becomes the one sentence the format facts state about
+    the product, the words the renderer's own scope statement and BL-220's terminal-safe floor print
+    (``authoring_retry._fact_true_opening_unit``); nothing is invented. Only an opening that cites no
+    inherited unit and that exactly one flag owns; the facts must state a format, else it stays for
+    the checks to judge. Mutates ``units`` (a copy the caller owns); returns the R14 records."""
+    from repo_presenter.readme.composition.authoring_retry import _fact_true_opening_unit
+    from repo_presenter.readme.composition.components.identity import product_name_of_repository
+
+    records: list[dict[str, Any]] = []
+    all_units = units.get("units") or []
+    for index, flag in enumerate(flags):
+        if status.get(index) != "refused":
+            continue
+        owners = [
+            u for u in all_units if isinstance(u, Mapping) and _prints(flag.quote, _printed_text(u))
+        ]
+        if len(owners) != 1 or (str(owners[0].get("section")), str(owners[0].get("slot"))) != (
+            "opening", "opening"
+        ):
+            continue
+        unit = owners[0]
+        if any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or []):
+            continue
+        replaced = _fact_true_opening_unit(
+            dict(unit), facts=facts, name=product_name_of_repository(facts.repository)
+        )
+        if replaced is None or replaced["text"] == unit.get("text"):
+            continue
+        unit.update(text=replaced["text"], fact_ids=replaced["fact_ids"])
+        records.append(
+            {
+                "rule": DEGRADE_RULE, "slot": "opening", "section": "opening",
+                "action": "opening_fact_true", "findings": [flag.check], "detail": flag.detail,
+            }
+        )
+    return records
+
+
+def _prints(quote: str, text: str) -> bool:
+    """Whether ``quote`` and a unit's printed ``text`` hold one another (plain, squashed)."""
+    a, b = _plain(quote), _plain(text)
+    return (len(a) >= _MIN_MATCH and a in b) or (len(b) >= _MIN_MATCH and b in a)
+
+
 def degrade_claims(
     plan: Mapping[str, Any],
     units: Mapping[str, Any],
@@ -956,6 +1026,7 @@ def degrade_claims(
     new_plan, new_units, records, status = _withhold_flagged(
         plan, units, rows, rule=DEGRADE_RULE, guard_inherited=True
     )
+    records.extend(_opening_fact_true(new_units, flags, status, facts))
     new_disp = copy.deepcopy(dict(dispositions))
     by_unit = {str(row.get("unit_id")): row for row in new_disp.get("dispositions", [])}
     cited = {
@@ -1008,7 +1079,10 @@ def degrade_claims(
     if quotes:
         new_units[DEGRADED_QUOTES_KEY] = [*new_units.get(DEGRADED_QUOTES_KEY, []), *quotes]
     # ``_withhold_flagged`` filed its own records under the units; this driver's own ride with them.
-    own = [r for r in records if r.get("action") in {"inherited_unit_omitted", "printed_text_withheld"}]
+    own = [
+        r for r in records
+        if r.get("action") in {"inherited_unit_omitted", "printed_text_withheld", "opening_fact_true"}
+    ]
     if own:
         new_units[DEGRADE_RECORDS_KEY] = [*new_units.get(DEGRADE_RECORDS_KEY, []), *own]
     if not records:
