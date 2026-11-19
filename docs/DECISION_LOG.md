@@ -7302,3 +7302,30 @@ content (7 cells), job cancels (3), PDF API-table rows, Enterprise Edition namin
 
 Backlog: BL-203, BL-270, BL-310, BL-320, BL-290.
 
+
+## 2026-11-19: BC-08 reads a kept unit's commands as a reader of the README does (BL-330, R46, R14)
+
+Class: frozen-code hosted passes on main 9476c1b left three cells failing on ONE BC-08 finding about an inherited
+command. Two share a root in how the check parses the unit, not in what the model wrote. (1) Page Python
+`inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command 'make\nbuild'`: the unit has an inline code span wrapped
+across two source lines; a deterministic section prints the paragraph unwrapped (`unwrapped_form`), and Markdown reads a
+line ending inside a span as a space, but the check compared the span with its line break. (2) PDF Python
+`inherited_unit:280.list: VERIFIED_REWRITE keeps the command 'python\n  with Document(...'`: the list item holds a fenced
+block, and the span pattern read the fence's backticks as an inline span whose text starts with the info string `python`
+(which the command pattern accepts), so a rewrite could never print it and restore (already VERIFIED_PRESERVE or
+REWRITE) could not clear it. Decision, inside the existing check (R27, zero calls, no render change): `text.inline_spans`
+drops fenced regions and squashes a span's whitespace as Markdown renders it; BC-08 (`protected_fragments`) and
+`_fold_register_corrections` use it, and a span command compares whitespace-squashed with the README (code-block
+lines still compare exactly). The check is not weakened for a real command: an unprinted `pip install ...` in the same
+unit still fails (negative control). Nothing is dropped from any README (R14), nothing printed changes (R9, R10).
+Property improved: robust, universal (a check that cannot be satisfied by any text is a defect of the check).
+Not fixed here: PDF Go `inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run
+./_examples/feature_showcase'`. Reproduced offline on the published text: the unit's sentence "encryption (...) is covered in
+Encryption and Signing below." names a section the README does not have (BC-07), so S4 folds it to VERIFIED_REWRITE and
+`restore_lost_units` refuses to restore it (`dangling_pointer`); the rewrite prints no command. The honest alternative
+is a recorded sentence-level withhold of that one sentence while keeping the command; it needs BC-05, BC-07, BC-17 and
+the parity gate to read the withheld form the same way (a register-free citation channel), which was not built (R27) and
+cannot be proven offline without the stored bundle. Hosted outcome of Page Python and PDF Python after this fix is
+unproven.
+
+Backlog: BL-330

@@ -50,6 +50,7 @@ from repo_presenter.readme.validation.text import (
     COMMAND,
     SPAN,
     fence_body,
+    inline_spans,
     normalized,
     outside_fences,
     section_texts,
@@ -465,7 +466,7 @@ def protected_fragments(candidate: Candidate) -> list[tuple[str, str, str]]:
         else:
             fragments.extend(
                 ("command", span, fact.id)
-                for span in SPAN.findall(fact.value)
+                for span in inline_spans(fact.value)
                 if COMMAND.match(span)
             )
             if fact.id in placed:
@@ -499,6 +500,7 @@ def protected_failures(candidate: Candidate) -> list[Failure]:
         for entry in candidate.dispositions.get("dispositions", [])
     }
     normalized_readme = normalized(candidate.readme)
+    squashed_readme = " ".join(candidate.readme.split())
     for category, text, unit_id in protected_fragments(candidate):
         entry = by_unit.get(unit_id, {})
         disposition = entry.get("disposition")
@@ -506,6 +508,12 @@ def protected_failures(candidate: Candidate) -> list[Failure]:
             continue
         if normalized(text) in normalized_readme:
             continue
+        if (
+            category == "command"
+            and unit_type(unit_id) != "code_block"
+            and text in squashed_readme
+        ):
+            continue  # a span wrapped across lines prints with a space or a line break alike
         if category == "command" and _withheld_on_evidence(text, entry, candidate):
             continue
         # The disposition names the destination section a dropped command or example belongs to,
