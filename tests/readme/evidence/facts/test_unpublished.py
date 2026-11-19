@@ -36,13 +36,17 @@ from repo_presenter.core.snapshot.capture import capture_snapshot, list_tree_pat
 from repo_presenter.extractors.platforms import python_registry
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.extractors.surface.registry import observe
+from repo_presenter.core.facts import FactsDocument
+from repo_presenter.readme.composition.renderer import RenderContext, _installation
 from repo_presenter.readme.evidence.facts import links
 from repo_presenter.readme.evidence.facts.extract import extract_facts
 from repo_presenter.readme.evidence.facts.unpublished import (
     DOCUMENTED_BUILD_PHRASE,
+    README_SOURCE_BUILD_PHRASE,
     README_STATEMENT_PHRASE,
     documented_source_install,
     documented_steps,
+    readme_directs_source_build,
     unpublished_statement,
 )
 
@@ -480,6 +484,132 @@ def test_a_statement_wrapped_over_two_lines_is_one_sentence() -> None:
     )
 
 
+# --- BL-340: a README that only directs a source build corroborates the registry's 404 ---------
+
+
+def test_a_source_build_readme_that_never_offers_a_registry_install_admits_the_checkout() -> (
+    None
+):
+    """Aspose.Imaging FOSS for .NET (hosted pass 2, BC-02 'distribution not found on nuget'): the
+    maintainers' Installation is a clone and a build, with no NuGet install and no listing. The
+    install is that clone plus the repository's own build, quoting the README's clone line."""
+    admitted = _admit("imaging-net")
+    row = ROWS["imaging-net"]
+    assert admitted.polarity == "SUPPORTED"
+    assert admitted.value == (
+        "git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git\n"
+        "cd Aspose.Imaging-FOSS-for-.NET\ndotnet build Aspose.Imaging.Foss.sln"
+    )
+    attributes = admitted.attributes or {}
+    assert attributes["install_kind"] == "source_checkout"
+    assert attributes[SOURCE_BASIS_ATTRIBUTE] == "documented"
+    assert attributes[REGISTRY_COMMAND_ATTRIBUTE] == "dotnet add package Aspose.Imaging.Foss"
+    details = [e.detail or "" for e in admitted.evidence]
+    assert any(d.startswith(README_SOURCE_BUILD_PHRASE) for d in details)
+    assert not any(README_STATEMENT_PHRASE in d for d in details)
+    assert any(d.startswith(DOCUMENTED_BUILD_PHRASE) for d in details)
+    assert readme_directs_source_build(row["readme_installation"]) is not None
+
+
+@pytest.mark.parametrize(
+    ("addition", "why"),
+    [
+        ("\n```bash\ndotnet add package Aspose.Imaging.Foss\n```\n", "prints the NuGet install"),
+        ("\nRun `Install-Package Aspose.Imaging.Foss`.\n", "prints the NuGet install inline"),
+        (
+            "\n[![NuGet](https://img.shields.io/nuget/v/Aspose.Imaging.Foss.svg)]"
+            "(https://www.nuget.org/packages/Aspose.Imaging.Foss)\n",
+            "carries a NuGet badge",
+        ),
+        ("\nThe package is available on NuGet.\n", "says it is on NuGet"),
+        ("\n```bash\npip install aspose-imaging\n```\n", "prints another registry install"),
+    ],
+)
+def test_a_readme_that_also_offers_the_registry_package_stays_refused(
+    addition: str, why: str
+) -> None:
+    row = ROWS["imaging-net"]
+    readme = row["readme_installation"] + addition
+    assert readme_directs_source_build(readme) is None, why
+    install = _fact(row["install_fact"])
+    assert _admit("imaging-net", readme_text=readme) == install, why
+
+
+def test_a_readme_without_a_clone_step_or_with_an_unreadable_registry_stays_refused() -> None:
+    row = ROWS["imaging-net"]
+    install = _fact(row["install_fact"])
+    no_clone = row["readme_installation"].replace("git clone", "git fetch")
+    assert readme_directs_source_build(no_clone) is None
+    assert _admit("imaging-net", readme_text=no_clone) == install
+    # A clone line outside a fence is prose, not a step a reader runs.
+    assert readme_directs_source_build("Run git clone https://example.org/x.git first.") is None
+    # A registry that could not be read admits nothing, whatever the README says.
+    unreadable = replace(
+        install,
+        polarity="UNRESOLVED",
+        evidence=(
+            install.evidence[0],
+            Evidence("https://api.nuget.org/", "package registry: could not be read: offline"),
+        ),
+    )
+    assert _admit("imaging-net", unreadable) == unreadable
+
+
+def test_a_source_build_the_facts_stage_measured_and_saw_fail_is_never_told_to_a_reader() -> None:
+    """Aspose.GIS FOSS for .NET: 381 compile errors. The same BC-02 reading, but the build was
+    driven and failed, so a README directing that build is no source install at all; "not
+    attempted" is a different record and does not block it."""
+    install = _fact(ROWS["imaging-net"]["install_fact"])
+    failed = replace(
+        install,
+        attributes={
+            "source_checkout_unverified": (
+                "no build exited 0: failed (`dotnet build src/Aspose.Imaging.Foss/"
+                "Aspose.Imaging.Foss.csproj` exited 1)"
+            )
+        },
+    )
+    assert _admit("imaging-net", failed) == failed
+    unmeasured = replace(
+        install,
+        attributes={
+            "source_checkout_unverified": "no build exited 0: not attempted (no dotnet SDK on this machine)"
+        },
+    )
+    assert _admit("imaging-net", unmeasured).polarity == "SUPPORTED"
+
+
+def test_pip_installs_of_the_checkout_are_not_registry_installs() -> None:
+    clone = "```bash\ngit clone https://example.org/x.git\ncd x\npip install -e .\npip install .\n```\n"
+    assert readme_directs_source_build(clone) is not None
+    assert readme_directs_source_build(clone + "```bash\npip install requests\n```\n") is None
+
+
+def _rendered_install(name: str) -> str:
+    row = ROWS[name]
+    entry = _entry(name)
+    install = _admit(name)
+    package = _fact(row["package_name_fact"])
+    context = RenderContext(
+        entry,
+        FactsDocument(row["repository"], "0" * 40, (package, install)),
+        {"sections": []},
+        {"units": []},
+        {"dispositions": []},
+    )
+    return "\n".join(_installation(context))
+
+
+def test_the_install_sentence_claims_unpublished_only_where_the_maintainers_say_so() -> None:
+    said = _rendered_install("jmap-java")
+    assert "is not published on" in said and "build it from a source checkout" in said
+    directed = _rendered_install("imaging-net")
+    assert "published" not in directed
+    assert "Build `Aspose.Imaging.Foss` from a source checkout:" in directed
+    assert "git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git" in directed
+    assert "dotnet add package" not in directed
+
+
 # --- end to end through extract_facts, on a real local clone -----------------------------------
 
 
@@ -596,3 +726,97 @@ def test_extraction_never_turns_a_registry_outage_into_an_unpublished_package(
     assert install.polarity == "UNRESOLVED"
     assert fact_registry_reading(install) == "unreadable"
     assert "install_kind" not in (install.attributes or {})
+
+
+# --- BL-340 end to end: a .NET clone whose README only directs a source build --------------------
+
+_NET_ENTRY = RegistryEntry.model_validate(
+    {
+        "repository": "example-org/Aspose.Example-FOSS-for-.NET",
+        "family": "example",
+        "platform": "net",
+        "ecosystem": "net",
+        "mode": "dry_run",
+        "policy_profile": "example-net",
+        "active": True,
+        "provider_identity": {"provider": "github", "repository_id": 8, "node_id": "R_8"},
+    }
+)
+
+
+def _net_install(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, readme: str) -> Fact:
+    from repo_presenter.extractors.platforms import net
+    from repo_presenter.extractors.surface.registry import RegistryObservation
+
+    def absent(*args: Any, **kwargs: Any) -> RegistryObservation:
+        return RegistryObservation(
+            "nuget",
+            "Aspose.Example.Foss",
+            False,
+            False,
+            "https://api.nuget.org/v3-flatcontainer/aspose.example.foss/index.json",
+            "nuget-api",
+            "live_probe",
+        )
+
+    monkeypatch.setattr(net, "observe", absent)
+    source = init_git_repository(tmp_path / "upstream", with_commit=False)
+    (source / "README.md").write_text(readme, encoding="utf-8")
+    (source / "LICENSE").write_text("MIT License\n\nPermission is hereby granted", "utf-8")
+    (source / "Aspose.Example.Foss.sln").write_text("Microsoft Visual Studio Solution File\n", "utf-8")
+    project = source / "src" / "Aspose.Example.Foss"
+    project.mkdir(parents=True)
+    (project / "Aspose.Example.Foss.csproj").write_text(
+        '<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup>'
+        "<TargetFramework>net8.0</TargetFramework></PropertyGroup></Project>\n",
+        encoding="utf-8",
+    )
+    (project / "Widget.cs").write_text(
+        "namespace Aspose.Example { public class Widget { } }\n", encoding="utf-8"
+    )
+    commit_all(source, "seed")
+    clone = pinned_read_only_clone(str(source), tmp_path / "clone")
+    snapshot = capture_snapshot(_NET_ENTRY.repository, clone)
+    plugin = plugin_for(_NET_ENTRY.ecosystem)
+    document, _ = extract_facts(
+        _NET_ENTRY,
+        snapshot,
+        clone.path,
+        list_tree_paths(clone.path),
+        plugin,
+        plugin.detect_manifest(clone.path),
+    )
+    return next(f for f in document.facts if f.id == "install_command:dotnet")
+
+
+_BUILD_README = (
+    "# Example\n\n## Installation\n\nBuild and install from a clone of the repository:\n\n"
+    "```bash\ngit clone https://github.com/example-org/Aspose.Example-FOSS-for-.NET.git\n"
+    "cd Aspose.Example-FOSS-for-.NET\ndotnet build Aspose.Example.Foss.sln\n```\n"
+)
+
+
+def test_extraction_states_a_nuget_404_beside_a_source_build_readme_as_a_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    install = _net_install(tmp_path, monkeypatch, _BUILD_README)
+    assert install.polarity == "SUPPORTED"
+    assert (install.attributes or {})["install_kind"] == "source_checkout"
+    assert (install.attributes or {})[REGISTRY_COMMAND_ATTRIBUTE] == (
+        "dotnet add package Aspose.Example.Foss"
+    )
+    assert "dotnet add package" not in install.value
+    assert any(
+        (e.detail or "").startswith(README_SOURCE_BUILD_PHRASE) for e in install.evidence
+    )
+
+
+def test_extraction_keeps_a_nuget_404_refused_when_the_readme_offers_the_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    offered = _BUILD_README + "\nOr from NuGet:\n\n```bash\ndotnet add package Aspose.Example.Foss\n```\n"
+    install = _net_install(tmp_path, monkeypatch, offered)
+    assert install.polarity == "CONTRADICTED"
+    assert "install_kind" not in (install.attributes or {})
+    no_readme_clone = "# Example\n\n## Installation\n\nSee the docs.\n"
+    assert _net_install(tmp_path / "b", monkeypatch, no_readme_clone).polarity == "CONTRADICTED"

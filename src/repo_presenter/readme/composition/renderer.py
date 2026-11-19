@@ -89,6 +89,7 @@ from repo_presenter.readme.evidence.facts.commands import (
 )
 from repo_presenter.readme.evidence.facts.links import link_text
 from repo_presenter.readme.evidence.facts.product_pages import banner_target, enterprise_target
+from repo_presenter.readme.evidence.facts.unpublished import README_STATEMENT_PHRASE
 
 # 35 (2026-11-06): no rendering change. BC-05 now fails a SUPERSEDE_REDUNDANT unit whose substance the
 # README does not state (validation/supersession.py), and no "validators" version is recorded in a
@@ -1549,10 +1550,17 @@ def _installation(context: RenderContext) -> list[str]:
         and (install.attributes or {}).get(SOURCE_BASIS_ATTRIBUTE) == DOCUMENTED_SOURCE_BASIS
         and package is not None
     ):
+        # The "not published" sentence is the maintainers' own statement (or the registry's, beside
+        # it); a README that only directs a source build (BL-340) says nothing of publication, so
+        # the sentence says only what to run.
+        maintainers_say_unpublished = any(
+            (evidence.detail or "").startswith(README_STATEMENT_PHRASE)
+            for evidence in install.evidence
+        )
         lines.append(
             f"`{package.value}` is not published on {context.spec.registry} yet; to use it, build "
             "it from a source checkout:"
-            if context.spec.manifest_names_distribution
+            if context.spec.manifest_names_distribution and maintainers_say_unpublished
             else f"Build `{package.value}` from a source checkout:"
         )
         lines.append("")

@@ -30,6 +30,7 @@ from repo_presenter.core.package_registry import (
 )
 from repo_presenter.readme.evidence.facts.unpublished import (
     DOCUMENTED_BUILD_PHRASE,
+    README_SOURCE_BUILD_PHRASE,
     README_STATEMENT_PHRASE,
     documented_steps,
 )
@@ -246,9 +247,14 @@ def _documented_source_failures(candidate: Candidate, fact: Fact) -> list[Failur
         problems.append(
             f"its registry reading ({reading or 'none'}) does not show the package unpublished"
         )
-    if not any(README_STATEMENT_PHRASE in detail for detail in details):
+    if not any(
+        phrase in detail
+        for detail in details
+        for phrase in (README_STATEMENT_PHRASE, README_SOURCE_BUILD_PHRASE)
+    ):
         problems.append(
-            "the maintainers' README is not recorded as saying it is unpublished"
+            "the maintainers' README is not recorded as saying it is unpublished or as directing "
+            "a source build without a registry install"
         )
     steps = attributes.get(DOCUMENTED_COMMAND_ATTRIBUTE, "")
     expected = documented_steps(

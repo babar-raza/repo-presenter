@@ -7329,3 +7329,23 @@ cannot be proven offline without the stored bundle. Hosted outcome of Page Pytho
 unproven.
 
 Backlog: BL-330
+
+## 2026-11-19: BC-02 contradicted package -- a source-build README corroborates the registry's "not published" (BL-340)
+
+Frozen-code hosted pass 2 left three cells on exactly one blocking BC-02 finding, `id_is_contradicted_package` (the
+registry lists no such package): GIS .NET, Imaging .NET, PSD Java. Verified, not assumed: the extractor's tier beneath the
+measured build (`unpublished.documented_source_install`) turns a 404 into a documented source install only when the
+maintainers' README says the package is unpublished; Imaging .NET's README never says so, it simply is a source-build
+README (`Build and install from a clone of the repository`, no NuGet install anywhere), so the two sources agree and the
+tier did not fire. R36 alternatives: (a) adopt aspose.org's approach (none published for these three repositories, so
+nothing to adopt); (b) print "not published" as a statement (rejected: the maintainers do not say it); (c) drop the
+install block with an R14 record (rejected: it loses true content); (d) render the source install the facts support,
+when the README itself directs it. Decided (d), in the existing tier, with the plain sentence "Build `X` from a source
+checkout:" (no publication claim) and guards: no registry install or listing anywhere in the README, no build measured
+to fail, registry reading `not_published`, a documented build. Not claimed: GIS .NET (no README and the product does not
+build, so a build command would be false; stays R24) and PSD Java (its README prints a Maven coordinate the registry
+404s, the case the existing tests deliberately keep refused; its README at the hosted revision could not be read here).
+Measured: see BL-340 evidence. R9 (no attribution wording), R10 (no seal changes) and R14 (no README content dropped:
+only a previously refused fact is now admitted) are respected; a passing README re-renders byte-identical.
+
+Backlog: BL-340.

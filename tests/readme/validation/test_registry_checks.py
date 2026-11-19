@@ -3493,7 +3493,8 @@ def test_a_documented_source_install_must_state_what_admits_it() -> None:
     assert details == [
         (
             "install_command:pip is a documented source install but the maintainers' README is not "
-            "recorded as saying it is unpublished"
+            "recorded as saying it is unpublished or as directing a source build without a "
+            "registry install"
         ),
         (
             "install_command:pip is a documented source install but the repository documents no "
