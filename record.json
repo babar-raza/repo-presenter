@@ -48,14 +48,27 @@
    "run_id": "44556829847",
    "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:53:22+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|opening",
+    "llm:factuality|unresolved|key_capabilities"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 4,
+   "outcome": "failure",
+   "run_id": "44557556703",
+   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T16:28:03+00:00",
+  "at": "2026-11-19T16:53:22+00:00",
   "classes": {
    "llm:factuality|authored_unit|opening": {
-    "example": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `TtfFont.smart_instancer.instantiate`, subsets ",
+    "example": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.smart_instancer.instantiate`, subsets fon",
     "findings": 1,
     "origin_kind": "authored_unit",
     "origins": [
@@ -112,12 +125,12 @@
   "findings": [
    {
     "label": "F01",
-    "message": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `TtfFont.smart_instancer.instantiate`, subsets fonts by text or script presets using `FontSubsetter.subset_by_text`, `FontSubsetter.subset_by_presets`, and `FontSubsetter.subset_for_web`, and generates QA reports using `FontQaReporter.build_packag",
+    "message": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) (+4 identical findings merged)",
     "origin": {
      "id": "opening.opening",
      "kind": "authored_unit"
     },
-    "quote": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `TtfFont.smart_instancer.instantiate`, subsets ",
+    "quote": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.smart_instancer.instantiate`, subsets fon",
     "rule": "llm:factuality",
     "section_id": "opening",
     "signature": "llm:factuality|authored_unit|opening",
@@ -194,8 +207,8 @@
    }
   ],
   "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-  "run_id": "44556829847",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556829847",
+  "run_id": "44557556703",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44557556703",
   "schema_version": 1,
   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
