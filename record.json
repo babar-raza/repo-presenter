@@ -66,44 +66,34 @@
    "run_id": "44349034180",
    "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T17:00:21+00:00",
+   "classes": [
+    "BC-02|unresolved|id_is_contradicted_package",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "44556823530",
+   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T17:56:27+00:00",
+  "at": "2026-11-19T17:00:21+00:00",
   "classes": {
-   "BC-05|inherited_unit|superseded_unstated": {
-    "example": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "findings": 2,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:013.code_block",
-     "inherited_unit:015.code_block"
-    ],
-    "rule": "BC-05",
-    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   "BC-14|unresolved|the_readme_states_q": {
-    "example": "the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none",
+   "BC-02|unresolved|id_is_contradicted_package": {
+    "example": "install_command:maven is CONTRADICTED: package registry: distribution not found on maven; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
     "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
-    "rule": "BC-14",
-    "scope": "c541affdd4fcb83feaa7fabe6618b4d3118d4711aa848b07a77d44de62ae04bf",
+    "rule": "BC-02",
+    "scope": "a41087b3b4293f6e22b053ad2deedfbc6c26169b6cb1e8c903a10d23e21c795f",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -116,20 +106,18 @@
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "the_readme_states_q",
-    "upstream": ""
+    "sub_rule": "id_is_contradicted_package",
+    "upstream": "package"
    },
    "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 4,
+    "example": "inherited_unit:002.badge_row holds links 'https://img.shields.io/maven-central/v/org.aspose/aspose-pdf-foss.svg', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 2,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:013.code_block",
-     "inherited_unit:015.code_block",
      "inherited_unit:002.badge_row"
     ],
     "rule": "BC-17",
-    "scope": "50c4ee4840a46f7e1d64ba6bcbda697fff40b9f3f961e0eadbe17ad4a1bbff51",
+    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -142,130 +130,32 @@
     ],
     "sub_rule": "technical_content",
     "upstream": ""
-   },
-   "claim_contradiction|authored_unit|the_readme_states_q": {
-    "example": "The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades \u2014 `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, a",
-    "findings": 1,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "api_reference.intro"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "2c715cae57c525595e32be50ab78692a2e2d47a34f68f478d477c9a4825d1cea",
-    "scope_paths": [
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "the_readme_states_q",
-    "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02, BC-17; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "claim_contradiction",
-    "message": "line 317 (COMPOSING): the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none",
-    "origin": {
-     "id": "api_reference.intro",
-     "kind": "authored_unit"
-    },
-    "quote": "The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades \u2014 `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, a",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|authored_unit|the_readme_states_q",
-    "source": "review",
-    "sub_rule": "the_readme_states_q",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "inherited_unit:013.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (<version>26.9.0</version>): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:013.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-05",
-    "message": "inherited_unit:015.code_block is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (implementation 'org.aspose:aspose-pdf-foss:26.9.0'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
-    "origin": {
-     "id": "inherited_unit:015.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-05",
-    "section_id": "",
-    "signature": "BC-05|inherited_unit|superseded_unstated",
-    "source": "validation",
-    "sub_rule": "superseded_unstated",
-    "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README states '1181 types' ('The public API surface has 1181 types.'), but the facts record 1183 public types (987 classes); state the computed count or none",
+    "label": "BC-02",
+    "message": "install_command:maven is CONTRADICTED: package registry: distribution not found on maven; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
     "origin": {
      "id": "-",
      "kind": "unresolved"
     },
     "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_states_q",
-    "source": "validation",
-    "sub_rule": "the_readme_states_q",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:013.code_block holds code_blocks '<dependency>', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:013.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
+    "rule": "BC-02",
     "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
+    "signature": "BC-02|unresolved|id_is_contradicted_package",
     "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:015.code_block holds code_blocks 'implementation 'org.aspose:aspose-pdf-foss:26.9.0'', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:015.code_block",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
+    "sub_rule": "id_is_contradicted_package",
+    "upstream": "package"
    },
    {
     "label": "BC-17",
@@ -299,55 +189,15 @@
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "disposition_coverage:1",
+    "label": "disposition_coverage:0",
     "outcome": "repaired",
     "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-05",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
     "section_id": null,
     "stage": "S4"
    },
@@ -362,15 +212,15 @@
    {
     "facts_defects": [],
     "label": "claim_contradiction:0",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "development_testing",
+    "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Java",
-  "run_id": "44349034180",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44349034180",
+  "run_id": "44556823530",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44556823530",
   "schema_version": 1,
   "source_revision": "5a4ae8799fc54ff904429d01aa0f923c940f55ac",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
