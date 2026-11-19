@@ -1,0 +1,93 @@
+{
+ "history": [
+  {
+   "at": "2026-11-19T15:54:47+00:00",
+   "classes": [
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44557448293",
+   "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-19T15:54:47+00:00",
+  "classes": {
+   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
+    "example": "The library's package entry points are organized into three stable layers, all importable from aspose.email_foss: the high-level MSG API, centered on `MapiMessage`, for creating, editing, and converting messages; the low-level MSG API, centered on `MsgReader`, `MsgWriter`, and `MsgDocument`, for dir",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.intro"
+    ],
+    "rule": "duplicate_paragraph",
+    "scope": "1e0aa55a2ea165ad56b00a61418426c18d820a7c291769f28a6062bb7edbddd1",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   }
+  },
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "duplicate_paragraph",
+    "message": "the candidate prints the same prose paragraph more than once",
+    "origin": {
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
+    },
+    "quote": "The library's package entry points are organized into three stable layers, all importable from aspose.email_foss: the high-level MSG API, centered on `MapiMessage`, for creating, editing, and converting messages; the low-level MSG API, centered on `MsgReader`, `MsgWriter`, and `MsgDocument`, for dir",
+    "rule": "duplicate_paragraph",
+    "section_id": "",
+    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
+    "source": "review",
+    "sub_rule": "the_candidate_prints_the",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "duplicate_paragraph:0",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "run_id": "44557448293",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44557448293",
+  "schema_version": 1,
+  "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+ "schema_version": 1
+}
