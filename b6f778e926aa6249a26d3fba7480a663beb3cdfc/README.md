@@ -315,7 +315,7 @@ Markdown documentation is available in the repository:
 - Full tagged block editing
 - Text, vector, effects, smart filters, and adjustment rendering
 
-These limitations don't apply to [full-featured Aspose.PSD for .NET — Enterprise Edition](https://products.aspose.com/psd/net/). Choose the commercial Aspose.PSD product if you need broad Photoshop feature support such as rendering, raster editing, export pipelines, richer resource/tag handling, or wider PSD/PSB compatibility.
+See [Aspose.PSD for .NET — Enterprise Edition](https://products.aspose.com/psd/net/). Choose the commercial Aspose.PSD product if you need broad Photoshop feature support such as rendering, raster editing, export pipelines, richer resource/tag handling, or wider PSD/PSB compatibility.
 
 ## Development and Testing
 
