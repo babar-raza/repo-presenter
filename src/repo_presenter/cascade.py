@@ -956,6 +956,22 @@ def _rolled_back(
     return output
 
 
+def _unprinted_kept_unit_ids(settled: _Settled, document: FactsDocument) -> list[str]:
+    """The kept inherited units the settled README does not print (``disposition_coverage``), the
+    shell-rendered kinds left out: a heading, badge row or HTML wrapper is printed by the shell
+    from facts, so no re-home could print it."""
+    from repo_presenter.readme.review.independent_reviewer import unprinted_kept_units
+
+    composed = settled.composed
+    return [
+        unit
+        for unit, _disposition in unprinted_kept_units(
+            composed.readme, facts=document, dispositions=composed.dispositions
+        )
+        if unit.rsplit(".", 1)[-1] not in {"heading", "badge_row", "html_block"}
+    ]
+
+
 def _restore_lost_content(
     settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
     tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
@@ -976,7 +992,17 @@ def _restore_lost_content(
     composed = settled.composed
     failing = blocking_failures(settled.validation)
     failing_ids = {str(check["id"]) for check in failing}
-    if not failing_ids & RESTORABLE_CHECKS:
+    # BL-310: a kept unit the README does not print is the deterministic reviewer's
+    # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+    # (a destination that does not print its kind, or one the plan omits). The restore's own
+    # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+    # reviewer is actually blocking, so a passing candidate is never touched.
+    unprinted = (
+        _unprinted_kept_unit_ids(settled, document)
+        if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+        else []
+    )
+    if not failing_ids & RESTORABLE_CHECKS and not unprinted:
         return settled
     # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
     # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -1016,6 +1042,15 @@ def _restore_lost_content(
             details, document, [change["unit_id"] for change in restored],
             mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
         )
+        unit_ids = [
+            *unit_ids,
+            *(
+                unit for unit in unprinted
+                if unit not in unit_ids
+                and unit not in {c["unit_id"] for c in restored}
+                and unit not in {s["unit_id"] for s in skipped}
+            ),
+        ]
         if not unit_ids:
             break
         dispositions, changes = restore_lost_units(
@@ -1102,6 +1137,10 @@ def _restore_lost_content(
             return discarded()
     elif require_clean_review and verdict.blocking_findings:
         return settled  # the S9 loop still has review defects to repair; write nothing yet
+    if unprinted and not failing_ids & RESTORABLE_CHECKS and len(verdict.blocking_findings) >= len(
+        settled.verdict.blocking_findings
+    ):
+        return discarded()  # entered on the reviewer's finding alone: kept only if it shrank
     write_dispositions(dispositions, out_dir / "dispositions.json")
     (out_dir / ACCOUNTING_FILENAME).write_text(
         json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",

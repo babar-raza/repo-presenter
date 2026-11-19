@@ -335,6 +335,13 @@ def restore_lost_units(
             current_destination in holdable_set
             and not prints_unit(str(current_destination), unit_id.rsplit(".", 1)[-1])
             and not links_home
+        ) or (
+            # BL-310: kept into a section no unit can be held by, or one the plan omits: nothing
+            # prints it there, which is what BC-05 ("placed in X, which the plan omits") and the
+            # reviewer's "kept but not printed" both name.
+            current_destination is not None
+            and current_destination not in holdable_set
+            and not links_home
         )
         if placed and not misrendered:
             # Already kept verbatim, and its destination is one that does render a placed unit:
