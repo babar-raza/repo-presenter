@@ -78,25 +78,39 @@
    "run_id": "44581401200",
    "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T21:28:30+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|inherited_unit|api_reference",
+    "llm:factuality|unresolved|api_reference"
+   ],
+   "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+   "findings": 21,
+   "outcome": "failure",
+   "run_id": "44618335928",
+   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T17:53:46+00:00",
+  "at": "2026-11-19T21:28:30+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
-    "example": "| `VertexElement` | VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented. |",
-    "findings": 14,
+    "example": "| `AnimationChannel` | Class that inherits from KeyframeSequence and declares the members componentType, defaultValue and keyframeSequence. |",
+    "findings": 11,
     "origin_kind": "authored_unit",
     "origins": [
      "opening.opening",
-     "api_reference.type:public_symbol:vertexelementfvector",
-     "api_reference.type:public_symbol:vertexelementintstemplate",
-     "api_reference.type:public_symbol:vertexelementsmoothinggroup",
-     "api_reference.type:public_symbol:vertexfield"
+     "key_capabilities.capability:5",
+     "api_reference.type:public_symbol:fmatrix4",
+     "api_reference.type:public_symbol:fvector2",
+     "api_reference.type:public_symbol:fvector3"
     ],
     "rule": "llm:factuality",
-    "scope": "b5e8056b406bdb67158619f6eabbd3c343bf592499bdd8e66a1d772970f29b73",
+    "scope": "d16cc107a98a7b3ad88fa84203a047630deb3fe6526e1221e799bd93a9afbf48",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -111,16 +125,40 @@
     "sub_rule": "api_reference",
     "upstream": ""
    },
-   "llm:factuality|unresolved|api_reference": {
-    "example": "| `VertexElementTangent` | Class that inherits from VertexElementFVector and declares a public constructor. |",
-    "findings": 2,
-    "origin_kind": "unresolved",
+   "llm:factuality|inherited_unit|api_reference": {
+    "example": "| `BoundingBox2D` | Class that declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum. |",
+    "findings": 3,
+    "origin_kind": "inherited_unit",
     "origins": [
-     "api_table_row:VertexElementTangent",
-     "api_table_row:Watermark"
+     "inherited_unit:043.table",
+     "inherited_unit:067.table"
     ],
     "rule": "llm:factuality",
-    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
+    "scope": "b508997cdadd859f1788d28b245f21097ef9d9887a5ddbefb6edab6726391fd2",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|api_reference": {
+    "example": "| `A3DObject` | Class that inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties. |",
+    "findings": 7,
+    "origin_kind": "unresolved",
+    "origins": [
+     "api_table_row:A3DObject",
+     "api_table_row:BindPoint",
+     "api_table_row:BoundingBox",
+     "api_table_row:Camera",
+     "api_table_row:Entity"
+    ],
+    "rule": "llm:factuality",
+    "scope": "af438f9f5a68e8378088c4d052c0c027cfadb52a00c7833d817c62ebfa3ddaa1",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -135,39 +173,39 @@
     "upstream": ""
    }
   },
-  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 16 blocking finding(s) of 16; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 21 blocking finding(s) of 21; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "F01",
-    "message": "VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented.",
+    "message": "The `A3DObject` class inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties.",
     "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
+     "id": "api_table_row:A3DObject",
+     "kind": "unresolved"
     },
-    "quote": "| `VertexElement` | VertexElement class provides vertex element properties including indices, mapping mode, name, reference mode, and type; clear, indices, and setIndices are not implemented. |",
+    "quote": "| `A3DObject` | Class that inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
+    "signature": "llm:factuality|unresolved|api_reference",
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
    },
    {
     "label": "F02",
-    "message": "VertexElementFVector class provides floating-point vector element data with copy, data, indices, mapping mode, name, and reference mode; setData is not implemented.",
+    "message": "The `AnimationChannel` class inherits from KeyframeSequence and declares the members componentType, defaultValue and keyframeSequence.",
     "origin": {
-     "id": "api_reference.type:public_symbol:vertexelementfvector",
+     "id": "opening.opening",
      "kind": "authored_unit"
     },
-    "quote": "| `VertexElementFVector` | VertexElementFVector class provides floating-point vector element data with copy, data, indices, mapping mode, name, and reference mode; setData is not implemented. |",
+    "quote": "| `AnimationChannel` | Class that inherits from KeyframeSequence and declares the members componentType, defaultValue and keyframeSequence. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -177,12 +215,12 @@
    },
    {
     "label": "F03",
-    "message": "VertexElementIntsTemplate class provides integer element data with copy, data, indices, mapping mode, name, and reference mode.",
+    "message": "The `AnimationClip` class inherits from SceneObject and declares the method createAnimationNode and the members animations, description, name, properties, start and stop.",
     "origin": {
-     "id": "api_reference.type:public_symbol:vertexelementintstemplate",
+     "id": "opening.opening",
      "kind": "authored_unit"
     },
-    "quote": "| `VertexElementIntsTemplate` | VertexElementIntsTemplate class provides integer element data with copy, data, indices, mapping mode, name, and reference mode. |",
+    "quote": "| `AnimationClip` | Class that inherits from SceneObject and declares the method createAnimationNode and the members animations, description, name, properties, start and stop. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -192,12 +230,12 @@
    },
    {
     "label": "F04",
-    "message": "VertexElementNormal class inherits from VertexElementFVector and declares a public constructor.",
+    "message": "The `AnimationNode` class inherits from A3DObject and declares the methods createBindPoint, findBindPoint, getBindPoint and getKeyframeSequence and the members bindPoints, name, properties and subAnimations.",
     "origin": {
      "id": "opening.opening",
      "kind": "authored_unit"
     },
-    "quote": "| `VertexElementNormal` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "quote": "| `AnimationNode` | Class that inherits from A3DObject and declares the methods createBindPoint, findBindPoint, getBindPoint and getKeyframeSequence and the members bindPoints, name, properties and subAnimations. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -207,27 +245,27 @@
    },
    {
     "label": "F05",
-    "message": "VertexElementSmoothingGroup class provides smoothing group element data with copy, data, indices, mapping mode, name, and reference mode.",
+    "message": "The `BindPoint` class inherits from A3DObject and declares the methods addChannel, bindKeyframeSequence, createKeyframeSequence, getChannel, getKeyframeSequence and resetChannels and the members channelsCount, name, properties, property and scene.",
     "origin": {
-     "id": "api_reference.type:public_symbol:vertexelementsmoothinggroup",
-     "kind": "authored_unit"
+     "id": "api_table_row:BindPoint",
+     "kind": "unresolved"
     },
-    "quote": "| `VertexElementSmoothingGroup` | VertexElementSmoothingGroup class provides smoothing group element data with copy, data, indices, mapping mode, name, and reference mode. |",
+    "quote": "| `BindPoint` | Class that inherits from A3DObject and declares the methods addChannel, bindKeyframeSequence, createKeyframeSequence, getChannel, getKeyframeSequence and resetChannels and the members channelsCount, name, properties, property and scene. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
+    "signature": "llm:factuality|unresolved|api_reference",
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
    },
    {
     "label": "F06",
-    "message": "VertexElementTangent class inherits from VertexElementFVector and declares a public constructor.",
+    "message": "The `BoundingBox` class declares methods including contains, infinite, merge, null, overlapsWith and scale and the members center, extent, maximum, minimum and size.",
     "origin": {
-     "id": "api_table_row:VertexElementTangent",
+     "id": "api_table_row:BoundingBox",
      "kind": "unresolved"
     },
-    "quote": "| `VertexElementTangent` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "quote": "| `BoundingBox` | Class that declares methods including contains, infinite, merge, null, overlapsWith and scale and the members center, extent, maximum, minimum and size. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|unresolved|api_reference",
@@ -237,87 +275,42 @@
    },
    {
     "label": "F07",
-    "message": "VertexElementUV class provides UV element data with add data, copy, data, indices, mapping mode, and name; addData and setData are not implemented.",
+    "message": "The `BoundingBox2D` class declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum.",
     "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
+     "id": "inherited_unit:043.table",
+     "kind": "inherited_unit"
     },
-    "quote": "| `VertexElementUV` | VertexElementUV class provides UV element data with add data, copy, data, indices, mapping mode, and name; addData and setData are not implemented. |",
+    "quote": "| `BoundingBox2D` | Class that declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
    },
    {
     "label": "F08",
-    "message": "VertexElementVertexColor class inherits from VertexElementFVector and declares a public constructor.",
+    "message": "The `BoundingBoxExtent` class declares the methods finite, infinite and null and the members extentX, extentY and extentZ.",
     "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
+     "id": "inherited_unit:043.table",
+     "kind": "inherited_unit"
     },
-    "quote": "| `VertexElementVertexColor` | Class that inherits from VertexElementFVector and declares a public constructor. |",
+    "quote": "| `BoundingBoxExtent` | Class that declares the methods finite, infinite and null and the members extentX, extentY and extentZ. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
    },
    {
     "label": "F09",
-    "message": "VertexField class provides vertex field properties including alias, data type, index, offset, semantic, and size.",
+    "message": "The `Camera` class inherits from Entity and declares methods including findProperty, getBoundingBox, getEntityRendererKey, getProperty, moveForward and removeProperty and members including apertureMode, aspect, aspectRatio, direction, excluded and farPlane.",
     "origin": {
-     "id": "api_reference.type:public_symbol:vertexfield",
-     "kind": "authored_unit"
-    },
-    "quote": "| `VertexField` | VertexField class provides vertex field properties including alias, data type, index, offset, semantic, and size. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F10",
-    "message": "VertexFieldDataType enum lists the BYTE_VECTOR4, DOUBLE, FLOAT, F_VECTOR2, F_VECTOR3, F_VECTOR4, INT16, and INT32 data types.",
-    "origin": {
-     "id": "api_reference.type:public_symbol:vertexfielddatatype",
-     "kind": "authored_unit"
-    },
-    "quote": "| `VertexFieldDataType` | VertexFieldDataType enum lists the BYTE_VECTOR4, DOUBLE, FLOAT, F_VECTOR2, F_VECTOR3, F_VECTOR4, INT16, and INT32 data types. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F11",
-    "message": "VertexFieldSemantic enum lists the BINORMAL, EDGE_CREASE, MORPH_NORMAL, MORPH_POSITION, NORMAL, POSITION, SPECULAR, and TANGENT semantics.",
-    "origin": {
-     "id": "api_reference.type:public_symbol:vertexfieldsemantic",
-     "kind": "authored_unit"
-    },
-    "quote": "| `VertexFieldSemantic` | VertexFieldSemantic enum lists the BINORMAL, EDGE_CREASE, MORPH_NORMAL, MORPH_POSITION, NORMAL, POSITION, SPECULAR, and TANGENT semantics. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F12",
-    "message": "Watermark class is not implemented.",
-    "origin": {
-     "id": "api_table_row:Watermark",
+     "id": "api_table_row:Camera",
      "kind": "unresolved"
     },
-    "quote": "| `Watermark` | Not implemented. |",
+    "quote": "| `Camera` | Class that inherits from Entity and declares methods including findProperty, getBoundingBox, getEntityRendererKey, getProperty, moveForward and removeProperty and members including apertureMode, aspect, aspectRatio, direction, excluded and farPlane. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|unresolved|api_reference",
@@ -326,13 +319,58 @@
     "upstream": ""
    },
    {
-    "label": "F13",
-    "message": "The `Scene` class loads files or buffers via `Scene.fromFile` or `Scene.openFromBuffer`, saves output via `Scene.save` or `Scene.saveToBuffer`, and exposes the node hierarchy through its rootNode property.",
+    "label": "F10",
+    "message": "The `CustomObject` class inherits from A3DObject and declares a public constructor.",
     "origin": {
-     "id": "api_reference.hub:public_symbol:scene",
+     "id": "inherited_unit:067.table",
+     "kind": "inherited_unit"
+    },
+    "quote": "| `CustomObject` | Class that inherits from A3DObject and declares a public constructor. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F11",
+    "message": "The `Entity` class inherits from SceneObject and declares the methods getBoundingBox and getEntityRendererKey and the members excluded, parentNode and parentNodes.",
+    "origin": {
+     "id": "api_table_row:Entity",
+     "kind": "unresolved"
+    },
+    "quote": "| `Entity` | Class that inherits from SceneObject and declares the methods getBoundingBox and getEntityRendererKey and the members excluded, parentNode and parentNodes. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|unresolved|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F12",
+    "message": "The `Extrapolation` class declares the members repeatCount and type.",
+    "origin": {
+     "id": "key_capabilities.capability:5",
      "kind": "authored_unit"
     },
-    "quote": "The `Scene` class loads files or buffers via `Scene.fromFile` or `Scene.openFromBuffer`, saves output via `Scene.save` or `Scene.saveToBuffer`, and exposes the node hierarchy through its rootNode property.",
+    "quote": "| `Extrapolation` | Class that declares the members repeatCount and type. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F13",
+    "message": "The `FMatrix4` class provides matrix operations, but FMatrix4.inverse throws Error (conditionally).",
+    "origin": {
+     "id": "api_reference.type:public_symbol:fmatrix4",
+     "kind": "authored_unit"
+    },
+    "quote": "| `FMatrix4` | FMatrix4 class provides matrix operations, but FMatrix4.inverse throws Error (conditionally). |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -342,12 +380,12 @@
    },
    {
     "label": "F14",
-    "message": "The `Node` class represents an element in the scene graph, supporting child nodes via `Node.addChildNode` and `Node.childNodes`, entities via `Node.addEntity` and `Node.entities`, and world-space transform computation via `Node.globalTransform`.",
+    "message": "The `FVector2` class provides 2D vector operations, but FVector2.add, FVector2.div, FVector2.parse and FVector2.sub throw errors (conditionally).",
     "origin": {
-     "id": "api_reference.hub:public_symbol:node",
+     "id": "api_reference.type:public_symbol:fvector2",
      "kind": "authored_unit"
     },
-    "quote": "The `Node` class represents an element in the scene graph, supporting child nodes via `Node.addChildNode` and `Node.childNodes`, entities via `Node.addEntity` and `Node.entities`, and world-space transform computation via `Node.globalTransform`.",
+    "quote": "| `FVector2` | FVector2 class provides 2D vector operations, but FVector2.add, FVector2.div, FVector2.parse and FVector2.sub throw errors (conditionally). |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -357,12 +395,12 @@
    },
    {
     "label": "F15",
-    "message": "The `Mesh` class manages polygon geometry through its controlPoints array and polygon definitions created via `Mesh.createPolygon`, and converts polygons to triangles via `Mesh.triangulate` before export.",
+    "message": "The `FVector3` class provides 3D vector operations, but FVector3.getItem and FVector3.setItem throw Error (conditionally).",
     "origin": {
-     "id": "api_reference.hub:public_symbol:mesh",
+     "id": "api_reference.type:public_symbol:fvector3",
      "kind": "authored_unit"
     },
-    "quote": "The `Mesh` class manages polygon geometry through its controlPoints array and polygon definitions created via `Mesh.createPolygon`, and converts polygons to triangles via `Mesh.triangulate` before export.",
+    "quote": "| `FVector3` | FVector3 class provides 3D vector operations, but FVector3.getItem and FVector3.setItem throw Error (conditionally). |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -372,22 +410,97 @@
    },
    {
     "label": "F16",
-    "message": "The `Material` class and its subclasses `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` provide surface appearance definitions, with `Material.getTexture` and `Material.setTexture` supporting texture assignment.",
+    "message": "The `FVector4` class provides 4D vector operations, but FVector4.getItem and FVector4.setItem throw Error (conditionally).",
     "origin": {
-     "id": "api_reference.hub:public_symbol:material",
+     "id": "api_reference.type:public_symbol:fvector4",
      "kind": "authored_unit"
     },
-    "quote": "The `Material` class and its subclasses `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` provide surface appearance definitions, with `Material.getTexture` and `Material.setTexture` supporting texture assignment.",
+    "quote": "| `FVector4` | FVector4 class provides 4D vector operations, but FVector4.getItem and FVector4.setItem throw Error (conditionally). |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
+   },
+   {
+    "label": "F17",
+    "message": "LambertMaterial class provides Lambert material properties including ambient and diffuse colors, but LambertMaterial.getTexture always returns null.",
+    "origin": {
+     "id": "opening.opening",
+     "kind": "authored_unit"
+    },
+    "quote": "| `LambertMaterial` | LambertMaterial class provides Lambert material properties including ambient and diffuse colors, but LambertMaterial.getTexture always returns null. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F18",
+    "message": "Light class provides apertureMode, aspect, aspectRatio, direction and excluded properties, but Light.getEntityRendererKey throws Error.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:light",
+     "kind": "authored_unit"
+    },
+    "quote": "| `Light` | Light class provides apertureMode, aspect, aspectRatio, direction and excluded properties, but Light.getEntityRendererKey throws Error. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F19",
+    "message": "Material class provides material properties, but Material.getTexture always returns null.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:material",
+     "kind": "authored_unit"
+    },
+    "quote": "| `Material` | Material class provides material properties, but Material.getTexture always returns null. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F20",
+    "message": "Class that inherits from Geometry and declares methods including createPolygon, difference, doBoolean, getBoundingBox, getEntityRendererKey and getPolygonSize and the members deformers, edges, polygonCount and polygons.",
+    "origin": {
+     "id": "api_table_row:Mesh",
+     "kind": "unresolved"
+    },
+    "quote": "| `Mesh` | Class that inherits from Geometry and declares methods including createPolygon, difference, doBoolean, getBoundingBox, getEntityRendererKey and getPolygonSize and the members deformers, edges, polygonCount and polygons. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|unresolved|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F21",
+    "message": "Class that inherits from SceneObject and declares methods including clear, createAnimationClip, fromFile, getAnimationClip, open and openFromBuffer and members including animationClips, assetInfo, currentAnimationClip, library, poses and rootNode.",
+    "origin": {
+     "id": "api_table_row:Scene",
+     "kind": "unresolved"
+    },
+    "quote": "| `Scene` | Class that inherits from SceneObject and declares methods including clear, createAnimationClip, fromFile, getAnimationClip, open and openFromBuffer and members including animationClips, assetInfo, currentAnimationClip, library, poses and rootNode. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|unresolved|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -401,8 +514,8 @@
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
-  "run_id": "44581401200",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44581401200",
+  "run_id": "44618335928",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44618335928",
   "schema_version": 1,
   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
