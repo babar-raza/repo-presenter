@@ -79,6 +79,7 @@ from repo_presenter.core.errors import PresenterError
 from repo_presenter.core.facts import FactsDocument, read_facts
 from repo_presenter.core.git_safety.git import run_git
 from repo_presenter.core.version_set import fingerprint
+from repo_presenter.readme.validation.must_correct import corrected_authored
 
 OUTCOME_RECERTIFIED = "RECERTIFIED"
 OUTCOME_NEEDS_REPAIR = "NEEDS_REPAIR"
@@ -534,44 +535,6 @@ def current_plan(
     if missing:
         updated["links"] = [*updated.get("links", []), *missing]
     return updated
-
-
-def corrected_authored(
-    plan: Mapping[str, Any],
-    units: Mapping[str, Any],
-    document: FactsDocument,
-    investigation: Mapping[str, Any] | None = None,
-    dispositions: Mapping[str, Any] | None = None,
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    """The plan and authored units with what an OPEN findings-register row confirms false
-    withheld (BL-210; ``must_correct.register_corrected`` and ``corrected_plan_examples``), and
-    each unit's citations narrowed to what its section may still cite once a capability or example
-    left the plan (BC-04). Pure; zero calls; unchanged when no row is printed."""
-    from repo_presenter.readme.composition.authoring import section_selections
-    from repo_presenter.readme.validation.must_correct import (
-        corrected_plan_examples,
-        register_corrected,
-    )
-
-    new_plan, new_units, _records = register_corrected(plan, units, document.repository)
-    new_plan, new_units = corrected_plan_examples(new_plan, new_units, document)
-    if new_plan == dict(plan) and new_units == dict(units):
-        return dict(plan), dict(units)
-    investigation = dict(investigation or {})
-    dispositions = dict(dispositions or {})
-
-    def allowed(section: str, which: Mapping[str, Any]) -> frozenset[str]:
-        return frozenset(section_selections(section, dict(which), investigation, dispositions, document)[0])
-
-    cache: dict[str, frozenset[str]] = {}
-    for unit in new_units.get("units", []):
-        section = str(unit.get("section", ""))
-        if section not in cache:
-            cache[section] = allowed(section, plan) - allowed(section, new_plan)
-        gone = cache[section]
-        if gone and any(fid in gone for fid in unit.get("fact_ids", [])):
-            unit["fact_ids"] = [fid for fid in unit["fact_ids"] if fid not in gone]
-    return dict(new_plan), dict(new_units)
 
 
 def _rerun_lane_r(

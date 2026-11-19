@@ -34,7 +34,8 @@ OPEN rows of the repository being judged that carry a quote -- the rows this che
 from __future__ import annotations
 
 import re
-from collections.abc import Collection, Iterable, Mapping
+from collections.abc import Collection, Iterable, Mapping, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -425,13 +426,15 @@ def _correction_rows(repository: str, path: Path | None) -> list[FindingRecord]:
     return [row for row in rows if len(_plain(row.quote)) >= _MIN_MATCH]
 
 
-def _record(slot: str, section: str, rows: Collection[FindingRecord], action: str) -> dict[str, Any]:
+def _record(
+    slot: str, section: str, rows: Collection[Any], action: str, rule: str = REGISTER_CORRECTION_RULE
+) -> dict[str, Any]:
     return {
-        "rule": REGISTER_CORRECTION_RULE,
+        "rule": rule,
         "slot": slot,
         "section": section,
         "action": action,
-        "findings": sorted(row.citation_id() for row in rows),
+        "findings": sorted({row.citation_id() for row in rows}),
     }
 
 
@@ -454,25 +457,88 @@ def register_corrected(
       unchanged and ``records`` is empty. Each change is one R14 record naming the rule and the
       register rows (also appended to ``units["register_corrections"]``).
     """
+    rows = _correction_rows(repository, path)
+    new_plan, new_units, records, _status = _withhold_flagged(plan, units, rows)
+    return new_plan, new_units, records
+
+
+#: The rule id of the last-resort degrade (BL-240) and the list of its R14 records in the units.
+DEGRADE_RULE = "BL-240"
+DEGRADE_RECORDS_KEY = "degrade_records"
+
+
+@dataclass(frozen=True)
+class FlaggedText:
+    """One piece of printed text a blocking check flags, shaped like the register row the
+    withholding below reads (``quote`` and ``citation_id()``), so the BL-210 lever serves both."""
+
+    quote: str
+    label: str
+
+    def citation_id(self) -> str:
+        return self.label
+
+
+def _withhold_flagged(
+    plan: Mapping[str, Any],
+    units: Mapping[str, Any],
+    rows: Sequence[Any],
+    *,
+    rule: str = REGISTER_CORRECTION_RULE,
+    guard_inherited: bool = False,
+) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], dict[int, str]]:
+    """The one withholding both ``register_corrected`` (rows of the findings register, BL-210) and
+    the last-resort degrade (``degrade_claims``, BL-240) apply: ``(plan, units, records, status)``.
+
+    ``status`` maps each row's index to ``"handled"`` (a sentence withheld, or a slot that could
+    stand without it dropped) or ``"refused"`` (an authored unit prints it but no slot lever
+    applies: left for the check to judge). An index absent from it matched no authored unit.
+    ``guard_inherited`` refuses to drop a whole unit that cites an inherited unit: that is a
+    must-carry carrier and the degrade never touches it (R14)."""
     import copy
 
-    rows = _correction_rows(repository, path)
     unit_list = [u for u in units.get("units", []) if isinstance(u, Mapping)]
     if not rows or not unit_list:
-        return dict(plan), dict(units), []
+        return dict(plan), dict(units), [], {}
+    status: dict[int, str] = {}
+    key = "register_corrections" if rule == REGISTER_CORRECTION_RULE else DEGRADE_RECORDS_KEY
     new_plan = copy.deepcopy(dict(plan))
     new_units = copy.deepcopy(dict(units))
     records: list[dict[str, Any]] = []
     dropped_caps: list[int] = []
     omitted = list(new_units.get("omitted") or [])
     kept: list[dict[str, Any]] = []
+
+    def index_of(matched: Sequence[Any]) -> list[int]:
+        return [i for i, r in enumerate(rows) if any(r is m for m in matched)]
+
+    def prints(row: Any, unit: Mapping[str, Any]) -> bool:
+        plain = _plain(str(unit.get("text", "")))
+        quote = _plain(row.quote)
+        return (len(quote) >= _MIN_MATCH and quote in plain) or (
+            len(plain) >= _MIN_MATCH and plain in quote
+        )
+
+    # The degrade withholds a statement only from the one unit that owns it: text two units both
+    # print is ambiguous, and the flag is left for the check to judge (BL-240).
+    ambiguous = {
+        i
+        for i, row in enumerate(rows)
+        if guard_inherited and sum(1 for u in new_units["units"] if prints(row, u)) > 1
+    }
+
     for unit in new_units["units"]:
         slot, section = str(unit.get("slot", "")), str(unit.get("section", ""))
         text = str(unit.get("text", ""))
         plain = _plain(text)
-        inside = [r for r in rows if _plain(r.quote) in plain]
+        inside = [r for r in rows if len(_plain(r.quote)) >= _MIN_MATCH and _plain(r.quote) in plain]
         covering = [r for r in rows if len(plain) >= _MIN_MATCH and plain in _plain(r.quote)]
         if not inside and not covering:
+            kept.append(unit)
+            continue
+        if ambiguous.intersection(index_of([*inside, *covering])):
+            for i in index_of([*inside, *covering]):
+                status.setdefault(i, "refused")
             kept.append(unit)
             continue
         # A quote that is the whole unit cannot be withheld sentence by sentence, but withholding the
@@ -487,13 +553,21 @@ def register_corrected(
                 and not any(_plain(r.quote) in _plain(corrected) for r in rows)
             ):
                 unit["text"] = corrected
-                records.append(_record(slot, section, inside, "sentence_withheld"))
+                records.append(_record(slot, section, inside, "sentence_withheld", rule))
+                status.update({i: "handled" for i in index_of(inside)})
                 kept.append(unit)
                 continue
         involved = [*inside, *covering]
+        cites_inherited = any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or [])
+        if guard_inherited and cites_inherited:
+            for i in index_of(involved):
+                status.setdefault(i, "refused")
+            kept.append(unit)
+            continue
         if slot.startswith("capability:") and slot.split(":", 1)[1].isdigit():
             dropped_caps.append(int(slot.split(":", 1)[1]))
-            records.append(_record(slot, section, involved, "capability_dropped"))
+            records.append(_record(slot, section, involved, "capability_dropped", rule))
+            status.update({i: "handled" for i in index_of(involved)})
             continue
         if slot.startswith(("hub:", "type:")):
             from repo_presenter.readme.composition.authoring import API_ROW_FALLBACK_REASON
@@ -502,13 +576,20 @@ def register_corrected(
                 {
                     "fact_id": slot.split(":", 1)[1],
                     "reason": API_ROW_FALLBACK_REASON
-                    + f"; withheld by {REGISTER_CORRECTION_RULE}: the findings register "
-                    "confirms its text false",
+                    + f"; withheld by {rule}: "
+                    + (
+                        "the findings register confirms its text false"
+                        if rule == REGISTER_CORRECTION_RULE
+                        else "a blocking check flags its text"
+                    ),
                     "section": section,
                 }
             )
-            records.append(_record(slot, section, involved, "api_row_fallback"))
+            records.append(_record(slot, section, involved, "api_row_fallback", rule))
+            status.update({i: "handled" for i in index_of(involved)})
             continue
+        for i in index_of(involved):
+            status.setdefault(i, "refused")
         kept.append(unit)
     if dropped_caps:
         gone = sorted(set(dropped_caps))
@@ -526,8 +607,8 @@ def register_corrected(
     if omitted != list(new_units.get("omitted") or []):
         new_units["omitted"] = omitted
     if records:
-        new_units["register_corrections"] = [*new_units.get("register_corrections", []), *records]
-    return new_plan, new_units, records
+        new_units[key] = [*new_units.get(key, []), *records]
+    return new_plan, new_units, records, status
 
 
 def corrected_plan_examples(
@@ -618,15 +699,24 @@ def corrected_plan_examples(
     return new_plan, new_units
 
 
-def withheld_printed_text(readme: str, repository: str, path: Path | None = None) -> str:
+def withheld_printed_text(
+    readme: str, repository: str, path: Path | None = None, degraded: Sequence[str] = ()
+) -> str:
     """The rendered README without the lines and sentences an OPEN register row confirms false that
     reach it from no unit this module can correct: text the renderer derives from facts (the
     Dependencies sentence, an API table row), the last stop of BL-210's correction.
 
     Outside code fences and tables only. A line that is the whole quote is dropped; otherwise the shortest run of sentences holding it
     is withheld from its line. Anything a quote still matches afterwards stays for BC-18 to judge,
-    and a README no row is printed in is returned unchanged (so a passing seal never changes)."""
-    rows = _correction_rows(repository, path)
+    and a README no row is printed in is returned unchanged (so a passing seal never changes).
+
+    ``degraded`` are the quotes the last-resort degrade recorded in the units
+    (``units["degraded_quotes"]``, BL-240): printed text no authored unit or inherited unit owns,
+    withheld the same way and only when it is still printed."""
+    rows = [
+        *_correction_rows(repository, path),
+        *(FlaggedText(q, DEGRADE_RULE) for q in degraded if len(_plain(q)) >= _MIN_MATCH),
+    ]
     if not rows:
         return readme
     flat = flat_squash(readme)
@@ -669,3 +759,227 @@ def withheld_printed_text(readme: str, repository: str, path: Path | None = None
             drop.add(index)
     kept_lines = [line for index, line in enumerate(lines) if index not in drop]
     return "\n".join(kept_lines)
+
+
+def corrected_authored(
+    plan: Mapping[str, Any],
+    units: Mapping[str, Any],
+    document: Any,
+    investigation: Mapping[str, Any] | None = None,
+    dispositions: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """The plan and authored units with what an OPEN findings-register row confirms false
+    withheld (BL-210; ``must_correct.register_corrected`` and ``corrected_plan_examples``), and
+    each unit's citations narrowed to what its section may still cite once a capability or example
+    left the plan (BC-04). Pure; zero calls; unchanged when no row is printed."""
+    from repo_presenter.readme.composition.authoring import section_selections
+
+    new_plan, new_units, _records = register_corrected(plan, units, document.repository)
+    new_plan, new_units = corrected_plan_examples(new_plan, new_units, document)
+    if new_plan == dict(plan) and new_units == dict(units):
+        return dict(plan), dict(units)
+    investigation = dict(investigation or {})
+    dispositions = dict(dispositions or {})
+
+    def allowed(section: str, which: Mapping[str, Any]) -> frozenset[str]:
+        return frozenset(section_selections(section, dict(which), investigation, dispositions, document)[0])
+
+    cache: dict[str, frozenset[str]] = {}
+    for unit in new_units.get("units", []):
+        section = str(unit.get("section", ""))
+        if section not in cache:
+            cache[section] = allowed(section, plan) - allowed(section, new_plan)
+        gone = cache[section]
+        if gone and any(fid in gone for fid in unit.get("fact_ids", [])):
+            unit["fact_ids"] = [fid for fid in unit["fact_ids"] if fid not in gone]
+    return dict(new_plan), dict(new_units)
+
+
+# --- BL-240: the last-resort degrade, reached only after repair has failed ------------------------
+#
+# Hosted Lane R (2026-11-18, cohort on c4df998) still ended in REJECT or an unrepairable defect on
+# ONE authored sentence, row or inherited unit a check flags as contradicting the facts: BC-14 /
+# claim_contradiction ``Euler`` named a property of ``Transform``, ``Scene.clear`` called a property,
+# a ``.fbx`` input claim reachable only through a stub; the model's repair refused or returned the
+# same text twice. The candidate then failed whole for one sentence. ``degrade_claims`` applies the
+# deterministic lever the system already has for each origin, with an R14 record naming this rule:
+#   * an authored unit loses the flagged sentence (a capability or API row that is only that text
+#     leaves the plan / falls back to the fact-true row: BL-210's ``_withhold_flagged``);
+#   * an inherited unit kept as written is omitted, citing the fact the flag names (never a unit an
+#     authored unit cites: that is a must-carry carrier);
+#   * text no unit owns (a row the renderer derives from a docstring) is recorded in
+#     ``units["degraded_quotes"]`` and the renderer prints its fact-true row / drops the sentence.
+# The caller (``cascade._degrade_settled``) re-judges the result and keeps it only when no blocking
+# check is newly failed and the blocking load strictly falls, so a passing README never changes.
+
+DEGRADED_QUOTES_KEY = "degraded_quotes"
+#: The rationale of an inherited unit the degrade omits; "contradict" is what every reader of an
+#: omission (BC-17's ``disposition_is_non_loss``) accepts as the evidenced, recorded decision.
+DEGRADED_OMISSION_RATIONALE = (
+    f"Omitted by the {DEGRADE_RULE} last-resort degrade (R14): a blocking check shows it contradicts the facts: "
+)
+_FACT_ID = re.compile(r"\b[a-z_]+:[A-Za-z0-9_.\-/:]+[A-Za-z0-9_]")
+#: The claim kinds of an LLM finding that say the printed text is false.
+_FALSE_CLAIM_KINDS = frozenset({"contradiction", "unsupported_claim"})
+
+
+@dataclass(frozen=True)
+class ClaimFlag:
+    """One printed statement a blocking check says the facts contradict: the narrowest text that
+    holds it, why, and the inherited unit that carries it verbatim when the README keeps one."""
+
+    quote: str
+    detail: str
+    check: str
+    unit: str | None = None
+
+
+def claim_flags(readme: str, facts: Any) -> list[ClaimFlag]:
+    """Every statement BC-14 / ``claim_contradiction`` flags in ``readme``, narrowed to the single
+    sentence that makes the claim when the flagged line holds several and the sentence alone
+    reproduces the finding (the rules are sentence-local); otherwise the whole flagged line.
+    Findings whose defect is a fact's (``EXTRACTING``) are not prose to withhold and are skipped."""
+    from repo_presenter.readme.validation.claims import claim_findings
+
+    lines = readme.splitlines()
+    flags: list[ClaimFlag] = []
+    for finding in claim_findings(readme, facts):
+        if finding.stage == "EXTRACTING" or not 0 <= finding.line < len(lines):
+            continue
+        last = finding.last if finding.last is not None else finding.line
+        text = "\n".join(lines[finding.line : last + 1]).strip()
+        quotes = [text]
+        if not text.lstrip().startswith(("|", "```", "~~~")):
+            sentences = [s.strip() for s in _SENTENCE_END.split(text) if s.strip()]
+            if len(sentences) > 1:
+                alone = [
+                    s
+                    for s in sentences
+                    if any(f.detail == finding.detail for f in claim_findings(s, facts))
+                ]
+                if alone:
+                    quotes = alone
+        flags.extend(ClaimFlag(q, finding.detail, "BC-14", finding.unit) for q in quotes if q)
+    return list(dict.fromkeys(flags))
+
+
+def verdict_flags(findings: Iterable[Any]) -> list[ClaimFlag]:
+    """The quoted text of each blocking MODEL reviewer finding that says a printed statement is
+    false (a deterministic rule's finding is ``claim_flags``' own, with its unit and sentence)."""
+    flags = []
+    for finding in findings:
+        quote = str(getattr(finding, "quote", "") or "").strip()
+        if (
+            getattr(finding, "source", "") == "llm"
+            and getattr(finding, "claim_kind", "") in _FALSE_CLAIM_KINDS
+            and len(_plain(quote)) >= _MIN_MATCH
+        ):
+            flags.append(
+                ClaimFlag(quote, str(getattr(finding, "message", "") or ""), str(finding.rule))
+            )
+    return list(dict.fromkeys(flags))
+
+
+def _inherited_holding(flag: ClaimFlag, dispositions: Mapping[str, Any], facts: Any) -> str | None:
+    """The one inherited unit kept as written whose text prints the flag's quote, if exactly one."""
+    from repo_presenter.readme.composition.placement import PLACED
+
+    wanted = flat_squash(flag.quote)
+    kept = {
+        str(row.get("unit_id"))
+        for row in dispositions.get("dispositions", [])
+        if row.get("disposition") in PLACED
+    }
+    holding = [
+        fact.id
+        for fact in facts.by_kind("inherited_unit")
+        if fact.id in kept and len(wanted) >= _MIN_MATCH and wanted in flat_squash(fact.value)
+    ]
+    return holding[0] if len(holding) == 1 else None
+
+
+def _cited_facts(detail: str, facts: Any) -> list[str]:
+    """The fact ids the flag's detail names, else the product's own identity: an omission must cite
+    a fact to be an accounted one (``independent_reviewer._accounting_units``)."""
+    known = {fact.id for fact in facts.facts}
+    named = [m for m in dict.fromkeys(_FACT_ID.findall(detail)) if m in known]
+    if named:
+        return named[:3]
+    return [fid for fid in ("package:name", "identity:repository") if fid in known][:1]
+
+
+def degrade_claims(
+    plan: Mapping[str, Any],
+    units: Mapping[str, Any],
+    dispositions: Mapping[str, Any],
+    flags: Sequence[ClaimFlag],
+    facts: Any,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
+    """``(plan, units, dispositions, records)`` with each flagged statement withheld at its origin
+    (see the BL-240 note above). Pure; zero calls; the inputs come back unchanged, with no
+    records, when nothing is flagged or nothing applies. A statement whose only owner is a unit
+    that cannot be withheld (an opening, an inherited unit an authored unit cites) is left printed
+    for the checks to judge."""
+    import copy
+
+    if not flags:
+        return dict(plan), dict(units), dict(dispositions), []
+    rows = [FlaggedText(flag.quote, flag.check) for flag in flags]
+    new_plan, new_units, records, status = _withhold_flagged(
+        plan, units, rows, rule=DEGRADE_RULE, guard_inherited=True
+    )
+    new_disp = copy.deepcopy(dict(dispositions))
+    by_unit = {str(row.get("unit_id")): row for row in new_disp.get("dispositions", [])}
+    cited = {
+        str(fid)
+        for unit in new_units.get("units", [])
+        if isinstance(unit, Mapping)
+        for fid in unit.get("fact_ids") or []
+    }
+    quotes: list[str] = []
+    for index, flag in enumerate(flags):
+        if index in status:
+            continue
+        unit_id = flag.unit or _inherited_holding(flag, new_disp, facts)
+        if unit_id is not None:
+            entry = by_unit.get(unit_id)
+            from repo_presenter.readme.composition.placement import PLACED
+
+            if (
+                entry is None
+                or entry.get("disposition") not in PLACED
+                or unit_id in cited
+                or unit_id.endswith((".heading", ".badge_row", ".html_block"))
+            ):
+                continue
+            section = str(entry.get("destination_section") or "")
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = _cited_facts(flag.detail, facts)
+            entry["rationale"] = (DEGRADED_OMISSION_RATIONALE + flag.detail)[:160]
+            records.append(
+                {
+                    "rule": DEGRADE_RULE, "slot": unit_id, "section": section,
+                    "action": "inherited_unit_omitted", "findings": [flag.check],
+                    "detail": flag.detail,
+                }
+            )
+            continue
+        if flag.quote not in quotes:
+            quotes.append(flag.quote)
+            records.append(
+                {
+                    "rule": DEGRADE_RULE, "slot": "printed_text", "section": "",
+                    "action": "printed_text_withheld", "findings": [flag.check],
+                    "detail": flag.detail,
+                }
+            )
+    if quotes:
+        new_units[DEGRADED_QUOTES_KEY] = [*new_units.get(DEGRADED_QUOTES_KEY, []), *quotes]
+    # ``_withhold_flagged`` filed its own records under the units; this driver's own ride with them.
+    own = [r for r in records if r.get("action") in {"inherited_unit_omitted", "printed_text_withheld"}]
+    if own:
+        new_units[DEGRADE_RECORDS_KEY] = [*new_units.get(DEGRADE_RECORDS_KEY, []), *own]
+    if not records:
+        return dict(plan), dict(units), dict(dispositions), []
+    return new_plan, new_units, new_disp, records

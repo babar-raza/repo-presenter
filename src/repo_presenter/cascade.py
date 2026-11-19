@@ -1112,6 +1112,131 @@ def _restore_lost_content(
     )
 
 
+#: Passes of the last-resort degrade after the repair loops (BL-240): the second answers a finding
+#: the model reviewer raises only once the first has withheld what the checks flagged.
+MAX_DEGRADE_PASSES = 2
+
+
+def _blocking_load(validation: dict[str, Any], verdict: ReviewVerdict) -> tuple[frozenset[str], int]:
+    """The blocking check ids still failing and how many failures plus deterministic findings that
+    leave: what a degrade must strictly lower without adding an id."""
+    failing = blocking_failures(validation)
+    ids = frozenset(str(check["id"]) for check in failing)
+    return ids, sum(len(check.get("details") or [1]) for check in failing) + len(
+        verdict.blocking_findings
+    )
+
+
+def _degrade_settled(
+    settled: _Settled, verdict: ReviewVerdict, *, entry: RegistryEntry, document: FactsDocument,
+    investigation: dict, tree_paths: list[str], original: str, out_dir: Path,
+) -> _Settled | None:
+    """The last-resort, recorded degrade (BL-240), reached only after the repair loops ended with
+    the candidate still failing: each statement a blocking check flags as contradicting the facts
+    is withheld at its origin (``must_correct.degrade_claims``: one authored sentence or row, one
+    inherited unit kept as written, or printed text no unit owns), after the BL-210 correction of
+    what the findings register confirms false (``corrected_authored``), the correction
+    re-certification already applies and hosted generation lacked. Every change is an R14 record
+    in the units and dispositions. Zero provider calls; the result is judged by the unchanged
+    validators and kept only when it adds no failing check and strictly lowers the blocking load;
+    otherwise ``None`` and the candidate is exactly as it was (a passing README never gets here).
+    Writes the artifacts of the degraded state."""
+    from repo_presenter.readme.validation.must_correct import (
+        claim_flags,
+        corrected_authored,
+        degrade_claims,
+        verdict_flags,
+    )
+
+    composed = settled.composed
+    flags = [
+        *claim_flags(composed.readme, document),
+        *verdict_flags(verdict.blocking_findings),
+    ]
+    old_ids, old_load = _blocking_load(settled.validation, settled.verdict)
+    unchanged = (composed.plan, composed.coherent_units, composed.dispositions)
+
+    def build(subset: list[Any], register: bool) -> tuple[dict, dict, dict]:
+        plan, units = composed.plan, composed.coherent_units
+        if register:
+            plan, units = corrected_authored(
+                plan, units, document, investigation, composed.dispositions
+            )
+        plan, units, dispositions, _records = degrade_claims(
+            plan, units, composed.dispositions, subset, document
+        )
+        return plan, units, dispositions
+
+    def judged(state: tuple[dict, dict, dict]) -> tuple[bool, Any]:
+        plan, units, dispositions = state
+        degraded = replace(composed, plan=plan, coherent_units=units)
+        result = _judge_restore(
+            dispositions, composed=degraded, entry=entry, document=document,
+            investigation=investigation, tree_paths=tree_paths, original=original,
+            out_dir=out_dir, restored=[],
+        )
+        ids, load = _blocking_load(result[4], result[5])
+        # Strictly fewer blocking failures; or, when the deterministic gates were already clean
+        # and only the model reviewer objected, no new one (its verdict is then asked afresh).
+        better = load < old_load if old_load else load == 0
+        return ids <= old_ids and better, (degraded, *result)
+
+    accepted: Any = None
+    for subset, register in ((flags, True), ([], True)):
+        state = build(subset, register)
+        if state == unchanged:
+            continue
+        ok, result = judged(state)
+        if ok:
+            accepted = result
+            break
+    if accepted is None and flags:
+        chosen: list[Any] = []
+        for flag in flags:  # the flags that cannot all be withheld together are taken one by one
+            state = build([*chosen, flag], False)
+            if state == unchanged:
+                continue
+            ok, result = judged(state)
+            if ok:
+                chosen.append(flag)
+                accepted = result
+    if accepted is None:
+        return None
+    degraded, readme, tasks, accounted, dispositions, validation, new_verdict = accepted
+    write_dispositions(dispositions, out_dir / "dispositions.json")
+    write_plan(degraded.plan, out_dir / "plan.json")
+    (out_dir / ACCOUNTING_FILENAME).write_text(
+        json.dumps(accounting_document(accounted), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8", newline="\n",
+    )
+    (out_dir / "content_units.coherent.json").write_text(
+        json.dumps(degraded.coherent_units, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8", newline="\n",
+    )
+    (out_dir / "README.coherent.md").write_text(readme, encoding="utf-8", newline="\n")
+    (out_dir / "README.patch.diff").write_text(
+        render_patch(original, readme), encoding="utf-8", newline="\n"
+    )
+    write_review_verdict(new_verdict, out_dir / REVIEW_VERDICT_FILENAME)
+    print(
+        "degrade: withheld flagged text (BL-240): "
+        + "; ".join(
+            f"{r.get('action')} {r.get('slot')}"
+            for r in [
+                *degraded.coherent_units.get("degrade_records", []),
+                *degraded.coherent_units.get("register_corrections", []),
+            ]
+        ),
+        file=sys.stderr,
+    )
+    return _Settled(
+        replace(
+            degraded, dispositions=dispositions, readme=readme, tasks=tasks, accounted=accounted
+        ),
+        validation, new_verdict, settled.rounds,
+    )
+
+
 def _review_defects(
     *, settled: _Settled, verdict: ReviewVerdict, entry: RegistryEntry, document: FactsDocument,
     prompts: PromptRegistry, repairs: RepairLedger,
@@ -1297,6 +1422,30 @@ def run_cascade(
         )
         rounds += settled.rounds
         verdict = settled.verdict
+    for _degrade in range(MAX_DEGRADE_PASSES):
+        # The last resort (BL-240): only after repair has ended with the candidate still failing.
+        if verdict.verdict == "ACCEPT" and not blocking_failures(settled.validation):
+            break
+        try:
+            degraded = _degrade_settled(
+                settled, verdict, entry=entry, document=document, investigation=investigation,
+                tree_paths=tree_paths, original=original, out_dir=out_dir,
+            )
+        except Exception as exc:  # noqa: BLE001 -- a best-effort step never turns a failed candidate into a crash
+            print(f"degrade: skipped ({type(exc).__name__}: {exc})", file=sys.stderr)
+            break
+        if degraded is None:
+            break
+        settled, verdict = degraded, degraded.verdict
+        if not verdict.blocking_findings and not blocking_failures(settled.validation):
+            verdict = review_with_model(
+                prompts=prompts, config=config, ledger=ledger, store=store, context=context,
+                candidate_readme=settled.composed.readme, original_readme=original,
+                facts=document, plan=settled.composed.plan,
+                dispositions=settled.composed.dispositions, validation=settled.validation,
+                deterministic_findings=verdict.findings,
+            )
+            write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
     composed, validation = settled.composed, settled.validation
     (out_dir / "validation.json").write_text(
         json.dumps(validation, indent=2, sort_keys=True, ensure_ascii=False) + "\n",

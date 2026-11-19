@@ -7137,3 +7137,31 @@ reachable, so the 12 cells were not replayed; the evidence is the exact failure-
 `recertify --all` before/after on the 53 sealed bundles. Property improved: universal, robust.
 
 Backlog: BL-230.
+
+## 2026-11-18: Last-resort recorded degrade after repair fails (BL-240, R46, R14)
+
+Class: the first hosted cohort on c4df998 (44349049455, 44349044054, 44349039315, 44349019101, 44349034180) reached the
+independent reviewer and still failed on ONE unit-local statement a check says the facts contradict: BC-14 /
+`claim_contradiction` on a member kind (`Euler` of `Transform`, `Scene.clear` called a property), a `.fbx` / `.dae`
+claim reachable only through a stub, and on Words .NET BC-18 on a Core API row whose register quote spans two rows and
+on a Quick Start code line (BL-210's correction ran only in re-certification). The repair was refused or returned the
+same text twice, and the whole candidate failed for one sentence. Decisions, all inside existing components (R27),
+zero provider calls: (1) `cascade._degrade_settled` runs after the settle and S10 repair loops, only while the
+candidate still fails; (2) it first applies BL-210's correction to hosted generation (`corrected_authored`, moved
+from `recertify` to `must_correct`, same function), then withholds each flagged statement at its origin with the lever the
+system already has: the authored sentence (or a capability / API row that is only that text: the fact-true row, R43(4)),
+the inherited unit kept as written (OMIT_UNSUPPORTED citing the fact the flag names, rationale rule `BL-240`, which every
+loss reader already accepts as an evidenced omission), or printed text no unit owns (`units["degraded_quotes"]`, refused
+by the renderer's existing `_register_refuted` / `withheld_printed_text`); (3) rule `BL-240/degrade`: each change is an R14
+record (`degrade_records` in the units, the disposition rationale) naming the check and the detail; a unit an authored unit
+cites, an opening, an inherited heading or badge row are never touched; (4) the result is re-judged by the unchanged
+validators and deterministic reviewer and is kept only when it adds no failing check and strictly lowers the blocking
+load, otherwise the candidate is exactly as it was; the model reviewer then reviews the degraded README (the verdict that
+seals), at most two passes; (5) `renderer._register_refuted` also refutes each whole-row line of a quote that spans table rows
+(the Words .NET shape), replacing that row by the fact-true description as a one-row quote does. A passing README never
+reaches the step, so no seal changes (R10); no public README wording is added (R9). Property improved: robust (one
+unit-local failure no longer halts the candidate), universal. Not determined: whether whole-unit omission of an inherited
+paragraph holding one false clause is the best loss for the maintainer text (a sentence-level inherited withhold needs a
+register-free citation channel through BC-05/BC-17 and was not built, R27); the hosted outcome of the 6 cohort cells.
+
+Backlog: BL-240
