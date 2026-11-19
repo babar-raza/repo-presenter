@@ -7,6 +7,7 @@ replies; the model review is replaced by a recorder, so these tests make no prov
 """
 
 # Re-verified under R43(2)/(3) (BL-102/BL-103: deterministic sections, Lane R policy) -- TC-019c.
+# Re-verified under BL-240 (last-resort degrade after repair fails; restore still runs first) -- TC-019c.
 
 from __future__ import annotations
 

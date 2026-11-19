@@ -255,6 +255,8 @@ class RenderContext:
             (unit["section"], unit["slot"]): unit.get("fact_ids", []) for unit in authored
         }
         self.dispositions = dispositions
+        #: Printed text the last-resort degrade recorded in the units (BL-240).
+        self.degraded_quotes: list[str] = [str(q) for q in units.get("degraded_quotes") or []]
         self._unplaced = False
         self._placements: list[Placement] | None = None
         self._placed: dict[str, list[str]] | None = None
@@ -1324,9 +1326,28 @@ def _register_refuted(context: RenderContext, line: str) -> bool:
         except (OSError, ValueError, FindingsRegisterError):
             rows = []
         quotes = [" ".join(row.quote.split()) for row in rows if row.quote.strip()]
+        # A quote that spans table rows (Words .NET: ``| `DigitalSignatureUtil` | Provides methods
+        # for signing document. |`` and the start of the next row, BL-240) also refutes each line
+        # of it that is a whole row: the row the renderer prints from the type's own docstring is
+        # replaced by the fact-true description, as a one-row quote does.
+        for row in rows:
+            parts = [" ".join(part.split()) for part in row.quote.split("\n") if part.strip()]
+            if len(parts) > 1:
+                quotes.extend(part for part in parts if _whole_table_row(part))
+        # Printed text the last-resort degrade recorded (BL-240): the same refusal.
+        quotes.extend(
+            " ".join(q.split()) for q in context.degraded_quotes if q.strip()
+        )
         context._register_quotes_cache = quotes  # type: ignore[attr-defined]
     squashed = " ".join(line.split())
     return any(quote in squashed for quote in quotes)
+
+
+def _whole_table_row(text: str) -> bool:
+    """Whether ``text`` is a complete Markdown table body row (at least two closed cells), not the
+    start of one."""
+    row = text.strip()
+    return row.startswith("|") and row.endswith("|") and row.count("|") >= 3
 
 
 def quoted_evidence_elisions(context: RenderContext) -> list[tuple[str, str]]:
@@ -2141,6 +2162,7 @@ def render_readme(
                 collapse_document_blank_runs("\n\n".join(blocks) + "\n"), facts
             ),
             facts.repository,
+            degraded=[str(q) for q in units.get("degraded_quotes") or []],
         )
     )
 
