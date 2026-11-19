@@ -2109,15 +2109,19 @@ items:
     updated: "2026-11-18"
 
   - id: BL-240
-    title: "Repair asks the model only when the check cannot compute the answer"
-    type: debt
-    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201)"
-    priority: P1
-    status: open
-    implementation_path: "readme/repair/loop.py reject_printed_quote and reject_still_failing: apply the named keep action on the first refusal"
-    acceptance: "replay the 10 logged cases where the model answered the same wrong disposition twice"
-    evidence: ["10 of 22 logged unrepairable outcomes"]
-    next_action: "after BL-230"
+    title: "Last-resort recorded degrade after repair fails: one flagged authored sentence, row or inherited unit is withheld with an R14 record instead of failing the whole candidate; repair asks the model only when the check cannot compute the answer"
+    type: defect
+    source: "owner ruling R46 (2026-11-18); investigation docs/investigations/2026-11-18-lane-r-trust.md (BL-201); first hosted cohort on c4df998 (runs 44349049455, 44349044054, 44349039315, 44349019101, 44349026907 success, 44349034180): the new fixes reach the independent reviewer, which then REJECTs on unit-local claims the repair cannot fix"
+    priority: P0
+    status: active
+    implementation_path: "cascade._degrade_settled (called after the settle and S10 repair loops, MAX_DEGRADE_PASSES=2, only while the candidate still fails) using readme/validation/must_correct.py: corrected_authored (BL-210 register_corrected + corrected_plan_examples, moved from recertify and now also run by hosted generation), claim_flags / verdict_flags / degrade_claims (the authored sentence or slot via _withhold_flagged, the inherited unit kept as written via OMIT_UNSUPPORTED citing the fact the flag names, printed text no unit owns via units['degraded_quotes'] read by composition/renderer._register_refuted and withheld_printed_text); renderer._register_refuted also refutes each whole-row line of a quote that spans table rows (Words .NET). Result judged by the unchanged validators and kept only if no new failing check and the blocking load strictly falls. Still open, the second half of the original item: readme/repair/loop.py reject_printed_quote and reject_still_failing applying the named keep action on the first refusal"
+    acceptance: "(1) tests/readme/validation/test_degrade_claims_bl240.py from the exact finding texts of the hosted runs: each shape withheld at its origin with an R14 record and then passing the check that flagged it; negative controls (passing README untouched, must-carry unit refused, a worse outcome not kept) ; (2) recertify --all before/after: no row changes, the 15 certified Lane R READMEs byte-identical, Lane L unchanged; recertify --gate OK; (3) hosted (R41): the 6 cohort cells reach a seal or a new, different failure class on their next run; (4) repair_loop first-refusal named keep: replay the 10 logged cases where the model answered the same wrong disposition twice"
+    evidence:
+      - "failure records 2026-11-18 (gh run view --log-failed): 44349049455 3D .NET 'the README names `Euler` as a property of `Transform`' and 'Y of Camera' (claim_contradiction x2, repair 'no stored disposition of an inherited unit is named'); 44349019101 3D Python 'calls `Scene.clear` a property' x3 and '.dae output reachable only through a stub' x2 (5 blocking, repair 'output rejected twice'); 44349044054 3D Java '.fbx input/output reachable only through a stub' (repair 'matches the causal stage's own output unchanged'); 44349039315 Words .NET BC-18 on the Core API row quote spanning two rows and on the Chart code line (repair 'facts defect'; BL-210 correction not in the cascade)"
+      - "tests/readme/validation/test_degrade_claims_bl240.py (13): Scene hub falls back to the fact-true row, Transform sentence withheld alone, .fbx inherited paragraph omitted citing format:input.fbx (recertify fold leaves it), .dae capability leaves the plan, docstring row prints its fact-true description, Words .NET spanning quote replaces the row, Chart line replaced by the BL-210 example correction in the cascade step; controls fail closed"
+      - "2026-11-18 recertify --all --json --remote origin, origin/main vs branch (0 provider calls, 54 seals): only Words .NET Lane R changed, NEEDS_REPAIR BC-18 -> RECERTIFIED (quote spanning rows); the 17 Lane R seals certified on main re-render byte-identical (sha256 of every re-rendered README), Lane L 34/34 unchanged (one transient SOURCE fetch failure in a disk-full run, RECERTIFIED in three other runs); recertify --gate --base-baseline <origin/main baseline>: OK, 54 seals checked; full suite -n 3: 6748 passed, 29 skipped, only test_every_candidate_gets_an_honest_receipt (container-only) failed, tc005 passes alone with free disk"
+      - "not reproduced in a test: the 3D .NET 'Y of Camera' sentence (the extractor's real Camera members are not in the log; the same rule family is covered by Transform)"
+    next_action: "recertify --all before/after and the R10 gate are in the branch report; supervisor integrates; hosted re-run of the 6 cohort cells (R41); then the repair/loop.py first-refusal named keep"
     updated: "2026-11-18"
 
   - id: BL-250

@@ -10,6 +10,7 @@ model is then never asked. The S10 job itself, the repair and the ledger are the
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -397,3 +398,78 @@ def test_a_finding_no_stage_can_revise_is_recorded_unrepairable_and_blocks(
     assert result.review_verdict.verdict == "REJECT"
     attempts = RepairLedger(run.out / REPAIRS_FILENAME).attempts
     assert [entry["outcome"] for entry in attempts.values()] == ["unrepairable"]
+
+
+# ---------------------------------------------------------------------------
+# The last-resort degrade after repair (BL-240)
+# ---------------------------------------------------------------------------
+
+HUB_LINE = 84  # the (1-based) line of the fixture README that prints the Widget hub unit
+GPU = "It also ships a GPU backend."
+
+
+def _authored_with_hub(text: str) -> list[Any]:
+    """The nine authoring-side replies with the Widget hub unit saying ``text`` (also in the
+    coherence echo, so the unit is printed as authored)."""
+    import json
+
+    replies = authored()
+    for index in (6, 7):
+        body = json.loads(replies[index].choices[0].message.content)
+        for unit in body["units"]:
+            if unit["slot"].startswith("hub:"):
+                unit["text"] = text
+        replies[index] = _completion(body)
+    return replies
+
+
+def claim_finding(line: int, section: str = "api_reference") -> dict[str, Any]:
+    return opening_finding(
+        section_id=section, claim_kind="unsupported_claim", lines=[line],
+        text="the sentence states a GPU backend the facts do not support",
+        repair="remove the GPU backend claim",
+    )
+
+
+def test_a_rejection_on_one_authored_row_is_degraded_with_a_record_then_re_reviewed(
+    run: Run, monkeypatch: pytest.MonkeyPatch, clean_gates: None
+) -> None:
+    provider = Replies(
+        monkeypatch,
+        *_authored_with_hub(f"The widget class renders. {GPU}"),
+        review_reply("REJECT_PRESENTATION", claim_finding(HUB_LINE)),
+        review_reply(),
+    )
+    result = run.cascade(review_repair_rounds=0)
+
+    assert provider.replies == [] and provider.reviewer_calls == 2
+    assert result.review_verdict.verdict == "ACCEPT" and result.review_verdict.model_reviewed
+    readme = (run.out / "README.coherent.md").read_text(encoding="utf-8")
+    assert GPU not in readme and "### Widget" in readme  # the row falls back, the type stays
+    units = json.loads((run.out / "content_units.coherent.json").read_text(encoding="utf-8"))
+    [record] = units["degrade_records"]
+    assert record["rule"] == "BL-240" and record["action"] == "api_row_fallback"
+    assert run.verdict_file().model_reviewed  # the verdict that seals is the re-review's
+
+
+def test_the_degrade_never_withholds_an_opening_or_runs_on_an_accepted_candidate(
+    run: Run, monkeypatch: pytest.MonkeyPatch, clean_gates: None
+) -> None:
+    provider = Replies(
+        monkeypatch, *authored(), review_reply("REJECT_PRESENTATION", claim_finding(OPENING_LINE, "opening"))
+    )
+    result = run.cascade(review_repair_rounds=0)
+    # the opening is the one slot no lever drops: the candidate stays rejected, unchanged
+    assert result.review_verdict.verdict == "REJECT" and provider.reviewer_calls == 1
+    units = json.loads((run.out / "content_units.coherent.json").read_text(encoding="utf-8"))
+    assert "degrade_records" not in units
+    assert "This writes plain prose" in (run.out / "README.coherent.md").read_text(encoding="utf-8")
+
+
+def test_an_accepted_candidate_is_not_degraded(
+    run: Run, monkeypatch: pytest.MonkeyPatch, clean_gates: None
+) -> None:
+    called: list[bool] = []
+    monkeypatch.setattr(cascade_module, "_degrade_settled", lambda *a, **k: called.append(True))
+    Replies(monkeypatch, *authored(), review_reply())
+    assert run.cascade().review_verdict.verdict == "ACCEPT" and called == []
