@@ -7192,3 +7192,113 @@ imports the main checkout's `src` unless `PYTHONPATH=$PWD/src` is set.
 
 Backlog: BL-203, BL-290.
 
+
+## 2026-11-19: Lane R progress lines and a wall-clock time-box inside the cascade (BL-270, R46)
+
+Five of 134 hosted Lane R runs (PDF Python x3, Java, .NET) were cancelled at the 90-minute `present` job timeout after settle
+rounds of 25 to 30 minutes on the same findings; a cancelled run leaves no verdict and no last-stage line. Decided and built
+as the smallest change inside `cascade.py` and `present.py` (no new module, stage or record type, R27): (1) `run_cascade`
+prints one `cascade progress: <event> | elapsed <s>s | provider calls <n>` line to stderr at each stage and settle round
+(S3 start/end, S9 round compose and judged, repair start/end, S10 review start/end, degrade passes, cascade end), and
+`present.py` prints the Lane R cascade start/end and seal start, so the hosted log always ends on the last stage reached;
+(2) `CASCADE_TIMEBOX_SECONDS = 3000` measured on an injectable clock from the cascade start: once passed no new S9 repair
+or S10 review-repair round starts (a round already paid for is still composed and judged), and the existing BL-240
+`_degrade_settled` then runs, so the run ends with a seal or a failure record before the job timeout. 3000 rather than 3600
+because hosted rounds take up to 30 minutes: the last round started just inside the box ends near 80 minutes. It measures
+time, not spend; R45 is unaffected. Property improved: robust and repeatable (a run always ends with a verdict and a
+diagnosable last stage). Unchanged: behaviour when the box is not reached (only extra stderr lines); no seal changes (R10);
+no README wording (R9). Not determined: whether 3000 s is the right value on hosted (only a hosted run shows), and the
+cancel path itself, which only GitHub's runner can exercise.
+
+Backlog: BL-270
+## 2026-11-19: BC-17 technical_content leftovers: a stale pinned version, a registry badge no template prints, a kept unit that never prints, a restore that forgot the correction (BL-310, R46, R14)
+
+Pareto of the hosted failure records (newest code e4a80219e2aa): `BC-17|inherited_unit|technical_content` is still the top
+Lane R class (7 cells, 20 findings), with `BC-05 superseded_unstated` (2 cells) and `disposition_coverage ... kept_verified_preserve`
+(1 cell, 10 findings) beside it. Zero-call replay of the one affected seal that exists (Aspose.PDF-FOSS-for-Java Lane R, the
+cell of hosted run 44349034180) found the shared root of its eight findings: the registry lists 26.9.0, the maintainers' Maven and
+Gradle snippets pin 26.6.0, and the candidate prints the same snippets at 26.9.0 (BC-14 forbids any other version). BC-17
+compared a whole code block and BC-05 the literal piece, so a version-only difference was a loss; restoring the unit as the
+checks ask printed the stale version back and traded BC-05/BC-17 for BC-14. The Maven Central badge and its search.maven.org link
+could never be a slot replacement either: Java's ecosystem spec has no version badge. Decisions, each inside an existing
+component (R27):
+
+1. Rule `BL-310/version`: a maintainers' pinned snippet whose only difference from what the README prints is a stale version
+   the verified install replaces is carried, not lost. `package_registry.with_verified_version` swaps a version number of the
+   verified version's shape for the verified one (`verified_package_version`: the registry's `package:published_version`, else
+   the manifest's, when SUPPORTED); BC-17 (`technical_content`, code blocks, Lane R only) and BC-05
+   (`supersession.superseded_failures`, the missing piece only) judge the swapped text. A snippet that differs in anything else,
+   or a README that does not print the verified version, is still a loss. The accounting reason is "replaced by the verified
+   package version", the same standing BC-17 already gives a version or an install command.
+2. Rule `BL-310/registry_badge`: a maintainers' registry-version badge (image, or the link of one) is replaced, not lost, when
+   its package is the repository's verified `package:name`, the version is SUPPORTED and the README states it
+   (`parity_gate.registry_badge_stated`, Lane R only). A badge of another package, or a README without the version, stays a loss.
+   Nothing is printed differently: the renderer is unchanged, so no sealed README changes (R10).
+3. Rule `BL-310/unprinted`: the reviewer's deterministic "kept but its text is not printed" finding names a keep that never
+   took effect (a section that does not print the kind, or one the plan omits). The existing restore re-home answers it, so
+   `cascade._restore_lost_content` adds those units (shell-rendered kinds excluded) to the ones BC-05/BC-08/BC-17 name, only
+   while the reviewer is blocking, and keeps the result only when its blocking findings shrink; `restore_units` now also re-homes
+   a unit kept into a section outside the holdable or included set. The text is unchanged and every change is the restore's
+   `{unit_id, was, now}` record (R14).
+4. Defect found on the same seal: `recertify._rerun_lane_r`'s restore re-derived the plan from the sealed one, which forgot the
+   BL-210 register correction, so the corrected units no longer filled a capability slot and the restored candidate failed BC-04
+   (`units must fill exactly these slots once each ... capability:6; got capability:1 ... capability:5`). The plan is now derived
+   from the units as they were before the correction, then the link backstop is applied.
+
+Verified zero-call: the PDF Java seal names 8 findings on origin/main and 2 on this branch (070.table, which the restore
+answers); `--restore-lost-units` ends NEEDS_REPAIR on main (BC-04, BC-14) and RECERTIFIED on this branch. Not reproduced (no seal
+or artifact, the proxy blocks run artifacts): TeX Python BC-05 license in Scope (the finding names no unit, so the text is
+authored or rewritten, not a kept paragraph the BL-089 fold covers), the TeX `status-pre--alpha` static badge (no fact
+verifies a maintainers' status badge; carrying it would trade BC-17 for the badge contract), Cells TypeScript 037.table
+`Protection` (its sealed form prints it), Go 025.paragraph (restore declines a unit whose text carries a dangling pointer on
+purpose). They stay on BL-310's next action. No public README wording is added (R9); a passing README is never touched
+(R10): the new rules only turn a loss into an accounted replacement and the restore only runs while a check fails. Properties
+improved: reliable and universal (a version-only difference no longer fails a candidate whose source drifted behind its
+registry; Java, Go, C++ and any ecosystem without a version badge template), repeatable (the restore replay judges the same
+plan as the dry count).
+
+Backlog: BL-310
+## 2026-11-19: API-row member claims are held to the type the sentence is about (BL-320, R46, R14)
+
+Frozen-code hosted pass 1 left about six cells (PDF Python, .NET, Java, Go, Font Python, 3D TypeScript and Python) on
+authored or fact-templated API-row sentences that "claim members a class does not have". First principles: the failing
+sentences are the renderer's own fact-true rows ("Class that inherits from ExplicitDestination and declares the methods
+Top and ToString."), and the facts do support them. The check was wrong: `surface_claims._owner_before` picks the nearest
+named type that shares any listed name, so a name the named BASE also has (`ToString`) made the base the owner, and every
+name only the row's type declares (`Top`) became "names `Top` as a method of `ExplicitDestination`". Decisions: (1) a type
+named after "inherits from / extends / derives from / subclass of / based on / implements", including a list of bases, is
+a base and never the owner of the list that follows; the owner is the sentence's subject (the row's own type or the type
+named first), so inherited members are never attributed to the derived type and a genuinely missing member of the row's
+own type is still flagged; (2) a list ends before a kind word that opens the next list ("methods including a and b and
+properties including c"), so `properties` is no method; (3) `_base_names` no longer raises on a base part with no word
+(it crashed `TypeDescriber` on stored facts); (4) the last-resort degrade (BL-240) also withholds, with an R14 record
+(`duplicate_unit_dropped`), an authored prose unit that is exactly a paragraph the candidate prints twice (Email Python and
+TeX Python `api_reference.intro`, the authored intro restating a kept inherited paragraph): never the inherited copy
+(R14), never the opening, only when no unit-level lever already applies. Measured with zero provider calls: the renderer's
+fact-true rows over all 54 stored facts documents drew 1,316 member-claim findings on 10,022 rows, now 0; `recertify
+--all` before/after changes no outcome, check or detail on any row with the same seal commit and re-renders every
+certified Lane R seal byte-identical except the three that already differed on main (BL-250). A check was not added or
+tightened (it was loosened where it was provably wrong, so no seal can newly fail, R10); no public README wording is added
+(R9). Property improved: reliable and universal (one wrong owner rule had failed whole PDF cells with 52 findings), measured
+by the pareto count of `claim_contradiction|*|member_owner` and `BC-14|*|the_readme_names_code` on the next frozen-code
+pass. Not determined and not built (R27): the model-judged `llm:factuality` findings on authored API rows and openings
+(a model reviewer's judgement, not computable from facts; the BL-240 degrade withholds a quoted row, an opening stays), and
+whether the base `TypeDescriber` infers from member evidence paths is always the declared base.
+
+Backlog: BL-320
+
+## 2026-11-19: Frozen-code portfolio proof pass 1 and repeat pass 2 (BL-203, R46)
+
+Frozen at main `9476c1b` (BL-210/220/230/240 merged, planner quiesced), 40 `present` run requests for Lane R, 25 seconds
+apart, twice. Pass 1: 22 of 40 cells hold a Lane R seal and 21 recertify (52.5 percent; the R46 bar is 85 percent, 34
+cells); 18 cells have no seal and PDF Java fails BC-05/BC-17 on its seal. Pass 2 (same code): no new seal, none lost; the
+sealed cells replay at zero cost, so the 40 of 40 verdict agreement is trivial. Generation repeatability on the 18 unsealed
+cells: 13 of 18 failed with the same failure classes twice (72 percent; bar 90 percent), 5 differed (PDF Python, PDF
+C++, PSD Java, Words Java, Words Python). Lesson: the failures are deterministic by class, not luck, so class fixes
+transfer; the next fixes (BL-270 progress and time-box, BL-310 stale pinned version and registry badge, BL-320
+member-claim owner rule) are merged together and verified (zero-call recertify unchanged at 21 of 22 Lane R and 34 of 34
+Lane L, R10 gate OK on 56 seals, full suite 6781 passed) before pass 3. Remaining classes after pass 1: BC-17 technical
+content (7 cells), job cancels (3), PDF API-table rows, Enterprise Edition naming (2), duplicate API-intro paragraph (2).
+
+Backlog: BL-203, BL-270, BL-310, BL-320, BL-290.
+

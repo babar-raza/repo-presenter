@@ -474,6 +474,8 @@ class FlaggedText:
 
     quote: str
     label: str
+    #: The quote is a paragraph the candidate prints twice (``duplicate_paragraph``, BL-320).
+    duplicate: bool = False
 
     def citation_id(self) -> str:
         return self.label
@@ -558,6 +560,19 @@ def _withhold_flagged(
                 kept.append(unit)
                 continue
         involved = [*inside, *covering]
+        # A paragraph printed twice, one copy being this whole authored prose unit: the other copy
+        # still prints the text, so the authored copy is withheld, even when it cites the inherited
+        # unit that carries the other copy (BL-320; the opening is never dropped).
+        if (
+            rule == DEGRADE_RULE
+            and covering
+            and all(getattr(r, "duplicate", False) for r in covering)
+            and slot != "opening"
+            and not slot.startswith(("capability:", "hub:", "type:"))
+        ):
+            records.append(_record(slot, section, covering, "duplicate_unit_dropped", rule))
+            status.update({i: "handled" for i in index_of(covering)})
+            continue
         cites_inherited = any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or [])
         if guard_inherited and cites_inherited:
             for i in index_of(involved):
@@ -880,6 +895,19 @@ def verdict_flags(findings: Iterable[Any]) -> list[ClaimFlag]:
     return list(dict.fromkeys(flags))
 
 
+def duplicate_flags(findings: Iterable[Any]) -> list[ClaimFlag]:
+    """The paragraph each blocking ``duplicate_paragraph`` finding says the candidate prints twice
+    (BL-320); ``degrade_claims`` withholds the authored copy, never an inherited one."""
+    flags = []
+    for finding in findings:
+        quote = str(getattr(finding, "quote", "") or "").strip()
+        if getattr(finding, "rule", "") == "duplicate_paragraph" and len(_plain(quote)) >= _MIN_MATCH:
+            flags.append(
+                ClaimFlag(quote, str(getattr(finding, "message", "") or ""), "duplicate_paragraph")
+            )
+    return list(dict.fromkeys(flags))
+
+
 def _inherited_holding(flag: ClaimFlag, dispositions: Mapping[str, Any], facts: Any) -> str | None:
     """The one inherited unit kept as written whose text prints the flag's quote, if exactly one."""
     from repo_presenter.readme.composition.placement import PLACED
@@ -924,7 +952,7 @@ def degrade_claims(
 
     if not flags:
         return dict(plan), dict(units), dict(dispositions), []
-    rows = [FlaggedText(flag.quote, flag.check) for flag in flags]
+    rows = [FlaggedText(flag.quote, flag.check, flag.check == "duplicate_paragraph") for flag in flags]
     new_plan, new_units, records, status = _withhold_flagged(
         plan, units, rows, rule=DEGRADE_RULE, guard_inherited=True
     )
@@ -939,6 +967,9 @@ def degrade_claims(
     quotes: list[str] = []
     for index, flag in enumerate(flags):
         if index in status:
+            continue
+        if flag.check == "duplicate_paragraph":
+            # No authored copy to withhold: the inherited copy is live content (R14), never dropped.
             continue
         unit_id = flag.unit or _inherited_holding(flag, new_disp, facts)
         if unit_id is not None:

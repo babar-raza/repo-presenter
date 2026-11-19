@@ -289,6 +289,51 @@ def is_unconfirmed_registry_install(text: str, packages: frozenset[str]) -> bool
     return any(re.split(r"==|@|=|>=|<=", word)[0] in packages for word in words)
 
 
+#: A version number as the README text and the facts spell it: dotted, two to four parts, not part
+#: of a longer number or path (``26.6.0`` in ``<version>26.6.0</version>``; not ``1.0`` in ``v1.0.3``).
+_VERSION_TOKEN = re.compile(r"(?<![\w.])(v?)(\d+(?:\.\d+){1,3})(?![\w.]*\d)")
+
+
+def verified_package_version(facts: Iterable[object]) -> str | None:
+    """The one package version the facts verify as current, or ``None``.
+
+    The registry's current stable release (``package:published_version``) when that fact is
+    SUPPORTED, else the manifest's own (``package:version``): the version every verified install
+    command prints (BC-14 refuses any other). ``None`` when neither is SUPPORTED or the facts do not
+    agree on a single value. Works on :class:`Fact` objects and on sealed ``facts.json`` mappings."""
+    by_id = {str(_field(f, "id")): f for f in facts if _field(f, "kind") == "package"}
+    for fact_id in (PUBLISHED_VERSION_FACT_ID, "package:version"):
+        fact = by_id.get(fact_id)
+        if fact is not None and _field(fact, "polarity") == "SUPPORTED":
+            value = str(_field(fact, "value") or "").strip()
+            return value or None
+    return None
+
+
+def with_verified_version(text: str, verified: str | None) -> str:
+    """``text`` with every version number of the verified version's own shape that is not the
+    verified version replaced by it: the form a maintainers' pinned snippet takes once the verified
+    install replaces its stale version (the Maven ``<version>26.6.0</version>`` or Gradle
+    ``implementation 'g:a:26.6.0'`` of a README whose package the registry now lists at 26.9.0).
+
+    A number of another shape (``1.0`` in an XML prolog, ``3.11`` beside ``26.9.0``) is untouched, and
+    so is everything else about the text: only the version differs, so a README that prints the
+    snippet with the verified version states exactly what the snippet states (R14: the version was
+    stale, nothing else of it is dropped)."""
+    if not verified:
+        return text
+    shape = verified.count(".")
+    bare = verified.removeprefix("v")
+
+    def swap(match: re.Match[str]) -> str:
+        number = match.group(2)
+        if number == bare or number.count(".") != shape:
+            return match.group(0)
+        return bare if not match.group(1) else f"{match.group(1)}{bare}"
+
+    return _VERSION_TOKEN.sub(swap, text)
+
+
 @dataclass(frozen=True)
 class RegistryObservation:
     """What the registry said about one distribution name."""

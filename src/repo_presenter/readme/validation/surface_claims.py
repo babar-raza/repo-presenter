@@ -869,6 +869,10 @@ _KIND_BEFORE = re.compile(
 )
 _KIND_AFTER = re.compile(rf"(?P<list>{_LIST})\s+(?P<kind>{_KIND_ALTERNATION})\b")
 _LIST_SPLIT = re.compile(_LIST_SEP)
+#: A list's last item that is really the next list's kind word: "methods including a and b and
+#: properties including c and d" (BL-320): ``properties`` opens the second list, it is no method.
+_NEXT_KIND_WORD = re.compile(rf"(?:{_LIST_SEP})(?:{_KIND_ALTERNATION})$", re.IGNORECASE)
+_NEXT_KIND_LEAD = re.compile(r"\s+(?:including|such\s+as|like)\b", re.IGNORECASE)
 _LIST_STOPWORDS = frozenset(
     {
         "a", "all", "also", "an", "and", "any", "are", "as", "be", "both", "by", "can", "each",
@@ -905,6 +909,15 @@ _OWNERSHIP_CUE = re.compile(
 _SPAN_JOINER = re.compile(r"\s*(?:/|,|,?\s*(?:and|or))?\s*")
 #: "the properties A and B of `Workbook`": the owner named right after the list.
 _OWNER_AFTER = re.compile(r"\s+(?:of|on|in)\s+(?:the\s+|a\s+|an\s+)?`?(?P<owner>[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)`?")
+#: Words right before a type name that make it a BASE of the sentence's subject ("Class that inherits
+#: from ExplicitDestination and declares the methods Top and ToString"): the list that follows is the
+#: subject's own, so the base is never the owner a later member list is held to (BL-320).
+_BASE_CUE = re.compile(
+    r"(?i)\b(?:inherits?\s+from|inheriting\s+from|extends|derives?\s+from|deriving\s+from|"
+    r"derived\s+from|subclass(?:es)?\s+of|based\s+on|implements)\s*"
+    # ... and the bases listed after the first ("inherits from Entity and IOrientable and declares").
+    r"(?:[`*_]*[A-Za-z_][\w.]*[`*_]*\s*(?:,\s*|,?\s+(?:and|or)\s+))*[`*_]*$"
+)
 _NOT_A_NAME = frozenset({"null", "true", "false", "None", "True", "False", "self", "this", "void"})
 
 
@@ -991,7 +1004,10 @@ def _base_names(fact: Fact) -> list[str]:
     for part in plain.split(","):
         part = part.strip().split("=")[0].strip()
         if part:
-            names.append(_SEGMENTS.split(part.replace("::", "."))[-1].split()[-1])
+            # A part with no word in its last segment ("public", a bare qualifier) names no base.
+            last = _SEGMENTS.split(part.replace("::", "."))[-1].split()
+            if last:
+                names.append(last[-1])
     return names
 
 
@@ -1125,13 +1141,17 @@ def _kind_lists(text: str) -> list[tuple[int, int, str, list[tuple[str, bool]], 
     for pattern in (_KIND_BEFORE, _KIND_AFTER):
         for match in pattern.finditer(text):
             items = _list_items(match.group("list"))
+            start, end = match.span()
+            if pattern is _KIND_BEFORE and _NEXT_KIND_LEAD.match(text, end):
+                opener = _NEXT_KIND_WORD.search(match.group(0))
+                if opener is not None:
+                    end, items = start + opener.start(), items[:-1]
             if pattern is _KIND_AFTER and len(items) < 2:
                 continue
             if pattern is _KIND_AFTER and not _kind_word_qualifies_list(text, match):
                 continue
             if not items:
                 continue
-            start, end = match.span()
             if any(start < other_end and other_start < end for other_start, other_end, *_ in found):
                 continue
             found.append(
@@ -1223,6 +1243,7 @@ def _list_owner(
     nothing listed ("holds control points, deformers, and provides methods to ...": the word a
     trailing kind word follows is a verb, not a name)."""
     after = _OWNER_AFTER.match(text, end)
+    mentions = [(at, found) for at, found in mentions if not _BASE_CUE.search(text[:at])]
     owners = (
         index.resolve(after.group("owner"))
         if after is not None and index.resolve(after.group("owner"))

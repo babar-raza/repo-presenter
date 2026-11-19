@@ -37,6 +37,8 @@ import re
 from repo_presenter.core.package_registry import (
     is_unconfirmed_registry_install,
     unconfirmed_registry_packages,
+    verified_package_version,
+    with_verified_version,
 )
 from repo_presenter.readme.composition.references import positional_only
 from repo_presenter.readme.validation.content_presence import unstated
@@ -137,6 +139,7 @@ def superseded_failures(candidate: Candidate) -> list[Failure]:
     # BC-02 refuses to print the registry install of a package whose ownership the registry does not
     # confirm, so a superseded unit's copy of that command is not owed by its replacement.
     unconfirmed = unconfirmed_registry_packages(candidate.facts.by_kind("install_command"))
+    verified = verified_package_version(candidate.facts.by_kind("package"))
     for entry in candidate.dispositions.get("dispositions", []):
         if entry.get("disposition") != SUPERSEDED:
             continue
@@ -144,14 +147,23 @@ def superseded_failures(candidate: Candidate) -> list[Failure]:
         text = texts.get(unit_id, "")
         if not text.strip() or exempt(unit_id, text, str(entry.get("rationale") or "")):
             continue
+        owed_form = owed_text(text, _kind(unit_id), public)
+        found = unstated(owed_form, candidate.readme, kind=_kind(unit_id), strict=True)
+        if verified is not None:
+            # A pinned snippet whose stale version the verified install replaces is carried when
+            # the README states it with the verified version; only that piece is excused.
+            swapped = with_verified_version(owed_form, verified)
+            if swapped != owed_form:
+                still = set(unstated(swapped, candidate.readme, kind=_kind(unit_id), strict=True))
+                found = [
+                    piece
+                    for piece in found
+                    if with_verified_version(piece, verified) == piece
+                    or with_verified_version(piece, verified) in still
+                ]
         missing = [
             piece
-            for piece in unstated(
-                owed_text(text, _kind(unit_id), public),
-                candidate.readme,
-                kind=_kind(unit_id),
-                strict=True,
-            )
+            for piece in found
             if owed(piece, public) and not is_unconfirmed_registry_install(piece, unconfirmed)
         ]
         if not missing:
