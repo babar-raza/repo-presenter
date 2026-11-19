@@ -80,11 +80,26 @@
    "run_id": "44558753929",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T18:41:12+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|renderer_fact|api_reference",
+    "llm:factuality|unresolved|api_reference",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 6,
+   "outcome": "failure",
+   "run_id": "44589326365",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T15:58:06+00:00",
+  "at": "2026-11-19T18:41:12+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
     "example": "The `aspose_psd_foss.PsdImage` class represents a loaded Photoshop document and exposes its dimensions via `aspose_psd_foss.PsdImage.width` and `aspose_psd_foss.PsdImage.height`, its color mode via `aspose_psd_foss.PsdImage.color_mode`, its compression method via `aspose_psd_foss.PsdImage.compressio",
@@ -285,7 +300,7 @@
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F02",
+    "label": "F03",
     "outcome": "unrepairable",
     "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
     "section_id": "scope_limitations",
@@ -293,7 +308,7 @@
    },
    {
     "facts_defects": [],
-    "label": "F01",
+    "label": "F01+F02",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
@@ -302,15 +317,15 @@
    {
     "facts_defects": [],
     "label": "F13",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:018.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"- None.  \". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": "development_testing",
     "stage": "S4"
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "44558753929",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44558753929",
+  "run_id": "44589326365",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44589326365",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
