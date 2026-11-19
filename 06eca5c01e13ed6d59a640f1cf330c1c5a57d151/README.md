@@ -1,0 +1,374 @@
+# Aspose.BarCode FOSS for Python
+
+![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python.svg)](https://github.com/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python/graphs/contributors)
+
+[![Aspose.BarCode FOSS for Python](https://products.aspose.org/media/barcode/python/banner-readme.png)](https://products.aspose.org/barcode/python/)
+
+Aspose.BarCode FOSS for Python generates barcodes in Code 128, QR, Code 39, EAN-13, EAN-8, UPC-A, and UPC-E formats. It converts barcode data into PNG and SVG images using the `to_png` and `to_svg` methods, and supports custom rendering through the `Renderer` interface with `SvgRenderer` and `PngRenderer` implementations. The product accepts encoding options such as `Code128Options`, `QrOptions`, `Code39Options`, and `Ean13Options` to control symbology-specific behavior, and raises `EncodingError`, `RenderingError`, `InvalidInputError`, and `SymbologyNotFoundError` when input or rendering conditions are invalid.
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [Additional Examples](#additional-examples)
+- [API Reference](#api-reference)
+- [Documentation & Resources](#documentation--resources)
+- [Scope and Limitations](#scope-and-limitations)
+- [Development and Testing](#development-and-testing)
+- [License](#license)
+
+## At a Glance
+
+```mermaid
+flowchart TB
+  PRODUCT["Aspose.BarCode FOSS for Python"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Generate multiple<br/>barcode symbologies"]
+    c2["Render barcodes to SVG<br/>and PNG"]
+    c3["Customize rendering<br/>with RenderOptions"]
+    c4["Support custom<br/>renderer subclasses"]
+    c5["Configure<br/>symbology-specific<br/>options"]
+    c6["Handle errors with<br/>typed exceptions"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+  end
+  PRODUCT --> Capabilities
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
+```
+
+## Key Capabilities
+
+- **Generate multiple barcode symbologies.** It generates barcodes using dedicated factory functions for code128, code39, ean13, ean8, upca, upce, and qr.
+- **Render barcodes to SVG and PNG.** It renders barcodes to SVG strings via `to_svg` and to PNG bytes via `to_png`, accepting `RenderOptions` to adjust scale, DPI, module width, and text display.
+- **Customize rendering with RenderOptions.** It customizes rendering through `RenderOptions`, which supports scale, DPI, module width and height, quiet zone, foreground and background color, transparent background, and text display, returning `ResolvedRenderOptions` after validation.
+- **Support custom renderer subclasses.** It supports custom renderer subclasses by accepting any `Renderer` implementation, with built-in `SvgRenderer` and `PngRenderer` provided for common output formats.
+- **Configure symbology-specific options.** It configures symbology-specific options using `Code128Options`, `Code39Options`, `Ean13Options`, and `QrOptions` to control encoding mode, check digits, error correction level, and other symbology parameters.
+- **Handle errors with typed exceptions.** It handles errors with typed exceptions including `BarcodeError`, `EncodingError`, `RenderingError`, `InvalidInputError`, and `SymbologyNotFoundError` to distinguish failure modes during encoding and rendering.
+
+- Code 128 barcodes encode with automatic optimal Code Set A/B/C switching, or a specific code
+  set forced through `Code128Options.encode_mode`.
+- Encode Code 39 barcodes in the base 43-character set or the Extended/Full-ASCII form (via
+  `code39()`/`code39ext()`), with an optional modulo-43 check character.
+- EAN-13, EAN-8, UPC-A, and UPC-E retail barcodes support automatic check-digit computation or
+  explicit check-digit validation via `allow_check_digit_input`.
+- QR Code (Model 2) generation spans versions 1-40, with selectable error correction level
+  (`QrErrorCorrectionLevel`) and encoding mode (`QrEncodeMode`).
+- Select any symbology by name — canonical or alias — through the generic `generate()`
+  (`generate(symbology, data)`) entry point, independent of the dedicated per-symbology helpers.
+
+## Installation
+
+`aspose-barcode-foss` is not yet published on PyPI; build it from a source checkout instead:
+
+```bash
+git clone https://github.com/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python.git
+cd Aspose.BarCode-FOSS-for-Python
+pip install .
+```
+
+Verify the install:
+
+```bash
+python -c "import aspose_barcode_foss"
+```
+
+Requires Python 3.12 or later.
+
+## Dependencies
+
+### Required Package Dependencies
+
+- `Pillow>=10.1.0`
+
+### Native and System Requirements
+
+- Requires Python 3.12 or later.
+
+## Quick Start
+
+This example creates a Code 128 barcode for the text Hello-World and renders it as both an SVG string and a PNG byte stream.
+
+```python
+from aspose_barcode_foss import code128
+
+barcode = code128("Hello-World")
+svg = barcode.to_svg()   # -> str
+png = barcode.to_png()   # -> bytes
+```
+
+## Additional Examples
+
+The following workflows demonstrate generating barcodes, customizing QR options, adding check digits, and rendering to PNG or SVG formats.
+
+### Render a Code 128 Barcode to SVG and PNG with Custom Options
+
+```python
+from aspose_barcode_foss import code128, RenderOptions
+
+barcode = code128("Hello-World")
+svg = barcode.to_svg(options=RenderOptions(scale=2.0, show_text=True))
+png = barcode.to_png(options=RenderOptions(dpi=300, module_width=3.0))
+```
+
+<details>
+<summary>View Additional Examples</summary>
+
+### Generate a QR Barcode and Render It to PNG Bytes
+
+```python
+from aspose_barcode_foss import generate
+
+barcode = generate("qr", "https://example.com")
+png = barcode.to_png()
+```
+
+### Encode a QR Barcode with High Error Correction and Automatic Encoding Mode
+
+```python
+from aspose_barcode_foss import qr, QrOptions, QrErrorCorrectionLevel, QrEncodeMode
+
+barcode = qr(
+    "PAYLOAD",
+    encode=QrOptions(
+        error_correction_level=QrErrorCorrectionLevel.H,
+        encoding_mode=QrEncodeMode.AUTO,
+    ),
+)
+```
+
+### Encode a Code 39 Barcode with an Added Check Digit
+
+```python
+from aspose_barcode_foss import code39, Code39Options
+
+barcode = code39("ABC-123", encode=Code39Options(add_check_digit=True))
+```
+
+### Render a Code 128 Barcode Using a Dedicated SVG Renderer
+
+```python
+from aspose_barcode_foss import code128, SvgRenderer, RenderOptions
+
+renderer = SvgRenderer()
+barcode = code128("Hello-World")
+artifact = barcode.render(renderer, options=RenderOptions(scale=3.0))
+svg = artifact.data
+```
+
+Runnable scripts are available in the [`examples`](examples/) directory
+(`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional
+worked examples cover the generic entry point and per-symbology encoding options below.
+
+Runnable example scripts and what each one demonstrates are listed in
+[`examples/README.md`](examples/README.md).
+
+</details>
+
+## API Reference
+
+The `aspose_barcode_foss.Barcode` class is the primary entry point: it is returned by `aspose_barcode_foss.generate()` and every per-symbology helper (`aspose_barcode_foss.code128()`, `aspose_barcode_foss.qr()`, and similar), and its `aspose_barcode_foss.Barcode.to_svg()`, `aspose_barcode_foss.Barcode.to_png()`, and `aspose_barcode_foss.Barcode.render()` methods produce the rendered output.
+
+The public API has 51 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `Barcode` | Public barcode object returned by the high-level API (some members not implemented). |
+| `aspose_barcode_foss.BarcodeError` | Public class. |
+| `aspose_barcode_foss.Code128Options` | Public class. |
+| `aspose_barcode_foss.Code39Options` | Public class. |
+| `aspose_barcode_foss.Ean13Options` | Public class. |
+| `aspose_barcode_foss.Ean8Options` | Public class. |
+| `aspose_barcode_foss.EncodeOptions` | Public class. |
+| `aspose_barcode_foss.EncodingError` | Public class. |
+| `aspose_barcode_foss.InvalidInputError` | Public class. |
+| `aspose_barcode_foss.PdfRenderer` | PdfRenderer class is not implemented. |
+| `aspose_barcode_foss.PngRenderer` | Public class. |
+| `aspose_barcode_foss.QrOptions` | Public class. |
+| `aspose_barcode_foss.RenderOptions` | Public class. |
+| `aspose_barcode_foss.Renderer` | Renderer class is not implemented. |
+| `aspose_barcode_foss.RenderingError` | Public class. |
+| `aspose_barcode_foss.ResolvedRenderOptions` | Public class. |
+| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders barcodes to SVG images. |
+| `aspose_barcode_foss.SymbologyNotFoundError` | SymbologyNotFoundError class represents errors when a barcode symbology is not found. |
+| `aspose_barcode_foss.UnsupportedCapabilityError` | UnsupportedCapabilityError class represents errors when a capability is unsupported. |
+| `aspose_barcode_foss.UnsupportedFeatureError` | UnsupportedFeatureError class represents errors when a feature is unsupported. |
+| `aspose_barcode_foss.UpcaOptions` | UpcaOptions class holds configuration options for UPC-A barcodes. |
+| `aspose_barcode_foss.UpceOptions` | UpceOptions class holds configuration options for UPC-E barcodes. |
+| `exceptions.BarcodeError` | aspose_barcode_foss.exceptions.BarcodeError class is the base exception for barcode-related errors. |
+| `exceptions.EncodingError` | aspose_barcode_foss.exceptions.EncodingError class represents errors that occur during barcode encoding. |
+| `exceptions.InvalidInputError` | aspose_barcode_foss.exceptions.InvalidInputError class represents errors caused by invalid input data. |
+| `exceptions.RenderingError` | aspose_barcode_foss.exceptions.RenderingError class represents errors that occur during barcode rendering. |
+| `exceptions.SymbologyNotFoundError` | aspose_barcode_foss.exceptions.SymbologyNotFoundError class represents errors when a barcode symbology is not found. |
+| `exceptions.UnsupportedCapabilityError` | aspose_barcode_foss.exceptions.UnsupportedCapabilityError class represents errors when a capability is unsupported. |
+| `exceptions.UnsupportedFeatureError` | aspose_barcode_foss.exceptions.UnsupportedFeatureError class represents errors when a feature is unsupported. |
+| `options.Code128Options` | aspose_barcode_foss.options.Code128Options class holds configuration options for Code 128 barcodes. |
+| `options.Code39Options` | aspose_barcode_foss.options.Code39Options class holds configuration options for Code 39 barcodes. |
+| `options.Ean13Options` | aspose_barcode_foss.options.Ean13Options class holds configuration options for EAN-13 barcodes. |
+| `options.Ean8Options` | aspose_barcode_foss.options.Ean8Options class holds configuration options for EAN-8 barcodes. |
+| `options.EncodeOptions` | aspose_barcode_foss.options.EncodeOptions class holds common encoding options for barcodes. |
+| `options.QrOptions` | QrOptions class holds configuration options for QR Code, including error_correction_level, version, and encoding_mode. |
+| `options.RenderOptions` | RenderOptions class: User-supplied rendering options. |
+| `options.ResolvedRenderOptions` | ResolvedRenderOptions class holds resolved rendering configuration settings for barcode output. |
+| `options.UpcaOptions` | UpcaOptions class holds configuration settings for UPCA barcode generation. |
+| `options.UpceOptions` | UpceOptions class holds configuration settings for UPCE barcode generation. |
+| `renderers.PdfRenderer` | PdfRenderer class raises NotImplementedError when its render() method is called (PDF rendering is not implemented in this FOSS build). |
+| `renderers.PngRenderer` | PngRenderer class renders barcodes to PNG format; it is used internally by Barcode.to_png(). |
+| `renderers.Renderer` | Renderer class is an abstract base class for renderers; direct instantiation raises NotImplementedError. |
+| `renderers.SvgRenderer` | SvgRenderer class renders barcodes to SVG format. |
+
+#### Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+| `aspose_barcode_foss.Code128EncodeMode` | Code128EncodeMode enum lists the AUTO, CODE_A, CODE_AB, CODE_AC, CODE_B, CODE_BC and CODE_C encoding modes for Code 128 barcodes. |
+| `aspose_barcode_foss.Code39EncodeMode` | Code39EncodeMode enum lists the BASE and FULL_ASCII encoding modes for Code 39 barcodes. |
+| `aspose_barcode_foss.QrEncodeMode` | QrEncodeMode enum lists the ALPHANUMERIC, AUTO, BYTE, KANJI and NUMERIC encoding modes for QR barcodes. |
+| `aspose_barcode_foss.QrErrorCorrectionLevel` | Enumerates H, L, M and Q. |
+| `options.Code128EncodeMode` | aspose_barcode_foss.options.Code128EncodeMode enum lists the AUTO, CODE_A, CODE_AB, CODE_AC, CODE_B, CODE_BC and CODE_C encoding modes for Code 128 barcodes. |
+| `options.Code39EncodeMode` | aspose_barcode_foss.options.Code39EncodeMode enum lists the BASE and FULL_ASCII encoding modes for Code 39 barcodes. |
+| `options.QrEncodeMode` | aspose_barcode_foss.options.QrEncodeMode enum lists the ALPHANUMERIC, AUTO, BYTE, KANJI and NUMERIC encoding modes for QR barcodes. |
+| `options.QrErrorCorrectionLevel` | Enumerates H, L, M and Q. |
+
+#### Detailed Member Reference
+
+### code128
+
+The `aspose_barcode_foss.code128()` helper returns a `Barcode` instance configured for Code 128, accepting `aspose_barcode_foss.Code128Options` that include `aspose_barcode_foss.Code128EncodeMode` settings.
+
+### qr
+
+The `aspose_barcode_foss.qr()` helper returns a `Barcode` instance configured for QR Code, accepting `aspose_barcode_foss.QrOptions` that include `aspose_barcode_foss.QrErrorCorrectionLevel` and `aspose_barcode_foss.QrEncodeMode` settings.
+
+### generate
+
+The `aspose_barcode_foss.generate()` function accepts a symbology name and input data, returning a `Barcode` instance for the requested symbology.
+
+### Barcode
+
+Public barcode object returned by the high-level API (some members not implemented).
+
+- `render`: Render the barcode with the provided renderer.
+- `to_pdf`: Render the barcode as PDF when the backend is available.
+- `to_png`: Render the barcode as PNG.
+- `to_svg`: Render the barcode as SVG.
+
+### renderers.SvgRenderer
+
+SvgRenderer class renders barcodes to SVG format.
+
+### renderers.PngRenderer
+
+PngRenderer class renders barcodes to PNG format; it is used internally by Barcode.to_png().
+
+### aspose_barcode_foss.RenderOptions
+
+The `aspose_barcode_foss.RenderOptions` class holds user-supplied rendering options such as scale, DPI, module size, colors, and text, while `aspose_barcode_foss.ResolvedRenderOptions` represents the fully-resolved configuration after merging user options with symbology defaults.
+
+### code39
+
+The `aspose_barcode_foss.code39()` helper returns a `Barcode` instance configured for Code 39, accepting `aspose_barcode_foss.Code39Options` that include `aspose_barcode_foss.Code39EncodeMode` settings.
+
+### ean13
+
+The `aspose_barcode_foss.ean13()` helper returns a `Barcode` instance configured for EAN-13, accepting `aspose_barcode_foss.Ean13Options` that include options for check-digit input.
+
+### upca
+
+The `aspose_barcode_foss.upca()` helper returns a `Barcode` instance configured for UPC-A, accepting `aspose_barcode_foss.UpcaOptions` that include options for check-digit input.
+
+### exceptions
+
+The `aspose_barcode_foss.exceptions` module defines `aspose_barcode_foss.exceptions.BarcodeError` as the base exception, with `aspose_barcode_foss.exceptions.EncodingError`, `aspose_barcode_foss.exceptions.RenderingError`, `aspose_barcode_foss.exceptions.InvalidInputError`, and `aspose_barcode_foss.exceptions.SymbologyNotFoundError` for specific failure cases.
+
+### aspose_barcode_foss.Renderer
+
+The `aspose_barcode_foss.Renderer` and `aspose_barcode_foss.renderers.Renderer` classes define the abstract renderer interface implemented by `aspose_barcode_foss.renderers.SvgRenderer`, `aspose_barcode_foss.renderers.PngRenderer`, and `aspose_barcode_foss.PdfRenderer`.
+
+| Class | Description |
+|---|---|
+| `Barcode` | The public barcode object returned by every encoding helper and `generate()`. Exposes `to_svg()`, `to_png()`, and `render()`. |
+
+| Class | Description |
+|---|---|
+| `BarcodeError` | Base exception for the barcode library. |
+| `Code128Options` | Encoding options for Code 128, including `encode_mode`. |
+| `Code39Options` | Encoding options for Code 39, including `add_check_digit`. |
+| `Ean13Options` | Encoding options for EAN-13, including `allow_check_digit_input`. |
+| `Ean8Options` | Encoding options for EAN-8, including `allow_check_digit_input`. |
+| `EncodeOptions` | Base type for symbology-specific encoding options. |
+| `EncodingError` | Raised on an encoder-level failure. |
+| `InvalidInputError` | Raised when the supplied input fails validation (bad characters, wrong length, and similar). |
+| `PdfRenderer` | Registered PDF renderer — `render()` raises `NotImplementedError` in this FOSS build (see Scope and Limitations). |
+| `PngRenderer` | Renders a barcode to PNG output; used internally by `Barcode.to_png()`. |
+| `QrOptions` | Encoding options for QR Code, including `error_correction_level`, `version`, `mask`, and `encoding_mode`. |
+| `RenderOptions` | User-supplied rendering options (scale, DPI, module size, colors, text). |
+| `Renderer` | Abstract renderer interface implemented by `SvgRenderer`/`PngRenderer`/`PdfRenderer`. |
+| `RenderingError` | Raised on a renderer-level failure. |
+| `ResolvedRenderOptions` | The fully-resolved rendering configuration after merging user options with symbology defaults. |
+| `SvgRenderer` | Renders a barcode to SVG output; used internally by `Barcode.to_svg()`. |
+| `SymbologyNotFoundError` | Raised when an unknown symbology name is passed to `generate()`. |
+| `UnsupportedCapabilityError` | Raised when a requested feature/symbology combination is unsupported. |
+| `UnsupportedFeatureError` | Raised when a requested feature exists in the spec but is not yet implemented. |
+| `UpcaOptions` | Encoding options for UPC-A, including `allow_check_digit_input`. |
+| `UpceOptions` | Encoding options for UPC-E, including `allow_check_digit_input`. |
+
+| Enumeration | Description |
+|---|---|
+| `Code128EncodeMode` | Code 128 Code Set selection: `AUTO`, `CODE_A`, `CODE_B`, `CODE_C`, `CODE_AB`, `CODE_AC`, `CODE_BC`. |
+| `Code39EncodeMode` | Supported Code 39 encode modes. |
+| `QrEncodeMode` | QR Code encoding mode: `AUTO`, `NUMERIC`, `ALPHANUMERIC`, `BYTE`, `KANJI`. |
+| `QrErrorCorrectionLevel` | QR Code error correction level: `L`, `M`, `Q`, `H`. |
+
+</details>
+
+## Documentation & Resources
+
+- **[Getting started guide](https://docs.aspose.org/barcode/python/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to articles and FAQ](https://kb.aspose.org/barcode/python/)** — task-focused how-tos and answers to common questions.
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python/issues).
+
+- **[Full API reference](https://reference.aspose.org/barcode/python/)** — complete, generated reference documentation for every public type.
+
+## Scope and Limitations
+
+- This library only generates (encodes) barcodes — it does not read or decode existing barcode images for any symbology.
+- PDF rendering is not implemented — `Barcode.to_pdf()` and `PdfRenderer.render()` both raise `NotImplementedError`. SVG and PNG rendering are implemented for every symbology.
+- ECI (Extended Channel Interpretation) normalization and validation (`EciHelper.normalize`/ `.validate`) are not implemented in this FOSS build, even though `EncodeOptions` exposes an `eci_assignment_number` field on every symbology's options type.
+- GS1 data parsing and validation (`Gs1Helper.parse`/`.validate`) are not implemented in this FOSS build, even though `EncodeOptions` exposes a `gs1_enabled` field on every symbology's options type.
+
+<details>
+<summary>View Other Unimplemented Members</summary>
+
+- `Renderer`: `render` raises NotImplementedError.
+
+</details>
+
+See [Aspose.BarCode for Python — Enterprise Edition](https://products.aspose.com/barcode/python-net/). It adds the full commercial rendering pipeline and broader symbology coverage on top of this FOSS API surface.
+
+## Development and Testing
+
+The suite covers 37 test files under `tests/`. Example programs live under `examples/`.
+
+- `pytest` >=8.0 and `ruff` >=0.15.7 — used only by the test suite and linter, never required to install or use the library.
+
+```bash
+git clone https://github.com/aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python.git
+cd Aspose.BarCode-FOSS-for-Python
+pip install -e . pytest ruff
+pytest
+```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.
