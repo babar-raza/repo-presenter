@@ -112,11 +112,27 @@
    "run_id": "44589395415",
    "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T21:41:55+00:00",
+   "classes": [
+    "BC-06|unresolved|n_aspose_com_links",
+    "BC-07|inherited_unit|id_is_kept_as",
+    "BC-17|inherited_unit|section_coverage",
+    "BC-17|inherited_unit|technical_content",
+    "live_readme_loss|inherited_unit|link_https"
+   ],
+   "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+   "findings": 9,
+   "outcome": "failure",
+   "run_id": "44620398709",
+   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T18:44:20+00:00",
+  "at": "2026-11-19T21:41:55+00:00",
   "classes": {
    "BC-06|unresolved|n_aspose_com_links": {
     "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1800 visible words and 7 verified examples)",
@@ -126,7 +142,7 @@
      "-"
     ],
     "rule": "BC-06",
-    "scope": "a41087b3b4293f6e22b053ad2deedfbc6c26169b6cb1e8c903a10d23e21c795f",
+    "scope": "5497d6319c32f538612ee710110e1275306f7d11f6510688183a459b58c19961",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -150,7 +166,7 @@
      "inherited_unit:080.paragraph"
     ],
     "rule": "BC-07",
-    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
+    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -172,7 +188,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
+    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -194,7 +210,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "a0b7ec83f67648d8c48cc177f84e6a668f5d537d89ed703c669c5ea71c7867d6",
+    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -216,7 +232,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "live_readme_loss",
-    "scope": "f84688c5fead6d3a246ec6a0d156c89dfdfdf7acaf520ff873982b7b1f06e03f",
+    "scope": "79d5edcdb58a1230883fbc3cd07a3aca0a52a608b2f1f3c7f83c56a3df7762b9",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -230,7 +246,7 @@
     "upstream": ""
    }
   },
-  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -377,15 +393,15 @@
    }
   ],
   "lane": "R",
-  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
     "label": "BC-07",
-    "outcome": "repaired",
-    "reason": "",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:080.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
     "section_id": null,
     "stage": "S4"
    },
@@ -407,8 +423,8 @@
    }
   ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
-  "run_id": "44589395415",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44589395415",
+  "run_id": "44620398709",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44620398709",
   "schema_version": 1,
   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
