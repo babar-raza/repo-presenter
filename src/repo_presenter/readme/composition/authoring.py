@@ -256,6 +256,12 @@ _FORBIDDEN = (
     ("$ ", "a command"),
 )
 _ANCHORED_ONLY = frozenset({"- ", "* "})
+#: A Markdown heading is a line that BEGINS with one to six ``#`` and a space; ``C# and F#`` or
+#: ``issue # 5`` inside a sentence is prose (BL-370, hosted Words Java run 44621196631: "unit
+#: opening: text contains a Markdown heading ('#')" three times on a unit with no line break). A unit
+#: is one paragraph (a line break is refused on its own), so the start of the text is its only line
+#: start.
+_HEADING_START = re.compile(r"\s*#{1,6}\s")
 _MARKUP_OPENER = re.compile(r"<[A-Za-z_/!?]")
 
 
@@ -2382,6 +2388,8 @@ def unit_checks(
                 continue
             if marker == "<":
                 matched = _bare_angle_bracket(raw_text, placeholders)
+            elif marker == "# ":
+                matched = _HEADING_START.match(text) is not None
             else:
                 matched = text.startswith(marker) if marker in _ANCHORED_ONLY else marker in text
             if matched:

@@ -7302,3 +7302,34 @@ content (7 cells), job cancels (3), PDF API-table rows, Enterprise Edition namin
 
 Backlog: BL-203, BL-270, BL-310, BL-320, BL-290.
 
+
+## 2026-11-19: Cut-off replies, a '#' in prose and a lone edition-name sentence no longer fail the run (BL-370, R46, R14)
+
+**Problem.** Frozen-code hosted pass 3 (main `4a0d0a5`, BL-220 included) left three Lane R cells ending as job errors on
+one failing slot: PDF Python `JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000);
+raise the budget or bound the output, never retry` (BL-220's own open item), Words Java `unit opening: text contains a
+Markdown heading ('#')` three times, PDF TypeScript `unit context: names the Enterprise Edition` after every ask. The job
+log prints the rejection reason and not the rejected reply, so the replies in the tests are synthesised from the reason
+and the slot context (the real texts are unproven offline). Roots: `run_job` raised on a cut reply although the narrowed
+ask for the missing slots already existed; the heading check matched `# ` anywhere in a one-paragraph unit, so `C# ` in a
+sentence was a heading; BL-220's edition recovery needed another sentence or a clause cut, so the single sentence the
+prompt itself asks to be written as 'It adds ...' (or one ending 'in the Enterprise Edition') had none.
+
+**Decision.** (1) A cut-off reply is treated like a rejected one when the job can be narrowed by part: the whole units
+it finished are kept, the missing slots are asked for alone (half of them when nothing was finished, so every ask is
+smaller than the one that was cut), at most three narrowed asks per cut reply, each recorded in the repair notes with
+rule BL-370; the merged reply is judged by the ordinary checks, so a slot still missing is rejected and falls to the
+existing recover hooks (an API row to the fact-true row, R43(4)); a job with no such hook still raises as before. No
+unit is replaced by the narrowing, so a must-carry unit is never dropped (R14). (2) A Markdown heading is a `#` run that
+begins the unit; a leading one is deleted and recorded, a `#` inside a sentence is prose. This loosens one check where it
+was provably wrong, so no sealed candidate can newly fail (R10). (3) The edition named only as a sentence subject is read
+as `It`, or a closing 'in/with ... Enterprise Edition' phrase is cut, the rest as written and recorded; a unit that is
+only the name still fails closed. No prompt, renderer, schema or version constant moves; no public README wording is added
+(R9). Property improved: robust (one slot no longer fails a whole run), measured by the pareto count of
+`job_error|*|OutputRejectedError:*` and `JobError:section_authoring_output_truncated_at` on the next frozen-code pass.
+
+**Not decided.** Whether three narrowed asks per cut reply is the right bound once hosted runs show how often a cut
+happens, and whether the cut is the model's reasoning or a long section (the narrowed ask answers both, the log does not
+say which).
+
+Backlog: BL-370
