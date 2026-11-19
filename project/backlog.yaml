@@ -2155,3 +2155,40 @@ items:
     evidence: ["5 PDF runs cancelled at the 90-minute timeout, 25 to 30 minute settle rounds"]
     next_action: "after BL-230"
     updated: "2026-11-18"
+
+  - id: BL-280
+    title: "Seal flips (good to bad): classify every recorded RECERTIFIED-to-failing change by cause, and make a flip impossible without a stated cause that the system can act on"
+    type: requirement
+    source: "owner request 2026-11-18: ideally there is no flip from positive to negative; how is it ensured"
+    priority: P0
+    status: open
+    implementation_path: "read-only analysis of data/recertification_baseline.json history and recertify records first; then the smallest change inside the existing R10 gate (recertify --gate) and baseline justification"
+    acceptance: "every recorded flip has a cause class (check made stricter, findings-register row added, upstream or registry change, reviewer variance, defect in the sealed text) with evidence; a frozen-code recertify repeat flips zero seals; a flip caused by a new register row or stricter check is corrected by the pipeline (BL-210 path) instead of being accepted as a justified demotion"
+    evidence: ["classified 2026-11-19 from the 7 flip commits (17 flips): 100 percent are the standard moving against sealed text, none from the sealed text changing: stricter or new check (BC-17 parity 2026-11-06 Imaging .NET R; stale_package_version L-05 BarCode Python L; K05 listed count Cells C++ L and HTML Python L; 3D .NET L L-03 L-05) about 7; findings register of 72 confirmed false claims making BC-18 block (2026-11-13) 10 Lane R seals; each was justified in the baseline, not corrected; reviewer variance not measured", "baseline history: 17 RECERTIFIED-to-NEEDS_REPAIR changes across 20 baseline revisions (2026-11-06 to 2026-11-14); 8 Lane R seals flipped at once in e917591 (findings register); the others follow BC-17 enforcement and individual defects"]
+    next_action: "(1) frozen-code recertify repeat to measure reviewer variance (none measured yet); (2) producer-side rule: a new check or register row must land with its correction (BL-210 path) before the baseline is rewritten, so the flip is corrected, not justified; (3) record a cause class on every baseline justification row"
+    updated: "2026-11-18"
+
+  - id: BL-290
+    title: "End-of-week delivery plan: every component running on GitHub Actions by 2026-11-22, status reported daily"
+    type: requirement
+    source: "owner ruling R49 (2026-11-19): finalize this app ASAP and deploy it to the GitHub runner with all components, achievable by the end of this week"
+    priority: P0
+    status: active
+    implementation_path: "plan backwards from 2026-11-22; components: planner and cohort chain, Lane R and Lane L present, recertify gate, M9 audit chain, supervisor tick, issue management (R39), review-page refresh (R47), state mirror; draft PRs only after every candidate of both lanes passes (R15)"
+    acceptance: "each component demonstrated on the hosted runner with evidence; the BL-203 frozen-code 40-cell proof pass and repeat run (R46 bar: 85 percent seal in one pass, 90 percent repeat agreement); Lane L 100 percent handled; daily status reported first (R12); if the date and the bar conflict the supervisor says so first and asks through the interactive form"
+    evidence: ["2026-11-19 start: Lane R 15 of 19 sealed cells recertify, about 21 of 40 never sealed (PSD Java blocked externally); Lane L 34 of 34 recertify, 24 accepted, 5 awaiting audit"]
+    next_action: "BL-240 last-resort authored-claim fix (interrupted, unreviewed); BL-203 frozen-code proof pass; Lane L audit of the 5 awaiting"
+    updated: "2026-11-19"
+
+  - id: BL-300
+    title: "Feedback cycle automation: investigation > execution > verification at once, then automatic review-page refresh"
+    type: requirement
+    source: "owner ruling R47 (2026-11-19)"
+    priority: P0
+    status: active
+    implementation_path: "the standing feedback watcher prompt (runs the cycle in the same turn it finds feedback, then rebuilds and republishes the page with scripts/review_page/build.py); docs/REVIEW_PAGE.md"
+    acceptance: "a new feedback entry is picked up at the next watcher fire, carried to verified evidence, and the page is republished in the same cycle; the owner sees the result without asking"
+    evidence: ["watcher prompt updated 2026-11-19; page republished version 8 after the manual refresh"]
+    next_action: "first live cycle on the next feedback entry; consider a shorter interval if the scheduler allows"
+    updated: "2026-11-19"
+
