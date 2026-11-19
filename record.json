@@ -5,7 +5,7 @@
   "provider_repository_id": 1172529510,
   "registry_revision": null,
   "active_transaction_id": "e30e3b6a59824350b91569d9ef6de912",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-15T02:43:59.913913+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-19T15:55:15.454780+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 32,
+  "state_version": 33,
   "recent_trigger_dedup_keys": {
     "run:41142575744:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "749bc2a2789d44f4a06527e6fa5f431e",
     "run:41162835931:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "d3043e1665a44495911e43ead88cd3bd",
@@ -51,5 +51,5 @@
     "run:43667479594:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "4ae54a4fa41a465780c17940c6f0023c",
     "run:44330619753:aspose-slides-foss/Aspose.Slides-FOSS-for-Python": "e30e3b6a59824350b91569d9ef6de912"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
