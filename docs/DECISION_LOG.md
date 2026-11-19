@@ -7286,3 +7286,19 @@ pass. Not determined and not built (R27): the model-judged `llm:factuality` find
 whether the base `TypeDescriber` infers from member evidence paths is always the declared base.
 
 Backlog: BL-320
+
+## 2026-11-19: Frozen-code portfolio proof pass 1 and repeat pass 2 (BL-203, R46)
+
+Frozen at main `9476c1b` (BL-210/220/230/240 merged, planner quiesced), 40 `present` run requests for Lane R, 25 seconds
+apart, twice. Pass 1: 22 of 40 cells hold a Lane R seal and 21 recertify (52.5 percent; the R46 bar is 85 percent, 34
+cells); 18 cells have no seal and PDF Java fails BC-05/BC-17 on its seal. Pass 2 (same code): no new seal, none lost; the
+sealed cells replay at zero cost, so the 40 of 40 verdict agreement is trivial. Generation repeatability on the 18 unsealed
+cells: 13 of 18 failed with the same failure classes twice (72 percent; bar 90 percent), 5 differed (PDF Python, PDF
+C++, PSD Java, Words Java, Words Python). Lesson: the failures are deterministic by class, not luck, so class fixes
+transfer; the next fixes (BL-270 progress and time-box, BL-310 stale pinned version and registry badge, BL-320
+member-claim owner rule) are merged together and verified (zero-call recertify unchanged at 21 of 22 Lane R and 34 of 34
+Lane L, R10 gate OK on 56 seals, full suite 6781 passed) before pass 3. Remaining classes after pass 1: BC-17 technical
+content (7 cells), job cancels (3), PDF API-table rows, Enterprise Edition naming (2), duplicate API-intro paragraph (2).
+
+Backlog: BL-203, BL-270, BL-310, BL-320, BL-290.
+
