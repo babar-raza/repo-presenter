@@ -700,6 +700,7 @@ def run_job(
     narrowed_units: list[str] = []
     repeated_units: list[str] = []
     merged_so_far = ""
+    heal_notes: list[dict[str, Any]] = []
     for ask in (1, 2, 3):
         if ask == 3:
             if not narrowed_units or narrowing is None:
@@ -714,25 +715,39 @@ def run_job(
                 model=model,
             )
         reply = run_with_retry("llm_call", functools.partial(attempts.call, config, current))
+        healed = False
         if reply.finish_reason == "length":
             truncated = ("output truncated at the manifest's max_output_tokens",)
             store.reject(request_sha256, ask, job, reply.content, list(truncated))
             attempts.record_invalid("TruncatedOutput", truncated)
-            raise JobError(
-                f"{job}: output truncated at the manifest's max_output_tokens "
-                f"({manifest.manifest.sampling.max_output_tokens}); raise the budget or bound "
-                "the output, never retry"
+            merged_reply = (
+                _complete_truncated(
+                    narrowing, manifest, reply.content, merged_so_far, model, attempts, config,
+                    store, request_sha256, ask, job, heal_notes,
+                )
+                if narrowing is not None and narrowing.truncated is not None
+                else None
             )
+            if merged_reply is None:
+                raise JobError(
+                    f"{job}: output truncated at the manifest's max_output_tokens "
+                    f"({manifest.manifest.sampling.max_output_tokens}); raise the budget or bound "
+                    "the output, never retry"
+                )
+            reply = replace(reply, content=merged_reply, finish_reason="stop")
+            healed = True
         content = reply.content
         earlier_reply = first_reply
         if ask == 2 and manifest.manifest.output.binding == "unit_ids":
             content = _complete_from_first_reply(content, first_reply)
-        elif ask == 3 and narrowing is not None:
+        elif ask == 3 and narrowing is not None and not healed:
             content = narrowing.merge(merged_so_far, content, narrowed_units)
         first_reply = reply.content
         output, rejection = _parse(manifest, content, facts, checks, call_schema)
         if output is not None:
             store.put(request_sha256, job, reply.model, output)
+            if heal_notes:
+                store.record_repairs(request_sha256, ask, job, [], notes=heal_notes)
             record_spend(budget_path if budget_path is not None else DEFAULT_BUDGET_PATH, 1, reply.total_tokens or 0)
             return JobResult(
                 job,
@@ -809,6 +824,76 @@ def run_job(
     if recovered_rejection:
         message += f"; recover's correction was rejected too: {'; '.join(recovered_rejection)}"
     raise OutputRejectedError(message)
+
+
+#: Narrowed asks one cut-off reply may cost (BL-370): each asks for what is still missing, half of it
+#: when the cut-off reply completed nothing.
+TRUNCATION_ASKS = 3
+TRUNCATION_RULE = "BL-370"
+TRUNCATED_LINE = "output truncated at the manifest's max_output_tokens"
+
+
+def _complete_truncated(
+    narrowing: Narrowing,
+    manifest: LoadedManifest,
+    partial: str,
+    base: str,
+    model: str | None,
+    attempts: "_Attempts",
+    config: GatewayConfig,
+    store: CallStore,
+    request_sha256: str,
+    ask: int,
+    job: str,
+    notes: list[dict[str, Any]],
+) -> str | None:
+    """A reply cut off at ``max_output_tokens`` treated as a rejected one (BL-370): the parts it
+    completed before the cut are kept, and the parts still missing are asked for alone (the same
+    prompt narrowed to them, through ``narrowing.ask``), at most :data:`TRUNCATION_ASKS` times, half
+    of what is missing when the cut-off reply completed nothing, so each ask is smaller than the
+    one that was cut. The merged reply is judged by the job's ordinary schema, binding and checks
+    by the caller; whatever stays missing fails there as a rejection, never silently.
+
+    ``None`` when nothing at all was completed (nothing to keep: the job fails as it always did)."""
+    assert narrowing.truncated is not None
+    merged = base
+    content = partial
+    answered = False  # the last narrowed ask came back whole
+    missing: list[str] = []
+    for round_number in range(1, TRUNCATION_ASKS + 1):
+        before = merged
+        merged, missing = narrowing.truncated(merged, content)
+        if not missing:
+            break
+        progress = merged != before or answered
+        wanted = missing if progress else missing[: max(1, (len(missing) + 1) // 2)]
+        packet, schema = narrowing.ask(wanted, merged, [TRUNCATED_LINE], [])
+        payload = request_payload(
+            manifest, render_messages(manifest, packet, schema), schema, model=model
+        )
+        notes.append(
+            {
+                "fallback": "truncated_reply_narrowed",
+                "rule": TRUNCATION_RULE,
+                "round": round_number,
+                "asked": list(wanted),
+                "missing": list(missing),
+            }
+        )
+        sub = run_with_retry("llm_call", functools.partial(attempts.call, config, payload))
+        if sub.finish_reason == "length":
+            store.reject(
+                request_sha256, ask, job, sub.content, [TRUNCATED_LINE],
+                stage=f"truncated-{round_number}",
+            )
+            attempts.record_invalid("TruncatedOutput", (TRUNCATED_LINE,))
+            content, answered = sub.content, False
+            continue
+        merged = narrowing.merge(merged, sub.content, wanted)
+        content, answered = "", True
+    else:
+        merged, missing = narrowing.truncated(merged, content)
+    return merged or None
 
 
 def _narrowing(

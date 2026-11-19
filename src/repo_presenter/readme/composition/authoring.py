@@ -261,7 +261,7 @@ _FORBIDDEN = (
 #: heading ('#')": the port of Words .NET names C#).
 _ANCHORED_ONLY = frozenset({"- ", "* ", "# "})
 _ANCHORED_FORMS = {"# ": "#{1,6} "}
-_HEADING_START = re.compile(r"#{1,6} ")
+_HEADING_START = re.compile(r"\s*#{1,6}\s")  # BL-370: also a tab or a leading space
 _MARKUP_OPENER = re.compile(r"<[A-Za-z_/!?]")
 
 
@@ -2390,6 +2390,8 @@ def unit_checks(
                 continue
             if marker == "<":
                 matched = _bare_angle_bracket(raw_text, placeholders)
+            elif marker == "# ":
+                matched = _HEADING_START.match(text) is not None
             else:
                 matched = (
                     _HEADING_START.match(text) is not None

@@ -163,7 +163,7 @@ def test_the_clause_that_names_the_edition_is_cut_back() -> None:
 
 def test_a_unit_that_is_only_the_edition_name_fails_closed() -> None:
     assert recover_authoring_output(
-        _context("The Enterprise Edition adds more."),
+        _context("Enterprise Edition."),
         task=_enterprise_task(), facts=make_facts(), name=NAME,
     ) is None
 
