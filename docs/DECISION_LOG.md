@@ -7258,3 +7258,31 @@ registry; Java, Go, C++ and any ecosystem without a version badge template), rep
 plan as the dry count).
 
 Backlog: BL-310
+## 2026-11-19: API-row member claims are held to the type the sentence is about (BL-320, R46, R14)
+
+Frozen-code hosted pass 1 left about six cells (PDF Python, .NET, Java, Go, Font Python, 3D TypeScript and Python) on
+authored or fact-templated API-row sentences that "claim members a class does not have". First principles: the failing
+sentences are the renderer's own fact-true rows ("Class that inherits from ExplicitDestination and declares the methods
+Top and ToString."), and the facts do support them. The check was wrong: `surface_claims._owner_before` picks the nearest
+named type that shares any listed name, so a name the named BASE also has (`ToString`) made the base the owner, and every
+name only the row's type declares (`Top`) became "names `Top` as a method of `ExplicitDestination`". Decisions: (1) a type
+named after "inherits from / extends / derives from / subclass of / based on / implements", including a list of bases, is
+a base and never the owner of the list that follows; the owner is the sentence's subject (the row's own type or the type
+named first), so inherited members are never attributed to the derived type and a genuinely missing member of the row's
+own type is still flagged; (2) a list ends before a kind word that opens the next list ("methods including a and b and
+properties including c"), so `properties` is no method; (3) `_base_names` no longer raises on a base part with no word
+(it crashed `TypeDescriber` on stored facts); (4) the last-resort degrade (BL-240) also withholds, with an R14 record
+(`duplicate_unit_dropped`), an authored prose unit that is exactly a paragraph the candidate prints twice (Email Python and
+TeX Python `api_reference.intro`, the authored intro restating a kept inherited paragraph): never the inherited copy
+(R14), never the opening, only when no unit-level lever already applies. Measured with zero provider calls: the renderer's
+fact-true rows over all 54 stored facts documents drew 1,316 member-claim findings on 10,022 rows, now 0; `recertify
+--all` before/after changes no outcome, check or detail on any row with the same seal commit and re-renders every
+certified Lane R seal byte-identical except the three that already differed on main (BL-250). A check was not added or
+tightened (it was loosened where it was provably wrong, so no seal can newly fail, R10); no public README wording is added
+(R9). Property improved: reliable and universal (one wrong owner rule had failed whole PDF cells with 52 findings), measured
+by the pareto count of `claim_contradiction|*|member_owner` and `BC-14|*|the_readme_names_code` on the next frozen-code
+pass. Not determined and not built (R27): the model-judged `llm:factuality` findings on authored API rows and openings
+(a model reviewer's judgement, not computable from facts; the BL-240 degrade withholds a quoted row, an opening stays), and
+whether the base `TypeDescriber` infers from member evidence paths is always the declared base.
+
+Backlog: BL-320
