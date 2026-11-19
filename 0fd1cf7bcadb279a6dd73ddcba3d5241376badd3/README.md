@@ -490,7 +490,7 @@ The optional PDF-export dependency, [ReportLab](https://pypi.org/project/reportl
 
 </details>
 
-These limitations don't apply to [full-featured Aspose.Note — Enterprise Edition](https://products.aspose.com/note/). It adds full read/write support (including writing OneNote files back out), broader format conversion, and wider OneNote compatibility beyond what this free edition covers.
+See [Aspose.Note — Enterprise Edition](https://products.aspose.com/note/). It adds full read/write support (including writing OneNote files back out), broader format conversion, and wider OneNote compatibility beyond what this free edition covers.
 
 ## Development and Testing
 
