@@ -8,7 +8,7 @@
  
  [![Aspose.Cells FOSS for Java](https://products.aspose.org/media/cells/java/banner-readme.png)](https://products.aspose.org/cells/java/)
 +
-+Aspose.Cells FOSS for Java reads and writes Excel files in the .xlsx format. It converts workbooks by loading existing files and saving modified versions, supporting operations such as cell value assignment, style formatting, row height and column width adjustment, and document property updates. It also handles workbook loading diagnostics, including repair attempts and issue reporting for malformed files. Conditional formatting and data validation rules can be applied to worksheet ranges and saved to output files.
++Aspose.Cells FOSS for Java reads and writes Excel workbooks in the .xlsx format. It creates and manipulates workbooks, worksheets, cells, and cell styles, including formatting and conditional formatting rules. It supports adding data validation and applying style properties such as bold font and custom number formats. The library runs on Java with no external runtime dependencies.
  
  Aspose.Cells FOSS for Java is a free, open-source, pure-Java spreadsheet library for creating,
  loading, modifying, and saving Excel `.xlsx` workbooks. It targets Java 17, and keeps OOXML
@@ -54,12 +54,12 @@
 -      c15["Load diagnostics and repair reporting"]
 -    end
 +    direction TB
-+    c1["Workbook and worksheet<br/>management"]
++    c1["Read and write Excel<br/>workbooks"]
 +    c2["Cell styling and<br/>formatting"]
 +    c3["Data validation and<br/>conditional formatting"]
-+    c4["Load diagnostics and<br/>repair"]
-+    c5["Embedded content<br/>support"]
-+    c6["Chart and shape<br/>rendering"]
++    c4["Chart and shape<br/>support"]
++    c5["Page setup and print<br/>layout"]
++    c6["Comments, pictures,<br/>and hyperlinks"]
 +    c1 ~~~ c4
 +    c2 ~~~ c5
 +    c3 ~~~ c6
@@ -75,42 +75,42 @@
  
  ## Key Capabilities
 +
-+- **Workbook and worksheet management.** It manages workbooks and worksheets through the `Workbook` class, which owns a `WorksheetCollection` of `Worksheet` objects, allowing add, remove, rename, and visibility control per sheet, while each worksheet exposes a `Cells` collection for reading and writing string, numeric, boolean, date/time, and formula values.
-+- **Cell styling and formatting.** It applies full cell styling and formatting through the `Style` class, which carries font, borders, fill, alignment, number format, and protection flags, set via `Cell.getStyle()` and `setStyle()`, with `NumberFormat` supporting built-in Excel number-format codes.
-+- **Data validation and conditional formatting.** It enforces data validation and conditional formatting on worksheet ranges via `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`, supporting validation types like whole numbers with operators and conditional formatting based on cell values.
-+- **Load diagnostics and repair.** It provides load diagnostics and repair through `LoadOptions` with strict-mode toggles and package/XML repair flags, and `Workbook.getLoadDiagnostics()` returns a report with repair details and preservation notes for unsupported package parts encountered during load and save.
-+- **Embedded content support.** It supports embedded content such as cell comments with author, text, visibility, and size via `CommentCollection`, and images from bytes, streams, or file paths with two-cell anchor positioning via `PictureCollection`, which detects JPEG, PNG, GIF, and BMP formats.
-+- **Chart and shape rendering.** It renders charts and shapes by creating 18 of the 25 `ChartType` values programmatically via `ChartCollection.add()`, while the remaining 7 ChartEx types round-trip verbatim from loaded workbooks, and `ShapeCollection` adds, retrieves, and removes 38 preset `AutoShapeType` geometries.
++- **Read and write Excel workbooks.** It reads and writes Excel workbooks by loading from file paths or streams into a `Workbook` that owns a `WorksheetCollection` of `Worksheet` objects, and saves the result back to file paths or binary streams.
++- **Cell styling and formatting.** It applies cell styling and formatting through `Style` objects that carry font, borders, fill, alignment, number format, and protection flags, set via `Cell.getStyle()` and `Cell.setStyle()`.
++- **Data validation and conditional formatting.** It enforces data validation and conditional formatting on worksheet ranges using `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`.
++- **Chart and shape support.** It creates charts programmatically and preserves chart types loaded from workbooks, and adds drawing shapes with preset geometries.
++- **Page setup and print layout.** It configures print layout and page setup via `PageSetup`, freezes rows and/or columns by coordinate or cell name, and applies worksheet and workbook protection with passwords.
++- **Comments, pictures, and hyperlinks.** It manages cell comments with author, text, visibility, and size via `CommentCollection`, embeds images from bytes, streams, or file paths via `PictureCollection`, and handles hyperlinks through `HyperlinkCollection`.
  
  - Read, write, and edit Excel `.xlsx` workbooks through `Workbook`, which owns a
    `WorksheetCollection` of `Worksheet` objects — add, remove, and rename sheets, select the
-@@ -76,33 +68,16 @@
+@@ -76,33 +68,13 @@
    package/XML repair, and `Workbook.getLoadDiagnostics()` returns a load diagnostics report —
    repair details and preservation notes for unsupported package parts encountered during the
    load/save flow.
 -- `Style` carries a cell's full formatting — font, borders, fill, alignment, number format, and
 -  protection flags — set through `Cell.getStyle()`/`setStyle()`; `NumberFormat` looks up and
 -  resolves built-in Excel number-format codes.
- - Control row and column layout with explicit sizing, hiding, and outline grouping via
-   `Row`/`Column`; `Worksheet` itself exposes tab color, zoom, gridline visibility, row/column
-   header visibility, zero display, and right-to-left layout.
+-- Control row and column layout with explicit sizing, hiding, and outline grouping via
+-  `Row`/`Column`; `Worksheet` itself exposes tab color, zoom, gridline visibility, row/column
+-  header visibility, zero display, and right-to-left layout.
  - Merged cells, defined names (`DefinedNameCollection`), and hyperlinks (`HyperlinkCollection`)
    round-trip through load and save.
 -- Validate data and apply conditional formatting to worksheet ranges via
 -  `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`.
--- `AutoFilter` supports color filters, dynamic filters, top-10 filters, custom filters, and sort
--  conditions on a worksheet range.
- - Configure print layout and page setup via `PageSetup`; freeze rows and/or columns by
-   coordinate or cell name and inspect or clear the frozen state; lock structure, windows, and
-   revisions with separate passwords via `WorksheetProtection`/`WorkbookProtection`, and persist
-   window layout and document-level metadata through
-   `WorkbookView`/`DocumentProperties`/`WorkbookProperties`.
+ - `AutoFilter` supports color filters, dynamic filters, top-10 filters, custom filters, and sort
+   conditions on a worksheet range.
+-- Configure print layout and page setup via `PageSetup`; freeze rows and/or columns by
+-  coordinate or cell name and inspect or clear the frozen state; lock structure, windows, and
+-  revisions with separate passwords via `WorksheetProtection`/`WorkbookProtection`, and persist
+-  window layout and document-level metadata through
+-  `WorkbookView`/`DocumentProperties`/`WorkbookProperties`.
 -- Add, edit, and remove cell comments (notes) with author, text, visibility, and size via
 -  `CommentCollection`, and embed images from bytes, streams, or file paths with two-cell anchor
 -  positioning via `PictureCollection`, which detects JPEG, PNG, GIF, and BMP formats.
--- Create 18 of the 25 real `ChartType` values programmatically via `ChartCollection.add()`; the
--  other 7 (the ChartEx types: Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel,
--  and Map) round-trip verbatim from a loaded workbook but cannot be created through the API.
+ - Create 18 of the 25 real `ChartType` values programmatically via `ChartCollection.add()`; the
+   other 7 (the ChartEx types: Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel,
+   and Map) round-trip verbatim from a loaded workbook but cannot be created through the API.
 -- `ShapeCollection` adds, retrieves, and removes drawing objects across 38 preset geometries
 -  (`AutoShapeType`; complex shapes loaded from an XLSX file are preserved verbatim), and
 -  `ListObjectCollection` creates, resizes, styles, and removes structured Excel tables
@@ -118,7 +118,7 @@
  - Configure calculation mode, reference mode, iterative calculation, and precision via
    `CalculationProperties`; formulas and error cell values (`#N/A`, `#VALUE!`, `#REF!`, and
    others) are stored and round-tripped with the correct cell type, but the library is not a
-@@ -110,7 +85,13 @@
+@@ -110,7 +82,13 @@
  
  ## Installation
  
@@ -133,7 +133,7 @@
  
  ```xml
  <dependency>
-@@ -120,39 +101,35 @@
+@@ -120,39 +98,35 @@
  </dependency>
  ```
  
@@ -173,7 +173,7 @@
  ## Quick Start
  
 -Create a workbook, write values, style a cell, and save it:
-+Create a new workbook, set up a worksheet named Report with formatted data in cells A1 and B1, adjust row height and column width, and save the result as `report.xlsx`.
++This example creates a new workbook, names the first worksheet Report, writes a text label and a numeric value into the first row, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as `report.xlsx`.
  
  ```java
 +import java.io.*;
@@ -182,37 +182,55 @@
  import org.aspose.cells_foss.Cell;
  import org.aspose.cells_foss.Style;
  import org.aspose.cells_foss.Workbook;
-@@ -182,9 +159,12 @@
+@@ -182,39 +156,16 @@
  }
  ```
  
 -Load an existing workbook with options and inspect load diagnostics:
-+Load a potentially corrupted Excel file with repair options enabled, print any diagnostic messages, update the document author property, and save the repaired workbook as `output.xlsx`.
- 
- ```java
-+import java.io.*;
-+import java.util.*;
-+import org.aspose.cells_foss.*;
- import org.aspose.cells_foss.LoadIssue;
- import org.aspose.cells_foss.LoadOptions;
- import org.aspose.cells_foss.Workbook;
-@@ -212,9 +192,14 @@
- 
- ## Additional Examples
- 
--Add data validation and conditional formatting to a range:
-+Aspose.Cells FOSS for Java supports data validation and conditional formatting workflows. Example 003 demonstrates creating a validation rule and applying conditional formatting to a cell range.
++## Additional Examples
 +
-+### Create a Validation Rule and Apply Conditional Formatting to a Cell Range
++The following examples demonstrate validation rules and conditional formatting workflows using Aspose.Cells FOSS for Java.
++
++### Create Data Validation and Conditional Formatting Rules for a Range
  
  ```java
+-import org.aspose.cells_foss.LoadIssue;
+-import org.aspose.cells_foss.LoadOptions;
+-import org.aspose.cells_foss.Workbook;
+-
+-public class LoadWorkbook {
+-    public static void main(String[] args) {
+-        LoadOptions options = new LoadOptions();
+-        options.setStrictMode(false);
+-        options.setTryRepairPackage(true);
+-        options.setTryRepairXml(true);
+-
+-        try (Workbook workbook = new Workbook("input.xlsx", options)) {
+-            if (workbook.getLoadDiagnostics().hasRepairs()) {
+-                for (LoadIssue issue : workbook.getLoadDiagnostics().getIssues()) {
+-                    System.out.println(issue.getMessage());
+-                }
+-            }
+-
+-            workbook.getDocumentProperties().setAuthor("cells-foss");
+-            workbook.save("output.xlsx");
+-        }
+-    }
+-}
+-```
+-
+-## Additional Examples
+-
+-Add data validation and conditional formatting to a range:
+-
+-```java
 +import java.io.*;
 +import java.util.*;
 +import org.aspose.cells_foss.*;
  import org.aspose.cells_foss.CellArea;
  import org.aspose.cells_foss.FormatCondition;
  import org.aspose.cells_foss.FormatConditionCollection;
-@@ -258,192 +243,213 @@
+@@ -258,192 +209,213 @@
  }
  ```
  
@@ -236,7 +254,7 @@
  
 -The public entry point is `org.aspose.cells_foss`. The classes below cover the full supported
 -public API surface — 183 public types organized into one module.
-+Aspose.Cells FOSS for Java provides a Java API for spreadsheet processing, with the public entry point `org.aspose.cells_foss`. The classes below cover the full supported public API surface — 183 public types organized into one module.
++The public entry point is `org.aspose.cells_foss`. The classes below cover the full supported public API surface — 183 public types organized into one module.
 +
 +The public API has 183 types.
  
@@ -544,11 +562,11 @@
 +
 +### cells_foss
 +
-+The `org.aspose.cells_foss` package serves as the public entry point for the Aspose.Cells FOSS for Java library, exposing 183 public types across one module.
++The `org.aspose.cells_foss` package serves as the single public entry point for the Aspose.Cells FOSS for Java library.
  
  | Enumeration | Description |
  |---|---|
-@@ -484,33 +490,59 @@
+@@ -484,33 +456,59 @@
  
  ## Documentation & Resources
  
@@ -598,7 +616,7 @@
 +
 +</details>
 +
-+These limitations don't apply to [full-featured Aspose.Cells for Java — Enterprise Edition](https://products.aspose.com/cells/java/). It adds additional spreadsheet save formats beyond .xlsx, a full formula calculation engine, ChartEx chart type creation, and dedicated enterprise support.
++See [Aspose.Cells for Java — Enterprise Edition](https://products.aspose.com/cells/java/). It adds additional spreadsheet save formats beyond .xlsx, a full formula calculation engine, ChartEx chart type creation, and dedicated enterprise support.
  
  ## Development and Testing
 +
@@ -626,7 +644,7 @@
  
  Requires JDK 17+ and Maven as the build tool. Run the test suite:
  
-@@ -523,15 +555,10 @@
+@@ -523,15 +521,10 @@
  ```bash
  mvn compile
  mvn clean package

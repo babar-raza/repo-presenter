@@ -77,113 +77,100 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:repository",
         "package:name",
         "package:version",
         "package:java_release",
-        "license:spdx",
-        "dependency:none",
-        "example:001",
-        "example:002",
-        "example:003"
+        "dependency:none"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
       ],
-      "rationale": "The Navigation heading is promotional and its list is superseded by the navigation section's auto-generated link list.",
+      "rationale": "The Navigation heading is rendered by the navigation section from facts.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "navigation",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:011",
-        "link_target:012",
-        "link_target:013",
-        "link_target:014",
-        "link_target:015",
-        "link_target:016",
-        "link_target:017",
-        "link_target:018",
-        "link_target:019",
-        "link_target:020",
-        "link_target:021",
-        "link_target:022"
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
       ],
-      "rationale": "Redundant with the verified facts it names: link_target:011, link_target:012, link_target:013, link_target:014, link_target:015, link_target:016, link_target:01",
+      "rationale": "The navigation list is rendered by the navigation section from facts.",
       "unit_id": "inherited_unit:006.list"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The At a Glance heading is promotional and its Mermaid diagram is superseded by the at_a_glance section.",
+      "rationale": "The At a Glance heading is rendered by the at_a_glance section from facts.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
       "destination_section": "at_a_glance",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:011",
-        "link_target:012",
-        "link_target:013",
-        "link_target:014",
-        "link_target:015",
-        "link_target:016",
-        "link_target:017",
-        "link_target:018",
-        "link_target:019",
-        "link_target:020",
-        "link_target:021",
-        "link_target:022"
+        "example:001",
+        "example:003",
+        "identity:ecosystem",
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.cells_foss"
       ],
-      "rationale": "The Mermaid diagram is rendered by the at_a_glance section from facts; the section's content is built from the same link targets.",
+      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
       "unit_id": "inherited_unit:008.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Key Capabilities heading is promotional and its list is superseded by the key_capabilities section.",
+      "rationale": "The Key Capabilities heading is rendered by the key_capabilities section from facts.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
         "public_symbol:org.aspose.cells_foss"
       ],
-      "rationale": "The list is superseded by the key_capabilities section, which re-authors the same capabilities from facts.",
+      "rationale": "The list provides detailed capability descriptions not fully covered by the generated summary.",
       "unit_id": "inherited_unit:010.list"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "install_command:maven"
       ],
-      "rationale": "The Installation heading is promotional and its content is superseded by the installation section.",
+      "rationale": "The Installation heading is rendered by the installation section from facts.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "inherited_unit:012.paragraph"
+        "install_command:maven"
       ],
-      "rationale": "The paragraph ends with a colon but no following content before the next heading, making it incomplete and unsupported as a standalone instruction.",
+      "rationale": "The paragraph introducing the install command is superseded by the installation section.",
       "unit_id": "inherited_unit:012.paragraph"
     },
     {
@@ -192,14 +179,16 @@
       "fact_ids": [
         "install_command:maven"
       ],
-      "rationale": "The Maven dependency snippet is superseded by the installation section, which renders the verified install command.",
+      "rationale": "The Maven dependency snippet matches the install_command fact and is superseded by the installation section.",
       "unit_id": "inherited_unit:013.code_block"
     },
     {
       "destination_section": "installation",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "rationale": "The Gradle introduction is superseded by the installation section.",
       "unit_id": "inherited_unit:014.paragraph"
     },
     {
@@ -208,35 +197,40 @@
       "fact_ids": [
         "install_command:maven"
       ],
-      "rationale": "The Gradle snippet is a real alternative install path; kept as written since the installation section only renders Maven.",
+      "rationale": "The Gradle snippet is a real alternative installation path; kept as written for developers using Gradle.",
       "unit_id": "inherited_unit:015.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "dependency:none",
-        "dependency:development.org.apache.poi-poi-ooxml"
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
       ],
-      "rationale": "The paragraph clarifies Java 17 targeting and Apache POI usage in test scope only, supported by dependency facts.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:016.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
       ],
-      "rationale": "The Dependencies heading is promotional and its content is superseded by the dependencies section.",
+      "rationale": "The Dependencies heading is rendered by the dependencies section from facts.",
       "unit_id": "inherited_unit:017.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
       ],
-      "rationale": "The Required Package Dependencies heading is promotional and its content is superseded by the dependencies section.",
+      "rationale": "The Required Package Dependencies heading is rendered by the dependencies section from facts.",
       "unit_id": "inherited_unit:018.heading"
     },
     {
@@ -256,7 +250,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Native and System Requirements heading is promotional and its content is superseded by the dependencies section.",
+      "rationale": "The Native and System Requirements heading introduces no content and is unsupported by facts.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
@@ -271,14 +265,12 @@
       "unit_id": "inherited_unit:021.list"
     },
     {
-      "destination_section": "dependencies",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "dependency:development.org.apache.poi-poi-ooxml",
-        "dependency:development.org.junit.jupiter-junit-jupiter",
-        "dependency:none"
+        "identity:ecosystem"
       ],
-      "rationale": "The heading is superseded by the dependencies section.",
+      "rationale": "Section heading 'Development Dependencies' is redundant with the dependencies section.",
       "unit_id": "inherited_unit:022.heading"
     },
     {
@@ -294,11 +286,9 @@
     },
     {
       "destination_section": "quick_start",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "rationale": "The heading is superseded by the quick_start section.",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The Quick Start heading is retained as it matches the destination section.",
       "unit_id": "inherited_unit:024.heading"
     },
     {
@@ -320,30 +310,28 @@
       "unit_id": "inherited_unit:026.code_block"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "rationale": "The example fact for this paragraph is CONTRADICTED, so the paragraph and its following code block are omitted.",
       "unit_id": "inherited_unit:027.paragraph"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "Printed by the example section from the verified example fact it cites, with any usings the compiler needed supplied above the inherited code.",
+      "rationale": "The example fact for this code block is CONTRADICTED, so it is omitted.",
       "unit_id": "inherited_unit:028.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "rationale": "The heading is superseded by the additional_examples section.",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The Additional Examples heading is retained as it matches the destination section.",
       "unit_id": "inherited_unit:029.heading"
     },
     {
@@ -378,24 +366,26 @@
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The paragraph describes the project structure, which is relevant to development and testing.",
+      "fact_ids": [
+        "build_test_asset:tests"
+      ],
+      "rationale": "The paragraph describes the project structure and is supported by the build_test_asset fact.",
       "unit_id": "inherited_unit:033.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The code block shows the project structure, which is relevant to development and testing.",
+      "fact_ids": [
+        "build_test_asset:tests"
+      ],
+      "rationale": "The code block describes the project structure and is supported by the build_test_asset fact.",
       "unit_id": "inherited_unit:034.code_block"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "rationale": "The heading is superseded by the api_reference section.",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The API Reference heading is retained as it matches the destination section.",
       "unit_id": "inherited_unit:035.heading"
     },
     {
@@ -404,23 +394,26 @@
       "fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "rationale": "The paragraph introduces the API reference, which is verified and preserved.",
+      "rationale": "The paragraph describes the public API surface and is supported by the public_symbol fact.",
       "unit_id": "inherited_unit:036.paragraph"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "identity:ecosystem",
+        "public_symbol:org.aspose.cells_foss"
       ],
-      "rationale": "The HTML block is part of the API reference section and preserved as is.",
+      "rationale": "The HTML block introduces the API surface table and is supported by the public_symbol fact.",
       "unit_id": "inherited_unit:037.html_block"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [],
-      "rationale": "The heading is moved to api_reference as it introduces the core API table.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "rationale": "The Core API heading is retained as it matches the destination section.",
       "unit_id": "inherited_unit:038.heading"
     },
     {
@@ -429,16 +422,16 @@
       "fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "rationale": "The table lists the supported public API surface, which is verified and preserved.",
+      "rationale": "The table lists the public API surface and is supported by the public_symbol fact.",
       "unit_id": "inherited_unit:039.table"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The Interfaces heading is omitted as the table already covers all public types and no separate interface list is needed.",
       "unit_id": "inherited_unit:040.heading"
     },
     {
@@ -449,16 +442,16 @@
         "public_symbol:org.aspose.cells_foss.packaging.ipackagewriter",
         "public_symbol:org.aspose.cells_foss.iwarningcallback"
       ],
-      "rationale": "The table of interfaces is superseded by the API reference section which lists all verified public symbols.",
+      "rationale": "Lists three core interfaces in the public API surface; facts confirm all three symbols exist and match the descriptions.",
       "unit_id": "inherited_unit:041.table"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading '#### Enumerations' is promotional and redundant; enumeration details are covered in the API reference section.",
+      "rationale": "The heading '#### Enumerations' is superseded by the API Reference section heading, which covers all public symbols.",
       "unit_id": "inherited_unit:042.heading"
     },
     {
@@ -469,27 +462,27 @@
         "public_symbol:org.aspose.cells_foss.borderstyletype",
         "public_symbol:org.aspose.cells_foss.cellvaluetype",
         "public_symbol:org.aspose.cells_foss.charttype",
-        "public_symbol:org.aspose.cells_foss.core.datesystem",
-        "public_symbol:org.aspose.cells_foss.core.diagnosticseverity",
-        "public_symbol:org.aspose.cells_foss.core.fillpatternkind",
-        "public_symbol:org.aspose.cells_foss.core.filteroperatortype",
-        "public_symbol:org.aspose.cells_foss.core.horizontalalignment",
-        "public_symbol:org.aspose.cells_foss.core.pageorientation",
-        "public_symbol:org.aspose.cells_foss.core.validationmodel",
-        "public_symbol:org.aspose.cells_foss.core.verticalalignment",
+        "public_symbol:org.aspose.cells_foss.diagnosticseverity",
         "public_symbol:org.aspose.cells_foss.diagnosticseverity",
         "public_symbol:org.aspose.cells_foss.fillpattern",
-        "public_symbol:org.aspose.cells_foss.filtercolumncollection",
-        "public_symbol:org.aspose.cells_foss.horizontalalignmenttype"
+        "public_symbol:org.aspose.cells_foss.fillpattern",
+        "public_symbol:org.aspose.cells_foss.filtervaluecollection",
+        "public_symbol:org.aspose.cells_foss.formatconditiontype",
+        "public_symbol:org.aspose.cells_foss.horizontalalignmenttype",
+        "public_symbol:org.aspose.cells_foss.imagetype",
+        "public_symbol:org.aspose.cells_foss.loadformat",
+        "public_symbol:org.aspose.cells_foss.operatortype",
+        "public_symbol:org.aspose.cells_foss.pageorientationtype",
+        "public_symbol:org.aspose.cells_foss.papersizetype"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:043.table"
     },
     {
       "destination_section": null,
-      "disposition": "NON_CONTENT",
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "The closing HTML comment `</details>` is non-content markup.",
+      "rationale": "An orphaned closing HTML tag with no matching opening tag; it adds no value and may break rendering.",
       "unit_id": "inherited_unit:044.html_block"
     },
     {
@@ -503,7 +496,7 @@
         "link_target:027",
         "link_target:028"
       ],
-      "rationale": "The heading '## Documentation & Resources' is moved to the documentation_resources section where its content belongs.",
+      "rationale": "The heading '## Documentation & Resources' is moved to the Documentation & Resources section where its list belongs.",
       "unit_id": "inherited_unit:045.heading"
     },
     {
@@ -517,14 +510,14 @@
         "link_target:027",
         "link_target:028"
       ],
-      "rationale": "Kept as written (inherit-and-correct, R43(3)). Not printed again: documentation resources already states this material from the facts it cites, so the kept unit",
+      "rationale": "All listed documentation links are verified; the list preserves maintainer-curated resources.",
       "unit_id": "inherited_unit:046.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "The heading '## Scope and Limitations' is moved to the scope_limitations section where its content belongs.",
+      "rationale": "The heading '## Scope and Limitations' is moved to the Scope and Limitations section where its list belongs.",
       "unit_id": "inherited_unit:047.heading"
     },
     {
@@ -534,34 +527,32 @@
         "public_symbol:org.aspose.cells_foss",
         "example:001"
       ],
-      "rationale": "The list of limitations is verified and preserved as written; all items are supported by facts in the accepted investigation.",
+      "rationale": "All listed limitations are supported by facts: save format, ChartEx creation, formula handling, and skeleton XML mappers.",
       "unit_id": "inherited_unit:048.list"
     },
     {
       "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:029",
         "link_target:product.enterprise"
       ],
-      "rationale": "The paragraph about the Enterprise Edition is moved to the enterprise_relationship section where it belongs.",
+      "rationale": "The paragraph introduces the Enterprise Edition; it is moved to the enterprise relationship section.",
       "unit_id": "inherited_unit:049.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "The heading '## Development and Testing' is moved to the development_testing section where its content belongs.",
+      "rationale": "The heading '## Development and Testing' is moved to the Development and Testing section where its content belongs.",
       "unit_id": "inherited_unit:050.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:test-command",
-        "package:java_release"
+        "build_test_asset:test-command"
       ],
-      "rationale": "The paragraph about JDK 17+ and Maven is verified and preserved as written.",
+      "rationale": "The paragraph correctly states the test command; the fact confirms 'mvn test' is the verified command.",
       "unit_id": "inherited_unit:051.paragraph"
     },
     {
@@ -570,7 +561,7 @@
       "fact_ids": [
         "build_test_asset:test-command"
       ],
-      "rationale": "The `mvn test` command is verified and preserved as written.",
+      "rationale": "The code block 'mvn test' is superseded by the generated test command in the Development and Testing section.",
       "unit_id": "inherited_unit:052.code_block"
     },
     {
@@ -579,7 +570,7 @@
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The paragraph about other common commands is verified and preserved as written.",
+      "rationale": "The paragraph correctly introduces other build commands; the facts confirm 'mvn package' and 'mvn compile'.",
       "unit_id": "inherited_unit:053.paragraph"
     },
     {
@@ -589,26 +580,26 @@
         "build_test_asset:build-command",
         "finding:cb66691e4f5b"
       ],
-      "rationale": "The findings register confirms the quoted text false. The `mvn compile`, `mvn clean package`, and `mvn javadoc:javadoc` commands are verified and preserved as w",
+      "rationale": "The code block lists 'mvn compile', 'mvn clean package', and 'mvn javadoc:javadoc'; the section renders 'mvn package' and 'mvn compile'.",
       "unit_id": "inherited_unit:054.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:release-workflow",
-        "link_target:027"
+        "build_test_asset:release-workflow"
       ],
-      "rationale": "The paragraph about the release workflow is verified and moved to the development_testing section, where it belongs.",
+      "rationale": "The paragraph correctly references the release workflow file; the fact confirms its existence and purpose.",
       "unit_id": "inherited_unit:055.paragraph"
     },
     {
-      "destination_section": "enterprise_relationship",
+      "destination_section": "license",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:product.enterprise"
+        "license:file",
+        "license:spdx"
       ],
-      "rationale": "The heading '## License' is moved to the enterprise_relationship section to align with the license fact.",
+      "rationale": "The heading '## License' is superseded by the License section heading, which renders from facts.",
       "unit_id": "inherited_unit:056.heading"
     },
     {
@@ -619,7 +610,7 @@
         "license:spdx",
         "link_target:product.enterprise"
       ],
-      "rationale": "The license paragraph is verified and preserved as written.",
+      "rationale": "The paragraph correctly describes the MIT license; facts confirm SPDX and file location.",
       "unit_id": "inherited_unit:057.paragraph"
     }
   ]

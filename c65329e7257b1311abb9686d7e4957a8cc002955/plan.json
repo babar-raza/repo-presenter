@@ -12,12 +12,12 @@
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Workbook and worksheet management",
+      "Read and write Excel workbooks",
       "Cell styling and formatting",
       "Data validation and conditional formatting",
-      "Load diagnostics and repair",
-      "Embedded content support",
-      "Chart and shape rendering"
+      "Chart and shape support",
+      "Page setup and print layout",
+      "Comments, pictures, and hyperlinks"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -25,14 +25,15 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "example:001",
-        "public_symbol:org.aspose.cells_foss"
+        "identity:ecosystem",
+        "package:name",
+        "package:version",
+        "example:001"
       ],
       "shared_fact_ids": [
-        "example:001",
-        "public_symbol:org.aspose.cells_foss"
+        "example:001"
       ],
-      "title": "Workbook and worksheet management"
+      "title": "Read and write Excel workbooks"
     },
     {
       "fact_ids": [
@@ -57,13 +58,12 @@
     },
     {
       "fact_ids": [
-        "example:002",
         "public_symbol:org.aspose.cells_foss"
       ],
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Load diagnostics and repair"
+      "title": "Chart and shape support"
     },
     {
       "fact_ids": [
@@ -72,7 +72,7 @@
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Embedded content support"
+      "title": "Page setup and print layout"
     },
     {
       "fact_ids": [
@@ -81,18 +81,44 @@
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Chart and shape rendering"
+      "title": "Comments, pictures, and hyperlinks"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "link_target:009",
-        "link_target:010",
-        "link_target:product.enterprise"
+        "link_target:009"
+      ],
+      "section_id": "banner",
+      "text": "The banner image link was moved from the badges section to the banner section per disposition."
+    },
+    {
+      "fact_ids": [
+        "link_target:010"
       ],
       "section_id": "enterprise_relationship",
-      "text": "The banner image link was moved from the badges section to the enterprise_relationship section to align with the product relationship facts."
+      "text": "The banner image alt text and link target were moved to the enterprise relationship section per disposition."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section_id": "quick_start",
+      "text": "The second Quick Start example (LoadWorkbook) was omitted because its example fact is CONTRADICTED per dispositions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section_id": "api_reference",
+      "text": "The Interfaces and Enumerations headings were omitted per dispositions; the Core API table already covers all public symbols."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:044.html_block"
+      ],
+      "section_id": "api_reference",
+      "text": "The orphaned closing HTML tag was omitted per disposition."
     }
   ],
   "flagship_example_id": "example:003",
@@ -144,7 +170,7 @@
   ],
   "material_limitations": [],
   "quick_start_example_id": "example:001",
-  "second_quick_start_example_id": "example:002",
+  "second_quick_start_example_id": null,
   "sections": [
     {
       "include": true,

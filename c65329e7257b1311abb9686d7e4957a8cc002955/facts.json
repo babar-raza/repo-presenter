@@ -5470,7 +5470,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 1: EXECUTED; compiled against the product's own classes; javac 21.0.12.1; imports supplied: java.io.*, java.util.*, org.aspose.cells_foss.*",
+          "detail": "example 1: EXECUTED; compiled against the product's own classes; javac 21.0.12.1; imports supplied: java.io.*, java.util.*, org.aspose.cells_foss.*; ran (exit 0)",
           "path": "receipts.json"
         }
       ],
@@ -5480,9 +5480,7 @@
       "value": "import org.aspose.cells_foss.Cell;\nimport org.aspose.cells_foss.Style;\nimport org.aspose.cells_foss.Workbook;\nimport org.aspose.cells_foss.Worksheet;\n\npublic class Main {\n    public static void main(String[] args) {\n        try (Workbook workbook = new Workbook()) {\n            Worksheet sheet = workbook.getWorksheets().get(0);\n            sheet.setName(\"Report\");\n\n            sheet.getCells().get(\"A1\").putValue(\"Revenue\");\n            sheet.getCells().get(\"B1\").putValue(12500.75);\n\n            Cell total = sheet.getCells().get(\"B1\");\n            Style style = total.getStyle();\n            style.getFont().setBold(true);\n            style.setCustom(\"#,##0.00\");\n            total.setStyle(style);\n\n            sheet.getCells().getRows().get(0).setHeight(22.0);\n            sheet.getCells().getColumns().get(1).setWidth(14.5);\n\n            workbook.save(\"report.xlsx\");\n        }\n    }\n}\n"
     },
     {
-      "attributes": {
-        "prelude": "import java.io.*;\nimport java.util.*;\nimport org.aspose.cells_foss.*;"
-      },
+      "attributes": null,
       "confidence": 1.0,
       "evidence": [
         {
@@ -5490,13 +5488,13 @@
           "path": "README.md"
         },
         {
-          "detail": "example 2: EXECUTED; compiled against the product's own classes; javac 21.0.12.1; imports supplied: java.io.*, java.util.*, org.aspose.cells_foss.*",
+          "detail": "example 2: FAILED; compiled against the product's own classes; javac 21.0.12.1; imports supplied: java.io.*, java.util.*, org.aspose.cells_foss.*; ran and threw org.aspose.cells_foss.WorkbookLoadException: Failed to open file.",
           "path": "receipts.json"
         }
       ],
       "id": "example:002",
       "kind": "example",
-      "polarity": "SUPPORTED",
+      "polarity": "CONTRADICTED",
       "value": "import org.aspose.cells_foss.LoadIssue;\nimport org.aspose.cells_foss.LoadOptions;\nimport org.aspose.cells_foss.Workbook;\n\npublic class LoadWorkbook {\n    public static void main(String[] args) {\n        LoadOptions options = new LoadOptions();\n        options.setStrictMode(false);\n        options.setTryRepairPackage(true);\n        options.setTryRepairXml(true);\n\n        try (Workbook workbook = new Workbook(\"input.xlsx\", options)) {\n            if (workbook.getLoadDiagnostics().hasRepairs()) {\n                for (LoadIssue issue : workbook.getLoadDiagnostics().getIssues()) {\n                    System.out.println(issue.getMessage());\n                }\n            }\n\n            workbook.getDocumentProperties().setAuthor(\"cells-foss\");\n            workbook.save(\"output.xlsx\");\n        }\n    }\n}\n"
     },
     {
@@ -5510,7 +5508,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 3: EXECUTED; compiled against the product's own classes; javac 21.0.12.1; imports supplied: java.io.*, java.util.*, org.aspose.cells_foss.*",
+          "detail": "example 3: EXECUTED; compiled against the product's own classes; javac 21.0.12.1; imports supplied: java.io.*, java.util.*, org.aspose.cells_foss.*; ran (exit 0)",
           "path": "receipts.json"
         }
       ],
