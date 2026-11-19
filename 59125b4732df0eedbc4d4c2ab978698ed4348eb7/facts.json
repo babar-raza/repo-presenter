@@ -1220,20 +1220,20 @@
     },
     {
       "attributes": null,
-      "confidence": 1.0,
+      "confidence": 0.5,
       "evidence": [
         {
           "detail": "lines 108-115; csharp fence; unit inherited_unit:027.code_block",
           "path": "README.md"
         },
         {
-          "detail": "example 1: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
+          "detail": "example 1: NEEDS_INPUT; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
           "path": "receipts.json"
         }
       ],
       "id": "example:001",
       "kind": "example",
-      "polarity": "SUPPORTED",
+      "polarity": "UNRESOLVED",
       "value": "using System.IO;\nusing Aspose.Email.Foss.Msg;\n\nusing var stream = File.OpenRead(\"sample.msg\");\nvar message = MapiMessage.FromStream(stream);\nConsole.WriteLine(message.Subject);\n"
     },
     {
@@ -1245,7 +1245,7 @@
           "path": "README.md"
         },
         {
-          "detail": "example 2: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
+          "detail": "example 2: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100; ran (exit 0)",
           "path": "receipts.json"
         }
       ],
@@ -1256,38 +1256,38 @@
     },
     {
       "attributes": null,
-      "confidence": 1.0,
+      "confidence": 0.5,
       "evidence": [
         {
           "detail": "lines 142-152; csharp fence; unit inherited_unit:034.code_block",
           "path": "README.md"
         },
         {
-          "detail": "example 3: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
+          "detail": "example 3: NEEDS_INPUT; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
           "path": "receipts.json"
         }
       ],
       "id": "example:003",
       "kind": "example",
-      "polarity": "SUPPORTED",
+      "polarity": "UNRESOLVED",
       "value": "using System.IO;\nusing Aspose.Email.Foss.Msg;\n\nusing var input = File.OpenRead(\"message.eml\");\nvar message = MapiMessage.LoadFromEml(input);\nusing var msgOutput = File.Create(\"message.msg\");\nmessage.Save(msgOutput);\nusing var emlOutput = File.Create(\"roundtrip.eml\");\nmessage.SaveToEml(emlOutput);\n"
     },
     {
       "attributes": null,
-      "confidence": 1.0,
+      "confidence": 0.5,
       "evidence": [
         {
           "detail": "lines 160-171; csharp fence; unit inherited_unit:037.code_block",
           "path": "README.md"
         },
         {
-          "detail": "example 4: EXECUTED; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100",
+          "detail": "example 4: NEEDS_INPUT; compiled against Aspose.Email.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
           "path": "receipts.json"
         }
       ],
       "id": "example:004",
       "kind": "example",
-      "polarity": "SUPPORTED",
+      "polarity": "UNRESOLVED",
       "value": "using Aspose.Email.Foss.Cfb;\n\nusing var cfb = CfbReader.FromFile(\"sample.msg\");\nConsole.WriteLine($\"Sector size: {cfb.SectorSize}\");\nConsole.WriteLine($\"Directory entries: {cfb.DirectoryEntryCount}\");\n\nforeach (var (depth, entry) in cfb.IterTree())\n{\n    Console.WriteLine(new string(' ', depth * 2) + entry.Name);\n}\n"
     },
     {
