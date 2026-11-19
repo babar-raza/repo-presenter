@@ -1,0 +1,122 @@
+{
+ "history": [
+  {
+   "at": "2026-11-19T16:04:45+00:00",
+   "classes": [
+    "BC-02|unresolved|no_install_command_fact",
+    "live_readme_loss|inherited_unit|heading"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44559904278",
+   "source_revision": "a7b05fdd3a51e1a87660254cf09519d3dc74a9f2",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  }
+ ],
+ "lane": "R",
+ "latest": {
+  "at": "2026-11-19T16:04:45+00:00",
+  "classes": {
+   "BC-02|unresolved|no_install_command_fact": {
+    "example": "no install command fact; the source install is not verified at this revision",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-02",
+    "scope": "a41087b3b4293f6e22b053ad2deedfbc6c26169b6cb1e8c903a10d23e21c795f",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "no_install_command_fact",
+    "upstream": ""
+   },
+   "live_readme_loss|inherited_unit|heading": {
+    "example": "Installation",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:008.heading"
+    ],
+    "rule": "live_readme_loss",
+    "scope": "f84688c5fead6d3a246ec6a0d156c89dfdfdf7acaf520ff873982b7b1f06e03f",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "heading",
+    "upstream": ""
+   }
+  },
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (heading 'Installation')",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Installation'",
+    "origin": {
+     "id": "inherited_unit:008.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Installation",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "BC-02",
+    "message": "no install command fact; the source install is not verified at this revision",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-02",
+    "section_id": "",
+    "signature": "BC-02|unresolved|no_install_command_fact",
+    "source": "validation",
+    "sub_rule": "no_install_command_fact",
+    "upstream": ""
+   }
+  ],
+  "lane": "R",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "origin": "hosted",
+  "outcome": "failure",
+  "repairs": [],
+  "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
+  "run_id": "44559904278",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44559904278",
+  "schema_version": 1,
+  "source_revision": "a7b05fdd3a51e1a87660254cf09519d3dc74a9f2",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+ },
+ "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
+ "schema_version": 1
+}
