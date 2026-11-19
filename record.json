@@ -5,7 +5,7 @@
   "provider_repository_id": 1426901814,
   "registry_revision": null,
   "active_transaction_id": "5073002602e84d8ebf2d79701cae92ea",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 68277adca33b: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-13T13:04:30.905251+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-19T15:59:33.454690+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 14,
+  "state_version": 15,
   "recent_trigger_dedup_keys": {
     "run:43423561117:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "c2fe112917fc4cbaa4d7c9d0a6680343",
     "run:43672437897:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "5073002602e84d8ebf2d79701cae92ea"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
