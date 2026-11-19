@@ -49,23 +49,67 @@
    "run_id": "44557740951",
    "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T18:40:50+00:00",
+   "classes": [
+    "llm:factuality|unresolved|documentation_resources",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44588563439",
+   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T15:45:35+00:00",
+  "at": "2026-11-19T18:40:50+00:00",
   "classes": {
-   "job_error|job_error|unknown:no_valid_independent_review": {
-    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u12 (api_reference, documentation_resources, scope_limitations): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F02: a contradiction finding must cite at least one product fact (not only inherited text)",
+   "llm:factuality|unresolved|documentation_resources": {
+    "example": "- **[Full API reference](https://reference.aspose.org/html/python/)** \u2014 the complete, browsable reference for all 303 public types.",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "unresolved",
     "origins": [
-     "unknown"
+     "-"
     ],
-    "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "unknown:no_valid_independent_review",
+    "rule": "llm:factuality",
+    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "documentation_resources",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|scope_limitations": {
+    "example": "See [Aspose.HTML for Python \u2014 Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   },
@@ -73,25 +117,40 @@
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u12 (api_reference, documentation_resources, scope_limitations): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F02: a contradiction finding must cite at least one product fact (not only inherited text)",
-   "kind": "unknown",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "unknown",
-    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u12 (api_reference, documentation_resources, scope_limitations): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F02: a contradiction finding must cite at least one product fact (not only inherited text)",
+    "label": "F01",
+    "message": " - **[Full API reference](https://reference.aspose.org/html/python/)** \u2014 the complete, browsable reference for all 303 public types.",
     "origin": {
-     "id": "unknown",
-     "kind": "job_error"
+     "id": "-",
+     "kind": "unresolved"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|unknown:no_valid_independent_review",
-    "source": "job",
-    "sub_rule": "unknown:no_valid_independent_review",
+    "quote": "- **[Full API reference](https://reference.aspose.org/html/python/)** \u2014 the complete, browsable reference for all 303 public types.",
+    "rule": "llm:factuality",
+    "section_id": "documentation_resources",
+    "signature": "llm:factuality|unresolved|documentation_resources",
+    "source": "review",
+    "sub_rule": "documentation_resources",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": " It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "See [Aspose.HTML for Python \u2014 Enterprise Edition](https://products.aspose.com/html/python-net/). It adds full `CSS` selector and pseudo-class coverage, constraint validation, image and PDF rendering, and unrestricted JavaScript execution.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|unresolved|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   ],
@@ -99,10 +158,35 @@
   "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F03",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F02",
+    "outcome": "unrepairable",
+    "reason": "section documentation_resources is deterministic; its blocks change only when facts change",
+    "section_id": "documentation_resources",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
-  "run_id": "44557740951",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44557740951",
+  "run_id": "44588563439",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44588563439",
   "schema_version": 1,
   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
