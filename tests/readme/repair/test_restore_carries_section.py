@@ -90,9 +90,13 @@ def test_a_kept_unit_prints_a_dead_link_as_its_label_and_every_other_character_a
     assert DEAD not in {link.href for link in extract_links(printed)}
 
 
-def test_negative_control_a_link_not_proven_dead_is_left_as_written() -> None:
-    # UNRESOLVED (the check never answered) is not evidence the target is gone: nothing changes.
-    assert kept_unit_form(UNIT, TWO_WAYS, _omr_facts("UNRESOLVED")) == TWO_WAYS
+def test_negative_control_a_verified_link_is_left_as_written() -> None:
+    # SUPPORTED (the check answered) changes nothing. UNRESOLVED (the check never answered) is not
+    # evidence the target is gone, but BC-06 blocks printing it as a link, so since BL-360 a kept
+    # unit prints it as its label exactly like a dead one (test_unverified_link_bl360).
+    assert kept_unit_form(UNIT, TWO_WAYS, _omr_facts("UNRESOLVED")) == kept_unit_form(
+        UNIT, TWO_WAYS, _omr_facts()
+    )
     assert without_contradicted_links(TWO_WAYS, _omr_facts("SUPPORTED")) == TWO_WAYS
 
 
