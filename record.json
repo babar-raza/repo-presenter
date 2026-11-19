@@ -63,56 +63,24 @@
    "run_id": "44384792818",
    "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T16:44:57+00:00",
+   "classes": [
+    "llm:factuality|unresolved|documentation_resources"
+   ],
+   "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44558270449",
+   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-18T20:54:10+00:00",
+  "at": "2026-11-19T16:44:57+00:00",
   "classes": {
-   "llm:factuality|authored_unit|api_reference": {
-    "example": "| `WarichuWTElement` | Warichu text (WT) content element. |",
-    "findings": 1,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "api_reference.type:public_symbol:aspose.pdf.logicalstructure.warichuwtelement"
-    ],
-    "rule": "llm:factuality",
-    "scope": "03f582d5896b02050efaf55359d5b682bc45406eba8ebaebe387fdef3fd8769a",
-    "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|inherited_unit|development_testing": {
-    "example": "No optional third-party package dependencies.",
-    "findings": 2,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:024.paragraph",
-     "inherited_unit:228.paragraph"
-    ],
-    "rule": "llm:factuality",
-    "scope": "83aaaef71fd035b627b361595daddc4b5294d8fac91c10838d57adf73d43ca72",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "development_testing",
-    "upstream": ""
-   },
    "llm:factuality|unresolved|documentation_resources": {
     "example": "- **[Full API reference](https://reference.aspose.org/pdf/net/)** \u2014 the complete, browsable reference for all 968 public types (the API Reference section above covers the essentials).",
     "findings": 1,
@@ -121,7 +89,7 @@
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "d647a0e42475b8fdb8a2b5e0fb471a696f44137aa4a8c6d327ab3edd0a42fabb",
+    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -134,58 +102,21 @@
     ],
     "sub_rule": "documentation_resources",
     "upstream": ""
-   },
-   "llm:factuality|unresolved|scope_limitations": {
-    "example": "See [Aspose.PDF for .NET \u2014 Enterprise Edition](https://products.aspose.com/pdf/net/). The commercial product adds features not implemented in this package, including digital signing, encryption, form filling, and advanced rendering to image and office formats.",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "llm:factuality",
-    "scope": "d647a0e42475b8fdb8a2b5e0fb471a696f44137aa4a8c6d327ab3edd0a42fabb",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "scope_limitations",
-    "upstream": ""
    }
   },
-  "code": "e4a80219e2aa6d92987d86494123c5055d59fffb891478502c4a81f845d6fd61",
+  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in development_testing blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "F01",
-    "message": "The table includes `WarichuWTElement` with description 'Warichu text (WT) content element.'",
-    "origin": {
-     "id": "api_reference.type:public_symbol:aspose.pdf.logicalstructure.warichuwtelement",
-     "kind": "authored_unit"
-    },
-    "quote": "| `WarichuWTElement` | Warichu text (WT) content element. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "The list states '[Full API reference](https://reference.aspose.org/pdf/net/) \u2014 the complete, browsable reference for all 968 public types (the API Reference section above covers the essentials).'",
+    "message": "The API Reference section above covers the essentials. (+1 identical findings merged)",
     "origin": {
      "id": "-",
      "kind": "unresolved"
@@ -197,66 +128,13 @@
     "source": "review",
     "sub_rule": "documentation_resources",
     "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "The commercial product adds features not implemented in this package, including digital signing, encryption, form filling, and advanced rendering to image and office formats.",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "See [Aspose.PDF for .NET \u2014 Enterprise Edition](https://products.aspose.com/pdf/net/). The commercial product adds features not implemented in this package, including digital signing, encryption, form filling, and advanced rendering to image and office formats.",
-    "rule": "llm:factuality",
-    "section_id": "scope_limitations",
-    "signature": "llm:factuality|unresolved|scope_limitations",
-    "source": "review",
-    "sub_rule": "scope_limitations",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "No optional third-party package dependencies.",
-    "origin": {
-     "id": "inherited_unit:024.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "No optional third-party package dependencies.",
-    "rule": "llm:factuality",
-    "section_id": "development_testing",
-    "signature": "llm:factuality|inherited_unit|development_testing",
-    "source": "review",
-    "sub_rule": "development_testing",
-    "upstream": ""
-   },
-   {
-    "label": "F05",
-    "message": "The test project (`Aspose.Pdf.Foss.Tests`) is an xUnit suite that runs on net8.0, net10.0 and net48 (add `-f net8.0` to run one target); every runnable example in this README traces back to a real test method in `tests/` \u2014 including `tests/AnnotationCreationTests.cs`, `tests/Actions/PdfActionTests.cs`, `tests/ChoiceFieldOptionsTests.cs`, and `tests/Content/ContentExtractionTests.cs`. CI runs the same restore/build/test sequence on Windows via [`.github/workflows/build.yml`](.github/workflows/bui",
-    "origin": {
-     "id": "inherited_unit:228.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "The test project (`Aspose.Pdf.Foss.Tests`) is an xUnit suite that runs on net8.0, net10.0 and net48 (add `-f net8.0` to run one target); every runnable example in this README traces back to a real test method in `tests/` \u2014 including `tests/AnnotationCreationTests.cs`, `tests/Actions/PdfActionTests.c",
-    "rule": "llm:factuality",
-    "section_id": "development_testing",
-    "signature": "llm:factuality|inherited_unit|development_testing",
-    "source": "review",
-    "sub_rule": "development_testing",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "c4df9986528908ac0465c873fac5864913b9ecfb",
+  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
-   {
-    "facts_defects": [],
-    "label": "F04",
-    "outcome": "unrepairable",
-    "reason": "section development_testing is deterministic; its blocks change only when facts change",
-    "section_id": "development_testing",
-    "stage": null
-   },
    {
     "facts_defects": [],
     "label": "F02",
@@ -283,48 +161,16 @@
    },
    {
     "facts_defects": [],
-    "label": "BC-05",
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: this revision makes BC-14 fail: the API table row for `NumberFormatList` names `Measure.NumberFormatList`, but `Aspose.Pdf.Annotations.Measure` has no member `NumberFormatList`",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0+claim_contradiction:1",
-    "outcome": "repaired",
-    "reason": "plan-level drop of hub:public_symbol:aspose.pdf.tagged, hub:public_symbol:aspose.pdf.comparison (blanked by the repair)",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F03",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "development_testing",
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
-  "run_id": "44384792818",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44384792818",
+  "run_id": "44558270449",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44558270449",
   "schema_version": 1,
   "source_revision": "1d21c95931c218dc9ddffad715257db5ed9c8e71",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
