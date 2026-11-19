@@ -24,71 +24,35 @@
    "run_id": "44590006162",
    "source_revision": "174c554e817586b0b397d308dd82c09515ab20a7",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T21:48:32+00:00",
+   "classes": [],
+   "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "44621121736",
+   "source_revision": "174c554e817586b0b397d308dd82c09515ab20a7",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T18:47:39+00:00",
-  "classes": {
-   "BC-02|unresolved|id_is_contradicted_package": {
-    "example": "install_command:maven is CONTRADICTED: package registry: distribution not found on maven; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-02",
-    "scope": "a41087b3b4293f6e22b053ad2deedfbc6c26169b6cb1e8c903a10d23e21c795f",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "id_is_contradicted_package",
-    "upstream": "package"
-   }
-  },
-  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-02; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "BC-02",
-    "message": "install_command:maven is CONTRADICTED: package registry: distribution not found on maven; PACKAGE_ABSENT: the registry lists no such package, and it becomes a source install only when the maintainers' README says it is unpublished and the repository documents a build",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-02",
-    "section_id": "",
-    "signature": "BC-02|unresolved|id_is_contradicted_package",
-    "source": "validation",
-    "sub_rule": "id_is_contradicted_package",
-    "upstream": "package"
-   }
-  ],
+  "at": "2026-11-19T21:48:32+00:00",
+  "classes": {},
+  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "R",
-  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
   "origin": "hosted",
-  "outcome": "failure",
+  "outcome": "success",
   "repairs": [],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
-  "run_id": "44590006162",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44590006162",
+  "run_id": "44621121736",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44621121736",
   "schema_version": 1,
   "source_revision": "174c554e817586b0b397d308dd82c09515ab20a7",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
