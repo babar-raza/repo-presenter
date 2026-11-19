@@ -95,22 +95,35 @@
    "run_id": "44589326365",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-19T22:00:13+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|renderer_fact|api_reference",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "44620313909",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T18:41:12+00:00",
+  "at": "2026-11-19T22:00:13+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
-    "example": "The `aspose_psd_foss.PsdImage` class represents a loaded Photoshop document and exposes its dimensions via `aspose_psd_foss.PsdImage.width` and `aspose_psd_foss.PsdImage.height`, its color mode via `aspose_psd_foss.PsdImage.color_mode`, its compression method via `aspose_psd_foss.PsdImage.compressio",
-    "findings": 2,
+    "example": "The public entry point is the `aspose_psd_foss` package. It provides the `aspose_psd_foss.PsdImage` class to load, inspect, and save Adobe Photoshop files, and the `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
+    "findings": 1,
     "origin_kind": "authored_unit",
     "origins": [
-     "api_reference.hub:public_symbol:aspose_psd_foss.psdimage",
      "api_reference.intro"
     ],
     "rule": "llm:factuality",
-    "scope": "b5e8056b406bdb67158619f6eabbd3c343bf592499bdd8e66a1d772970f29b73",
+    "scope": "d16cc107a98a7b3ad88fa84203a047630deb3fe6526e1221e799bd93a9afbf48",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -126,43 +139,20 @@
     "upstream": ""
    },
    "llm:factuality|renderer_fact|api_reference": {
-    "example": "Gets or sets the PSD image resources.",
-    "findings": 2,
+    "example": "Gets or sets the Aspose.PSD-compatible API version number.",
+    "findings": 1,
     "origin_kind": "renderer_fact",
     "origins": [
-     "public_symbol:aspose_psd_foss.psdimage.image_resources",
-     "public_symbol:aspose_psd_foss.psdimage.has_icc_profile"
+     "public_symbol:aspose_psd_foss.psdimage.version"
     ],
     "rule": "llm:factuality",
-    "scope": "6386b6372e4cc6c2a7ba142061e1c50867b82b313562163991ad2eff97122caa",
+    "scope": "0f8ed22c083cf2e7eb4d585aa84abb91b438463ea94a3314dd531cdb04fc829f",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
      "src/repo_presenter/extractors",
      "src/repo_presenter/readme/composition/renderer.py",
      "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|unresolved|api_reference": {
-    "example": "Gets the active layer.",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "llm:factuality",
-    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/review"
     ],
@@ -177,7 +167,7 @@
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "72689fe1ecd21ba262e1af14add3d2540eda7616eef28384fa06dd8cf014dd73",
+    "scope": "af438f9f5a68e8378088c4d052c0c027cfadb52a00c7833d817c62ebfa3ddaa1",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -192,84 +182,39 @@
     "upstream": ""
    }
   },
-  "code": "ae88a94f7cec93efe72eddc0e71109593848bd948ef1030016a7c1172ea93309",
+  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in scope_limitations blocks until a revis",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [contradiction] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "F01",
-    "message": "The `aspose_psd_foss.PsdImage` class represents a loaded Photoshop document and exposes its dimensions via `aspose_psd_foss.PsdImage.width` and `aspose_psd_foss.PsdImage.height`, its color mode via `aspose_psd_foss.PsdImage.color_mode`, its compression method via `aspose_psd_foss.PsdImage.compression`, the presence of layers via `aspose_psd_foss.PsdImage.has_layers`, the layer count via `aspose_psd_foss.PsdImage.layer_count`, the layers collection via `aspose_psd_foss.PsdImage.layers`, the prese",
+    "message": "The `aspose_psd_foss.PsdImage.version` property returns the Aspose.PSD-compatible API version number.",
     "origin": {
-     "id": "api_reference.hub:public_symbol:aspose_psd_foss.psdimage",
-     "kind": "authored_unit"
+     "id": "public_symbol:aspose_psd_foss.psdimage.version",
+     "kind": "renderer_fact"
     },
-    "quote": "The `aspose_psd_foss.PsdImage` class represents a loaded Photoshop document and exposes its dimensions via `aspose_psd_foss.PsdImage.width` and `aspose_psd_foss.PsdImage.height`, its color mode via `aspose_psd_foss.PsdImage.color_mode`, its compression method via `aspose_psd_foss.PsdImage.compressio",
+    "quote": "Gets or sets the Aspose.PSD-compatible API version number.",
     "rule": "llm:factuality",
     "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
+    "signature": "llm:factuality|renderer_fact|api_reference",
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
    },
    {
     "label": "F02",
-    "message": "Gets or sets the PSD image resources.",
-    "origin": {
-     "id": "public_symbol:aspose_psd_foss.psdimage.image_resources",
-     "kind": "renderer_fact"
-    },
-    "quote": "Gets or sets the PSD image resources.",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|renderer_fact|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "Gets whether an embedded ICC profile resource is present.",
-    "origin": {
-     "id": "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
-     "kind": "renderer_fact"
-    },
-    "quote": "Gets whether an embedded ICC profile resource is present.",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|renderer_fact|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "Gets the active layer.",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "Gets the active layer.",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F05",
-    "message": "The public entry point is the `aspose_psd_foss` package.",
+    "message": "The `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
     "origin": {
      "id": "api_reference.intro",
      "kind": "authored_unit"
     },
-    "quote": "The public entry point is the `aspose_psd_foss` package.  ",
+    "quote": "The public entry point is the `aspose_psd_foss` package. It provides the `aspose_psd_foss.PsdImage` class to load, inspect, and save Adobe Photoshop files, and the `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -278,7 +223,7 @@
     "upstream": ""
    },
    {
-    "label": "F06",
+    "label": "F03",
     "message": "It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment layers, and enterprise-grade features such as multi-threaded processing and cloud-based rendering.",
     "origin": {
      "id": "-",
@@ -294,13 +239,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "9476c1b058abd4350f5cf4586d81e2b26ccc6174",
+  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F03",
+    "label": "F04",
     "outcome": "unrepairable",
     "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
     "section_id": "scope_limitations",
@@ -308,24 +253,16 @@
    },
    {
     "facts_defects": [],
-    "label": "F01+F02",
+    "label": "F01+F02+F03",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F13",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "development_testing",
-    "stage": "S4"
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "44589326365",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44589326365",
+  "run_id": "44620313909",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44620313909",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
