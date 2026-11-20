@@ -7568,3 +7568,38 @@ fixed. Hosted re-run of Slides C++ is the proof (R41, unproven). R9: no README w
 R10: no seal touched. R14: nothing dropped, the change only keeps content.
 
 Backlog: BL-420
+
+## 2026-11-20: BL-460 -- an omitted list longer than the section can owe is trimmed to the facts it owes instead of failing the candidate (Slides C++)
+
+Hosted re-run 44673592648 (main 3b07ba8, past BL-420) failed in section_authoring: `output rejected three times ... last
+rejection: $.omitted: [31 entries] is too long`. Investigation (zero provider calls, from the log text): the units were
+accepted by every check; only the schema's `maxItems` on `omitted` refused the reply, identically three times. That bound is
+`output_bounds.omittable_count`, the distinct facts the task offers (accepted facts, must-carry units, slot-bound facts; BL-082
+decided to bound the internal accounting rather than raise the budget). The reply's units are about 1650 characters, so the
+token-budget cap (`omitted_cap`) cannot be the binding one; the bound was the offered count. The model listed 31 distinct ids,
+among them the `do_not_claim` records (contradicted examples 001-007, unresolved formats) that no accepted-facts list offers.
+Why: the authoring prompt says every accepted fact is cited or listed in `omitted`, an invitation to account for everything it
+sees; the schema and the prompt are both older than the do_not_claim records and neither is wrong on its own.
+Alternatives (R36): (b) correct the validator: it is right, an `omitted` entry for a fact never offered is not accounting for
+anything owed, and widening the bound to the do_not_claim ids would only make the reply longer (the risk BL-082 closed);
+(c) bound the packet: the packet is the facts the section needs, it cannot shrink; changing the prompt would move the request
+hash and every candidate's version set, and is out of scope. Chosen (a): `authoring_retry.recover_unowed_omissions`, the first
+step of `recover_authoring_output` and `recover_opening_output` (the existing recover hooks, BL-220 pattern, run after the last
+ask): an entry for a fact the task never offered, or a repeated id, is dropped (the first entry of an id kept); everything a
+check reads (must-carry omissions, API-row fallback entries, entries for offered facts) stays. `carried_unit_errors` reads only
+must-carry ids, which are offered. `omitted` is internal accounting, never printed in a README. Every dropped entry is a
+RECOVERY_NOTES record (rule BL-460, fact id, reason, why) in the `.repaired-<attempt>.json` record (R14), and run_job judges the
+trimmed reply again through the real schema, binding and checks, so a unit that is itself wrong still fails closed. No prompt,
+schema, bound, threshold, renderer or version constant moves.
+Property improved: robust and universal (a model's over-long accounting no longer costs the candidate), measured offline by
+`tests/readme/composition/test_unowed_omissions_bl460.py` built from the log's own rejection text (31 entries copied verbatim;
+the job raises without the recovery and completes with it) with negative controls. Class size: pass3 and pass4 failure records:
+PDF C++ (runs 43650797919 and 44313184309, later sealed) and now Slides C++, 2 cells and 3 hosted failures. Not changed: the
+prompt that invites the exhaustive list, and PDF Go's source_reconciliation fact_ids rejection (different class).
+Evidence: `recertify --all --json --remote origin` on origin/main 3b07ba8 vs the branch is byte-identical (59 rows: Lane L 34 and Lane R 24 RECERTIFIED with readme_changed false, 1 Lane R row RECERTIFIED with readme_changed true on both; zero provider calls); this path is not exercised by recertify (it runs only when a model reply is rejected), so it proves no seal moves and Lane L is unchanged, not that the hosted cell is fixed. GATE_EVIDENCE_PLACEHOLDER
+Unproven: the hosted re-run of Slides C++ (R41); that the offered count is the bound there was inferred from the reply size
+because the task cannot be rebuilt offline (the cell has no stored bundle). If an entry for an offered fact were the cause the
+trim would find nothing and the reply would still fail closed, as before. R9: no README wording moves. R10: no seal touched.
+R14: no README content dropped; only internal accounting entries, each recorded.
+
+Backlog: BL-460
