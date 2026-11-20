@@ -5,7 +5,7 @@
   "provider_repository_id": 1185448261,
   "registry_revision": null,
   "active_transaction_id": "b1624eb3565d47759d52943b57b1b88e",
-  "state": "ACCEPTED",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-12; nothing sealed",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-20T00:32:42.615904+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44644760803",
     "acquired_at": "2026-11-20T00:20:05.452899+00:00",
@@ -26,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "423d772a842c423db1271899258864fe",
+    "transition_id": "51d90b47207c422e9e618c5871f94b31",
     "transaction_id": "b1624eb3565d47759d52943b57b1b88e",
     "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-    "from_state": "REVIEWING",
-    "to_state": "ACCEPTED",
-    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
-    "occurred_at": "2026-11-19T21:39:22.953760+00:00",
+    "from_state": "ACCEPTED",
+    "to_state": "INVALIDATED",
+    "event": "present.yml hosted transaction failed",
+    "occurred_at": "2026-11-20T00:32:42.178023+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
     "output_manifest": "candidates/aspose-slides-foss__Aspose.Slides-FOSS-for-Java/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 57,
+  "state_version": 58,
   "recent_trigger_dedup_keys": {
     "run:41112860184:aspose-slides-foss/Aspose.Slides-FOSS-for-Java": "1e333ad4250b44d9a344769a33adb6f4",
     "run:41180170192:aspose-slides-foss/Aspose.Slides-FOSS-for-Java": "f422e69edfe14c2c98b60607b4fcc1b2",
