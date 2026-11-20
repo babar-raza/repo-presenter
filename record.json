@@ -79,71 +79,187 @@
    "run_id": "44644760803",
    "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T08:46:59+00:00",
+   "classes": [
+    "BC-17|inherited_unit|technical_content",
+    "live_readme_loss|inherited_unit|link_https"
+   ],
+   "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+   "findings": 6,
+   "outcome": "failure",
+   "run_id": "44702140598",
+   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:32:50+00:00",
+  "at": "2026-11-20T08:46:59+00:00",
   "classes": {
-   "BC-12|unresolved|product_name_q_is": {
-    "example": "product name 'Aspose.Slides FOSS' is not the canonical name 'Aspose.Slides FOSS for Java'",
-    "findings": 1,
-    "origin_kind": "unresolved",
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:084.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 3,
+    "origin_kind": "inherited_unit",
     "origins": [
-     "-"
+     "inherited_unit:084.list"
     ],
-    "rule": "BC-12",
-    "scope": "2feda7ee1a134961f647ec6251bf65c52daf825c87cfe06cb6cee5363282c918",
+    "rule": "BC-17",
+    "scope": "20a52933d320ef8bb891b1c057abe59286702ebd966d2bc20f51b5d7abcc1fba",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
      "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "product_name_q_is",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   "live_readme_loss|inherited_unit|link_https": {
+    "example": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+    "findings": 3,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:084.list"
+    ],
+    "rule": "live_readme_loss",
+    "scope": "18578a6ef73fe6ab81faedb8b05faa98fe53e7e457a03d18fb2845045c9df4ce",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "link_https",
     "upstream": ""
    }
   },
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-12; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp); live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-12",
-    "message": "product name 'Aspose.Slides FOSS' is not the canonical name 'Aspose.Slides FOSS for Java'",
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|link_https",
+    "source": "review",
+    "sub_rule": "link_https",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+    "origin": {
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|link_https",
+    "source": "review",
+    "sub_rule": "link_https",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: link https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+    "origin": {
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|link_https",
+    "source": "review",
+    "sub_rule": "link_https",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:084.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-.NET', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
     },
     "quote": "",
-    "rule": "BC-12",
-    "section_id": "documentation_resources",
-    "signature": "BC-12|unresolved|product_name_q_is",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
     "source": "validation",
-    "sub_rule": "product_name_q_is",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:084.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:084.list holds links 'https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Python', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:084.list: still DEFER_UNRESOLVED, which is the defect: deferring it loses its content. Keep it as written in a section that can hold it (opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship), or omit it citing the fact that contradicts it",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-  "run_id": "44644760803",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44644760803",
+  "run_id": "44702140598",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44702140598",
   "schema_version": 1,
   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
