@@ -57,7 +57,7 @@ from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.errors import PresenterError
 from repo_presenter.core.facts import FactsDocument, read_facts, write_facts
 from repo_presenter.core.git_safety.git import run_git
-from repo_presenter.core.llm.jobs import CallStore, JobContext, run_job
+from repo_presenter.core.llm.jobs import CallStore, ContextWindowError, JobContext, run_job
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import PromptRegistry, load_manifests
 from repo_presenter.core.noop_proof import Invocation, count_provider_calls, measure_invocation
@@ -66,6 +66,7 @@ from repo_presenter.core.registry.loader import load_registry, require_listed
 from repo_presenter.core.registry.models import RegistryEntry
 from repo_presenter.extractors.platforms.registry import plugin_for
 from repo_presenter.readme.composition.authoring import (
+    REQUEST_CHAR_CEILING,
     authoring_schema,
     authoring_tasks,
     merge_units,
@@ -79,6 +80,7 @@ from repo_presenter.readme.composition.authoring_retry import (
 )
 from repo_presenter.readme.composition.coherence import (
     apply_coherence,
+    bound_coherence_packet,
     coherence_batch_units,
     coherence_batches,
     coherence_checks,
@@ -311,6 +313,22 @@ def _run_planning(
     return result.output
 
 
+#: Tighter packets one context-window refusal may cost (BL-450): each is sized from the refused
+#: request's own measured characters per token, so one is normally enough.
+CONTEXT_RETRIES = 2
+#: Input tokens left unused beside ``max_output_tokens`` when a refused request is resized.
+CONTEXT_MARGIN_TOKENS = 16_000
+
+
+def _tighter_ceiling(exc: ContextWindowError, max_output_tokens: int) -> int:
+    """The character ceiling that puts the request ``exc`` refused inside its window: the
+    characters per token that request measured, over the input the window leaves beside
+    ``max_output_tokens`` and a margin, at 80% so the next request is not borderline."""
+    per_token = exc.request_chars / max(exc.input_tokens, 1)
+    room = exc.context_tokens - max_output_tokens - CONTEXT_MARGIN_TOKENS
+    return max(int(per_token * room * 0.8), 20_000)
+
+
 def _run_authoring(
     *, entry: RegistryEntry, document: FactsDocument, investigation: dict, dispositions: dict,
     plan: dict, prompts: PromptRegistry, config: GatewayConfig, ledger: Ledger, store: CallStore,
@@ -318,7 +336,28 @@ def _run_authoring(
 ) -> dict:
     loaded = prompts["section_authoring"]
     name = product_name(entry)
-    tasks = authoring_tasks(entry, document, investigation, dispositions, plan)
+    ceiling = REQUEST_CHAR_CEILING
+    for retry in range(CONTEXT_RETRIES + 1):
+        try:
+            return _author_sections(
+                loaded, name, authoring_tasks(
+                    entry, document, investigation, dispositions, plan, ceiling=ceiling
+                ),
+                document=document, dispositions=dispositions, config=config, ledger=ledger,
+                store=store, context=context,
+            )
+        except ContextWindowError as exc:
+            if retry == CONTEXT_RETRIES:
+                raise
+            ceiling = min(
+                ceiling - 1, _tighter_ceiling(exc, loaded.manifest.sampling.max_output_tokens)
+            )
+
+
+def _author_sections(
+    loaded, name: str, tasks: list, *, document: FactsDocument, dispositions: dict,
+    config: GatewayConfig, ledger: Ledger, store: CallStore, context: JobContext,
+) -> dict:
     outputs: dict[str, dict] = {}
     for task in tasks:
         call_schema = bound_authoring_citations(
@@ -342,6 +381,11 @@ def _run_authoring(
             context=context, call_schema=call_schema, checks=checks, recover=recover,
             narrow=authoring_narrowing(task, loaded),
         )
+        if task.bounded:
+            # R14: what the model was not shown of which fact, beside the stored call.
+            store.record_repairs(
+                result.request_sha256, 0, loaded.manifest.prompt_id, [], notes=task.bounded
+            )
         outputs[task.label] = result.output
     return merge_units(outputs)
 
@@ -358,7 +402,6 @@ def _run_coherence(
     current = units_document
     for _batch_id, batch_tasks in batches:
         existing = coherence_batch_units(current.get("units", []), batch_tasks)
-        packet = coherence_packet(entry, pre_coherence_readme, current, batch_tasks, document)
         call_schema = coherence_schema(loaded, existing, batch_tasks)
 
         def checks(output: dict, batch_tasks=batch_tasks, existing=existing) -> list[str]:
@@ -373,10 +416,29 @@ def _run_coherence(
                 name=name, dispositions=dispositions,
             )
 
-        result = run_job(
-            loaded, packet, config=config, facts=document, ledger=ledger, store=store,
-            context=context, call_schema=call_schema, checks=checks, recover=recover,
-        )
+        ceiling = REQUEST_CHAR_CEILING
+        for retry in range(CONTEXT_RETRIES + 1):
+            # BL-450: the packet carries the whole document and every accepted fact in full.
+            packet, bounded = bound_coherence_packet(
+                coherence_packet(entry, pre_coherence_readme, current, batch_tasks, document),
+                batch_tasks, ceiling,
+            )
+            try:
+                result = run_job(
+                    loaded, packet, config=config, facts=document, ledger=ledger, store=store,
+                    context=context, call_schema=call_schema, checks=checks, recover=recover,
+                )
+                break
+            except ContextWindowError as exc:
+                if retry == CONTEXT_RETRIES:
+                    raise
+                ceiling = min(
+                    ceiling - 1, _tighter_ceiling(exc, loaded.manifest.sampling.max_output_tokens)
+                )
+        if bounded:
+            store.record_repairs(
+                result.request_sha256, 0, loaded.manifest.prompt_id, [], notes=bounded
+            )
         current, _revised = apply_coherence(current, result.output)
     return current
 
