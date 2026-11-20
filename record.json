@@ -87,44 +87,33 @@
    "run_id": "44619285488",
    "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T00:21:07+00:00",
+   "classes": [
+    "llm:factuality|unresolved|key_capabilities"
+   ],
+   "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "44643689454",
+   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T21:38:29+00:00",
+  "at": "2026-11-20T00:21:07+00:00",
   "classes": {
-   "llm:factuality|authored_unit|opening": {
-    "example": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.smart_instancer.instantiate`, subsets fon",
-    "findings": 1,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "opening.opening"
-    ],
-    "rule": "llm:factuality",
-    "scope": "d16cc107a98a7b3ad88fa84203a047630deb3fe6526e1221e799bd93a9afbf48",
-    "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "opening",
-    "upstream": ""
-   },
    "llm:factuality|unresolved|key_capabilities": {
     "example": "- **Multi-format font loading.** It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `",
-    "findings": 4,
+    "findings": 3,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "af438f9f5a68e8378088c4d052c0c027cfadb52a00c7833d817c62ebfa3ddaa1",
+    "scope": "da63402f2530f8eec8886174b1dbfedabc22a68726f57744f149c2e66206f7ea",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -139,33 +128,18 @@
     "upstream": ""
    }
   },
-  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "F01",
-    "message": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) (+3 identical findings merged)",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "It opens TrueType (`.ttf`), CFF (`.cff`), and EOT (`.eot`) fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.smart_instancer.instantiate`, subsets fon",
-    "rule": "llm:factuality",
-    "section_id": "opening",
-    "signature": "llm:factuality|authored_unit|opening",
-    "source": "review",
-    "sub_rule": "opening",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
     "message": "It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `aspose_font.WoffFont` objects.",
     "origin": {
      "id": "-",
@@ -180,22 +154,7 @@
     "upstream": ""
    },
    {
-    "label": "F03",
-    "message": "It subsets fonts by text or by preset coverage using `aspose_font.FontSubsetter.subset_by_text` or `aspose_font.FontSubsetter.subset_by_presets`, and provides `aspose_font.FontSubsetter.available_presets` to discover supported coverage sets.",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "- **Font subsetting.** It subsets fonts by text or by preset coverage using `aspose_font.FontSubsetter.subset_by_text` or `aspose_font.FontSubsetter.subset_by_presets`, and provides `aspose_font.FontSubsetter.available_presets` to discover supported coverage sets.",
-    "rule": "llm:factuality",
-    "section_id": "key_capabilities",
-    "signature": "llm:factuality|unresolved|key_capabilities",
-    "source": "review",
-    "sub_rule": "key_capabilities",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
+    "label": "F02",
     "message": "It generates QA reports in JSON, HTML, Markdown, and PDF formats by calling `aspose_font.FontQaReporter.build_package` and writing the report using `aspose_font.FontQaReport.write_json`, `aspose_font.FontQaReport.write_html`, `aspose_font.FontQaReport.write_markdown`, and `aspose_font.FontQaReport.write_pdf`.",
     "origin": {
      "id": "-",
@@ -210,7 +169,7 @@
     "upstream": ""
    },
    {
-    "label": "F05",
+    "label": "F03",
     "message": "It renders color glyphs, SVG glyphs, and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph`, `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png`, and converts rasterized content to PNG using `aspose_font.Rasterizer.to_png` or animated PNG using `aspose_font.rasterizer.encode_apng_from_rgb`.",
     "origin": {
      "id": "-",
@@ -226,7 +185,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
+  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -241,15 +200,15 @@
    {
     "facts_defects": [],
     "label": "F01",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: unit opening: spells '.pfa/'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": "opening",
     "stage": "S6"
    }
   ],
   "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-  "run_id": "44619285488",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44619285488",
+  "run_id": "44643689454",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44643689454",
   "schema_version": 1,
   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
