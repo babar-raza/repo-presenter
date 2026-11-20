@@ -67,25 +67,83 @@
    "run_id": "44620545046",
    "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T00:32:50+00:00",
+   "classes": [
+    "BC-12|unresolved|product_name_q_is"
+   ],
+   "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44644760803",
+   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T21:39:30+00:00",
-  "classes": {},
-  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-20T00:32:50+00:00",
+  "classes": {
+   "BC-12|unresolved|product_name_q_is": {
+    "example": "product name 'Aspose.Slides FOSS' is not the canonical name 'Aspose.Slides FOSS for Java'",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-12",
+    "scope": "2feda7ee1a134961f647ec6251bf65c52daf825c87cfe06cb6cee5363282c918",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "product_name_q_is",
+    "upstream": ""
+   }
+  },
+  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-12; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-12",
+    "message": "product name 'Aspose.Slides FOSS' is not the canonical name 'Aspose.Slides FOSS for Java'",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-12",
+    "section_id": "documentation_resources",
+    "signature": "BC-12|unresolved|product_name_q_is",
+    "source": "validation",
+    "sub_rule": "product_name_q_is",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
+  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-  "run_id": "44620545046",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44620545046",
+  "run_id": "44644760803",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44644760803",
   "schema_version": 1,
   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
