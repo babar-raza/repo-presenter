@@ -165,71 +165,75 @@
    "run_id": "44673623844",
    "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T08:32:22+00:00",
+   "classes": [
+    "job_error|job_error|LaneStepFailure:the_lane_step_ended"
+   ],
+   "code": "78345847e22124df42df49034713e26f60fb4c1143519866608ba70a38a39b1c",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44691819075",
+   "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
+   "version_set": ""
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T04:58:51+00:00",
+  "at": "2026-11-20T08:32:22+00:00",
   "classes": {
-   "job_error|job_error|JobError:section_authoring_gateway_answered_http": {
-    "example": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 258818 input tokens (8000 > 262144 - 258818). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
+   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
+    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "JobError"
+     "LaneStepFailure"
     ],
     "rule": "job_error",
-    "scope": "2b912455710b5335b2107946c67cf1a6c7e0efbce645ecafc795c0f73b617c21",
-    "scope_paths": [
-     "prompts",
-     "pyproject.toml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
-    ],
-    "sub_rule": "JobError:section_authoring_gateway_answered_http",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
     "upstream": ""
    }
   },
-  "code": "3f38d472f5bec702e2be15af7504c2ca380299efa2aa67206fc3eecebfeb6ceb",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
+  "code": "78345847e22124df42df49034713e26f60fb4c1143519866608ba70a38a39b1c",
+  "durable_state": "",
+  "exit_code": null,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 258818 input tokens (8000 > 262144 - 258818). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
-   "kind": "JobError",
+   "classification": "unknown",
+   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "kind": "LaneStepFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "JobError",
-    "message": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 258818 input tokens (8000 > 262144 - 258818). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
+    "label": "LaneStepFailure",
+    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
     "origin": {
-     "id": "JobError",
+     "id": "LaneStepFailure",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|JobError:section_authoring_gateway_answered_http",
+    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
     "source": "job",
-    "sub_rule": "JobError:section_authoring_gateway_answered_http",
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "3b07ba82e5de09b15a992b4683e3f76518535061",
+  "main_sha": "400eb72376c8a983c3519bd030d22dc41351ae2b",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44673623844",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44673623844",
+  "run_id": "44691819075",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44691819075",
   "schema_version": 1,
   "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
-  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  "version_set": ""
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
  "schema_version": 1
