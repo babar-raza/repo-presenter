@@ -1352,6 +1352,7 @@ def _degrade_settled(
         corrected_authored,
         degrade_claims,
         duplicate_flags,
+        duplicate_opening_flags,
         verdict_flags,
     )
 
@@ -1360,6 +1361,7 @@ def _degrade_settled(
         *claim_flags(composed.readme, document),
         *verdict_flags(verdict.blocking_findings),
         *duplicate_flags(verdict.blocking_findings),
+        *duplicate_opening_flags(verdict.blocking_findings),
     ]
     old_ids, old_load = _blocking_load(settled.validation, settled.verdict)
     unchanged = (composed.plan, composed.coherent_units, composed.dispositions)
