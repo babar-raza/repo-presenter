@@ -292,7 +292,8 @@ def restore_lost_units(
 
     output = copy.deepcopy(dict(dispositions))
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
-    unit_ids, payloads = _with_lead_in_payloads(unit_ids, units)
+    ecosystem = next((f.value for f in facts.by_kind("identity") if f.id == "identity:ecosystem"), "")
+    unit_ids, payloads = _with_lead_in_payloads(unit_ids, units, ecosystem)
     before = {
         entry.get("unit_id"): (
             entry.get("disposition"), entry.get("destination_section"), entry.get("rationale"),
@@ -467,8 +468,24 @@ def restore_lost_units(
 _LEAD_IN_KINDS = frozenset({"paragraph", "list"})
 
 
+def owned_elsewhere(unit_id: str, units: Mapping[str, Any], ecosystem: str) -> bool:
+    """Whether ``unit_id`` is a code block ``placement`` never prints (``renders_verbatim``: an
+    example fence of this ecosystem, printed by the examples renderer, or a diagram), so a restore
+    to "kept as written" cannot print it."""
+    from repo_presenter.core.errors import ConfigError
+    from repo_presenter.readme.composition.placement import renders_verbatim
+
+    fact = units.get(unit_id)
+    if fact is None or unit_id.rsplit(".", 1)[-1] != "code_block":
+        return False
+    try:
+        return not renders_verbatim(unit_id, str(fact.value), ecosystem)
+    except ConfigError:
+        return False
+
+
 def _with_lead_in_payloads(
-    unit_ids: Sequence[str], units: Mapping[str, Any]
+    unit_ids: Sequence[str], units: Mapping[str, Any], ecosystem: str = ""
 ) -> tuple[list[str], dict[str, str]]:
     """``unit_ids`` plus the block each colon-ending lead-in among them introduces, and
     ``{payload: lead-in}`` for every such pair. A lead-in kept without its block is BC-07's dangling
@@ -489,6 +506,13 @@ def _with_lead_in_payloads(
             continue
         payload = _payload_of(unit_id, units)
         if payload is None:
+            continue
+        if owned_elsewhere(payload, units, ecosystem):
+            # BL-511: an example fence is printed by the examples renderer while its unit stays
+            # SUPERSEDE_REDUNDANT citing the example (``reconciliation.retained_examples``); keeping
+            # it "as written" here would hand it to ``placement`` ("owned elsewhere"), which prints
+            # nothing, and the example the README printed would be lost (hosted PDF TypeScript: 241,
+            # 304 and 410 code blocks, each a new BC-17 loss that discarded the whole restore).
             continue
         payloads[payload] = unit_id
         if payload not in wanted:

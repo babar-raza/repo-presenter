@@ -187,3 +187,46 @@ def test_a_unit_whose_restore_adds_an_unattributed_failure_is_found_and_rolled_b
     assert rows == {_GOOD: "VERIFIED_PRESERVE", _BAD: "SUPERSEDE_REDUNDANT"}
     assert [c["id"] for c in result.validation["checks"]] == ["BC-05"]
     assert _REFUSED == {_BAD}
+
+
+# --- BL-511: a restored unit that is itself a NEW loss is rolled back alone ----------------------
+# Hosted PDF TypeScript Lane R (run 44717025933): three restored code blocks became BC-17 losses the
+# candidate did not have (their restore took them out of the one place that printed them), and
+# ``_strictly_fewer_failures`` refused the restore as a whole: 102 recoverable losses stayed.
+
+
+def _validate_new_loss(candidate: Any, *a: Any, **k: Any) -> dict[str, Any]:
+    """_BAD restored = _BAD is a BC-17 loss; _GOOD restored = clean."""
+    checks = _validate(candidate)["checks"]
+    checks = [c for c in checks if c["id"] != "BC-14"]
+    if _BAD in _placed(candidate.dispositions):
+        detail = (
+            f"{_BAD} holds code_blocks 'x = 1', which the published README prints and this candidate "
+            "loses (technical_content): keep it"
+        )
+        checks.append(
+            {"id": "BC-17", "details": [detail], "failures": [{"detail": detail, "unit_id": _BAD}]}
+        )
+    return {"checks": checks}
+
+
+def test_a_restored_unit_that_becomes_a_new_loss_is_rolled_back_and_the_rest_is_kept(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    settled, result = _drive(monkeypatch, tmp_path, _validate_new_loss)
+    assert result.composed is not settled.composed
+    rows = {row["unit_id"]: row["disposition"] for row in result.composed.dispositions["dispositions"]}
+    assert rows == {_GOOD: "VERIFIED_PRESERVE", _BAD: "SUPERSEDE_REDUNDANT"}
+    assert _REFUSED == {_BAD}  # its loss goes on to the model repair, never withheld
+    record = json.loads((tmp_path / "restored_units.json").read_text(encoding="utf-8"))
+    assert [change["unit_id"] for change in record["restored"]] == [_GOOD]
+    assert {s["unit_id"]: s["reason"] for s in record["skipped_for_pointer"]} == {_BAD: "new_failure:BC-17"}
+
+
+def test_negative_control_without_the_attribution_the_whole_restore_is_discarded(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(cascade_module, "_new_loss_units", lambda *a, **k: {})
+    settled, result = _drive(monkeypatch, tmp_path, _validate_new_loss)
+    assert result.composed is settled.composed  # the guard discarded _GOOD's clean restore too
+    assert not (tmp_path / "restored_units.json").exists()
