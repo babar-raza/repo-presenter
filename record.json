@@ -5,7 +5,7 @@
   "provider_repository_id": 1250546660,
   "registry_revision": null,
   "active_transaction_id": "829c4d42dc5641c599385cfcbc14bc7d",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "1e5e237d8c2e4c88a38c0278480bbaf6",
-    "transaction_id": "448eb341fb514700bc5945502a805a20",
+    "transition_id": "be6e57fa85044cf79cd6c3c7e50a226f",
+    "transaction_id": "829c4d42dc5641c599385cfcbc14bc7d",
     "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-11-01T11:10:14.847208+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-20T12:12:38.690037+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-pdf-foss__Aspose.PDF-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 41,
+  "state_version": 42,
   "recent_trigger_dedup_keys": {
     "run:41298091280:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "448eb341fb514700bc5945502a805a20",
     "run:41303579390:aspose-pdf-foss/Aspose.PDF-FOSS-for-.NET": "f3097cd8c67844ca981292e0e2abf2a7",
