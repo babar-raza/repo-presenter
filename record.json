@@ -149,87 +149,35 @@
    "run_id": "44656351405",
    "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T03:12:12+00:00",
+   "classes": [],
+   "code": "8e3859509bd592e319beeb8938e2860b058a27a615be51da0bb74538d066af9f",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "44665689609",
+   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T01:54:25+00:00",
-  "classes": {
-   "llm:factuality|authored_unit|opening": {
-    "example": "Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files.",
-    "findings": 1,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "opening.opening"
-    ],
-    "rule": "llm:factuality",
-    "scope": "fb4d311493cc210ff42ce92cfb7d796c660319cef2b4e1c71fc29ee8255ee8c9",
-    "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "opening",
-    "upstream": ""
-   }
-  },
-  "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "F01",
-    "message": "Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files.",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files.",
-    "rule": "llm:factuality",
-    "section_id": "opening",
-    "signature": "llm:factuality|authored_unit|opening",
-    "source": "review",
-    "sub_rule": "opening",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-20T03:12:12+00:00",
+  "classes": {},
+  "code": "8e3859509bd592e319beeb8938e2860b058a27a615be51da0bb74538d066af9f",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "R",
-  "main_sha": "82b8ccbac847b04cfc0b797f5099c0b1315cf2ab",
+  "main_sha": "a2d37f69ba6c648e5e7c21e92b24ccc3aeac64ee",
   "origin": "hosted",
-  "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:058.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
-    "section_id": "api_reference",
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:058.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert\\nPS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to\\n`Raste",
-    "section_id": null,
-    "stage": "S4"
-   }
-  ],
+  "outcome": "success",
+  "repairs": [],
   "repository": "aspose-page-foss/Aspose.Page-FOSS-for-Python",
-  "run_id": "44656351405",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44656351405",
+  "run_id": "44665689609",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44665689609",
   "schema_version": 1,
   "source_revision": "43cef367cd0b2cf00cc03064ca9d29d1ff507967",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
