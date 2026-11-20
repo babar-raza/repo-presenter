@@ -20,6 +20,8 @@ from repo_presenter.core.facts import NON_IDENTIFIER_KINDS, Fact, FactsDocument
 from repo_presenter.readme.composition.authoring import (
     allowed_identifiers,
     cited_inherited_identifiers,
+    composed_identifier_allowed,
+    declared_type_texts,
     identifier_allowed,
     surface_members,
     unit_checks,
@@ -200,6 +202,13 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
         for fact in facts.by_kind(kind)
         if fact.polarity == "SUPPORTED"
     }
+    declared = declared_type_texts(facts)
+
+    def grounded(name: str) -> bool:
+        # A name in type position is a fact value (or a dotted suffix of one), never a bare method
+        # or member name: ``identifier_allowed`` admits those for a call or ``Class.member``.
+        return name in values or name in symbols or name in allowed
+
     placed_lines = {
         line for text in placed_texts(candidate) for line in text.splitlines()
     }
@@ -255,6 +264,7 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
                 span not in values
                 and span not in symbols
                 and not identifier_allowed(span, allowed, members, methods)
+                and not composed_identifier_allowed(span, grounded, declared)
             ):
                 failures.append(
                     Failure("COMPOSING", f"code span {span!r} is not a fact value")
