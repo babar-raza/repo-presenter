@@ -177,63 +177,83 @@
    "run_id": "44691819075",
    "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-20T08:39:24+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:source_reconciliation_id_uncited_prose_omit_omit_unsupported_on"
+   ],
+   "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44701825510",
+   "source_revision": "7b29333aed4ce6a1ebac41a22067613afea0b578",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T08:32:22+00:00",
+  "at": "2026-11-20T08:39:24+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "job_error|job_error|OutputRejectedError:source_reconciliation_id_uncited_prose_omit_omit_unsupported_on": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: inherited_unit:014.002.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"- **Hyphenation** \u2014 opt-in `hyphen",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepFailure"
+     "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "scope": "37efe7aa69f0b4628ebfaf0fd1083ea02dcc69306039b8a9b219d4d85fd066fc",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:source_reconciliation_id_uncited_prose_omit_omit_unsupported_on",
     "upstream": ""
    }
   },
-  "code": "78345847e22124df42df49034713e26f60fb4c1143519866608ba70a38a39b1c",
-  "durable_state": "",
-  "exit_code": null,
+  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
-   "kind": "LaneStepFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: inherited_unit:014.002.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"- **Hyphenation** \u2014 opt-in `hyphenate: { lang }` on `AddTextBlock`, Flow paragraphs and lists (or once on the flow), table cells and `AddMarkdown`: a word that does not fit breaks at the rightmost Liang-pattern point that fits, with a drawn hyphen, and a word wider than the whole column hyphenates before falling back to the plain split. Patterns for en-US, en-GB, de, fr, es, it, nl, pt and pl come from TeX's hyph-utf8 (`hyphenationLanguages()` lists them); a tag matches by RFC 4647, so `en` and `de-AT` work, and an unlisted regi",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: inherited_unit:014.002.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"- **Hyphenation** \u2014 opt-in `hyphen",
     "origin": {
-     "id": "LaneStepFailure",
+     "id": "OutputRejectedError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "signature": "job_error|job_error|OutputRejectedError:source_reconciliation_id_uncited_prose_omit_omit_unsupported_on",
     "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "sub_rule": "OutputRejectedError:source_reconciliation_id_uncited_prose_omit_omit_unsupported_on",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "400eb72376c8a983c3519bd030d22dc41351ae2b",
+  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44691819075",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44691819075",
+  "run_id": "44701825510",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44701825510",
   "schema_version": 1,
-  "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
-  "version_set": ""
+  "source_revision": "7b29333aed4ce6a1ebac41a22067613afea0b578",
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
  "schema_version": 1
