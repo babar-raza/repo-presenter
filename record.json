@@ -5,7 +5,7 @@
   "provider_repository_id": 1280033370,
   "registry_revision": null,
   "active_transaction_id": "d6503b95311a4bec8c7a7e9c663f5c13",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-06; nothing sealed",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-19T21:38:03.193350+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T08:24:45.977143+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 87,
+  "state_version": 88,
   "recent_trigger_dedup_keys": {
     "run:41149996795:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "27084422c2ed489697485041c13baa1e",
     "run:41154207665:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "7c7bda772f6d48339400dbdbc08191d7",
@@ -70,5 +70,5 @@
     "run:44619992187:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "5d0d69bcdfbc4c978ecdee3f1459b265",
     "run:44644297990:aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp": "d6503b95311a4bec8c7a7e9c663f5c13"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
