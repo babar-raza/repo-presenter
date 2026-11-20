@@ -7,7 +7,7 @@
   "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "fc04f52e6ea8de1661cf6cc2149d63369a61aad0f1bb48417deb71cfa04cc8dd",
+  "request_sha256": "0dfc7bbfaf63a8644518217a91b2fdb1c13e224732a43708b00d3139686ba17b",
   "retryable": false,
   "reviewer_logic_version": "10",
   "schema_version": 2,
@@ -16,8 +16,8 @@
       "findings": 0,
       "lines": [
         7,
-        104,
-        24
+        50,
+        6
       ],
       "m8": {
         "shape": null,
@@ -27,12 +27,10 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "ac72c07540f1bbc94432db50697457eb198e0ffe04fb517bd2c0c6d08671c882",
+      "request_sha256": "8fc2bfcde3b03d910c6b2b5fcdc9e78e0f79f8e010f7b93dc002f982355a98be",
       "sections": [
         "opening",
-        "key_capabilities",
-        "quick_start",
-        "additional_examples"
+        "key_capabilities"
       ],
       "status": "reviewed",
       "unit": "u1"
@@ -40,9 +38,9 @@
     {
       "findings": 0,
       "lines": [
-        129,
-        167,
-        24
+        108,
+        145,
+        23
       ],
       "m8": {
         "shape": null,
@@ -52,7 +50,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "96aa0510d9d32ae999d886dcb4eba5a1d301aa06a6894d86a9abec02ec523999",
+      "request_sha256": "1be7007750f3f26609267a0ec03702752f50bd67cc9b75a9a04a8171ca6cfe82",
       "sections": [
         "api_reference"
       ],
@@ -62,9 +60,9 @@
     {
       "findings": 0,
       "lines": [
-        168,
-        207,
-        25
+        146,
+        181,
+        27
       ],
       "m8": {
         "shape": null,
@@ -74,7 +72,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "2def234082a95e0bbb15edfdc60527f901b0bb297fa0542375f81f6e2b90fda2",
+      "request_sha256": "4f37f2f2b0df658ee0b382dcaf0b801b84b3514beaf14cfb99f6e7497a166404",
       "sections": [
         "api_reference"
       ],
@@ -84,8 +82,54 @@
     {
       "findings": 0,
       "lines": [
-        208,
-        292,
+        185,
+        293,
+        35
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "595ecf59b9e673a603521a41254b7c0613d40d3faa5fc0721f3552a65711a7b3",
+      "sections": [
+        "api_reference",
+        "documentation_resources",
+        "scope_limitations"
+      ],
+      "status": "reviewed",
+      "unit": "u4"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        314,
+        331,
+        7
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "4f4521a4551053fc04c77fe70cf746c40148a059508c935bd2838e7c986a461f",
+      "sections": [
+        "development_testing"
+      ],
+      "status": "reviewed",
+      "unit": "u5"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        1,
+        106,
         32
       ],
       "m8": {
@@ -96,20 +140,29 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "2ec8e5aa7346cc91a5d2bd3efc05367d81b0e57fb3778509dd7e22761594a79e",
+      "request_sha256": "7f16cbf0d8c9d26ca2e23626045fb44757b7c912df4d8406a2e04fde1a870183",
+      "sample": "audit_packet",
       "sections": [
-        "api_reference",
-        "documentation_resources"
+        "opening",
+        "structure",
+        "navigation",
+        "structure",
+        "key_capabilities",
+        "structure",
+        "installation",
+        "structure",
+        "dependencies",
+        "structure"
       ],
       "status": "reviewed",
-      "unit": "u4"
+      "unit": "s2-u1"
     },
     {
       "findings": 0,
       "lines": [
-        297,
-        349,
-        16
+        108,
+        145,
+        26
       ],
       "m8": {
         "shape": null,
@@ -119,13 +172,112 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "ffd851508f3f90beeb2b825dce5965a5bae8e8798608bf5f92dd402c23d3badb",
+      "request_sha256": "ae6b4ccb0842f867cd36be16c661611134bdec68278a29b55be2ac1c29f0a438",
+      "sample": "audit_packet",
       "sections": [
-        "scope_limitations",
-        "development_testing"
+        "api_reference"
       ],
       "status": "reviewed",
-      "unit": "u5"
+      "unit": "s2-u2"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        146,
+        180,
+        28
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "19fd93e1d4eee7e135ae7519f240ce17652ea203964faee635a8ef8d12cc6ba8",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        181,
+        252,
+        58
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "3b10271698c48e000b7599a6459401677fc9c6b03e84e1c91c7bc03584a026fd",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u4"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        254,
+        295,
+        29
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "258fa89701f0053395bf9653acfc5b2d24f1eb1083f26585b25380c5150aab04",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference",
+        "structure",
+        "documentation_resources",
+        "structure",
+        "scope_limitations",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u5"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        297,
+        335,
+        10
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "272e954e3ba4adda828a02bf2f678f1fafcff4e308fdc42a8672c3847073d409",
+      "sample": "audit_packet",
+      "sections": [
+        "development_testing",
+        "structure",
+        "license"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u6"
     }
   ],
   "verdict": "ACCEPT"
