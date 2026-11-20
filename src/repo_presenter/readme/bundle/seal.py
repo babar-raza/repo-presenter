@@ -182,6 +182,11 @@ class SealInputs:
     secrets: Sequence[ConfiguredSecret] = ()
     # The lane this candidate belongs to; its bundle is sealed in that lane's tree only.
     lane: str = LANE_R
+    # BL-440: an explicit refresh of an already sealed cell (``present --refresh``). The caller has
+    # run the full generation; a candidate that passed every gate then REPLACES a proven or
+    # waiting seal as a new seal (the old one stays in the bundle ref's history), instead of being
+    # recorded beside it as a waiting update. Never set by anything but the explicit request.
+    refresh: bool = False
 
 
 @dataclass(frozen=True)
@@ -696,6 +701,7 @@ def _supersede_invalidated(
         "previous_sealed_by": existing.get("sealed_by"),
         "previous_proof": existing.get("no_op_proof"),
         "superseded_at": _now(),
+        **({"refresh": True} if inputs.refresh else {}),
     }
     return _write_bundle(
         bundle, staged, inputs=inputs, extra={"superseded": superseded}, existing=existing
@@ -776,7 +782,20 @@ def seal_candidate(inputs: SealInputs) -> SealResult:
         return _write_bundle(bundle, staged, inputs=inputs)
 
     differing = _differing_artifacts(staged, bundle)
+    if inputs.refresh and not differing:
+        # BL-440: the refreshed candidate is byte-identical to the sealed one; nothing new to seal
+        # and nothing to prove (a proof needs zero provider calls). The existing seal stays as is.
+        return SealResult(
+            bundle=bundle,
+            state=str(existing.get("state")),
+            files=dict(existing.get("files", {})),
+            no_op_proof=existing.get("no_op_proof"),
+        )
     if differing:
+        if inputs.refresh and _is_waiting_state(existing):
+            return _supersede_invalidated(
+                bundle, existing, differing, staged, inputs, _route(differing, inputs.lane)
+            )
         if not _is_waiting_state(existing):
             # Nothing was proven or waiting yet -- a plain re-seal with the new content, same as
             # the first seal would have been had this content been the first one staged.

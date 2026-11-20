@@ -68,6 +68,7 @@ jobs:
       repository: ${{ steps.check.outputs.repository }}
       ecosystem: ${{ steps.check.outputs.ecosystem }}
       lane: ${{ steps.check.outputs.lane }}
+      refresh: ${{ steps.check.outputs.refresh }}
       seed_run_id: ${{ steps.check.outputs.seed_run_id }}
       findings_path: ${{ steps.check.outputs.findings_path }}
       findings_ref: ${{ steps.check.outputs.findings_ref }}
@@ -102,6 +103,7 @@ jobs:
       repository: ${{ needs.validate.outputs.repository }}
       ecosystem: ${{ needs.validate.outputs.ecosystem }}
       lane: ${{ needs.validate.outputs.lane }}
+      refresh: ${{ needs.validate.outputs.refresh == 'true' }}
     secrets: inherit
 
   cohort:

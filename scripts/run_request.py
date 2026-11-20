@@ -5,6 +5,7 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
 ``run-requests/<id>`` whose ONLY change from the current ``main`` is one file, ``run-request.json``::
 
     {"job": "present", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
+    {"job": "present", "repository": "owner/name", "ecosystem": "rust", "lane": "R", "refresh": true}
     {"job": "mint"}
     {"job": "recertify"}
     {"job": "cohort"}
@@ -33,6 +34,11 @@ executor pushes ``audit-abandoned/run-<seed_run_id>`` at main; ``open_seed_batch
 refused for a batch that has findings (that one is finished by score and write, never discarded) or fewer
 attempts. It accepts nothing and writes no acceptance record; the batch's candidates stay unjudged, so they
 can be seeded again.
+
+``refresh`` (BL-440) is accepted on a ``present`` request only, only as the JSON boolean ``true`` (``false`` is
+the same as absent) and only with ``"lane": "R"`` written out: it asks present.yml for a fresh Lane R seal of a
+cell that already holds one (full generation, no zero-call path; the existing seal is replaced only if the new
+candidate passes every gate). It is one more validated data field -- no new trigger, secret, permission or path.
 
 Trust boundary. A push-triggered workflow runs the workflow files of the PUSHED commit, so nothing that holds a
 secret may run on the push. ``.github/workflows/run-request.yml`` (push) holds no secret, has a read-only
@@ -396,7 +402,7 @@ def validate(
         return {"job": "count", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
-    allowed_keys = {"job", "repository", "ecosystem", "lane"}
+    allowed_keys = {"job", "repository", "ecosystem", "lane", "refresh"}
     if set(request) - allowed_keys:
         raise RequestError(f"unknown fields {sorted(set(request) - allowed_keys)}")
     repository, ecosystem, lane = request.get("repository"), request.get("ecosystem"), request.get("lane", "both")
@@ -407,7 +413,16 @@ def validate(
         raise RequestError(f"{repository} is registered as {entry.get('ecosystem')!r}, not {ecosystem!r}")
     if lane not in LANES:
         raise RequestError(f"lane {lane!r} is not one of {sorted(LANES)}")
-    return {"job": "present", "repository": repository, "ecosystem": ecosystem, "lane": lane}
+    refresh = request.get("refresh", False)
+    if not isinstance(refresh, bool):
+        raise RequestError(f"refresh {refresh!r} is not a JSON boolean")
+    outputs = {"job": "present", "repository": repository, "ecosystem": ecosystem, "lane": lane}
+    if refresh:
+        # BL-440: a fresh seal attempt is Lane R's; the lane must be named, never defaulted.
+        if request.get("lane") != "R":
+            raise RequestError('refresh needs "lane": "R" (a fresh seal attempt is Lane R only)')
+        outputs["refresh"] = "true"
+    return outputs
 
 
 def check_trigger(event: Any) -> tuple[str, str]:
