@@ -64,6 +64,7 @@ from repo_presenter.readme.review.applied_edits import (
     evidenced_edit_errors,
 )
 from repo_presenter.readme.review.calibration_status import load_calibration
+from repo_presenter.readme.review.clearances import Deriver
 from repo_presenter.readme.review.findings import CLEARANCES_FOR_KIND, Finding
 from repo_presenter.readme.review.reply import (
     MAX_FINDINGS,
@@ -494,6 +495,7 @@ def review_with_model(
     deterministic_findings: Sequence[Finding] = (),
     rendered: bool = True,
     audit: bool = False,
+    derive: Deriver | None = None,
 ) -> ReviewVerdict:
     """The model-reviewed verdict for ``candidate_readme``; ``ReviewUnavailable`` when no valid
     review could be obtained. ``dispositions`` and ``validation`` are the deterministic stage's
@@ -624,6 +626,7 @@ def review_with_model(
         max_findings=min(MAX_FINDINGS * len(units), MAX_MERGED_FINDINGS),
         calibration_status=load_calibration().status,
         unit_reviews=records,
+        derive=derive,
     )
     if unavailable and verdict.verdict == "ACCEPT":
         raise ReviewUnavailable(

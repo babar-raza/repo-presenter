@@ -249,7 +249,8 @@ def test_a_cleared_status_is_constructed_only_by_the_registered_clearance_path()
     assert offenders == []
 
 
-def test_clearance_proofs_are_sealed_only_by_the_four_registered_functions() -> None:
+def test_clearance_proofs_are_sealed_only_by_the_registered_functions() -> None:
+    """The four typed clearances (plan D3) and the one provenance clearance (BL-400)."""
     callers = set()
     constructors = set()
     for path in sorted(SRC.rglob("*.py")):
@@ -266,6 +267,7 @@ def test_clearance_proofs_are_sealed_only_by_the_four_registered_functions() -> 
         ("clearances.py", "absence_unsourced"),
         ("clearances.py", "names_supported"),
         ("clearances.py", "omission_present"),
+        ("clearances.py", "derived_from_supported_facts"),
     }
     assert constructors == {
         ("findings.py", "_seal_clearance"),
@@ -295,4 +297,11 @@ def test_no_clearance_reads_a_quote_against_a_fact_value() -> None:
     for node in ast.walk(tree):
         if isinstance(node, ast.Attribute) and node.attr == "quote":
             uses.append(_enclosing(node))
-    assert set(uses) <= {"_claims"}
+    # BL-400: ``derived_from_supported_facts`` reads the quote only to find which candidate lines it is
+    # (``_quoted_lines``: whole-line equality against the candidate's own rows); it never compares a quote to a
+    # fact value, and the line locator is handed no facts at all.
+    assert set(uses) <= {"_claims", "derived_from_supported_facts"}
+    locator = next(
+        node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef) and node.name == "_quoted_lines"
+    )
+    assert [arg.arg for arg in locator.args.args] == ["quote", "rows"]

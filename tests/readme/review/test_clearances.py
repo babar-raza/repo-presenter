@@ -398,10 +398,21 @@ def test_a_valid_clearance_does_not_transfer_to_another_finding() -> None:
 
 
 def test_the_strongest_forgery_still_fails_for_a_never_clearable_claim() -> None:
-    finding = llm("contradiction", quote="Exports SVG through the SvgExporter class.")
+    finding = llm("quality", quote="Exports SVG through the SvgExporter class.")
     proof = _seal_clearance("absence_present", finding, ("forged",))
     with pytest.raises(ValueError, match="never clearable"):
         replace(finding, status="CLEARED", clearance=proof)
+
+
+@pytest.mark.parametrize("claim_kind", ["contradiction", "unsupported_claim"])
+def test_a_typed_clearance_never_clears_a_claim_only_provenance_may_clear(claim_kind: str) -> None:
+    """BL-400: these two kinds are cleared by ``derived_from_supported_facts`` alone; any typed clearance, however
+    sealed, is refused for them."""
+    finding = llm(claim_kind, quote="Exports SVG through the SvgExporter class.")
+    for name in ("absence_present", "absence_unsourced", "names_supported", "omission_present"):
+        proof = _seal_clearance(name, finding, ("forged",))
+        with pytest.raises(ValueError, match="cleared only by"):
+            replace(finding, status="CLEARED", clearance=proof)
 
 
 def test_a_deterministic_finding_cannot_be_constructed_cleared() -> None:

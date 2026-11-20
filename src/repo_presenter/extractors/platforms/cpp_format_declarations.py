@@ -37,6 +37,7 @@ import re
 from pathlib import Path
 
 from repo_presenter.core.examples import FormatDeclaration
+from repo_presenter.readme.evidence.facts.source_text import is_test_path
 
 _SOURCE_SUFFIXES = (".h", ".hpp", ".cpp", ".cc", ".cxx")
 _MAX_FILE_BYTES = 2_000_000
@@ -113,9 +114,20 @@ def format_declarations(root: Path, tree_paths: list[str]) -> list[FormatDeclara
         text = _read(root / rel_path)
         if text is None:
             continue
-        for enum_type, name, line in _declared_members(text):
+        declared_here = _declared_members(text)
+        for enum_type, name, line in declared_here:
             all_declared.setdefault((enum_type, name), (line, rel_path))
+        # BL-400: a reference is registration only when product code outside the enum's own declaring file makes
+        # it. A test that expects a refusal, or the declaring header's own to-string switch, references every
+        # member whether or not the library implements it (Aspose.Slides FOSS for C++ declares 21 ``SaveFormat``
+        # members, writes six, and its ``to_string_view`` switch and conformance tests name all 21: 15 stub
+        # formats read as SUPPORTED output).
+        if is_test_path(rel_path):
+            continue
+        declaring = {enum_type for enum_type, _name, _line in declared_here}
         for enum_type, name in _QUALIFIED_REF.findall(text):
+            if enum_type in declaring:
+                continue
             if enum_type == "LoadFormat":
                 input_registered.add(name)
             else:
