@@ -1,153 +1,40 @@
 {
   "coherence": {
     "applied": true,
-    "revised": []
+    "revised": [
+      "api_reference/intro"
+    ]
   },
-  "degrade_records": [
-    {
-      "action": "inherited_unit_omitted",
-      "detail": "the README says its count of public types is listed in what follows, but the table rows that follow list only 74; state the count of what is listed, or list every type",
-      "findings": [
-        "BC-14"
-      ],
-      "rule": "BL-240",
-      "section": "api_reference",
-      "slot": "inherited_unit:058.paragraph"
-    },
-    {
-      "action": "opening_fact_true",
-      "detail": "Aspose.Page FOSS for Python reads PostScript (`.ps`), Encapsulated PostScript (`.eps`), and XML Paper Specification (`.xps`) files, and converts them to PDF. It also reads JPEG XR (`.jxr`), PNG (`.png`), TIFF (`.tif`, `.tiff`), and Windows Device Image (`.wdp`) files, and writes raster images in PNG (`.png`), JPEG (`.jpeg`), BMP (`.bmp`), and TIFF (`.tiff`) formats.",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "opening",
-      "slot": "opening"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:1"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:3"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:4"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:5"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:6"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:7"
-    },
-    {
-      "action": "capability_dropped",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "key_capabilities",
-      "slot": "capability:8"
-    }
-  ],
   "omitted": [
+    {
+      "fact_id": "format:input.jxr",
+      "reason": "No evidence supports .jxr as an input format; only output and helper conversions exist.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "format:input.png",
+      "reason": "No evidence supports .png as an input format; only output and helper conversions exist.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "format:input.tif",
+      "reason": "No evidence supports .tif as an input format; only output and helper conversions exist.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "format:input.tiff",
+      "reason": "No evidence supports .tiff as an input format; only output and helper conversions exist.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "format:input.wdp",
+      "reason": "No evidence supports .wdp as an input format; only output and helper conversions exist.",
+      "section": "opening"
+    },
     {
       "fact_id": "inherited_unit:010.list",
       "reason": "The inherited list is fully covered by the eight capability units; no additional items require separate treatment.",
       "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:027.heading",
-      "reason": "The renderer prints the heading; prose must not repeat it.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "inherited_unit:029.code_block",
-      "reason": "The renderer prints the code block; prose must not repeat or describe its structure.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "Not needed in this unit; ecosystem identity is implied by package and platform facts.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "Not needed in this unit; family identity is implied by product name and example.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "Not needed in this unit; platform identity is implied by package and example.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Provenance only; not used in prose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Provenance only; not used in prose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Provenance only; not used in prose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "Provenance only; not used in prose.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "package:python_requires",
-      "reason": "Not needed in this unit; runtime version is not mentioned in the example.",
-      "section": "quick_start"
-    },
-    {
-      "fact_id": "example:002",
-      "reason": "Unresolved example; not used in this section.",
-      "section": "quick_start"
     },
     {
       "fact_id": "public_symbol:aspose.page.common.color_resources.devicencolorspace",
@@ -159,22 +46,48 @@
   "units": [
     {
       "fact_ids": [
-        "format:input.eps",
-        "format:input.jxr",
-        "format:input.png",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:python_requires",
+        "license:spdx",
+        "example:001",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "public_symbol:aspose.page.mcp",
         "format:input.ps",
-        "format:input.tif",
-        "format:input.tiff",
-        "format:input.wdp",
+        "format:input.eps",
         "format:input.xps",
-        "format:output.bmp",
-        "format:output.jpeg",
         "format:output.png",
-        "format:output.tiff"
+        "format:output.jpeg",
+        "format:output.bmp",
+        "format:output.tiff",
+        "public_symbol:aspose.page.image",
+        "public_symbol:aspose.page.pdf",
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.xps",
+        "dependency:skia-python"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files."
+      "text": "Aspose.Page FOSS for Python reads PostScript (.ps), Encapsulated PostScript (.eps), and XML Paper Specification (.xps) files, and converts them to PDF. It writes raster images in PNG (.png), JPEG (.jpeg), BMP (.bmp), and TIFF (.tiff) formats. It provides modules for working with PostScript, EPS, XPS, PDF, and image formats through the aspose.page.mcp, aspose.page.ps, aspose.page.xps, aspose.page.pdf, and aspose.page.image packages."
+    },
+    {
+      "fact_ids": [
+        "format:input.eps",
+        "format:input.ps",
+        "public_symbol:aspose.page.pdf",
+        "public_symbol:aspose.page.ps"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It reads and parses .ps and .eps documents using a full PostScript interpreter and extracts DSC/EPS metadata."
     },
     {
       "fact_ids": [
@@ -182,8 +95,72 @@
         "public_symbol:aspose.page.xps"
       ],
       "section": "key_capabilities",
-      "slot": "capability:1",
+      "slot": "capability:2",
       "text": "It reads and parses .xps documents by walking fixed pages and print tickets through the XPS parser and renderer."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.xps"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It authors PS and XPS documents from scratch using the RenderModelBuilder API to construct paths, text, and images, then writes them back to the source format."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:003",
+        "example:005",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It converts PS and XPS documents to PDF output using PdfWriter with font embedding resolved through FontResolver and FontCache."
+    },
+    {
+      "fact_ids": [
+        "dependency:skia-python",
+        "example:006",
+        "format:output.bmp",
+        "format:output.jpeg",
+        "format:output.png",
+        "format:output.tiff"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It rasterizes PS/EPS content to .png, .jpeg, .bmp, or .tiff using the Skia backend, with a pure-Python fallback available for PS/EPS-to-image conversion."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "example:005",
+        "public_symbol:aspose.page.mcp"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It exposes conversion and metadata operations as MCP tools including ps_to_pdf, xps_to_pdf, and eps_metadata for FastMCP-based automation."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.image",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It builds page content programmatically using RenderModelBuilder to construct paths, text, images, and a clip/state stack, producing a RenderDocument."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "It embeds TrueType and Type1 fonts in PDF output by resolving them through FontResolver and FontCache during PdfWriter.write()."
     },
     {
       "fact_ids": [
@@ -195,14 +172,21 @@
     },
     {
       "fact_ids": [
+        "example:006"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "This example renders a simple blank page to a PNG image using the RasterRenderer and encode_png functions from the aspose-page-foss package."
+    },
+    {
+      "fact_ids": [
         "example:003",
         "example:004",
-        "example:005",
-        "example:006"
+        "example:005"
       ],
       "section": "additional_examples",
       "slot": "preview",
-      "text": "The following workflows demonstrate reading, writing, and converting document formats, extracting metadata, and rendering pages to images."
+      "text": "The following workflows demonstrate building a PDF from a render model, extracting EPS metadata, and converting XPS to PDF."
     },
     {
       "fact_ids": [
@@ -210,7 +194,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:003",
-      "text": "Build a PDF directly from the render model"
+      "text": "Build a PDF directly from the render model."
     },
     {
       "fact_ids": [
@@ -218,7 +202,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:004",
-      "text": "Extract EPS metadata"
+      "text": "Extract EPS metadata."
     },
     {
       "fact_ids": [
@@ -226,19 +210,23 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:005",
-      "text": "Convert XPS to PDF via the MCP handler"
+      "text": "Convert XPS to PDF via the MCP handler."
     },
     {
       "fact_ids": [
-        "example:006"
-      ],
-      "section": "additional_examples",
-      "slot": "workflow:example:006",
-      "text": "Render a page to PNG without any PS/XPS input"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.page",
+        "example:001",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:python_requires",
         "public_symbol:aspose.page.image",
         "public_symbol:aspose.page.mcp",
         "public_symbol:aspose.page.pdf",
@@ -247,58 +235,7 @@
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "The aspose.page module provides entry points for working with PostScript, EPS, XPS, and PDF content, with dedicated submodules for each format. The aspose.page.ps submodule supports reading and writing PostScript and EPS files, the aspose.page.xps submodule handles XPS documents, the aspose.page.pdf submodule serializes render models to PDF, the aspose.page.image submodule renders documents to raster images, and the aspose.page.mcp submodule offers high-level conversion and metadata extraction tools."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.page",
-        "public_symbol:aspose.page.image",
-        "public_symbol:aspose.page.mcp",
-        "public_symbol:aspose.page.pdf",
-        "public_symbol:aspose.page.ps",
-        "public_symbol:aspose.page.xps"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.page",
-      "text": "The aspose.page module serves as the top-level namespace for the Aspose.Page FOSS for Python library, exposing submodules for PostScript, EPS, XPS, PDF, and image processing operations."
-    },
-    {
-      "fact_ids": [
-        "format:input.eps",
-        "format:input.ps",
-        "public_symbol:aspose.page.pdf",
-        "public_symbol:aspose.page.ps"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.page.ps",
-      "text": "The aspose.page.ps submodule enables reading and writing PostScript and EPS files, and can convert them to PDF using PdfWriter or to raster images using RasterRenderer."
-    },
-    {
-      "fact_ids": [
-        "format:input.xps",
-        "public_symbol:aspose.page.xps"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.page.xps",
-      "text": "The aspose.page.xps submodule supports loading and editing XPS documents, and can convert them to PDF or raster images."
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.page.pdf"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.page.pdf",
-      "text": "The aspose.page.pdf submodule provides PdfWriter to serialize a RenderDocument into PDF 1.4 bytes, and supports metadata configuration via PdfMetadata."
-    },
-    {
-      "fact_ids": [
-        "example:006",
-        "public_symbol:aspose.page.image"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.page.image",
-      "text": "The aspose.page.image submodule offers RasterRenderer to render a RenderDocument to a raster surface, and encode it to PNG using encode_png."
+      "text": "Aspose.Page FOSS for Python provides entry points through the aspose.page.mcp module for high-level conversions and metadata extraction, and through dedicated modules for PostScript, EPS, XPS, PDF, and image processing. The aspose.page.mcp module offers handlers that wrap lower-level APIs to convert between formats and inspect document properties."
     },
     {
       "fact_ids": [
@@ -309,7 +246,46 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.page.mcp",
-      "text": "The aspose.page.mcp submodule provides high-level handlers such as ps_to_pdf, eps_metadata, and xps_to_pdf for converting and inspecting input files via McpInput and McpOutput payloads."
+      "text": "The aspose.page.mcp module provides high-level handlers such as ps_to_pdf, eps_metadata, and xps_to_pdf that accept McpInput and McpOutput objects to convert PostScript, EPS, and XPS documents to PDF or image formats and extract metadata."
+    },
+    {
+      "fact_ids": [
+        "format:input.eps",
+        "format:input.ps",
+        "public_symbol:aspose.page.ps"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.page.ps",
+      "text": "The aspose.page.ps module supports reading and writing PostScript and Encapsulated PostScript (.ps and .eps) files through classes like PsDocument, PsCanvas, and DscMetadata, enabling document creation, modification, and conversion to PDF or raster images."
+    },
+    {
+      "fact_ids": [
+        "format:input.xps",
+        "public_symbol:aspose.page.xps"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.page.xps",
+      "text": "The aspose.page.xps module enables working with XML Paper Specification (.xps) documents through classes like XpsDocument, XpsDocumentBuilder, and XpsCanvas, supporting document loading, editing, and conversion to PDF or raster images."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:003",
+        "example:005",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.page.pdf",
+      "text": "The aspose.page.pdf module provides PdfWriter to serialize render model documents into PDF 1.4 bytes, with PdfMetadata for document information dictionary fields and PdfSaveOptions for conversion settings."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose.page.image"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.page.image",
+      "text": "The aspose.page.image module offers RasterRenderer to render RenderDocument instances to raster surfaces and encode them as PNG, with DefaultRasterWriter and SkiaRasterWriter supporting direct document-to-image conversion."
     },
     {
       "fact_ids": [

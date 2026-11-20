@@ -14,11 +14,11 @@
 -model, and writes PDF or raster (PNG, JPEG, BMP, TIFF) output without Ghostscript or Adobe
 -tooling. Raster output uses the free `skia-python` package, which has native components. The
 -same conversions are also exposed as MCP tools for LLM-agent and automation workflows.
-+Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files.
++Aspose.Page FOSS for Python reads PostScript (`.ps`), Encapsulated PostScript (`.eps`), and XML Paper Specification (`.xps`) files, and converts them to PDF. It writes raster images in PNG (`.png`), JPEG (`.jpeg`), BMP (`.bmp`), and TIFF (`.tiff`) formats. It provides modules for working with PostScript, EPS, XPS, PDF, and image formats through the `aspose.page.mcp`, `aspose.page.ps`, `aspose.page.xps`, `aspose.page.pdf`, and `aspose.page.image` packages.
  
  ## Navigation
  
-@@ -28,37 +23,41 @@
+@@ -28,37 +23,57 @@
  ## At a Glance
  
  ```mermaid
@@ -35,32 +35,37 @@
    subgraph Capabilities["Core Capabilities"]
 -    direction LR
 -    subgraph capl[" "]
--      direction TB
++    direction TB
++    c1["Read and parse PS/EPS<br/>documents"]
++    c3["Author PS and XPS<br/>documents"]
++    c5["Rasterize to image<br/>formats"]
++    c7["Programmatic page<br/>building"]
++    c1 ~~~ c5
++    c3 ~~~ c7
++    subgraph cg1["Xps"]
+       direction TB
 -      c1["Read PS and EPS documents (PsDocument)"]
 -      c2["Read XPS packages (XpsDocument)"]
 -      c3["Author new documents (PsDocument.create, XpsDocument.create)"]
--    end
++      c2["Read and parse XPS<br/>documents"]
+     end
 -    subgraph capr[" "]
--      direction TB
++    subgraph cg2["Pdf"]
+       direction TB
 -      c4["Build the render model (RenderModelBuilder)"]
 -      c5["Write PDF and raster output (PdfWriter, RasterRenderer)"]
 -      c6["MCP server tools for automated conversion"]
--    end
-+    direction TB
-+    c1["Read and parse PS/EPS<br/>documents"]
-+    c2["Read and parse XPS<br/>documents"]
-+    c3["Author PS and XPS<br/>documents"]
-+    c4["Convert to PDF output"]
-+    c5["Rasterize to image<br/>formats"]
-+    c6["MCP tool exposure"]
-+    c7["Programmatic page<br/>building"]
-+    c8["Font embedding for PDF"]
-+    c1 ~~~ c4
-+    c2 ~~~ c5
-+    c3 ~~~ c6
-+    c4 ~~~ c7
-+    c5 ~~~ c8
-+    c6 ~~~ c8
++      c4["Convert to PDF output"]
++      c8["Font embedding for PDF"]
+     end
++    subgraph cg3["Mcp"]
++      direction TB
++      c6["MCP tool exposure"]
++    end
++    c5 ~~~ cg1
++    c7 ~~~ cg1
++    cg1 ~~~ cg2
++    cg2 ~~~ cg3
    end
    subgraph Outputs["Outputs"]
      direction TB
@@ -75,11 +80,29 @@
  
  ## Key Capabilities
 +
++- **Read and parse PS/EPS documents.** It reads and parses `.ps` and `.eps` documents using a full PostScript interpreter and extracts DSC/EPS metadata.
 +- **Read and parse XPS documents.** It reads and parses `.xps` documents by walking fixed pages and print tickets through the XPS parser and renderer.
++- **Author PS and XPS documents.** It authors PS and XPS documents from scratch using the `RenderModelBuilder` API to construct paths, text, and images, then writes them back to the source format.
++- **Convert to PDF output.** It converts PS and XPS documents to PDF output using `PdfWriter` with font embedding resolved through `FontResolver` and `FontCache`.
++- **Rasterize to image formats.** It rasterizes PS/EPS content to `.png`, `.jpeg`, `.bmp`, or `.tiff` using the Skia backend, with a pure-Python fallback available for PS/EPS-to-image conversion.
++- **MCP tool exposure.** It exposes conversion and metadata operations as MCP tools including `ps_to_pdf`, `xps_to_pdf`, and `eps_metadata` for FastMCP-based automation.
++- **Programmatic page building.** It builds page content programmatically using `RenderModelBuilder` to construct paths, text, images, and a clip/state stack, producing a `RenderDocument`.
++- **Font embedding for PDF.** It embeds TrueType and Type1 fonts in PDF output by resolving them through `FontResolver` and `FontCache` during `PdfWriter.write()`.
  
  - Read and parse PS/EPS documents with `PsDocument.from_file()` / `from_bytes()`, backed by a
    full PostScript interpreter (`PsInterpreter`, `PsParser`, `PsTokenizer`, `OperatorRegistry`)
-@@ -83,56 +82,35 @@
+@@ -69,10 +84,6 @@
+   `XpsDocument.create()`, drawing through `PsCanvas` (`move_to`, `line_to`, `curve_to`, `stroke`,
+   `fill`, `draw_text`, `draw_image`) or the `XpsDocumentBuilder` page API, then `save()` back to
+   the source format.
+-- Build page content programmatically with `RenderModelBuilder` — paths, text, images, and a
+-  clip/state stack — independent of any PS/XPS input, producing a `RenderDocument`.
+-- Write PDF 1.4 output with `PdfWriter`, including TrueType/Type1 font embedding resolved through
+-  `FontResolver` and `FontCache`.
+ - Rasterize PS/EPS content to PNG, JPEG, BMP, or TIFF with `RasterRenderer`; the Skia backend
+   (`skia-python`, installed with the package) is used by default for speed, and a pure-Python
+   renderer (`DefaultRasterWriter`) remains available — set `ASPOSE_PAGE_RASTERIZER=python` or
+@@ -83,56 +94,35 @@
  
  ## Installation
  
@@ -149,13 +172,14 @@
  
  ```python
  from aspose.page.mcp.handlers import ps_to_pdf
-@@ -144,26 +122,11 @@
+@@ -144,26 +134,29 @@
  )
  ```
  
 -Convert a PS or EPS file to a raster image directly through the document API:
--
--```python
++This example renders a simple blank page to a PNG image using the `RasterRenderer` and `encode_png` functions from the aspose-page-foss package.
+ 
+ ```python
 -from aspose.page.ps.document import PsDocument
 -from aspose.page.ps.output import ImageSaveOptions
 -
@@ -164,8 +188,21 @@
 -
 -with open("output.png", "wb") as f:
 -    f.write(data)
--```
--
++import aspose.page.ps  # works around a module import-order issue in aspose.page.image.raster_renderer
++from aspose.page.common.render_model import RenderDocument, RenderPage
++from aspose.page.image.raster_renderer import RasterRenderer
++from aspose.page.image.encoders import encode_png
++
++doc = RenderDocument()
++doc.pages.append(RenderPage(width=200, height=100))
++
++surface = RasterRenderer(dpi=144).render(doc)
++png_bytes = encode_png(surface, dpi=144)
++
++with open("blank.png", "wb") as f:
++    f.write(png_bytes)
+ ```
+ 
  ## Additional Examples
  
 -### Build a PDF Directly From the Render Model
@@ -173,13 +210,13 @@
 -No PS/XPS input is required — pages can be constructed entirely in code and written straight to
 -PDF. Import `aspose.page.ps` first, before any other `aspose.page` submodule, to avoid a
 -circular-import error in a fresh interpreter:
-+The following workflows demonstrate reading, writing, and converting document formats, extracting metadata, and rendering pages to images.
++The following workflows demonstrate building a PDF from a render model, extracting EPS metadata, and converting XPS to PDF.
 +
 +### Build a PDF Directly from the Render Model
  
  ```python
  import aspose.page.ps  # works around a module import-order issue in aspose.page.pdf.writer
-@@ -187,20 +150,6 @@
+@@ -187,20 +180,6 @@
  <details>
  <summary>View Additional Examples</summary>
  
@@ -200,13 +237,27 @@
  ### Extract EPS Metadata
  
  ```python
-@@ -241,6 +190,19 @@
-     f.write(png_bytes)
+@@ -223,22 +202,17 @@
+ )
  ```
  
+-### Render a Page to PNG Without Any PS/XPS Input
 +Convert a PS or EPS file to a raster image directly through the document API:
-+
-+```python
+ 
+ ```python
+-import aspose.page.ps  # works around a module import-order issue in aspose.page.image.raster_renderer
+-from aspose.page.common.render_model import RenderDocument, RenderPage
+-from aspose.page.image.raster_renderer import RasterRenderer
+-from aspose.page.image.encoders import encode_png
+-
+-doc = RenderDocument()
+-doc.pages.append(RenderPage(width=200, height=100))
+-
+-surface = RasterRenderer(dpi=144).render(doc)
+-png_bytes = encode_png(surface, dpi=144)
+-
+-with open("blank.png", "wb") as f:
+-    f.write(png_bytes)
 +from aspose.page.ps.document import PsDocument
 +from aspose.page.ps.output import ImageSaveOptions
 +
@@ -215,12 +266,10 @@
 +
 +with open("output.png", "wb") as f:
 +    f.write(data)
-+```
-+
- ### Convert XPS to a Raster Image (Needs the Skia Backend)
+ ```
  
- Unlike PS/EPS rasterization, XPS-to-image conversion has no pure-Python fallback — it always
-@@ -257,253 +219,325 @@
+ ### Convert XPS to a Raster Image (Needs the Skia Backend)
+@@ -257,253 +231,321 @@
      f.write(data)
  ```
  
@@ -251,7 +300,7 @@
 -PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to
 -`RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` /
 -`RenderDocument` model. The public API surface includes 139 types, organized by module below.
-+The `aspose.page` module provides entry points for working with PostScript, EPS, XPS, and PDF content, with dedicated submodules for each format. The `aspose.page.ps` submodule supports reading and writing PostScript and EPS files, the `aspose.page.xps` submodule handles XPS documents, the `aspose.page.pdf` submodule serializes render models to PDF, the `aspose.page.image` submodule renders documents to raster images, and the `aspose.page.mcp` submodule offers high-level conversion and metadata extraction tools.
++Aspose.Page FOSS for Python provides entry points through the `aspose.page.mcp` module for high-level conversions and metadata extraction, and through dedicated modules for PostScript, XPS, PDF, and image processing. The `aspose.page.mcp` module offers handlers that wrap lower-level APIs to convert between formats and inspect document properties.
 +
 +The public API has 139 types.
  
@@ -449,29 +498,25 @@
 +
 +#### Detailed Member Reference
 +
-+### page
++### mcp
 +
-+The `aspose.page` module serves as the top-level namespace for the Aspose.Page FOSS for Python library, exposing submodules for PostScript, EPS, XPS, PDF, and image processing operations.
++The `aspose.page.mcp` module provides high-level handlers such as `ps_to_pdf`, `eps_metadata`, and `xps_to_pdf` that accept `McpInput` and `McpOutput` objects to convert PostScript, EPS, and XPS documents to PDF or image formats and extract metadata.
 +
 +### ps
 +
-+The `aspose.page.ps` submodule enables reading and writing PostScript and EPS files, and can convert them to PDF using `PdfWriter` or to raster images using `RasterRenderer`.
++The `aspose.page.ps` module supports reading and writing PostScript and Encapsulated PostScript (`.ps` and `.eps`) files through classes like `PsDocument`, `PsCanvas`, and `DscMetadata`, enabling document creation, modification, and conversion to PDF or raster images.
 +
 +### xps
 +
-+The `aspose.page.xps` submodule supports loading and editing XPS documents, and can convert them to PDF or raster images.
++The `aspose.page.xps` module enables working with XML Paper Specification (`.xps`) documents through classes like `XpsDocument`, `XpsDocumentBuilder`, and `XpsCanvas`, supporting document loading, editing, and conversion to PDF or raster images.
 +
 +### pdf
 +
-+The `aspose.page.pdf` submodule provides `PdfWriter` to serialize a `RenderDocument` into PDF 1.4 bytes, and supports metadata configuration via `PdfMetadata`.
++The `aspose.page.pdf` module provides `PdfWriter` to serialize render model documents into PDF 1.4 bytes, with `PdfMetadata` for document information dictionary fields and `PdfSaveOptions` for conversion settings.
 +
 +### image
 +
-+The `aspose.page.image` submodule offers `RasterRenderer` to render a `RenderDocument` to a raster surface, and encode it to PNG using `encode_png`.
-+
-+### mcp
-+
-+The `aspose.page.mcp` submodule provides high-level handlers such as `ps_to_pdf`, `eps_metadata`, and `xps_to_pdf` for converting and inspecting input files via `McpInput` and `McpOutput` payloads.
++The `aspose.page.image` module offers `RasterRenderer` to render `RenderDocument` instances to raster surfaces and encode them as PNG, with `DefaultRasterWriter` and `SkiaRasterWriter` supporting direct document-to-image conversion.
  
  | Class | Description |
  |---|---|
@@ -708,7 +753,7 @@
  
  - `ps_to_pdf(input, output, options=None)`, `ps_to_image(input, output, options)`,
    `xps_to_pdf(input, output, options=None)`, `xps_to_image(input, output, options)`,
-@@ -514,8 +548,6 @@
+@@ -514,8 +556,6 @@
  - `create_server()` / `run(host, port)` in `aspose.page.mcp.server` — registers all five tools
    above on a `FastMCP("Aspose.Page")` server.
  
@@ -717,12 +762,14 @@
  - `Clipper` (extends `ClipperBase`) — a full port of the Vatti polygon-clipping algorithm used
    internally for clip-path handling; `execute(clip_type, solution, subj_fill, clip_fill)` is the
    primary entry point, alongside `add_path(...)` / `add_paths(...)` inherited from `ClipperBase`.
-@@ -527,34 +559,43 @@
+@@ -526,35 +566,45 @@
+ 
  - **[Getting started guide](https://docs.aspose.org/page/python/)** — installation, walkthroughs, and feature guides for this library.
  - **[How-to guides & FAQ](https://kb.aspose.org/page/python/)** — task-focused answers for common PS/EPS/XPS-processing questions.
++- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-page-foss/Aspose.Page-FOSS-for-Python/issues).
++
  - **[Full API reference](https://reference.aspose.org/page/python/)** — the complete, browsable reference for all 139 public types.
 -- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-page-foss/Aspose.Page-FOSS-for-Python/issues) on GitHub.
-+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-page-foss/Aspose.Page-FOSS-for-Python/issues).
  
  ## Scope and Limitations
  
@@ -784,7 +831,7 @@
  
  Sync dependencies and run the test suite with `uv`:
  
-@@ -563,28 +604,16 @@
+@@ -563,28 +613,16 @@
  make test
  ```
  

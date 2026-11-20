@@ -527,11 +527,11 @@
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:006"
       ],
-      "rationale": "The 'Render a Page to PNG Without Any PS/XPS Input' heading and its code block are verified examples and moved to Additional Examples.",
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
       "unit_id": "inherited_unit:048.heading"
     },
     {
@@ -615,12 +615,18 @@
       "unit_id": "inherited_unit:057.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "api_reference",
+      "disposition": "CORRECT_WITH_EVIDENCE",
       "fact_ids": [
-        "package:name"
+        "public_symbol:aspose",
+        "public_symbol:aspose.page",
+        "public_symbol:aspose.page.image",
+        "public_symbol:aspose.page.mcp",
+        "public_symbol:aspose.page.pdf",
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.xps"
       ],
-      "rationale": "Omitted by the BL-240 last-resort degrade (R14): a blocking check shows it contradicts the facts: the README says its count of public types is listed in what fo",
+      "rationale": "The paragraph is preserved but the unsupported claim of 139 types is removed; the remaining content is supported by the listed public symbols.",
       "unit_id": "inherited_unit:058.paragraph"
     },
     {
@@ -642,7 +648,7 @@
         "format:input.eps",
         "format:input.ps",
         "format:input.xps",
-        "public_symbol:aspose.page",
+        "link_target:027",
         "public_symbol:aspose.page.image",
         "public_symbol:aspose.page.mcp",
         "public_symbol:aspose.page.pdf",
@@ -953,7 +959,7 @@
         "format:input.eps",
         "format:input.ps",
         "format:input.xps",
-        "public_symbol:aspose.page",
+        "link_target:027",
         "public_symbol:aspose.page.image",
         "public_symbol:aspose.page.mcp",
         "public_symbol:aspose.page.pdf",

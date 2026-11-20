@@ -2,25 +2,21 @@
   "additional_example_ids": [
     "example:003",
     "example:004",
-    "example:005",
-    "example:006"
+    "example:005"
   ],
   "api_hubs": [
     {
       "fact_ids": [
-        "public_symbol:aspose.page",
-        "public_symbol:aspose.page.ps",
-        "public_symbol:aspose.page.xps",
-        "public_symbol:aspose.page.pdf",
-        "public_symbol:aspose.page.image",
+        "example:001",
+        "example:004",
+        "example:005",
         "public_symbol:aspose.page.mcp"
       ],
-      "symbol_fact_id": "public_symbol:aspose.page"
+      "symbol_fact_id": "public_symbol:aspose.page.mcp"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.page.ps",
-        "public_symbol:aspose.page.pdf",
         "format:input.ps",
         "format:input.eps"
       ],
@@ -35,26 +31,19 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.page.pdf",
-        "example:003"
+        "example:001",
+        "example:003",
+        "example:005",
+        "public_symbol:aspose.page.pdf"
       ],
       "symbol_fact_id": "public_symbol:aspose.page.pdf"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.page.image",
-        "example:006"
+        "example:006",
+        "public_symbol:aspose.page.image"
       ],
       "symbol_fact_id": "public_symbol:aspose.page.image"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.page.mcp",
-        "example:001",
-        "example:004",
-        "example:005"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.page.mcp"
     }
   ],
   "at_a_glance": {
@@ -83,6 +72,19 @@
   "core_capabilities": [
     {
       "fact_ids": [
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.pdf",
+        "format:input.ps",
+        "format:input.eps"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:aspose.page.pdf",
+        "public_symbol:aspose.page.ps"
+      ],
+      "title": "Read and parse PS/EPS documents"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose.page.xps",
         "format:input.xps"
       ],
@@ -90,6 +92,82 @@
         "public_symbol:aspose.page.xps"
       ],
       "title": "Read and parse XPS documents"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.xps",
+        "example:003"
+      ],
+      "shared_fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.xps"
+      ],
+      "title": "Author PS and XPS documents"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:003",
+        "example:005",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "shared_fact_ids": [
+        "example:001",
+        "example:003",
+        "example:005",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "title": "Convert to PDF output"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "format:output.png",
+        "format:output.jpeg",
+        "format:output.bmp",
+        "format:output.tiff",
+        "dependency:skia-python"
+      ],
+      "shared_fact_ids": [],
+      "title": "Rasterize to image formats"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "example:005",
+        "public_symbol:aspose.page.mcp"
+      ],
+      "shared_fact_ids": [
+        "example:001",
+        "example:005"
+      ],
+      "title": "MCP tool exposure"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.image",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "shared_fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "title": "Programmatic page building"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "shared_fact_ids": [
+        "example:003",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "title": "Font embedding for PDF"
     }
   ],
   "deviations": [
@@ -113,7 +191,7 @@
     },
     {
       "link_fact_id": "link_target:027",
-      "section_id": "documentation_resources"
+      "section_id": "api_reference"
     },
     {
       "link_fact_id": "link_target:028",
@@ -122,7 +200,7 @@
   ],
   "material_limitations": [],
   "quick_start_example_id": "example:001",
-  "second_quick_start_example_id": null,
+  "second_quick_start_example_id": "example:006",
   "sections": [
     {
       "include": true,

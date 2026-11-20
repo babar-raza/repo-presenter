@@ -1,59 +1,33 @@
 {
   "acceptance_label": "uncalibrated",
   "calibration_status": "NOT_PASSED",
-  "findings": [
-    {
-      "absent": [],
-      "causal_stage": "S6",
-      "claim_kind": "unsupported_claim",
-      "clearance": {
-        "digest": "a8e6e03698c44f91b2900293b0ec9c37111398c0348cccea439b71c3ff695839",
-        "evidence": [
-          "line 7 is printed from SUPPORTED facts by a deterministic stage (zero-call re-derivation); no register row or claim detector refutes it; in no known-false class; cites format:input.eps, format:input.jxr, format:input.png, format:input.ps, format:input.tif, format:input.tiff, format:input.wdp, format:input.xps, format:output.bmp, format:output.jpeg, format:output.png, format:output.tiff"
-        ],
-        "name": "derived_from_supported_facts"
-      },
-      "criterion": "factuality",
-      "evidence": "audit: distinctive terms ['Aspose.Page']; found in SUPPORTED fact values: Aspose.Page -> enum_member:aspose.page.xps.print_tickets.printticketscope.document; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised",
-      "fact_ids": [],
-      "finding_id": "F01",
-      "message": "Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files.",
-      "omission": null,
-      "quote": "Aspose.Page FOSS for Python reads EPS, JXR, PNG, PS, TIF, TIFF, WDP and XPS files and writes BMP, JPEG, PNG and TIFF files.",
-      "repair": "Remove the unsupported claim about reading PNG, TIF, TIFF, WDP, and JXR files, and writing PNG and TIFF files. The facts confirm support for reading EPS, PS, XPS, and writing BMP, JPEG, PNG, and TIFF, but reading PNG, TIF, TIFF, WDP, and JXR is not supported by any fact in this unit.",
-      "rule": "llm:factuality",
-      "section_id": "opening",
-      "source": "llm",
-      "status": "CLEARED",
-      "unsupported_names": []
-    }
-  ],
+  "findings": [],
   "model_served": "qwen3-next",
-  "model_verdict": "REJECT_FACTUAL",
+  "model_verdict": "ACCEPT",
   "prompt_version": "21",
   "reason": "",
-  "reply_sha256": "c599067091c9df32ad5a41b95f1b6355f976b3cefa787680a68d2a4f65ae6789",
-  "request_sha256": "5eaa224cc0097b61c060e1fe7971f295b03ae74dda40ea88df2e888cbb1d697f",
+  "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+  "request_sha256": "dfa2aaa70ebca966b5a3fe7e3f1f78d90885c3fcf182f98901ee0b69dec3b873",
   "retryable": false,
   "reviewer_logic_version": "10",
   "schema_version": 2,
   "unit_reviews": [
     {
-      "findings": 1,
+      "findings": 0,
       "lines": [
         7,
-        226,
-        28
+        238,
+        32
       ],
       "m8": {
         "shape": null,
         "status": "not_run",
         "verdict": null
       },
-      "model_verdict": "REJECT_FACTUAL",
+      "model_verdict": "ACCEPT",
       "reason": "",
-      "reply_sha256": "c599067091c9df32ad5a41b95f1b6355f976b3cefa787680a68d2a4f65ae6789",
-      "request_sha256": "d8a2821e06531634b9527cba4b2ae325707c1ec9a216848286a07223283c9376",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "953ba30a09686cd5c0e747016714a32707def3432f05d0612473f1d367de0997",
       "sections": [
         "opening",
         "key_capabilities",
@@ -66,9 +40,9 @@
     {
       "findings": 0,
       "lines": [
-        234,
-        314,
-        41
+        246,
+        328,
+        43
       ],
       "m8": {
         "shape": null,
@@ -78,7 +52,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "bb9dbf0bef56948208ee4b19dc40756e0ed961c6cd02993406a394fdf8ce123c",
+      "request_sha256": "9650e6dc224c462d33f02a4e48e6ca155117f426094fbcd1b5d23c1ff0e2bf3e",
       "sections": [
         "api_reference"
       ],
@@ -88,9 +62,9 @@
     {
       "findings": 0,
       "lines": [
-        315,
-        421,
-        42
+        329,
+        429,
+        39
       ],
       "m8": {
         "shape": null,
@@ -100,7 +74,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "c7454a0ed3b5b379ffe663d759ba8d8afcbc46f7f8bd64c394cf5692ccb65b88",
+      "request_sha256": "3795d17e4d231b6df45a4c8c68019f5b7dafeaa20866073bd4305052b003e3d5",
       "sections": [
         "api_reference"
       ],
@@ -110,8 +84,8 @@
     {
       "findings": 0,
       "lines": [
-        422,
-        482,
+        430,
+        490,
         52
       ],
       "m8": {
@@ -122,7 +96,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "a78b85e13d95263c526f58c32e8d537ca5a07591d0ce25e6f1d2a3957af4a422",
+      "request_sha256": "3db583b9734d5f00cc7ac1fe38b38f7b6c5b2f8e96036dbd6230ddee79e98e8f",
       "sections": [
         "api_reference"
       ],
@@ -132,8 +106,8 @@
     {
       "findings": 0,
       "lines": [
-        483,
-        561,
+        491,
+        571,
         46
       ],
       "m8": {
@@ -144,7 +118,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "a2c0b561058fe5d2bde059c0b432c4a2ba0f9a1c3c98e017575e4f4dc7aa0444",
+      "request_sha256": "e4a4626392fd44a3fb94bae0b7aa45beacb05b1c548c7b39e04ae147f8f3fd22",
       "sections": [
         "api_reference",
         "documentation_resources"
@@ -155,8 +129,8 @@
     {
       "findings": 0,
       "lines": [
-        566,
-        607,
+        575,
+        616,
         13
       ],
       "m8": {
@@ -167,13 +141,216 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "8119458bbd0ab7f8a61bca0e9d6980a355bf293b6b6e3a8d037a922ca6dea977",
+      "request_sha256": "86688a2f0b11b1d5ae07280cac1f57d856921a4fdb2e3aa54f519f6e4a1105d7",
       "sections": [
         "scope_limitations",
         "development_testing"
       ],
       "status": "reviewed",
       "unit": "u6"
+    },
+    {
+      "findings": 1,
+      "lines": [
+        1,
+        155,
+        57
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "REJECT_FACTUAL",
+      "reason": "",
+      "reply_sha256": "a2755524bbe979495a2e7569e6b33c2fe48cab0fb8114a2ca97e8944e94295e8",
+      "request_sha256": "a981f24233a193bcc39f94da6f38d53fbc43daf9207145e1edc4dd8b30b76f5e",
+      "sample": "audit_packet",
+      "sections": [
+        "opening",
+        "structure",
+        "navigation",
+        "structure",
+        "key_capabilities",
+        "structure",
+        "installation",
+        "structure",
+        "dependencies",
+        "structure",
+        "quick_start",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u1"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        157,
+        244,
+        10
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "9b24871eea4a91f666fbabd1905dd2e9e4e32f4d7f9fc555e64bff7a5a382791",
+      "sample": "audit_packet",
+      "sections": [
+        "additional_examples",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u2"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        246,
+        308,
+        55
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "6724fadddc1ec4378e3574cf4090e75c199e4b3532f22be387e012e332ab209a",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        309,
+        361,
+        53
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "8d16e8bf5100983afa348a590a406d98ca672769697ae34e8f9abf0f27284f4d",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u4"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        362,
+        431,
+        52
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "cc4b94526ede5d4aef2aa10063bd1de1d1a3e9e7c566ec498499d4fa918d4092",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u5"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        432,
+        494,
+        54
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "d7e4518e697d177d460f8ab2f33d9d2f2a65cb4661a108a6a2afdd4c08fff0c3",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u6"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        495,
+        565,
+        54
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "b6818d5a191d0f1e72ff954150764dcd4360b26b64e8482193809e8b17cb2f92",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u7"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        567,
+        628,
+        22
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "bc4d023f7f5bd603e32fe34d055e666ebdb1a5b2d819610a88472a7063776f76",
+      "sample": "audit_packet",
+      "sections": [
+        "documentation_resources",
+        "structure",
+        "scope_limitations",
+        "structure",
+        "development_testing",
+        "structure",
+        "license"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u8"
     }
   ],
   "verdict": "ACCEPT"
