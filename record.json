@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "validation_failed",
+    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-20T08:17:52.494793+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44701076200",
     "acquired_at": "2026-11-20T08:16:31.186412+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 44,
+  "state_version": 45,
   "recent_trigger_dedup_keys": {
     "run:db18c12c51f3412f8bd68e169709484b:aspose-email-foss/Aspose.Email-FOSS-for-Python": "1fa5d07104b740a6b27d1eab319a9e1c",
     "run:f53899afe94f4697ae19afac1b18bc07:aspose-email-foss/Aspose.Email-FOSS-for-Python": "9517fed275ad44adb03f2686c3c0f20a"
