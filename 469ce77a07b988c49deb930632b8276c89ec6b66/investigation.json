@@ -1,0 +1,166 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:cxx_standard"
+    ],
+    "text": "C++ developers building cross-platform applications that need to generate or modify PowerPoint presentations programmatically."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:008",
+        "example:009",
+        "format:output.pptx",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Create new presentations or load existing .pptx files, manage slides via SlideCollection, and save in Office Open XML formats.",
+      "title": "Create and edit presentations"
+    },
+    {
+      "fact_ids": [
+        "example:008",
+        "example:009",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Insert AutoShapes, Tables, Connectors, and PictureFrames; format text at portion, paragraph, and text-frame levels; apply fills, outlines, and effects.",
+      "title": "Shape and text formatting"
+    },
+    {
+      "fact_ids": [
+        "example:009",
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Set core, application, and custom document properties; add per-slide speaker notes and comments with authors, timestamps, and replies.",
+      "title": "Document properties and notes"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.slides.foss"
+      ],
+      "text": "Embed images from in-memory byte buffers via ImageCollection and attach them as PictureFrames to slides.",
+      "title": "Image embedding"
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci-matrix",
+        "install_command:cmake",
+        "package:cmake_minimum"
+      ],
+      "text": "Builds on Ubuntu, macOS, and Windows using CMake with automatic dependency fetching via FetchContent.",
+      "title": "Cross-platform build support"
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:ci"
+      ],
+      "text": "Validate generated .pptx packages directly using conformance tests that inspect ZIP contents and XML structure.",
+      "title": "Conformance testing"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:cmake"
+      ],
+      "text": "No support for charts, SmartArt, OLE objects, animations, transitions, group shapes, hyperlinks, slide backgrounds, themes, or slide size configuration."
+    },
+    {
+      "fact_ids": [
+        "format:output.pptx"
+      ],
+      "text": "Only six Office Open XML presentation formats are supported; other SaveFormat values throw std::invalid_argument."
+    },
+    {
+      "fact_ids": [
+        "example:008"
+      ],
+      "text": "Cloned slides via slides().add_clone() lose their source shapes' text content."
+    },
+    {
+      "fact_ids": [
+        "dependency:pugixml"
+      ],
+      "text": "pugixml is exposed in the public interface, requiring consumers to have its headers available."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "package:name"
+      ],
+      "text": "Enables programmatic PowerPoint file manipulation in C++ without external dependencies like Microsoft Office or COM."
+    },
+    {
+      "fact_ids": [
+        "install_command:cmake",
+        "package:cmake_minimum",
+        "package:cxx_standard"
+      ],
+      "text": "Provides a consistent CMake-based build and integration path across Windows, Linux, and macOS."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:name",
+      "package:version",
+      "format:output.pptx"
+    ],
+    "text": "Aspose.Slides FOSS for C++ is a C++20 library for creating, reading, and editing PowerPoint .pptx presentations without requiring Microsoft PowerPoint or COM interop."
+  },
+  "uncertainties": [
+    "Whether the library supports saving to streams (only path-based save() is documented).",
+    "Whether the library supports adding images from file paths or streams (only byte buffer overload is documented).",
+    "Whether the library supports export to non-PPTX formats like PDF, HTML, or images.",
+    "Whether the library supports VBA macros or digital signatures.",
+    "Whether the library supports sections (ISection is declared but not implemented).",
+    "Whether the library supports slide size configuration beyond the default 4:3 template.",
+    "Whether the library supports animations or slide transitions.",
+    "Whether the library supports group shapes (add_group_shape is not present)."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "install_command:cmake",
+        "package:cmake_minimum",
+        "package:cxx_standard"
+      ],
+      "name": "Build from source",
+      "text": "Clone the repository and run CMake to configure and build the static library using CMake 3.20+ and C++20."
+    },
+    {
+      "fact_ids": [
+        "install_command:cmake",
+        "package:name"
+      ],
+      "name": "Consume via FetchContent",
+      "text": "Integrate the library into a CMake project using FetchContent to fetch and build AsposeSlidesFoss automatically."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "dependency:development.googletest",
+        "dependency:development.gtest"
+      ],
+      "name": "Run tests",
+      "text": "Build and run unit, integration, and conformance tests using GoogleTest, including cross-platform CI matrix and sanitizer checks."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow",
+        "package:distribution.aspose.slides.cpp.foss"
+      ],
+      "name": "Release packaging",
+      "text": "Publish releases to NuGet on Windows using a dedicated workflow triggered by version tags."
+    }
+  ]
+}
