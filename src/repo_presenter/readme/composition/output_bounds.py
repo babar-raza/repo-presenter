@@ -16,13 +16,20 @@ from typing import Any
 from repo_presenter.readme.composition.authoring import SectionTask, citable
 
 
+def omittable_ids(task: SectionTask) -> frozenset[str]:
+    """The distinct facts a reply over ``task`` may list in ``omitted``: the section's accepted
+    facts, the inherited units it must carry and every fact a slot is bound to."""
+    ids: set[str] = set(task.accepted_ids) | set(task.must_carry)
+    for facts in task.slot_facts.values():
+        ids |= set(facts)
+    return frozenset(ids)
+
+
 def omittable_count(tasks: Iterable[SectionTask]) -> int:
     """How many distinct facts a reply over ``tasks`` could list in ``omitted`` (each once)."""
     ids: set[str] = set()
     for task in tasks:
-        ids |= set(task.accepted_ids) | set(task.must_carry)
-        for facts in task.slot_facts.values():
-            ids |= set(facts)
+        ids |= omittable_ids(task)
     return len(ids)
 
 
