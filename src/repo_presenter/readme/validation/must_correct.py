@@ -420,6 +420,22 @@ def _plain(text: str) -> str:
 
 #: The one authored clause the renderer prints after its own Enterprise Edition sentence (BL-350).
 _ENTERPRISE_SLOT = ("enterprise_relationship", "context")
+#: The rule of the recorded decision to withhold that clause when it carries the maintainers' own
+#: paragraph about the commercial product (BL-480, R14, R42): the independent review found no fact
+#: that supports what the paragraph says the other product adds, and the repository cannot verify a
+#: statement about a different product.
+ENTERPRISE_CLAIM_RULE = "BL-480"
+#: The rationale written on each inherited unit that decision omits. "no longer" is the wording every
+#: reader of an omission (BC-17's ``disposition_is_non_loss``) accepts as a recorded, evidenced one.
+ENTERPRISE_CLAIM_RATIONALE = (
+    f"Omitted by the {ENTERPRISE_CLAIM_RULE} last-resort degrade (R14, R42): the independent review "
+    "found no fact that supports what this paragraph says the commercial product adds, and this "
+    "repository cannot verify a statement about a different product, so it is no longer made; the "
+    "verified Enterprise Edition link stays in the closing sentence of Scope and Limitations"
+)
+#: The renderer's own Enterprise sentence followed by more text: a quote that starts there is the
+#: closing paragraph of Scope, and the only authored text in it is the Enterprise clause.
+_ENTERPRISE_SHELL_LEAD = re.compile(r"Enterprise Edition\]\(https?://[^)\s]+\)\.\s+\S")
 
 
 def _printed_text(unit: Mapping[str, Any]) -> str:
@@ -550,6 +566,11 @@ def _withhold_flagged(
         plain = _plain(_printed_text(unit))
         inside = [r for r in rows if len(_plain(r.quote)) >= _MIN_MATCH and _plain(r.quote) in plain]
         covering = [r for r in rows if len(plain) >= _MIN_MATCH and plain in _plain(r.quote)]
+        if rule == DEGRADE_RULE and (section, slot) == _ENTERPRISE_SLOT and not inside and not covering:
+            # The owner by position, not by text (BL-480): a quote that starts at the renderer's own
+            # Enterprise sentence and runs on is that closing paragraph, whose only authored text is
+            # this clause, whatever later edits did to the clause's characters.
+            covering = [r for r in rows if _ENTERPRISE_SHELL_LEAD.search(_plain(r.quote))]
         if not inside and not covering:
             kept.append(unit)
             continue
@@ -589,17 +610,40 @@ def _withhold_flagged(
             status.update({i: "handled" for i in index_of(covering)})
             continue
         cites_inherited = any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or [])
-        if guard_inherited and cites_inherited:
-            for i in index_of(involved):
-                status.setdefault(i, "refused")
-            kept.append(unit)
-            continue
         if rule == DEGRADE_RULE and (section, slot) == _ENTERPRISE_SLOT:
             # BL-350: the closing sentence of Scope names the Enterprise Edition and links it from
             # the facts; only the "it adds ..." clause is authored. Without it the renderer prints
             # the fact-true sentence alone (its own fallback when no unit is authored).
-            records.append(_record(slot, section, involved, "enterprise_context_withheld", rule))
+            # BL-480: on every cell whose live README has an Enterprise paragraph the clause cites
+            # that paragraph (the must-carry carrier), which BL-350's inherited guard refused, so the
+            # lever never ran where it mattered. The clause is the maintainers' own text, so the
+            # withholding is a recorded R14 decision (rule BL-480; ``degrade_claims`` rewrites the
+            # paragraph's disposition), reached only when the independent review has faulted the
+            # printed clause after every repair (the degrade is the last resort, R42).
+            record = _record(slot, section, involved, "enterprise_context_withheld", rule)
+            inherited = sorted(
+                str(f) for f in unit.get("fact_ids") or [] if str(f).startswith("inherited_unit:")
+            )
+            if inherited:
+                record["rule"] = ENTERPRISE_CLAIM_RULE
+                record["inherited_units"] = inherited
+            records.append(record)
+            from repo_presenter.readme.composition.authoring import ENTERPRISE_CLAIM_OMISSION_REASON
+
+            # The section's one slot is then owed no unit (BC-04), as an API row's is after its fallback.
+            omitted.append(
+                {
+                    "fact_id": "link_target:product.enterprise",
+                    "reason": ENTERPRISE_CLAIM_OMISSION_REASON,
+                    "section": "enterprise_relationship",
+                }
+            )
             status.update({i: "handled" for i in index_of(involved)})
+            continue
+        if guard_inherited and cites_inherited:
+            for i in index_of(involved):
+                status.setdefault(i, "refused")
+            kept.append(unit)
             continue
         if slot.startswith("capability:") and slot.split(":", 1)[1].isdigit():
             dropped_caps.append(int(slot.split(":", 1)[1]))
@@ -1006,6 +1050,42 @@ def _prints(quote: str, text: str) -> bool:
     return (len(a) >= _MIN_MATCH and a in b) or (len(b) >= _MIN_MATCH and b in a)
 
 
+def _omit_enterprise_paragraphs(
+    records: Sequence[Mapping[str, Any]], by_unit: Mapping[str, dict[str, Any]], facts: Any
+) -> list[dict[str, Any]]:
+    """BL-480: the maintainers' Enterprise paragraph whose clause the degrade just withheld is
+    omitted on the record, not left as "superseded by the renderer's sentence" (that sentence no
+    longer carries what it said). Each inherited unit the withheld clause cited and that the plan
+    placed for the closing sentence gets OMIT_UNSUPPORTED, citing the verified Enterprise target,
+    with ``ENTERPRISE_CLAIM_RATIONALE``; an R14 record names it. Mutates ``by_unit``'s rows."""
+    from repo_presenter.readme.composition.planning import ENTERPRISE_FACT_ID
+
+    known = {fact.id for fact in facts.facts}
+    out: list[dict[str, Any]] = []
+    for record in records:
+        if record.get("action") != "enterprise_context_withheld":
+            continue
+        for unit_id in record.get("inherited_units") or []:
+            entry = by_unit.get(str(unit_id))
+            if entry is None or entry.get("destination_section") != "enterprise_relationship":
+                continue
+            entry["disposition"] = "OMIT_UNSUPPORTED"
+            entry["destination_section"] = None
+            entry["fact_ids"] = (
+                [ENTERPRISE_FACT_ID] if ENTERPRISE_FACT_ID in known else _cited_facts("", facts)
+            )
+            entry["rationale"] = ENTERPRISE_CLAIM_RATIONALE
+            out.append(
+                {
+                    "rule": ENTERPRISE_CLAIM_RULE, "slot": str(unit_id),
+                    "section": "enterprise_relationship", "action": "inherited_unit_omitted",
+                    "findings": list(record.get("findings") or []),
+                    "detail": "the clause printed from this paragraph is withheld with the Enterprise clause",
+                }
+            )
+    return out
+
+
 def degrade_claims(
     plan: Mapping[str, Any],
     units: Mapping[str, Any],
@@ -1033,6 +1113,7 @@ def degrade_claims(
     )
     new_disp = copy.deepcopy(dict(dispositions))
     by_unit = {str(row.get("unit_id")): row for row in new_disp.get("dispositions", [])}
+    records.extend(_omit_enterprise_paragraphs(records, by_unit, facts))
     cited = {
         str(fid)
         for unit in new_units.get("units", [])

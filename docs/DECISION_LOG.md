@@ -7781,3 +7781,61 @@ candidate is not stored, so its producing line could not be replayed). R9: no RE
 demoted. R14: nothing dropped; the change only stops refusing true content.
 
 Backlog: BL-470
+
+---
+
+## 2026-11-20: The Enterprise clause that carries the maintainers' own paragraph is withheld on a recorded decision when the independent review faults it (BL-480, R14, R36, R42, R43)
+
+Class: the single most common blocker left on the one-finding Lane R cells, `llm:factuality unsupported_claim` in
+`scope_limitations` on one line, the renderer's own "See [Aspose.X - Enterprise Edition](url)." joined to an authored "It adds
+...": Slides C++ run 44691775045 (main 400eb72, "degrade: nothing kept (1 flag(s) tried)"), OMR Python 44645155538 and
+44656583285 (the lever answered `printed_text_withheld`, then the same finding), PSD Python, HTML Python earlier.
+Origin, established on the Slides C++ units: the clause is `enterprise_relationship:context`, which the renderer prints right
+after its own sentence (`renderer._enterprise_paragraph`). On every cell whose live README has an Enterprise paragraph, S4 places
+that paragraph (`inherited_unit:103.paragraph` on Slides C++, "These limitations don't apply to [... Enterprise Edition](url),
+which adds broader format support (including PDF, HTML, and image export), charts, animations, and full commercial support.",
+written by the maintainers; the live README is aspose.org's own publication) as SUPERSEDE_REDUNDANT into
+`enterprise_relationship`, the author prompt tells the model the substance of that section is what the commercial product adds, and
+the unit it writes cites the paragraph (a local Lane R cascade on the stored Lane L facts of Slides C++, 48 provider calls, wrote
+`{section: enterprise_relationship, slot: context, fact_ids: ["inherited_unit:103.paragraph"], text: "It adds broader format support
+(including PDF, HTML, and image export), charts, animations, and full commercial support."}`; all 17 Enterprise clause units in the certified Lane R seals of
+`/home/user/.supervisor/w-feedback/seals` cite an inherited paragraph the same way). The reviewer cannot clear it: no fact states what another product adds
+(`link_target:product.enterprise` is the only Enterprise fact), and it says so ("distinctive terms [Aspose.Slides,
+products.aspose.com] found in SUPPORTED fact values ... no registered clearance proves an unsupported claim false").
+Why BL-350's lever missed it, two independent reasons, both measured: (1) `must_correct._withhold_flagged` tested "the unit cites an
+inherited unit" before the Enterprise slot, so the lever was refused for exactly the units that exist (BL-350's own negative control
+pinned the refusal); (2) even where the lever applies, the candidate was discarded by BC-04, which owes the section's one slot a unit
+("enterprise_relationship: units must fill exactly these slots once each: context; got "): BL-350's tests did not see it because
+their fixture already failed BC-04 for an unrelated detail and `_degrade_settled` compares check ids only. Reproduced offline,
+zero calls, on the Slides C++ units, dispositions, plan and facts of that cascade with the hosted finding injected:
+origin/main prints "degrade: nothing kept (1 flag(s) tried)", the line the hosted log shows. OMR Python: its README has no Enterprise
+paragraph at all (so the clause is the model's own, from nothing the repository states), the unit store of the hosted runs is not
+downloadable here, and why the owner lookup answered `printed_text_withheld` is NOT established; a reason (2) discard explains the
+rejection after a found owner, and the owner is now also found by position (below).
+Alternatives considered (R36/R42): (a) always print only the renderer's sentence, never the clause: rejected, 24 of the 25 current Lane R seal heads
+print text after the Enterprise sentence and the reviewer accepted it, so it would change certified bytes and drop live content in
+all of them (R10, R14) for a variance that hits a few cells; (b) keep it as an attributed maintainer statement: rejected, R9 forbids attribution wording and
+the reviewer would still not clear it; (c) the reviewer clears maintainer text: no such clearance exists and none is invented (the
+reviewer is frozen); (d) aspose.org's published candidates (skills/readme-refresh.md: "These limitations apply only to {Product} FOSS
+- they don't carry over to [{Product} - Enterprise Edition](...), which adds...") print the clause as maintainer text: followed for
+every cell the review accepts, which is why nothing is withheld unless the independent review faults it after every repair; where it
+does, the claim is about a different product the repository cannot verify, so aspose.org's approach is not followable there and the
+withholding is decided case by case, by the pipeline globally. Decision: the BL-240 degrade (last resort, only after repair ended with
+the candidate failing, the only code that can change a README that already passes none) withholds the clause also when it cites an
+inherited unit, as a recorded R14 decision with rule BL-480: the units record `enterprise_context_withheld` naming the paragraph, the
+paragraph's disposition becomes OMIT_UNSUPPORTED citing `link_target:product.enterprise` with the rationale
+`ENTERPRISE_CLAIM_RATIONALE` ("... this repository cannot verify a statement about a different product, so it is no longer made"),
+an `inherited_unit_omitted` record is filed, the section's slot is released by an `omitted` item (`ENTERPRISE_CLAIM_OMISSION_REASON`,
+read by `authoring.api_row_fallback_slots` like an API row's fallback), and the renderer prints its own sentence alone. The owner of a
+flag whose quote starts at the renderer's Enterprise sentence and runs on is also found by position, not only by the clause's text.
+Never for any other slot, never for a flag that prints nowhere, never for the renderer's sentence alone. R9: nothing is printed for
+the omission (the README keeps the verified "See [... Enterprise Edition](url)." sentence). R10: recertification never reaches the
+degrade. R14: the omission is recorded with rule, reason and the unit it came from. Property improved: robust, repeatable (one lever
+now reaches the shape that exists; measured by tests/readme/validation/test_enterprise_claim_bl480.py, from the exact Slides C++
+sentence, with negative controls, and by the offline end-to-end degrade on the real Slides C++ state: nothing kept before, kept after
+with no new failing check, the Enterprise sentence kept, the clause gone, two R14 records).
+Not proven: the hosted outcome (R41). If the independent review faults a different line next, that is the next class. A candidate
+whose reviewer faults the Enterprise sentence itself, or whose clause is in a unit that is not `enterprise_relationship:context`, is
+not reached.
+
+Backlog: BL-480
