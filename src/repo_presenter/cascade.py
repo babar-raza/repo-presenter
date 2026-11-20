@@ -149,7 +149,9 @@ from repo_presenter.readme.review.independent_reviewer import (
 )
 from repo_presenter.readme.review.llm_review import (
     MAX_REVIEW_REPAIR_ROUNDS,
+    merge_second_sample,
     review_with_model,
+    second_sample_lines,
 )
 from repo_presenter.readme.validation.blocking import (
     blocking_failures,
@@ -1192,6 +1194,12 @@ MAX_DEGRADE_PASSES = 4
 #: the degrade and the final review inside the job timeout.
 CASCADE_TIMEBOX_SECONDS = 3000.0
 
+#: BL-430: a candidate the production review accepts is reviewed once more, a fresh sample over the packet
+#: the independent audit uses, and a blocking finding of either sample on author-written text blocks
+#: (``llm_review.merge_second_sample``). ``run_cascade(second_review=None)`` reads this; the offline suite
+#: turns it off (``tests/conftest.py``) because it scripts the provider reply by reply.
+SECOND_REVIEW = True
+
 
 def _blocking_load(validation: dict[str, Any], verdict: ReviewVerdict) -> tuple[frozenset[str], int]:
     """The blocking check ids still failing and how many failures plus deterministic findings that
@@ -1420,6 +1428,7 @@ def run_cascade(
     review_repair_rounds: int = MAX_REVIEW_REPAIR_ROUNDS,
     timebox_seconds: float = CASCADE_TIMEBOX_SECONDS,
     clock: Callable[[], float] = time.monotonic,
+    second_review: bool | None = None,
 ) -> CascadeResult:
     """Run S3 (investigation) through S8 (coherence), the S9 validation and the independent
     review, for one repository, as one process under one invocation. Writes the same artifact
@@ -1446,6 +1455,12 @@ def run_cascade(
     ``clock``, provider calls so far) so a run the job timeout cancels still shows its last stage;
     ``timebox_seconds`` after the cascade's start no new repair round (S9 or S10) begins and the
     degrade step then runs. ``clock`` is injectable for tests.
+
+    BL-430: every review of an accepted candidate is two samples (``second_review``, default
+    ``SECOND_REVIEW``): the production review, then the audit's packet, by union
+    (``llm_review.merge_second_sample``). A blocking finding of the second sample is repaired by the same S10
+    rounds and withheld by the same BL-240 degrade as any other. Once the time-box has passed no new second
+    sample starts (a sample over a large README takes minutes and the job timeout is the safety net).
     """
     from repo_presenter.readme.repair.loop import composition_hash
 
@@ -1479,6 +1494,35 @@ def run_cascade(
 
     def expired() -> bool:
         return clock() - started >= timebox_seconds
+
+    sampled_twice = SECOND_REVIEW if second_review is None else second_review
+
+    def reviewed(current: _Settled, findings: Any) -> ReviewVerdict:
+        """The model's verdict on ``current``'s candidate: the production review and, when it accepts,
+        the second sample (BL-430)."""
+        reviewer = dict(
+            prompts=prompts, config=config, ledger=ledger, store=store, context=context,
+            candidate_readme=current.composed.readme, original_readme=original, facts=document,
+            plan=current.composed.plan, dispositions=current.composed.dispositions,
+            validation=current.validation,
+        )
+        deriver = _deriver(current, entry=entry, document=document)
+        first = review_with_model(**reviewer, deterministic_findings=findings, derive=deriver)
+        if not sampled_twice or first.verdict != "ACCEPT":
+            return first
+        if expired():
+            progress("S10 second review sample skipped: time-box reached")
+            return first
+        progress("S10 second review sample (audit packet) start")
+        second = review_with_model(
+            **reviewer, rendered=False, audit=True, derive=deriver,
+            only_units_holding=second_sample_lines(reviewer["candidate_readme"], document),
+        )
+        merged = merge_second_sample(
+            first, second, candidate_readme=reviewer["candidate_readme"], facts=document
+        )
+        progress(f"S10 second review sample end: {merged.verdict}")
+        return merged
 
     progress(f"S3 investigation start (time-box {timebox_seconds:.0f}s)")
     investigation = _run_investigation(
@@ -1517,13 +1561,7 @@ def run_cascade(
         # check rejects, once per candidate version. ReviewUnavailable propagates: no valid
         # review, no verdict that could be sealed.
         progress(f"S10 review start (repair round {review_rounds} of {review_repair_rounds})")
-        verdict = review_with_model(
-            prompts=prompts, config=config, ledger=ledger, store=store, context=context,
-            candidate_readme=settled.composed.readme, original_readme=original, facts=document,
-            plan=settled.composed.plan, dispositions=settled.composed.dispositions,
-            validation=settled.validation, deterministic_findings=verdict.findings,
-            derive=_deriver(settled, entry=entry, document=document),
-        )
+        verdict = reviewed(settled, verdict.findings)
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         progress(f"S10 review end: {verdict.verdict}")
         if verdict.verdict == "ACCEPT" or review_rounds >= review_repair_rounds:
@@ -1578,14 +1616,7 @@ def run_cascade(
             break
         settled, verdict = degraded, degraded.verdict
         if not verdict.blocking_findings and not blocking_failures(settled.validation):
-            verdict = review_with_model(
-                prompts=prompts, config=config, ledger=ledger, store=store, context=context,
-                candidate_readme=settled.composed.readme, original_readme=original,
-                facts=document, plan=settled.composed.plan,
-                dispositions=settled.composed.dispositions, validation=settled.validation,
-                deterministic_findings=verdict.findings,
-                derive=_deriver(settled, entry=entry, document=document),
-            )
+            verdict = reviewed(settled, verdict.findings)
             write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
     progress(f"cascade end: {verdict.verdict}")
     composed, validation = settled.composed, settled.validation

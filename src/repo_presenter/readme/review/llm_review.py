@@ -41,8 +41,8 @@ from __future__ import annotations
 import difflib
 import hashlib
 import json
-from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from collections.abc import Collection, Mapping, Sequence
+from dataclasses import dataclass, replace
 from functools import partial
 from typing import Any
 
@@ -74,7 +74,7 @@ from repo_presenter.readme.review.reply import (
     review_from_reply,
     validate_review_reply,
 )
-from repo_presenter.readme.review.scope import authored_table_lines, maintainer_lines
+from repo_presenter.readme.review.scope import authored_table_lines, line_sections, maintainer_lines
 from repo_presenter.readme.review.sectionwise import (
     ReviewUnit,
     plan_units,
@@ -496,6 +496,7 @@ def review_with_model(
     rendered: bool = True,
     audit: bool = False,
     derive: Deriver | None = None,
+    only_units_holding: Collection[int] | None = None,
 ) -> ReviewVerdict:
     """The model-reviewed verdict for ``candidate_readme``; ``ReviewUnavailable`` when no valid
     review could be obtained. ``dispositions`` and ``validation`` are the deterministic stage's
@@ -506,7 +507,10 @@ def review_with_model(
     The one thing taken from ``dispositions`` is structural: which shown lines are attributed
     maintainer text (``scope.maintainer_lines``, units kept as ``PRESERVE_ATTRIBUTED``). Each unit's
     packet names them and its contract refuses an ``unsupported_claim`` citing only them. A Lane L
-    review has no such disposition, so the set is empty and nothing changes there."""
+    review has no such disposition, so the set is empty and nothing changes there.
+
+    ``only_units_holding`` (BL-430's second sample only) asks just the units that hold at least one of
+    these lines; each asked request is exactly the one the full review would send."""
     loaded = prompts[JOB]
     units, attributed, planned = planned_requests(
         prompts=prompts,
@@ -529,6 +533,11 @@ def review_with_model(
             "the candidate has no author-written text to review (every line is renderer-printed)",
             [],
         )
+    if only_units_holding is not None:
+        wanted = frozenset(only_units_holding)
+        planned = tuple(request for request in planned if wanted & set(request.unit.lines))
+        if not planned:
+            raise ReviewUnavailable("no review unit holds any of the lines asked about", [])
     replies: list[tuple[ReviewUnit, dict[str, Any]]] = []
     records: list[dict[str, Any]] = []
     request_hashes: list[str] = []
@@ -640,6 +649,105 @@ def review_with_model(
             blocks.setdefault(request_of[unit_label], []).append(finding.finding_id)
     _record_blocks(store, blocks, candidate_readme, verdict.verdict)
     return verdict
+
+
+#: ``unit_reviews`` key that marks a record of an extra review sample (BL-430); the unit label is
+#: prefixed ``s2-`` so it never collides with the production sample's ``u1``.
+SECOND_SAMPLE_KEY = "sample"
+SECOND_SAMPLE = "audit_packet"
+
+
+def _squashed(text: str) -> str:
+    return " ".join(text.split())
+
+
+def _authored_scope(candidate_readme: str, facts: FactsDocument) -> tuple[frozenset[int], frozenset[str]]:
+    """The 1-based lines and the section names the production Lane R review reads (its units hold
+    author-written text and nothing the renderer printed), i.e. the text a BL-240 degrade or a repair
+    round can change."""
+    authored = authored_table_lines(candidate_readme, facts)
+    sections = line_sections(candidate_readme, True, authored)
+    lines = frozenset(n for n, section in enumerate(sections, 1) if section is not None)
+    return lines, frozenset(section for section in sections if section is not None)
+
+
+def _on_authored_text(
+    finding: Any, rows: Sequence[str], lines: frozenset[int], sections: frozenset[str]
+) -> bool:
+    """Whether a blocking finding of the second sample is about text the production review reads:
+    its quote prints on an authored line, or, when the quote prints nowhere (a whole-section finding),
+    it names an authored section. A finding on a heading, a navigation or install line, or any other
+    line the renderer printed is not counted: no repair or degrade can change that text, and the
+    audit's own derivation owns such lines."""
+    pieces = [_squashed(piece) for piece in str(finding.quote or "").splitlines() if piece.strip()]
+    printed = {
+        number
+        for number, row in enumerate(rows, 1)
+        if any(piece and piece in _squashed(row) for piece in pieces)
+    }
+    if printed:
+        return bool(printed & lines)
+    return finding.section_id in sections
+
+
+def second_sample_lines(candidate_readme: str, facts: FactsDocument) -> frozenset[int]:
+    """The lines the production Lane R review reads: the only lines whose units the second sample asks
+    about, and the only lines a second-sample finding is counted on (BL-430)."""
+    return _authored_scope(candidate_readme, facts)[0]
+
+
+def merge_second_sample(
+    first: ReviewVerdict,
+    second: ReviewVerdict,
+    *,
+    candidate_readme: str,
+    facts: FactsDocument,
+) -> ReviewVerdict:
+    """The verdict of two review samples of one candidate, by union (BL-430). ``first`` is the production
+    review (author-written text only, section-grouped units); ``second`` a fresh sample of the same
+    reviewer, prompt and contract over the packet the independent audit uses
+    (``review_with_model(audit=True, rendered=False, only_units_holding=second_sample_lines(...))``: the
+    whole document, headings shown, different unit grouping and fact selection), asked by the cascade.
+    A blocking finding of either sample on text the production review reads blocks.
+
+    Why: on the hosted audit rounds 44588173276 and 44656899884 every flagged Lane R control had been
+    accepted at seal by the production packet, and the audit packet, a different request, flagged the
+    same authored lines again and again (OCR .NET: lines 50 and 51 in 3 of 4 fresh audit samples and
+    in both rounds, 0 of 5 production samples; PSD Java: 4 of 4 and 0 of 5). The seal gate and the
+    audit gate judged different packets; a seal now needs both.
+
+    Nothing is demoted and no threshold moves: ``first`` is returned as it was when the second sample finds
+    nothing on authored text, with the second sample's unit records appended (``sample`` marks them);
+    otherwise the union REJECT carries every finding of both, the second's ids prefixed ``S2-``, and the
+    caller's existing repair rounds and BL-240 degrade take it from there. A candidate ``first`` already
+    rejects is returned as it is. The call store replays an identical request (the
+    no-re-roll rule), so a further sample of the same bytes needs a further, different packet; there is
+    exactly one second sample."""
+    if first.verdict != "ACCEPT":
+        return first
+    records = tuple(
+        {**record, "unit": f"s2-{record.get('unit', '?')}", SECOND_SAMPLE_KEY: SECOND_SAMPLE}
+        for record in second.unit_reviews
+    )
+    lines, sections = _authored_scope(candidate_readme, facts)
+    rows = candidate_readme.splitlines()
+    kept = [
+        replace(finding, finding_id=f"S2-{finding.finding_id}" if finding.finding_id else "")
+        for finding in second.blocking_findings
+        if _on_authored_text(finding, rows, lines, sections)
+    ]
+    if not kept:
+        return replace(first, unit_reviews=(*first.unit_reviews, *records))
+    return ReviewVerdict.folded(
+        [*first.findings, *kept],
+        model_verdict=second.model_verdict if second.model_verdict in REJECT_VERDICTS else first.model_verdict,
+        prompt_version=first.prompt_version,
+        model_served=first.model_served,
+        request_sha256=first.request_sha256,
+        reply_sha256=first.reply_sha256,
+        calibration_status=first.calibration_status,
+        unit_reviews=(*first.unit_reviews, *records),
+    )
 
 
 def blocked_predicate(verdict: ReviewVerdict) -> str:
