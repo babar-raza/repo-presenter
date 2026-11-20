@@ -83,71 +83,75 @@
    "run_id": "44645285347",
    "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T03:23:50+00:00",
+   "classes": [
+    "job_error|job_error|LaneStepFailure:the_lane_step_ended"
+   ],
+   "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44656630584",
+   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
+   "version_set": ""
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:38:04+00:00",
+  "at": "2026-11-20T03:23:50+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '1.7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this tex",
+   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
+    "example": "LaneStepFailure: the lane step ended cancelled and left no failure record",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "OutputRejectedError"
+     "LaneStepFailure"
     ],
     "rule": "job_error",
-    "scope": "2a7903dce76c7c5c2d35799032d1eb51c4956cb73c6692537a627743c6ec7108",
-    "scope_paths": [
-     "prompts",
-     "pyproject.toml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
-    ],
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
     "upstream": ""
    }
   },
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
+  "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
+  "durable_state": "",
+  "exit_code": null,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '1.7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.; recover's correction was rejected too: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "unknown",
+   "detail": "LaneStepFailure: the lane step ended cancelled and left no failure record",
+   "kind": "LaneStepFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: unit opening: spells '1.7'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this tex",
+    "label": "LaneStepFailure",
+    "message": "LaneStepFailure: the lane step ended cancelled and left no failure record",
     "origin": {
-     "id": "OutputRejectedError",
+     "id": "LaneStepFailure",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no",
+    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
     "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "82b8ccbac847b04cfc0b797f5099c0b1315cf2ab",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
-  "run_id": "44645285347",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44645285347",
+  "run_id": "44656630584",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44656630584",
   "schema_version": 1,
   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
-  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  "version_set": ""
  },
  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
  "schema_version": 1
