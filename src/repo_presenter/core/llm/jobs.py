@@ -50,6 +50,7 @@ import copy
 import functools
 import itertools
 import json
+import sys
 import os
 import re
 import string
@@ -821,6 +822,12 @@ def run_job(
         else "twice"
     )
     message = f"{job}: output rejected {asked}; last rejection: {'; '.join(rejection)}"
+    # Hosted logs print only the reason; the rejected reply itself (cut short) is what the next class
+    # fix needs (supervisor diagnostics, 2026-11-20). It carries no secret: it is the model's README text.
+    try:
+        print(f"{job}: last rejected reply (first 1500 chars): {str(content)[:1500]}", file=sys.stderr)
+    except NameError:  # no reply was ever read
+        pass
     if recovered_rejection:
         message += f"; recover's correction was rejected too: {'; '.join(recovered_rejection)}"
     raise OutputRejectedError(message)
