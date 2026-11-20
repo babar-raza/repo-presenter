@@ -169,25 +169,80 @@
    "run_id": "44745649764",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T18:10:31+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph"
+   ],
+   "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44787771703",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:37:06+00:00",
-  "classes": {},
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-20T18:10:31+00:00",
+  "classes": {
+   "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's i",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "OutputRejectedError"
+    ],
+    "rule": "job_error",
+    "scope": "ddb6152147c005945ab46558f8b3cfc155240548e40fb31754912156dcb3c7e2",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "upstream": ""
+   }
+  },
+  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again",
+   "kind": "OutputRejectedError",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's i",
+    "origin": {
+     "id": "OutputRejectedError",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "44745649764",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745649764",
+  "run_id": "44787771703",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44787771703",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
