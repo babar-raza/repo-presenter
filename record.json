@@ -129,11 +129,23 @@
    "run_id": "44644427027",
    "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T01:55:57+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition"
+   ],
+   "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44656444321",
+   "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:21:55+00:00",
+  "at": "2026-11-20T01:55:57+00:00",
   "classes": {
    "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
     "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
@@ -143,7 +155,7 @@
      "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "2a7903dce76c7c5c2d35799032d1eb51c4956cb73c6692537a627743c6ec7108",
+    "scope": "fc403fa977cb33e1ab3d18087c088984b9b4717f2573e0fd3e0258ac64db84d9",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -157,7 +169,7 @@
     "upstream": ""
    }
   },
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+  "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -184,13 +196,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "82b8ccbac847b04cfc0b797f5099c0b1315cf2ab",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44644427027",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44644427027",
+  "run_id": "44656444321",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44656444321",
   "schema_version": 1,
   "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
