@@ -12,12 +12,12 @@
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Read and write Excel workbooks",
-      "Cell styling and formatting",
+      "Workbook and worksheet management",
+      "Cell value and formula handling",
+      "Styling and formatting",
       "Data validation and conditional formatting",
-      "Chart and shape support",
-      "Page setup and print layout",
-      "Comments, pictures, and hyperlinks"
+      "Embedded objects and shapes",
+      "Charts and tables"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -25,15 +25,14 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "package:name",
-        "package:version",
-        "example:001"
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
       ],
       "shared_fact_ids": [
-        "example:001"
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Read and write Excel workbooks"
+      "title": "Workbook and worksheet management"
     },
     {
       "fact_ids": [
@@ -44,7 +43,18 @@
         "example:001",
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Cell styling and formatting"
+      "title": "Cell value and formula handling"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "shared_fact_ids": [
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "title": "Styling and formatting"
     },
     {
       "fact_ids": [
@@ -63,7 +73,7 @@
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Chart and shape support"
+      "title": "Embedded objects and shapes"
     },
     {
       "fact_ids": [
@@ -72,19 +82,32 @@
       "shared_fact_ids": [
         "public_symbol:org.aspose.cells_foss"
       ],
-      "title": "Page setup and print layout"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "title": "Comments, pictures, and hyperlinks"
+      "title": "Charts and tables"
     }
   ],
   "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository"
+      ],
+      "section_id": "identity",
+      "text": "The H1 product name is rendered by the identity section from facts."
+    },
+    {
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005"
+      ],
+      "section_id": "badges",
+      "text": "The badge row is rendered by the badges section from facts."
+    },
     {
       "fact_ids": [
         "link_target:009",
@@ -92,28 +115,66 @@
         "link_target:product.enterprise"
       ],
       "section_id": "banner",
-      "text": "The banner image link in the inherited README points to the enterprise product page; moved to enterprise_relationship where product relationships are described."
+      "text": "The banner image links to the enterprise product page; moved to enterprise_relationship where product relationships are described."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:repository",
+        "package:name"
+      ],
+      "section_id": "opening",
+      "text": "The paragraph's substance is covered by the product_summary and capabilities facts; rewritten to match the opening section's required two-to-four sentence scope."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository"
+      ],
+      "section_id": "navigation",
+      "text": "The navigation list is rendered by the navigation section from link_target facts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The diagram describes core capabilities; placed in key_capabilities to support the required three-to-eight capability items."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven"
+      ],
+      "section_id": "installation",
+      "text": "The Maven dependency snippet matches the install_command fact and is rendered by the installation section."
+    },
+    {
+      "fact_ids": [
+        "dependency:development.org.apache.poi-poi-ooxml",
+        "dependency:development.org.junit.jupiter-junit-jupiter",
+        "dependency:none"
+      ],
+      "section_id": "dependencies",
+      "text": "The dependency list is fully covered by the dependencies section facts."
     },
     {
       "fact_ids": [
         "example:001"
       ],
       "section_id": "quick_start",
-      "text": "The second Quick Start example (Load workbook with options) is CONTRADICTED and omitted."
+      "text": "The code block matches the verified example:001 and is supported."
     },
     {
       "fact_ids": [
         "example:003"
       ],
       "section_id": "additional_examples",
-      "text": "The Additional Examples section includes only the verified example; the second example (Load workbook) is omitted as CONTRADICTED."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:044.html_block"
-      ],
-      "section_id": "api_reference",
-      "text": "The orphaned closing HTML tag (</details>) is omitted as it adds no value and may break rendering."
+      "text": "The code block matches the verified example:003 and is supported."
     }
   ],
   "flagship_example_id": "example:003",
@@ -133,6 +194,10 @@
     {
       "link_fact_id": "link_target:007",
       "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "banner"
     },
     {
       "link_fact_id": "link_target:023",

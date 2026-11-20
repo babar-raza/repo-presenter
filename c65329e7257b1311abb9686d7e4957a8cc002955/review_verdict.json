@@ -7,7 +7,7 @@
   "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "082329b8399a1be32896382a8ecab8b4889c90cb947e77cd09210fde4863abbe",
+  "request_sha256": "25a700d2817c2c6c57df4cf527ace11fca1f401448e5a0dac601e48675ef55d8",
   "retryable": false,
   "reviewer_logic_version": "10",
   "schema_version": 2,
@@ -16,8 +16,8 @@
       "findings": 0,
       "lines": [
         7,
-        84,
-        37
+        15,
+        8
       ],
       "m8": {
         "shape": null,
@@ -27,10 +27,9 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "67b9be5d5e7069ba8c40d1abcad6aad008af8a54227ca718edea07d318eace9a",
+      "request_sha256": "488831635935e89708dec263c0aa5c7d7921b70a7b1681e24e259d8cfcddf800",
       "sections": [
-        "opening",
-        "key_capabilities"
+        "opening"
       ],
       "status": "reviewed",
       "unit": "u1"
@@ -38,9 +37,9 @@
     {
       "findings": 0,
       "lines": [
-        127,
-        534,
-        30
+        55,
+        98,
+        43
       ],
       "m8": {
         "shape": null,
@@ -50,8 +49,31 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "810d2165cd9867d5d403b0232ad02a4659d8b96fb60229b86a96fbb08e1e9406",
+      "request_sha256": "4abd1815bde45d44bf6b1819262762daf6b3e918b78a8bb5141d7a88b243c553",
       "sections": [
+        "key_capabilities"
+      ],
+      "status": "reviewed",
+      "unit": "u2"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        99,
+        548,
+        34
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "4f32f517c8f4bb7bbad86e5cdbc2515aa6911417ad0e9703878608fbb458194b",
+      "sections": [
+        "key_capabilities",
         "quick_start",
         "additional_examples",
         "api_reference",
@@ -60,7 +82,164 @@
         "development_testing"
       ],
       "status": "reviewed",
-      "unit": "u2"
+      "unit": "u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        1,
+        53,
+        23
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "5427a8f3c3d64fddb784cf46f98cc42aa6165191f1dab7595aff3320bc8f89b7",
+      "sample": "audit_packet",
+      "sections": [
+        "opening",
+        "structure",
+        "navigation",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u1"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        55,
+        98,
+        43
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "7bb37d6a94b561152dc5feb89cc79a8dfe77cc88a44f8656e7494b3cbfc52633",
+      "sample": "audit_packet",
+      "sections": [
+        "key_capabilities"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u2"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        99,
+        234,
+        22
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "5708f8ec87aec0a97bef6197c02234aece281f29db49346e9a443b390def6008",
+      "sample": "audit_packet",
+      "sections": [
+        "key_capabilities",
+        "structure",
+        "installation",
+        "structure",
+        "dependencies",
+        "structure",
+        "quick_start",
+        "structure",
+        "additional_examples",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        236,
+        302,
+        59
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "edceb20a8b0f83cb043d8964fbecfd2b8fd8f6ebb4ed10dfbd964947e7c983c2",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u4"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        416,
+        479,
+        55
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "259a55c77b5309ea34dca0e77ec31007233d5057abb38b88f8042c39bc46848b",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u7"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        481,
+        552,
+        32
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "023da5ce15e5a8c6405fa8a79c5516539cc4c28189539d4125d3782f658318da",
+      "sample": "audit_packet",
+      "sections": [
+        "documentation_resources",
+        "structure",
+        "scope_limitations",
+        "structure",
+        "development_testing",
+        "structure",
+        "license"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u8"
     }
   ],
   "verdict": "ACCEPT"

@@ -4,7 +4,7 @@
 
 [![Aspose.Cells FOSS for Java](https://products.aspose.org/media/cells/java/banner-readme.png)](https://products.aspose.org/cells/java/)
 
-It creates, loads, modifies, and saves Excel workbooks using the `Workbook` and `Worksheet` classes. It supports cell values and formulas, styling, page setup, data validation, conditional formatting, auto filters, comments, embedded pictures and charts, drawing shapes, and Excel tables (ListObjects). Saving is currently limited to .xlsx.
+It reads and writes Excel files in the XLSX format. It creates, edits, and formats spreadsheets using classes such as `Workbook`, `Worksheet`, and `Cell`. It supports data validation and conditional formatting rules.
 
 Aspose.Cells FOSS for Java is a free, open-source, pure-Java spreadsheet library for creating,
 loading, modifying, and saving Excel `.xlsx` workbooks. It targets Java 17, and keeps OOXML
@@ -35,12 +35,12 @@ flowchart TB
   PRODUCT["Aspose.Cells FOSS for Java"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["Read and write Excel<br/>workbooks"]
-    c2["Cell styling and<br/>formatting"]
-    c3["Data validation and<br/>conditional formatting"]
-    c4["Chart and shape<br/>support"]
-    c5["Page setup and print<br/>layout"]
-    c6["Comments, pictures,<br/>and hyperlinks"]
+    c1["Workbook and worksheet<br/>management"]
+    c2["Cell value and formula<br/>handling"]
+    c3["Styling and formatting"]
+    c4["Data validation and<br/>conditional formatting"]
+    c5["Embedded objects and<br/>shapes"]
+    c6["Charts and tables"]
     c1 ~~~ c4
     c2 ~~~ c5
     c3 ~~~ c6
@@ -52,12 +52,12 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Read and write Excel workbooks.** It reads, writes, and edits Excel workbooks through the `Workbook` class, which owns a `WorksheetCollection` of `Worksheet` objects, and exposes `Cells` collections of `Cell` objects for reading and writing string, numeric, boolean, date/time, and formula values.
-- **Cell styling and formatting.** It applies full cell formatting through the `Style` class, which controls font, borders, fill, alignment, number format, and protection flags, and supports custom number formats and built-in Excel format codes.
-- **Data validation and conditional formatting.** It enforces data validation and applies conditional formatting to worksheet ranges via `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`, supporting whole-number, operator-based, and value-based rules.
-- **Chart and shape support.** It creates charts programmatically and supports drawing objects with preset geometries, while preserving additional chart and shape types loaded from XLSX files verbatim.
-- **Page setup and print layout.** It configures print layout and page setup via `PageSetup`, freezes rows and/or columns by coordinate or cell name, and controls visibility of gridlines, row/column headers, zero values, and right-to-left layout on each worksheet.
-- **Comments, pictures, and hyperlinks.** It manages cell comments with author, text, visibility, and size via `CommentCollection`, embeds images from bytes, streams, or file paths with two-cell anchor positioning via `PictureCollection`, and supports hyperlinks that round-trip through load and save.
+- **Workbook and worksheet management.** It creates, loads, and saves Excel workbooks through the `Workbook` class, manages individual worksheets via a `WorksheetCollection`, and provides access to cell data through a `Cells` collection that supports string, numeric, boolean, date/time, and formula values.
+- **Cell value and formula handling.** It reads and writes cell values including formulas, supports setting and retrieving cell content types, and preserves formula expressions and error values such as #N/A, #VALUE!, and #REF! during load and save operations.
+- **Styling and formatting.** It applies full cell styling through the `Style` class, including font properties, borders, fills, alignment, and custom number formats, and adjusts row heights and column widths explicitly.
+- **Data validation and conditional formatting.** It enforces data validation rules on cell ranges using `Validation` with types such as whole number and operators like between, and applies conditional formatting to highlight cells based on value conditions.
+- **Embedded objects and shapes.** It embeds images from bytes, streams, or file paths with two-cell anchor positioning, supports cell comments with author, text, visibility, and size controls, and manages drawing shapes with preset geometries.
+- **Charts and tables.** It creates and manipulates charts and structured Excel tables, including support for various chart types and table features such as column definitions and totals rows.
 
 - Read, write, and edit Excel `.xlsx` workbooks through `Workbook`, which owns a
   `WorksheetCollection` of `Worksheet` objects — add, remove, and rename sheets, select the
@@ -71,13 +71,30 @@ flowchart TB
 - `Style` carries a cell's full formatting — font, borders, fill, alignment, number format, and
   protection flags — set through `Cell.getStyle()`/`setStyle()`; `NumberFormat` looks up and
   resolves built-in Excel number-format codes.
+- Control row and column layout with explicit sizing, hiding, and outline grouping via
+  `Row`/`Column`; `Worksheet` itself exposes tab color, zoom, gridline visibility, row/column
+  header visibility, zero display, and right-to-left layout.
 - Merged cells, defined names (`DefinedNameCollection`), and hyperlinks (`HyperlinkCollection`)
   round-trip through load and save.
+- Validate data and apply conditional formatting to worksheet ranges via
+  `ValidationCollection` and `ConditionalFormattingCollection`, both scoped to `CellArea`.
 - `AutoFilter` supports color filters, dynamic filters, top-10 filters, custom filters, and sort
   conditions on a worksheet range.
+- Configure print layout and page setup via `PageSetup`; freeze rows and/or columns by
+  coordinate or cell name and inspect or clear the frozen state; lock structure, windows, and
+  revisions with separate passwords via `WorksheetProtection`/`WorkbookProtection`, and persist
+  window layout and document-level metadata through
+  `WorkbookView`/`DocumentProperties`/`WorkbookProperties`.
+- Add, edit, and remove cell comments (notes) with author, text, visibility, and size via
+  `CommentCollection`, and embed images from bytes, streams, or file paths with two-cell anchor
+  positioning via `PictureCollection`, which detects JPEG, PNG, GIF, and BMP formats.
 - Create 18 of the 25 real `ChartType` values programmatically via `ChartCollection.add()`; the
   other 7 (the ChartEx types: Waterfall, Treemap, Sunburst, Histogram, Box and Whisker, Funnel,
   and Map) round-trip verbatim from a loaded workbook but cannot be created through the API.
+- `ShapeCollection` adds, retrieves, and removes drawing objects across 38 preset geometries
+  (`AutoShapeType`; complex shapes loaded from an XLSX file are preserved verbatim), and
+  `ListObjectCollection` creates, resizes, styles, and removes structured Excel tables
+  (ListObjects), including column definitions and totals rows.
 - Configure calculation mode, reference mode, iterative calculation, and precision via
   `CalculationProperties`; formulas and error cell values (`#N/A`, `#VALUE!`, `#REF!`, and
   others) are stored and round-tripped with the correct cell type, but the library is not a
@@ -124,7 +141,7 @@ No required third-party package dependencies; in `pom.xml`, every `<dependency>`
 
 ## Quick Start
 
-This example creates a new workbook, names the first worksheet Report, writes a text value and a formatted numeric value into cells A1 and B1, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as `report.xlsx`.
+This example creates a new workbook, names the first worksheet Report, writes a text value and a number into cells A1 and B1, applies bold formatting and a custom number format to the number, adjusts row height and column width, and saves the result as `report.xlsx`.
 
 ```java
 import java.io.*;
@@ -159,11 +176,13 @@ public class Main {
 }
 ```
 
+Add the dependency to your `pom.xml`.
+
 ## Additional Examples
 
-The library supports data validation and conditional formatting workflows. Example 003 demonstrates adding validation rules and applying conditional formatting to a worksheet.
+Aspose.Cells FOSS for Java supports data validation and conditional formatting rules. The following example creates a validation range and applies a conditional format to highlight values between 1 and 100.
 
-### Create a Validation and Conditional Formatting Rule for Cells B2 Through B11
+### Create a Validation Range and Apply Conditional Formatting to Highlight Values Between 1 And 100
 
 ```java
 import java.io.*;
@@ -214,7 +233,7 @@ public class RulesExample {
 
 ## API Reference
 
-The public entry point is `org.aspose.cells_foss`. The classes below cover the full supported public API surface — 183 public types organized into one module. Interfaces and enumerations are also included.
+The public entry point is `org.aspose.cells_foss`. The classes below cover the full supported public API surface — 183 public types organized into one module.
 
 The public API has 183 types.
 
@@ -418,12 +437,7 @@ The public API has 183 types.
 
 ### cells_foss
 
-The `org.aspose.cells_foss` package provides core classes for reading, writing, and manipulating Excel workbooks, including workbook, worksheet, cell, style, chart, shape, table, validation, conditional formatting, auto-filter, page setup, hyperlink, comment, picture, defined name, document properties, workbook settings, workbook properties, load options, save options, diagnostics, exceptions, and XML mapping utilities.
-
-| Class | Description |
-|---|---|
-| `WorkbookView` | Represents the view / window settings stored in &lt;bookViews&gt;. |
-| `XlsxWorkbookSerializer` | Serializer for XLSX workbook files — thin coordinator that delegates to helper classes. |
+The `org.aspose.cells_foss` package serves as the primary namespace for the Aspose.Cells FOSS for Java library, providing access to workbook, worksheet, and cell manipulation capabilities.
 
 | Enumeration | Description |
 |---|---|

@@ -1,73 +1,133 @@
 {
   "omitted": [
     {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "provenance metadata, not a capability",
-      "section": "key_capabilities"
+      "fact_id": "inherited_unit:012.paragraph",
+      "reason": "The paragraph is an inherited unit for dependency instructions, not part of the lead-in description of the example.",
+      "section": "quick_start"
     },
     {
-      "fact_id": "identity:repository",
-      "reason": "provenance metadata, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "provenance metadata, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:java_release",
-      "reason": "runtime version is printed by the renderer, not described in prose",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "version is printed by the renderer, not described in prose",
-      "section": "key_capabilities"
+      "fact_id": "inherited_unit:026.code_block",
+      "reason": "The code block is rendered by the system and must not be repeated in prose.",
+      "section": "quick_start"
     },
     {
       "fact_id": "example:002",
-      "reason": "contradicted example, not used",
-      "section": "key_capabilities"
+      "reason": "The example is contradicted and must not be cited or described.",
+      "section": "quick_start"
     },
     {
       "fact_id": "format:input.xlsx",
-      "reason": "unresolved format, not used",
-      "section": "key_capabilities"
+      "reason": "The format is unresolved and must not be stated.",
+      "section": "quick_start"
     },
     {
       "fact_id": "format:output.xlsx",
-      "reason": "unresolved format, not used",
-      "section": "key_capabilities"
+      "reason": "The format is unresolved and must not be stated.",
+      "section": "quick_start"
     },
     {
       "fact_id": "finding:bc53a18ea34b",
-      "reason": "confirmed false claim, not used",
-      "section": "key_capabilities"
+      "reason": "The finding is a confirmed false claim and must not be stated.",
+      "section": "quick_start"
     },
     {
       "fact_id": "finding:cb66691e4f5b",
-      "reason": "confirmed false claim, not used",
-      "section": "key_capabilities"
+      "reason": "The finding is a confirmed false claim and must not be stated.",
+      "section": "quick_start"
     },
     {
-      "fact_id": "inherited_unit:010.list",
-      "reason": "inherited list is not cited in any capability slot",
-      "section": "key_capabilities"
+      "fact_id": "identity:ecosystem",
+      "reason": "The ecosystem identity is not used in the lead-in description of the example.",
+      "section": "quick_start"
     },
     {
-      "fact_id": "inherited_unit:039.table",
-      "reason": "The table of classes is already present in the rendered document under the API Reference section; this unit's prose must not repeat it.",
+      "fact_id": "identity:family",
+      "reason": "The family identity is not used in the lead-in description of the example.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "The platform identity is not used in the lead-in description of the example.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "The product knowledge refresh identity is not used in the lead-in description of the example.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "The repository identity is not used in the lead-in description of the example.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "The revision identity is not used in the lead-in description of the example.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:035.heading",
+      "reason": "The renderer prints the heading; prose units never repeat it.",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:041.table",
-      "reason": "The table of interfaces is already present in the rendered document under the API Reference section; this unit's prose must not repeat it.",
+      "fact_id": "inherited_unit:038.heading",
+      "reason": "The renderer prints the heading; prose units never repeat it.",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:043.table",
-      "reason": "The table of enumerations is already present in the rendered document under the API Reference section; this unit's prose must not repeat it.",
+      "fact_id": "inherited_unit:040.heading",
+      "reason": "The renderer prints the heading; prose units never repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "Ecosystem identity is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Family identity is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "Platform identity is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Knowledge refresh metadata is not used in prose; it is provenance.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Revision identity is not used in prose; it is provenance.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:java_release",
+      "reason": "Java release version is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Package name is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Published version is not used in prose; it is metadata for the renderer.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Version is not used in prose; it is metadata for the renderer.",
       "section": "api_reference"
     },
     {
@@ -80,24 +140,30 @@
   "units": [
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:java_release",
+        "package:name",
+        "package:version",
+        "license:spdx",
+        "dependency:none",
         "example:001",
         "example:003",
-        "inherited_unit:004.paragraph"
+        "public_symbol:org.aspose.cells_foss"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "It creates, loads, modifies, and saves Excel workbooks using the Workbook and Worksheet classes. It supports cell values and formulas, styling, page setup, data validation, conditional formatting, auto filters, comments, embedded pictures and charts, drawing shapes, and Excel tables (ListObjects). Saving is currently limited to .xlsx."
+      "text": "It reads and writes Excel files in the XLSX format. It creates, edits, and formats spreadsheets using classes such as Workbook, Worksheet, and Cell. It supports conditional formatting and data validation rules."
     },
     {
       "fact_ids": [
         "example:001",
-        "identity:ecosystem",
-        "package:name",
-        "package:version"
+        "public_symbol:org.aspose.cells_foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It reads, writes, and edits Excel workbooks through the Workbook class, which owns a WorksheetCollection of Worksheet objects, and exposes Cells collections of Cell objects for reading and writing string, numeric, boolean, date/time, and formula values."
+      "text": "It creates, loads, and saves Excel workbooks through the Workbook class, manages individual worksheets via a WorksheetCollection, and provides access to cell data through a Cells collection that supports string, numeric, boolean, date/time, and formula values."
     },
     {
       "fact_ids": [
@@ -106,7 +172,16 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It applies full cell formatting through the Style class, which controls font, borders, fill, alignment, number format, and protection flags, and supports custom number formats and built-in Excel format codes."
+      "text": "It reads and writes cell values including formulas, supports setting and retrieving cell content types, and preserves formula expressions and error values such as #N/A, #VALUE!, and #REF! during load and save operations."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:org.aspose.cells_foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It applies full cell styling through the Style class, including font properties, borders, fills, alignment, and custom number formats, and adjusts row heights and column widths explicitly."
     },
     {
       "fact_ids": [
@@ -114,16 +189,8 @@
         "public_symbol:org.aspose.cells_foss"
       ],
       "section": "key_capabilities",
-      "slot": "capability:3",
-      "text": "It enforces data validation and applies conditional formatting to worksheet ranges via ValidationCollection and ConditionalFormattingCollection, both scoped to CellArea, supporting whole-number, operator-based, and value-based rules."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.cells_foss"
-      ],
-      "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It creates charts programmatically and supports drawing objects with preset geometries, while preserving additional chart and shape types loaded from XLSX files verbatim."
+      "text": "It enforces data validation rules on cell ranges using Validation with types such as whole number and operators like between, and applies conditional formatting to highlight cells based on value conditions."
     },
     {
       "fact_ids": [
@@ -131,7 +198,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It configures print layout and page setup via PageSetup, freezes rows and/or columns by coordinate or cell name, and controls visibility of gridlines, row/column headers, zero values, and right-to-left layout on each worksheet."
+      "text": "It embeds images from bytes, streams, or file paths with two-cell anchor positioning, supports cell comments with author, text, visibility, and size controls, and manages drawing shapes with preset geometries."
     },
     {
       "fact_ids": [
@@ -139,7 +206,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It manages cell comments with author, text, visibility, and size via CommentCollection, embeds images from bytes, streams, or file paths with two-cell anchor positioning via PictureCollection, and supports hyperlinks that round-trip through load and save."
+      "text": "It creates and manipulates charts and structured Excel tables, including support for various chart types and table features such as column definitions and totals rows."
     },
     {
       "fact_ids": [
@@ -147,43 +214,7 @@
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "This example creates a new workbook, names the first worksheet Report, writes a text value and a formatted numeric value into cells A1 and B1, applies bold formatting and a custom number format to the numeric cell, adjusts row height and column width, and saves the result as report.xlsx."
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:java_release",
-        "package:name",
-        "package:published_version",
-        "package:version"
-      ],
-      "section": "additional_examples",
-      "slot": "preview",
-      "text": "The library supports data validation and conditional formatting workflows. Example 003 demonstrates adding validation rules and applying conditional formatting to a worksheet."
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:java_release",
-        "package:name",
-        "package:published_version",
-        "package:version"
-      ],
-      "section": "additional_examples",
-      "slot": "workflow:example:003",
-      "text": "Create a validation and conditional formatting rule for cells B2 through B11."
+      "text": "This example creates a new workbook, names the first worksheet Report, writes a text value and a number into cells A1 and B1, applies bold formatting and a custom number format to the number, adjusts row height and column width, and saves the result as report.xlsx."
     },
     {
       "fact_ids": [
@@ -193,17 +224,27 @@
         "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
-        "inherited_unit:035.heading",
-        "inherited_unit:036.paragraph",
-        "inherited_unit:038.heading",
-        "inherited_unit:039.table",
-        "inherited_unit:041.table",
-        "inherited_unit:043.table",
         "package:java_release",
         "package:name",
         "package:published_version",
         "package:version",
-        "public_symbol:org.aspose.cells_foss"
+        "example:003"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "Aspose.Cells FOSS for Java supports data validation and conditional formatting rules. The following example creates a validation range and applies a conditional format to highlight values between 1 and 100."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Create a validation range and apply conditional formatting to highlight values between 1 and 100."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:036.paragraph"
       ],
       "section": "api_reference",
       "slot": "intro",
@@ -215,7 +256,7 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:org.aspose.cells_foss",
-      "text": "The org.aspose.cells_foss package provides core classes for reading, writing, and manipulating Excel workbooks, including workbook, worksheet, cell, style, chart, shape, table, validation, conditional formatting, auto-filter, page setup, hyperlink, comment, picture, defined name, document properties, workbook settings, workbook properties, load options, save options, diagnostics, exceptions, and XML mapping utilities."
+      "text": "The org.aspose.cells_foss package serves as the primary namespace for the Aspose.Cells FOSS for Java library, providing access to workbook, worksheet, and cell manipulation capabilities."
     },
     {
       "fact_ids": [
