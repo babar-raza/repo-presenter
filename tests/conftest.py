@@ -138,3 +138,12 @@ def r15_portfolio_reader_is_injected(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         client, "portfolio_readiness", lambda: PortfolioReadiness(ready=True, active=1)
     )
+
+
+@pytest.fixture(autouse=True)
+def one_review_sample(monkeypatch: pytest.MonkeyPatch) -> None:
+    """BL-430: the cascade reviews an accepted candidate a second time (``cascade.SECOND_REVIEW``). The
+    suite's scripted providers answer reply by reply, so the second sample is off by default here; the
+    tests of BL-430 (``tests/test_cascade_second_review.py``) turn it on explicitly with
+    ``second_review=True`` and assert the production default separately."""
+    monkeypatch.setattr("repo_presenter.cascade.SECOND_REVIEW", False)
