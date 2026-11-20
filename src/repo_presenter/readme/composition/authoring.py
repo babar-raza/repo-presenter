@@ -1614,6 +1614,74 @@ def identifier_allowed(
     return False
 
 
+# BL-470: a code span that composes fact values with a language's own generic, collection or
+# primitive type names (``List<RecognitionResult>``, ``Dict[str, Foo]``, ``Foo[]``, ``Optional[Foo]``).
+# A closed list, never grown per candidate: it names type constructors and primitives, not APIs; a
+# span still needs at least one identifier that is a fact value, and every other identifier in it
+# must be one too, so an invented type inside a generic stays refused.
+PRIMITIVE_TYPE_NAMES = frozenset(
+    {
+        "str", "int", "float", "bool", "bytes", "None", "string", "double", "long", "byte",
+        "object", "void", "char", "short", "decimal", "number", "boolean", "any", "String",
+        "Integer", "Long", "Double", "Boolean", "Object", "Void",
+    }
+)
+GENERIC_TYPE_NAMES = PRIMITIVE_TYPE_NAMES | frozenset(
+    {
+        "List", "Dict", "Set", "Tuple", "Optional", "Union", "Sequence", "Iterable", "Iterator",
+        "Mapping", "Callable", "Type", "Literal", "list", "dict", "set", "tuple", "type",
+        "IList", "IEnumerable", "ICollection", "IReadOnlyList", "IReadOnlyCollection",
+        "IDictionary", "Dictionary", "HashSet", "Task", "ValueTask", "Nullable", "Array", "Func",
+        "Action", "KeyValuePair", "Map", "Collection", "Stream", "Future", "CompletableFuture",
+        "Vec", "Option", "Result", "Box", "HashMap", "Promise", "Record", "Partial", "Readonly",
+    }
+)
+_COMPOSED_SPAN = re.compile(r"\w[<\[]|[|?]")
+_SPAN_IDENTIFIER = re.compile(r"[A-Za-z_][\w.]*")
+_SPAN_PUNCTUATION = re.compile(r"[\s<>\[\],|?]*")
+_ARGUMENT_HEAD = re.compile(r"([A-Za-z_][\w.]*)\s*(?:<|\[(?!\]))")
+_DECLARED_TYPE_ATTRIBUTES = ("bases", "signature")
+
+
+def declared_type_texts(facts: FactsDocument) -> frozenset[str]:
+    """The type expressions the extractor read verbatim from the pinned source for SUPPORTED
+    symbols (a class's ``bases``, a member's ``signature``): spelling one is quoting the source."""
+    found: set[str] = set()
+    for fact in facts.by_kind("public_symbol"):
+        if fact.polarity != "SUPPORTED":
+            continue
+        for key in _DECLARED_TYPE_ATTRIBUTES:
+            text = " ".join(((fact.attributes or {}).get(key) or "").split())
+            if text:
+                found.add(text)
+    return frozenset(found)
+
+
+def composed_identifier_allowed(
+    span: str, grounded: Callable[[str], bool], declared: frozenset[str] = frozenset()
+) -> bool:
+    """A code span that is a type expression over fact values: generic, array, optional or union
+    syntax (``X<...>``, ``X[...]``, ``X?``, ``X | Y``) that the source declares verbatim, or whose
+    identifiers are ALL ``grounded`` (``grounded`` judges a name in type position: a fact value,
+    never a bare method or member name) apart from the closed ``GENERIC_TYPE_NAMES``, with at least
+    one grounded identifier. A span without that syntax is never composed, so every span the plain
+    rule refuses stays refused, and a call or signature is not a type expression."""
+    text = " ".join(span.split())
+    if not _COMPOSED_SPAN.search(text):
+        return False
+    if text in declared:
+        return True
+    if not _SPAN_PUNCTUATION.fullmatch(_SPAN_IDENTIFIER.sub("", text)):
+        return False
+    # Only a type constructor takes arguments: a primitive never does, and a lowercase head that is
+    # no known constructor is a placeholder (``v<version>``), not a generic.
+    for head in _ARGUMENT_HEAD.findall(text):
+        if head in PRIMITIVE_TYPE_NAMES or not (head in GENERIC_TYPE_NAMES or head[:1].isupper()):
+            return False
+    named = [name for name in _SPAN_IDENTIFIER.findall(text) if name not in GENERIC_TYPE_NAMES]
+    return bool(named) and all(grounded(name) for name in named)
+
+
 _SPELLABLE = re.compile(r"[A-Za-z_][\w.\-]*(?:\(\))?")
 _NEAREST_LIMIT = 4
 _NEAREST_RATIO = 0.8
