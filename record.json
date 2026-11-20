@@ -116,79 +116,121 @@
    "run_id": "44744453902",
    "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T17:31:10+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition"
+   ],
+   "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44774952733",
+   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:31:03+00:00",
+  "at": "2026-11-20T17:31:10+00:00",
   "classes": {
-   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
-    "example": "The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and `Style` \u2014 `Workbook.Worksheets` is a `WorksheetCollection` of `Worksheet` objects, each exposing a `Cells` collection for reading and writing values, formulas, and styles.",
+   "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'; api_reference/intro: ",
     "findings": 1,
-    "origin_kind": "authored_unit",
+    "origin_kind": "job_error",
     "origins": [
-     "api_reference.intro"
+     "OutputRejectedError"
     ],
-    "rule": "duplicate_paragraph",
-    "scope": "70d8f67e33c86f747ede4f6e2911b968fde38f39f6ae7408fbd6c191bb96d4d8",
+    "rule": "job_error",
+    "scope": "ddb6152147c005945ab46558f8b3cfc155240548e40fb31754912156dcb3c7e2",
     "scope_paths": [
-     "prompts/section_authoring.yaml",
+     "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "the_candidate_prints_the",
+    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "upstream": ""
    }
   },
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'; api_reference/intro: coherence revision drops the previously-cited public_symbol 'public_symbol:legacyworkbook.load' and none of its own content ('LegacyWorkbook.load') remains in the revised text - a named capability, format, or structural detail the prior version carried must not be silently dropped during coherence; api_reference/intro: coherence revision drops the previously-cited public_symbol 'public_symbol:workbook.constructor' and none of its own content ('Workbook.constructor') remains in the revised text -",
+   "kind": "OutputRejectedError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "duplicate_paragraph",
-    "message": "the candidate prints the same prose paragraph more than once",
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'; api_reference/intro: ",
     "origin": {
-     "id": "api_reference.intro",
-     "kind": "authored_unit"
+     "id": "OutputRejectedError",
+     "kind": "job_error"
     },
-    "quote": "The library ships a real class surface centered on `Workbook`, `Worksheet`, `Cell`, and `Style` \u2014 `Workbook.Worksheets` is a `WorksheetCollection` of `Worksheet` objects, each exposing a `Cells` collection for reading and writing values, formulas, and styles.",
-    "rule": "duplicate_paragraph",
+    "quote": "",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
-    "source": "review",
-    "sub_rule": "the_candidate_prints_the",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "duplicate_paragraph:0",
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F02+F03+F04+F05",
+    "outcome": "escalated",
+    "reason": "the revision cites public_symbol:legacyworkbook.tohtml outside the slot's planned facts; escalated once to a plan-level repair at S5",
+    "section_id": "key_capabilities",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
     "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "opening",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F02+F03+F04+F05",
+    "outcome": "repaired",
+    "reason": "the causing plan was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
+    "section_id": null,
+    "stage": "S5"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units.3.text' changed ('The Style class encapsulates font, fill, border, alignment, and number-format settings for a cell, with supporting interfaces Font and Border.' to 'The Style class encapsulates font, fill, border, alignment, and number-format settings for a cell, with supporting classes Font and Border.'), but the causal stage's own input and this revision hold the identical value there",
     "section_id": "api_reference",
     "stage": "S6"
    }
   ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript",
-  "run_id": "44744453902",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44744453902",
+  "run_id": "44774952733",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44774952733",
   "schema_version": 1,
   "source_revision": "9ff8ec01a5a1286b88ef739727bd0769bf98bf97",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
