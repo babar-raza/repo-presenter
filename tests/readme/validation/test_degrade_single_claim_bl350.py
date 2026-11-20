@@ -119,10 +119,17 @@ def test_the_authored_enterprise_clause_is_withheld_and_the_fact_true_sentence_s
     assert json.loads((tmp_path / "content_units.coherent.json").read_text())[DEGRADE_RECORDS_KEY]
 
 
-def test_an_enterprise_clause_that_carries_an_inherited_unit_is_never_withheld(tmp_path: Path) -> None:
-    # the maintainers' own Enterprise paragraph is must-carry (R14): the degrade leaves it
+def test_an_enterprise_clause_that_carries_an_inherited_unit_is_withheld_on_a_recorded_decision(
+    tmp_path: Path,
+) -> None:
+    # BL-480 replaces BL-350's refusal: the maintainers' own Enterprise paragraph is must-carry
+    # (R14), so the clause is withheld only as a recorded decision (tests/.../test_enterprise_claim_bl480.py
+    # holds the full shape); here the inherited unit has no placed disposition, so nothing is rewritten
     world = _enterprise_world(tmp_path, OMR_ADDS, cite="inherited_unit:004.list")
-    assert _degrade(world, tmp_path, (f"{SHELL} {OMR_ADDS}", "scope_limitations")) is None
+    degraded = _degrade(world, tmp_path, (f"{SHELL} {OMR_ADDS}", "scope_limitations"))
+    assert degraded is not None and "It adds" not in degraded.composed.readme
+    [record] = degraded.composed.coherent_units[DEGRADE_RECORDS_KEY]
+    assert record["rule"] == "BL-480" and record["inherited_units"] == ["inherited_unit:004.list"]
 
 
 def test_a_quote_the_enterprise_clause_does_not_print_changes_nothing(tmp_path: Path) -> None:

@@ -2402,11 +2402,28 @@ API_ROW_FALLBACK_REASON = (
     "renderer prints the type's fact-true row"
 )
 API_ROW_SLOT_PREFIXES = ("type:", "hub:")
+#: The reason of the omitted record that releases the Enterprise clause's one slot (BL-480): the
+#: last-resort degrade withheld the clause the independent review faulted, and the renderer prints
+#: its own fact-true Enterprise sentence alone, so the section is owed no unit.
+ENTERPRISE_CLAIM_OMISSION_REASON = (
+    "Enterprise clause withheld (BL-480, R14): the independent review found no fact that supports it, "
+    "so the renderer prints the verified Enterprise Edition sentence alone"
+)
+_ENTERPRISE_SECTION = "enterprise_relationship"
 
 
 def api_row_fallback_slots(output: Mapping[str, Any], task: SectionTask) -> frozenset[str]:
-    """The ``type:``/``hub:`` slots of ``task`` whose symbol ``output`` records as an API-row
-    fallback (:data:`API_ROW_FALLBACK_REASON`)."""
+    """The slots of ``task`` the renderer fills from facts, so no unit is owed: the ``type:``/``hub:``
+    slots whose symbol ``output`` records as an API-row fallback (:data:`API_ROW_FALLBACK_REASON`),
+    and the Enterprise clause's slot once the degrade recorded it withheld
+    (:data:`ENTERPRISE_CLAIM_OMISSION_REASON`)."""
+    if task.section_id == _ENTERPRISE_SECTION and any(
+        isinstance(item, Mapping)
+        and item.get("section") == _ENTERPRISE_SECTION
+        and str(item.get("reason") or "").startswith(ENTERPRISE_CLAIM_OMISSION_REASON)
+        for item in output.get("omitted", [])
+    ):
+        return frozenset(task.slots)
     fallen = {
         str(item.get("fact_id"))
         for item in output.get("omitted", [])
