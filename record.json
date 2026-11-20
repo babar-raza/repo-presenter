@@ -5,7 +5,7 @@
   "provider_repository_id": 1245412430,
   "registry_revision": null,
   "active_transaction_id": "d5d729d6e59a4873bab302473952eea3",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T08:22:27.877471+00:00",
+    "resume_predicate": null,
+    "recovery_count": 23
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "8195ae7d8e7e4850a3f4f6a533803b9d",
@@ -33,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 116,
+  "state_version": 117,
   "recent_trigger_dedup_keys": {
     "run:41147002918:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "56267f90eb494405ba4c90f0c676ddb5",
     "run:41237173263:aspose-pdf-foss/Aspose.PDF-FOSS-for-Java": "d5d729d6e59a4873bab302473952eea3"
   },
-  "recovery_count": 22
+  "recovery_count": 23
 }
