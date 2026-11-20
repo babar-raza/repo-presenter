@@ -108,21 +108,33 @@
    "run_id": "44665731411",
    "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T04:32:24+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q"
+   ],
+   "code": "3f38d472f5bec702e2be15af7504c2ca380299efa2aa67206fc3eecebfeb6ceb",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44673592648",
+   "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T03:16:45+00:00",
+  "at": "2026-11-20T04:32:24+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:source_reconciliation_id_uncovered_supersession_supersede_redundant_treats": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:033.code_block: uncovered_supersession: SUPERSEDE_REDUNDANT treats installation as carrying this code block, but installation prints the verified install command, not '",
+   "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'identity:ecosystem', 'reason': 'Not needed for this capability; ecosystem identity is covered elsewhere.'}, {'fact_id': 'identity:family', 'reason': 'Not needed for this capab",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
      "OutputRejectedError"
     ],
     "rule": "job_error",
-    "scope": "4fdb5faeffec158aa975fbf0a30dbcfe51daabf24f15caefdc55c8f72d3154d5",
+    "scope": "2b912455710b5335b2107946c67cf1a6c7e0efbce645ecafc795c0f73b617c21",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -132,23 +144,23 @@
      "src/repo_presenter/readme/composition",
      "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "OutputRejectedError:source_reconciliation_id_uncovered_supersession_supersede_redundant_treats",
+    "sub_rule": "OutputRejectedError:section_authoring_omitted_q_q_q",
     "upstream": ""
    }
   },
-  "code": "8e3859509bd592e319beeb8938e2860b058a27a615be51da0bb74538d066af9f",
+  "code": "3f38d472f5bec702e2be15af7504c2ca380299efa2aa67206fc3eecebfeb6ceb",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:033.code_block: uncovered_supersession: SUPERSEDE_REDUNDANT treats installation as carrying this code block, but installation prints the verified install command, not 'install-package aspose.slides.cpp.foss'. A unit is superseded only when something that renders takes its place: place it (VERIFIED_PRESERVE or VERIFIED_MOVE) into a section that can hold it (opening, key_capabilities, quick_start, additional_examples, api_reference, documentation_resources, scope_limitations, development_testing, enterprise_relationship) or choose DEFER_UNRESOLVED. The nearest section that can hold it is development_testing. The unit's exact text is \"```powershell\\nInstall-Packa",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'identity:ecosystem', 'reason': 'Not needed for this capability; ecosystem identity is covered elsewhere.'}, {'fact_id': 'identity:family', 'reason': 'Not needed for this capability; family identity is covered elsewhere.'}, {'fact_id': 'identity:platform', 'reason': 'Not needed for this capability; platform identity is covered elsewhere.'}, {'fact_id': 'identity:product-knowledge-refresh', 'reason': 'Not needed for this capability; knowledge refresh metadata is internal.'}, {'fact_id': 'identity:repository', 'reason': 'Not needed for this capability; repository identity is covered elsewhere.'}, {'fact_id': 'identity:revision', 'reason': 'Not needed for this capability",
    "kind": "OutputRejectedError",
    "transient": true
   },
   "findings": [
    {
     "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:033.code_block: uncovered_supersession: SUPERSEDE_REDUNDANT treats installation as carrying this code block, but installation prints the verified install command, not '",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected three times (the third a narrowed ask for the units still failing); last rejection: $.omitted: [{'fact_id': 'identity:ecosystem', 'reason': 'Not needed for this capability; ecosystem identity is covered elsewhere.'}, {'fact_id': 'identity:family', 'reason': 'Not needed for this capab",
     "origin": {
      "id": "OutputRejectedError",
      "kind": "job_error"
@@ -156,20 +168,20 @@
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:source_reconciliation_id_uncovered_supersession_supersede_redundant_treats",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_omitted_q_q_q",
     "source": "job",
-    "sub_rule": "OutputRejectedError:source_reconciliation_id_uncovered_supersession_supersede_redundant_treats",
+    "sub_rule": "OutputRejectedError:section_authoring_omitted_q_q_q",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "a2d37f69ba6c648e5e7c21e92b24ccc3aeac64ee",
+  "main_sha": "3b07ba82e5de09b15a992b4683e3f76518535061",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp",
-  "run_id": "44665731411",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44665731411",
+  "run_id": "44673592648",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44673592648",
   "schema_version": 1,
   "source_revision": "469ce77a07b988c49deb930632b8276c89ec6b66",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
