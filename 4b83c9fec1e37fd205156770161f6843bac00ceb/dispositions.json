@@ -71,15 +71,13 @@
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
-      "destination_section": "banner",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "DEFER_UNRESOLVED",
       "fact_ids": [
-        "link_target:009",
-        "link_target:010",
-        "link_target:product.banner",
+        "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The banner image links to the enterprise product page and is kept as a verified product illustration.",
+      "rationale": "The banner image links to the enterprise product page and is moved to the enterprise relationship section.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
@@ -104,9 +102,22 @@
         "identity:platform",
         "identity:product-knowledge-refresh",
         "identity:repository",
-        "identity:revision"
+        "identity:revision",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023"
       ],
-      "rationale": "The Navigation heading is rendered by the deterministic navigation section.",
+      "rationale": "The navigation heading and list are superseded by the navigation section rendered from facts.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
@@ -118,18 +129,36 @@
         "identity:platform",
         "identity:product-knowledge-refresh",
         "identity:repository",
-        "identity:revision"
+        "identity:revision",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:023"
       ],
-      "rationale": "The navigation list is rendered by the deterministic navigation section.",
+      "rationale": "The navigation list is superseded by the navigation section rendered from facts.",
       "unit_id": "inherited_unit:006.list"
     },
     {
       "destination_section": "at_a_glance",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:002",
+        "example:004",
+        "example:007",
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.devices"
       ],
-      "rationale": "The At a Glance heading is rendered by the deterministic at_a_glance section.",
+      "rationale": "The At a Glance heading and Mermaid diagram are superseded by the at_a_glance section rendered from verified examples and public symbols.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
@@ -138,32 +167,34 @@
       "fact_ids": [
         "example:002",
         "example:004",
-        "example:005",
         "example:007",
-        "public_symbol:aspose.pdf.annotations",
-        "public_symbol:aspose.pdf.cryptoalgorithm",
-        "public_symbol:aspose.pdf.devices",
         "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.drawing",
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.metadata",
-        "public_symbol:aspose.pdf.permissions",
-        "public_symbol:aspose.pdf.table",
-        "public_symbol:aspose.pdf.text"
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.devices"
       ],
-      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
+      "rationale": "The Mermaid diagram is superseded by the at_a_glance section rendered from verified examples and public symbols.",
       "unit_id": "inherited_unit:008.code_block"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:002",
+        "example:004",
+        "example:005",
+        "example:007",
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.devices",
+        "public_symbol:aspose.pdf.cryptoalgorithm",
+        "public_symbol:aspose.pdf.permissions",
+        "public_symbol:aspose.pdf.facades",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.table",
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.forms"
       ],
-      "rationale": "The Key Capabilities heading is rendered by the deterministic key_capabilities section.",
+      "rationale": "The Key Capabilities heading and list are superseded by the key_capabilities section rendered from verified examples and public symbols.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
@@ -172,6 +203,7 @@
       "fact_ids": [
         "example:002",
         "example:004",
+        "example:005",
         "example:007",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.text",
@@ -179,12 +211,12 @@
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.table",
         "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.table",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.forms"
       ],
-      "rationale": "The list items are supported by facts and provide detailed capability descriptions.",
+      "rationale": "The Key Capabilities list is superseded by the key_capabilities section rendered from verified examples and public symbols.",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -193,7 +225,7 @@
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The Installation heading is rendered by the deterministic installation section.",
+      "rationale": "The Installation heading and content are superseded by the installation section rendered from the install_command fact.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
@@ -206,12 +238,12 @@
       "unit_id": "inherited_unit:012.paragraph"
     },
     {
-      "destination_section": "development_testing",
+      "destination_section": "quick_start",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The include example is a real, verified code snippet and is kept as written for development testing.",
+      "rationale": "The single-header include example is preserved as the Quick Start example, supported by example:001.",
       "unit_id": "inherited_unit:013.code_block"
     },
     {
@@ -220,17 +252,16 @@
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The Visual Studio heading is superseded by the deterministic installation section.",
+      "rationale": "The Visual Studio heading is superseded by the installation section rendered from the install_command fact.",
       "unit_id": "inherited_unit:014.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "package:distribution.aspose.pdf.cpp.foss",
-        "link_target:024"
+        "package:distribution.aspose.pdf.cpp.foss"
       ],
-      "rationale": "Kept in development_testing: additional_examples holds no install material. The NuGet package description is supported by facts and provides a real alternati...",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:015.paragraph"
     },
     {
@@ -239,35 +270,34 @@
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The Release Archive heading is superseded by the deterministic installation section.",
+      "rationale": "The From a Release Archive heading is superseded by the installation section rendered from the install_command fact.",
       "unit_id": "inherited_unit:016.heading"
     },
     {
-      "destination_section": "additional_examples",
+      "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "install_command:cmake",
-        "link_target:025"
+        "install_command:cmake"
       ],
-      "rationale": "The release archive description is supported by facts and provides a real alternative install path.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:017.paragraph"
     },
     {
-      "destination_section": "additional_examples",
+      "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The CMake find_package example is supported by facts and provides a real alternative install path.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:018.code_block"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The cmake --install description is supported by facts and provides a real alternative install path.",
+      "rationale": "The cmake --install description is unsupported; the install_command fact shows only the git clone and build commands are verified.",
       "unit_id": "inherited_unit:019.paragraph"
     },
     {
@@ -276,7 +306,7 @@
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The CMake Subdirectory heading is superseded by the deterministic installation section.",
+      "rationale": "The As a CMake Subdirectory heading is superseded by the installation section rendered from the install_command fact.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
@@ -285,7 +315,7 @@
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The CMake add_subdirectory snippet is a verified source-build installation path supported by the install_command fact.",
+      "rationale": "The CMake add_subdirectory snippet is a verified, supported build path and matches no section's install command.",
       "unit_id": "inherited_unit:021.code_block"
     },
     {
@@ -298,15 +328,12 @@
       "unit_id": "inherited_unit:022.paragraph"
     },
     {
-      "destination_section": "dependencies",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "dependency:development.aspose_pdf_foss",
-        "dependency:development.googletest",
-        "dependency:development.python3",
-        "dependency:none"
+        "identity:ecosystem"
       ],
-      "rationale": "The 'Requirements' heading is superseded by the 'Dependencies' section which renders requirements deterministically.",
+      "rationale": "The heading 'Requirements' is superseded by the 'Scope and Limitations' section which renders requirements as limitations.",
       "unit_id": "inherited_unit:023.heading"
     },
     {
@@ -314,9 +341,10 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "package:cmake_minimum",
+        "package:cxx_standard",
         "dependency:development.python3"
       ],
-      "rationale": "Kept in development_testing: scope_limitations holds no install material. The compiler and CMake version requirements are supported; Python 3 is a build-time...",
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. Kept as written (inherit-and-correct, R43(3)). The compiler, CMake, and Python requ...",
       "unit_id": "inherited_unit:024.list"
     },
     {
@@ -326,16 +354,16 @@
         "dependency:none",
         "dependency:development.googletest"
       ],
-      "rationale": "Kept in development_testing: scope_limitations holds no install material. The runtime dependency statement and test suite dependency details are supported by...",
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The runtime dependency statement and test suite dependency details are supported an...",
       "unit_id": "inherited_unit:025.paragraph"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Build From Source' heading is superseded by the 'Development and Testing' section which renders build instructions deterministically.",
+      "rationale": "The heading 'Build From Source' is superseded by the 'Development and Testing' section which renders build instructions.",
       "unit_id": "inherited_unit:026.heading"
     },
     {
@@ -344,53 +372,39 @@
       "fact_ids": [
         "install_command:cmake"
       ],
-      "rationale": "The CMake configure and build commands match the verified install_command fact.",
+      "rationale": "The build commands are identical to the verified install_command:cmake fact and are superseded by the installation section.",
       "unit_id": "inherited_unit:027.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "import_path:aspose_pdf_foss",
-        "install_command:cmake"
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix",
+        "import_path:aspose_pdf_foss"
       ],
-      "rationale": "Details about output location and build-type options are supported by the install_command fact and add useful context.",
+      "rationale": "Details about output paths and CMakePresets.json are maintainer insight not contradicted by facts.",
       "unit_id": "inherited_unit:028.paragraph"
     },
     {
-      "destination_section": "dependencies",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "dependency:development.aspose_pdf_foss",
-        "dependency:development.googletest",
-        "dependency:development.python3",
-        "dependency:none"
+        "identity:ecosystem"
       ],
-      "rationale": "The 'Dependencies' heading is superseded by the deterministic 'Dependencies' section.",
+      "rationale": "The heading 'Dependencies' is superseded by the deterministic 'Dependencies' section.",
       "unit_id": "inherited_unit:029.heading"
     },
     {
-      "destination_section": "dependencies",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "dependency:development.aspose_pdf_foss",
-        "dependency:development.googletest",
-        "dependency:development.python3",
-        "dependency:none"
+        "identity:ecosystem"
       ],
-      "rationale": "The 'Required Package Dependencies' heading is superseded by the deterministic 'Dependencies' section.",
+      "rationale": "The heading 'Required Package Dependencies' is superseded by the deterministic 'Dependencies' section.",
       "unit_id": "inherited_unit:030.heading"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "dependency:development.python3"
-      ],
-      "rationale": "Kept in development_testing: scope_limitations holds no install material. Python3 is a build-time dependency required by CMake configure; it belongs in scope...",
-      "unit_id": "inherited_unit:031.list"
-    },
-    {
       "destination_section": "dependencies",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
@@ -399,7 +413,16 @@
         "dependency:development.python3",
         "dependency:none"
       ],
-      "rationale": "The 'Development Dependencies' heading is superseded by the deterministic 'Dependencies' section.",
+      "rationale": "The Python3 requirement is covered by the dependencies section and is not a runtime dependency.",
+      "unit_id": "inherited_unit:031.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading 'Development Dependencies' is superseded by the deterministic 'Dependencies' section.",
       "unit_id": "inherited_unit:032.heading"
     },
     {
@@ -409,24 +432,22 @@
         "dependency:development.googletest",
         "import_path:aspose_pdf_foss"
       ],
-      "rationale": "Kept in development_testing: scope_limitations holds no build material. googletest is a development dependency used only for tests and not linked into the li...",
+      "rationale": "The googletest dependency description is supported and adds context about its test-only role.",
       "unit_id": "inherited_unit:033.list"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Quick Start' heading is superseded by the deterministic 'Quick Start' section.",
+      "rationale": "The heading 'Quick Start' is superseded by the deterministic 'Quick Start' section.",
       "unit_id": "inherited_unit:034.heading"
     },
     {
       "destination_section": "quick_start",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:002"
-      ],
+      "fact_ids": [],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:035.paragraph"
     },
@@ -436,26 +457,23 @@
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "The example code block matches the verified example:002 fact and is the minimal Quick Start example.",
+      "rationale": "The code block is the verified Quick Start example and matches example:002.",
       "unit_id": "inherited_unit:036.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "example:003",
-        "link_target:027"
-      ],
-      "rationale": "The paragraph describes additional examples beyond Quick Start and is supported by example:003 and the examples/12_create_features.cpp link.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The maintainer insight on example 12_create_features and its scope is valuable and not contradicted.",
       "unit_id": "inherited_unit:037.paragraph"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Additional Examples' heading is superseded by the deterministic 'Additional Examples' section.",
+      "rationale": "The heading 'Additional Examples' is superseded by the deterministic 'Additional Examples' section.",
       "unit_id": "inherited_unit:038.heading"
     },
     {
@@ -466,7 +484,7 @@
         "link_target:028",
         "link_target:029"
       ],
-      "rationale": "The paragraph about 12 runnable examples and their build location is supported by the examples directory and README link facts.",
+      "rationale": "The description of the examples directory and build output location is supported and adds detail.",
       "unit_id": "inherited_unit:039.paragraph"
     },
     {
@@ -484,61 +502,75 @@
       "fact_ids": [
         "example:003"
       ],
-      "rationale": "The example fact example:003 has polarity CONTRADICTED, so this code block is not placed.",
+      "rationale": "The example fact for this code block is CONTRADICTED, so it is never placed.",
       "unit_id": "inherited_unit:041.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "The lifetime rule for objects is valuable maintainer insight not contradicted by facts; it is kept as attributed content.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.pdf.table",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.artifact"
+      ],
+      "rationale": "The lifetime rule for objects stored by reference is supported by the public symbols and example usage.",
       "unit_id": "inherited_unit:042.blockquote"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "The HTML details/summary element is not rendered in the target format and adds no verifiable value.",
+      "rationale": "HTML details/summary elements are not rendered in the target format and add no verifiable substance.",
       "unit_id": "inherited_unit:043.html_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [],
-      "rationale": "The table lists examples and their purposes; it is moved to Additional Examples where it fits contextually.",
+      "fact_ids": [
+        "build_test_asset:examples"
+      ],
+      "rationale": "The table lists example files that exist in the repository and are supported by the build_test_asset fact.",
       "unit_id": "inherited_unit:044.table"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "link_target:028",
+        "link_target:029",
+        "link_target:030"
       ],
-      "rationale": "The heading 'Open a Password-Protected Document' is superseded by the Quick Start and Additional Examples sections which cover this capability.",
+      "rationale": "Heading owned by the renderer: additional examples prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:045.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:004"
+        "example:004",
+        "public_symbol:aspose.pdf.document"
       ],
-      "rationale": "The code block for opening a password-protected document is verified by example:004 and kept as written.",
+      "rationale": "The code block is supported by example:004 and matches the public_symbol:aspose.pdf.document usage.",
       "unit_id": "inherited_unit:046.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:005",
+        "public_symbol:aspose.pdf.documentinfo"
       ],
-      "rationale": "The heading 'Read and Update Document Metadata' is superseded by the Additional Examples section which covers this capability.",
+      "rationale": "The heading and its following content are supported by example:005 and public_symbol:aspose.pdf.documentinfo.",
       "unit_id": "inherited_unit:047.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
+      "fact_ids": [
+        "example:005",
+        "public_symbol:aspose.pdf.documentinfo"
+      ],
       "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
       "unit_id": "inherited_unit:048.paragraph"
     },
@@ -546,25 +578,29 @@
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:005"
+        "example:005",
+        "public_symbol:aspose.pdf.documentinfo"
       ],
-      "rationale": "The code block for reading and updating metadata is verified by example:005 and kept as written.",
+      "rationale": "The code block is supported by example:005 and matches the public_symbol:aspose.pdf.documentinfo usage.",
       "unit_id": "inherited_unit:049.code_block"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "The blockquote describes a limitation on metadata updates for from-scratch documents; it is kept as attributed content.",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "example:005",
+        "public_symbol:aspose.pdf.documentinfo"
+      ],
+      "rationale": "The blockquote describes a limitation confirmed by the fact that setting metadata on a from-scratch document throws.",
       "unit_id": "inherited_unit:050.blockquote"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:006"
       ],
-      "rationale": "The heading 'Render Every Page to a Multi-Page TIFF' is superseded by the Additional Examples section which covers this capability.",
+      "rationale": "The example fact for the following code block is CONTRADICTED, so the heading is unsupported.",
       "unit_id": "inherited_unit:051.heading"
     },
     {
@@ -573,32 +609,39 @@
       "fact_ids": [
         "example:006"
       ],
-      "rationale": "The example fact example:006 has polarity CONTRADICTED, so this code block is not placed.",
+      "rationale": "The example fact for this code block is CONTRADICTED, so it is never placed.",
       "unit_id": "inherited_unit:052.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "example:007",
+        "public_symbol:aspose.pdf.cryptoalgorithm"
       ],
-      "rationale": "The heading 'Encrypt a Document With AES-256' is superseded by the Additional Examples section which covers this capability.",
+      "rationale": "The heading and its following code block are supported by example:007 and public_symbol:aspose.pdf.cryptoalgorithm.",
       "unit_id": "inherited_unit:053.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:007"
+        "example:007",
+        "public_symbol:aspose.pdf.cryptoalgorithm"
       ],
-      "rationale": "The code block for AES-256 encryption is verified by example:007 and kept as written.",
+      "rationale": "The code block is supported by example:007 and matches the public_symbol:aspose.pdf.cryptoalgorithm usage.",
       "unit_id": "inherited_unit:054.code_block"
     },
     {
-      "destination_section": "scope_limitations",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
-      "rationale": "The paragraph explains CryptoAlgorithm and Permissions; it is kept as attributed content as it adds context not in facts.",
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007",
+        "example:008",
+        "public_symbol:aspose.pdf.cryptoalgorithm",
+        "public_symbol:aspose.pdf.permissions"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:055.paragraph"
     },
     {
@@ -606,7 +649,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:008",
-        "identity:ecosystem"
+        "link_target:030",
+        "public_symbol:aspose.pdf.facades.pdffilesignature"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:056.heading"
@@ -615,7 +659,9 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:008"
+        "example:008",
+        "link_target:030",
+        "public_symbol:aspose.pdf.facades.pdffilesignature"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:057.code_block"
@@ -625,7 +671,8 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:009",
-        "link_target:030"
+        "link_target:030",
+        "public_symbol:aspose.pdf.facades.pdffilesignature"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:058.paragraph"
@@ -635,7 +682,7 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "example:009",
-        "identity:ecosystem"
+        "public_symbol:aspose.pdf.annotations.highlightannotation"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
       "unit_id": "inherited_unit:059.heading"
@@ -644,23 +691,39 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:009"
+        "example:009",
+        "public_symbol:aspose.pdf.annotations.highlightannotation"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:060.code_block"
     },
     {
-      "destination_section": "api_reference",
+      "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Lists annotation subtypes supported by the library; all are confirmed public symbols.",
+      "fact_ids": [
+        "public_symbol:aspose.pdf.annotations.annotationtype",
+        "public_symbol:aspose.pdf.annotations.highlightannotation",
+        "public_symbol:aspose.pdf.annotations.underlineannotation",
+        "public_symbol:aspose.pdf.annotations.squigglyannotation",
+        "public_symbol:aspose.pdf.annotations.strikeoutannotation",
+        "public_symbol:aspose.pdf.annotations.squareannotation",
+        "public_symbol:aspose.pdf.annotations.circleannotation",
+        "public_symbol:aspose.pdf.annotations.lineannotation",
+        "public_symbol:aspose.pdf.annotations.inkannotation",
+        "public_symbol:aspose.pdf.annotations.textannotation",
+        "public_symbol:aspose.pdf.annotations.freetextannotation",
+        "public_symbol:aspose.pdf.annotations.stampannotation",
+        "public_symbol:aspose.pdf.annotations.linkannotation",
+        "public_symbol:aspose.pdf.annotations.fileattachmentannotation"
+      ],
+      "rationale": "Lists annotation subtypes supported by the library, confirmed by public symbol facts.",
       "unit_id": "inherited_unit:061.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
+        "example:001",
         "example:010"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -670,7 +733,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
+        "example:001",
         "example:010",
         "public_symbol:aspose.pdf.forms.textboxfield"
       ],
@@ -688,14 +751,14 @@
         "public_symbol:aspose.pdf.forms.listboxfield",
         "public_symbol:aspose.pdf.forms.buttonfield"
       ],
-      "rationale": "Kept in development_testing: api_reference holds no build material. Lists AcroForm field types supported; all are confirmed public symbols.",
+      "rationale": "Kept in development_testing: key_capabilities holds no build material. Lists AcroForm field types supported, confirmed by public symbol facts.",
       "unit_id": "inherited_unit:064.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
+        "example:001",
         "example:011"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -705,7 +768,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
+        "example:001",
         "example:011",
         "public_symbol:aspose.pdf.annotations.xyzexplicitdestination",
         "public_symbol:aspose.pdf.outlinecollection",
@@ -718,7 +781,7 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
+        "example:001",
         "example:012"
       ],
       "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
@@ -728,9 +791,9 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
+        "example:001",
         "example:012",
-        "public_symbol:aspose.pdf.devices.tiffdevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.facades.pdfconverter",
         "public_symbol:aspose.pdf.facades.pdfextractor",
         "public_symbol:aspose.pdf.text.textabsorber"
@@ -739,60 +802,57 @@
       "unit_id": "inherited_unit:068.code_block"
     },
     {
-      "destination_section": "api_reference",
+      "destination_section": "additional_examples",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Describes PdfConverter and PdfExtractor capabilities; all features mentioned are confirmed public symbols.",
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose.pdf.facades.pdfconverter",
+        "public_symbol:aspose.pdf.devices.pngdevice"
+      ],
+      "rationale": "Describes PdfConverter per-page cursor and PageCount, confirmed by public symbols.",
       "unit_id": "inherited_unit:069.paragraph"
     },
     {
       "destination_section": null,
-      "disposition": "NON_CONTENT",
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "HTML closing tag </details> is non-content markup.",
+      "rationale": "HTML closing tag with no matching opening tag; non-semantic and unsupported.",
       "unit_id": "inherited_unit:070.html_block"
     },
     {
-      "destination_section": "development_testing",
+      "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "build_test_asset:ci",
-        "build_test_asset:tests",
-        "build_test_asset:examples"
+        "public_symbol:aspose"
       ],
-      "rationale": "The heading 'Project Structure' is superseded by the generated 'Development and Testing' section which covers repository layout.",
+      "rationale": "The heading 'Project Structure' is superseded by the API Reference section which includes public symbol facts.",
       "unit_id": "inherited_unit:071.heading"
     },
     {
-      "destination_section": "development_testing",
+      "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:ci",
-        "build_test_asset:tests",
-        "build_test_asset:examples"
+        "link_target:028"
       ],
-      "rationale": "Describes repository structure; layout matches verified build_test_asset paths.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:072.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:ci",
-        "build_test_asset:tests",
-        "build_test_asset:examples"
+        "link_target:028"
       ],
-      "rationale": "Tree diagram of repository structure; matches verified build_test_asset paths.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:073.code_block"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose",
-        "public_symbol:aspose.pdf"
+        "public_symbol:aspose"
       ],
-      "rationale": "The heading 'API Reference' is superseded by the generated 'API Reference' section which covers the full public surface.",
+      "rationale": "The heading 'API Reference' is superseded by the API Reference section which includes public symbol facts.",
       "unit_id": "inherited_unit:074.heading"
     },
     {
@@ -800,56 +860,71 @@
       "disposition": "VERIFIED_REWRITE",
       "fact_ids": [
         "public_symbol:aspose",
-        "public_symbol:aspose.pdf"
+        "public_symbol:aspose.pdf",
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.facades",
+        "public_symbol:aspose.pdf.forms"
       ],
-      "rationale": "Re-authored from the facts: kept as written it would point at content that does not follow it in its section. Introduces the public API surface; the count of 24",
+      "rationale": "Re-authored from the facts: kept as written it would point at content that does not follow it in its section. States the number of public types and modules, con",
       "unit_id": "inherited_unit:075.paragraph"
     },
     {
       "destination_section": null,
-      "disposition": "NON_CONTENT",
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "HTML summary block is non-content markup.",
+      "rationale": "HTML summary tag with no matching details tag; non-semantic and unsupported.",
       "unit_id": "inherited_unit:076.html_block"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose",
-        "public_symbol:aspose.pdf"
+        "public_symbol:aspose"
       ],
-      "rationale": "The heading 'Core API' is superseded by the generated 'API Reference' section which covers the full public surface.",
+      "rationale": "Moves the heading to the API Reference section where public symbols are listed.",
       "unit_id": "inherited_unit:077.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose",
-        "public_symbol:aspose.pdf"
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.text.textabsorber",
+        "public_symbol:aspose.pdf.devices.pngdevice"
       ],
-      "rationale": "The table's description of Document metadata methods incorrectly attributes DocumentInfo members (Title, Author, Creator, Producer, Subject, Keywords) to the As",
+      "rationale": "Lists public types confirmed by public symbol facts; includes key classes like Document and TextAbsorber.",
       "unit_id": "inherited_unit:078.table"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "public_symbol:aspose",
-        "public_symbol:aspose.pdf"
+        "public_symbol:aspose"
       ],
-      "rationale": "The heading 'Enumerations' is superseded by the generated 'API Reference' section which covers the full public surface.",
+      "rationale": "Moves the heading to the API Reference section where public enums are listed.",
       "unit_id": "inherited_unit:079.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose",
-        "public_symbol:aspose.pdf"
+        "public_symbol:aspose.pdf.afrelationship",
+        "public_symbol:aspose.pdf.borderside",
+        "public_symbol:aspose.pdf.color",
+        "public_symbol:aspose.pdf.cryptoalgorithm",
+        "public_symbol:aspose.pdf.fileencoding",
+        "public_symbol:aspose.pdf.horizontalalignment",
+        "public_symbol:aspose.pdf.numberingstyle",
+        "public_symbol:aspose.pdf.pagecoordinatetype",
+        "public_symbol:aspose.pdf.passwordtype",
+        "public_symbol:aspose.pdf.pdfformat",
+        "public_symbol:aspose.pdf.permissions",
+        "public_symbol:aspose.pdf.rotation",
+        "public_symbol:aspose.pdf.verticalalignment"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table of enumerations; all listed enums are confirmed public symbols.",
+      "rationale": "Lists public enums confirmed by public symbol facts; includes key enums like Rotation and Permissions.",
       "unit_id": "inherited_unit:080.table"
     },
     {
@@ -858,48 +933,31 @@
       "fact_ids": [
         "public_symbol:aspose.pdf.annotations"
       ],
-      "rationale": "The 'Annotations' heading is superseded by the API Reference section which lists all public symbols including Aspose::Pdf::Annotations.",
+      "rationale": "The 'Annotations' heading duplicates the API reference section's scope; the table below is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:081.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "OMIT_UNSUPPORTED",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
-        "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
-        "public_symbol:aspose.pdf.cryptoalgorithm",
-        "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
-        "public_symbol:aspose.pdf.devices.resolution",
-        "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
-        "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
-        "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
-        "public_symbol:aspose.pdf.pagecollection",
-        "public_symbol:aspose.pdf.permissions",
-        "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
-        "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
-        "public_symbol:aspose.pdf.text.textfragmentabsorber"
+        "public_symbol:aspose.pdf.annotations.annotationselector",
+        "public_symbol:aspose.pdf.annotations.bleedmarkannotation",
+        "public_symbol:aspose.pdf.annotations.border",
+        "public_symbol:aspose.pdf.annotations.caretannotation",
+        "public_symbol:aspose.pdf.annotations.characteristics",
+        "public_symbol:aspose.pdf.annotations.circleannotation",
+        "public_symbol:aspose.pdf.annotations.colorbarannotation",
+        "public_symbol:aspose.pdf.annotations.commonfigureannotation",
+        "public_symbol:aspose.pdf.annotations.cornerprintermarkannotation",
+        "public_symbol:aspose.pdf.annotations.defaultappearance",
+        "public_symbol:aspose.pdf.annotations.explicitdestination",
+        "public_symbol:aspose.pdf.annotations.fileattachmentannotation",
+        "public_symbol:aspose.pdf.annotations.fitbexplicitdestination",
+        "public_symbol:aspose.pdf.annotations.fitbhexplicitdestination"
       ],
-      "rationale": "The table line claiming `NamedDestination` inherits from `IAppointment` is unsupported and must be removed.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The class table is superseded by the API reference's public symbol inventory; every listed cla",
       "unit_id": "inherited_unit:082.table"
     },
     {
@@ -911,7 +969,7 @@
         "public_symbol:aspose.pdf.annotations.annotationstatemodel",
         "public_symbol:aspose.pdf.annotations.annotationtype"
       ],
-      "rationale": "The 'Enumerations' heading under Annotations is superseded by the API Reference section which lists all public symbols including annotation enumerations.",
+      "rationale": "The 'Enumerations' heading duplicates the API reference scope; the table is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:083.heading"
     },
     {
@@ -931,7 +989,7 @@
         "public_symbol:aspose.pdf.annotations.explicitdestinationtype",
         "public_symbol:aspose.pdf.annotations.fileicon"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table of annotation enumerations is superseded by the API Reference section which provides",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The enumeration table is superseded by the API reference's public symbol inventory; every list",
       "unit_id": "inherited_unit:084.table"
     },
     {
@@ -940,7 +998,7 @@
       "fact_ids": [
         "public_symbol:aspose.pdf.drawing"
       ],
-      "rationale": "The 'Drawing' heading is superseded by the API Reference section which lists all public symbols including Aspose::Pdf::Drawing.",
+      "rationale": "The 'Drawing' heading duplicates the API reference scope; the table below is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:085.heading"
     },
     {
@@ -954,7 +1012,7 @@
         "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.drawing.shape"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table of drawing classes is superseded by the API Reference section which provides the com",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The class table is superseded by the API reference's public symbol inventory; every listed cla",
       "unit_id": "inherited_unit:086.table"
     },
     {
@@ -963,48 +1021,16 @@
       "fact_ids": [
         "public_symbol:aspose.pdf.facades"
       ],
-      "rationale": "The 'Facades' heading is superseded by the API Reference section which lists all public symbols including Aspose::Pdf::Facades.",
+      "rationale": "The 'Facades' heading duplicates the API reference scope; the table below is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:087.heading"
     },
     {
-      "destination_section": "api_reference",
+      "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
-        "public_symbol:aspose.pdf.annotations",
-        "public_symbol:aspose.pdf.annotations.annotation",
-        "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
-        "public_symbol:aspose.pdf.cryptoalgorithm",
-        "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
-        "public_symbol:aspose.pdf.devices.resolution",
-        "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
-        "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
-        "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
-        "public_symbol:aspose.pdf.pagecollection",
-        "public_symbol:aspose.pdf.permissions",
-        "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
-        "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
-        "public_symbol:aspose.pdf.text.textfragmentabsorber"
+        "package:name"
       ],
-      "rationale": "The unit contains multiple factual errors that cannot be corrected without new evidence: method names are mislabeled as properties, and several methods are mis-",
+      "rationale": "Omitted by the BL-240 last-resort degrade (R14): a blocking check shows it contradicts the facts: the README calls `Bookmark.Action` a property ('Bookmarks can ",
       "unit_id": "inherited_unit:088.table"
     },
     {
@@ -1018,9 +1044,13 @@
         "public_symbol:aspose.pdf.facades.defaultmetadataproperties",
         "public_symbol:aspose.pdf.facades.encodingtype",
         "public_symbol:aspose.pdf.facades.fieldtype",
-        "public_symbol:aspose.pdf.facades.fontstyle"
+        "public_symbol:aspose.pdf.facades.fontstyle",
+        "public_symbol:aspose.pdf.facades.imagemergemode",
+        "public_symbol:aspose.pdf.facades.keysize",
+        "public_symbol:aspose.pdf.facades.positioningmode",
+        "public_symbol:aspose.pdf.facades.propertyflag"
       ],
-      "rationale": "The 'Enumerations' heading under Facades is superseded by the API Reference section which lists all public symbols including facades enumerations.",
+      "rationale": "The 'Enumerations' heading duplicates the API reference scope; the table is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:089.heading"
     },
     {
@@ -1037,9 +1067,10 @@
         "public_symbol:aspose.pdf.facades.fontstyle",
         "public_symbol:aspose.pdf.facades.imagemergemode",
         "public_symbol:aspose.pdf.facades.keysize",
-        "public_symbol:aspose.pdf.facades.positioningmode"
+        "public_symbol:aspose.pdf.facades.positioningmode",
+        "public_symbol:aspose.pdf.facades.propertyflag"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table of facades enumerations is superseded by the API Reference section which provides th",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The enumeration table is superseded by the API reference's public symbol inventory; every list",
       "unit_id": "inherited_unit:090.table"
     },
     {
@@ -1048,7 +1079,7 @@
       "fact_ids": [
         "public_symbol:aspose.pdf.forms"
       ],
-      "rationale": "The 'Forms' heading is superseded by the API Reference section which lists all public symbols including Aspose::Pdf::Forms.",
+      "rationale": "The 'Forms' heading duplicates the API reference scope; the table below is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:091.heading"
     },
     {
@@ -1061,13 +1092,14 @@
         "public_symbol:aspose.pdf.forms.choicefield",
         "public_symbol:aspose.pdf.forms.comboboxfield",
         "public_symbol:aspose.pdf.forms.datefield",
-        "public_symbol:aspose.pdf.forms.docmdpaccesspermissions",
         "public_symbol:aspose.pdf.forms.docmdpsignature",
         "public_symbol:aspose.pdf.forms.externalsignature",
         "public_symbol:aspose.pdf.forms.field",
-        "public_symbol:aspose.pdf.forms.fileselectboxfield"
+        "public_symbol:aspose.pdf.forms.fileselectboxfield",
+        "public_symbol:aspose.pdf.forms.form",
+        "public_symbol:aspose.pdf.forms.iconfit"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table of forms classes is superseded by the API Reference section which provides the compl",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The class table is superseded by the API reference's public symbol inventory; every listed cla",
       "unit_id": "inherited_unit:092.table"
     },
     {
@@ -1083,7 +1115,7 @@
         "public_symbol:aspose.pdf.forms.subjectnameelements",
         "public_symbol:aspose.pdf.forms.symbology"
       ],
-      "rationale": "The 'Enumerations' heading under Forms is superseded by the API Reference section which lists all public symbols including forms enumerations.",
+      "rationale": "The 'Enumerations' heading duplicates the API reference scope; the table is superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:093.heading"
     },
     {
@@ -1099,7 +1131,7 @@
         "public_symbol:aspose.pdf.forms.subjectnameelements",
         "public_symbol:aspose.pdf.forms.symbology"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table of forms enumerations is superseded by the API Reference section which provides the ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The enumeration table is superseded by the API reference's public symbol inventory; every list",
       "unit_id": "inherited_unit:094.table"
     },
     {
@@ -1108,7 +1140,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Detailed Member Reference' heading is promotional and not supported by any fact; it adds no verifiable information.",
+      "rationale": "The 'Detailed Member Reference' heading is unsupported by facts and adds no value beyond the API reference.",
       "unit_id": "inherited_unit:095.heading"
     },
     {
@@ -1119,28 +1151,28 @@
         "public_symbol:aspose.pdf.page",
         "public_symbol:aspose.pdf.pagecollection"
       ],
-      "rationale": "The 'Documents and Pages' heading is superseded by the API Reference section which lists all public symbols including Document, Page, and PageCollection.",
+      "rationale": "The 'Documents and Pages' heading duplicates the API reference scope; the list items are superseded by the public symbol inventory.",
       "unit_id": "inherited_unit:096.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list of Document methods is superseded by the API Reference section which provides the com",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item duplicates the API reference's public symbol inventory; its substance is fully c",
       "unit_id": "inherited_unit:097.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list of Page methods is superseded by the API Reference section which provides the complet",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item duplicates the API reference's public symbol inventory; its substance is fully c",
       "unit_id": "inherited_unit:097.002.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list of PageCollection methods is superseded by the API Reference section which provides t",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The list item duplicates the API reference's public symbol inventory; its substance is fully c",
       "unit_id": "inherited_unit:097.003.list"
     },
     {
@@ -1149,7 +1181,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Text Extraction and Building' heading is promotional and not supported by any fact; it adds no verifiable information.",
+      "rationale": "The 'Text Extraction and Building' heading is unsupported by facts and adds no value beyond the API reference.",
       "unit_id": "inherited_unit:098.heading"
     },
     {
@@ -1164,45 +1196,35 @@
         "public_symbol:aspose.pdf.text.textstate",
         "public_symbol:aspose.pdf.text.fontrepository"
       ],
-      "rationale": "Kept in development_testing: api_reference holds no build material. Kept in the collapsed API Reference: it lists public API members. Kept in development_tes...",
+      "rationale": "Kept in development_testing: api_reference holds no build material. Lists core text API types and methods supported by the library and verified via public sy...",
       "unit_id": "inherited_unit:099.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1212,7 +1234,7 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Lists rendering devices and their methods verified by public symbols and example:002.",
+      "rationale": "Lists rendering device classes and their methods verified by public symbols and example:002.",
       "unit_id": "inherited_unit:101.001.list"
     },
     {
@@ -1221,7 +1243,7 @@
       "fact_ids": [
         "public_symbol:aspose.pdf.devices.resolution"
       ],
-      "rationale": "Resolution class for DPI configuration is verified and used in example:002.",
+      "rationale": "Describes Resolution class for DPI settings, verified by public symbol and example:002.",
       "unit_id": "inherited_unit:101.002.list"
     },
     {
@@ -1231,45 +1253,35 @@
         "public_symbol:aspose.pdf.devices.documentdevice",
         "public_symbol:aspose.pdf.devices.pagedevice"
       ],
-      "rationale": "Base rendering surface types DocumentDevice and PageDevice are verified public symbols.",
+      "rationale": "Lists base rendering device types verified by public symbols.",
       "unit_id": "inherited_unit:101.003.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1279,45 +1291,35 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Lists table, drawing, and artifact types verified by public symbols and example:003 (CONTRADICTED) is not used for placement.",
+      "rationale": "Lists table, drawing, and artifact types with verified public symbols and example:002.",
       "unit_id": "inherited_unit:103.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1349,38 +1351,28 @@
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1390,45 +1382,35 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Lists forms API types verified by public symbols.",
+      "rationale": "Lists forms API types and field subtypes verified by public symbols.",
       "unit_id": "inherited_unit:107.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1445,18 +1427,18 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose.pdf.nameddestinationcollection",
+        "public_symbol:aspose.pdf.annotations.explicitdestination",
         "public_symbol:aspose.pdf.annotations.xyzexplicitdestination",
         "public_symbol:aspose.pdf.annotations.fitexplicitdestination"
       ],
-      "rationale": "Lists explicit destination types verified by public symbols.",
+      "rationale": "Lists explicit destination subtypes verified by public symbols.",
       "unit_id": "inherited_unit:109.002.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Lists document info and metadata types verified by public symbols and example:005.",
+      "rationale": "Lists DocumentInfo properties verified by public symbols and example:005.",
       "unit_id": "inherited_unit:109.003.list"
     },
     {
@@ -1466,45 +1448,35 @@
         "public_symbol:aspose.pdf.metadata",
         "public_symbol:aspose.pdf.xmpvalue"
       ],
-      "rationale": "Lists XMP metadata access types verified by public symbols.",
+      "rationale": "Lists XMP metadata types verified by public symbols.",
       "unit_id": "inherited_unit:109.004.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1521,38 +1493,28 @@
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "example:007",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.annotations.annotation",
         "public_symbol:aspose.pdf.annotations.annotationcollection",
-        "public_symbol:aspose.pdf.annotations.highlightannotation",
-        "public_symbol:aspose.pdf.annotations.textannotation",
         "public_symbol:aspose.pdf.cryptoalgorithm",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution",
         "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.embeddedfilecollection",
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle",
         "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.checkboxfield",
-        "public_symbol:aspose.pdf.forms.formtype",
-        "public_symbol:aspose.pdf.forms.radiobuttonfield",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.outlinecollection",
         "public_symbol:aspose.pdf.pagecollection",
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text.fontrepository",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
@@ -1569,21 +1531,16 @@
       "destination_section": null,
       "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "Trailing HTML comment closer with no semantic content.",
+      "rationale": "Trailing HTML closing tag with no semantic content.",
       "unit_id": "inherited_unit:114.html_block"
     },
     {
       "destination_section": "documentation_resources",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "link_target:031",
-        "link_target:032",
-        "link_target:033",
-        "link_target:034",
-        "link_target:035",
-        "link_target:036"
+        "link_target:019"
       ],
-      "rationale": "The heading and list items are superseded by the Documentation & Resources section, which is rendered from verified links to the same resources.",
+      "rationale": "The heading '## Documentation & Resources' matches the destination section and is supported by the link target fact.",
       "unit_id": "inherited_unit:115.heading"
     },
     {
@@ -1597,14 +1554,16 @@
         "link_target:035",
         "link_target:036"
       ],
-      "rationale": "The list items are superseded by the Documentation & Resources section, which is rendered from verified links to the same resources.",
+      "rationale": "All listed documentation links are verified and supported by the facts; the list provides valuable resource navigation.",
       "unit_id": "inherited_unit:116.list"
     },
     {
       "destination_section": "scope_limitations",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The heading matches the section ID and is supported by the inherited list and paragraph describing limitations.",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:020"
+      ],
+      "rationale": "The heading '## Scope and Limitations' matches the destination section and is supported by the link target fact.",
       "unit_id": "inherited_unit:117.heading"
     },
     {
@@ -1618,11 +1577,11 @@
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "install_command:cmake",
-        "example:007",
+        "public_symbol:aspose.pdf.xmpvalue",
+        "public_symbol:aspose.pdf.documentinfo",
         "public_symbol:aspose.pdf.permissions"
       ],
-      "rationale": "The list items match the limitations in the accepted investigation and are supported by the facts.",
+      "rationale": "All listed limitations are supported by facts: XmpValue helpers, /Info patching, and Permissions enforcement.",
       "unit_id": "inherited_unit:119.list"
     },
     {
@@ -1632,14 +1591,16 @@
         "link_target:037",
         "link_target:product.enterprise"
       ],
-      "rationale": "The paragraph relates the FOSS edition to the Enterprise Edition and is supported by the verified product link.",
+      "rationale": "References the Enterprise Edition product page and contrasts FOSS scope; supported by the product enterprise link target.",
       "unit_id": "inherited_unit:120.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The heading matches the section ID and is supported by the inherited code block and paragraph describing testing.",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:021"
+      ],
+      "rationale": "The heading '## Development and Testing' matches the destination section and is supported by the link target fact.",
       "unit_id": "inherited_unit:121.heading"
     },
     {
@@ -1649,26 +1610,26 @@
         "build_test_asset:tests",
         "build_test_asset:ci"
       ],
-      "rationale": "The code block matches the build and test commands supported by the CI and test assets.",
+      "rationale": "The build and test commands are supported by the CI and tests assets; the code block provides essential developer workflow.",
       "unit_id": "inherited_unit:122.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [
-        "build_test_asset:tests",
         "dependency:development.googletest"
       ],
-      "rationale": "The paragraph describes the test suite and its dependencies, which are supported by the facts.",
+      "rationale": "Maintainer insight on test structure and GoogleTest usage; no fact contradicts it and it adds useful context.",
       "unit_id": "inherited_unit:123.paragraph"
     },
     {
-      "destination_section": "third_party_notices",
+      "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "third_party_notices:file"
+        "link_target:022",
+        "link_target:product.enterprise"
       ],
-      "rationale": "The heading is superseded by the Third-Party Notices section, which is rendered from the file fact.",
+      "rationale": "The heading '## Third-Party Notices' is moved to enterprise_relationship to align with the section's purpose of third-party licensing.",
       "unit_id": "inherited_unit:124.heading"
     },
     {
@@ -1677,19 +1638,20 @@
       "fact_ids": [
         "link_target:038",
         "link_target:039",
-        "link_target:product.enterprise"
+        "link_target:product.enterprise",
+        "third_party_notices:file"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:125.paragraph"
     },
     {
-      "destination_section": "license",
+      "destination_section": "enterprise_relationship",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "license:file",
-        "license:spdx"
+        "link_target:023",
+        "link_target:product.enterprise"
       ],
-      "rationale": "The heading is superseded by the License section, which is rendered from the file and SPDX facts.",
+      "rationale": "The heading '## License' is moved to enterprise_relationship to group with third-party notices under licensing.",
       "unit_id": "inherited_unit:126.heading"
     },
     {
@@ -1700,14 +1662,13 @@
         "license:spdx",
         "link_target:product.enterprise"
       ],
-      "rationale": "The paragraph describes the MIT license and its permissions, which is supported by the facts.",
+      "rationale": "The license declaration is verified and supported; the paragraph provides essential licensing information.",
       "unit_id": "inherited_unit:127.paragraph"
     },
     {
       "destination_section": "enterprise_relationship",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "license:spdx",
         "link_target:038",
         "link_target:product.enterprise"
       ],

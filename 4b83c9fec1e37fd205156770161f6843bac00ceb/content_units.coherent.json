@@ -3,425 +3,552 @@
     "applied": true,
     "revised": []
   },
+  "degrade_records": [
+    {
+      "action": "inherited_unit_omitted",
+      "detail": "the README calls `Bookmark.Action` a property ('Bookmarks can be organized hierarchically; use Bookmark.ChildItem() or Bookmark.ChildItems() to access nested Bookmarks and set properties such as Action, Destination, and display flags like BoldFlag and ItalicFlag.'), but the facts record it as a method; call it by its kind",
+      "findings": [
+        "BC-14"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "inherited_unit:088.table"
+    }
+  ],
   "omitted": [
     {
       "fact_id": "example:003",
-      "reason": "Contradicted example; not used in opening.",
+      "reason": "Contradicted example; not implemented.",
       "section": "opening"
     },
     {
       "fact_id": "example:006",
-      "reason": "Contradicted example; not used in opening.",
+      "reason": "Contradicted example; not implemented.",
       "section": "opening"
     },
     {
       "fact_id": "example:008",
-      "reason": "Unresolved example; not used in opening.",
+      "reason": "Unresolved example; not implemented.",
       "section": "opening"
     },
     {
       "fact_id": "example:009",
-      "reason": "Unresolved example; not used in opening.",
+      "reason": "Unresolved example; not implemented.",
       "section": "opening"
     },
     {
       "fact_id": "example:010",
-      "reason": "Unresolved example; not used in opening.",
+      "reason": "Unresolved example; not implemented.",
       "section": "opening"
     },
     {
       "fact_id": "example:011",
-      "reason": "Unresolved example; not used in opening.",
+      "reason": "Unresolved example; not implemented.",
       "section": "opening"
     },
     {
       "fact_id": "example:012",
-      "reason": "Unresolved example; not used in opening.",
+      "reason": "Unresolved example; not implemented.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "install_command:cmake",
+      "reason": "Installation command is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "license:spdx",
+      "reason": "License is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:cmake_minimum",
+      "reason": "CMake version is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Version is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:distribution.aspose.pdf.cpp.foss",
+      "reason": "Distribution name is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Package name is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.annotations",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.cryptoalgorithm",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.devices",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.document",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.documentinfo",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.drawing",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.facades",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.forms",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.metadata",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.outlinecollection",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.permissions",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.table",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.pdf.text",
+      "reason": "Public symbol is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Provenance metadata; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository URL is rendered separately by the renderer; not part of the opening prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Revision hash is rendered separately by the renderer; not part of the opening prose.",
       "section": "opening"
     },
     {
       "fact_id": "link_target:006",
-      "reason": "Link target not used in opening.",
+      "reason": "Link target is rendered separately by the renderer; not part of the opening prose.",
       "section": "opening"
     },
     {
       "fact_id": "inherited_unit:010.list",
-      "reason": "The list item describes additional capabilities beyond the seven key capabilities slots; it is omitted because the section restricts each slot to one capability and the facts already covered by the seven slots are cited elsewhere.",
+      "reason": "The list item is covered by the six capability units; it is not omitted because it is not a fact about the product but a source of facts.",
       "section": "key_capabilities"
     },
     {
-      "fact_id": "example:003",
-      "reason": "example is CONTRADICTED and not used by any capability unit",
+      "fact_id": "inherited_unit:061.paragraph",
+      "reason": "The paragraph is covered by the capability units; it is not omitted because it is not a fact about the product but a source of facts.",
       "section": "key_capabilities"
     },
     {
-      "fact_id": "example:006",
-      "reason": "example is CONTRADICTED and not used by any capability unit",
-      "section": "key_capabilities"
+      "fact_id": "inherited_unit:013.code_block",
+      "reason": "The unit is an inherited code block, not a fact about product behavior; it is rendered separately by the renderer and not described in prose.",
+      "section": "quick_start"
     },
     {
-      "fact_id": "example:008",
-      "reason": "example is UNRESOLVED and not used by any capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:009",
-      "reason": "example is UNRESOLVED and not used by any capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:010",
-      "reason": "example is UNRESOLVED and not used by any capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:011",
-      "reason": "example is UNRESOLVED and not used by any capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:012",
-      "reason": "example is UNRESOLVED and not used by any capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "link_target:006",
-      "reason": "link target is UNRESOLVED and not used by any capability unit",
-      "section": "key_capabilities"
+      "fact_id": "inherited_unit:036.code_block",
+      "reason": "The unit is an inherited code block, not a fact about product behavior; it is rendered separately by the renderer and not described in prose.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:ecosystem",
-      "reason": "identity fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact identifies the ecosystem as cpp, which is already evident from the code example and platform identity; it adds no new descriptive value for this lead-in sentence.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:family",
-      "reason": "identity fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact identifies the family as pdf, which is already evident from the product name and example; it adds no new descriptive value for this lead-in sentence.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:platform",
-      "reason": "identity fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact identifies the platform as cpp, which is already evident from the code example; it adds no new descriptive value for this lead-in sentence.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:product-knowledge-refresh",
-      "reason": "identity fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact records a knowledge refresh check result, not a user-facing capability; it is not relevant to describing what the example does.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "identity fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact identifies the repository, which is not part of the user-facing description of the example's purpose.",
+      "section": "quick_start"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "identity fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact records a revision hash, which is not part of the user-facing description of the example's purpose.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:cmake_minimum",
-      "reason": "package fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact specifies a CMake version requirement, which is not relevant to describing what the example does.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:cxx_standard",
-      "reason": "package fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact specifies a C++ standard, which is not relevant to describing what the example does.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:distribution.aspose.pdf.cpp.foss",
-      "reason": "package fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact identifies the distribution name, which is already evident from the product name and not needed in this lead-in sentence.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:name",
-      "reason": "package fact not needed in this capability unit",
-      "section": "key_capabilities"
+      "reason": "The fact identifies the package name, which is already evident from the product name and not needed in this lead-in sentence.",
+      "section": "quick_start"
     },
     {
       "fact_id": "package:version",
-      "reason": "package fact not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.document",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.loadoptions",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.documentinfo",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.metadata",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.devices",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.cryptoalgorithm",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.permissions",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.facades",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.table",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "public_symbol:aspose.pdf.drawing",
-      "reason": "public symbol not needed in this capability unit",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:017.paragraph",
-      "reason": "Belongs to a different section; not part of additional_examples.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:018.code_block",
-      "reason": "Belongs to a different section; not part of additional_examples.",
-      "section": "additional_examples"
-    },
-    {
-      "fact_id": "inherited_unit:019.paragraph",
-      "reason": "Belongs to a different section; not part of additional_examples.",
-      "section": "additional_examples"
+      "reason": "The fact specifies a version, which is not relevant to describing what the example does.",
+      "section": "quick_start"
     },
     {
       "fact_id": "inherited_unit:037.paragraph",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit providing broader context; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:039.paragraph",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit describing example directory structure; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:042.blockquote",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit stating lifetime rules; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:044.table",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit listing example files; not cited by any example fact in this section.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:045.heading",
+      "reason": "Inherited unit providing a heading; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:046.code_block",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit providing a code block; not cited by any example fact in this section.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:047.heading",
+      "reason": "Inherited unit providing a heading; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:049.code_block",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit providing a code block; not cited by any example fact in this section.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:053.heading",
+      "reason": "Inherited unit providing a heading; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "inherited_unit:054.code_block",
-      "reason": "Belongs to a different section; not part of additional_examples.",
+      "reason": "Inherited unit providing a code block; not cited by any example fact in this section.",
+      "section": "additional_examples"
+    },
+    {
+      "fact_id": "inherited_unit:069.paragraph",
+      "reason": "Inherited unit describing PdfConverter and PdfExtractor; not cited by any example fact in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:003",
-      "reason": "Contradicted example; not used in any accepted unit.",
+      "reason": "Contradicted example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:006",
-      "reason": "Contradicted example; not used in any accepted unit.",
+      "reason": "Contradicted example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:008",
-      "reason": "Unresolved example; not used in any accepted unit.",
+      "reason": "Unresolved example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:009",
-      "reason": "Unresolved example; not used in any accepted unit.",
+      "reason": "Unresolved example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:010",
-      "reason": "Unresolved example; not used in any accepted unit.",
+      "reason": "Unresolved example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:011",
-      "reason": "Unresolved example; not used in any accepted unit.",
+      "reason": "Unresolved example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "example:012",
-      "reason": "Unresolved example; not used in any accepted unit.",
+      "reason": "Unresolved example; not used in this section.",
       "section": "additional_examples"
     },
     {
       "fact_id": "link_target:006",
-      "reason": "Unresolved link target; not used in any accepted unit.",
+      "reason": "Unresolved link target; not used in this section.",
       "section": "additional_examples"
     },
     {
-      "fact_id": "inherited_unit:061.paragraph",
-      "reason": "The list of annotation subtypes is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:069.paragraph",
-      "reason": "The PdfConverter per-page cursor details are not cited by any hub unit and are not required for the API reference introduction or hub descriptions.",
-      "section": "api_reference"
-    },
-    {
       "fact_id": "inherited_unit:075.paragraph",
-      "reason": "The summary of 244 public types is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The table of 244 public types and five modules is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:080.table",
-      "reason": "The enumeration table is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "fact_id": "inherited_unit:077.heading",
+      "reason": "The heading '### Core API' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:079.heading",
+      "reason": "The heading '#### Enumerations' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:082.table",
+      "reason": "The table of annotation classes and enumerations is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:084.table",
-      "reason": "The annotation enumeration table is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The table of annotation enumerations is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:086.table",
-      "reason": "The drawing class table is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The table of drawing classes is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:088.table",
+      "reason": "The table of facade classes is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:090.table",
-      "reason": "The enumeration table is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The table of facade enumerations is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:092.table",
-      "reason": "The form class table is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The table of form classes is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:094.table",
-      "reason": "The enumeration table is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The table of form enumerations is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:097.001.list",
-      "reason": "The Document member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for Document members is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:097.002.list",
-      "reason": "The Page member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for Page members is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:097.003.list",
-      "reason": "The PageCollection member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for PageCollection members is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:100.heading",
+      "reason": "The heading '### Rendering Devices' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:101.001.list",
-      "reason": "The device member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for rendering devices is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:101.002.list",
-      "reason": "The Resolution member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for Resolution is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:101.003.list",
-      "reason": "The DocumentDevice/PageDevice base type is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for DocumentDevice/PageDevice is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:102.heading",
+      "reason": "The heading '### Tables and Vector Graphics' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:103.list",
-      "reason": "The Table/Graph/WatermarkArtifact member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for tables and vector graphics is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:104.heading",
+      "reason": "The heading '### Annotations and Actions' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:105.list",
+      "reason": "The bullet list for annotations and actions is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:106.heading",
+      "reason": "The heading '### Forms (AcroForm)' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:107.list",
-      "reason": "The Forms::Form member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for forms is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:108.heading",
+      "reason": "The heading '### Outlines, Named Destinations, and Metadata' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:109.001.list",
-      "reason": "The OutlineCollection member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for outlines is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:109.002.list",
-      "reason": "The NamedDestinationCollection member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for named destinations is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:109.003.list",
-      "reason": "The DocumentInfo member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for DocumentInfo is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:109.004.list",
-      "reason": "The Metadata/XmpValue member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for Metadata/XmpValue is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:110.heading",
+      "reason": "The heading '### Security and Signing' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:111.list",
-      "reason": "The CryptoAlgorithm member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for security and signing is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:112.heading",
+      "reason": "The heading '### Facades (Aspose.Pdf.Facades)' is rendered by the deterministic renderer; it is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:113.list",
-      "reason": "The Facades member list is not cited by any hub unit and is not required for the API reference introduction or hub descriptions.",
+      "reason": "The bullet list for facades is rendered by the deterministic renderer; this unit is not prose and is not cited by any hub.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:003",
-      "reason": "The example is contradicted and not used by any hub unit.",
+      "reason": "Contradicted example; not cited by any hub and not used to infer prose.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:006",
-      "reason": "The example is contradicted and not used by any hub unit.",
+      "reason": "Contradicted example; not cited by any hub and not used to infer prose.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:008",
-      "reason": "The example is unresolved and not used by any hub unit.",
+      "reason": "Unresolved example; not cited by any hub and not used to infer prose.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:009",
-      "reason": "The example is unresolved and not used by any hub unit.",
+      "reason": "Unresolved example; not cited by any hub and not used to infer prose.",
       "section": "api_reference"
     },
     {
+      "fact_id": "example:010",
+      "reason": "Unresolved example; not cited by any hub and not used to infer prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:011",
+      "reason": "Unresolved example; not cited by any hub and not used to infer prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:012",
+      "reason": "Unresolved example; not cited by any hub and not used to infer prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "link_target:006",
+      "reason": "Link target for C++20 standard; not cited by any hub and not used to infer prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:125.paragraph",
+      "reason": "Describes library dependencies and font licensing, not commercial product additions beyond this FOSS package.",
+      "section": "enterprise_relationship"
+    },
+    {
       "fact_id": "inherited_unit:127.paragraph",
-      "reason": "This fact describes the MIT License terms for the FOSS package and does not state what the commercial product adds; it is not relevant to the context sentence about commercial enhancements.",
+      "reason": "Describes the MIT License terms, not commercial product additions beyond this FOSS package.",
+      "section": "enterprise_relationship"
+    },
+    {
+      "fact_id": "inherited_unit:128.paragraph",
+      "reason": "Describes bundled Liberation fonts and license details, not commercial product additions beyond this FOSS package.",
       "section": "enterprise_relationship"
     },
     {
@@ -477,65 +604,31 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:004.paragraph",
-        "license:spdx",
-        "package:cmake_minimum",
-        "package:cxx_standard",
-        "package:distribution.aspose.pdf.cpp.foss",
-        "package:name",
-        "package:version",
-        "public_symbol:aspose.pdf.annotations",
-        "public_symbol:aspose.pdf.cryptoalgorithm",
-        "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.drawing",
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.loadoptions",
-        "public_symbol:aspose.pdf.metadata",
-        "public_symbol:aspose.pdf.permissions",
-        "public_symbol:aspose.pdf.table",
-        "public_symbol:aspose.pdf.text"
+        "package:cxx_standard"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.PDF FOSS for Cpp reads and writes PDF documents, extracts text, and converts pages to image formats such as PNG. It builds documents from scratch, supporting text, tables, vector graphics, watermarks, annotations, AcroForm fields, and bookmarks. It encrypts and decrypts files using AESx256 and handles password-protected documents. It reads document metadata and information such as title, author, and keywords, and writes updated values back to the file."
+      "text": "Aspose.PDF FOSS for Cpp reads and writes PDF documents, extracts text, converts pages to images, and manages document metadata, encryption, and permissions. It supports reading encrypted files when provided with a user or owner password and writing encrypted files using AESx256 encryption. It exposes classes for document information, text absorption, and rendering via devices such as PNG output. It operates without external dependencies and is implemented in C++."
     },
     {
       "fact_ids": [
-        "example:002",
         "example:004",
         "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.loadoptions"
+        "public_symbol:aspose.pdf.documentinfo"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It opens existing PDF files with Aspose.Pdf.Document, supports password-protected files by passing a user or owner password to the constructor, and reports encryption status via IsEncrypted(); it also allows byte-verbatim round-trips or incremental /Info updates that preserve original bytes."
+      "text": "It opens existing PDF files with Aspose.Pdf.Document, supports password-protected files by passing the user or owner password to the constructor, and reports encryption status via IsEncrypted(); it also allows editing document information through Document.Info() and saving changes with Document.Save()."
     },
     {
       "fact_ids": [
         "example:002",
-        "example:005",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.metadata",
+        "public_symbol:aspose.pdf.devices",
         "public_symbol:aspose.pdf.text"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It extracts text using Aspose.Pdf.Text::TextAbsorber to walk a whole document or a single page, and provides typed access to document information such as title, author, subject, keywords, creator, producer, and dates through Aspose.Pdf.DocumentInfo, plus arbitrary custom entries via Add/Remove/ClearCustomData."
-    },
-    {
-      "fact_ids": [
-        "example:002",
-        "public_symbol:aspose.pdf.devices"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:3",
-      "text": "It renders pages to raster images using Aspose.Pdf.Devices::PngDevice, JpegDevice, and BmpDevice for single-page output, and TiffDevice for single-page or multi-page ranges with median-cut palette quantisation or caller-supplied palette conversion."
+      "text": "It extracts text from documents or individual pages using Aspose.Pdf.Text.TextAbsorber, and renders pages to raster images in PNG, JPEG, BMP, or TIFF formats through Aspose.Pdf.Devices.PngDevice, JpegDevice, BmpDevice, and TiffDevice with configurable resolution and color depth."
     },
     {
       "fact_ids": [
@@ -545,37 +638,40 @@
         "public_symbol:aspose.pdf.permissions"
       ],
       "section": "key_capabilities",
-      "slot": "capability:4",
-      "text": "It encrypts documents using Document::Encrypt with user and owner passwords, granular Aspose.Pdf.Permissions flags, and algorithms including RC4-40, RC4-128, AES-128, and AES-256, and signs documents with Aspose.Pdf.Facades::PdfFileSignature to add detached PKCS#7 signatures."
+      "slot": "capability:3",
+      "text": "It encrypts documents using Document.Encrypt() with algorithms including RC4-40, RC4-128, AES-128, or AES-256, and controls permissions such as printing, modifying, extracting, and annotating via Aspose.Pdf.Permissions flags; it also supports signing documents with Aspose.Pdf.Facades.PdfFileSignature using detached PKCS#7 signatures."
     },
     {
       "fact_ids": [
         "example:002",
         "public_symbol:aspose.pdf.annotations",
-        "public_symbol:aspose.pdf.document",
         "public_symbol:aspose.pdf.drawing",
         "public_symbol:aspose.pdf.forms",
         "public_symbol:aspose.pdf.table"
       ],
       "section": "key_capabilities",
-      "slot": "capability:5",
-      "text": "It builds documents from scratch using positioned text via Aspose.Pdf.Text::TextBuilder and TextFragment, tabular layout with Aspose.Pdf.Table (column widths, borders, background colours, and spanning cells), vector shapes via Aspose.Pdf.Drawing::Graph, and interactive AcroForm fields through Aspose.Pdf.Forms."
+      "slot": "capability:4",
+      "text": "It builds documents from scratch using positioned text via Aspose.Pdf.Text.TextBuilder and TextFragment, tabular layout with Aspose.Pdf.Table including column widths, borders, and background colors, vector shapes through Aspose.Pdf.Drawing.Graph, and interactive AcroForm fields via Aspose.Pdf.Forms.Form."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.text"
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.forms"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It adds and manages annotations such as highlight, underline, text sticky notes, links, stamps, and file attachments through Aspose.Pdf.Annotations, and creates interactive form fields like text boxes, checkboxes, and combo boxes using Aspose.Pdf.Forms.Form with support for flattening fields into static content."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:aspose.pdf.documentinfo",
+        "public_symbol:aspose.pdf.metadata",
+        "public_symbol:aspose.pdf.outlinecollection"
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It supports the Standard-14 fonts without an embedded /FontFile, painting correctly via system fonts and falling back to bundled substitutes so glyphs render even in fontless environments."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.facades"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:7",
-      "text": "It provides the classic Aspose.Pdf.Facades API for legacy workflows, including PdfConverter for rasterisation, PdfExtractor for text extraction with page ranges, PdfFileSecurity for encryption and password changes, PdfFileSignature for signing, PdfBookmarkEditor for bookmarks, PdfFileEditor for concatenation and splitting, and PdfFileStamp for headers, footers, and page numbers."
+      "text": "It reads and writes document metadata through typed Aspose.Pdf.DocumentInfo accessors for title, author, subject, keywords, creator, and producer, plus custom entries via Add/Remove/ClearCustomData, and accesses XMP metadata using Aspose.Pdf.Metadata."
     },
     {
       "fact_ids": [
@@ -583,18 +679,17 @@
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "This example opens a PDF document, prints the page count, extracts all text, and renders the first page as a PNG image at 150 DPI."
+      "text": "This example opens a PDF file, prints the page count, extracts all text, and renders the first page as a PNG image at 150 DPI."
     },
     {
       "fact_ids": [
         "example:004",
         "example:005",
-        "example:007",
-        "example:001"
+        "example:007"
       ],
       "section": "additional_examples",
       "slot": "preview",
-      "text": "The following workflows demonstrate opening encrypted files, reading and updating document metadata, and applying AESx256 encryption."
+      "text": "The following workflows demonstrate opening encrypted files, reading and updating document metadata, and applying AES-256 encryption."
     },
     {
       "fact_ids": [
@@ -602,7 +697,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:004",
-      "text": "Open a password-protected PDF and check encryption status."
+      "text": "Open a password-protected PDF document."
     },
     {
       "fact_ids": [
@@ -610,7 +705,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:005",
-      "text": "Read and update document metadata, then save changes."
+      "text": "Read and update document metadata."
     },
     {
       "fact_ids": [
@@ -618,7 +713,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:007",
-      "text": "Apply AESx256 encryption with user and owner passwords."
+      "text": "Encrypt a document with AES-256."
     },
     {
       "fact_ids": [
@@ -626,64 +721,57 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:001",
-      "text": "Include the main header to access the library."
+      "text": "Include the main header for Aspose.PDF FOSS for Cpp."
     },
     {
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
         "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.loadoptions"
+        "public_symbol:aspose.pdf.pagecollection",
+        "public_symbol:aspose.pdf.documentinfo"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "Aspose.PDF FOSS for Cpp exposes the Aspose.Pdf.Document class as its primary entry point, which provides access to pages, metadata, forms, and annotations. Supporting classes such as Aspose.Pdf.DocumentInfo and Aspose.Pdf.LoadOptions enable metadata inspection and document loading configuration."
+      "text": "Aspose.PDF FOSS for Cpp exposes the Aspose.Pdf.Document class as the primary entry point for loading, creating, and saving PDF documents. It provides access to page collections, document information, forms, and other core features through its members."
     },
     {
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
-        "public_symbol:aspose.pdf.document"
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.pagecollection",
+        "public_symbol:aspose.pdf.documentinfo"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.document",
-      "text": "The Aspose.Pdf.Document class loads PDF files from a path, supports password-protected documents, and exposes collections for pages, outlines, annotations, and embedded files, along with methods to encrypt, decrypt, and save the document."
+      "text": "The Aspose.Pdf.Document class supports opening existing PDFs, creating new documents, encrypting or decrypting files, and saving to disk; it exposes collections for pages, outlines, embedded files, and named destinations, and provides access to form, metadata, and document info objects."
     },
     {
       "fact_ids": [
-        "example:002",
-        "example:005",
         "public_symbol:aspose.pdf.text",
         "public_symbol:aspose.pdf.text.textabsorber",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.text",
-      "text": "The Aspose.Pdf.Text namespace provides text extraction via Aspose.Pdf.Text.TextAbsorber and Aspose.Pdf.Text.TextFragmentAbsorber, which visit a document and expose extracted text content and fragment details."
+      "text": "The Aspose.Pdf.Text namespace provides text extraction capabilities via Aspose.Pdf.Text.TextAbsorber and Aspose.Pdf.Text.TextFragmentAbsorber, which visit document pages and populate text or fragment collections for inspection."
     },
     {
       "fact_ids": [
-        "example:002",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.devices",
-      "text": "The Aspose.Pdf.Devices namespace offers rendering devices such as Aspose.Pdf.Devices.PageDevice, with concrete implementations like PngDevice and TiffDevice, and resolution control via Aspose.Pdf.Devices.Resolution to set horizontal and vertical DPI."
+      "text": "The Aspose.Pdf.Devices namespace includes rendering devices such as Aspose.Pdf.Devices.PngDevice, which converts a document or page to an image stream, and Aspose.Pdf.Devices.Resolution, which defines horizontal and vertical DPI settings."
     },
     {
       "fact_ids": [
-        "example:007",
         "public_symbol:aspose.pdf.cryptoalgorithm",
+        "public_symbol:aspose.pdf.facades",
         "public_symbol:aspose.pdf.permissions"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.cryptoalgorithm",
-      "text": "The Aspose.Pdf.CryptoAlgorithm class enumerates supported encryption algorithms including AESx256, and works with the Aspose.Pdf.Permissions flags to control document access and modification rights."
+      "text": "The Aspose.Pdf.CryptoAlgorithm enum lists supported encryption algorithms including RC4x40, RC4x128, AESx128, and AESx256, while Aspose.Pdf.Permissions is a flags enum that controls allowed operations per ISO 32000-1 §7.6.3.2 Table 22."
     },
     {
       "fact_ids": [
@@ -693,37 +781,17 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.annotations",
-      "text": "The Aspose.Pdf.Annotations namespace provides annotation support through Aspose.Pdf.Annotations.Annotation and Aspose.Pdf.Annotations.AnnotationCollection, enabling addition, enumeration, and manipulation of annotation objects on pages."
+      "text": "The Aspose.Pdf.Annotations namespace provides the base Aspose.Pdf.Annotations.Annotation class and per-page Aspose.Pdf.Annotations.AnnotationCollection, with concrete subtypes for highlight, text, free text, stamp, link, ink, and redaction annotations."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.formtype",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.forms",
-      "text": "The Aspose.Pdf.Forms namespace exposes form handling via Aspose.Pdf.Forms.FormType and Aspose.Pdf.Forms.TextBoxField, supporting form field creation, addition to pages, and flattening."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.pdf.facades",
-      "text": "The Aspose.Pdf.Facades namespace provides high-level utilities including Aspose.Pdf.Facades.PdfConverter for rasterizing PDFs and Aspose.Pdf.Facades.PdfExtractor for scoped text extraction."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.cell",
-        "public_symbol:aspose.pdf.row",
-        "public_symbol:aspose.pdf.table"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.pdf.table",
-      "text": "The Aspose.Pdf.Table namespace offers table support via Aspose.Pdf.Table, Aspose.Pdf.Row, and Aspose.Pdf.Cell, enabling structured content with column widths, borders, and cell styling."
+      "text": "The Aspose.Pdf.Forms namespace exposes the Aspose.Pdf.Forms.Form class for managing AcroForm fields and subtypes such as Aspose.Pdf.Forms.TextBoxField, CheckboxField, and RadioButtonField."
     },
     {
       "fact_ids": [
@@ -733,36 +801,17 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.pdf.drawing",
-      "text": "The Aspose.Pdf.Drawing namespace provides vector drawing primitives such as Aspose.Pdf.Drawing.Graph, Aspose.Pdf.Drawing.Rectangle, and Aspose.Pdf.Drawing.Circle for embedding graphics in PDFs."
+      "text": "The Aspose.Pdf.Drawing namespace includes Aspose.Pdf.Drawing.Graph for vector graphics, and shapes such as Aspose.Pdf.Drawing.Rectangle, Circle, and Line that can be added to pages."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.nameddestinationcollection",
-        "public_symbol:aspose.pdf.outlinecollection",
-        "public_symbol:aspose.pdf.outlineitemcollection"
+        "public_symbol:aspose.pdf.facades",
+        "public_symbol:aspose.pdf.facades.pdfconverter",
+        "public_symbol:aspose.pdf.facades.pdffilesignature"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.pdf.outlinecollection",
-      "text": "The Aspose.Pdf.OutlineCollection class manages document outlines and works with Aspose.Pdf.OutlineItemCollection and Aspose.Pdf.NamedDestinationCollection to define navigable bookmarks and destinations."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.metadata",
-        "public_symbol:aspose.pdf.xmpvalue"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.pdf.metadata",
-      "text": "The Aspose.Pdf.Metadata namespace provides XMP metadata access through Aspose.Pdf.XmpValue, enabling programmatic reading and writing of document metadata properties."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.page",
-        "public_symbol:aspose.pdf.pagecollection",
-        "public_symbol:aspose.pdf.pagelabelcollection"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.pdf.pagecollection",
-      "text": "The Aspose.Pdf.PageCollection class manages document pages via a 1-based indexer, supporting addition, insertion, deletion, and counting of pages, and works with Aspose.Pdf.Page and Aspose.Pdf.PageLabelCollection."
+      "slot": "hub:public_symbol:aspose.pdf.facades",
+      "text": "The Aspose.Pdf.Facades namespace provides high-level utilities including Aspose.Pdf.Facades.PdfFileSignature for detached PKCS#7 signing and Aspose.Pdf.Facades.PdfConverter for rasterising PDFs to multi-page TIFF or per-page PNG."
     },
     {
       "fact_ids": [
@@ -1138,7 +1187,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.pdfaction",
-      "text": "PdfAction class represents a PDF action that performs an operation."
+      "text": "PdfAction class provides base functionality for PDF actions."
     },
     {
       "fact_ids": [
@@ -1162,7 +1211,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.polygonannotation",
-      "text": "PolygonAnnotation class represents a polygon annotation."
+      "text": "PolygonAnnotation class represents a polygon annotation that displays a closed polygon."
     },
     {
       "fact_ids": [
@@ -1170,7 +1219,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.polylineannotation",
-      "text": "PolylineAnnotation class represents a polyline annotation."
+      "text": "PolylineAnnotation class represents a polyline annotation that displays a series of connected line segments."
     },
     {
       "fact_ids": [
@@ -1178,7 +1227,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.popupannotation",
-      "text": "PopupAnnotation class represents a popup annotation that displays a note."
+      "text": "PopupAnnotation class represents a popup annotation that displays a pop-up window."
     },
     {
       "fact_ids": [
@@ -1282,7 +1331,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.soundicon",
-      "text": "SoundIcon enum lists the Mic and Speaker icons for sound annotations."
+      "text": "SoundIcon enum lists the Mic and Speaker sound icon types."
     },
     {
       "fact_ids": [
@@ -1290,7 +1339,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.squareannotation",
-      "text": "SquareAnnotation class represents a square annotation."
+      "text": "SquareAnnotation class represents a square annotation that displays a rectangle."
     },
     {
       "fact_ids": [
@@ -1298,7 +1347,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.squigglyannotation",
-      "text": "SquigglyAnnotation class represents a squiggly underline annotation."
+      "text": "SquigglyAnnotation class represents a squiggly annotation that underlines text with a wavy line."
     },
     {
       "fact_ids": [
@@ -1306,7 +1355,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.stampannotation",
-      "text": "StampAnnotation class represents a stamp annotation that applies a visual mark."
+      "text": "StampAnnotation class represents a stamp annotation that displays a graphic or text overlay."
     },
     {
       "fact_ids": [
@@ -1314,7 +1363,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.stampicon",
-      "text": "StampIcon enum lists the Approved, AsIs, Confidential, Departmental, Draft, Experimental, Expired, Final, ForComment, ForPublicRelease, NotApproved and NotForPublicRelease stamp icons."
+      "text": "StampIcon enum lists the Approved, AsIs, Confidential, Departmental, Draft, Experimental, Expired, Final, ForComment, ForPublicRelease, NotApproved and NotForPublicRelease stamp icon types."
     },
     {
       "fact_ids": [
@@ -1322,7 +1371,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.strikeoutannotation",
-      "text": "StrikeOutAnnotation class represents a strikeout annotation."
+      "text": "StrikeOutAnnotation class represents a strikeout annotation that strikes through text."
     },
     {
       "fact_ids": [
@@ -1330,7 +1379,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.submitformaction",
-      "text": "SubmitFormAction class represents a form submission action."
+      "text": "SubmitFormAction class represents a submit form action that sends form data."
     },
     {
       "fact_ids": [
@@ -1354,7 +1403,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.texticon",
-      "text": "TextIcon enum lists the Check, Circle, Comment, Cross, Help, Insert, Key, NewParagraph, Note, Paragraph, RightArrow, and RightPointer icon types."
+      "text": "TextIcon enum lists the Check, Circle, Comment, Cross, Help, Insert, Key, NewParagraph, Note, Paragraph, RightArrow, and RightPointer text icon values."
     },
     {
       "fact_ids": [
@@ -1362,7 +1411,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.textmarkupannotation",
-      "text": "TextMarkupAnnotation class provides GetMarkedText, QuadPoints, and TextMarkupAnnotation members for text markup annotations."
+      "text": "TextMarkupAnnotation class provides methods to get marked text and quad points, and to construct a text markup annotation."
     },
     {
       "fact_ids": [
@@ -1370,7 +1419,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.textstyle",
-      "text": "TextStyle class provides Alignment, FontName, FontSize, HorizontalAlignment, and TextStyle members for text styling."
+      "text": "TextStyle class provides methods to get alignment, font name, font size, and horizontal alignment, and to construct a text style."
     },
     {
       "fact_ids": [
@@ -1378,7 +1427,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.trimmarkannotation",
-      "text": "TrimMarkAnnotation class provides an Accept method for trim mark annotations."
+      "text": "TrimMarkAnnotation class provides an Accept method to accept the annotation."
     },
     {
       "fact_ids": [
@@ -1386,7 +1435,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.underlineannotation",
-      "text": "UnderlineAnnotation class provides an Accept method for underline annotations."
+      "text": "UnderlineAnnotation class provides an Accept method to accept the annotation."
     },
     {
       "fact_ids": [
@@ -1394,7 +1443,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.watermarkannotation",
-      "text": "WatermarkAnnotation class provides Accept and Opacity methods for watermark annotations."
+      "text": "WatermarkAnnotation class provides Accept and Opacity methods to accept the annotation and control its opacity."
     },
     {
       "fact_ids": [
@@ -1402,7 +1451,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.widgetannotation",
-      "text": "WidgetAnnotation class provides Accept, DefaultAppearance, Exportable, GetCheckedStateName, Highlighting, Parent, ReadOnly, and Required methods for widget annotations."
+      "text": "WidgetAnnotation class provides methods to accept the annotation, get default appearance, exportable state, checked state name, highlighting mode, parent, read-only, and required flags."
     },
     {
       "fact_ids": [
@@ -1410,7 +1459,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.annotations.xyzexplicitdestination",
-      "text": "XYZExplicitDestination class provides Left, ToString, Top, and Zoom methods for XYZ explicit destinations."
+      "text": "XYZExplicitDestination class provides methods to get left, top, and zoom values, and to convert the destination to a string."
     },
     {
       "fact_ids": [
@@ -1418,7 +1467,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.artifact",
-      "text": "Artifact class provides IsBackground, Opacity, Position, Rotation, SetImage, SetTextAndState, Text, and TextState methods for artifacts."
+      "text": "Artifact class provides methods to get or set background state, opacity, position, rotation, image, text and state, text content, and text state."
     },
     {
       "fact_ids": [
@@ -1426,7 +1475,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.artifactcollection",
-      "text": "ArtifactCollection class provides Add, ArtifactCollection, Count, Delete, and Update methods for artifact collections."
+      "text": "ArtifactCollection class provides methods to add, count, delete, and update artifacts, and to construct the collection."
     },
     {
       "fact_ids": [
@@ -1434,7 +1483,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.baseparagraph",
-      "text": "BaseParagraph class provides BaseParagraph, HorizontalAlignment, Hyperlink, IsFirstParagraphInColumn, IsInLineParagraph, IsInNewPage, IsKeptWithNext, and Margin methods for base paragraphs."
+      "text": "BaseParagraph class provides methods to construct the paragraph, get horizontal alignment, hyperlink, first-in-column state, inline state, new-page state, kept-with-next state, and margin."
     },
     {
       "fact_ids": [
@@ -1442,7 +1491,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.bitmapinfo",
-      "text": "BitmapInfo class provides BitmapInfo, Format, Height, PixelBytes, PixelFormat, and Width methods for bitmap information."
+      "text": "BitmapInfo class provides methods to construct the object, get format, height, pixel bytes, pixel format, and width."
     },
     {
       "fact_ids": [
@@ -1450,7 +1499,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.borderinfo",
-      "text": "BorderInfo class provides Bottom, Left, Right, RoundedBorderRadius, and Top methods for border information."
+      "text": "BorderInfo class provides methods to get bottom, left, right, rounded border radius, and top border values."
     },
     {
       "fact_ids": [
@@ -1466,7 +1515,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.cell",
-      "text": "Cell class provides Alignment, BackgroundColor, BackgroundImage, BackgroundImageFile, Border, ColSpan, DefaultCellTextState, and IsNoBorder methods for table cells."
+      "text": "Cell class provides methods to get alignment, background color, background image, background image file, border, column span, default cell text state, and no-border state."
     },
     {
       "fact_ids": [
@@ -1474,7 +1523,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.cells",
-      "text": "Cells class provides Add, Count, Insert, Remove, and RemoveRange methods for collections of cells."
+      "text": "Cells class provides methods to add, count, insert, remove, and remove a range of cells."
     },
     {
       "fact_ids": [
@@ -1482,7 +1531,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.color",
-      "text": "Color class provides A, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, and Bisque methods for color values."
+      "text": "Color class provides methods to get alpha component and predefined colors such as AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, and Bisque."
     },
     {
       "fact_ids": [
@@ -1490,7 +1539,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.cryptoalgorithm",
-      "text": "CryptoAlgorithm enum lists the AESx128, AESx256, RC4x128, and RC4x40 cryptographic algorithm values."
+      "text": "CryptoAlgorithm enum lists the AESx128, AESx256, RC4x128, and RC4x40 encryption algorithm values."
     },
     {
       "fact_ids": [
@@ -1498,7 +1547,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.bmpdevice",
-      "text": "BmpDevice class provides a Process method for BMP device rendering."
+      "text": "BmpDevice class provides a Process method to render a document to BMP format."
     },
     {
       "fact_ids": [
@@ -1522,7 +1571,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.device",
-      "text": "Device class provides a Device constructor for device classes."
+      "text": "Device class provides a Device constructor."
     },
     {
       "fact_ids": [
@@ -1530,7 +1579,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.documentdevice",
-      "text": "DocumentDevice class provides a Process method for document device rendering."
+      "text": "DocumentDevice class provides a Process method to render a document."
     },
     {
       "fact_ids": [
@@ -1546,7 +1595,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.imagedevice",
-      "text": "ImageDevice class provides CoordinateType, FormPresentationMode, GetBitmap, Height, RenderingOptions, Resolution, and Width methods for image device rendering."
+      "text": "ImageDevice class provides methods to get coordinate type, form presentation mode, bitmap, height, rendering options, resolution, and width."
     },
     {
       "fact_ids": [
@@ -1554,7 +1603,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.jpegdevice",
-      "text": "JpegDevice class provides a Process method for JPEG device rendering."
+      "text": "JpegDevice class provides a Process method to render a document to JPEG format."
     },
     {
       "fact_ids": [
@@ -1562,7 +1611,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.margins",
-      "text": "Margins class provides Bottom, Left, Right, and Top methods for margin information."
+      "text": "Margins class provides methods to get bottom, left, right, and top margin values."
     },
     {
       "fact_ids": [
@@ -1570,7 +1619,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.pagedevice",
-      "text": "PageDevice class provides a Process method for page device rendering."
+      "text": "PageDevice class provides a Process method to render a page."
     },
     {
       "fact_ids": [
@@ -1578,7 +1627,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.pngdevice",
-      "text": "PngDevice class provides Process and TransparentBackground methods for PNG device rendering."
+      "text": "PngDevice class provides Process and TransparentBackground methods to render a document to PNG format and control transparent background."
     },
     {
       "fact_ids": [
@@ -1586,7 +1635,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.resolution",
-      "text": "Resolution class provides X and Y methods for resolution information."
+      "text": "Resolution class provides methods to get X and Y resolution values."
     },
     {
       "fact_ids": [
@@ -1602,7 +1651,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.textdevice",
-      "text": "TextDevice class provides GetEncoding, Process, and SetEncoding methods for text device rendering."
+      "text": "TextDevice class provides methods to get encoding, process a document, and set encoding."
     },
     {
       "fact_ids": [
@@ -1610,7 +1659,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.tiffdevice",
-      "text": "TiffDevice class provides BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions, Resolution, Settings, and Width methods for TIFF device rendering."
+      "text": "TiffDevice class provides methods to binarize with Bradley, get form presentation mode, height, process a document, rendering options, resolution, settings, and width."
     },
     {
       "fact_ids": [
@@ -1618,7 +1667,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.devices.tiffsettings",
-      "text": "TiffSettings class provides Brightness, Compression, CoordinateType, Depth, Margins, Shape, and SkipBlankPages methods for TIFF settings."
+      "text": "TiffSettings class provides methods to get brightness, compression, coordinate type, depth, margins, shape, and skip blank pages settings."
     },
     {
       "fact_ids": [
@@ -1626,7 +1675,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.document",
-      "text": "Document class provides Decrypt, Document, EmbeddedFiles, Encrypt, Form, Info, IsEncrypted, and Metadata methods for PDF documents."
+      "text": "Document class provides methods to decrypt, construct, get embedded files, encrypt, form, info, encrypted state, and metadata."
     },
     {
       "fact_ids": [
@@ -1634,7 +1683,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.documentinfo",
-      "text": "DocumentInfo class provides Add, Author, Clear, ClearCustomData, Creator, DocumentInfo, IsPredefinedKey, and Keywords methods for document information."
+      "text": "DocumentInfo class provides methods to add, get author, clear, clear custom data, creator, construct, check predefined key, and keywords."
     },
     {
       "fact_ids": [
@@ -1642,7 +1691,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.drawing.circle",
-      "text": "Circle class provides CheckBounds, PosX, PosY, and Radius methods for circle drawing."
+      "text": "Circle class provides methods to check bounds, get position X, position Y, and radius."
     },
     {
       "fact_ids": [
@@ -1650,7 +1699,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.drawing.ellipse",
-      "text": "Ellipse class provides Bottom, CheckBounds, Height, Left, and Width methods for ellipse drawing."
+      "text": "Ellipse class provides methods to get bottom, check bounds, height, left, and width."
     },
     {
       "fact_ids": [
@@ -1658,7 +1707,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.drawing.graph",
-      "text": "Graph class provides Border, GraphInfo, Height, IsChangePosition, Left, Shapes, Top, and Width methods for graph drawing."
+      "text": "Graph class provides methods to get border, graph info, height, change position state, left, shapes, top, and width."
     },
     {
       "fact_ids": [
@@ -1666,7 +1715,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.drawing.line",
-      "text": "Line class provides CheckBounds and PositionArray methods for line drawing."
+      "text": "Line class provides methods to check bounds and get position array."
     },
     {
       "fact_ids": [
@@ -1674,7 +1723,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.drawing.rectangle",
-      "text": "Rectangle class provides geometric operations and properties for a rectangle, including Bottom, CheckBounds, Height, Left, RoundedCornerRadius, and Width methods."
+      "text": "Rectangle class provides methods to check bounds, get height, width, left, bottom, and rounded corner radius, and perform geometric operations such as intersection, containment, and movement."
     },
     {
       "fact_ids": [
@@ -1682,7 +1731,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.drawing.shape",
-      "text": "Shape class provides shape drawing capabilities with CheckBounds, GraphInfo, and Shape methods."
+      "text": "Shape class provides methods to check bounds, access graph information, and retrieve the underlying shape."
     },
     {
       "fact_ids": [
@@ -1690,7 +1739,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.embeddedfilecollection",
-      "text": "EmbeddedFileCollection class manages embedded files with Add, Count, Delete, DeleteByKey, EmbeddedFileCollection, FindByName, and Keys methods."
+      "text": "EmbeddedFileCollection class provides methods to add, delete, find by name, and count embedded files, as well as retrieve keys and construct the collection."
     },
     {
       "fact_ids": [
@@ -1698,7 +1747,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.algorithm",
-      "text": "Algorithm enum lists the AES and RC4 encryption algorithm values."
+      "text": "Algorithm enum lists the AES and RC4 encryption algorithms."
     },
     {
       "fact_ids": [
@@ -1706,7 +1755,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.alignmenttype",
-      "text": "AlignmentType class provides text alignment options with Center, Left, Right, and ToString methods."
+      "text": "AlignmentType enum provides methods to represent center, left, and right alignment, and convert the value to a string."
     },
     {
       "fact_ids": [
@@ -1714,7 +1763,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.autorotatemode",
-      "text": "AutoRotateMode enum lists the AntiClockWise, ClockWise, and None rotation mode values."
+      "text": "AutoRotateMode enum lists the AntiClockWise, ClockWise, and None rotation modes."
     },
     {
       "fact_ids": [
@@ -1722,7 +1771,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.blendingcolorspace",
-      "text": "BlendingColorSpace enum lists the Auto, DeviceCMYK, DeviceRGB, and DontChange blending color space values."
+      "text": "BlendingColorSpace enum lists the Auto, DeviceCMYK, DeviceRGB, and DontChange blending color spaces."
     },
     {
       "fact_ids": [
@@ -1730,7 +1779,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.bookmark",
-      "text": "Bookmark class represents a bookmark with Action, BoldFlag, Bookmark, ChildItem, ChildItems, Destination, ItalicFlag, and Level methods."
+      "text": "Bookmark class provides methods to access action, bold flag, child items, destination, italic flag, level, and other properties."
     },
     {
       "fact_ids": [
@@ -1738,7 +1787,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.bookmarks",
-      "text": "Bookmarks class provides bookmark collection functionality with the Bookmarks method."
+      "text": "Bookmarks class provides a constructor to create a bookmarks collection."
     },
     {
       "fact_ids": [
@@ -1746,7 +1795,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.datatype",
-      "text": "DataType enum lists the FDF, ODBC, OLEDB, PDF, XFDF, and XML data type values."
+      "text": "DataType enum lists the FDF, ODBC, OLEDB, PDF, XFDF, and XML data types."
     },
     {
       "fact_ids": [
@@ -1754,7 +1803,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.defaultmetadataproperties",
-      "text": "DefaultMetadataProperties enum lists the Advisory, BaseURL, CreateDate, CreatorTool, Identifier, MetadataDate, ModifyDate, Nickname, and Thumbnails metadata property values."
+      "text": "DefaultMetadataProperties enum lists the Advisory, BaseURL, CreateDate, CreatorTool, Identifier, MetadataDate, ModifyDate, Nickname, and Thumbnails metadata properties."
     },
     {
       "fact_ids": [
@@ -1762,7 +1811,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.documentprivilege",
-      "text": "DocumentPrivilege class provides document permission methods including AllowAll, AllowAssembly, AllowCopy, AllowDegradedPrinting, AllowFillIn, AllowModifyAnnotations, AllowModifyContents, and AllowPrint."
+      "text": "DocumentPrivilege class provides methods to allow all, assembly, copy, degraded printing, fill-in, modify annotations, modify contents, and print."
     },
     {
       "fact_ids": [
@@ -1770,7 +1819,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.encodingtype",
-      "text": "EncodingType enum lists the Cp1250, Cp1252, Cp1257, Identity_h, Identity_v, Macroman, and Winansi encoding type values."
+      "text": "EncodingType enum lists the Cp1250, Cp1252, Cp1257, Identity_h, Identity_v, Macroman, and Winansi encoding types."
     },
     {
       "fact_ids": [
@@ -1778,7 +1827,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.facade",
-      "text": "Facade class provides base facade functionality with BindPdf, Close, Dispose, Document, and Facade methods."
+      "text": "Facade class provides methods to bind a PDF document, close resources, dispose, access the document, and construct the facade."
     },
     {
       "fact_ids": [
@@ -1786,7 +1835,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.fieldtype",
-      "text": "FieldType enum lists the Barcode, CheckBox, ComboBox, DateTime, Image, InvalidNameOrType, ListBox, MultiLineText, Numeric, PushButton, Radio, and Signature field type values."
+      "text": "FieldType enum lists the Barcode, CheckBox, ComboBox, DateTime, Image, InvalidNameOrType, ListBox, MultiLineText, Numeric, PushButton, Radio, and Signature field types."
     },
     {
       "fact_ids": [
@@ -1794,7 +1843,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.fontstyle",
-      "text": "FontStyle enum lists the CjkFont, Courier, CourierBold, CourierBoldOblique, CourierOblique, Helvetica, HelveticaBold, HelveticaBoldOblique, HelveticaOblique, Symbol, TimesBold, and TimesBoldItalic font style values."
+      "text": "FontStyle enum lists the CjkFont, Courier, CourierBold, CourierBoldOblique, CourierOblique, Helvetica, HelveticaBold, HelveticaBoldOblique, HelveticaOblique, Symbol, TimesBold, and TimesBoldItalic font styles."
     },
     {
       "fact_ids": [
@@ -1802,7 +1851,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.formeditor",
-      "text": "FormEditor class provides form editing methods including AddField, AddFieldScript, AddListItem, AddSubmitBtn, ConvertTo, CopyInnerField, CopyOuterField, and DecorateField."
+      "text": "FormEditor class provides methods to add fields, field scripts, list items, submit buttons, convert fields, copy inner and outer fields, and decorate fields."
     },
     {
       "fact_ids": [
@@ -1810,7 +1859,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.formfieldfacade",
-      "text": "FormFieldFacade class provides form field alignment constants including AlignBottom, AlignCenter, AlignJustified, AlignLeft, AlignMiddle, AlignRight, AlignTop, and AlignUndefined."
+      "text": "FormFieldFacade class provides fields to align content at bottom, center, justified, left, middle, right, top, and undefined positions."
     },
     {
       "fact_ids": [
@@ -1818,7 +1867,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.ifacade",
-      "text": "IFacade interface provides facade contract methods including BindPdf, Close, and IFacade."
+      "text": "IFacade interface provides methods to bind a PDF document, close resources, and construct the facade."
     },
     {
       "fact_ids": [
@@ -1826,7 +1875,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.isaveablefacade",
-      "text": "ISaveableFacade interface provides save contract methods including ISaveableFacade and Save."
+      "text": "ISaveableFacade interface provides methods to construct the facade and save the document."
     },
     {
       "fact_ids": [
@@ -1834,7 +1883,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.imagemergemode",
-      "text": "ImageMergeMode enum lists the Center, Horizontal, and Vertical image merge mode values."
+      "text": "ImageMergeMode enum lists the Center, Horizontal, and Vertical image merge modes."
     },
     {
       "fact_ids": [
@@ -1842,7 +1891,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.keysize",
-      "text": "KeySize enum lists the x128, x256, and x40 key size values."
+      "text": "KeySize enum lists the x128, x256, and x40 key sizes."
     },
     {
       "fact_ids": [
@@ -1850,7 +1899,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfannotationeditor",
-      "text": "PdfAnnotationEditor class provides annotation editing methods including DeleteAnnotation, DeleteAnnotations, FlatteningAnnotations, ImportAnnotationFromXfdf, ImportAnnotations, ImportAnnotationsFromFdf, ImportAnnotationsFromXfdf, and ModifyAnnotations."
+      "text": "PdfAnnotationEditor class provides methods to delete annotations, flatten annotations, import annotations from XFDF and FDF, and modify annotations."
     },
     {
       "fact_ids": [
@@ -1858,7 +1907,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfbookmarkeditor",
-      "text": "PdfBookmarkEditor class provides bookmark editing methods including CreateBookmarkOfPage, CreateBookmarks, DeleteBookmarks, ExportBookmarksToHtml, ExportBookmarksToXML, ExtractBookmarks, ExtractBookmarksToHTML, and ImportBookmarksWithXML."
+      "text": "PdfBookmarkEditor class provides methods to create bookmarks, delete bookmarks, export bookmarks to HTML and XML, extract bookmarks, and import bookmarks with XML."
     },
     {
       "fact_ids": [
@@ -1866,7 +1915,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfcontenteditor",
-      "text": "PdfContentEditor class provides content editing methods including AddDocumentAdditionalAction, AddDocumentAttachment, ChangeViewerPreference, DeleteAttachments, DeleteImage, DeleteStamp, DeleteStampById, and DeleteStampByIds."
+      "text": "PdfContentEditor class provides methods to add document additional actions and attachments, change viewer preferences, and delete attachments, images, and stamps."
     },
     {
       "fact_ids": [
@@ -1874,7 +1923,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfconverter",
-      "text": "PdfConverter class provides conversion methods including CoordinateType, DoConvert, EndPage, FormPresentationMode, GetNextImage, HasNextImage, PageCount, and Password."
+      "text": "PdfConverter class provides methods to set coordinate type, perform conversion, set end page, form presentation mode, get next image, check for next image, get page count, and set password."
     },
     {
       "fact_ids": [
@@ -1882,7 +1931,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfextractor",
-      "text": "PdfExtractor class provides extraction methods including EndPage, ExtractAttachment, ExtractImage, ExtractText, ExtractTextMode, GetAttachNames, GetAttachment, and GetAttachmentInfo."
+      "text": "PdfExtractor class provides methods to set end page, extract attachments, images, and text, set text extraction mode, get attachment names and info, and retrieve attachments."
     },
     {
       "fact_ids": [
@@ -1890,7 +1939,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdffileeditor",
-      "text": "PdfFileEditor class provides file editing methods including AddMargins, AddMarginsPct, AddPageBreak, AllowConcatenateExceptions, Append, CloseConcatenatedStreams, Concatenate, and ConcatenationPacketSize."
+      "text": "PdfFileEditor class provides methods to add margins and page breaks, allow concatenation exceptions, append and concatenate files, and set concatenation packet size."
     },
     {
       "fact_ids": [
@@ -1898,7 +1947,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdffileinfo",
-      "text": "PdfFileInfo class provides file information methods including Author, BindPdf, ClearInfo, CreationDate, Creator, GetMetaInfo, GetPageHeight, and GetPageRotation."
+      "text": "PdfFileInfo class provides methods to access author and creation information, bind a PDF file, clear info, get metadata, page height, and page rotation."
     },
     {
       "fact_ids": [
@@ -1906,7 +1955,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdffilesecurity",
-      "text": "PdfFileSecurity class provides file security methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile, InputFile, OutputFile, and PdfFileSecurity."
+      "text": "PdfFileSecurity class provides methods to allow exceptions, bind a PDF file, change password, decrypt and encrypt files, and set input and output file paths."
     },
     {
       "fact_ids": [
@@ -1914,7 +1963,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdffilesignature",
-      "text": "PdfFileSignature class provides signature methods including Certify, ContainsSignature, ContainsUsageRights, CoversWholeDocument, GetAccessPermissions, GetBlankSignNames, GetBlankSignatureNames, and GetContactInfo."
+      "text": "PdfFileSignature class provides methods to certify documents, check for signatures and usage rights, verify coverage, get access permissions, and retrieve blank signature names and contact info."
     },
     {
       "fact_ids": [
@@ -1922,7 +1971,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdffilestamp",
-      "text": "PdfFileStamp class provides stamping methods including AddFooter, AddHeader, AddPageNumber, ConvertTo, InputFile, KeepSecurity, OptimizeSize, and OutputFile."
+      "text": "PdfFileStamp class provides methods to add footers, headers, and page numbers, convert files, set input and output file paths, keep security, and optimize size."
     },
     {
       "fact_ids": [
@@ -1930,7 +1979,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfpageeditor",
-      "text": "PdfPageEditor class provides page editing methods including Alignment, ApplyChanges, BLINDH, BLINDV, BTWIPE, DGLITTER, DISSOLVE, and DisplayDuration."
+      "text": "PdfPageEditor class provides methods to set alignment, apply changes, and configure display duration, as well as fields for transition effects."
     },
     {
       "fact_ids": [
@@ -1938,7 +1987,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.pdfxmpmetadata",
-      "text": "PdfXmpMetadata class provides XMP metadata methods including Add, Clear, Contains, ContainsKey, Count, GetNamespaceURIByPrefix, GetPrefixByNamespaceURI, and IsFixedSize."
+      "text": "PdfXmpMetadata class provides methods to add, clear, check for keys and values, get count and namespace URIs, and check if the collection is fixed size."
     },
     {
       "fact_ids": [
@@ -1946,7 +1995,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.positioningmode",
-      "text": "PositioningMode enum lists the Current, Legacy, and ModernLineSpacing positioning mode values."
+      "text": "PositioningMode enum lists the Current, Legacy, and ModernLineSpacing positioning modes."
     },
     {
       "fact_ids": [
@@ -1954,7 +2003,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.propertyflag",
-      "text": "PropertyFlag enum lists the InvalidFlag, NoExport, ReadOnly, and Required property flag values."
+      "text": "PropertyFlag enum lists the InvalidFlag, NoExport, ReadOnly, and Required property flags."
     },
     {
       "fact_ids": [
@@ -1962,7 +2011,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.saveablefacade",
-      "text": "SaveableFacade class provides save functionality with Save and SaveableFacade methods."
+      "text": "SaveableFacade class provides methods to save the document and construct the facade."
     },
     {
       "fact_ids": [
@@ -1970,7 +2019,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.signaturename",
-      "text": "SignatureName class provides signature name functionality with FullName, GetHashCode, HasSignature, Name, SignatureName, and ToString members."
+      "text": "SignatureName class provides methods to get hash code, check for signatures, and convert to string, as well as fields for full name and name."
     },
     {
       "fact_ids": [
@@ -1978,7 +2027,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.stamptype",
-      "text": "StampType enum lists the Form and Image stamp type values."
+      "text": "StampType enum lists the Form and Image stamp types."
     },
     {
       "fact_ids": [
@@ -1986,7 +2035,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.facades.submitformflag",
-      "text": "SubmitFormFlag enum lists the Fdf, FdfWithComments, Html, Pdf, Xfdf, and XfdfWithComments submit form flag values."
+      "text": "SubmitFormFlag enum lists the Fdf, FdfWithComments, Html, Pdf, Xfdf, and XfdfWithComments submit form flags."
     },
     {
       "fact_ids": [
@@ -2018,7 +2067,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.filespecification",
-      "text": "FileSpecification class provides methods to manage file specification details including AFRelationship, Description, Encoding, FileSystem, IncludeContents, MIMEType, Name, and UnicodeName."
+      "text": "FileSpecification class provides methods to manage file specification properties including AFRelationship, Description, Encoding, FileSystem, IncludeContents, MIMEType, Name, and UnicodeName."
     },
     {
       "fact_ids": [
@@ -2026,7 +2075,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.floatingbox",
-      "text": "FloatingBox class provides methods to manage BackgroundColor, Border, Height, IsNeedRepeating, Paragraphs, and Width properties."
+      "text": "FloatingBox class provides methods to manage background color, border, height, repeating behavior, paragraphs, and width of a floating box."
     },
     {
       "fact_ids": [
@@ -2034,7 +2083,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.barcodefield",
-      "text": "BarcodeField class provides methods to manage Caption, ECC, Resolution, Symbology, XSymHeight, and XSymWidth properties."
+      "text": "BarcodeField class provides methods to manage barcode caption, error correction code level, resolution, symbology, symbol height, and symbol width."
     },
     {
       "fact_ids": [
@@ -2042,7 +2091,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.boxstyle",
-      "text": "BoxStyle enum lists the Check, Circle, Cross, Diamond, Square, and Star box style values."
+      "text": "BoxStyle enum lists the Check, Circle, Cross, Diamond, Square, and Star box styles."
     },
     {
       "fact_ids": [
@@ -2050,7 +2099,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.buttonfield",
-      "text": "ButtonField class provides methods to manage AlternateCaption, ICPosition, IconFit, NormalCaption, and RolloverCaption properties."
+      "text": "ButtonField class provides methods to manage alternate caption, icon caption position, icon fit, normal caption, and rollover caption."
     },
     {
       "fact_ids": [
@@ -2058,7 +2107,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.checkboxfield",
-      "text": "CheckboxField class provides methods to manage ActiveState, AllowedStates, Checked, Clone, ExportValue, and Style properties."
+      "text": "CheckboxField class provides methods to manage active state, allowed states, checked status, export value, and style."
     },
     {
       "fact_ids": [
@@ -2066,7 +2115,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.choicefield",
-      "text": "ChoiceField class provides methods to manage CommitImmediately, MultiSelect, Options, Selected, SelectedItems, and Value properties."
+      "text": "ChoiceField class provides methods to manage options, selection, commit behavior, and multi-select capability."
     },
     {
       "fact_ids": [
@@ -2074,7 +2123,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.comboboxfield",
-      "text": "ComboBoxField class provides methods to manage Editable and SpellCheck properties."
+      "text": "ComboBoxField class provides methods to manage editable state and spell check behavior."
     },
     {
       "fact_ids": [
@@ -2082,7 +2131,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.datefield",
-      "text": "DateField class provides methods to manage DateFormat and Init properties."
+      "text": "DateField class provides methods to manage date format and initialization."
     },
     {
       "fact_ids": [
@@ -2090,7 +2139,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.docmdpaccesspermissions",
-      "text": "DocMDPAccessPermissions enum lists the AnnotationModification, FillingInForms, and NoChanges access permission values."
+      "text": "DocMDPAccessPermissions enum lists the AnnotationModification, FillingInForms, and NoChanges access permission levels."
     },
     {
       "fact_ids": [
@@ -2098,7 +2147,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.docmdpsignature",
-      "text": "DocMDPSignature class provides a method to manage AccessPermissions."
+      "text": "DocMDPSignature class provides a method to manage document-level digital signature access permissions."
     },
     {
       "fact_ids": [
@@ -2114,7 +2163,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.field",
-      "text": "Field class provides methods to manage AlternateName, AnnotationIndex, Count, FitIntoRectangle, Flatten, IsGroup, IsSharedField, and MappingName properties."
+      "text": "Field class provides methods to manage alternate name, annotation index, count, fit into rectangle, flattening, group status, shared field status, and mapping name."
     },
     {
       "fact_ids": [
@@ -2122,7 +2171,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.fileselectboxfield",
-      "text": "FileSelectBoxField class provides a method to manage file selection box functionality."
+      "text": "FileSelectBoxField class provides a method to manage file selection box fields."
     },
     {
       "fact_ids": [
@@ -2130,7 +2179,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.form",
-      "text": "Form class provides methods to manage Add, AddFieldAppearance, AutoRecalculate, AutoRestoreForm, CalculatedFields, Count, DefaultAppearance, and Delete operations."
+      "text": "Form class provides methods to manage form fields including adding, deleting, calculating, and setting default appearance."
     },
     {
       "fact_ids": [
@@ -2138,7 +2187,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.formtype",
-      "text": "FormType enum lists the Dynamic, Standard, and Static form type values."
+      "text": "FormType enum lists the Dynamic, Standard, and Static form types."
     },
     {
       "fact_ids": [
@@ -2146,7 +2195,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.iconcaptionposition",
-      "text": "IconCaptionPosition enum lists the CaptionAboveIcon, CaptionBelowIcon, CaptionOverlaid, CaptionToTheLeft, CaptionToTheRight, NoCaption, and NoIcon caption position values."
+      "text": "IconCaptionPosition enum lists the CaptionAboveIcon, CaptionBelowIcon, CaptionOverlaid, CaptionToTheLeft, CaptionToTheRight, NoCaption, and NoIcon positions."
     },
     {
       "fact_ids": [
@@ -2154,7 +2203,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.iconfit",
-      "text": "IconFit class provides methods to manage IconFit, LeftoverBottom, LeftoverLeft, NameToScalingMode, NameToScalingReason, ScalingMode, ScalingModeToName, and ScalingReason properties."
+      "text": "IconFit class provides methods to manage icon scaling mode and scaling reason."
     },
     {
       "fact_ids": [
@@ -2162,7 +2211,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.listboxfield",
-      "text": "ListBoxField class provides methods to manage TopIndex property."
+      "text": "ListBoxField class provides methods to manage list box fields including top index."
     },
     {
       "fact_ids": [
@@ -2170,7 +2219,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.numberfield",
-      "text": "NumberField class provides methods to manage AllowedChars property."
+      "text": "NumberField class provides methods to manage allowed characters and number field behavior."
     },
     {
       "fact_ids": [
@@ -2178,7 +2227,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.option",
-      "text": "Option class provides methods to manage Index, Name, Selected, and Value properties."
+      "text": "Option class provides methods to manage option index, name, selection status, and value."
     },
     {
       "fact_ids": [
@@ -2186,7 +2235,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.optioncollection",
-      "text": "OptionCollection class provides methods to manage Add, Clear, Contains, Count, Get, IsReadOnly, and Remove operations."
+      "text": "OptionCollection class provides methods to manage a collection of options including adding, clearing, removing, and checking containment."
     },
     {
       "fact_ids": [
@@ -2194,7 +2243,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.pkcs1",
-      "text": "PKCS1 class provides a method to manage PKCS#1 signature operations."
+      "text": "PKCS1 class provides a method to manage PKCS#1 digital signatures."
     },
     {
       "fact_ids": [
@@ -2202,7 +2251,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.pkcs7",
-      "text": "PKCS7 class provides a method to manage PKCS#7 signature operations."
+      "text": "PKCS7 class provides a method to manage PKCS#7 digital signatures."
     },
     {
       "fact_ids": [
@@ -2210,7 +2259,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.pkcs7detached",
-      "text": "PKCS7Detached class provides a method to manage detached PKCS#7 signature operations."
+      "text": "PKCS7Detached class provides a method to manage detached PKCS#7 digital signatures."
     },
     {
       "fact_ids": [
@@ -2218,7 +2267,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.passwordboxfield",
-      "text": "PasswordBoxField class provides a method to manage password box functionality."
+      "text": "PasswordBoxField class provides a method to manage password box fields."
     },
     {
       "fact_ids": [
@@ -2226,7 +2275,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.radiobuttonfield",
-      "text": "RadioButtonField class provides methods to manage Add, AddOption, NoToggleToOff, SetPosition, and Style properties."
+      "text": "RadioButtonField class provides methods to manage radio button fields including adding options, position, style, and toggle behavior."
     },
     {
       "fact_ids": [
@@ -2234,7 +2283,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.radiobuttonoptionfield",
-      "text": "RadioButtonOptionField class provides methods to manage OptionName and Style properties."
+      "text": "RadioButtonOptionField class provides methods to manage radio button option name and style."
     },
     {
       "fact_ids": [
@@ -2242,7 +2291,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.richtextboxfield",
-      "text": "RichTextBoxField class provides methods to manage FormattedValue, Justify, RichTextValue, and Value properties."
+      "text": "RichTextBoxField class provides methods to manage formatted value, justification, rich text value, and style."
     },
     {
       "fact_ids": [
@@ -2250,7 +2299,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.scalingmode",
-      "text": "ScalingMode enum lists the Anamorphic and Proportional scaling mode values."
+      "text": "ScalingMode enum lists the Anamorphic and Proportional scaling modes."
     },
     {
       "fact_ids": [
@@ -2258,7 +2307,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.scalingreason",
-      "text": "ScalingReason enum lists the Always, IconIsBigger, IconIsSmaller, and Never scaling reason values."
+      "text": "ScalingReason enum lists the Always, IconIsBigger, IconIsSmaller, and Never scaling reasons."
     },
     {
       "fact_ids": [
@@ -2266,7 +2315,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.signature",
-      "text": "Signature class provides methods to manage Authority, AvoidEstimatingSignatureLength, ByteRange, ContactInfo, CustomAppearance, DefaultSignatureLength, Location, and Reason properties."
+      "text": "Signature class provides methods to manage signature authority, contact information, location, reason, custom appearance, and byte range."
     },
     {
       "fact_ids": [
@@ -2274,7 +2323,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.signaturecustomappearance",
-      "text": "SignatureCustomAppearance class provides methods to manage BackgroundColor, ContactInfoLabel, DateSignedAtLabel, DateTimeFormat, DateTimeLocalFormat, DigitalSignedLabel, DigitalSubjectFormat, and FontFamilyName properties."
+      "text": "SignatureCustomAppearance class provides methods to manage signature appearance including background color, contact info label, date signed label, date time format, digital signed label, digital subject format, and font family name."
     },
     {
       "fact_ids": [
@@ -2282,7 +2331,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.signaturefield",
-      "text": "SignatureField class provides methods to manage Sign and Signature operations."
+      "text": "SignatureField class provides methods to sign and manage signature appearance."
     },
     {
       "fact_ids": [
@@ -2290,7 +2339,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.subjectnameelements",
-      "text": "SubjectNameElements enum lists the C, CN, E, L, O, OU, and S subject name element values."
+      "text": "SubjectNameElements enum lists the C, CN, E, L, O, OU, and S subject name elements."
     },
     {
       "fact_ids": [
@@ -2298,7 +2347,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.symbology",
-      "text": "Symbology enum lists the DataMatrix, PDF417, and QRCode symbology values."
+      "text": "Symbology enum lists the DataMatrix, PDF417, and QRCode barcode symbologies."
     },
     {
       "fact_ids": [
@@ -2306,7 +2355,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.textboxfield",
-      "text": "TextBoxField class provides methods to manage AddBarcode, ForceCombs, MaxLen, Multiline, Scrollable, SpellCheck, TextVerticalAlignment, and Value properties."
+      "text": "TextBoxField class provides methods to manage text box properties including barcode addition, comb forcing, maximum length, multiline behavior, scrollability, spell check, vertical alignment, and value."
     },
     {
       "fact_ids": [
@@ -2314,7 +2363,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.forms.xfa",
-      "text": "Aspose.Pdf.Forms.XFA class provides access to XFA field names and the XFA data stream."
+      "text": "Aspose.Pdf.Forms.XFA class provides access to XFA field names and the XFA data through its FieldNames and XFA methods."
     },
     {
       "fact_ids": [
@@ -2322,7 +2371,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.graphinfo",
-      "text": "Aspose.Pdf.GraphInfo class holds the color, fill color, line width, dash array, dash phase, rotation angle, and scaling information for vector graphics."
+      "text": "Aspose.Pdf.GraphInfo class holds graph rendering attributes including Color, DashArray, DashPhase, FillColor, IsDoubled, LineWidth, and RotationAngle."
     },
     {
       "fact_ids": [
@@ -2330,7 +2379,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.horizontalalignment",
-      "text": "Aspose.Pdf.HorizontalAlignment enum lists the Center, FullJustify, Justify, Left, None, and Right horizontal alignment options."
+      "text": "Aspose.Pdf.HorizontalAlignment enum lists the Center, FullJustify, Justify, Left, None, and Right horizontal alignment values."
     },
     {
       "fact_ids": [
@@ -2338,7 +2387,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.hyperlink",
-      "text": "Aspose.Pdf.Hyperlink class represents a hyperlink object."
+      "text": "Aspose.Pdf.Hyperlink class provides a constructor to create a hyperlink object."
     },
     {
       "fact_ids": [
@@ -2346,7 +2395,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.iindexbitmapconverter",
-      "text": "Aspose.Pdf.IIndexBitmapConverter interface provides methods to convert indexed bitmaps to 1-bpp, 4-bpp, and 8-bpp images."
+      "text": "Aspose.Pdf.IIndexBitmapConverter interface provides methods Get1BppImage, Get4BppImage, and Get8BppImage to convert indexed bitmaps."
     },
     {
       "fact_ids": [
@@ -2354,7 +2403,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.loadoptions",
-      "text": "Aspose.Pdf.LoadOptions class provides options for loading PDF documents, including disabling font license verifications."
+      "text": "Aspose.Pdf.LoadOptions class provides a constructor and the DisableFontLicenseVerifications option for loading PDF documents."
     },
     {
       "fact_ids": [
@@ -2362,7 +2411,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.margininfo",
-      "text": "Aspose.Pdf.MarginInfo class holds the left, right, top, and bottom margin values."
+      "text": "Aspose.Pdf.MarginInfo class holds margin values for Bottom, Left, Right, and Top sides."
     },
     {
       "fact_ids": [
@@ -2370,7 +2419,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.metadata",
-      "text": "Aspose.Pdf.Metadata class provides methods to add, remove, and query document metadata, including namespace prefix management."
+      "text": "Aspose.Pdf.Metadata class provides methods Add, Clear, Contains, ContainsKey, Count, GetNamespaceUriByPrefix, GetPrefixByNamespaceUri, and IsFixedSize to manage document metadata."
     },
     {
       "fact_ids": [
@@ -2378,7 +2427,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.nameddestinationcollection",
-      "text": "Aspose.Pdf.NamedDestinationCollection class provides methods to add, remove, and enumerate named destinations."
+      "text": "Aspose.Pdf.NamedDestinationCollection class provides methods Add, Count, Names, and Remove to manage named destinations."
     },
     {
       "fact_ids": [
@@ -2394,7 +2443,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.outlinecollection",
-      "text": "Aspose.Pdf.OutlineCollection class represents the collection of document outlines."
+      "text": "Aspose.Pdf.OutlineCollection class represents the collection of outlines in a PDF document."
     },
     {
       "fact_ids": [
@@ -2402,7 +2451,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.outlineitemcollection",
-      "text": "Aspose.Pdf.OutlineItemCollection class provides methods to manage outline items, including action, destination, bold, italic, level, and next item properties."
+      "text": "Aspose.Pdf.OutlineItemCollection class provides methods Action, Bold, Destination, HasNext, Insert, Italic, Level, and Next to manage outline items."
     },
     {
       "fact_ids": [
@@ -2410,7 +2459,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.outlines",
-      "text": "Aspose.Pdf.Outlines class provides methods to add, remove, and enumerate outline items."
+      "text": "Aspose.Pdf.Outlines class provides methods Add, Clear, Contains, Count, Delete, First, IsReadOnly, and Last to manage the outline tree."
     },
     {
       "fact_ids": [
@@ -2418,7 +2467,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.page",
-      "text": "Aspose.Pdf.Page class provides methods to add images, annotations, and artifacts, and to access page boxes such as MediaBox, CropBox, ArtBox, and BleedBox."
+      "text": "Aspose.Pdf.Page class provides methods AddImage, Annotations, ArtBox, Artifacts, BleedBox, CropBox, GetPageRect, and MediaBox to access page content and properties."
     },
     {
       "fact_ids": [
@@ -2426,7 +2475,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.pagecollection",
-      "text": "Aspose.Pdf.PageCollection class provides methods to add, insert, and delete pages."
+      "text": "Aspose.Pdf.PageCollection class provides methods Add, Count, Delete, Insert, and PageCollection to manage pages in a document."
     },
     {
       "fact_ids": [
@@ -2434,7 +2483,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.pagecoordinatetype",
-      "text": "Aspose.Pdf.PageCoordinateType enum lists the CropBox and MediaBox coordinate types."
+      "text": "Aspose.Pdf.PageCoordinateType enum lists the CropBox and MediaBox coordinate type values."
     },
     {
       "fact_ids": [
@@ -2442,7 +2491,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.pagelabel",
-      "text": "Aspose.Pdf.PageLabel class provides methods to set the numbering style, prefix, and starting value for page labels."
+      "text": "Aspose.Pdf.PageLabel class provides methods NumberingStyle, Prefix, and StartingValue to define page labeling."
     },
     {
       "fact_ids": [
@@ -2450,7 +2499,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.pagelabelcollection",
-      "text": "Aspose.Pdf.PageLabelCollection class provides methods to get page labels, retrieve pages for a label, and update or remove labels."
+      "text": "Aspose.Pdf.PageLabelCollection class provides methods GetLabel, GetPages, RemoveLabel, and UpdateLabel to manage page labels."
     },
     {
       "fact_ids": [
@@ -2458,7 +2507,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.pagesize",
-      "text": "Aspose.Pdf.PageSize class provides methods to access standard page sizes such as A0 through A6 and B5."
+      "text": "Aspose.Pdf.PageSize class provides methods A0, A1, A2, A3, A4, A5, A6, and B5 to access standard page sizes."
     },
     {
       "fact_ids": [
@@ -2466,7 +2515,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.paragraphs",
-      "text": "Aspose.Pdf.Paragraphs class provides methods to add, insert, remove, and clear paragraphs."
+      "text": "Aspose.Pdf.Paragraphs class provides methods Add, Clear, Count, Insert, Remove, and RemoveRange to manage paragraph objects."
     },
     {
       "fact_ids": [
@@ -2474,7 +2523,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.passwordtype",
-      "text": "Aspose.Pdf.PasswordType enum lists the Inaccessible, None, Owner, and User password types."
+      "text": "Aspose.Pdf.PasswordType enum lists the Inaccessible, None, Owner, and User password type values."
     },
     {
       "fact_ids": [
@@ -2482,7 +2531,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.pdfformat",
-      "text": "Aspose.Pdf.PdfFormat enum lists the PDF/A and PDF/E format versions such as PDF_A_1A, PDF_A_1B, PDF_A_2A, PDF_A_2B, PDF_A_2U, PDF_A_3A, PDF_A_3B, PDF_A_3U, PDF_A_4, PDF_A_4E, PDF_A_4F, and PDF_E_1."
+      "text": "Aspose.Pdf.PdfFormat enum lists the PDF_A_1A, PDF_A_1B, PDF_A_2A, PDF_A_2B, PDF_A_2U, PDF_A_3A, PDF_A_3B, PDF_A_3U, PDF_A_4, PDF_A_4E, PDF_A_4F, and PDF_E_1 format values."
     },
     {
       "fact_ids": [
@@ -2490,7 +2539,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.permissions",
-      "text": "Aspose.Pdf.Permissions enum lists the document permission flags such as AssembleDocument, ExtractContent, ExtractContentWithDisabilities, FillForm, ModifyContent, ModifyTextAnnotations, PrintDocument, and PrintingQuality."
+      "text": "Aspose.Pdf.Permissions enum lists the AssembleDocument, ExtractContent, ExtractContentWithDisabilities, FillForm, ModifyContent, ModifyTextAnnotations, PrintDocument, and PrintingQuality permission values."
     },
     {
       "fact_ids": [
@@ -2498,7 +2547,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.point",
-      "text": "Aspose.Pdf.Point class provides methods to calculate distance, access X and Y coordinates, and check triviality."
+      "text": "Aspose.Pdf.Point class provides methods Distance, Trivial, X, and Y to represent a point in two-dimensional space."
     },
     {
       "fact_ids": [
@@ -2506,7 +2555,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.rectangle",
-      "text": "Aspose.Pdf.Rectangle class provides methods to check containment of points and lines, compute center, height, and perform intersection."
+      "text": "Aspose.Pdf.Rectangle class provides methods Center, Contains, ContainsLine, ContainsPoint, Empty, Equals, Height, and Intersect to represent and query rectangles."
     },
     {
       "fact_ids": [
@@ -2514,7 +2563,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.renderingoptions",
-      "text": "Aspose.Pdf.RenderingOptions class provides options for rendering, including font analysis, barcode optimization, font conversion, default font name, cache size, and interpolation quality."
+      "text": "Aspose.Pdf.RenderingOptions class provides methods AnalyzeFonts, BarcodeOptimization, ConvertFontsToUnicodeTTF, DefaultFontName, HeightExtraUnits, IgnoreResourceFontErrors, InterpolationHighQuality, and MaxFontsCacheSize to control rendering behavior."
     },
     {
       "fact_ids": [
@@ -2522,7 +2571,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.resources",
-      "text": "Aspose.Pdf.Resources class provides access to images and resources."
+      "text": "Aspose.Pdf.Resources class provides methods Images and Resources to access page resources."
     },
     {
       "fact_ids": [
@@ -2530,7 +2579,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.rotation",
-      "text": "Aspose.Pdf.Rotation enum lists the None, on90, on180, and on270 rotation values."
+      "text": "Aspose.Pdf.Rotation enum lists the None, on180, on270, and on90 rotation values."
     },
     {
       "fact_ids": [
@@ -2538,7 +2587,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.row",
-      "text": "Aspose.Pdf.Row class provides methods to set background color, border, cells, default cell properties, fixed row height, and new page behavior."
+      "text": "Aspose.Pdf.Row class provides methods BackgroundColor, Border, Cells, DefaultCellBorder, DefaultCellPadding, DefaultCellTextState, FixedRowHeight, and IsInNewPage to manage table row properties."
     },
     {
       "fact_ids": [
@@ -2546,7 +2595,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.rows",
-      "text": "Aspose.Pdf.Rows class provides methods to add, count, index, remove, and remove ranges of rows."
+      "text": "Aspose.Pdf.Rows class provides methods Add, Count, IndexOf, Remove, RemoveAt, RemoveRange, and Rows to manage table rows."
     },
     {
       "fact_ids": [
@@ -2554,7 +2603,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.svgloadoptions",
-      "text": "Aspose.Pdf.SvgLoadOptions class provides options for loading SVG, including adjusting page size."
+      "text": "Aspose.Pdf.SvgLoadOptions class provides the AdjustPageSize method to control page sizing when loading SVG content."
     },
     {
       "fact_ids": [
@@ -2562,7 +2611,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.table",
-      "text": "Aspose.Pdf.Table class provides methods to set alignment, background color, border, column widths, and default cell properties."
+      "text": "Aspose.Pdf.Table class provides methods Alignment, BackgroundColor, Border, ColumnWidths, DefaultCellBorder, DefaultCellPadding, DefaultCellTextState, and DefaultColumnWidth to manage table properties."
     },
     {
       "fact_ids": [
@@ -2570,7 +2619,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.encoding",
-      "text": "Aspose.Pdf.Text.Encoding class provides methods to encode and decode text, including BigEndianUnicode, code page, and string conversion."
+      "text": "Aspose.Pdf.Text.Encoding class provides methods BigEndianUnicode, CodePage, Encoding, GetByteCount, GetBytes, GetCharCount, GetEncoding, and GetString to handle text encoding."
     },
     {
       "fact_ids": [
@@ -2578,7 +2627,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.font",
-      "text": "Aspose.Pdf.Text.Font class provides methods to access base font, font name, and embedding or subset status."
+      "text": "Aspose.Pdf.Text.Font class provides methods BaseFont, FontName, IsEmbedded, and IsSubset to represent font properties."
     },
     {
       "fact_ids": [
@@ -2586,7 +2635,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.fontrepository",
-      "text": "Aspose.Pdf.Text.FontRepository class provides methods to find and open fonts."
+      "text": "Aspose.Pdf.Text.FontRepository class provides methods FindFont and OpenFont to locate and open fonts."
     },
     {
       "fact_ids": [
@@ -2594,7 +2643,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.position",
-      "text": "Aspose.Pdf.Text.Position class provides methods to set X and Y indentation for text."
+      "text": "Aspose.Pdf.Text.Position class provides methods XIndent and YIndent to specify text position."
     },
     {
       "fact_ids": [
@@ -2602,7 +2651,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textabsorber",
-      "text": "Aspose.Pdf.Text.TextAbsorber class provides methods to visit pages, extract text, check for errors, and access the extracted text."
+      "text": "Aspose.Pdf.Text.TextAbsorber class provides methods HasErrors, Text, TextAbsorber, and Visit to extract text from a document."
     },
     {
       "fact_ids": [
@@ -2610,7 +2659,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textbuilder",
-      "text": "Aspose.Pdf.Text.TextBuilder class provides methods to append text and paragraphs to a page."
+      "text": "Aspose.Pdf.Text.TextBuilder class provides methods AppendParagraph and AppendText to build text content on a page."
     },
     {
       "fact_ids": [
@@ -2618,7 +2667,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textfragment",
-      "text": "Aspose.Pdf.Text.TextFragment class provides methods to set position, rectangle, text, text state, and constructor."
+      "text": "Aspose.Pdf.Text.TextFragment class provides methods Position, Rectangle, Text, TextFragment, and TextState to represent a fragment of text."
     },
     {
       "fact_ids": [
@@ -2626,7 +2675,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textfragmentabsorber",
-      "text": "Aspose.Pdf.Text.TextFragmentAbsorber class provides methods to visit pages and access text fragments."
+      "text": "Aspose.Pdf.Text.TextFragmentAbsorber class provides methods TextFragments and Visit to extract text fragments from a document."
     },
     {
       "fact_ids": [
@@ -2634,7 +2683,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textfragmentcollection",
-      "text": "TextFragmentCollection class holds a collection of text fragments and provides a Count method to get the number of items."
+      "text": "TextFragmentCollection class holds a collection of text fragments and exposes a Count method to retrieve the number of items."
     },
     {
       "fact_ids": [
@@ -2642,7 +2691,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textfragmentstate",
-      "text": "TextFragmentState class provides state settings for text fragments and includes a constructor to initialize a new instance."
+      "text": "TextFragmentState class provides state settings for text fragments and exposes a constructor to initialize its instance."
     },
     {
       "fact_ids": [
@@ -2650,7 +2699,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textparagraph",
-      "text": "TextParagraph class represents a paragraph of text and provides methods such as AppendLine, FirstLineIndent, HorizontalAlignment, Margin, Position, Rectangle, SubsequentLinesIndent, and VerticalAlignment to configure its content and layout."
+      "text": "TextParagraph class represents a paragraph of text and exposes methods such as AppendLine, FirstLineIndent, HorizontalAlignment, Margin, Position, Rectangle, SubsequentLinesIndent, and VerticalAlignment."
     },
     {
       "fact_ids": [
@@ -2658,7 +2707,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.text.textstate",
-      "text": "TextState class defines text appearance settings and provides methods such as BackgroundColor, CharacterSpacing, Font, FontSize, ForegroundColor, HorizontalAlignment, HorizontalScaling, and Invisible to control formatting."
+      "text": "TextState class defines text formatting properties and exposes methods such as BackgroundColor, CharacterSpacing, Font, FontSize, ForegroundColor, HorizontalAlignment, HorizontalScaling, and Invisible."
     },
     {
       "fact_ids": [
@@ -2674,7 +2723,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.watermarkartifact",
-      "text": "WatermarkArtifact class represents a watermark artifact that can be added to a PDF page."
+      "text": "WatermarkArtifact class represents a watermark artifact that can be added to a page."
     },
     {
       "fact_ids": [
@@ -2682,7 +2731,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.ximage",
-      "text": "XImage class represents an image in a PDF document and provides methods such as ContainsTransparency, GetRawImageData, Height, ImageMask, Name, and Width to access its properties."
+      "text": "XImage class represents an image and exposes methods such as ContainsTransparency, GetRawImageData, Height, ImageMask, Name, and Width."
     },
     {
       "fact_ids": [
@@ -2690,7 +2739,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.ximagecollection",
-      "text": "XImageCollection class manages a collection of XImage objects and provides methods such as Add, Clear, Contains, Count, Delete, GetImageName, Names, and Remove to manipulate the collection."
+      "text": "XImageCollection class manages a collection of XImage objects and exposes methods such as Add, Clear, Contains, Count, Delete, GetImageName, Names, and Remove."
     },
     {
       "fact_ids": [
@@ -2704,7 +2753,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.pdf.xmpvalue",
-      "text": "XmpValue class represents an XMP value and provides methods such as IsArray, IsDateTime, IsDouble, IsField, IsInteger, IsNamedValue, IsNamedValues, and IsRaw to query its type; IsDateTime, IsField, IsNamedValue, IsNamedValues, IsRaw, and IsStructure always return false."
+      "text": "XmpValue class represents an XMP value and exposes methods such as IsArray, IsDouble, IsInteger, IsString, ToArray, ToDouble, ToInteger, and ToString, while IsDateTime, IsField, IsNamedValue, IsNamedValues, IsRaw, and IsStructure always return false."
     }
   ]
 }

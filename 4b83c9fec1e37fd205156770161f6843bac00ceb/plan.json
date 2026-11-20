@@ -8,19 +8,14 @@
   "api_hubs": [
     {
       "fact_ids": [
-        "example:002",
-        "example:004",
-        "example:005",
         "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.loadoptions"
+        "public_symbol:aspose.pdf.pagecollection",
+        "public_symbol:aspose.pdf.documentinfo"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.document"
     },
     {
       "fact_ids": [
-        "example:002",
-        "example:005",
         "public_symbol:aspose.pdf.text",
         "public_symbol:aspose.pdf.text.textabsorber",
         "public_symbol:aspose.pdf.text.textfragmentabsorber"
@@ -29,18 +24,17 @@
     },
     {
       "fact_ids": [
-        "example:002",
         "public_symbol:aspose.pdf.devices",
-        "public_symbol:aspose.pdf.devices.pagedevice",
+        "public_symbol:aspose.pdf.devices.pngdevice",
         "public_symbol:aspose.pdf.devices.resolution"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.devices"
     },
     {
       "fact_ids": [
-        "example:007",
         "public_symbol:aspose.pdf.cryptoalgorithm",
-        "public_symbol:aspose.pdf.permissions"
+        "public_symbol:aspose.pdf.permissions",
+        "public_symbol:aspose.pdf.facades"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.cryptoalgorithm"
     },
@@ -55,26 +49,10 @@
     {
       "fact_ids": [
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.formtype",
+        "public_symbol:aspose.pdf.forms.form",
         "public_symbol:aspose.pdf.forms.textboxfield"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.forms"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.facades.pdfconverter",
-        "public_symbol:aspose.pdf.facades.pdfextractor"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.facades"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.table",
-        "public_symbol:aspose.pdf.row",
-        "public_symbol:aspose.pdf.cell"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.table"
     },
     {
       "fact_ids": [
@@ -86,37 +64,21 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.outlinecollection",
-        "public_symbol:aspose.pdf.outlineitemcollection",
-        "public_symbol:aspose.pdf.nameddestinationcollection"
+        "public_symbol:aspose.pdf.facades",
+        "public_symbol:aspose.pdf.facades.pdffilesignature",
+        "public_symbol:aspose.pdf.facades.pdfconverter"
       ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.outlinecollection"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.metadata",
-        "public_symbol:aspose.pdf.xmpvalue"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.metadata"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.pagecollection",
-        "public_symbol:aspose.pdf.page",
-        "public_symbol:aspose.pdf.pagelabelcollection"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.pagecollection"
+      "symbol_fact_id": "public_symbol:aspose.pdf.facades"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
       "Open and edit PDF documents",
-      "Extract text and metadata",
-      "Render pages to images",
+      "Extract text and render pages",
       "Encrypt and sign documents",
       "Create PDFs from scratch",
-      "Support for standard fonts",
-      "Facades API for legacy workflows"
+      "Manage forms and annotations",
+      "Access metadata and outlines"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -124,41 +86,25 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "example:002",
         "example:004",
         "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.loadoptions"
+        "public_symbol:aspose.pdf.documentinfo"
       ],
       "shared_fact_ids": [
-        "example:002",
-        "public_symbol:aspose.pdf.document"
+        "public_symbol:aspose.pdf.documentinfo"
       ],
       "title": "Open and edit PDF documents"
     },
     {
       "fact_ids": [
         "example:002",
-        "example:005",
         "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.metadata"
-      ],
-      "shared_fact_ids": [
-        "example:002",
-        "public_symbol:aspose.pdf.text"
-      ],
-      "title": "Extract text and metadata"
-    },
-    {
-      "fact_ids": [
-        "example:002",
-        "public_symbol:aspose.pdf.devices",
         "public_symbol:aspose.pdf.devices"
       ],
       "shared_fact_ids": [
         "example:002"
       ],
-      "title": "Render pages to images"
+      "title": "Extract text and render pages"
     },
     {
       "fact_ids": [
@@ -167,48 +113,153 @@
         "public_symbol:aspose.pdf.permissions",
         "public_symbol:aspose.pdf.facades"
       ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.pdf.facades"
-      ],
+      "shared_fact_ids": [],
       "title": "Encrypt and sign documents"
     },
     {
       "fact_ids": [
         "example:002",
-        "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.table",
         "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.table",
         "public_symbol:aspose.pdf.annotations",
         "public_symbol:aspose.pdf.forms"
       ],
       "shared_fact_ids": [
         "example:002",
-        "public_symbol:aspose.pdf.document"
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.forms"
       ],
       "title": "Create PDFs from scratch"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.text",
-        "public_symbol:aspose.pdf.text"
+        "public_symbol:aspose.pdf.forms",
+        "public_symbol:aspose.pdf.annotations"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.pdf.text"
+        "public_symbol:aspose.pdf.annotations",
+        "public_symbol:aspose.pdf.forms"
       ],
-      "title": "Support for standard fonts"
+      "title": "Manage forms and annotations"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.facades",
-        "public_symbol:aspose.pdf.facades"
+        "example:005",
+        "public_symbol:aspose.pdf.documentinfo",
+        "public_symbol:aspose.pdf.metadata",
+        "public_symbol:aspose.pdf.outlinecollection"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.pdf.facades"
+        "public_symbol:aspose.pdf.documentinfo"
       ],
-      "title": "Facades API for legacy workflows"
+      "title": "Access metadata and outlines"
     }
   ],
-  "deviations": [],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "section_id": "identity",
+      "text": "The H1 product name is rendered from facts in the identity section."
+    },
+    {
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:007"
+      ],
+      "section_id": "badges",
+      "text": "The badge row is rendered from facts in the badges section."
+    },
+    {
+      "fact_ids": [
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "section_id": "banner",
+      "text": "The banner image links to the enterprise product page and is moved to the enterprise relationship section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "package:cxx_standard",
+        "dependency:none",
+        "public_symbol:aspose",
+        "public_symbol:aspose.pdf"
+      ],
+      "section_id": "opening",
+      "text": "The paragraph describes the library's purpose, no-runtime-dependency design, and API alignment with Aspose.PDF for .NET, supported by facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "section_id": "navigation",
+      "text": "The navigation heading and list are superseded by the navigation section rendered from facts."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:004",
+        "example:007",
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.text",
+        "public_symbol:aspose.pdf.devices"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The At a Glance heading and Mermaid diagram are superseded by the at_a_glance section rendered from verified examples and public symbols."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:004",
+        "example:005",
+        "example:007",
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.text"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The Key Capabilities heading and list are superseded by the key_capabilities section rendered from verified examples and public symbols."
+    },
+    {
+      "fact_ids": [
+        "install_command:cmake"
+      ],
+      "section_id": "installation",
+      "text": "The Installation heading and content are superseded by the installation section rendered from the install_command fact."
+    },
+    {
+      "fact_ids": [
+        "dependency:development.aspose_pdf_foss",
+        "dependency:development.googletest",
+        "dependency:development.python3",
+        "dependency:none"
+      ],
+      "section_id": "dependencies",
+      "text": "The dependencies section is rendered from the dependency facts."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section_id": "quick_start",
+      "text": "The Quick Start example is supported by example:002."
+    }
+  ],
   "flagship_example_id": "example:007",
   "links": [
     {
@@ -236,20 +287,16 @@
       "section_id": "documentation_resources"
     },
     {
-      "link_fact_id": "link_target:024",
-      "section_id": "installation"
+      "link_fact_id": "link_target:037",
+      "section_id": "enterprise_relationship"
     },
     {
-      "link_fact_id": "link_target:025",
-      "section_id": "installation"
+      "link_fact_id": "link_target:039",
+      "section_id": "third_party_notices"
     },
     {
-      "link_fact_id": "link_target:026",
-      "section_id": "development_testing"
-    },
-    {
-      "link_fact_id": "link_target:027",
-      "section_id": "additional_examples"
+      "link_fact_id": "link_target:040",
+      "section_id": "license"
     },
     {
       "link_fact_id": "link_target:028",
@@ -262,66 +309,6 @@
     {
       "link_fact_id": "link_target:030",
       "section_id": "additional_examples"
-    },
-    {
-      "link_fact_id": "link_target:037",
-      "section_id": "enterprise_relationship"
-    },
-    {
-      "link_fact_id": "link_target:038",
-      "section_id": "enterprise_relationship"
-    },
-    {
-      "link_fact_id": "link_target:039",
-      "section_id": "third_party_notices"
-    },
-    {
-      "link_fact_id": "link_target:040",
-      "section_id": "license"
-    },
-    {
-      "link_fact_id": "link_target:001",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:003",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:005",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:007",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:008",
-      "section_id": "installation"
-    },
-    {
-      "link_fact_id": "link_target:004",
-      "section_id": "license"
-    },
-    {
-      "link_fact_id": "link_target:011",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:012",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:013",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:014",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:015",
-      "section_id": "navigation"
     }
   ],
   "material_limitations": [],

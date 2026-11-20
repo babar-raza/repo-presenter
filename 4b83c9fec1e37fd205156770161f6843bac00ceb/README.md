@@ -4,7 +4,7 @@
 
 [![Aspose.PDF FOSS for Cpp](https://products.aspose.org/media/pdf/cpp/banner-readme.png)](https://products.aspose.org/pdf/cpp/)
 
-Aspose.PDF FOSS for Cpp reads and writes PDF documents, extracts text, and converts pages to image formats such as PNG. It builds documents from scratch, supporting text, tables, vector graphics, watermarks, annotations, AcroForm fields, and bookmarks. It encrypts and decrypts files using AESx256 and handles password-protected documents. It reads document metadata and information such as title, author, and keywords, and writes updated values back to the file.
+Aspose.PDF FOSS for Cpp reads and writes PDF documents, extracts text, converts pages to images, and manages document metadata, encryption, and permissions. It supports reading encrypted files when provided with a user or owner password and writing encrypted files using AESx256 encryption. It exposes classes for document information, text absorption, and rendering via devices such as PNG output. It operates without external dependencies and is implemented in C++.
 
 Aspose.PDF FOSS for Cpp is a free, open-source, modern C++20 library for working with PDF
 documents — opening and saving existing files, extracting text, rasterising pages to image
@@ -39,25 +39,14 @@ flowchart TB
   subgraph Capabilities["Core Capabilities"]
     direction TB
     c1["Open and edit PDF<br/>documents"]
-    c5["Create PDFs from<br/>scratch"]
-    subgraph cg1["Text"]
-      direction TB
-      c2["Extract text and<br/>metadata"]
-      c6["Support for standard<br/>fonts"]
-    end
-    subgraph cg2["Devices"]
-      direction TB
-      c3["Render pages to images"]
-    end
-    subgraph cg3["Facades"]
-      direction TB
-      c4["Encrypt and sign<br/>documents"]
-      c7["Facades API for legacy<br/>workflows"]
-    end
-    c1 ~~~ cg1
-    c5 ~~~ cg1
-    cg1 ~~~ cg2
-    cg2 ~~~ cg3
+    c2["Extract text and<br/>render pages"]
+    c3["Encrypt and sign<br/>documents"]
+    c4["Create PDFs from<br/>scratch"]
+    c5["Manage forms and<br/>annotations"]
+    c6["Access metadata and<br/>outlines"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
   end
   PRODUCT --> Capabilities
   classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
@@ -66,23 +55,15 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Open and edit PDF documents.** It opens existing PDF files with `Aspose.Pdf.Document`, supports password-protected files by passing a user or owner password to the constructor, and reports encryption status via `IsEncrypted()`; it also allows byte-verbatim round-trips or incremental /Info updates that preserve original bytes.
-- **Extract text and metadata.** It extracts text using Aspose.Pdf.Text::TextAbsorber to walk a whole document or a single page, and provides typed access to document information such as title, author, subject, keywords, creator, producer, and dates through `Aspose.Pdf.DocumentInfo`, plus arbitrary custom entries via Add/Remove/`ClearCustomData`.
-- **Render pages to images.** It renders pages to raster images using Aspose.Pdf.Devices::PngDevice, `JpegDevice`, and `BmpDevice` for single-page output, and `TiffDevice` for single-page or multi-page ranges with median-cut palette quantisation or caller-supplied palette conversion.
-- **Encrypt and sign documents.** It encrypts documents using Document::Encrypt with user and owner passwords, granular `Aspose.Pdf.Permissions` flags, and algorithms including RC4-40, RC4-128, AES-128, and AES-256, and signs documents with Aspose.Pdf.Facades::PdfFileSignature to add detached PKCS#7 signatures.
-- **Create PDFs from scratch.** It builds documents from scratch using positioned text via Aspose.Pdf.Text::TextBuilder and `TextFragment`, tabular layout with `Aspose.Pdf.Table` (column widths, borders, background colours, and spanning cells), vector shapes via Aspose.Pdf.Drawing::Graph, and interactive AcroForm fields through `Aspose.Pdf.Forms`.
-- **Support for standard fonts.** It supports the Standard-14 fonts without an embedded /FontFile, painting correctly via system fonts and falling back to bundled substitutes so glyphs render even in fontless environments.
-- **Facades API for legacy workflows.** It provides the classic `Aspose.Pdf.Facades` API for legacy workflows, including `PdfConverter` for rasterisation, `PdfExtractor` for text extraction with page ranges, `PdfFileSecurity` for encryption and password changes, `PdfFileSignature` for signing, `PdfBookmarkEditor` for bookmarks, `PdfFileEditor` for concatenation and splitting, and `PdfFileStamp` for headers, footers, and page numbers.
+- **Open and edit PDF documents.** It opens existing PDF files with `Aspose.Pdf.Document`, supports password-protected files by passing the user or owner password to the constructor, and reports encryption status via `IsEncrypted()`; it also allows editing document information through `Document.Info()` and saving changes with `Document.Save()`.
+- **Extract text and render pages.** It extracts text from documents or individual pages using `Aspose.Pdf.Text.TextAbsorber`, and renders pages to raster images in PNG, JPEG, BMP, or TIFF formats through `Aspose.Pdf.Devices.PngDevice`, `JpegDevice`, `BmpDevice`, and `TiffDevice` with configurable resolution and color depth.
+- **Encrypt and sign documents.** It encrypts documents using `Document.Encrypt()` with algorithms including RC4-40, RC4-128, AES-128, or AES-256, and controls permissions such as printing, modifying, extracting, and annotating via `Aspose.Pdf.Permissions` flags; it also supports signing documents with `Aspose.Pdf.Facades.PdfFileSignature` using detached PKCS#7 signatures.
+- **Create PDFs from scratch.** It builds documents from scratch using positioned text via `Aspose.Pdf.Text.TextBuilder` and `TextFragment`, tabular layout with `Aspose.Pdf.Table` including column widths, borders, and background colors, vector shapes through `Aspose.Pdf.Drawing.Graph`, and interactive AcroForm fields via `Aspose.Pdf.Forms.Form`.
+- **Manage forms and annotations.** It adds and manages annotations such as highlight, underline, text sticky notes, links, stamps, and file attachments through `Aspose.Pdf.Annotations`, and creates interactive form fields like text boxes, checkboxes, and combo boxes using `Aspose.Pdf.Forms.Form` with support for flattening fields into static content.
+- **Access metadata and outlines.** It reads and writes document metadata through typed `Aspose.Pdf.DocumentInfo` accessors for title, author, subject, keywords, creator, and producer, plus custom entries via Add/Remove/`ClearCustomData`, and accesses XMP metadata using `Aspose.Pdf.Metadata`.
 
 - Extract text with `Text::TextAbsorber`, which walks a whole `Document` or a single `Page`, or
   `Text::TextFragmentAbsorber` for positioned fragments with font, size, and colour.
-- Render pages to raster images through `PngDevice`, `JpegDevice`, and `BmpDevice` (single page
-  per call), or `TiffDevice` (single page, or a full multi-page document range in one call via
-  `Process(Document, startPage, endPage, ostream)`) — an anti-aliased renderer with no third-party
-  runtime dependency;
-  `TiffDevice` supports 1/4/8/24-bpp output with median-cut palette quantisation, or a
-  caller-supplied `IIndexBitmapConverter` (`Get1BppImage`/`Get4BppImage`/`Get8BppImage`) for
-  caller-controlled palette generation.
 - Build documents from scratch: positioned and word-wrapped text through `Text::TextBuilder`,
   `TextFragment`, and `TextParagraph` (with font lookup via `FontRepository::FindFont`), tabular
   layout through `Table`/`Row`/`Cell` (column widths, per-cell and default borders, background
@@ -111,6 +92,9 @@ flowchart TB
   documents via `Concatenate`/`SplitFromFirst`/`SplitToEnd`/`SplitToPages`), and `PdfFileStamp`
   (page header/footer/page-number stamping via `AddHeader`/`AddFooter`/`AddPageNumber`) — each
   binding independently to a `Document`.
+
+Available subtypes: `Highlight`, `Underline`, `Squiggly`, `StrikeOut`, `Square`, `Circle`, `Line`,
+`Ink`, `Text`, `FreeText`, `Stamp`, `Link` (with `GoToAction`/`GoToURIAction`), `FileAttachment`.
 
 ## Installation
 
@@ -144,7 +128,7 @@ No required third-party package dependencies; in `CMakeLists.txt`, no dependency
 
 ## Quick Start
 
-This example opens a PDF document, prints the page count, extracts all text, and renders the first page as a PNG image at 150 DPI.
+This example opens a PDF file, prints the page count, extracts all text, and renders the first page as a PNG image at 150 DPI.
 
 ```cpp
 #include <aspose/pdf/document.hpp>
@@ -171,9 +155,9 @@ int main() {
 
 ## Additional Examples
 
-The following workflows demonstrate opening encrypted files, reading and updating document metadata, and applying AESx256 encryption.
+The following workflows demonstrate opening encrypted files, reading and updating document metadata, and applying AES-256 encryption.
 
-### Apply AESx256 Encryption with User and Owner Passwords
+### Encrypt a Document with AES-256
 
 ```cpp
 #include <aspose/pdf/document.hpp>
@@ -190,7 +174,7 @@ int main() {
 <details>
 <summary>View Additional Examples</summary>
 
-### Open a Password-Protected PDF and Check Encryption Status
+### Open a Password-Protected PDF Document
 
 ```cpp
 #include <aspose/pdf/document.hpp>
@@ -202,7 +186,7 @@ if (locked.IsEncrypted()) {
 }
 ```
 
-### Read and Update Document Metadata, Then Save Changes
+### Read and Update Document Metadata
 
 ```cpp
 #include <aspose/pdf/document.hpp>
@@ -220,11 +204,15 @@ int main() {
 }
 ```
 
-### Include the Main Header to Access the Library
+### Include the Main Header for Aspose.PDF FOSS for Cpp
 
 ```cpp
 #include <aspose.pdf.foss.hpp>
 ```
+
+`CryptoAlgorithm` covers `RC4x40`, `RC4x128`, `AESx128`, and `AESx256`. `Permissions` is a
+`[Flags]` enum (ISO 32000-1 §7.6.3.2 Table 22) — compose with `|`. Permissions are enforced by
+viewers; the library itself is not a DRM mechanism.
 
 ### Sign a Document
 
@@ -302,18 +290,6 @@ extractor.ExtractText();
 extractor.GetText("page1.txt");
 ```
 
-Each [GitHub release](https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp/releases) ships
-prebuilt archives for Linux x64 (GCC 13) and Windows x64 (MSVC, with Release and Debug libraries).
-Each archive contains the public headers, the static library, and a CMake package. Extract it and
-point `CMAKE_PREFIX_PATH` at the extracted folder:
-
-```cmake
-find_package(aspose_pdf_foss 1.0 CONFIG REQUIRED)
-target_link_libraries(your_app PRIVATE aspose_pdf_foss::aspose_pdf_foss)
-```
-
-The same package is produced by `cmake --install build --prefix <dir>` from a source build.
-
 Additional Examples below extends this into a from-scratch showcase
 ([`examples/12_create_features.cpp`](examples/12_create_features.cpp), one of the 12 programs
 under `examples/` — see `examples/README.md`, built via `cmake --build build` into
@@ -351,11 +327,15 @@ from-scratch content-creation showcase. After `cmake --build build`, executables
 | `11_render_standard14` | render `/Helvetica` with no embedded font (fallback path) |
 | `12_create_features` | from-scratch 10-page showcase: text, image, tables, graphics, annotations, AcroForm fields, bookmarks |
 
+`PdfConverter` also exposes a per-page cursor — `HasNextImage()`/`GetNextImage(outputFile)` — for
+walking pages one at a time as PNGs via `Devices::PngDevice`, and `PageCount()` for the real page
+count.
+
 </details>
 
 ## API Reference
 
-Aspose.PDF FOSS for Cpp exposes the `Aspose.Pdf.Document` class as its primary entry point, which provides access to pages, metadata, forms, and annotations. Supporting classes such as `Aspose.Pdf.DocumentInfo` and `Aspose.Pdf.LoadOptions` enable metadata inspection and document loading configuration.
+Aspose.PDF FOSS for Cpp exposes the `Aspose.Pdf.Document` class as the primary entry point for loading, creating, and saving PDF documents. It provides access to page collections, document information, forms, and other core features through its members.
 
 The public API has 249 types.
 
@@ -401,153 +381,153 @@ The public API has 249 types.
 | `NamedAction` | NamedAction class represents a named action that performs a predefined operation. |
 | `NamedDestination` | NamedDestination class represents a named destination that points to a location in the document. |
 | `PageInformationAnnotation` | PageInformationAnnotation class represents a page information annotation. |
-| `PdfAction` | PdfAction class represents a PDF action that performs an operation. |
+| `PdfAction` | PdfAction class provides base functionality for PDF actions. |
 | `PolyAnnotation` | PolyAnnotation class provides base functionality for polygon and polyline annotations. |
-| `PolygonAnnotation` | PolygonAnnotation class represents a polygon annotation. |
-| `PolylineAnnotation` | PolylineAnnotation class represents a polyline annotation. |
-| `PopupAnnotation` | PopupAnnotation class represents a popup annotation that displays a note. |
+| `PolygonAnnotation` | PolygonAnnotation class represents a polygon annotation that displays a closed polygon. |
+| `PolylineAnnotation` | PolylineAnnotation class represents a polyline annotation that displays a series of connected line segments. |
+| `PopupAnnotation` | PopupAnnotation class represents a popup annotation that displays a pop-up window. |
 | `PrinterMarkAnnotation` | PrinterMarkAnnotation class provides functionality to add printer marks to a document. |
 | `RedactionAnnotation` | RedactionAnnotation class represents a redaction annotation that hides content. |
 | `RegistrationMarkAnnotation` | RegistrationMarkAnnotation class represents a registration mark annotation. |
 | `RichMediaAnnotation` | RichMediaAnnotation class represents a rich media annotation that embeds interactive content. |
 | `ScreenAnnotation` | ScreenAnnotation class represents a screen annotation that creates a media player area. |
 | `SoundAnnotation` | SoundAnnotation class represents a sound annotation that plays an audio clip. |
-| `SquareAnnotation` | SquareAnnotation class represents a square annotation. |
-| `SquigglyAnnotation` | SquigglyAnnotation class represents a squiggly underline annotation. |
-| `StampAnnotation` | StampAnnotation class represents a stamp annotation that applies a visual mark. |
-| `StrikeOutAnnotation` | StrikeOutAnnotation class represents a strikeout annotation. |
-| `SubmitFormAction` | SubmitFormAction class represents a form submission action. |
+| `SquareAnnotation` | SquareAnnotation class represents a square annotation that displays a rectangle. |
+| `SquigglyAnnotation` | SquigglyAnnotation class represents a squiggly annotation that underlines text with a wavy line. |
+| `StampAnnotation` | StampAnnotation class represents a stamp annotation that displays a graphic or text overlay. |
+| `StrikeOutAnnotation` | StrikeOutAnnotation class represents a strikeout annotation that strikes through text. |
+| `SubmitFormAction` | SubmitFormAction class represents a submit form action that sends form data. |
 | `TextAnnotation` | TextAnnotation class represents a text annotation that displays a note. |
-| `TextMarkupAnnotation` | TextMarkupAnnotation class provides GetMarkedText, QuadPoints, and TextMarkupAnnotation members for text markup annotations. |
-| `TextStyle` | TextStyle class provides Alignment, FontName, FontSize, HorizontalAlignment, and TextStyle members for text styling. |
-| `TrimMarkAnnotation` | TrimMarkAnnotation class provides an Accept method for trim mark annotations. |
-| `UnderlineAnnotation` | UnderlineAnnotation class provides an Accept method for underline annotations. |
-| `WatermarkAnnotation` | WatermarkAnnotation class provides Accept and Opacity methods for watermark annotations. |
-| `WidgetAnnotation` | WidgetAnnotation class provides Accept, DefaultAppearance, Exportable, GetCheckedStateName, Highlighting, Parent, ReadOnly, and Required methods for widget annotations. |
-| `XYZExplicitDestination` | XYZExplicitDestination class provides Left, ToString, Top, and Zoom methods for XYZ explicit destinations. |
-| `Artifact` | Artifact class provides IsBackground, Opacity, Position, Rotation, SetImage, SetTextAndState, Text, and TextState methods for artifacts. |
-| `ArtifactCollection` | ArtifactCollection class provides Add, ArtifactCollection, Count, Delete, and Update methods for artifact collections. |
-| `BaseParagraph` | BaseParagraph class provides BaseParagraph, HorizontalAlignment, Hyperlink, IsFirstParagraphInColumn, IsInLineParagraph, IsInNewPage, IsKeptWithNext, and Margin methods for base paragraphs. |
-| `BitmapInfo` | BitmapInfo class provides BitmapInfo, Format, Height, PixelBytes, PixelFormat, and Width methods for bitmap information. |
-| `BorderInfo` | BorderInfo class provides Bottom, Left, Right, RoundedBorderRadius, and Top methods for border information. |
-| `Cell` | Cell class provides Alignment, BackgroundColor, BackgroundImage, BackgroundImageFile, Border, ColSpan, DefaultCellTextState, and IsNoBorder methods for table cells. |
-| `Cells` | Cells class provides Add, Count, Insert, Remove, and RemoveRange methods for collections of cells. |
-| `Color` | Color class provides A, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, and Bisque methods for color values. |
-| `BmpDevice` | BmpDevice class provides a Process method for BMP device rendering. |
-| `Device` | Device class provides a Device constructor for device classes. |
-| `DocumentDevice` | DocumentDevice class provides a Process method for document device rendering. |
-| `ImageDevice` | ImageDevice class provides CoordinateType, FormPresentationMode, GetBitmap, Height, RenderingOptions, Resolution, and Width methods for image device rendering. |
-| `JpegDevice` | JpegDevice class provides a Process method for JPEG device rendering. |
-| `Margins` | Margins class provides Bottom, Left, Right, and Top methods for margin information. |
-| `PageDevice` | PageDevice class provides a Process method for page device rendering. |
-| `PngDevice` | PngDevice class provides Process and TransparentBackground methods for PNG device rendering. |
-| `Resolution` | Resolution class provides X and Y methods for resolution information. |
-| `TextDevice` | TextDevice class provides GetEncoding, Process, and SetEncoding methods for text device rendering. |
-| `TiffDevice` | TiffDevice class provides BinarizeBradley, FormPresentationMode, Height, Process, RenderingOptions, Resolution, Settings, and Width methods for TIFF device rendering. |
-| `TiffSettings` | TiffSettings class provides Brightness, Compression, CoordinateType, Depth, Margins, Shape, and SkipBlankPages methods for TIFF settings. |
-| `Document` | Document class provides Decrypt, Document, EmbeddedFiles, Encrypt, Form, Info, IsEncrypted, and Metadata methods for PDF documents. |
-| `DocumentInfo` | DocumentInfo class provides Add, Author, Clear, ClearCustomData, Creator, DocumentInfo, IsPredefinedKey, and Keywords methods for document information. |
-| `Circle` | Circle class provides CheckBounds, PosX, PosY, and Radius methods for circle drawing. |
-| `Ellipse` | Ellipse class provides Bottom, CheckBounds, Height, Left, and Width methods for ellipse drawing. |
-| `Graph` | Graph class provides Border, GraphInfo, Height, IsChangePosition, Left, Shapes, Top, and Width methods for graph drawing. |
-| `Line` | Line class provides CheckBounds and PositionArray methods for line drawing. |
-| `Drawing.Rectangle` | Rectangle class provides geometric operations and properties for a rectangle, including Bottom, CheckBounds, Height, Left, RoundedCornerRadius, and Width methods. |
-| `Shape` | Shape class provides shape drawing capabilities with CheckBounds, GraphInfo, and Shape methods. |
-| `EmbeddedFileCollection` | EmbeddedFileCollection class manages embedded files with Add, Count, Delete, DeleteByKey, EmbeddedFileCollection, FindByName, and Keys methods. |
-| `AlignmentType` | AlignmentType class provides text alignment options with Center, Left, Right, and ToString methods. |
-| `Bookmark` | Bookmark class represents a bookmark with Action, BoldFlag, Bookmark, ChildItem, ChildItems, Destination, ItalicFlag, and Level methods. |
-| `Bookmarks` | Bookmarks class provides bookmark collection functionality with the Bookmarks method. |
-| `DocumentPrivilege` | DocumentPrivilege class provides document permission methods including AllowAll, AllowAssembly, AllowCopy, AllowDegradedPrinting, AllowFillIn, AllowModifyAnnotations, AllowModifyContents, and AllowPrint. |
-| `Facade` | Facade class provides base facade functionality with BindPdf, Close, Dispose, Document, and Facade methods. |
-| `FormEditor` | FormEditor class provides form editing methods including AddField, AddFieldScript, AddListItem, AddSubmitBtn, ConvertTo, CopyInnerField, CopyOuterField, and DecorateField. |
-| `FormFieldFacade` | FormFieldFacade class provides form field alignment constants including AlignBottom, AlignCenter, AlignJustified, AlignLeft, AlignMiddle, AlignRight, AlignTop, and AlignUndefined. |
-| `IFacade` | IFacade interface provides facade contract methods including BindPdf, Close, and IFacade. |
-| `ISaveableFacade` | ISaveableFacade interface provides save contract methods including ISaveableFacade and Save. |
-| `PdfAnnotationEditor` | PdfAnnotationEditor class provides annotation editing methods including DeleteAnnotation, DeleteAnnotations, FlatteningAnnotations, ImportAnnotationFromXfdf, ImportAnnotations, ImportAnnotationsFromFdf, ImportAnnotationsFromXfdf, and ModifyAnnotations. |
-| `PdfBookmarkEditor` | PdfBookmarkEditor class provides bookmark editing methods including CreateBookmarkOfPage, CreateBookmarks, DeleteBookmarks, ExportBookmarksToHtml, ExportBookmarksToXML, ExtractBookmarks, ExtractBookmarksToHTML, and ImportBookmarksWithXML. |
-| `PdfContentEditor` | PdfContentEditor class provides content editing methods including AddDocumentAdditionalAction, AddDocumentAttachment, ChangeViewerPreference, DeleteAttachments, DeleteImage, DeleteStamp, DeleteStampById, and DeleteStampByIds. |
-| `PdfConverter` | PdfConverter class provides conversion methods including CoordinateType, DoConvert, EndPage, FormPresentationMode, GetNextImage, HasNextImage, PageCount, and Password. |
-| `PdfExtractor` | PdfExtractor class provides extraction methods including EndPage, ExtractAttachment, ExtractImage, ExtractText, ExtractTextMode, GetAttachNames, GetAttachment, and GetAttachmentInfo. |
-| `PdfFileEditor` | PdfFileEditor class provides file editing methods including AddMargins, AddMarginsPct, AddPageBreak, AllowConcatenateExceptions, Append, CloseConcatenatedStreams, Concatenate, and ConcatenationPacketSize. |
-| `PdfFileInfo` | PdfFileInfo class provides file information methods including Author, BindPdf, ClearInfo, CreationDate, Creator, GetMetaInfo, GetPageHeight, and GetPageRotation. |
-| `PdfFileSecurity` | PdfFileSecurity class provides file security methods including AllowExceptions, BindPdf, ChangePassword, DecryptFile, EncryptFile, InputFile, OutputFile, and PdfFileSecurity. |
-| `PdfFileSignature` | PdfFileSignature class provides signature methods including Certify, ContainsSignature, ContainsUsageRights, CoversWholeDocument, GetAccessPermissions, GetBlankSignNames, GetBlankSignatureNames, and GetContactInfo. |
-| `PdfFileStamp` | PdfFileStamp class provides stamping methods including AddFooter, AddHeader, AddPageNumber, ConvertTo, InputFile, KeepSecurity, OptimizeSize, and OutputFile. |
-| `PdfPageEditor` | PdfPageEditor class provides page editing members including Alignment, ApplyChanges, BLINDH, BLINDV, BTWIPE, DGLITTER, DISSOLVE, and DisplayDuration. |
-| `PdfXmpMetadata` | PdfXmpMetadata class provides XMP metadata methods including Add, Clear, Contains, ContainsKey, Count, GetNamespaceURIByPrefix, GetPrefixByNamespaceURI, and IsFixedSize. |
-| `SaveableFacade` | SaveableFacade class provides save functionality with Save and SaveableFacade methods. |
-| `SignatureName` | SignatureName class provides signature name functionality with FullName, GetHashCode, HasSignature, Name, SignatureName, and ToString members. |
+| `TextMarkupAnnotation` | TextMarkupAnnotation class provides methods to get marked text and quad points, and to construct a text markup annotation. |
+| `TextStyle` | TextStyle class provides methods to get alignment, font name, font size, and horizontal alignment, and to construct a text style. |
+| `TrimMarkAnnotation` | TrimMarkAnnotation class provides an Accept method to accept the annotation. |
+| `UnderlineAnnotation` | UnderlineAnnotation class provides an Accept method to accept the annotation. |
+| `WatermarkAnnotation` | WatermarkAnnotation class provides Accept and Opacity methods to accept the annotation and control its opacity. |
+| `WidgetAnnotation` | WidgetAnnotation class provides methods to accept the annotation, get default appearance, exportable state, checked state name, highlighting mode, parent, read-only, and required flags. |
+| `XYZExplicitDestination` | XYZExplicitDestination class provides methods to get left, top, and zoom values, and to convert the destination to a string. |
+| `Artifact` | Artifact class provides methods to get or set background state, opacity, position, rotation, image, text and state, text content, and text state. |
+| `ArtifactCollection` | ArtifactCollection class provides methods to add, count, delete, and update artifacts, and to construct the collection. |
+| `BaseParagraph` | BaseParagraph class provides methods to construct the paragraph, get horizontal alignment, hyperlink, first-in-column state, inline state, new-page state, kept-with-next state, and margin. |
+| `BitmapInfo` | BitmapInfo class provides methods to construct the object, get format, height, pixel bytes, pixel format, and width. |
+| `BorderInfo` | BorderInfo class provides methods to get bottom, left, right, rounded border radius, and top border values. |
+| `Cell` | Cell class provides methods to get alignment, background color, background image, background image file, border, column span, default cell text state, and no-border state. |
+| `Cells` | Cells class provides methods to add, count, insert, remove, and remove a range of cells. |
+| `Color` | Color class provides methods to get alpha component and predefined colors such as AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, and Bisque. |
+| `BmpDevice` | BmpDevice class provides a Process method to render a document to BMP format. |
+| `Device` | Device class provides a Device constructor. |
+| `DocumentDevice` | DocumentDevice class provides a Process method to render a document. |
+| `ImageDevice` | ImageDevice class provides methods to get coordinate type, form presentation mode, bitmap, height, rendering options, resolution, and width. |
+| `JpegDevice` | JpegDevice class provides a Process method to render a document to JPEG format. |
+| `Margins` | Margins class provides methods to get bottom, left, right, and top margin values. |
+| `PageDevice` | PageDevice class provides a Process method to render a page. |
+| `PngDevice` | PngDevice class provides Process and TransparentBackground methods to render a document to PNG format and control transparent background. |
+| `Resolution` | Resolution class provides methods to get X and Y resolution values. |
+| `TextDevice` | TextDevice class provides methods to get encoding, process a document, and set encoding. |
+| `TiffDevice` | TiffDevice class provides methods to binarize with Bradley, get form presentation mode, height, process a document, rendering options, resolution, settings, and width. |
+| `TiffSettings` | TiffSettings class provides methods to get brightness, compression, coordinate type, depth, margins, shape, and skip blank pages settings. |
+| `Document` | Document class provides methods to decrypt, construct, get embedded files, encrypt, form, info, encrypted state, and metadata. |
+| `DocumentInfo` | DocumentInfo class provides methods to add, get author, clear, clear custom data, creator, construct, check predefined key, and keywords. |
+| `Circle` | Circle class provides methods to check bounds, get position X, position Y, and radius. |
+| `Ellipse` | Ellipse class provides methods to get bottom, check bounds, height, left, and width. |
+| `Graph` | Graph class provides methods to get border, graph info, height, change position state, left, shapes, top, and width. |
+| `Line` | Line class provides methods to check bounds and get position array. |
+| `Drawing.Rectangle` | Rectangle class provides methods to check bounds, get height, width, left, bottom, and rounded corner radius, and perform geometric operations such as intersection, containment, and movement. |
+| `Shape` | Shape class provides methods to check bounds, access graph information, and retrieve the underlying shape. |
+| `EmbeddedFileCollection` | EmbeddedFileCollection class provides methods to add, delete, find by name, and count embedded files, as well as retrieve keys and construct the collection. |
+| `AlignmentType` | AlignmentType enum provides methods to represent center, left, and right alignment, and convert the value to a string. |
+| `Bookmark` | Bookmark class provides methods to access action, bold flag, child items, destination, italic flag, level, and other properties. |
+| `Bookmarks` | Bookmarks class provides a constructor to create a bookmarks collection. |
+| `DocumentPrivilege` | DocumentPrivilege class provides methods to allow all, assembly, copy, degraded printing, fill-in, modify annotations, modify contents, and print. |
+| `Facade` | Facade class provides methods to bind a PDF document, close resources, dispose, access the document, and construct the facade. |
+| `FormEditor` | FormEditor class provides methods to add fields, field scripts, list items, submit buttons, convert fields, copy inner and outer fields, and decorate fields. |
+| `FormFieldFacade` | FormFieldFacade class provides fields to align content at bottom, center, justified, left, middle, right, top, and undefined positions. |
+| `IFacade` | IFacade interface provides methods to bind a PDF document, close resources, and construct the facade. |
+| `ISaveableFacade` | ISaveableFacade interface provides methods to construct the facade and save the document. |
+| `PdfAnnotationEditor` | PdfAnnotationEditor class provides methods to delete annotations, flatten annotations, import annotations from XFDF and FDF, and modify annotations. |
+| `PdfBookmarkEditor` | PdfBookmarkEditor class provides methods to create bookmarks, delete bookmarks, export bookmarks to HTML and XML, extract bookmarks, and import bookmarks with XML. |
+| `PdfContentEditor` | PdfContentEditor class provides methods to add document additional actions and attachments, change viewer preferences, and delete attachments, images, and stamps. |
+| `PdfConverter` | PdfConverter class provides methods to set coordinate type, perform conversion, set end page, form presentation mode, get next image, check for next image, get page count, and set password. |
+| `PdfExtractor` | PdfExtractor class provides methods to set end page, extract attachments, images, and text, set text extraction mode, get attachment names and info, and retrieve attachments. |
+| `PdfFileEditor` | PdfFileEditor class provides methods to add margins and page breaks, allow concatenation exceptions, append and concatenate files, and set concatenation packet size. |
+| `PdfFileInfo` | PdfFileInfo class provides methods to access author and creation information, bind a PDF file, clear info, get metadata, page height, and page rotation. |
+| `PdfFileSecurity` | PdfFileSecurity class provides methods to allow exceptions, bind a PDF file, change password, decrypt and encrypt files, and set input and output file paths. |
+| `PdfFileSignature` | PdfFileSignature class provides methods to certify documents, check for signatures and usage rights, verify coverage, get access permissions, and retrieve blank signature names and contact info. |
+| `PdfFileStamp` | PdfFileStamp class provides methods to add footers, headers, and page numbers, convert files, set input and output file paths, keep security, and optimize size. |
+| `PdfPageEditor` | PdfPageEditor class provides methods to set alignment, apply changes, and configure display duration, as well as fields for transition effects. |
+| `PdfXmpMetadata` | PdfXmpMetadata class provides methods to add, clear, check for keys and values, get count and namespace URIs, and check if the collection is fixed size. |
+| `SaveableFacade` | SaveableFacade class provides methods to save the document and construct the facade. |
+| `SignatureName` | SignatureName class provides methods to get hash code, check for signatures, and convert to string, as well as fields for full name and name. |
 | `VerticalAlignmentType` | VerticalAlignmentType enum lists the Bottom, Center, and Top vertical alignment values. |
-| `FileSpecification` | FileSpecification class provides methods to manage file specification details including AFRelationship, Description, Encoding, FileSystem, IncludeContents, MIMEType, Name, and UnicodeName. |
-| `FloatingBox` | FloatingBox class provides methods to manage BackgroundColor, Border, Height, IsNeedRepeating, Paragraphs, and Width members. |
-| `BarcodeField` | BarcodeField class provides methods to manage Caption, ECC, Resolution, Symbology, XSymHeight, and XSymWidth members. |
-| `ButtonField` | ButtonField class provides methods to manage AlternateCaption, ICPosition, IconFit, NormalCaption, and RolloverCaption members. |
-| `CheckboxField` | CheckboxField class provides methods to manage ActiveState, AllowedStates, Checked, Clone, ExportValue, and Style members. |
-| `ChoiceField` | ChoiceField class provides methods to manage CommitImmediately, MultiSelect, Options, Selected, SelectedItems, and Value members. |
-| `ComboBoxField` | ComboBoxField class provides methods to manage Editable and SpellCheck members. |
-| `DateField` | DateField class provides methods to manage DateFormat and Init members. |
-| `DocMDPSignature` | DocMDPSignature class provides a method to manage AccessPermissions. |
+| `FileSpecification` | FileSpecification class provides methods to manage file specification members including AFRelationship, Description, Encoding, FileSystem, IncludeContents, MIMEType, Name, and UnicodeName. |
+| `FloatingBox` | FloatingBox class provides methods to manage background color, border, height, repeating behavior, paragraphs, and width of a floating box. |
+| `BarcodeField` | BarcodeField class provides methods to manage barcode caption, error correction code level, resolution, symbology, symbol height, and symbol width. |
+| `ButtonField` | ButtonField class provides methods to manage alternate caption, icon caption position, icon fit, normal caption, and rollover caption. |
+| `CheckboxField` | CheckboxField class provides methods to manage active state, allowed states, checked status, export value, and style. |
+| `ChoiceField` | ChoiceField class provides methods to manage options, selection, commit behavior, and multi-select capability. |
+| `ComboBoxField` | ComboBoxField class provides methods to manage editable state and spell check behavior. |
+| `DateField` | DateField class provides methods to manage date format and initialization. |
+| `DocMDPSignature` | DocMDPSignature class provides a method to manage document-level digital signature access permissions. |
 | `ExternalSignature` | ExternalSignature class represents an external digital signature. |
-| `Field` | Field class provides methods to manage AlternateName, AnnotationIndex, Count, FitIntoRectangle, Flatten, IsGroup, IsSharedField, and MappingName members. |
-| `FileSelectBoxField` | FileSelectBoxField class provides a method to manage file selection box functionality. |
-| `Form` | Form class provides methods to manage Add, AddFieldAppearance, AutoRecalculate, AutoRestoreForm, CalculatedFields, Count, DefaultAppearance, and Delete operations. |
-| `IconFit` | IconFit class provides methods to manage IconFit, LeftoverBottom, LeftoverLeft, NameToScalingMode, NameToScalingReason, ScalingMode, ScalingModeToName, and ScalingReason members. |
-| `ListBoxField` | ListBoxField class provides methods to manage TopIndex property. |
-| `NumberField` | NumberField class provides methods to manage AllowedChars property. |
-| `Option` | Option class provides methods to manage Index, Name, Selected, and Value members. |
-| `OptionCollection` | OptionCollection class provides methods to manage Add, Clear, Contains, Count, Get, IsReadOnly, and Remove operations. |
-| `PKCS1` | PKCS1 class provides a method to manage PKCS#1 signature operations. |
-| `PKCS7` | PKCS7 class provides a method to manage PKCS#7 signature operations. |
-| `PKCS7Detached` | PKCS7Detached class provides a method to manage detached PKCS#7 signature operations. |
-| `PasswordBoxField` | PasswordBoxField class provides a method to manage password box functionality. |
-| `RadioButtonField` | RadioButtonField class provides methods to manage Add, AddOption, NoToggleToOff, SetPosition, and Style members. |
-| `RadioButtonOptionField` | RadioButtonOptionField class provides methods to manage OptionName and Style members. |
-| `RichTextBoxField` | RichTextBoxField class provides methods to manage FormattedValue, Justify, RichTextValue, and Value members. |
-| `Signature` | Signature class provides methods to manage Authority, AvoidEstimatingSignatureLength, ByteRange, ContactInfo, CustomAppearance, DefaultSignatureLength, Location, and Reason members. |
-| `SignatureCustomAppearance` | SignatureCustomAppearance class provides methods to manage BackgroundColor, ContactInfoLabel, DateSignedAtLabel, DateTimeFormat, DateTimeLocalFormat, DigitalSignedLabel, DigitalSubjectFormat, and FontFamilyName members. |
-| `SignatureField` | SignatureField class provides methods to manage Sign and Signature operations. |
-| `TextBoxField` | TextBoxField class provides methods to manage AddBarcode, ForceCombs, MaxLen, Multiline, Scrollable, SpellCheck, TextVerticalAlignment, and Value members. |
-| `XFA` | Aspose.Pdf.Forms.XFA class provides access to XFA field names and the XFA data stream. |
-| `GraphInfo` | Aspose.Pdf.GraphInfo class holds the color, fill color, line width, dash array, dash phase, rotation angle, and scaling information for vector graphics. |
-| `Hyperlink` | Aspose.Pdf.Hyperlink class represents a hyperlink object. |
-| `IIndexBitmapConverter` | Aspose.Pdf.IIndexBitmapConverter interface provides methods to convert indexed bitmaps to 1-bpp, 4-bpp, and 8-bpp images. |
-| `LoadOptions` | Aspose.Pdf.LoadOptions class provides options for loading PDF documents, including disabling font license verifications. |
-| `MarginInfo` | Aspose.Pdf.MarginInfo class holds the left, right, top, and bottom margin values. |
-| `Metadata` | Aspose.Pdf.Metadata class provides methods to add, remove, and query document metadata, including namespace prefix management. |
-| `NamedDestinationCollection` | Aspose.Pdf.NamedDestinationCollection class provides methods to add, remove, and enumerate named destinations. |
-| `OutlineCollection` | Aspose.Pdf.OutlineCollection class represents the collection of document outlines. |
-| `OutlineItemCollection` | Aspose.Pdf.OutlineItemCollection class provides methods to manage outline items, including action, destination, bold, italic, level, and next item properties. |
-| `Outlines` | Aspose.Pdf.Outlines class provides methods to add, remove, and enumerate outline items. |
-| `Page` | Aspose.Pdf.Page class provides methods to add images, annotations, and artifacts, and to access page boxes such as MediaBox, CropBox, ArtBox, and BleedBox. |
-| `PageCollection` | Aspose.Pdf.PageCollection class provides methods to add, insert, and delete pages. |
-| `PageLabel` | Aspose.Pdf.PageLabel class provides methods to set the numbering style, prefix, and starting value for page labels. |
-| `PageLabelCollection` | Aspose.Pdf.PageLabelCollection class provides methods to get page labels, retrieve pages for a label, and update or remove labels. |
-| `PageSize` | Aspose.Pdf.PageSize class provides methods to access standard page sizes such as A0 through A6 and B5. |
-| `Paragraphs` | Aspose.Pdf.Paragraphs class provides methods to add, insert, remove, and clear paragraphs. |
-| `Point` | Aspose.Pdf.Point class provides methods to calculate distance, access X and Y coordinates, and check triviality. |
-| `Pdf.Rectangle` | Aspose.Pdf.Rectangle class provides methods to check containment of points and lines, compute center, height, and perform intersection. |
-| `RenderingOptions` | Aspose.Pdf.RenderingOptions class provides options for rendering, including font analysis, barcode optimization, font conversion, default font name, cache size, and interpolation quality. |
-| `Resources` | Aspose.Pdf.Resources class provides access to images and resources. |
-| `Row` | Aspose.Pdf.Row class provides methods to set background color, border, cells, default cell properties, fixed row height, and new page behavior. |
-| `Rows` | Aspose.Pdf.Rows class provides methods to add, count, index, remove, and remove ranges of rows. |
-| `SvgLoadOptions` | Aspose.Pdf.SvgLoadOptions class provides options for loading SVG, including adjusting page size. |
-| `Table` | Aspose.Pdf.Table class provides methods to set alignment, background color, border, column widths, and default cell properties. |
-| `Encoding` | Aspose.Pdf.Text.Encoding class provides methods to encode and decode text, including BigEndianUnicode, code page, and string conversion. |
-| `Font` | Aspose.Pdf.Text.Font class provides methods to access base font, font name, and embedding or subset status. |
-| `FontRepository` | Aspose.Pdf.Text.FontRepository class provides methods to find and open fonts. |
-| `Position` | Aspose.Pdf.Text.Position class provides methods to set X and Y indentation for text. |
-| `TextAbsorber` | Aspose.Pdf.Text.TextAbsorber class provides methods to visit pages, extract text, check for errors, and access the extracted text. |
-| `TextBuilder` | Aspose.Pdf.Text.TextBuilder class provides methods to append text and paragraphs to a page. |
-| `TextFragment` | Aspose.Pdf.Text.TextFragment class provides methods to set position, rectangle, text, text state, and constructor. |
-| `TextFragmentAbsorber` | Aspose.Pdf.Text.TextFragmentAbsorber class provides methods to visit pages and access text fragments. |
-| `TextFragmentCollection` | TextFragmentCollection class holds a collection of text fragments and provides a Count method to get the number of items. |
-| `TextFragmentState` | TextFragmentState class provides state settings for text fragments and includes a constructor to initialize a new instance. |
-| `TextParagraph` | TextParagraph class represents a paragraph of text and provides methods such as AppendLine, FirstLineIndent, HorizontalAlignment, Margin, Position, Rectangle, SubsequentLinesIndent, and VerticalAlignment to configure its content and layout. |
-| `TextState` | TextState class defines text appearance settings and provides methods such as BackgroundColor, CharacterSpacing, Font, FontSize, ForegroundColor, HorizontalAlignment, HorizontalScaling, and Invisible to control formatting. |
-| `WatermarkArtifact` | WatermarkArtifact class represents a watermark artifact that can be added to a PDF page. |
-| `XImage` | XImage class represents an image in a PDF document and provides methods such as ContainsTransparency, GetRawImageData, Height, ImageMask, Name, and Width to access its properties. |
-| `XImageCollection` | XImageCollection class manages a collection of XImage objects and provides methods such as Add, Clear, Contains, Count, Delete, GetImageName, Names, and Remove to manipulate the collection. |
-| `XmpValue` | XmpValue class represents an XMP value and provides methods such as IsArray, IsDateTime, IsDouble, IsField, IsInteger, IsNamedValue, IsNamedValues, and IsRaw to query its type; IsDateTime, IsField, IsNamedValue, IsNamedValues, IsRaw, and IsStructure always return false. |
+| `Field` | Field class provides methods to manage alternate name, annotation index, count, fit into rectangle, flattening, group status, shared field status, and mapping name. |
+| `FileSelectBoxField` | FileSelectBoxField class provides a method to manage file selection box fields. |
+| `Form` | Form class provides methods to manage form fields including adding, deleting, calculating, and setting default appearance. |
+| `IconFit` | IconFit class provides methods to manage icon scaling mode and scaling reason. |
+| `ListBoxField` | ListBoxField class provides methods to manage list box fields including top index. |
+| `NumberField` | NumberField class provides methods to manage allowed characters and number field behavior. |
+| `Option` | Option class provides methods to manage option index, name, selection status, and value. |
+| `OptionCollection` | OptionCollection class provides methods to manage a collection of options including adding, clearing, removing, and checking containment. |
+| `PKCS1` | PKCS1 class provides a method to manage PKCS#1 digital signatures. |
+| `PKCS7` | PKCS7 class provides a method to manage PKCS#7 digital signatures. |
+| `PKCS7Detached` | PKCS7Detached class provides a method to manage detached PKCS#7 digital signatures. |
+| `PasswordBoxField` | PasswordBoxField class provides a method to manage password box fields. |
+| `RadioButtonField` | RadioButtonField class provides methods to manage radio button fields including adding options, position, style, and toggle behavior. |
+| `RadioButtonOptionField` | RadioButtonOptionField class provides methods to manage radio button option name and style. |
+| `RichTextBoxField` | RichTextBoxField class provides methods to manage formatted value, justification, rich text value, and style. |
+| `Signature` | Signature class provides methods to manage signature authority, contact information, location, reason, custom appearance, and byte range. |
+| `SignatureCustomAppearance` | SignatureCustomAppearance class provides methods to manage signature appearance including background color, contact info label, date signed label, date time format, digital signed label, digital subject format, and font family name. |
+| `SignatureField` | SignatureField class provides methods to sign and manage signature appearance. |
+| `TextBoxField` | TextBoxField class provides methods to manage text box properties including barcode addition, comb forcing, maximum length, multiline behavior, scrollability, spell check, vertical alignment, and value. |
+| `XFA` | Aspose.Pdf.Forms.XFA class provides access to XFA field names and the XFA data through its FieldNames and XFA methods. |
+| `GraphInfo` | Aspose.Pdf.GraphInfo class holds graph rendering attributes including Color, DashArray, DashPhase, FillColor, IsDoubled, LineWidth, and RotationAngle. |
+| `Hyperlink` | Aspose.Pdf.Hyperlink class provides a constructor to create a hyperlink object. |
+| `IIndexBitmapConverter` | Aspose.Pdf.IIndexBitmapConverter interface provides methods Get1BppImage, Get4BppImage, and Get8BppImage to convert indexed bitmaps. |
+| `LoadOptions` | Aspose.Pdf.LoadOptions class provides a constructor and the DisableFontLicenseVerifications option for loading PDF documents. |
+| `MarginInfo` | Aspose.Pdf.MarginInfo class holds margin values for Bottom, Left, Right, and Top sides. |
+| `Metadata` | Aspose.Pdf.Metadata class provides methods Add, Clear, Contains, ContainsKey, Count, GetNamespaceUriByPrefix, GetPrefixByNamespaceUri, and IsFixedSize to manage document metadata. |
+| `NamedDestinationCollection` | Aspose.Pdf.NamedDestinationCollection class provides methods Add, Count, Names, and Remove to manage named destinations. |
+| `OutlineCollection` | Aspose.Pdf.OutlineCollection class represents the collection of outlines in a PDF document. |
+| `OutlineItemCollection` | Aspose.Pdf.OutlineItemCollection class provides methods Action, Bold, Destination, HasNext, Insert, Italic, Level, and Next to manage outline items. |
+| `Outlines` | Aspose.Pdf.Outlines class provides methods Add, Clear, Contains, Count, Delete, First, IsReadOnly, and Last to manage the outline tree. |
+| `Page` | Aspose.Pdf.Page class provides methods AddImage, Annotations, ArtBox, Artifacts, BleedBox, CropBox, GetPageRect, and MediaBox to access page content and properties. |
+| `PageCollection` | Aspose.Pdf.PageCollection class provides methods Add, Count, Delete, Insert, and PageCollection to manage pages in a document. |
+| `PageLabel` | Aspose.Pdf.PageLabel class provides methods NumberingStyle, Prefix, and StartingValue to define page labeling. |
+| `PageLabelCollection` | Aspose.Pdf.PageLabelCollection class provides methods GetLabel, GetPages, RemoveLabel, and UpdateLabel to manage page labels. |
+| `PageSize` | Aspose.Pdf.PageSize class provides methods A0, A1, A2, A3, A4, A5, A6, and B5 to access standard page sizes. |
+| `Paragraphs` | Aspose.Pdf.Paragraphs class provides methods Add, Clear, Count, Insert, Remove, and RemoveRange to manage paragraph objects. |
+| `Point` | Aspose.Pdf.Point class provides methods Distance, Trivial, X, and Y to represent a point in two-dimensional space. |
+| `Pdf.Rectangle` | Aspose.Pdf.Rectangle class provides methods Center, Contains, ContainsLine, ContainsPoint, Empty, Equals, Height, and Intersect to represent and query rectangles. |
+| `RenderingOptions` | Aspose.Pdf.RenderingOptions class provides methods AnalyzeFonts, BarcodeOptimization, ConvertFontsToUnicodeTTF, DefaultFontName, HeightExtraUnits, IgnoreResourceFontErrors, InterpolationHighQuality, and MaxFontsCacheSize to control rendering behavior. |
+| `Resources` | Aspose.Pdf.Resources class provides methods Images and Resources to access page resources. |
+| `Row` | Aspose.Pdf.Row class provides methods BackgroundColor, Border, Cells, DefaultCellBorder, DefaultCellPadding, DefaultCellTextState, FixedRowHeight, and IsInNewPage to manage table row properties. |
+| `Rows` | Aspose.Pdf.Rows class provides methods Add, Count, IndexOf, Remove, RemoveAt, RemoveRange, and Rows to manage table rows. |
+| `SvgLoadOptions` | Aspose.Pdf.SvgLoadOptions class provides the AdjustPageSize method to control page sizing when loading SVG content. |
+| `Table` | Aspose.Pdf.Table class provides methods Alignment, BackgroundColor, Border, ColumnWidths, DefaultCellBorder, DefaultCellPadding, DefaultCellTextState, and DefaultColumnWidth to manage table properties. |
+| `Encoding` | Aspose.Pdf.Text.Encoding class provides methods BigEndianUnicode, CodePage, Encoding, GetByteCount, GetBytes, GetCharCount, GetEncoding, and GetString to handle text encoding. |
+| `Font` | Aspose.Pdf.Text.Font class provides methods BaseFont, FontName, IsEmbedded, and IsSubset to represent font properties. |
+| `FontRepository` | Aspose.Pdf.Text.FontRepository class provides methods FindFont and OpenFont to locate and open fonts. |
+| `Position` | Aspose.Pdf.Text.Position class provides methods XIndent and YIndent to specify text position. |
+| `TextAbsorber` | Aspose.Pdf.Text.TextAbsorber class provides methods HasErrors, Text, TextAbsorber, and Visit to extract text from a document. |
+| `TextBuilder` | Aspose.Pdf.Text.TextBuilder class provides methods AppendParagraph and AppendText to build text content on a page. |
+| `TextFragment` | Aspose.Pdf.Text.TextFragment class provides methods Position, Rectangle, Text, TextFragment, and TextState to represent a fragment of text. |
+| `TextFragmentAbsorber` | Aspose.Pdf.Text.TextFragmentAbsorber class provides methods TextFragments and Visit to extract text fragments from a document. |
+| `TextFragmentCollection` | TextFragmentCollection class holds a collection of text fragments and exposes a Count method to retrieve the number of items. |
+| `TextFragmentState` | TextFragmentState class provides state settings for text fragments and exposes a constructor to initialize its instance. |
+| `TextParagraph` | TextParagraph class represents a paragraph of text and exposes methods such as AppendLine, FirstLineIndent, HorizontalAlignment, Margin, Position, Rectangle, SubsequentLinesIndent, and VerticalAlignment. |
+| `TextState` | TextState class defines text formatting properties and exposes methods such as BackgroundColor, CharacterSpacing, Font, FontSize, ForegroundColor, HorizontalAlignment, HorizontalScaling, and Invisible. |
+| `WatermarkArtifact` | WatermarkArtifact class represents a watermark artifact that can be added to a page. |
+| `XImage` | XImage class represents an image and exposes methods such as ContainsTransparency, GetRawImageData, Height, ImageMask, Name, and Width. |
+| `XImageCollection` | XImageCollection class manages a collection of XImage objects and exposes methods such as Add, Clear, Contains, Count, Delete, GetImageName, Names, and Remove. |
+| `XmpValue` | XmpValue class represents an XMP value and exposes methods such as IsArray, IsDouble, IsInteger, IsString, ToArray, ToDouble, ToInteger, and ToString, while IsDateTime, IsField, IsNamedValue, IsNamedValues, IsRaw, and IsStructure always return false. |
 
 #### Enumerations
 
@@ -578,124 +558,135 @@ The public API has 249 types.
 | `PrinterMarksKind` | PrinterMarksKind enum lists the All, BleedMarks, ColorBars, None, PageInformation, RegistrationMarks and TrimMarks printer mark kinds. |
 | `ReplyType` | ReplyType enum lists the Group, Reply and Undefined reply type values. |
 | `RichTextFontStyles` | RichTextFontStyles enum lists the Bold, BoldItalic, Italic and Plain font styles for rich text. |
-| `SoundIcon` | SoundIcon enum lists the Mic and Speaker icons for sound annotations. |
-| `StampIcon` | StampIcon enum lists the Approved, AsIs, Confidential, Departmental, Draft, Experimental, Expired, Final, ForComment, ForPublicRelease, NotApproved and NotForPublicRelease stamp icons. |
+| `SoundIcon` | SoundIcon enum lists the Mic and Speaker sound icon types. |
+| `StampIcon` | StampIcon enum lists the Approved, AsIs, Confidential, Departmental, Draft, Experimental, Expired, Final, ForComment, ForPublicRelease, NotApproved and NotForPublicRelease stamp icon types. |
 | `TextAlignment` | TextAlignment enum lists the Center, Left and Right text alignment options. |
-| `TextIcon` | TextIcon enum lists the Check, Circle, Comment, Cross, Help, Insert, Key, NewParagraph, Note, Paragraph, RightArrow, and RightPointer icon types. |
+| `TextIcon` | TextIcon enum lists the Check, Circle, Comment, Cross, Help, Insert, Key, NewParagraph, Note, Paragraph, RightArrow, and RightPointer text icon values. |
 | `BorderSide` | BorderSide enum lists the All, Bottom, Box, Left, None, Right, and Top border side values. |
-| `CryptoAlgorithm` | CryptoAlgorithm enum lists the AESx128, AESx256, RC4x128, and RC4x40 cryptographic algorithm values. |
+| `CryptoAlgorithm` | CryptoAlgorithm enum lists the AESx128, AESx256, RC4x128, and RC4x40 encryption algorithm values. |
 | `ColorDepth` | ColorDepth enum lists the Default, Format1bpp, Format24bpp, Format4bpp, and Format8bpp color depth values. |
 | `CompressionType` | CompressionType enum lists the CCITT3, CCITT4, LZW, None, and RLE compression type values. |
 | `FormPresentationMode` | FormPresentationMode enum lists the Editor and Production form presentation mode values. |
 | `ShapeType` | ShapeType enum lists the Landscape, None, and Portrait shape type values. |
-| `Algorithm` | Algorithm enum lists the AES and RC4 encryption algorithm values. |
-| `AutoRotateMode` | AutoRotateMode enum lists the AntiClockWise, ClockWise, and None rotation mode values. |
-| `BlendingColorSpace` | BlendingColorSpace enum lists the Auto, DeviceCMYK, DeviceRGB, and DontChange blending color space values. |
-| `DataType` | DataType enum lists the FDF, ODBC, OLEDB, PDF, XFDF, and XML data type values. |
-| `DefaultMetadataProperties` | DefaultMetadataProperties enum lists the Advisory, BaseURL, CreateDate, CreatorTool, Identifier, MetadataDate, ModifyDate, Nickname, and Thumbnails metadata property values. |
-| `EncodingType` | EncodingType enum lists the Cp1250, Cp1252, Cp1257, Identity_h, Identity_v, Macroman, and Winansi encoding type values. |
-| `FieldType` | FieldType enum lists the Barcode, CheckBox, ComboBox, DateTime, Image, InvalidNameOrType, ListBox, MultiLineText, Numeric, PushButton, Radio, and Signature field type values. |
-| `FontStyle` | FontStyle enum lists the CjkFont, Courier, CourierBold, CourierBoldOblique, CourierOblique, Helvetica, HelveticaBold, HelveticaBoldOblique, HelveticaOblique, Symbol, TimesBold, and TimesBoldItalic font style values. |
-| `ImageMergeMode` | ImageMergeMode enum lists the Center, Horizontal, and Vertical image merge mode values. |
-| `KeySize` | KeySize enum lists the x128, x256, and x40 key size values. |
-| `PositioningMode` | PositioningMode enum lists the Current, Legacy, and ModernLineSpacing positioning mode values. |
-| `PropertyFlag` | PropertyFlag enum lists the InvalidFlag, NoExport, ReadOnly, and Required property flag values. |
-| `StampType` | StampType enum lists the Form and Image stamp type values. |
-| `SubmitFormFlag` | SubmitFormFlag enum lists the Fdf, FdfWithComments, Html, Pdf, Xfdf, and XfdfWithComments submit form flag values. |
+| `Algorithm` | Algorithm enum lists the AES and RC4 encryption algorithms. |
+| `AutoRotateMode` | AutoRotateMode enum lists the AntiClockWise, ClockWise, and None rotation modes. |
+| `BlendingColorSpace` | BlendingColorSpace enum lists the Auto, DeviceCMYK, DeviceRGB, and DontChange blending color spaces. |
+| `DataType` | DataType enum lists the FDF, ODBC, OLEDB, PDF, XFDF, and XML data types. |
+| `DefaultMetadataProperties` | DefaultMetadataProperties enum lists the Advisory, BaseURL, CreateDate, CreatorTool, Identifier, MetadataDate, ModifyDate, Nickname, and Thumbnails metadata properties. |
+| `EncodingType` | EncodingType enum lists the Cp1250, Cp1252, Cp1257, Identity_h, Identity_v, Macroman, and Winansi encoding types. |
+| `FieldType` | FieldType enum lists the Barcode, CheckBox, ComboBox, DateTime, Image, InvalidNameOrType, ListBox, MultiLineText, Numeric, PushButton, Radio, and Signature field types. |
+| `FontStyle` | FontStyle enum lists the CjkFont, Courier, CourierBold, CourierBoldOblique, CourierOblique, Helvetica, HelveticaBold, HelveticaBoldOblique, HelveticaOblique, Symbol, TimesBold, and TimesBoldItalic font styles. |
+| `ImageMergeMode` | ImageMergeMode enum lists the Center, Horizontal, and Vertical image merge modes. |
+| `KeySize` | KeySize enum lists the x128, x256, and x40 key sizes. |
+| `PositioningMode` | PositioningMode enum lists the Current, Legacy, and ModernLineSpacing positioning modes. |
+| `PropertyFlag` | PropertyFlag enum lists the InvalidFlag, NoExport, ReadOnly, and Required property flags. |
+| `StampType` | StampType enum lists the Form and Image stamp types. |
+| `SubmitFormFlag` | SubmitFormFlag enum lists the Fdf, FdfWithComments, Html, Pdf, Xfdf, and XfdfWithComments submit form flags. |
 | `WordWrapMode` | WordWrapMode enum lists the ByWords and Default word wrap modes. |
 | `FileEncoding` | FileEncoding enum lists the None and Zip file encoding options. |
-| `BoxStyle` | BoxStyle enum lists the Check, Circle, Cross, Diamond, Square, and Star box style values. |
-| `DocMDPAccessPermissions` | DocMDPAccessPermissions enum lists the AnnotationModification, FillingInForms, and NoChanges access permission values. |
-| `FormType` | FormType enum lists the Dynamic, Standard, and Static form type values. |
-| `IconCaptionPosition` | IconCaptionPosition enum lists the CaptionAboveIcon, CaptionBelowIcon, CaptionOverlaid, CaptionToTheLeft, CaptionToTheRight, NoCaption, and NoIcon caption position values. |
-| `ScalingMode` | ScalingMode enum lists the Anamorphic and Proportional scaling mode values. |
-| `ScalingReason` | ScalingReason enum lists the Always, IconIsBigger, IconIsSmaller, and Never scaling reason values. |
-| `SubjectNameElements` | SubjectNameElements enum lists the C, CN, E, L, O, OU, and S subject name element values. |
-| `Symbology` | Symbology enum lists the DataMatrix, PDF417, and QRCode symbology values. |
-| `HorizontalAlignment` | Aspose.Pdf.HorizontalAlignment enum lists the Center, FullJustify, Justify, Left, None, and Right horizontal alignment options. |
+| `BoxStyle` | BoxStyle enum lists the Check, Circle, Cross, Diamond, Square, and Star box styles. |
+| `DocMDPAccessPermissions` | DocMDPAccessPermissions enum lists the AnnotationModification, FillingInForms, and NoChanges access permission levels. |
+| `FormType` | FormType enum lists the Dynamic, Standard, and Static form types. |
+| `IconCaptionPosition` | IconCaptionPosition enum lists the CaptionAboveIcon, CaptionBelowIcon, CaptionOverlaid, CaptionToTheLeft, CaptionToTheRight, NoCaption, and NoIcon positions. |
+| `ScalingMode` | ScalingMode enum lists the Anamorphic and Proportional scaling modes. |
+| `ScalingReason` | ScalingReason enum lists the Always, IconIsBigger, IconIsSmaller, and Never scaling reasons. |
+| `SubjectNameElements` | SubjectNameElements enum lists the C, CN, E, L, O, OU, and S subject name elements. |
+| `Symbology` | Symbology enum lists the DataMatrix, PDF417, and QRCode barcode symbologies. |
+| `HorizontalAlignment` | Aspose.Pdf.HorizontalAlignment enum lists the Center, FullJustify, Justify, Left, None, and Right horizontal alignment values. |
 | `NumberingStyle` | Aspose.Pdf.NumberingStyle enum lists the LettersLowercase, LettersUppercase, None, NumeralsArabic, NumeralsRomanLowercase, and NumeralsRomanUppercase numbering styles. |
-| `PageCoordinateType` | Aspose.Pdf.PageCoordinateType enum lists the CropBox and MediaBox coordinate types. |
-| `PasswordType` | Aspose.Pdf.PasswordType enum lists the Inaccessible, None, Owner, and User password types. |
-| `PdfFormat` | Aspose.Pdf.PdfFormat enum lists the PDF/A and PDF/E format versions such as PDF_A_1A, PDF_A_1B, PDF_A_2A, PDF_A_2B, PDF_A_2U, PDF_A_3A, PDF_A_3B, PDF_A_3U, PDF_A_4, PDF_A_4E, PDF_A_4F, and PDF_E_1. |
-| `Permissions` | Aspose.Pdf.Permissions enum lists the document permission flags such as AssembleDocument, ExtractContent, ExtractContentWithDisabilities, FillForm, ModifyContent, ModifyTextAnnotations, PrintDocument, and PrintingQuality. |
-| `Rotation` | Aspose.Pdf.Rotation enum lists the None, on90, on180, and on270 rotation values. |
+| `PageCoordinateType` | Aspose.Pdf.PageCoordinateType enum lists the CropBox and MediaBox coordinate type values. |
+| `PasswordType` | Aspose.Pdf.PasswordType enum lists the Inaccessible, None, Owner, and User password type values. |
+| `PdfFormat` | Aspose.Pdf.PdfFormat enum lists the PDF_A_1A, PDF_A_1B, PDF_A_2A, PDF_A_2B, PDF_A_2U, PDF_A_3A, PDF_A_3B, PDF_A_3U, PDF_A_4, PDF_A_4E, PDF_A_4F, and PDF_E_1 format values. |
+| `Permissions` | Aspose.Pdf.Permissions enum lists the AssembleDocument, ExtractContent, ExtractContentWithDisabilities, FillForm, ModifyContent, ModifyTextAnnotations, PrintDocument, and PrintingQuality permission values. |
+| `Rotation` | Aspose.Pdf.Rotation enum lists the None, on180, on270, and on90 rotation values. |
 | `VerticalAlignment` | VerticalAlignment enum lists the Bottom, Center, None, and Top vertical alignment options. |
 
 #### Detailed Member Reference
 
 ### Document
 
-The `Aspose.Pdf.Document` class loads PDF files from a path, supports password-protected documents, and exposes collections for pages, outlines, annotations, and embedded files, along with methods to encrypt, decrypt, and save the document.
+The `Aspose.Pdf.Document` class supports opening existing PDFs, creating new documents, encrypting or decrypting files, and saving to disk; it exposes collections for pages, outlines, embedded files, and named destinations, and provides access to form, metadata, and document info objects.
 
 ### Text
 
-The `Aspose.Pdf.Text` namespace provides text extraction via `Aspose.Pdf.Text.TextAbsorber` and `Aspose.Pdf.Text.TextFragmentAbsorber`, which visit a document and expose extracted text content and fragment details.
+The `Aspose.Pdf.Text` namespace provides text extraction capabilities via `Aspose.Pdf.Text.TextAbsorber` and `Aspose.Pdf.Text.TextFragmentAbsorber`, which visit document pages and populate text or fragment collections for inspection.
 
 ### Devices
 
-The `Aspose.Pdf.Devices` namespace offers rendering devices such as `Aspose.Pdf.Devices.PageDevice`, with concrete implementations like `PngDevice` and `TiffDevice`, and resolution control via `Aspose.Pdf.Devices.Resolution` to set horizontal and vertical DPI.
+The `Aspose.Pdf.Devices` namespace includes rendering devices such as `Aspose.Pdf.Devices.PngDevice`, which converts a document or page to an image stream, and `Aspose.Pdf.Devices.Resolution`, which defines horizontal and vertical DPI settings.
 
 ### CryptoAlgorithm
 
-The `Aspose.Pdf.CryptoAlgorithm` class enumerates supported encryption algorithms including AESx256, and works with the `Aspose.Pdf.Permissions` flags to control document access and modification rights.
+The `Aspose.Pdf.CryptoAlgorithm` enum lists supported encryption algorithms including RC4x40, RC4x128, AESx128, and AESx256, while `Aspose.Pdf.Permissions` is a flags enum that controls allowed operations per ISO 32000-1 §7.6.3.2 `Table` 22.
 
 ### Annotations
 
-The `Aspose.Pdf.Annotations` namespace provides annotation support through `Aspose.Pdf.Annotations.Annotation` and `Aspose.Pdf.Annotations.AnnotationCollection`, enabling addition, enumeration, and manipulation of annotation objects on pages.
+The `Aspose.Pdf.Annotations` namespace provides the base `Aspose.Pdf.Annotations.Annotation` class and per-page `Aspose.Pdf.Annotations.AnnotationCollection`, with concrete subtypes for highlight, text, free text, stamp, link, ink, and redaction annotations.
 
 ### Forms
 
-The `Aspose.Pdf.Forms` namespace exposes form handling via `Aspose.Pdf.Forms.FormType` and `Aspose.Pdf.Forms.TextBoxField`, supporting form field creation, addition to pages, and flattening.
-
-### Facades
-
-The `Aspose.Pdf.Facades` namespace provides high-level utilities including `Aspose.Pdf.Facades.PdfConverter` for rasterizing PDFs and `Aspose.Pdf.Facades.PdfExtractor` for scoped text extraction.
-
-### Table
-
-The `Aspose.Pdf.Table` namespace offers table support via `Aspose.Pdf.Table`, `Aspose.Pdf.Row`, and `Aspose.Pdf.Cell`, enabling structured content with column widths, borders, and cell styling.
+The `Aspose.Pdf.Forms` namespace exposes the `Aspose.Pdf.Forms.Form` class for managing AcroForm fields and subtypes such as `Aspose.Pdf.Forms.TextBoxField`, `CheckboxField`, and `RadioButtonField`.
 
 ### Drawing
 
-The `Aspose.Pdf.Drawing` namespace provides vector drawing primitives such as `Aspose.Pdf.Drawing.Graph`, `Aspose.Pdf.Drawing.Rectangle`, and `Aspose.Pdf.Drawing.Circle` for embedding graphics in PDFs.
+The `Aspose.Pdf.Drawing` namespace includes `Aspose.Pdf.Drawing.Graph` for vector graphics, and shapes such as `Aspose.Pdf.Drawing.Rectangle`, `Circle`, and `Line` that can be added to pages.
 
-### OutlineCollection
+### Facades
 
-The `Aspose.Pdf.OutlineCollection` class manages document outlines and works with `Aspose.Pdf.OutlineItemCollection` and `Aspose.Pdf.NamedDestinationCollection` to define navigable bookmarks and destinations.
+The `Aspose.Pdf.Facades` namespace provides high-level utilities including `Aspose.Pdf.Facades.PdfFileSignature` for detached PKCS#7 signing and `Aspose.Pdf.Facades.PdfConverter` for rasterising PDFs to multi-page TIFF or per-page PNG.
 
-### Metadata
-
-The `Aspose.Pdf.Metadata` namespace provides XMP metadata access through `Aspose.Pdf.XmpValue`, enabling programmatic reading and writing of document metadata properties.
-
-### PageCollection
-
-The `Aspose.Pdf.PageCollection` class manages document pages via a 1-based indexer, supporting addition, insertion, deletion, and counting of pages, and works with `Aspose.Pdf.Page` and `Aspose.Pdf.PageLabelCollection`.
-
-Available subtypes: `Highlight`, `Underline`, `Squiggly`, `StrikeOut`, `Square`, `Circle`, `Line`,
-`Ink`, `Text`, `FreeText`, `Stamp`, `Link` (with `GoToAction`/`GoToURIAction`), `FileAttachment`.
-
-`PdfConverter` also exposes a per-page cursor — `HasNextImage()`/`GetNextImage(outputFile)` — for
-walking pages one at a time as PNGs via `Devices::PngDevice`, and `PageCount()` for the real page
-count.
-
-| Enumeration | Description |
+| Class | Description |
 |---|---|
-| `AFRelationship` | Enumerates Alternative, Data, EncryptedPayload, None, Source, Supplement and Unspecified. |
-| `BorderSide` | Enumerates All, Bottom, Box, Left, None, Right and Top. |
-| `ColorDepth` | Enumerates Default, Format1bpp, Format24bpp, Format4bpp and Format8bpp. |
-| `CompressionType` | Enumerates CCITT3, CCITT4, LZW, None and RLE. |
-| `CryptoAlgorithm` | Enumerates AESx128, AESx256, RC4x128 and RC4x40. |
-| `FileEncoding` | Enumerates None and Zip. |
-| `FormPresentationMode` | Enumerates Editor and Production. |
-| `HorizontalAlignment` | Enumerates Center, FullJustify, Justify, Left, None and Right. |
-| `NumberingStyle` | Enumerates LettersLowercase, LettersUppercase, None, NumeralsArabic, NumeralsRomanLowercase and NumeralsRomanUppercase. |
-| `PageCoordinateType` | PageCoordinateType enum values MediaBox and CropBox let developers choose which page rectangle is used for coordinate calculations. |
-| `PasswordType` | Enumerates Inaccessible, None, Owner and User. |
-| `PdfFormat` | Enumerates values including PDF_A_1A, PDF_A_1B, PDF_A_2A, PDF_A_2B, PDF_A_2U, PDF_A_3A, PDF_A_3B and PDF_A_3U. |
-| `Permissions` | Enumerates AssembleDocument, ExtractContent, ExtractContentWithDisabilities, FillForm, ModifyContent, ModifyTextAnnotations, PrintDocument and PrintingQuality. |
-| `Rotation` | Rotation enum provides four orientation values: None, on90, on180, on270. |
-| `ShapeType` | Enumerates Landscape, None and Portrait. |
-| `VerticalAlignment` | Enumerates Bottom, Center, None and Top. |
+| `Annotation` | Class that inherits from BaseParagraph and declares methods including Accept, ActiveState, Alignment, AnnotationType, Border and Characteristics. |
+| `AnnotationCollection` | Class that declares methods including Accept, Add, Clear, Contains, Count and Delete. |
+| `AnnotationSelector` | Class that declares the method Visit. |
+| `BleedMarkAnnotation` | BleedMarkAnnotation.Accept(visitor) implements the visitor pattern, allowing external visitor objects to process the annotation without exposing its internal structure. |
+| `Border` | Border appearance can be customized by setting its Width, Style, Effect, EffectIntensity, and corner radii via the Border class methods. |
+| `CaretAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol. |
+| `Characteristics` | Class that declares the method Rotate. |
+| `CircleAnnotation` | Class that inherits from CommonFigureAnnotation and declares the method Accept. |
+| `ColorBarAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and ColorOfCMYK. |
+| `CommonFigureAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Frame and InteriorColor. |
+| `CornerPrinterMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Position. |
+| `DefaultAppearance` | Class that declares the methods FontName, FontResourceName, FontSize and Text. |
+| `ExplicitDestination` | Class that inherits from IAppointment and declares the methods PageNumber and ToString. |
+| `FileAttachmentAnnotation` | FileAttachmentAnnotation.File() gets or sets the attached file via a FileSpecification object, allowing embedding of external resources in a PDF. |
+| `FitExplicitDestination` | Class that inherits from ExplicitDestination and declares the method ToString. |
+| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |
+| `HighlightAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
+| `InkAnnotation` | InkAnnotation represents free‑hand ink strokes; its InkList property holds a StrokeList that can be read or replaced. |
+| `JavascriptAction` | JavascriptAction encapsulates a JavaScript snippet attached to PDF objects; the script can be retrieved or updated via Script() getter/setter. |
+| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |
+| `LinkAnnotation` | LinkAnnotation enables clickable areas in a PDF that can trigger a PdfAction or navigate to a named destination. |
+| `MarkupAnnotation` | MarkupAnnotation provides methods to set review state, opacity, title, and rich text for comment‑type annotations. |
+| `MovieAnnotation` | MovieAnnotation lets you embed a video file in a PDF, with properties for title, poster flag, aspect ratio, and rotation. |
+| `NamedAction` | Class that inherits from PdfAction and declares the methods Name and ToString. |
+| `NamedDestination` | Class that inherits from IAppointment and declares the methods Name and ToString. |
+| `PageInformationAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Accept. |
+| `PdfAction` | PdfAction.GetECMAScriptString() returns the JavaScript code attached to a PDF action, enabling inspection or modification of interactive scripts. |
+| `PolyAnnotation` | Class that inherits from MarkupAnnotation and declares the methods EndingStyle, Intent, InteriorColor, StartingStyle and Vertices. |
+| `PolygonAnnotation` | Class that inherits from PolyAnnotation and declares the method Accept. |
+| `PolylineAnnotation` | Class that inherits from PolyAnnotation and declares the method Accept. |
+| `PopupAnnotation` | Class that inherits from Annotation and declares the methods Accept, Open and Parent. |
+| `PrinterMarkAnnotation` | PrinterMarkAnnotation can insert printer marks such as trim, bleed, registration, or colour bars into an entire document or a single page via AddPrinterMarks. |
+| `RedactionAnnotation` | RedactionAnnotation lets you permanently remove content while optionally overlaying custom text, fill colour, border colour and font size. |
+| `RegistrationMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and Position. |
+| `RichMediaAnnotation` | RichMediaAnnotation enables embedding of Flash or other rich media with activation events and custom variables. |
+| `ScreenAnnotation` | Class that inherits from Annotation and declares the methods Accept and Title. |
+| `SoundAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept and Icon. |
+| `SquareAnnotation` | Class that inherits from CommonFigureAnnotation and declares the method Accept. |
+| `SquigglyAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
+| `StampAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image. |
+| `StrikeOutAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
+| `SubmitFormAction` | Class that inherits from PdfAction and declares the methods Flags, ToString and Url. |
+| `TextAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open. |
+| `TextMarkupAnnotation` | Class that inherits from MarkupAnnotation and declares the methods GetMarkedText and QuadPoints. |
+| `TextStyle` | Class that declares the methods Alignment, FontName, FontSize and HorizontalAlignment. |
+| `TrimMarkAnnotation` | TrimMarkAnnotation and UnderlineAnnotation both support the visitor pattern via an Accept method that forwards the annotation to a visitor object. |
+| `UnderlineAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
+| `WatermarkAnnotation` | WatermarkAnnotation enables adding a visual watermark to a PDF page and lets developers control its transparency. |
+| `WidgetAnnotation` | WidgetAnnotation provides access to AcroForm field attributes such as ReadOnly, Required, Exportable, and DefaultAppearance. |
+| `XYZExplicitDestination` | XYZExplicitDestination supplies explicit page view coordinates via Left(), Top() and Zoom() methods. |
 
 | Enumeration | Description |
 |---|---|
@@ -853,10 +844,14 @@ count.
 
 ## Scope and Limitations
 
-> The incremental-update writer patches an existing `/Info` object; a from-scratch document has
-> no `/Info` to patch, so setting metadata on one and saving throws.
+Each [GitHub release](https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp/releases) ships prebuilt archives for Linux x64 (GCC 13) and Windows x64 (MSVC, with Release and Debug libraries). Each archive contains the public headers, the static library, and a CMake package. Extract it and point `CMAKE_PREFIX_PATH` at the extracted folder:
 
-`CryptoAlgorithm` covers `RC4x40`, `RC4x128`, `AESx128`, and `AESx256`. `Permissions` is a `[Flags]` enum (ISO 32000-1 §7.6.3.2 Table 22) — compose with `|`. Permissions are enforced by viewers; the library itself is not a DRM mechanism.
+```cmake
+find_package(aspose_pdf_foss 1.0 CONFIG REQUIRED)
+target_link_libraries(your_app PRIVATE aspose_pdf_foss::aspose_pdf_foss)
+```
+
+Public-facing headers and their implementations sit under `include/aspose/pdf/` and `src/public/`; internal foundation primitives (codecs, the rasteriser, crypto) live separately under `include/internal/` and `src/internal/`.
 
 - A handful of `XmpValue` type-checking helpers — `IsDateTime`, `IsField`, `IsNamedValue`, `IsRaw`, `IsNamedValues`, and `IsStructure` — are stubs that always return `false`; use `IsString`/`IsInteger`/`IsDouble`/`IsArray` instead.
 - Standard-14 font fallback covers 12 of the 14 standard fonts (Helvetica, Times-Roman, and Courier, four styles each) via bundled Liberation substitutes; Symbol and ZapfDingbats have no bundled fallback.
@@ -887,13 +882,9 @@ Both forms of the target make your code compile as C++20.
 
 The static library lands at `build/libaspose_pdf_foss.a` (or `aspose_pdf_foss.lib` on MSVC), built out-of-source under `build/`. For a release build, pass `-DCMAKE_BUILD_TYPE=Release` to the configure step. `CMakePresets.json` also carries host-conditional Windows-MSVC presets — e.g. `cmake --preset windows-msvc-debug`.
 
-- `Python3` — required by the CMake configure step (`find_package(Python3 REQUIRED COMPONENTS Interpreter)` in `CMakeLists.txt`) to run a generator script that embeds the bundled Standard-14 font outlines into a generated source file; needed only to configure/build the library, not by the compiled library at runtime.
-
 - `googletest` (1.14.0) — fetched via CMake FetchContent in `CMakeLists.txt`; builds the `aspose_pdf_foss_tests` ctest binary only, never linked into the shipped `aspose_pdf_foss` library.
 
 Field types: `TextBoxField`, `CheckboxField`, `RadioButtonField`, `ComboBoxField`, `ListBoxField`, `ButtonField`.
-
-Public-facing headers and their implementations sit under `include/aspose/pdf/` and `src/public/`; internal foundation primitives (codecs, the rasteriser, crypto) live separately under `include/internal/` and `src/internal/`:
 
 ```
 ├── include/
