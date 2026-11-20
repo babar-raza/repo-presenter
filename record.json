@@ -5,7 +5,7 @@
   "provider_repository_id": 1246258574,
   "registry_revision": null,
   "active_transaction_id": "743ec0d97311433195edb2047c11145c",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-19T21:28:24.458066+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-20T00:07:56.402154+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 22
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 186,
+  "state_version": 187,
   "recent_trigger_dedup_keys": {
     "run:40555595204:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "a355a427933a4c5e8d543429f22050e0",
     "run:40571540396:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "886cefd3f4934c8b90359a383ef158f6",
@@ -62,5 +62,5 @@
     "run:41109510803:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "4c25b8b12f604c6e938adde96424da2b",
     "run:41304454389:aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp": "743ec0d97311433195edb2047c11145c"
   },
-  "recovery_count": 21
+  "recovery_count": 22
 }
