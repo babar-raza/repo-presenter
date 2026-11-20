@@ -49,25 +49,83 @@
    "run_id": "44645096667",
    "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T06:33:02+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is"
+   ],
+   "code": "b0d4e117d6bc1d5640bb0e141ea9dbe1b53d65899eadf568e0456c2b4fc9e5d1",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44686944431",
+   "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:22:58+00:00",
-  "classes": {},
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-20T06:33:02+00:00",
+  "classes": {
+   "BC-04|unresolved|code_span_q_is": {
+    "example": "code span 'List<RecognitionResult>' is not a fact value",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "BC-04",
+    "scope": "2d84afb148801787dbcdbc0790705eb2e8a069e19ddc1dd403fa9f257106b032",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   }
+  },
+  "code": "b0d4e117d6bc1d5640bb0e141ea9dbe1b53d65899eadf568e0456c2b4fc9e5d1",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-04; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "BC-04",
+    "message": "code span 'List<RecognitionResult>' is not a fact value",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-04",
+    "section_id": "",
+    "signature": "BC-04|unresolved|code_span_q_is",
+    "source": "validation",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "41fee6103a546d7513720019ad4e94d82e9a766e",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
-  "run_id": "44645096667",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44645096667",
+  "run_id": "44686944431",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44686944431",
   "schema_version": 1,
   "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
