@@ -2522,3 +2522,57 @@ items:
       - "recertify --all --json --remote origin, origin/main 30b9e9a vs branch, 0 provider calls: byte-identical on 64 rows (Lane L 34, Lane R 30, all RECERTIFIED); no seal changes outcome and no sealed README changes bytes (R10)"
     next_action: "supervisor integrates; hosted re-run of PDF TypeScript Lane R (R41). Still open on the cell: BL-510's listing claim, the BC-05 'number 2.8' (581.paragraph, which the restore keeps as written in the replay), and the 52-minute compose (51 calls); a restore discarded for an item no restored unit holds remains all-or-nothing; the failed candidate (units, dispositions, README) is still not stored with the failure record, which is why this needed a one-hour local cascade"
     updated: "2026-11-20"
+
+  - id: BL-540
+    title: "A zero-call restore that returns the inherited opening paragraph AFTER the opening was authored leaves the authored opening restating it, the final deterministic review rejects the pair (duplicate_opening_paragraph), and the degrade had no flag for a deterministic finding"
+    type: defect
+    source: "owner rulings R9, R10, R14, R27, R36, R41, R44, R46; hosted Lane R refresh OCR .NET run 44775277577 (2026-11-20, main 72cba04, 20 provider calls, 1793 s): 'S9 settle round 1: judged, 2 blocking check(s) failing, 0 blocking finding(s)', 'repair start (0 defect(s))', 'degrade: nothing kept (0 flag(s) tried)', 'finding duplicate_opening_paragraph ... the opening unit restates the inherited preserved paragraph placed beside it', failure record refs/repository-presenter-state/failures/aspose-ocr-foss__Aspose.OCR-FOSS-for-.NET (class duplicate_opening_paragraph|authored_unit|the_q_unit_restates)"
+    priority: P0
+    status: active
+    implementation_path: "readme/validation/must_correct.duplicate_opening_flags (new, beside duplicate_flags) read by cascade._degrade_settled: a blocking duplicate_opening_paragraph finding is a degrade flag; _withhold_flagged refuses it as an opening (never dropped) and _opening_fact_true replaces the authored opening with the sentence the format facts state (the BL-220/BL-350 floor, written as an R14 record 'opening_fact_true'); the inherited paragraph is untouched; degrade_claims never omits an inherited unit for it. No new mechanism: the existing last-resort degrade, one more flag class."
+    acceptance: "(1) tests/readme/validation/test_degrade_restated_opening_bl540.py: the restated opening prints the format-facts sentence and the paragraph stays, with the degrade's own log line 'nothing kept (0 flag(s) tried)' reproduced when the flag is disabled; negative controls: an opening with new content, an opening that cites an inherited unit and facts that state no format are never touched; (2) recertify --all: every seal RECERTIFIED, no README byte changes; recertify --gate OK; (3) hosted (R41, not proven): OCR .NET Lane R refresh seals, or fails on a different finding"
+    evidence:
+      - "mechanism read from the log and the code: round 1 judged 0 blocking findings, so the loop's restore (require_clean_review=True) was refused when the restored pair carried the duplicate finding; the final restore (_restore_lost_content without require_clean_review) applied it; the degrade's flags (claim_flags, verdict_flags, duplicate_flags) all ignore a deterministic duplicate_opening_paragraph finding, so 0 flags were tried"
+      - "reproduced zero-call in tests: with duplicate_opening_flags disabled the degrade prints 'degrade: nothing kept (0 flag(s) tried)' exactly as the hosted log"
+    next_action: "supervisor integrates; hosted refresh of OCR .NET Lane R (R41)"
+    updated: "2026-11-20"
+
+  - id: BL-541
+    title: "A Java README that calls bean accessors 'properties' (the maintainers' own 'header properties getWidth(), getHeight(), getBitsPerChannel()') raised BC-14 three times, the restore that put the bullet back was rolled back for the new failure, and the BC-17 losses it answered stayed through three settle rounds (PSD Java: 'no LLM review was made')"
+    type: defect
+    source: "owner rulings R9, R10, R14, R27, R36, R41, R44, R46; hosted Lane R refresh PSD Java run 44775343067 (2026-11-20, source d808d1d, 26 provider calls): 'restore: 4 unit(s) restored but blocking still fails: BC-14 the README calls PsdImage.getWidth a property ...', then 'BC-17 inherited_unit:010.list holds api_identifiers getBitsPerChannel(), getCompression(), getChannelsCount()' x3 rounds, 'no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-17'; the maintainers' sentence is README.md line 52 of aspose-psd-foss/Aspose.PSD-FOSS-for-Java at d808d1d"
+    priority: P0
+    status: active
+    implementation_path: "readme/validation/surface_claims._bean_property (read by _list_findings, rule (n)): where the facts record a Java method whose name is a bean accessor (get/is/set plus a capital), the README word 'property' names it truthfully. Not applied to kind_true_text/_misnamed_kinds, so an authored Core API row is still rewritten as before (no sealed byte moves). Any other ecosystem (C# properties are a language construct), any other method name, and any other kind word keep the finding."
+    acceptance: "(1) tests/readme/validation/test_java_bean_property_bl541.py from the exact maintainers' bullet; negative controls (net, python, go; a non-accessor method; the word 'fields'); (2) recertify --all: every seal RECERTIFIED, no README byte changes; recertify --gate OK; (3) hosted (R41, not proven): PSD Java Lane R refresh restores 010.list and reaches the model review"
+    evidence:
+      - "the published sentence read from a shallow clone of the pinned source (d808d1d): 'reads the header properties `getWidth()`, `getHeight()`, `getBitsPerChannel()`, `getColorMode()`, `getCompression()` and `getChannelsCount()`'; the facts record each as member_kind method (stored PSD Java facts)"
+    next_action: "supervisor integrates; hosted refresh of PSD Java Lane R (R41); other Java cells that print 'properties' over accessors are covered by the same rule"
+    updated: "2026-11-20"
+
+  - id: BL-542
+    title: "The renderer's 'No required third-party package dependencies; in `pom.xml`, every <dependency> the POM declares is test, provided or optional' line is the dependency:none fact's own evidence but the derivation refused to clear a model flag on it ('no fact value in the line'), so PSD Java line 83 flagged in 4 of 4 audit samples with no stage able to change it"
+    type: defect
+    source: "owner rulings R10, R27, R36, R44, R46; docs/investigations/2026-11-20-pre-audit-sweep.md (branch investigate/bl520-pre-audit-sweep): 'Renderer requirements line | PSD Java 83 (4/4) ... renderer-owned, BL-430 cannot degrade it and the BL-400 clearance refuses it. Needs a class fix'"
+    priority: P0
+    status: active
+    implementation_path: "readme/composition/renderer.no_required_dependencies_line (the one function that words the line, used by _dependencies unchanged) and review/derivation.rederive_lane_r: the exact printed line, when the dependency:none fact is SUPPORTED and no required dependency is on record, gets the origin {renderer, fact_ids: [dependency:none]}, the BL-400 mechanism the opening's format sentence already uses; the existing conditions (every cited fact SUPPORTED, no claim detector or register row refutes it, no known-false class) still apply. No wording changes, so no certified README byte changes (R10)."
+    acceptance: "(1) tests/readme/review/test_dependency_none_clearance_bl542.py: the stored PSD Java facts' line is clearable and cites dependency:none; negative controls: any reworded clause, a non-SUPPORTED marker and a listed required dependency are never cleared; (2) recertify --all unchanged; (3) hosted/audit (R41, not proven): PSD Java Lane R no longer flags line 83 in fresh audit samples"
+    evidence:
+      - "reproduced zero-call on the stored PSD Java bundle: before, derivation kept line 83 with 'no fact value in the line'; after, the line is clearable and cites dependency:none"
+    next_action: "supervisor integrates; PSD Java still needs its refresh for the other findings (BL-541)"
+    updated: "2026-11-20"
+
+  - id: BL-543
+    title: "The maintainers' paragraph whose type count the renderer corrected to the facts' computation ('The library exposes 303 public types in total, listed below by module') is flagged unsupported_claim ('303' is in no fact value), the derivation neither owned the line nor accepted rows above the count, and the degrade cannot withhold a paragraph that carries API identifiers (BC-17 0 -> 3)"
+    type: defect
+    source: "owner rulings R9, R10, R14, R27, R36, R41, R44, R46; hosted Lane R refresh HTML Python run 44775079471 (2026-11-20, 51 provider calls, 3962 s): 'finding F01 [llm:factuality] section=api_reference: The library exposes 303 public types in total, listed below by module ...' (evidence 'in no SUPPORTED fact value and not in the original README: 303'), 'degrade: candidate discarded: adds failing check(s) [BC-17] blocking load 0 -> 3 is not lower' x2, 'degrade: nothing kept (1 flag(s) tried)'; failure record refs/repository-presenter-state/failures/aspose-html-foss__Aspose.HTML-FOSS-for-Python"
+    priority: P0
+    status: active
+    implementation_path: "review/derivation: (a) rederive_lane_r marks a printed row that is a kept inherited unit's text with renderer.correct_stated_type_counts applied (in the corrected unit, not in the original) as a deterministic correction {renderer, count_corrected}, recognised by recomputing the correction; (b) count_provenance holds a 'listed below' total to rows >= the count, as BC-14's _count_findings does (listed < stated), not rows == count (HTML: 517 member+type rows over 303 types); (c) review/clearances.derived_from_supported_facts and scripts/run_m9_auditor.apply_derivation clear a flag on a count-corrected line only when the flag states one of the line's counts (flag_is_about_count), so a flag on another statement of the same paragraph stays blocking."
+    acceptance: "(1) tests/readme/review/test_count_corrected_clearance_bl543.py (11): the exact paragraph shape cleared with the K05 provenance; negative controls: a flag on another statement, a count the facts do not compute, rows short of the total, a paragraph the renderer did not correct; listed-row boundaries 517/303/302/0 against 303; (2) recertify --all unchanged; (3) hosted (R41, not proven): HTML Python Lane R refresh passes this finding. Residual: the maintainers' 'listed below by module' is as strong as BC-14 holds it (rows reach the count), not a proof that every type has its own row"
+    evidence:
+      - "reproduced zero-call on the stored HTML Python bundle with inherited_unit:046 returned to VERIFIED_PRESERVE (the shape the hosted run printed): the line renders at 213, count_provenance returned None because 303 != 517 rows, and the line was not even derivable; after, line 213 and the Documentation line 820 are clearable with 'K05 verified: 303 public types = SUPPORTED class/enum public_symbol facts (302 classes + 1 enums = 303)'"
+      - "the degrade is correctly unable to help (R14): omitting the paragraph loses its identifiers (BC-17 0 -> 3), so the fix is the clearance, not another degrade"
+    next_action: "supervisor integrates; hosted refresh of HTML Python Lane R (R41); the compose of this cell took 3765 s (time-box 3000 s), a separate throughput class"
+    updated: "2026-11-20"

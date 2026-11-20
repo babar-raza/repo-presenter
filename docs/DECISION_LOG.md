@@ -8004,3 +8004,29 @@ twice (0.353, then 0.211 against 0.1) and the owner chose to keep the gate and m
 
 Backlog: BL-290, BL-511.
 
+
+## 2026-11-20: Four classes behind the first hosted refresh failures: restated opening after restore, bean "properties", the dependency:none line, the count-corrected paragraph (BL-540, BL-541, BL-542, BL-543, R46, R14, R10)
+Hosted refresh runs 44775277577 (OCR .NET), 44775079471 (HTML Python) and 44775343067 (PSD Java), each read from its log and
+failure record (artifacts were not reachable from the container; the pinned PSD Java source was cloned read-only and the stored
+bundles replayed zero-call). (A) OCR .NET: the loop's restore was refused because the restored inherited paragraph and the authored
+opening formed a blocking `duplicate_opening_paragraph`, 0 defects were repairable, the final restore applied it anyway, and the
+degrade had no flag for a deterministic finding (`nothing kept (0 flag(s) tried)`): the finding is now a degrade flag, answered by the
+existing BL-220/BL-350 fact-true opening (R14 record `opening_fact_true`), the maintainers' paragraph untouched. (B) HTML Python: the
+maintainers' paragraph prints with its type count corrected to the facts' 303; the model's F01 "303 is in no fact value" could not be
+cleared because the derivation neither owned a maintainers' line nor accepted 517 rows over a "listed below" total of 303 (BC-14 holds
+`listed < stated`; the derivation held `!=`), and the degrade is right to refuse omitting the paragraph (BC-17 0 -> 3, R14): the
+derivation now recognises the renderer's count correction by recomputing it, holds "listed below" to the same rows >= count as BC-14,
+and clears a flag only when it states the line's count (a flag on another statement of the paragraph stays blocking). (C) PSD Java: the
+maintainers' "header properties `getWidth()`, `getHeight()` ..." (published line 52) called Java getters properties; BC-14 read that
+as method-called-property, rolled the restore back, and the BC-17 losses stayed for three rounds: in Java a get/is/set accessor is a bean
+property, so the word is true for a Java method of that shape (any other ecosystem, name or kind word keeps the finding; the renderer's
+rewrite of an authored row is unchanged, so no sealed byte moves). Also (C): the renderer's "No required third-party package
+dependencies; in `pom.xml`, ..." line is the `dependency:none` fact's evidence word for word; its origin now cites the fact (the BL-400
+mechanism of the opening's format sentence), so the model flag on it, 4 of 4 audit samples on PSD Java line 83, is cleared with its
+proof. Chosen over rewording the clause because rewording changes the bytes of every Java/other seal carrying it (R10: only a refresh may);
+the clause's truth is the extractor's fact, unchanged. R9: no README wording is added or changed by any of the four. R10/R14: recertify
+before/after recorded in the backlog items. Not proven: all four are hosted-unproven (R41); HTML Python also spent 3765 s composing (the
+3000 s time-box), a separate class. Properties improved: robust and repeatable (a deterministic finding no longer ends a candidate the
+degrade can answer; a count the facts prove is cleared the same way on every sample), proven locally by zero-call tests with negative controls.
+
+Backlog: BL-540, BL-541, BL-542, BL-543
