@@ -366,11 +366,33 @@ def enterprise_provenance(rows: Sequence[str], number: int, facts: Any) -> str |
             f"({(enterprise.attributes or {}).get('level', 'platform')}-level target {enterprise.value}, SUPPORTED)")
 
 
+def not_thrown_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None:
+    """The verified basis of a ``| `Type` | Declared; not thrown by library code. |`` row (BL-390): the renderer
+    prints that constant only for a type a SUPPORTED ``implementation`` fact of aspect ``never_thrown`` says no
+    library code throws or constructs, so the K02 "behaviour claim" is the fact itself, stated back. ``None``
+    for any other line, a type with no such SUPPORTED fact, or a description that is not the constant."""
+    from repo_presenter.readme.validation.code_path_claims import NOT_THROWN_DESCRIPTION
+
+    match = _TYPE_TABLE_ROW.match(rows[number - 1])
+    if match is None or not rows[number - 1].rstrip().endswith(f"| {NOT_THROWN_DESCRIPTION} |"):
+        return None
+    name = rows[number - 1].split("|")[1].strip().strip("`")
+    for fact in getattr(facts, "facts", ()):
+        attributes = fact.attributes or {}
+        if (fact.kind == "implementation" and fact.polarity == "SUPPORTED"
+                and attributes.get("aspect") == "never_thrown"
+                and str(attributes.get("type") or "").rsplit(".", 1)[-1] == name.rsplit(".", 1)[-1]):
+            return f"K02 verified: {fact.id} (SUPPORTED, never_thrown) states: {fact.value}"
+    return None
+
+
 def class_provenance(label: str, rows: Sequence[str], number: int, facts: Any) -> str | None:
     if label.startswith("K05"):
         return count_provenance(rows, number, facts)
     if label.startswith("K10"):
         return enterprise_provenance(rows, number, facts)
+    if label.startswith("K02"):
+        return not_thrown_provenance(rows, number, facts)
     return None
 
 
@@ -649,6 +671,18 @@ def rederived_readme(
         if tag == "equal":
             for j in range(j1, j2):
                 origins[j] = {"source": "renderer"}
+    # BL-390: a Core API row whose authored sentence the renderer REPLACED with the fact-true
+    # ``NOT_THROWN_DESCRIPTION`` (``renderer._not_thrown_marked``: a type no library code throws) differs from
+    # the sentinel render (the sentinel is not a "thrown when" clause, so it is kept) and was labelled
+    # authored, so a model "contradiction" on it could never be cleared (Aspose.Note Python line 301, round
+    # 44588173276: "Declared; not thrown by library code." against SUPPORTED never_thrown fact). Only the
+    # renderer can print that constant, from that fact, so the row is the renderer's whatever the author wrote.
+    from repo_presenter.readme.validation.code_path_claims import NOT_THROWN_DESCRIPTION
+
+    for j, row in enumerate(full.splitlines()):
+        match = _TYPE_TABLE_ROW.match(row)
+        if match and row.rstrip().endswith(f"| {NOT_THROWN_DESCRIPTION} |"):
+            origins[j] = {"source": "renderer"}
     return Rederived(full, tuple(origins))
 
 

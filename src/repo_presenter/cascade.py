@@ -1256,11 +1256,19 @@ def _degrade_settled(
         if result[0] == composed.readme:
             # A flag that prints nowhere (or a lever that changed no printed byte) buys nothing and
             # would only spend a model re-review on the same README (BL-350).
+            print("degrade: candidate discarded: no printed byte changed", file=sys.stderr)
             return False, None
         ids, load = _blocking_load(result[4], result[5])
         # Strictly fewer blocking failures; or, when the deterministic gates were already clean
         # and only the model reviewer objected, no new one (its verdict is then asked afresh).
         better = load < old_load if old_load else load == 0
+        if not (ids <= old_ids and better):
+            print(
+                "degrade: candidate discarded: "
+                + (f"adds failing check(s) {sorted(ids - old_ids)}" if not ids <= old_ids else "")
+                + (f"blocking load {old_load} -> {load} is not lower" if not better else ""),
+                file=sys.stderr,
+            )
         return ids <= old_ids and better, (degraded, *result)
 
     accepted: Any = None
@@ -1283,6 +1291,7 @@ def _degrade_settled(
                 chosen.append(flag)
                 accepted = result
     if accepted is None:
+        print(f"degrade: nothing kept ({len(flags)} flag(s) tried)", file=sys.stderr)
         return None
     degraded, readme, tasks, accounted, dispositions, validation, new_verdict = accepted
     write_dispositions(dispositions, out_dir / "dispositions.json")

@@ -7435,3 +7435,71 @@ happens, and whether the cut is the model's reasoning or a long section (the nar
 say which).
 
 Backlog: BL-370
+
+## 2026-11-20: Hosted M9 round 44588173276 failed its false-flag gate (6 of 17 controls): classified, two producer gaps closed, the rest left for hosted evidence (BL-390)
+
+**Facts.** Seed run 44588173276 (main 9476c1b): 56 candidates (34 Lane L, 22 Lane R), 192 findings, seeded recall 1.0
+(39 of 39), false-flag rate 6/17 = 0.353 > 0.1, `batch_passed False`, so no candidate was accepted (Lane R independently
+accepted stays 1 of 40; R44 needs 34). The six flagged controls are all Lane R: HTML Python 22 findings, Note Python 15,
+Email C++ 10, Cells TypeScript 5, OCR .NET 3, Cells Java 2. Cells C++ (2) and Cells Rust (1) only had findings the auditor
+had already cleared as `supported` and are not counted (the scorer is correct). The five Lane L controls had no finding.
+The audited bytes of all 12 Lane R controls were recovered from the state refs (SHA-256 equal to the acceptance records),
+and each review packet was rebuilt offline with `planned_requests` for the seal-time scope and the audit scope (zero calls).
+
+**Classification of the 192 findings.**
+
+| Class | n | Where | Cause |
+|---|---|---|---|
+| Seeded copies, deterministic | 76 | 18 claim-detector contradictions (13 L, 5 R), 58 `m9_underived_line` (31 L, 27 R) | the seeds, by design; all 39 seeds matched |
+| Seeded copies, model | 51 | 15 L, 36 R (12 cleared as supported) | cannot be split into seed line and other line without the encrypted manifest |
+| Control, K1 stale review of changed bytes | 27 | HTML Python 22, Cells TypeScript 5: authored `type:` API rows (22), key capability bullets and opening (5) | sealed 2026-10-30 and 2026-11-01 under reviewer prompt v17 / logic 6, re-certified 2026-11-18 with zero calls and `readme_changed` true: the model never saw the audited bytes and the reviewer is older than the audit's (v21 / logic 10) |
+| Control, K2 rows never shown to the production review | 15 | Note Python: 13 authored `type:` rows of types with a signature and no docstring, plus 2 `contradiction` flags | `scope.authored_type_rows` skipped every type with a signature although `authoring.undocumented_types` writes and the renderer prints a sentence for it: the seal-time review (66 lines) showed none of the 15 rows, the audit shows every row. Of the 2 flags, line 301 is the renderer's own fact-true row `Declared; not thrown by library code.` (SUPPORTED `never_thrown` fact), mislabelled authored by the auditor's sentinel re-derivation so it could not be cleared; line 312 is an authored sentence ("IsReadOnly always returns False") that a SUPPORTED `constant_return` fact states, a model error |
+| Control, K3 same review, same bytes, flagged at audit | 15 | Email C++ 10 (authored enum/class rows), OCR 3 (capability bullets and the Enterprise link line), Cells Java 2 (opening, capability) | reviewed at seal with v21 / logic 10 on the same bytes (`readme_changed` false); the flagged lines are in both scopes, the packets carry the same cited facts, and the auditor's own evidence says every distinctive term is in a SUPPORTED fact. No structural difference found; consistent with reviewer variance across packets that differ in unit grouping, the audit note and heading lines |
+| Control, cleared | 8 | renderer lines (type counts, NuGet name, requirements) | already `supported`, correctly not counted |
+
+By origin, all 55 `unverifiable` control findings sit on text a model authored (32 authored `type:` rows with the type facts in
+the packet, 15 Note rows, 7 key capabilities, 2 openings, 1 scope line); none is on a deterministic renderer line or on
+maintainer-attributed text. By groundedness: the flagged rows are mostly derivable (Email C++ rows list members the facts
+carry; Cells Java's "no external runtime dependencies" is `dependency:none`; OCR's frameworks are `package:target_framework`);
+HTML rows such as "Crypto class provides cryptographic functionality" restate the name with domain knowledge and no fact.
+
+**Decision.** (1) `scope.authored_type_rows`/`authored_table_lines` now follow the producer's rule (a SUPPORTED class or enum
+with no docstring is authored, signature or not) and exclude the renderer's own rows (`Public <kind>.`, ``Defined as `<signature>`.``,
+`NOT_THROWN_DESCRIPTION`): the production Lane R review shows the same API rows the audit shows, and
+`run_acceptance_writer.derived_lines` no longer counts them as renderer-derived. Property improved: reliable and repeatable
+(seal gate and audit judge the same lines); measured (offline, the 12 stored seals): flagged lines outside the seal-time review scope 15 (all Note) to 1 (line 301, the renderer's own row, which change (2) clears).
+(2) The auditor labels a row printing `NOT_THROWN_DESCRIPTION` as the renderer's and verifies the K02 behaviour class by a
+SUPPORTED `never_thrown` implementation fact for that type (`not_thrown_provenance`, recorded in the cleared row), so a model
+flag on the renderer's own fact-true row is `supported`, not a false flag: Note line 301. Measured: the exact row is clearable,
+authored sentences are never cleared (negative control). (3) Not done, with evidence: a fact-grounding rule that falls back
+authored rows (it replaces 97% of authored rows for a 2.5% hit rate, a render-all that R43(4) excludes, and fails checklist item 13);
+excluding stale-review seals from control slots (it would hide the signal and read as selecting easy controls); changing the
+gate (pre-registered, an owner decision). Expected false-flag rate after these changes without provider calls: 6/17 unchanged
+(Note keeps 14 flagged rows until the production review sees them, K1 and K3 cells are untouched), i.e. no zero-call fix
+moves the rate; what moves it is hosted (BL-390 acceptance (3), (4)). R14: nothing is dropped from any README. R10: no seal
+is touched; recertify before and after are identical.
+
+**What a hosted re-run must show.** A fresh audit of the same 12 Lane R controls: Note line 301 `supported`; a same-bytes
+repeat audit of the same 12 controls (calls) whose flagged line sets overlap: a low overlap means the flags are reviewer variance on
+unclearable `unsupported_claim` findings (an owner decision about the gate, not taken), a high overlap means weak rows to fix
+at their origin; the K1 seals re-reviewed by the current reviewer through the production review.
+
+Backlog: BL-390
+
+## 2026-11-20: Owner decisions on the audit gate and the Sunday deliverable; pass 4 result; degrade diagnostics
+
+Owner (interactive form, 2026-11-20): (1) audit gate: keep it, no threshold change; merge the BL-390 scope fix, re-review
+the seals an older reviewer sealed, and run a same-bytes repeat audit to measure how much of the flagging is reviewer
+variance before deciding the gate; (2) Sunday 2026-11-22 deliverable: deploy every component on GitHub Actions and report
+the real numbers against the 85% bar; the bar is not lowered; no upstream PRs until both lanes pass (R15).
+Frozen-code pass 4 (main `7f39a29`, BL-330 to BL-370 merged): 24 of 40 Lane R cells hold a seal and recertify (pass 1: 21,
+pass 3: 23); one new seal (PDF C++); 17 of 40 job successes; 16 cells unsealed. Hosted logs show the BL-350 degrade fires
+on OMR (`printed_text_withheld`) yet the candidate is rejected again with the same finding and no re-review follows, and
+every provider call count is 0 (stored outputs replay), so the reason a degraded candidate is discarded was invisible.
+`cascade._degrade_settled` now prints why a candidate is discarded (no printed byte changed, a new failing check, or a
+blocking load that is not lower) and when nothing is kept, so the next targeted hosted re-run of the stuck cells (OMR,
+Slides C++, Font, PDF .NET, Page, PSD Python) can be diagnosed from the log. Independent acceptance is the other gate:
+the 2026-11-19 audit round accepted nothing (false-flag rate 0.353 over 17 controls, limit 0.1).
+
+Backlog: BL-290, BL-350, BL-390.
+

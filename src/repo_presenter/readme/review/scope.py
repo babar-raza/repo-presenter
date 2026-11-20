@@ -117,14 +117,36 @@ def _table_data_row(rows: list[str], index: int) -> bool:
 def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
     """The 1-based numbers of the API reference table rows whose description an author wrote.
 
-    The renderer prints the Core API table from facts, but a type with no docstring and no
-    signature gets the sentence authored for it in a bounded batch (``renderer._symbol_description``:
-    the ``type:<fact id>`` unit). That sentence is an author's claim like any other, and iteration 4
-    of the calibration found real unsupported claims in exactly such cells (own Cells C++, own HTML
-    Python), which the reviewer was never shown. Structural, like ``reviewable_lines``: a row is
-    authored when its type is a SUPPORTED class or enum with neither a docstring nor a signature and
-    its description is not the renderer's ``Public <kind>.`` fallback."""
+    The renderer prints the Core API table from facts, but a type with no docstring gets the
+    sentence authored for it in a bounded batch (``authoring.undocumented_types`` /
+    ``renderer._symbol_description``: the ``type:<fact id>`` unit). That sentence is an author's
+    claim like any other, and iteration 4 of the calibration found real unsupported claims in
+    exactly such cells (own Cells C++, own HTML Python), which the reviewer was never shown.
+    Structural, like ``reviewable_lines``: a row is authored when its type is a SUPPORTED class or
+    enum with no docstring and its description is not one of the renderer's own fact-true rows
+    (``renderer_row_descriptions``).
+
+    BL-390: a type that also carries a ``signature`` is just as authored (the batch is written
+    for every undocumented type and the renderer prints its sentence before it falls back to
+    the signature), but this function skipped it, so the production review never showed
+    Aspose.Note Python's 15 authored rows and the M9 audit, which shows every row, flagged 14 of
+    them (hosted round 44588173276). The rule now matches the producer's."""
     return frozenset(authored_type_rows(readme, facts))
+
+
+def renderer_row_descriptions(fact: Fact) -> frozenset[str]:
+    """Every description the renderer prints for ``fact``'s Core API row without an author's
+    sentence: the ``Public <kind>.`` label, ``Defined as `<signature>`.`` for a type with a
+    signature (``renderer._described``), and the fact-true row it substitutes for a type no library
+    code throws (``code_path_claims.NOT_THROWN_DESCRIPTION``). None of them is an author's claim."""
+    from repo_presenter.readme.validation.code_path_claims import NOT_THROWN_DESCRIPTION
+
+    attributes = fact.attributes or {}
+    out = {f"Public {attributes.get('symbol_kind', 'symbol')}.", NOT_THROWN_DESCRIPTION}
+    signature = attributes.get("signature")
+    if signature:
+        out.add(f"Defined as `{signature.replace('|', '/').replace(chr(96), '')}`.")
+    return frozenset(out)
 
 
 def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
@@ -134,17 +156,17 @@ def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
 
     names = api_reference_names(facts)
     authored_types: dict[str, Fact] = {}
-    fallbacks: dict[str, str] = {}
+    fallbacks: dict[str, frozenset[str]] = {}
     for fact in facts.by_kind("public_symbol"):
         attributes = fact.attributes or {}
         kind = attributes.get("symbol_kind")
         if fact.polarity != "SUPPORTED" or kind not in {"class", "enum"}:
             continue
-        if attributes.get("docstring") or attributes.get("signature"):
+        if attributes.get("docstring"):
             continue
         name = names.get(fact.value, fact.value.rsplit(".", 1)[-1])
         authored_types.setdefault(name, fact)
-        fallbacks[name] = f"Public {kind}."
+        fallbacks[name] = renderer_row_descriptions(fact)
     if not authored_types:
         return {}
     owners = section_lines(readme)
@@ -156,7 +178,7 @@ def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
         if match is None or match.group(1) not in authored_types:
             continue
         description = match.group(2).strip()
-        if description and description != fallbacks[match.group(1)]:
+        if description and description not in fallbacks[match.group(1)]:
             found[number] = authored_types[match.group(1)]
     return found
 
