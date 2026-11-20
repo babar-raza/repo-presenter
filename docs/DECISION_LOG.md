@@ -7839,3 +7839,34 @@ whose reviewer faults the Enterprise sentence itself, or whose clause is in a un
 not reached.
 
 Backlog: BL-480
+
+## 2026-11-20: A rejection that names a nested inherited unit reaches the bounded asks and the last-ask settle (BL-490, R14, R36, R46, R27)
+
+Hosted run 44701825510 (PDF TypeScript Lane R, main f99c724) passed the context overflow (BL-450) and then died in the first model job
+S4 `source_reconciliation`: `inherited_unit:014.002.list: uncited_prose_omit: OMIT_UNSUPPORTED on a list needs at least one fact ID ...`
+after "output rejected twice". The model had omitted the maintainers' feature list (Hyphenation, ...) with no citing fact; the check
+names two levers (cite a fact, or place the unit). BL-420's last-ask settle already keeps such a unit as written, so the question was
+why it did not run. Zero provider calls: from the printed rejection and unit the offline reproduction shows the cause is not the lever
+but the unit id. `_UNIT_ERROR` read `inherited_unit:\d+\.[a-z_]+` (one numeric segment), so the line naming `014.002.list` matched
+nothing, `_rejected_unit_ids` returned `[]` (its documented exit for "a defect no narrowed ask can address"), and neither the
+third, narrowed ask nor `_settle_unresolved` (which runs in that ask's merge) was ever made; "rejected twice", not three times,
+is that signature. The pattern now reads `\d+(?:\.\d+)*` (the shape `failures._UNIT_ID` and `repair/restore_units` already read).
+Nothing else moves: with the unit named, the existing bounded ask is made and, if it is still refused, the existing settle keeps it as
+written (VERIFIED_PRESERVE for a code block or a unit citing only SUPPORTED facts, else PRESERVE_ATTRIBUTED) into the nearest holdable
+section with the R14 rationale; it fails closed for a unit with no holdable home, a contradicted code unit, a unit citing a CONTRADICTED
+fact, shell-rendered kinds and units not asked about (R14: never dropped on no evidence; R9: attribution stays internal).
+
+Every refusal of S4 whose message names a lever was enumerated by first principles. Settled by keeping the unit (already in
+`_settle_unresolved`, now reachable for nested ids): `uncited_prose_omit`, the supported-omission kinds, `uncited_redundant_defer`,
+`uncovered_supersession`, a command block omitted while build facts exist. Not a settle case: a placing disposition with a destination
+the shell cannot hold (re-homed by `normalize` before the checks). Left refused on purpose, because "keep it as written" is not the
+safe lever there: `uncited_redundant_diagram` (keeping the diagram duplicates the renderer's own), `unprinted_command` (the model
+corrected or rewrote a code block; keeping the original could print a command the evidence refutes), `dangling_pointer` (needs a
+neighbouring unit kept too). PDF Go's S4 failure (`dispositions[n].fact_ids[n]` schema rejection, runs 44313168971, 44366309808) is a
+different shape (a cited fact id the schema does not accept), not a named-lever refusal, and is not changed. Class size: 1 of 51
+cells in pass 5 (PDF TypeScript), 0 in pass 4; any README with a list or table under a numbered subheading is in the same position.
+Property improved: robust (a rejection reaches the bounded ask whatever its unit's depth), measured by
+tests/readme/reconciliation/test_s4_nested_unit_named_lever_bl490.py (11 tests, 5 fail on origin/main).
+Not proven: the hosted outcome (R41); the next S4 rejection may be a different class.
+
+Backlog: BL-490
