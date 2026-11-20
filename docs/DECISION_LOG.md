@@ -7568,3 +7568,63 @@ fixed. Hosted re-run of Slides C++ is the proof (R41, unproven). R9: no README w
 R10: no seal touched. R14: nothing dropped, the change only keeps content.
 
 Backlog: BL-420
+
+
+## 2026-11-20: BL-430 -- the audit's false flags are a packet effect: a Lane R seal now also needs one clean sample of the audit's packet
+
+**Facts.** Round 1 (44588173276): 6 of 17 controls flagged (0.353); round 2 (44656899884, seed 44656297985, after BL-390): 4 of 19
+(0.211); limit 0.1, seeded recall 1.0 and 0.974. Every flagged control is Lane R and every flag is a blocking model finding on a line
+an author wrote, graded `unverifiable`. The owner kept the gate and its thresholds and asked how much of the flagging is reviewer
+variance. Hypothesis tested: a seal rests on one sample at seal time, the audit draws a fresh sample, and weak lines survive one
+but not the other. Measured with live calls (fresh call store per sample, 25 Lane R controls of both rounds rebuilt from the state
+refs; every seal-time request hash recomputed offline and compared with the stored seal).
+
+**Classification of the 85 flagged lines (57 round 1, 28 round 2, 9 controls).**
+
+| Class | n | Where | What separates them |
+|---|---|---|---|
+| Reviewed at seal on the audited bytes and packet (request hashes equal), flagged again by the audit | 43 | Round 2: BarCode Python 19, OCR .NET 4, PDF C++ 1, PSD Java 4; round 1: Email C++ 10, OCR .NET 3, Cells Java 2 | authored lines: 38 of 43 are `api_reference` rows (30: BarCode 18 type rows, Email C++ 10) or `key_capabilities` bullets (8); the audit's own evidence says every distinctive term of the line is in a SUPPORTED fact (36 of 43) or it has none (7, e.g. 'enabling use across modern and legacy .NET applications'); the same sections hold about 2,300 other authored lines of these controls that no audit flagged, so section, kind and fact support do not separate them |
+| Stale or never-shown review (BL-390 K1/K2) | 42 | round 1: HTML Python 22, Note Python 15, Cells TypeScript 5 | the sealed bytes were never reviewed by the current reviewer, or the production review did not show the rows; BL-390 closed the scope gap, the bytes stay until re-run |
+| of which, renderer-owned lines the clearance cannot prove | 3 | PSD Java 83 (`dependency:none` clause, 'no fact value in the line'), BarCode 186 (K02 'not implemented'), Note 301 (fixed in BL-390) | each sits beside authored flags in the same control; left open |
+| of which, a quality finding on the renderer's Enterprise sentence joined to the licence | 2 (one per OCR round) | OCR 261 | BL-350's class; not clearable, not degradable by the claim flags |
+
+**Repeatability.** Of the 41 authored lines the audit flagged on the five reproduced controls (OCR, PSD Java, BarCode, PDF C++,
+Email C++), 37 were flagged again in at least one of 3 to 4 fresh audit-packet samples and 29 in at least half (OCR lines 50 and 51 in
+3 of 4 and in both audit rounds, PSD Java line 50 in 4 of 4, Email C++ 147/148/150 in 3 of 3, BarCode 17 of 18 rows in 4 of 4);
+Cells Java's two round-1 lines in none of 4 (sample-dependent). The same lines under the production packet: OCR 0 of 5 samples,
+PSD Java 0 of 5, PDF C++ 0 of 1, BarCode 2 of 2 (rows 195, 199, 225, 227; the stored seal had accepted). A whole-document review
+without the audit's headings and note flags neither OCR 50/51 nor PSD 49 to 51, and neither does the production packet with the
+headings and note: only the audit packet does, so the cause is the request, not the draw. The hypothesis is therefore false for most
+lines and true for a few (Cells Java; Words .NET and Cells C++ in 1 of 3 samples each); the false-flag rate has a systematic part (the
+same lines, every time, accepted at seal) and a small random part (3 of 45 samples on clean controls).
+
+**Decision.** Smallest sound class fix inside existing components, with the audit gate, thresholds, verdict mapping and the
+reviewer prompt untouched: after every production ACCEPT in the S10 loop and after the BL-240 degrade, the cascade asks the same
+reviewer, prompt, contract and call store once more over the audit's packet (`review_with_model(audit=True, rendered=False)`, only the
+units that hold author-written lines, each request exactly the audit's), and `llm_review.merge_second_sample` takes the union: a
+blocking finding of either sample on a line the production review reads blocks (ids `S2-`, units `s2-` marked `sample` in the
+existing `unit_reviews`); a finding on a heading, navigation, install or licence line is not counted (no repair or degrade can change
+renderer text, and the audit's derivation owns it). The existing repair rounds and the BL-240 degrade take the union findings, so a
+sealed candidate has a clean audit-packet sample on its exact bytes. A rejected production verdict is never sampled again; a clean
+second sample changes no byte of the verdict but its unit records; the sample is skipped once the BL-270 time-box has passed. Property
+improved: repeatable and independently accepted (the seal gate and the audit judge the same packet). Measured: after one clean
+audit-packet sample another sample flags a control in 8 of 112 pairs against 20 of 67 unconditionally; on the stored OCR and PSD Java
+candidates with the flagged lines withheld, a fresh audit sample finds only OCR line 261 and PSD line 83 (the two classes above).
+Cost: audit-packet units holding authored lines 201 against 113 production units over 23 cells (median 5 against 4), one more review
+per review round, which R45 lets through. R10: no existing seal is touched (the change never reads one), so a third audit round drawing
+the old seals measures nothing new; the hosted re-run of the flagged cells under this code is the refresh, a separate zero-seal-change
+refresh path would need a new write path into sealed bundles and a rule for a rejecting refresh (R10 forbids demoting), not small, not
+built (R27), and not needed by round 2 (all four flagged controls had been reviewed at seal by the current reviewer). R14: the degrade's
+existing R14 records; R9: no wording moves.
+
+**Not fixed, said plainly.** The random part: a clean control is flagged in about 4 to 7 percent of fresh samples whatever is done at
+seal, so a round of 19 controls passes the gate (at most one flag) with probability about 0.6 to 0.8: the gate is knife-edge and its
+variance is the owner's. A second audit-packet sample of the same bytes is the store's replay (no re-roll), so a further sample needs a
+further, different packet; not built. PSD Java line 83, BarCode row 186 and OCR line 261 are separate classes.
+
+**What a hosted re-run and a third audit round must show.** A targeted Lane R re-run of OCR .NET, PSD Java, BarCode Python, PDF C++
+and Email C++: each seals with `s2-` records in `review_verdict.json` and without the lines above, or fails on named `S2-` findings.
+Then a third audit round over seals made by this code (same bytes sampled again in the audit): false-flag rate against 0.1, flagged
+lines compared with this table (a repeat of the same line after a clean seal-time audit-packet sample would falsify the fix).
+
+Backlog: BL-430
