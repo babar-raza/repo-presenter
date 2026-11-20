@@ -7935,3 +7935,72 @@ could clear no longer ends the cell), measured by tests/readme/composition/test_
 "list only 3"). Not proven: the hosted outcome (R41); PDF TypeScript still carries the BC-17/BC-05 losses of BL-511.
 
 Backlog: BL-510
+
+## 2026-11-20: A restored lead-in no longer drags its example fence out of the examples renderer, and a restored unit that is itself a new loss is rolled back alone (BL-511, R46, R14)
+
+PDF TypeScript Lane R (hosted run 44717025933, 10:10Z; again run 44745502021 on main 30b9e9a) ends REJECT with 102 and then
+78 BC-17 `technical_content` losses, 56 to 66 of them from one maintainers' member table (`528.table`, 47 KB) and the rest from
+the other kept member tables and three framing paragraphs. Root cause, found by a zero-call replay of the cell's own composition
+(facts extracted locally from the pinned clone, one cascade run of 63 calls, then the cached call store replayed twice, once
+with the code of origin/main and once with the fix; same store, same state, zero provider calls both):
+
+1. The 102 losses are restorable. Before the restore the candidate loses 107 BC-17 items (replay) because S4 filed the tables
+   `VERIFIED_REWRITE` into `api_reference` (the rewrite does not print their identifiers) and the framing paragraphs
+   `SUPERSEDE_REDUNDANT`. The restore chooses the fewest carriers (5 units in the replay, 12 and 15 on hosted), re-dispositions
+   them to kept-as-written, and the re-judged candidate drops from 107 to 2 BC-17 items. There is no cap (`RESTORE_ROUNDS` is
+   10 and every carrier is chosen in round 1) and the time-box is not involved: the restore ran 11:06:24 to 11:08:12 on hosted,
+   after the box, because `run_cascade` calls it after `_settle_s9` whatever the clock says (only the in-loop restore, which
+   needs a clean review before it returns, is skipped once the box has expired).
+2. The restore is then thrown away whole. `restore_units._with_lead_in_payloads` keeps a colon-ending lead-in together with the
+   block it introduces (BC-07 "dangling colon"). Three of the framing paragraphs are such lead-ins, and their payloads are
+   example fences (`241`, `304`, `410`; `245`, `308`, `414` on the second run). An example fence is printed by the examples
+   renderer while its unit stays `SUPERSEDE_REDUNDANT` citing the example fact (`retained_examples`, "reprinted verbatim with a
+   not-verified note"); re-dispositioned to kept-as-written it becomes `placement`'s "owned elsewhere" and prints nothing. Each is
+   a NEW BC-17 `code_blocks` loss, `_strictly_fewer_failures` refuses any restorable item the candidate did not already lose, and
+   `discarded()` returns the pre-restore candidate: 119 cleared losses forfeited for 1 to 3 new ones. The log line "restore: N
+   unit(s) restored but blocking still fails: BC-17 ...241.code_block..." is that state; the failure record shows the pre-restore
+   findings. A second hosted run of the same cell (44745502021) shows the identical signature.
+
+Decisions, each inside an existing component (R27):
+
+- `restore_units._with_lead_in_payloads` does not pull a payload that `placement` never prints (`owned_elsewhere`: an example fence
+  of the ecosystem or a diagram; the same `renders_verbatim` the placement uses). The lead-in is kept as written; its example stays
+  with the examples renderer exactly as S4 recorded it (disposition, citation and rationale unchanged, R14). A payload placement
+  does print is still restored with its lead-in.
+- `cascade._restore_lost_content` attributes a NEW restorable item to the restored unit that holds it (`_new_loss_units`, the
+  restorable-check twin of `_new_failure_units`) and rolls that unit back alone, recorded in `restored_units.json` as
+  `skipped_for_pointer` with reason `new_failure:BC-17`, so its loss goes on to the model repair (never withheld as "a restore's to
+  answer") and one bad unit cannot discard the clean restores of the others. A new item no restored unit holds still discards the
+  restore, as before. The existing observation line also fires when a restore is discarded (stderr only).
+- The time-box is unchanged: it bounds repair rounds that cost provider calls; the zero-call restore already runs after it.
+
+Replay, same call store, zero calls: origin/main restores 5 units and discards them (BC-17 107 -> 2 with 241.code_block new,
+`same candidate` returned); the fix restores 4 units and keeps them (BC-17 107 -> 1, the one left is a shields.io contributors badge
+whose link a container without network cannot check). `recertify --all --json --remote origin` is byte-identical before and after on
+all 64 rows (Lane L 34, Lane R 30, all RECERTIFIED); no sealed README changes bytes (R10). The fix changes nothing for a candidate
+the restore is not run on. Class size: 21 of the 30 stored Lane R seals hold at least one colon-ending lead-in whose payload is an
+example fence and whose lead-in is not kept as written (25 hold at least one such pair), so the shape is common and a restore that
+chooses such a lead-in on any of them met it; of the 51 stored failure records 6 hold BC-17 and the signature "restored payload is a
+new `code_blocks` loss" is certain on 2 (PDF TypeScript, both runs); the other five cells' restore lines are different shapes (PSD
+Java `010.list` identifiers, Slides .NET `083.list` links, PDF Go `025.paragraph` dangling pointer, TeX Python status badge, Words
+Python BC-04) and are not claimed. R9: no README wording is added or changed. R14: nothing is dropped; the only change to kept
+content is that an example the README printed stays printed and a table whose identifiers were lost is kept as written, each
+recorded as the restore's `{unit_id, was, now}`. Properties improved: reliable and universal (a huge README no longer forfeits a
+whole restore for one unit), repeatable (the same candidate gives the same restore). Not proven: the hosted outcome (R41); the
+cell may still fail on BL-510's claim, the `2.8` BC-05 or the 52-minute compose; a restore discarded for an item no restored unit
+holds is still all-or-nothing.
+
+Backlog: BL-511
+
+## 2026-11-20: Supervisor stop at a safe checkpoint (owner request) and progress report
+
+The owner asked for a stop at a safe checkpoint with an overall progress report once all in-flight work was done.
+Frozen-code hosted pass 6 (main `30b9e9a`): 30 of 40 Lane R cells seal and recertify (pass 1: 21; pass 3: 23; pass 4:
+24; pass 5: 26), Lane L 34 of 34, no seal lost. BL-511 (a restore no longer drags an example fence out of the
+examples renderer, and a restored unit that is itself a new loss is rolled back alone) is merged with this entry. Full
+report: `docs/PROGRESS_2026-11-20.md`. State left: planner off (`scheduled_execution_authorized=false`), watcher
+disabled, no worker or run request in flight; independent Lane R acceptance is 1 of 40 because the audit gate failed
+twice (0.353, then 0.211 against 0.1) and the owner chose to keep the gate and measure variance.
+
+Backlog: BL-290, BL-511.
+

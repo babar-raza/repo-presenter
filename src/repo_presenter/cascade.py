@@ -958,6 +958,32 @@ def _new_failure_units(
     return offenders
 
 
+def _new_loss_units(
+    old: list[dict[str, Any]], new: list[dict[str, Any]], restored: set[str]
+) -> dict[str, str]:
+    """``{unit_id: check id}`` for every restored unit a RESTORABLE check (BC-05/BC-08/BC-17) now
+    names for an item the pre-restore candidate did not lose: the restore itself took the unit out
+    of what the README printed. ``_strictly_fewer_failures`` refuses any new restorable item, so
+    without this attribution one such unit discarded the whole restore (BL-511)."""
+    before = {
+        (str(check["id"]), str(detail))
+        for check in old if str(check["id"]) in RESTORABLE_CHECKS
+        for detail in check.get("details") or []
+    }
+    offenders: dict[str, str] = {}
+    for check in new:
+        check_id = str(check["id"])
+        if check_id not in RESTORABLE_CHECKS:
+            continue
+        for detail in check.get("details") or []:
+            if (check_id, str(detail)) in before:
+                continue
+            for unit in failing_unit_ids([f"{check_id}: {detail}"], checks=(check_id,)):
+                if unit in restored:
+                    offenders.setdefault(unit, check_id)
+    return offenders
+
+
 def _new_unattributed(old: list[dict[str, Any]], new: list[dict[str, Any]]) -> set[tuple[str, str]]:
     """The non-restorable ``(check id, detail)`` failures of ``new`` that ``old`` did not have and
     that name no unit."""
@@ -1146,6 +1172,15 @@ def _restore_lost_content(
                 blocking_failures(settled.validation), failing,
                 {change["unit_id"] for change in restored},
             )
+            # BL-511: a restored unit that is itself a loss the pre-restore candidate did not have
+            # (its restore took it out of the one place that printed it) is rolled back alone, the
+            # same way, so one such unit no longer discards every other unit's clean restore with it
+            # (hosted PDF TypeScript: three such units threw away 102 recoverable losses).
+            for unit, check in _new_loss_units(
+                blocking_failures(settled.validation), failing,
+                {change["unit_id"] for change in restored},
+            ).items():
+                offenders.setdefault(unit, check)
             if not offenders:
                 # A new failure no failure record attributes to a unit (BC-07's "expected one badge
                 # row; found 5" when a kept unit prints badge lines above the first heading, BC-06 on
@@ -1198,6 +1233,14 @@ def _restore_lost_content(
         if not _strictly_fewer_failures(blocking_failures(settled.validation), failing) or len(
             verdict.blocking_findings
         ) > len(settled.verdict.blocking_findings):
+            # Observation only (BL-511): a discarded restore used to leave no trace in the log, so the
+            # losses it would have cleared looked like losses no restore could answer.
+            print(
+                f"restore: {len(restored)} unit(s) restored but discarded, not a strict improvement: "
+                f"blocking details {sum(len(c.get('details') or []) for c in blocking_failures(settled.validation))}"
+                f" -> {sum(len(c.get('details') or []) for c in failing)}",
+                file=sys.stderr,
+            )
             return discarded()
     elif require_clean_review and verdict.blocking_findings:
         return settled  # the S9 loop still has review defects to repair; write nothing yet

@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 ....................................................                     [100%]
-52 passed in 5.32s
+52 passed in 8.31s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 ....................................................                     [100%]
-52 passed in 11.61s
+52 passed in 7.99s
 
 --- stderr ---
 
@@ -21,12 +21,12 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 mutated: M src/repo_presenter/cascade.py
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
-F....FFF..FF........................................                     [100%]
+F....FFF..FF.................F.F.F..................                     [100%]
 =================================== FAILURES ===================================
 _ test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1203/test_a_candidate_that_loses_on0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9ff9ec40>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_candidate_that_loses_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3e7be10>
 
     def test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -34,13 +34,13 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9ff9ec40>
 >       run, seen = _run_to_review(tmp_path, monkeypatch, "DEFER_UNRESOLVED", None)
                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:90: 
+tests/test_cascade_restore.py:91: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:81: in _run_to_review
+tests/test_cascade_restore.py:82: in _run_to_review
     run.cascade(max_rounds=1)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1385: in run_cascade
+src/repo_presenter/cascade.py:1660: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -51,7 +51,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1203/test_a_candidate_that_loses_on0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_candidate_that_loses_on0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -74,7 +74,17 @@ require_clean_review = False, unrestorable = None
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS:
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
             return settled
         # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
         # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -114,6 +124,15 @@ require_clean_review = False, unrestorable = None
                 details, document, [change["unit_id"] for change in restored],
                 mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
             if not unit_ids:
                 break
 >           dispositions, changes = restore_lost_units(
@@ -121,11 +140,16 @@ require_clean_review = False, unrestorable = None
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:994: TypeError
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
 _ test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1203/test_restorable_defects_make_z0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9feaa550>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_restorable_defects_make_z0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3f1be50>
 
     def test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -133,16 +157,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9feaa550>
 >       run, client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=True)
                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:212: 
+tests/test_cascade_restore.py:213: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:203: in _settle_run
+tests/test_cascade_restore.py:204: in _settle_run
     run.cascade(max_rounds=3)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1385: in run_cascade
+src/repo_presenter/cascade.py:1660: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
                                     ^^^^^^^^^^^^^^^^^^^^
-src/repo_presenter/cascade.py:707: in _settle_s9
+src/repo_presenter/cascade.py:796: in _settle_s9
     restored = _restore_lost_content(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
@@ -152,7 +176,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1203/test_restorable_defects_make_z0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_restorable_defects_make_z0/out')
 require_clean_review = True, unrestorable = set()
 
     def _restore_lost_content(
@@ -175,7 +199,17 @@ require_clean_review = True, unrestorable = set()
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS:
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
             return settled
         # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
         # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -215,6 +249,15 @@ require_clean_review = True, unrestorable = set()
                 details, document, [change["unit_id"] for change in restored],
                 mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
             if not unit_ids:
                 break
 >           dispositions, changes = restore_lost_units(
@@ -222,11 +265,16 @@ require_clean_review = True, unrestorable = set()
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:994: TypeError
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 3: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 3: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
 _ test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1203/test_a_restorable_bc17_defect_0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9fe8fb60>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_restorable_bc17_defect_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3b08500>
 
     def test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -237,16 +285,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9fe8fb60>
 >       _run, _client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=False)
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:225: 
+tests/test_cascade_restore.py:226: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:203: in _settle_run
+tests/test_cascade_restore.py:204: in _settle_run
     run.cascade(max_rounds=3)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1385: in run_cascade
+src/repo_presenter/cascade.py:1660: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_cascade_restore.py:196: in <lambda>
+tests/test_cascade_restore.py:197: in <lambda>
     lambda settled, **kw: settled if kw.get("require_clean_review") else real(settled, **kw),
                                                                          ^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -257,7 +305,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1203/test_a_restorable_bc17_defect_0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_restorable_bc17_defect_0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -280,7 +328,17 @@ require_clean_review = False, unrestorable = None
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS:
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
             return settled
         # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
         # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -320,6 +378,15 @@ require_clean_review = False, unrestorable = None
                 details, document, [change["unit_id"] for change in restored],
                 mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
             if not unit_ids:
                 break
 >           dispositions, changes = restore_lost_units(
@@ -327,11 +394,17 @@ require_clean_review = False, unrestorable = None
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:994: TypeError
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 3: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 3: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
+cascade progress: S9 settle round 1: repair start (1 defect(s)) | elapsed 0s | provider calls 8
 ______ test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model _______
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1203/test_without_the_filter_the_sa0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9fe8f4d0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_without_the_filter_the_sa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3f8f110>
 
     def test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -340,16 +413,16 @@ monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9fe8f4d0>
 >       _run, _client, repaired = _settle_run(tmp_path, monkeypatch, restore_in_settle=False)
                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-tests/test_cascade_restore.py:236: 
+tests/test_cascade_restore.py:237: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-tests/test_cascade_restore.py:203: in _settle_run
+tests/test_cascade_restore.py:204: in _settle_run
     run.cascade(max_rounds=3)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1385: in run_cascade
+src/repo_presenter/cascade.py:1660: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-tests/test_cascade_restore.py:196: in <lambda>
+tests/test_cascade_restore.py:197: in <lambda>
     lambda settled, **kw: settled if kw.get("require_clean_review") else real(settled, **kw),
                                                                          ^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -360,7 +433,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1203/test_without_the_filter_the_sa0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_without_the_filter_the_sa0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -383,7 +456,17 @@ require_clean_review = False, unrestorable = None
         composed = settled.composed
         failing = blocking_failures(settled.validation)
         failing_ids = {str(check["id"]) for check in failing}
-        if not failing_ids & RESTORABLE_CHECKS:
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
             return settled
         # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
         # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -423,6 +506,15 @@ require_clean_review = False, unrestorable = None
                 details, document, [change["unit_id"] for change in restored],
                 mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
             )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
             if not unit_ids:
                 break
 >           dispositions, changes = restore_lost_units(
@@ -430,10 +522,16 @@ require_clean_review = False, unrestorable = None
             )
 E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:994: TypeError
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 3: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 3: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
+cascade progress: S9 settle round 1: repair start (1 defect(s)) | elapsed 0s | provider calls 8
 _ test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair _
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7ca02e5300>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3c19f30>
 
     def test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair(
         monkeypatch: pytest.MonkeyPatch,
@@ -445,10 +543,10 @@ E
 E         Left contains one more item: 'fp-inherited_unit:026.paragraph'
 E         Use -v to get more diff
 
-tests/test_cascade_restore.py:342: AssertionError
+tests/test_cascade_restore.py:343: AssertionError
 ___ test_negative_control_without_the_pointer_guard_both_defects_are_dropped ___
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f7c9febaa50>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3a94d10>
 
     def test_negative_control_without_the_pointer_guard_both_defects_are_dropped(
         monkeypatch: pytest.MonkeyPatch,
@@ -462,7 +560,401 @@ E
 E         Left contains 2 more items, first extra item: 'fp-inherited_unit:025.paragraph'
 E         Use -v to get more diff
 
-tests/test_cascade_restore.py:351: AssertionError
+tests/test_cascade_restore.py:352: AssertionError
+_ test_without_the_accounting_stage_the_same_run_is_rejected_for_the_subheading _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_without_the_accounting_st0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3b24fa0>
+
+    def test_without_the_accounting_stage_the_same_run_is_rejected_for_the_subheading(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """The falsifier: stub the stage out and the reviewer's two findings on the sub-heading return
+        (``disposition_coverage`` and ``live_readme_loss``) with the README unchanged."""
+        run = _Run(tmp_path, monkeypatch, README_WITH_SUBHEADING)
+        with_accounting = run.first_pass(_first_replies(_reply_keeping_a_subheading()))
+        readme = (run.out / "README.coherent.md").read_text(encoding="utf-8")
+    
+        other = _Run(tmp_path / "other", monkeypatch, README_WITH_SUBHEADING)
+        monkeypatch.setattr(
+            cascade_module,
+            "account_unprinted_units",
+            lambda candidate: (candidate.dispositions, []),
+        )
+>       without = other.first_pass(_first_replies(_reply_keeping_a_subheading()))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cascade_s9.py:567: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_cascade_s9.py:109: in first_pass
+    result = self.cascade(max_rounds=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_cascade_s9.py:96: in cascade
+    return run_cascade(
+src/repo_presenter/cascade.py:1660: in run_cascade
+    settled = _restore_lost_content(_settle_s9(**settle), **restoring)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+settled = _Settled(composed=_Composition(dispositions={'dispositions': [{'unit_id': 'inherited_unit:001.heading', 'disposition':...n=None, model_served=None, request_sha256=None, reply_sha256=None, calibration_status=None, unit_reviews=()), rounds=1)
+entry = RegistryEntry(repository='org/Aspose.Widget-FOSS-for-Python', family='widget', platform='python', ecosystem='python', ...', active=True, provider_identity=ProviderIdentity(provider='github', repository_id=1, node_id='MDEwOlJlcG9zaXRvcnkx'))
+document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_revision='fffffffffffffffffffffffffffffffffffffff...s'),), polarity='SUPPORTED', confidence=1.0, attributes={'section': 'Aspose Widget > Limitations'})), schema_version=1)
+investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
+tree_paths = ['README.md']
+original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitations\n\nOnly PNG output is currently supported.\n\n### Main\n'
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_without_the_accounting_st0/other/out')
+require_clean_review = False, unrestorable = None
+
+    def _restore_lost_content(
+        settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
+        tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
+    ) -> _Settled:
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
+        they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
+        from the same plan and authored units, and re-judge with the unchanged validators and the
+        deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
+        are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
+        from repo_presenter.recertify import RESTORE_ROUNDS
+    
+        composed = settled.composed
+        failing = blocking_failures(settled.validation)
+        failing_ids = {str(check["id"]) for check in failing}
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
+            return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
+        holdable = holdable_sections(document)
+        included = [
+            section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+        ]
+        dispositions = composed.dispositions
+        restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
+        readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
+        validation, verdict = settled.validation, settled.verdict
+        if any("section fit:" in str(d) for check in failing for d in check.get("details") or []):
+            # BL-230: BC-05 section fit names no unit, so the unit restore below never sees it. The
+            # S4 section-fit folds answer it zero-call: kept text moves to a section that prints it.
+            fitted, fit_changes = fit_misfiled_units(dispositions, document, included)
+            if fit_changes:
+                trial = _judge_restore(
+                    fitted, composed=composed, entry=entry, document=document,
+                    investigation=investigation, tree_paths=tree_paths, original=original,
+                    out_dir=out_dir, restored=restored + fit_changes,
+                )
+                if _strictly_fewer_failures(failing, blocking_failures(trial[4])):
+                    readme, tasks, accounted, dispositions, validation, verdict = trial
+                    restored.extend(fit_changes)
+                    failing = blocking_failures(validation)
+        for _round in range(RESTORE_ROUNDS):
+            details = [
+                f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
+            ]
+            unit_ids = choose_units(
+                details, document, [change["unit_id"] for change in restored],
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
+            )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
+            if not unit_ids:
+                break
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
+
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 3 blocking finding(s) | elapsed 0s | provider calls 8
+cascade progress: S9/S10 end after 1 settle round(s): REJECT | elapsed 0s | provider calls 8
+cascade progress: degrade pass 1 start | elapsed 0s | provider calls 8
+degrade: nothing kept (0 flag(s) tried)
+cascade progress: cascade end: REJECT | elapsed 0s | provider calls 8
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 6 blocking finding(s) | elapsed 0s | provider calls 8
+_ test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_runs_again _
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_kept_unit_the_render_ca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3a862e0>
+
+    def test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_runs_again(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        run = _Run(tmp_path, monkeypatch)
+>       first = run.first_pass(_first_replies(_reply_keeping_code_without_an_example()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cascade_s9.py:655: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_cascade_s9.py:109: in first_pass
+    result = self.cascade(max_rounds=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_cascade_s9.py:96: in cascade
+    return run_cascade(
+src/repo_presenter/cascade.py:1660: in run_cascade
+    settled = _restore_lost_content(_settle_s9(**settle), **restoring)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+settled = _Settled(composed=_Composition(dispositions={'dispositions': [{'unit_id': 'inherited_unit:001.heading', 'disposition':...n=None, model_served=None, request_sha256=None, reply_sha256=None, calibration_status=None, unit_reviews=()), rounds=1)
+entry = RegistryEntry(repository='org/Aspose.Widget-FOSS-for-Python', family='widget', platform='python', ecosystem='python', ...', active=True, provider_identity=ProviderIdentity(provider='github', repository_id=1, node_id='MDEwOlJlcG9zaXRvcnkx'))
+document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_revision='fffffffffffffffffffffffffffffffffffffff...s'),), polarity='SUPPORTED', confidence=1.0, attributes={'section': 'Aspose Widget > Limitations'})), schema_version=1)
+investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
+tree_paths = ['README.md']
+original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitations\n\nOnly PNG output is currently supported.\n'
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_kept_unit_the_render_ca0/out')
+require_clean_review = False, unrestorable = None
+
+    def _restore_lost_content(
+        settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
+        tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
+    ) -> _Settled:
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
+        they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
+        from the same plan and authored units, and re-judge with the unchanged validators and the
+        deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
+        are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
+        from repo_presenter.recertify import RESTORE_ROUNDS
+    
+        composed = settled.composed
+        failing = blocking_failures(settled.validation)
+        failing_ids = {str(check["id"]) for check in failing}
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
+            return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
+        holdable = holdable_sections(document)
+        included = [
+            section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+        ]
+        dispositions = composed.dispositions
+        restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
+        readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
+        validation, verdict = settled.validation, settled.verdict
+        if any("section fit:" in str(d) for check in failing for d in check.get("details") or []):
+            # BL-230: BC-05 section fit names no unit, so the unit restore below never sees it. The
+            # S4 section-fit folds answer it zero-call: kept text moves to a section that prints it.
+            fitted, fit_changes = fit_misfiled_units(dispositions, document, included)
+            if fit_changes:
+                trial = _judge_restore(
+                    fitted, composed=composed, entry=entry, document=document,
+                    investigation=investigation, tree_paths=tree_paths, original=original,
+                    out_dir=out_dir, restored=restored + fit_changes,
+                )
+                if _strictly_fewer_failures(failing, blocking_failures(trial[4])):
+                    readme, tasks, accounted, dispositions, validation, verdict = trial
+                    restored.extend(fit_changes)
+                    failing = blocking_failures(validation)
+        for _round in range(RESTORE_ROUNDS):
+            details = [
+                f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
+            ]
+            unit_ids = choose_units(
+                details, document, [change["unit_id"] for change in restored],
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
+            )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
+            if not unit_ids:
+                break
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
+
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 4 blocking finding(s) | elapsed 0s | provider calls 8
+____ test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried _____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_defect_is_attempted_onc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbae3a874d0>
+
+    def test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        run = _Run(tmp_path, monkeypatch)
+>       first = run.first_pass(_first_replies(_reply_keeping_code_without_an_example()))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_cascade_s9.py:702: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_cascade_s9.py:109: in first_pass
+    result = self.cascade(max_rounds=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_cascade_s9.py:96: in cascade
+    return run_cascade(
+src/repo_presenter/cascade.py:1660: in run_cascade
+    settled = _restore_lost_content(_settle_s9(**settle), **restoring)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+settled = _Settled(composed=_Composition(dispositions={'dispositions': [{'unit_id': 'inherited_unit:001.heading', 'disposition':...n=None, model_served=None, request_sha256=None, reply_sha256=None, calibration_status=None, unit_reviews=()), rounds=1)
+entry = RegistryEntry(repository='org/Aspose.Widget-FOSS-for-Python', family='widget', platform='python', ecosystem='python', ...', active=True, provider_identity=ProviderIdentity(provider='github', repository_id=1, node_id='MDEwOlJlcG9zaXRvcnkx'))
+document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_revision='fffffffffffffffffffffffffffffffffffffff...s'),), polarity='SUPPORTED', confidence=1.0, attributes={'section': 'Aspose Widget > Limitations'})), schema_version=1)
+investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
+tree_paths = ['README.md']
+original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitations\n\nOnly PNG output is currently supported.\n'
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1316/test_a_defect_is_attempted_onc0/out')
+require_clean_review = False, unrestorable = None
+
+    def _restore_lost_content(
+        settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
+        tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
+        unrestorable: set[str] | None = None,
+    ) -> _Settled:
+        """TC-019c: when the settled candidate fails a restorable check (BC-05/BC-08/BC-17), keep the units
+        they name (``readme.repair.restore_units``: the remedy those checks' own text states), re-render
+        from the same plan and authored units, and re-judge with the unchanged validators and the
+        deterministic reviewer rules. Zero provider calls: the stored plan, authored and coherent units
+        are reused, as ``recertify`` reuses a sealed bundle's. Returns ``settled`` unchanged unless a
+        restore changed something and either left no blocking failure, or strictly shrank them without
+        adding a check id, growing a non-restorable check, or adding a blocking review finding (a PARTIAL
+        restore: the restorable content is back and only what restore cannot answer goes on to the repair
+        loop) -- so a run that this cannot improve behaves exactly as it did before, and the checks are
+        never weakened."""
+        from repo_presenter.recertify import RESTORE_ROUNDS
+    
+        composed = settled.composed
+        failing = blocking_failures(settled.validation)
+        failing_ids = {str(check["id"]) for check in failing}
+        # BL-310: a kept unit the README does not print is the deterministic reviewer's
+        # ``disposition_coverage`` finding, no validator's: the keep was recorded and never took effect
+        # (a destination that does not print its kind, or one the plan omits). The restore's own
+        # re-home answers it, so those units join the ones BC-05/BC-08/BC-17 name -- but only while the
+        # reviewer is actually blocking, so a passing candidate is never touched.
+        unprinted = (
+            _unprinted_kept_unit_ids(settled, document)
+            if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
+            else []
+        )
+        if not failing_ids & RESTORABLE_CHECKS and not unprinted:
+            return settled
+        # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
+        # say) used to rule the whole restore out, which stranded the restorable losses: they are not
+        # sent to the model (``_without_restorable``), so nothing could ever recover them (measured: Cells
+        # Cpp, BC-02 + BC-05 + BC-17 on inherited_unit:010.list/041/044, no restore ever ran). The restore
+        # now runs for the restorable part regardless; ``_strictly_fewer_failures`` below keeps the result
+        # only when no new check id appears, no non-restorable check grows, and something is cleared, so
+        # the surviving non-restorable defects go on to the repair loop with the content already back.
+        holdable = holdable_sections(document)
+        included = [
+            section["section_id"] for section in composed.plan.get("sections", []) if section.get("include")
+        ]
+        dispositions = composed.dispositions
+        restored: list[dict[str, str]] = []
+        skipped: list[dict[str, str]] = []
+        readme, tasks, accounted = composed.readme, composed.tasks, composed.accounted
+        validation, verdict = settled.validation, settled.verdict
+        if any("section fit:" in str(d) for check in failing for d in check.get("details") or []):
+            # BL-230: BC-05 section fit names no unit, so the unit restore below never sees it. The
+            # S4 section-fit folds answer it zero-call: kept text moves to a section that prints it.
+            fitted, fit_changes = fit_misfiled_units(dispositions, document, included)
+            if fit_changes:
+                trial = _judge_restore(
+                    fitted, composed=composed, entry=entry, document=document,
+                    investigation=investigation, tree_paths=tree_paths, original=original,
+                    out_dir=out_dir, restored=restored + fit_changes,
+                )
+                if _strictly_fewer_failures(failing, blocking_failures(trial[4])):
+                    readme, tasks, accounted, dispositions, validation, verdict = trial
+                    restored.extend(fit_changes)
+                    failing = blocking_failures(validation)
+        for _round in range(RESTORE_ROUNDS):
+            details = [
+                f"{check['id']}: {detail}" for check in failing for detail in check.get("details") or []
+            ]
+            unit_ids = choose_units(
+                details, document, [change["unit_id"] for change in restored],
+                mandatory_checks=("BC-05", "BC-08"), exclude=[s["unit_id"] for s in skipped],
+            )
+            unit_ids = [
+                *unit_ids,
+                *(
+                    unit for unit in unprinted
+                    if unit not in unit_ids
+                    and unit not in {c["unit_id"] for c in restored}
+                    and unit not in {s["unit_id"] for s in skipped}
+                ),
+            ]
+            if not unit_ids:
+                break
+>           dispositions, changes = restore_lost_units(
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
+            )
+E           TypeError: <lambda>() got an unexpected keyword argument 'skipped'
+
+src/repo_presenter/cascade.py:1146: TypeError
+----------------------------- Captured stderr call -----------------------------
+cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+cascade progress: S3 investigation end | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 4 blocking finding(s) | elapsed 0s | provider calls 8
 =========================== short test summary info ============================
 FAILED tests/test_cascade_restore.py::test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored
 FAILED tests/test_cascade_restore.py::test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review
@@ -470,7 +962,10 @@ FAILED tests/test_cascade_restore.py::test_a_restorable_bc17_defect_is_never_sen
 FAILED tests/test_cascade_restore.py::test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model
 FAILED tests/test_cascade_restore.py::test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair
 FAILED tests/test_cascade_restore.py::test_negative_control_without_the_pointer_guard_both_defects_are_dropped
-6 failed, 46 passed in 5.04s
+FAILED tests/test_cascade_s9.py::test_without_the_accounting_stage_the_same_run_is_rejected_for_the_subheading
+FAILED tests/test_cascade_s9.py::test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_runs_again
+FAILED tests/test_cascade_s9.py::test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried
+9 failed, 43 passed in 14.50s
 
 --- stderr ---
 
