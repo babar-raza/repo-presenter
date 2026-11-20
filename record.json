@@ -160,21 +160,37 @@
    "run_id": "44702013874",
    "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T13:43:10+00:00",
+   "classes": [
+    "BC-06|unresolved|n_aspose_com_links",
+    "BC-07|inherited_unit|id_is_kept_as",
+    "BC-17|inherited_unit|section_coverage",
+    "BC-17|inherited_unit|technical_content",
+    "live_readme_loss|inherited_unit|link_https"
+   ],
+   "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+   "findings": 9,
+   "outcome": "failure",
+   "run_id": "44745713375",
+   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T08:29:48+00:00",
+  "at": "2026-11-20T13:43:10+00:00",
   "classes": {
    "BC-06|unresolved|n_aspose_com_links": {
-    "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1800 visible words and 7 verified examples)",
+    "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1797 visible words and 7 verified examples)",
     "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "BC-06",
-    "scope": "2cf9719b2996f82cbddb7e544312b844d042cfcf299a845da98d774f4966e65d",
+    "scope": "5eb2632186b1e4aa8f9bfeb77d573a255dc3f9d03b69dac768094f3711534dae",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -198,7 +214,7 @@
      "inherited_unit:080.paragraph"
     ],
     "rule": "BC-07",
-    "scope": "20a52933d320ef8bb891b1c057abe59286702ebd966d2bc20f51b5d7abcc1fba",
+    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -220,7 +236,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "20a52933d320ef8bb891b1c057abe59286702ebd966d2bc20f51b5d7abcc1fba",
+    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -242,7 +258,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "20a52933d320ef8bb891b1c057abe59286702ebd966d2bc20f51b5d7abcc1fba",
+    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -264,7 +280,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "live_readme_loss",
-    "scope": "18578a6ef73fe6ab81faedb8b05faa98fe53e7e457a03d18fb2845045c9df4ce",
+    "scope": "92d443dc513ef067be6b5b533735b9c59e5a97cbe8706b8c502666525a92fea9",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -278,7 +294,7 @@
     "upstream": ""
    }
   },
-  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -335,7 +351,7 @@
    },
    {
     "label": "BC-06",
-    "message": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1800 visible words and 7 verified examples)",
+    "message": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1797 visible words and 7 verified examples)",
     "origin": {
      "id": "-",
      "kind": "unresolved"
@@ -357,7 +373,7 @@
     },
     "quote": "",
     "rule": "BC-07",
-    "section_id": "scope_limitations",
+    "section_id": "additional_examples",
     "signature": "BC-07|inherited_unit|id_is_kept_as",
     "source": "validation",
     "sub_rule": "id_is_kept_as",
@@ -425,15 +441,15 @@
    }
   ],
   "lane": "R",
-  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
+  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
     "label": "BC-07",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:080.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": null,
     "stage": "S4"
    },
@@ -448,15 +464,15 @@
    {
     "facts_defects": [],
     "label": "BC-06",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'links' changed ('16 links (including 4 aspose.com links: 015, 016, 017, 018)' to '16 links (including 2 aspose.com links: 015, 016)'), but the causal stage's own input and this revision hold the identical value there",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": null,
     "stage": "S5"
    }
   ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
-  "run_id": "44702013874",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44702013874",
+  "run_id": "44745713375",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745713375",
   "schema_version": 1,
   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
