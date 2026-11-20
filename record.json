@@ -5,7 +5,7 @@
   "provider_repository_id": 1186397596,
   "registry_revision": null,
   "active_transaction_id": "4b729562c0694d0c83b80f6bfae65e42",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-20T08:26:58.208233+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T13:40:18.312690+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 96,
+  "state_version": 97,
   "recent_trigger_dedup_keys": {
     "run:41142566929:aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp": "ea14b9178d0649edba017318f426a63e",
     "run:41145445126:aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp": "e1e6370cfa6c4e7ebe8e50e83276f6dd",
@@ -73,5 +73,5 @@
     "run:44702070386:aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp": "08c050c50fdd48368edb78ee0e712ae9",
     "run:44709033978:aspose-slides-foss/Aspose.Slides-FOSS-for-Cpp": "4b729562c0694d0c83b80f6bfae65e42"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
