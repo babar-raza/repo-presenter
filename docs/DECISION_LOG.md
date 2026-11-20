@@ -7503,3 +7503,35 @@ the 2026-11-19 audit round accepted nothing (false-flag rate 0.353 over 17 contr
 
 Backlog: BL-290, BL-350, BL-390.
 
+
+## 2026-11-20: BL-400 -- the production review clears a flag on a line the renderer prints from SUPPORTED facts; the C++ format reader stops counting a header's own switch
+
+Five hosted targeted re-runs (OMR, Slides C++, Page Python, PSD Python, Font Python; main 82b8ccb) were each rejected on one
+or two model findings. Investigated line by line against the Lane L bundles' facts and the upstream clones; the five are
+three different classes, and only one is the one the brief named.
+(1) Page Python: the flagged opening is byte for byte the sentence `_fact_true_opening_unit` prints from 12 SUPPORTED format facts
+with real dispatch evidence. The audit's clearable-line logic would NOT have cleared it either (the opening is an authored-region
+line, `owned_lines` calls it prose), so the asymmetry was smaller than briefed; the shared predicate now treats a fact-true
+opening, recomputed byte for byte, as the renderer's line citing those facts, in the audit and the review alike. New
+provenance clearance `derived_from_supported_facts` (unsupported_claim and contradiction only) clears a flag only when every
+quoted line is reproduced with every authored unit replaced by a sentinel, states only SUPPORTED facts, is refuted by no claim
+detector or open register row, and is in no known-false class; a missing register clears nothing. The predicate moved from the
+script into `readme/review/derivation.py` (one implementation, the script re-exports it). Typed clearances and `CLEARANCES_FOR_KIND`
+are unchanged. Property improved: reliable and repeatable (seal-time and audit-time judge the same lines); measured offline by
+tests built from the exact finding texts with negative controls.
+(2) Slides C++: NOT clearable, and not cleared. The 22 SUPPORTED output formats are wrong: upstream 469ce77 declares 21
+SaveFormat members, `Presentation::save` writes six, and `unimplemented_formats()` pins 15 that throw (R42, upstream stub
+formats). The reader counted the header's own `to_string_view` switch and the conformance tests as registration. Fixed at the
+root: only product code outside the declaring file, and not a test, registers a format (on the clone: `.pptx` only). Sealed
+C++ bundles keep their facts until re-extracted. aspose.org's published candidate was not consulted for this fix; the upstream
+source is the evidence.
+(3) OMR and PSD Python scope: the flagged line joins the renderer's Enterprise sentence to the authored clause ("It adds ...
+PDF, DOCX, and Excel."); no fact states it, so the clearance correctly refuses it. Why the BL-350 enterprise lever reported
+`printed_text_withheld` instead of `enterprise_context_withheld` needs the runs' unit store (artifact blocked from the
+container); open. PSD api_reference intro and Font opening/capability are authored lines: not in this class.
+Evidence: recertify --all origin/main vs branch identical on all 58 rows (24 Lane R, 34 Lane L, all RECERTIFIED); gate and
+full suite recorded in the backlog item. Hosted re-run must show: Page Python seals or fails on a different finding; Slides C++
+re-extracts with `.pptx` as the only output format and either seals or fails on a different line; OMR, PSD and Font unchanged.
+R9: no README wording moves. R10: no seal touched. R14: nothing dropped.
+
+Backlog: BL-400

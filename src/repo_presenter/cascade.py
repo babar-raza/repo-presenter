@@ -1203,6 +1203,23 @@ def _blocking_load(validation: dict[str, Any], verdict: ReviewVerdict) -> tuple[
     )
 
 
+def _deriver(settled: _Settled, *, entry: RegistryEntry, document: FactsDocument) -> Any:
+    """What the model review asks about a flagged line (BL-400): did the renderer print it from SUPPORTED
+    facts? Answered over the very plan, units and dispositions this candidate was rendered from, zero calls
+    (``review.derivation.lane_r_derivation``); it answers ``None`` -- nothing cleared -- if it cannot."""
+    from repo_presenter.readme.review.derivation import lane_r_derivation
+
+    composed = settled.composed
+
+    def derive(lines: Collection[int]) -> Any:
+        return lane_r_derivation(
+            composed.readme, entry=entry, facts=document, plan=composed.plan,
+            units=composed.coherent_units, dispositions=composed.dispositions, ask=lines,
+        )
+
+    return derive
+
+
 def _degrade_settled(
     settled: _Settled, verdict: ReviewVerdict, *, entry: RegistryEntry, document: FactsDocument,
     investigation: dict, tree_paths: list[str], original: str, out_dir: Path,
@@ -1505,6 +1522,7 @@ def run_cascade(
             candidate_readme=settled.composed.readme, original_readme=original, facts=document,
             plan=settled.composed.plan, dispositions=settled.composed.dispositions,
             validation=settled.validation, deterministic_findings=verdict.findings,
+            derive=_deriver(settled, entry=entry, document=document),
         )
         write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
         progress(f"S10 review end: {verdict.verdict}")
@@ -1566,6 +1584,7 @@ def run_cascade(
                 facts=document, plan=settled.composed.plan,
                 dispositions=settled.composed.dispositions, validation=settled.validation,
                 deterministic_findings=verdict.findings,
+                derive=_deriver(settled, entry=entry, document=document),
             )
             write_review_verdict(verdict, out_dir / REVIEW_VERDICT_FILENAME)
     progress(f"cascade end: {verdict.verdict}")

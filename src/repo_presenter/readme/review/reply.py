@@ -25,7 +25,7 @@ from repo_presenter.readme.composition.components.shell import (
     section_ids,
 )
 from repo_presenter.readme.review.audit import audit_unsupported_claim
-from repo_presenter.readme.review.clearances import ClearanceContext, apply_clearances
+from repo_presenter.readme.review.clearances import ClearanceContext, Deriver, apply_clearances
 from repo_presenter.readme.review.findings import (
     CLAIM_KINDS,
     CLEARANCES_FOR_KIND,
@@ -572,6 +572,7 @@ def review_from_reply(
     max_findings: int = MAX_FINDINGS,
     calibration_status: str | None = None,
     unit_reviews: Sequence[Mapping[str, Any]] = (),
+    derive: Deriver | None = None,
 ) -> ReviewVerdict:
     """The verdict for one reply: validate, clear what a registered clearance proves false, fold.
     Raises ``ReviewUnavailable`` (retryable, never an ACCEPT) when the reply breaks the contract.
@@ -586,7 +587,7 @@ def review_from_reply(
     )
     if errors:
         raise ReviewUnavailable("the reviewer's reply broke the contract", errors)
-    context = ClearanceContext(candidate_readme, original_readme, facts)
+    context = ClearanceContext(candidate_readme, original_readme, facts, derive)
     llm_findings = tuple(
         apply_clearances(_audited(f, candidate_readme, original_readme, facts), context)
         for f in findings_from_reply(reply)

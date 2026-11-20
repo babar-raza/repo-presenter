@@ -51,6 +51,15 @@ CLEARANCES_FOR_KIND: Mapping[str, tuple[str, ...]] = {
     "name_denial": ("names_supported",),
     "omission": ("omission_present",),
 }
+#: The one clearance of a different order (BL-400): it proves nothing about a claim, it records that the
+#: flagged line is a deterministic stage's own statement of SUPPORTED facts rather than text an author wrote
+#: (``review.derivation``, the predicate the M9 audit has always used). It applies to the two kinds a model
+#: raises against printed text, never to ``quality`` and never to a typed kind, and it is not a "typed
+#: clearance": ``CLEARANCES_FOR_KIND`` (and so ``reply.UNTYPED_KINDS`` and ``blocked_predicate``) are unchanged.
+PROVENANCE_CLEARANCES_FOR_KIND: Mapping[str, tuple[str, ...]] = {
+    "unsupported_claim": ("derived_from_supported_facts",),
+    "contradiction": ("derived_from_supported_facts",),
+}
 CLEARANCE_NAMES: tuple[str, ...] = tuple(
     name for names in CLEARANCES_FOR_KIND.values() for name in names
 )
@@ -168,7 +177,9 @@ class Finding:
                 f"deterministic finding {self.rule!r} cannot be CLEARED: only a reviewer's claim "
                 "has a typed claim a clearance can disprove"
             )
-        allowed = CLEARANCES_FOR_KIND.get(self.claim_kind, ())
+        allowed = CLEARANCES_FOR_KIND.get(self.claim_kind, ()) + PROVENANCE_CLEARANCES_FOR_KIND.get(
+            self.claim_kind, ()
+        )
         if not allowed:
             raise ValueError(f"a {self.claim_kind!r} finding is never clearable")
         clearance = self.clearance
