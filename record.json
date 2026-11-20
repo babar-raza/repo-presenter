@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'; api_reference/intro: coherence revision drops the previously-cited public_symbol 'public_symbol:legacyworkbook.load' and none of its own content ('LegacyWorkbook.load') remains in the revised text - a named capability, format, or structural detail the prior version carried must not be silently dropped during coherence; api_reference/intro: coherence revision drops the previously-cited public_symbol 'public_symbol:workbook.constructor' and none of its own content ('Workbook.constructor') remains in the revised text - a named capability, format, or structural detail the prior version carried must not be silently dropped during coherence; api_reference/intro: coherence revision drops the previously-cited public_symbol 'public_symbol:workbook.save' and none of its own content ('Workbook.Save') remains in the revised text - a named capability, format, or structural detail the prior version carried must not be silently dropped during coherence; recover's correction was rejected too: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-20T17:31:03.779448+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44774952733",
     "acquired_at": "2026-11-20T16:37:11.457726+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 88,
+  "state_version": 89,
   "recent_trigger_dedup_keys": {
     "run:40555617732:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "b8b09d6469db42c4b94a798807bcff09",
     "run:40571563106:aspose-cells-foss/Aspose.Cells-FOSS-for-TypeScript": "17282737701949eb95673de8c2b33f30",
