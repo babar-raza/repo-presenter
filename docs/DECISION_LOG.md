@@ -7991,3 +7991,16 @@ cell may still fail on BL-510's claim, the `2.8` BC-05 or the 52-minute compose;
 holds is still all-or-nothing.
 
 Backlog: BL-511
+
+## 2026-11-20: Supervisor stop at a safe checkpoint (owner request) and progress report
+
+The owner asked for a stop at a safe checkpoint with an overall progress report once all in-flight work was done.
+Frozen-code hosted pass 6 (main `30b9e9a`): 30 of 40 Lane R cells seal and recertify (pass 1: 21; pass 3: 23; pass 4:
+24; pass 5: 26), Lane L 34 of 34, no seal lost. BL-511 (a restore no longer drags an example fence out of the
+examples renderer, and a restored unit that is itself a new loss is rolled back alone) is merged with this entry. Full
+report: `docs/PROGRESS_2026-11-20.md`. State left: planner off (`scheduled_execution_authorized=false`), watcher
+disabled, no worker or run request in flight; independent Lane R acceptance is 1 of 40 because the audit gate failed
+twice (0.353, then 0.211 against 0.1) and the owner chose to keep the gate and measure variance.
+
+Backlog: BL-290, BL-511.
+
