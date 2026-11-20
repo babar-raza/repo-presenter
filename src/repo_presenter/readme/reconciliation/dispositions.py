@@ -2959,7 +2959,8 @@ _SHELL_RENDERED_KINDS = frozenset({"heading", "badge_row", "html_block"})
 def _settle_unresolved(merged: str, unit_ids: Sequence[str], facts: FactsDocument) -> str:
     """After the LAST ask (the narrowed merge), keep as written every asked unit that is still
     refused by this module's own checks and is dropped or parked (OMIT_UNSUPPORTED /
-    DEFER_UNRESOLVED), instead of failing the whole batch on it (R14: maintainer content is
+    DEFER_UNRESOLVED) or superseded into a section the check refuses as uncovered_supersession
+    (it names the placement as its own lever), instead of failing the whole batch on it (R14: maintainer content is
     must-carry unless a fact contradicts it; no careless drops).
 
     A unit becomes VERIFIED_PRESERVE when every fact it cites is SUPPORTED and it cites at least
@@ -2976,8 +2977,16 @@ def _settle_unresolved(merged: str, unit_ids: Sequence[str], facts: FactsDocumen
     if not isinstance(document, dict) or not isinstance(document.get("dispositions"), list):
         return merged
     probe = copy.deepcopy(document)
-    named = _rejected_unit_ids(reconcile_checks(probe, facts))
+    rejection = reconcile_checks(probe, facts)
+    named = _rejected_unit_ids(rejection)
     wanted = [unit for unit in unit_ids if unit in named]
+    # A supersession the check itself refuses as uncovered names its own lever (place the unit in
+    # the nearest section that can hold it); BL-420.
+    uncovered = frozenset(
+        match.group(1)
+        for error in rejection
+        if f": {UNCOVERED_SUPERSESSION}: " in error and (match := _UNIT_ERROR.match(error))
+    )
     if not wanted:
         return merged
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
@@ -2990,7 +2999,10 @@ def _settle_unresolved(merged: str, unit_ids: Sequence[str], facts: FactsDocumen
         if unit_id not in wanted or unit_id not in units or unit_id in contradicted:
             continue
         kind = _unit_kind(unit_id)
-        if kind in _SHELL_RENDERED_KINDS or entry.get("disposition") not in _UNKEPT:
+        was = entry.get("disposition")
+        if kind in _SHELL_RENDERED_KINDS or not (
+            was in _UNKEPT or (was == "SUPERSEDE_REDUNDANT" and unit_id in uncovered)
+        ):
             continue
         cited = [by_id[f] for f in entry.get("fact_ids") or [] if f in by_id]
         if any(fact.polarity == "CONTRADICTED" for fact in cited):
@@ -2999,16 +3011,18 @@ def _settle_unresolved(merged: str, unit_ids: Sequence[str], facts: FactsDocumen
         destination = nearest_holdable(unit_id, heading, holdable, root)
         if destination is None:
             continue
-        was = entry.get("disposition")
         verified = kind == "code_block" or (
             bool(cited) and all(fact.polarity == "SUPPORTED" for fact in cited)
         )
         entry["disposition"] = "VERIFIED_PRESERVE" if verified else ATTRIBUTED
         entry["destination_section"] = destination
+        state = {
+            "OMIT_UNSUPPORTED": "omitted",
+            "SUPERSEDE_REDUNDANT": "superseded by a section that does not carry it",
+        }.get(str(was), "unplaced")
         entry["rationale"] = (
             "Kept as the maintainers wrote it: no fact contradicts it, and it was still "
-            f"{'omitted' if was == 'OMIT_UNSUPPORTED' else 'unplaced'} after "
-            "the final ask. " + str(entry.get("rationale") or "")
+            f"{state} after the final ask. " + str(entry.get("rationale") or "")
         )[:_RATIONALE_LIMIT]
     return json.dumps(document)
 
