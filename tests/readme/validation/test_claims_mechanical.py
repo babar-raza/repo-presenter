@@ -8,6 +8,8 @@ count, and an invented verification narrative. Each has its negative twin, the c
 must leave alone.
 """
 
+# Re-verified under BL-541 (a Java bean accessor listed under "properties" is not a member-kind finding) -- TC-017b.
+
 from __future__ import annotations
 
 from types import SimpleNamespace
