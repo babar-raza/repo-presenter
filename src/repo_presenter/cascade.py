@@ -1305,6 +1305,11 @@ CASCADE_TIMEBOX_SECONDS = 3000.0
 #: turns it off (``tests/conftest.py``) because it scripts the provider reply by reply.
 SECOND_REVIEW = True
 
+#: BL-530: the audit-packet sample is drawn twice (two different requests) and both must be clean; only
+#: read when the second sample is on. A flag in either draw is a blocking finding for the same S10 repair
+#: rounds, BL-240 degrade, restore and settle machinery.
+SECOND_DRAW = True
+
 
 def _blocking_load(validation: dict[str, Any], verdict: ReviewVerdict) -> tuple[frozenset[str], int]:
     """The blocking check ids still failing and how many failures plus deterministic findings that
@@ -1627,6 +1632,23 @@ def run_cascade(
             first, second, candidate_readme=reviewer["candidate_readme"], facts=document
         )
         progress(f"S10 second review sample end: {merged.verdict}")
+        if merged.verdict != "ACCEPT" or not SECOND_DRAW:
+            return merged
+        if expired():
+            progress("S10 second review draw skipped: time-box reached")
+            return merged
+        # BL-530: one audit-packet draw is not repeatable (a seal clean on one draw flagged on 2 to 3 of 4
+        # fresh draws), so a second, independent draw (a different request, never a store replay) is also
+        # required clean. Measured, never blocked: the extra provider calls only show in the cost report.
+        progress("S10 second review draw 2 (audit packet) start")
+        again = review_with_model(
+            **reviewer, rendered=False, audit=True, derive=deriver, draw=2,
+            only_units_holding=second_sample_lines(reviewer["candidate_readme"], document),
+        )
+        merged = merge_second_sample(
+            merged, again, candidate_readme=reviewer["candidate_readme"], facts=document, draw=2
+        )
+        progress(f"S10 second review draw 2 end: {merged.verdict}")
         return merged
 
     progress(f"S3 investigation start (time-box {timebox_seconds:.0f}s)")

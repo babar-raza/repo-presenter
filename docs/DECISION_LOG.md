@@ -8004,3 +8004,15 @@ twice (0.353, then 0.211 against 0.1) and the owner chose to keep the gate and m
 
 Backlog: BL-290, BL-511.
 
+
+## 2026-11-20: Seal-time audit-packet sample is drawn twice, both must be clean (BL-530, class fix B)
+
+The pre-audit sweep showed one seal-time audit-packet draw (BL-430) is not repeatable: PSD Python and Page Python carry a clean
+draw yet 3 of 4 and 2 of 4 fresh draws of the identical packet flag them, and the post-BL-430 seals flag 16% of fresh samples
+against about 7% background, over the audit gate's 10%. Decision: a second, independent draw. Draw 1 stays the BL-430 request
+byte for byte (stored call stores replay, every existing seal recertifies unchanged); draw 2 is the same packet with
+`review_scope.draw = 2`, a different request, so the store never replays it. Either draw's blocking finding on authored text
+blocks through the unchanged S10 repair, BL-240 degrade, restore and settle path (draw 2 ids `S3-`, records `s3-`). The gate
+thresholds are not touched (owner decision); cost is measured, never blocked (R45); no second draw after the BL-270 time-box.
+
+Backlog: BL-530.

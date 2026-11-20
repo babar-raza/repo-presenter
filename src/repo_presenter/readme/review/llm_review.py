@@ -432,6 +432,7 @@ def planned_requests(
     rendered: bool = True,
     validation: Mapping[str, Any] | None = None,
     audit: bool = False,
+    draw: int = 1,
 ) -> tuple[tuple[ReviewUnit, ...], frozenset[int], tuple[PlannedRequest, ...]]:
     """The review units of ``candidate_readme``, its attributed maintainer lines, and each unit's
     packet, call schema and request hash. No call is made: this is the part of
@@ -440,7 +441,12 @@ def planned_requests(
 
     ``audit`` is the M9 blind auditor's whole-document review (``scripts/run_m9_auditor.py``):
     heading lines are reviewable and authored API reference rows carry their type facts even with
-    ``rendered=False``. Every production caller leaves it ``False`` (requests unchanged)."""
+    ``rendered=False``. Every production caller leaves it ``False`` (requests unchanged).
+
+    ``draw`` (BL-530) is the independent-draw index of an audit-packet sample. Draw ``1`` (the default) is
+    the request as it always was, byte for byte, so every stored call replays; a draw above 1 adds
+    ``review_scope.draw`` to the packet, a different request that the store does not replay, hence a
+    genuinely fresh draw over the same lines. The prompt and its manifest are untouched."""
     loaded = prompts[JOB]
     authored = authored_table_lines(candidate_readme, facts) if rendered else frozenset()
     units = plan_units(candidate_readme, rendered=rendered, authored=authored, headings=audit)
@@ -467,6 +473,8 @@ def planned_requests(
             maintainer_lines=attributed,
             audit=audit,
         )
+        if draw > 1:
+            packet["review_scope"] = {**packet["review_scope"], "draw": draw}
         if changed is not None:
             packet["review_scope"] = {
                 **packet["review_scope"],
@@ -497,6 +505,7 @@ def review_with_model(
     audit: bool = False,
     derive: Deriver | None = None,
     only_units_holding: Collection[int] | None = None,
+    draw: int = 1,
 ) -> ReviewVerdict:
     """The model-reviewed verdict for ``candidate_readme``; ``ReviewUnavailable`` when no valid
     review could be obtained. ``dispositions`` and ``validation`` are the deterministic stage's
@@ -523,6 +532,7 @@ def review_with_model(
         rendered=rendered,
         validation=validation,
         audit=audit,
+        draw=draw,
     )
     changed = edit_scope(
         rendered=rendered, validation=validation,
@@ -702,6 +712,7 @@ def merge_second_sample(
     *,
     candidate_readme: str,
     facts: FactsDocument,
+    draw: int = 1,
 ) -> ReviewVerdict:
     """The verdict of two review samples of one candidate, by union (BL-430). ``first`` is the production
     review (author-written text only, section-grouped units); ``second`` a fresh sample of the same
@@ -722,17 +733,20 @@ def merge_second_sample(
     caller's existing repair rounds and BL-240 degrade take it from there. A candidate ``first`` already
     rejects is returned as it is. The call store replays an identical request (the
     no-re-roll rule), so a further sample of the same bytes needs a further, different packet; there is
-    exactly one second sample."""
+    exactly one second sample per request, so BL-530 asks a second draw as a different request
+    (``planned_requests(draw=2)``) and merges it with ``draw=2`` onto the first merge: its records are
+    prefixed ``s3-`` and its finding ids ``S3-`` (draw 1 keeps ``s2-`` / ``S2-``, so every stored
+    seal reads as before). Either draw's blocking finding on authored text blocks."""
     if first.verdict != "ACCEPT":
         return first
     records = tuple(
-        {**record, "unit": f"s2-{record.get('unit', '?')}", SECOND_SAMPLE_KEY: SECOND_SAMPLE}
+        {**record, "unit": f"s{draw + 1}-{record.get('unit', '?')}", SECOND_SAMPLE_KEY: SECOND_SAMPLE}
         for record in second.unit_reviews
     )
     lines, sections = _authored_scope(candidate_readme, facts)
     rows = candidate_readme.splitlines()
     kept = [
-        replace(finding, finding_id=f"S2-{finding.finding_id}" if finding.finding_id else "")
+        replace(finding, finding_id=f"S{draw + 1}-{finding.finding_id}" if finding.finding_id else "")
         for finding in second.blocking_findings
         if _on_authored_text(finding, rows, lines, sections)
     ]
