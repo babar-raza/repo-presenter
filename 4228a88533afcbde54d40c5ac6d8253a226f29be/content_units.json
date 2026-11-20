@@ -1,0 +1,366 @@
+{
+  "omitted": [
+    {
+      "fact_id": "inherited_unit:045.paragraph",
+      "reason": "The inherited unit's substance is already reflected in the license statement in the rendered document; its specific link targets and file paths are not used elsewhere and are not relevant to describing commercial additions.",
+      "section": "enterprise_relationship"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version",
+        "example:001",
+        "format:input.png",
+        "format:input.txt",
+        "import_path:omr.api",
+        "public_symbol:omr.api",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.api.imagecollection",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.exceptions",
+        "public_symbol:omr.exceptions.childoverflowexception",
+        "public_symbol:omr.exceptions.invalidconfigurationexception",
+        "public_symbol:omr.exceptions.multiselectexception",
+        "public_symbol:omr.exceptions.omrexception",
+        "public_symbol:omr.generation.generationresult",
+        "public_symbol:omr.generation.templateconfig",
+        "public_symbol:omr.model.recognitionresult",
+        "public_symbol:omr",
+        "inherited_unit:005.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.OMR FOSS for Python reads .png images and .txt template definitions, converts them into optical mark recognition results, and writes output in multiple formats. It generates templates from text definitions and recognizes scanned forms by processing images against those templates. The product exposes core functionality through OmrEngine, TemplateProcessor, and related classes, supporting operations such as Generate, Recalculate, and Recognize. It is built only on numpy + opencv-python + Pillow."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "format:input.txt",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.generation.generationresult",
+        "public_symbol:omr.generation.templateconfig"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It creates printable bubble-sheet forms by generating PNG pages and a machine-readable .omr descriptor from markup (.txt) or code-first TemplateConfig, using OmrEngine.Generate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It registers scans robustly by handling arbitrary orientation, skew, perspective distortion, scanner-line suppression, and fiducial reconstruction before recognition."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It classifies marks using fixed-threshold or auto-calibrated logic and validates responses with FormValidationLogic, including light-shade processing and multiselect exception handling."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It exports recognition results in CSV, JSON, and XML formats through RecognitionResult methods such as GetCsv, GetJson, and GetXml."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr",
+        "public_symbol:omr.api",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.api.imagecollection",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.exceptions",
+        "public_symbol:omr.exceptions.childoverflowexception",
+        "public_symbol:omr.exceptions.invalidconfigurationexception",
+        "public_symbol:omr.exceptions.multiselectexception",
+        "public_symbol:omr.exceptions.omrexception"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It preserves API fidelity to Aspose.OMR for .NET by exposing the same class hierarchy (omr.api, omr.exceptions) and exception types (ChildOverflowException, InvalidConfigurationException, MultiselectException, OMRException) with matching method names."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.templateprocessor"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It supports batch processing by accepting a folder of scan images through TemplateProcessor.RecognizeFolder."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It enables re-scoring without re-sampling by calling TemplateProcessor.Recalculate on an existing RecognitionResult."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "This example shows how to generate a template from a text file, save the template image and metadata, then recognize an image of a filled form and export the results as CSV."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The omr package exposes the core API through omr.api.OmrEngine, which produces template generation results and template processors for recognition. The omr.api.TemplateProcessor performs recognition on scanned images, returning omr.model.RecognitionResult objects that provide multiple export formats."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.generation.generationresult",
+        "public_symbol:omr.generation.templateconfig"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:omr.api.omrengine",
+      "text": "The OmrEngine class provides the Generate method to create template images and descriptors from a text description or a TemplateConfig, returning a GenerationResult that can be saved to disk."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:omr.api.templateprocessor",
+      "text": "The TemplateProcessor class is obtained from OmrEngine.GetTemplateProcessor and provides Recalculate, Recognize, and RecognizeFolder methods to process scanned images using a specified FormValidationLogic."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:omr.model.recognitionresult",
+      "text": "The RecognitionResult class exposes GetCsv, GetCsvAsStream, GetJson, GetJsonAsStream, GetXml, and GetXmlAsStream methods to export recognition results in multiple structured formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.exceptions",
+        "public_symbol:omr.exceptions.childoverflowexception",
+        "public_symbol:omr.exceptions.invalidconfigurationexception",
+        "public_symbol:omr.exceptions.multiselectexception",
+        "public_symbol:omr.exceptions.omrexception"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:omr.exceptions",
+      "text": "The omr.exceptions module defines ChildOverflowException, InvalidConfigurationException, MultiselectException, and OMRException as the exception types raised during template processing and recognition."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation",
+        "public_symbol:omr.generation.generationresult",
+        "public_symbol:omr.generation.globalpagesettings",
+        "public_symbol:omr.generation.templateconfig"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:omr.generation",
+      "text": "The omr.generation package contains classes such as TemplateConfig, GenerationResult, and GlobalPageSettings that configure and represent template generation behavior and output."
+    },
+    {
+      "fact_ids": [
+        "import_path:omr",
+        "public_symbol:omr"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:omr",
+      "text": "The omr package is the top-level import path for the Aspose.OMR FOSS for Python library, which provides optical mark recognition capabilities under the MIT license."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:045.paragraph",
+        "package:license",
+        "package:name",
+        "package:python_requires",
+        "package:version"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds advanced recognition algorithms, batch processing, and export to multiple formats including PDF, DOCX, and Excel."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.omr.api.omrengine.generate.body.runtimeexceptionomr",
+        "implementation:throws.omr.api.omrengine.generate.body.typeerror",
+        "implementation:throws.omr.api.omrengine.gettemplateprocessor.body.runtimeexceptionomr",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.api.omrengine.generate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.api.omrengine",
+      "text": "OmrEngine class provides methods to generate a template and obtain a TemplateProcessor, where Generate dispatches on the source type to build a template into a GenerationResult and GetTemplateProcessor returns a TemplateProcessor instance."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.api.templateprocessor.recalculate",
+        "public_symbol:omr.api.templateprocessor.recognizefolder"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.api.templateprocessor",
+      "text": "TemplateProcessor class provides methods to recognize forms, recalculate recognition results at a new threshold in place, and recognize every supported image in a folder as independent forms."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.exceptions.childoverflowexception"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.exceptions.childoverflowexception",
+      "text": "ChildOverflowException class is an exception type that inherits from OMRException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.baseoffset"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.baseoffset",
+      "text": "BaseOffset class represents a base offset setting in generation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.bubblesize"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.bubblesize",
+      "text": "BubbleSize enum lists the Extralarge, Extrasmall, Large, Normal, Small, and undefined bubble size values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.fontstyle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.fontstyle",
+      "text": "FontStyle enum lists the Bold, Italic, Regular, Strikeout, Underline, and undefined font style values."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.omr.generation.generationresult.saveaspdf.body.notimplementederror",
+        "public_symbol:omr.generation.generationresult"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.generationresult",
+      "text": "GenerationResult class represents the result of template generation, and its SaveAsPdf member is not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.globalpagesettings"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.globalpagesettings",
+      "text": "GlobalPageSettings class holds global page configuration settings."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.omr.generation.memorygenerationresult.getpdf.body.notimplementederror",
+        "public_symbol:omr.generation.memorygenerationresult"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.memorygenerationresult",
+      "text": "MemoryGenerationResult class represents a generation result stored in memory, and its GetPDF member is not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.orientation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.orientation",
+      "text": "Orientation enum lists the Horizontal, Vertical, and undefined orientation values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.papersize"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.papersize",
+      "text": "PaperSize enum lists the A3, A4, Legal, Letter, Tabloid, p8519, p8521, and undefined paper size values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.pixeloffset"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.pixeloffset",
+      "text": "PixelOffset class represents a pixel offset setting in generation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.referencepointssettings"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.referencepointssettings",
+      "text": "ReferencePointsSettings class holds settings for reference points in generation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.rotationpointposition"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.rotationpointposition",
+      "text": "RotationPointPosition enum lists the BottomLeft1, BottomLeft2, BottomRight1, BottomRight2, TopLeft1, TopLeft2, TopRight1, and TopRight2 rotation point position values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.config.borderstyle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.config.borderstyle",
+      "text": "BorderStyle class represents a border style configuration."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.config.elements.choiceboxconfig"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.config.elements.choiceboxconfig",
+      "text": "ChoiceBoxConfig class is a configuration element that inherits from ParentConfig."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.config.enums.configtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:omr.generation.config.enums.configtype",
+      "text": "ConfigType enum lists the Answer, AnswerSheet, Barcode, Block, BubbleArray, CheckBox, ChoiceBox, ChoiceBoxAnswer, CompositeGrid, Container, Content, and CustomAnswerSheet configuration type values."
+    }
+  ]
+}

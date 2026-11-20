@@ -1,0 +1,195 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:python_requires"
+    ],
+    "text": "Python developers building OMR applications who need to generate printable bubble-sheet forms and recognize filled scans using the Aspose API surface without .NET dependencies."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "format:input.txt",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.generation.templateconfig",
+        "public_symbol:omr.generation.generationresult"
+      ],
+      "text": "Generate printable PNG pages and machine-readable .omr descriptors from text-markup DSL files or TemplateConfig trees using OmrEngine.Generate.",
+      "title": "Form generation from markup or code"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "text": "Register scans using four corner fiducials to handle any cardinal rotation, skew, perspective, scanner banding, and partial fiducial loss.",
+      "title": "Robust scan registration"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "text": "Classify filled vs blank bubbles using fixed or auto-calibrated thresholds, with multiselect validation via FormValidationLogic.",
+      "title": "Mark classification and validation"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "text": "Export recognition results as CSV, JSON, or XML using RecognitionResult methods.",
+      "title": "Result export in multiple formats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr",
+        "public_symbol:omr.api",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.api.imagecollection",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.exceptions",
+        "public_symbol:omr.exceptions.childoverflowexception",
+        "public_symbol:omr.exceptions.invalidconfigurationexception",
+        "public_symbol:omr.exceptions.multiselectexception",
+        "public_symbol:omr.exceptions.omrexception"
+      ],
+      "text": "Class, method, property, enum-type, and enum-member names are preserved character-for-character from Aspose.OMR for .NET v26.1.0.",
+      "title": "API fidelity to Aspose.OMR for .NET"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.templateprocessor"
+      ],
+      "text": "Process multiple scans via RecognizeFolder to handle batch recognition workflows.",
+      "title": "Batch processing support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "text": "Call TemplateProcessor.Recalculate on a RecognitionResult with a new threshold to re-score without re-reading pixels.",
+      "title": "Re-scoring without re-sampling"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "text": "Registration fails silently under extreme oblique perspective or combined skew/perspective with fiducial occlusion."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "text": "Grid orientation follows .NET spec: horizontal = each digit is a column of bubbles, vertical = each digit is a row."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.generation.templateconfig"
+      ],
+      "text": "Some attributes like choicebox.display_number, option.row_index, and block.background_color are accepted but not rendered."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:omr.api.templateprocessor"
+      ],
+      "text": "SaveAsPdf and GetPDF raise NotImplementedError as PDF output is deferred."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "example:001",
+        "format:input.png",
+        "format:input.txt",
+        "import_path:omr.api",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.api.templateprocessor"
+      ],
+      "text": "Enables end-to-end OMR workflows—authoring forms in code or text markup, generating printable PNGs and machine-readable .omr descriptors, and recognizing filled scans—using a pure Python stack."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.api.imagecollection"
+      ],
+      "text": "Provides robust registration for real-world scans, handling any cardinal rotation, skew, perspective distortion, scanner banding, and partial fiducial loss."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "text": "Supports multiple output formats (CSV, JSON, XML) for recognition results and allows re-scoring via Recalculate without re-reading pixels."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:product-knowledge-refresh",
+      "identity:repository",
+      "package:name",
+      "package:version"
+    ],
+    "text": "A Python library for Optical Mark Recognition (OMR) that ports the Aspose.OMR for .NET v26.1.0 API name-for-name, enabling form generation and scan recognition using numpy, opencv-python, and Pillow."
+  },
+  "uncertainties": [
+    "The exact behavior of RecognizeFolder when encountering mixed or corrupted scan formats is not documented in the facts.",
+    "Whether multiselect validation applies to all element types or only specific ones is not explicitly stated.",
+    "The behavior of Recalculate when the new threshold falls outside the 0–100 range is not specified.",
+    "The handling of non-ASCII characters in text elements is not detailed in the provided facts.",
+    "The resolution requirements for fiducial detection beyond the 300 DPI note are not fully specified.",
+    "Whether the auto-calibrated threshold (-100) works identically across all element types is not confirmed.",
+    "The scope of out-of-scope enums (e.g., BarcodeType) and whether they raise NotImplementedError is not clarified.",
+    "The exact behavior of the text-markup parser when encountering invalid TAB-indented attributes is not documented."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:001",
+        "format:input.txt",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.generation.templateconfig"
+      ],
+      "name": "Generate form from markup",
+      "text": "Pass a .txt file or string list to OmrEngine.Generate to produce a printable PNG and .omr descriptor using the Aspose text-markup DSL."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.api.omrengine",
+        "public_symbol:omr.generation.templateconfig"
+      ],
+      "name": "Generate form in code",
+      "text": "Build a TemplateConfig tree programmatically and pass it to OmrEngine.Generate to produce a printable PNG and .omr descriptor."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "format:input.png",
+        "public_symbol:omr.api.formvalidationlogic",
+        "public_symbol:omr.api.templateprocessor",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "name": "Recognize filled scan",
+      "text": "Use TemplateProcessor.Recognize on a scan image to detect marks, returning a RecognitionResult with per-bubble fill values and recognized answers."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:omr.model.recognitionresult"
+      ],
+      "name": "Export results",
+      "text": "Call RecognitionResult.GetCsv, GetJson, or GetXml to export recognition results in structured formats."
+    }
+  ]
+}
