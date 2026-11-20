@@ -128,11 +128,27 @@
    "run_id": "44620398709",
    "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T00:23:34+00:00",
+   "classes": [
+    "BC-06|unresolved|n_aspose_com_links",
+    "BC-07|inherited_unit|id_is_kept_as",
+    "BC-17|inherited_unit|section_coverage",
+    "BC-17|inherited_unit|technical_content",
+    "live_readme_loss|inherited_unit|link_https"
+   ],
+   "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+   "findings": 9,
+   "outcome": "failure",
+   "run_id": "44644632959",
+   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T21:41:55+00:00",
+  "at": "2026-11-20T00:23:34+00:00",
   "classes": {
    "BC-06|unresolved|n_aspose_com_links": {
     "example": "4 aspose.com links exceed the aspose.com ceiling of 2 (auto budget from 1800 visible words and 7 verified examples)",
@@ -142,7 +158,7 @@
      "-"
     ],
     "rule": "BC-06",
-    "scope": "5497d6319c32f538612ee710110e1275306f7d11f6510688183a459b58c19961",
+    "scope": "2feda7ee1a134961f647ec6251bf65c52daf825c87cfe06cb6cee5363282c918",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -166,7 +182,7 @@
      "inherited_unit:080.paragraph"
     ],
     "rule": "BC-07",
-    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
+    "scope": "d0b61170e85579bfc592273ec94b008b18685177ede12d9fe12a5eb566888e83",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -188,7 +204,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
+    "scope": "d0b61170e85579bfc592273ec94b008b18685177ede12d9fe12a5eb566888e83",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -210,7 +226,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "BC-17",
-    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
+    "scope": "d0b61170e85579bfc592273ec94b008b18685177ede12d9fe12a5eb566888e83",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -232,7 +248,7 @@
      "inherited_unit:083.list"
     ],
     "rule": "live_readme_loss",
-    "scope": "79d5edcdb58a1230883fbc3cd07a3aca0a52a608b2f1f3c7f83c56a3df7762b9",
+    "scope": "a8a7c8814b7457520b6ce4368273354b38072b0f9863246cef597fd129d4760e",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -246,7 +262,7 @@
     "upstream": ""
    }
   },
-  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -393,7 +409,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
+  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -401,7 +417,7 @@
     "facts_defects": [],
     "label": "BC-07",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:080.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:080.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"There are four editions of this library and they are **not** interchangeable. Three of them \u2014\\n.NET, Java and C++ \u2014 are the same design in three languages; Python is a larger and different one.\\nThe ",
     "section_id": null,
     "stage": "S4"
    },
@@ -423,8 +439,8 @@
    }
   ],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
-  "run_id": "44620398709",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44620398709",
+  "run_id": "44644632959",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44644632959",
   "schema_version": 1,
   "source_revision": "86c441b5d81e707f2ea9e01b197dbb6ff7a3859b",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
