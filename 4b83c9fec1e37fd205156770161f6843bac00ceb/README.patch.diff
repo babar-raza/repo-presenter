@@ -14,7 +14,7 @@
 +
 +[![Aspose.PDF FOSS for Cpp](https://products.aspose.org/media/pdf/cpp/banner-readme.png)](https://products.aspose.org/pdf/cpp/)
 +
-+Aspose.PDF FOSS for Cpp reads and writes PDF documents, extracts text, and converts pages to image formats such as PNG. It builds documents from scratch, supporting text, tables, vector graphics, watermarks, annotations, AcroForm fields, and bookmarks. It encrypts and decrypts files using AES-256 and handles password-protected documents. It reads document metadata and information such as title, author, and keywords, and writes updated values back to the file.
++Aspose.PDF FOSS for Cpp reads and writes PDF documents, extracts text, and converts pages to image formats such as PNG. It builds documents from scratch, supporting text, tables, vector graphics, watermarks, annotations, AcroForm fields, and bookmarks. It encrypts and decrypts files using AESx256 and handles password-protected documents. It reads document metadata and information such as title, author, and keywords, and writes updated values back to the file.
 +
 +Aspose.PDF FOSS for Cpp is a free, open-source, modern C++20 library for working with PDF
  documents — opening and saving existing files, extracting text, rasterising pages to image
@@ -105,7 +105,7 @@
 +- **Render pages to images.** It renders pages to raster images using Aspose.Pdf.Devices::PngDevice, `JpegDevice`, and `BmpDevice` for single-page output, and `TiffDevice` for single-page or multi-page ranges with median-cut palette quantisation or caller-supplied palette conversion.
 +- **Encrypt and sign documents.** It encrypts documents using Document::Encrypt with user and owner passwords, granular `Aspose.Pdf.Permissions` flags, and algorithms including RC4-40, RC4-128, AES-128, and AES-256, and signs documents with Aspose.Pdf.Facades::PdfFileSignature to add detached PKCS#7 signatures.
 +- **Create PDFs from scratch.** It builds documents from scratch using positioned text via Aspose.Pdf.Text::TextBuilder and `TextFragment`, tabular layout with `Aspose.Pdf.Table` (column widths, borders, background colours, and spanning cells), vector shapes via Aspose.Pdf.Drawing::Graph, and interactive AcroForm fields through `Aspose.Pdf.Forms`.
-+- **Support for standard fonts.** It supports the Standard-14 fonts without an embedded /FontFile, painting correctly via system fonts and falling back to bundled substitutes so glyphs render even in fontless Linux/CI containers.
++- **Support for standard fonts.** Public module.
 +- **Facades API for legacy workflows.** It provides the classic `Aspose.Pdf.Facades` API for legacy workflows, including `PdfConverter` for rasterisation, `PdfExtractor` for text extraction with page ranges, `PdfFileSecurity` for encryption and password changes, `PdfFileSignature` for signing, `PdfBookmarkEditor` for bookmarks, `PdfFileEditor` for concatenation and splitting, and `PdfFileStamp` for headers, footers, and page numbers.
 +
  - Extract text with `Text::TextAbsorber`, which walks a whole `Document` or a single `Page`, or
@@ -459,7 +459,7 @@
  
  | Example | Shows |
  |---|---|
-@@ -319,175 +351,598 @@
+@@ -319,175 +351,549 @@
  | `11_render_standard14` | render `/Helvetica` with no embedded font (fallback path) |
  | `12_create_features` | from-scratch 10-page showcase: text, image, tables, graphics, annotations, AcroForm fields, bookmarks |
  
@@ -568,7 +568,7 @@
 +
 +## API Reference
 +
-+Aspose.PDF FOSS for Cpp exposes the `Aspose.Pdf.Text`, `Aspose.Pdf.Devices`, `Aspose.Pdf.Annotations`, `Aspose.Pdf.Forms`, `Aspose.Pdf.Facades`, `Aspose.Pdf.CryptoAlgorithm`, `Aspose.Pdf.Drawing`, `Aspose.Pdf.Table`, `Aspose.Pdf.OutlineCollection`, `Aspose.Pdf.NamedDestinationCollection`, and `Aspose.Pdf.EmbeddedFileCollection` modules. Each module provides dedicated classes for working with specific PDF features.
++Aspose.PDF FOSS for Cpp exposes the `Aspose.Pdf.Document` class as its primary entry point, which provides access to pages, metadata, forms, and annotations. Supporting classes such as `Aspose.Pdf.DocumentInfo` and `Aspose.Pdf.LoadOptions` enable metadata inspection and document loading configuration.
 +
 +The public API has 249 types.
 +
@@ -836,49 +836,53 @@
 +
 +#### Detailed Member Reference
 +
++### Document
++
++The `Aspose.Pdf.Document` class loads PDF files from a path, supports password-protected documents, and exposes collections for pages, outlines, annotations, and embedded files, along with methods to encrypt, decrypt, and save the document.
++
 +### Text
 +
-+The `Aspose.Pdf.Text` module provides text extraction and construction capabilities through `TextAbsorber`, `TextFragmentAbsorber`, and `TextBuilder`. `TextAbsorber` visits a page and populates its Text property with the extracted text, while `TextFragmentAbsorber` returns a collection of text fragments via its `TextFragments` property after calling Visit. `TextBuilder` lets developers append paragraphs and text to a page.
++The `Aspose.Pdf.Text` namespace provides text extraction via `Aspose.Pdf.Text.TextAbsorber` and `Aspose.Pdf.Text.TextFragmentAbsorber`, which visit a document and expose extracted text content and fragment details.
 +
 +### Devices
 +
-+The `Aspose.Pdf.Devices` module enables rendering pages to image formats via `PageDevice` and `Resolution`. `Resolution` exposes horizontal and vertical DPI values, and `PageDevice` implements the Process method to render a page to a stream.
-+
-+### Annotations
-+
-+The `Aspose.Pdf.Annotations` module supports adding and managing annotations through `Annotation` and `AnnotationCollection`. `Annotation` provides properties and methods to configure appearance, position, and behavior, and `AnnotationCollection` offers collection operations such as Add, Remove, and Delete.
-+
-+### Forms
-+
-+The `Aspose.Pdf.Forms` module provides form field support through `Field` and `FormType`.
-+
-+### Facades
-+
-+The `Aspose.Pdf.Facades` module offers high-level operations through `PdfConverter` and `PdfExtractor`. `PdfConverter` converts PDF pages to raster images, and `PdfExtractor` extracts text from a specified page range.
++The `Aspose.Pdf.Devices` namespace offers rendering devices such as `Aspose.Pdf.Devices.PageDevice`, with concrete implementations like `PngDevice` and `TiffDevice`, and resolution control via `Aspose.Pdf.Devices.Resolution` to set horizontal and vertical DPI.
 +
 +### CryptoAlgorithm
 +
-+The `Aspose.Pdf.CryptoAlgorithm` module defines encryption algorithms and permissions for securing PDF documents. `CryptoAlgorithm` enumerates supported algorithms, and `Permissions` provides a flags enum for access control per ISO 32000-1.
++The `Aspose.Pdf.CryptoAlgorithm` class enumerates supported encryption algorithms including AESx256, and works with the `Aspose.Pdf.Permissions` flags to control document access and modification rights.
 +
-+### Drawing
++### Annotations
 +
-+The `Aspose.Pdf.Drawing` module enables vector graphics via `Graph` and shape primitives. `Graph` holds a collection of shapes such as `Line`, `Rectangle`, `Circle`, and `Ellipse`.
++The `Aspose.Pdf.Annotations` namespace provides annotation support through `Aspose.Pdf.Annotations.Annotation` and `Aspose.Pdf.Annotations.AnnotationCollection`, enabling addition, enumeration, and manipulation of annotation objects on pages.
++
++### Forms
++
++The `Aspose.Pdf.Forms` namespace exposes form handling via `Aspose.Pdf.Forms.FormType` and `Aspose.Pdf.Forms.TextBoxField`, supporting form field creation, addition to pages, and flattening.
++
++### Facades
++
++The `Aspose.Pdf.Facades` namespace provides high-level utilities including `Aspose.Pdf.Facades.PdfConverter` for rasterizing PDFs and `Aspose.Pdf.Facades.PdfExtractor` for scoped text extraction.
 +
 +### Table
 +
-+The `Aspose.Pdf.Table` module supports tabular content through `Table` and `Row`. `Table` exposes rows and border settings, and `Row` provides cells for adding content.
++The `Aspose.Pdf.Table` namespace offers table support via `Aspose.Pdf.Table`, `Aspose.Pdf.Row`, and `Aspose.Pdf.Cell`, enabling structured content with column widths, borders, and cell styling.
++
++### Drawing
++
++The `Aspose.Pdf.Drawing` namespace provides vector drawing primitives such as `Aspose.Pdf.Drawing.Graph`, `Aspose.Pdf.Drawing.Rectangle`, and `Aspose.Pdf.Drawing.Circle` for embedding graphics in PDFs.
 +
 +### OutlineCollection
 +
-+The `Aspose.Pdf.OutlineCollection` module manages document outlines via `OutlineCollection` and `OutlineItemCollection`. `OutlineItemCollection` supports setting title, bold style, and destination for outline items.
++The `Aspose.Pdf.OutlineCollection` class manages document outlines and works with `Aspose.Pdf.OutlineItemCollection` and `Aspose.Pdf.NamedDestinationCollection` to define navigable bookmarks and destinations.
 +
-+### NamedDestinationCollection
++### Metadata
 +
-+The `Aspose.Pdf.NamedDestinationCollection` module provides named destinations through `NamedDestinationCollection` and `XYZExplicitDestination`. `XYZExplicitDestination` supplies explicit page view coordinates via Left, Top, and Zoom methods.
++The `Aspose.Pdf.Metadata` namespace provides XMP metadata access through `Aspose.Pdf.XmpValue`, enabling programmatic reading and writing of document metadata properties.
 +
-+### EmbeddedFileCollection
++### PageCollection
 +
-+The `Aspose.Pdf.EmbeddedFileCollection` module supports embedding files via `EmbeddedFileCollection` and `FileSpecification`. `FileSpecification` enables associating an external file with a PDF document.
++The `Aspose.Pdf.PageCollection` class manages document pages via a 1-based indexer, supporting addition, insertion, deletion, and counting of pages, and works with `Aspose.Pdf.Page` and `Aspose.Pdf.PageLabelCollection`.
  
  Available subtypes: `Highlight`, `Underline`, `Squiggly`, `StrikeOut`, `Square`, `Circle`, `Line`,
  `Ink`, `Text`, `FreeText`, `Stamp`, `Link` (with `GoToAction`/`GoToURIAction`), `FileAttachment`.
@@ -958,59 +962,6 @@
 +| `Rotation` | Rotation enum provides four orientation values: None, on90, on180, on270. |
 +| `ShapeType` | Enumerates Landscape, None and Portrait. |
 +| `VerticalAlignment` | Enumerates Bottom, Center, None and Top. |
-+
-+| Class | Description |
-+|---|---|
-+| `Annotation` | Class that inherits from BaseParagraph and declares methods including Accept, ActiveState, Alignment, AnnotationType, Border and Characteristics. |
-+| `AnnotationCollection` | Class that declares methods including Accept, Add, Clear, Contains, Count and Delete. |
-+| `AnnotationSelector` | Class that declares the method Visit. |
-+| `BleedMarkAnnotation` | BleedMarkAnnotation.Accept(visitor) implements the visitor pattern, allowing external visitor objects to process the annotation without exposing its internal structure. |
-+| `Border` | Border appearance can be customized by setting its Width, Style, Effect, EffectIntensity, and corner radii via the Border class methods. |
-+| `CaretAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Frame and Symbol. |
-+| `Characteristics` | Class that declares the method Rotate. |
-+| `CircleAnnotation` | Class that inherits from CommonFigureAnnotation and declares the method Accept. |
-+| `ColorBarAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and ColorOfCMYK. |
-+| `CommonFigureAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Frame and InteriorColor. |
-+| `CornerPrinterMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Position. |
-+| `DefaultAppearance` | Class that declares the methods FontName, FontResourceName, FontSize and Text. |
-+| `ExplicitDestination` | Class that inherits from IAppointment and declares the methods PageNumber and ToString. |
-+| `FileAttachmentAnnotation` | FileAttachmentAnnotation.File() gets or sets the attached file via a FileSpecification object, allowing embedding of external resources in a PDF. |
-+| `FitExplicitDestination` | Class that inherits from ExplicitDestination and declares the method ToString. |
-+| `FreeTextAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, Callout, DefaultAppearance, DefaultAppearanceObject, DefaultStyle and EndingStyle. |
-+| `HighlightAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
-+| `InkAnnotation` | InkAnnotation represents free‑hand ink strokes; its InkList property holds a StrokeList that can be read or replaced. |
-+| `JavascriptAction` | JavascriptAction encapsulates a JavaScript snippet attached to PDF objects; the script can be retrieved or updated via Script() getter/setter. |
-+| `LineAnnotation` | Class that inherits from MarkupAnnotation and declares methods including Accept, CaptionOffset, CaptionPosition, Ending, EndingStyle and Intent. |
-+| `LinkAnnotation` | LinkAnnotation enables clickable areas in a PDF that can trigger a PdfAction or navigate to a named destination. |
-+| `MarkupAnnotation` | MarkupAnnotation provides methods to set review state, opacity, title, and rich text for comment‑type annotations. |
-+| `MovieAnnotation` | MovieAnnotation lets you embed a video file in a PDF, with properties for title, poster flag, aspect ratio, and rotation. |
-+| `NamedAction` | Class that inherits from PdfAction and declares the methods Name and ToString. |
-+| `NamedDestination` | Class that inherits from IAppointment and declares the methods Name and ToString. |
-+| `PageInformationAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Accept. |
-+| `PdfAction` | PdfAction.GetECMAScriptString() returns the JavaScript code attached to a PDF action, enabling inspection or modification of interactive scripts. |
-+| `PolyAnnotation` | Class that inherits from MarkupAnnotation and declares the methods EndingStyle, Intent, InteriorColor, StartingStyle and Vertices. |
-+| `PolygonAnnotation` | Class that inherits from PolyAnnotation and declares the method Accept. |
-+| `PolylineAnnotation` | Class that inherits from PolyAnnotation and declares the method Accept. |
-+| `PopupAnnotation` | Class that inherits from Annotation and declares the methods Accept, Open and Parent. |
-+| `PrinterMarkAnnotation` | PrinterMarkAnnotation can insert printer marks such as trim, bleed, registration, or colour bars into an entire document or a single page via AddPrinterMarks. |
-+| `RedactionAnnotation` | RedactionAnnotation lets you permanently remove content while optionally overlaying custom text, fill colour, border colour and font size. |
-+| `RegistrationMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and Position. |
-+| `RichMediaAnnotation` | RichMediaAnnotation enables embedding of Flash or other rich media with activation events and custom variables. |
-+| `ScreenAnnotation` | Class that inherits from Annotation and declares the methods Accept and Title. |
-+| `SoundAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept and Icon. |
-+| `SquareAnnotation` | Class that inherits from CommonFigureAnnotation and declares the method Accept. |
-+| `SquigglyAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
-+| `StampAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image. |
-+| `StrikeOutAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
-+| `SubmitFormAction` | Class that inherits from PdfAction and declares the methods Flags, ToString and Url. |
-+| `TextAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open. |
-+| `TextMarkupAnnotation` | Class that inherits from MarkupAnnotation and declares the methods GetMarkedText and QuadPoints. |
-+| `TextStyle` | Class that declares the methods Alignment, FontName, FontSize and HorizontalAlignment. |
-+| `TrimMarkAnnotation` | TrimMarkAnnotation and UnderlineAnnotation both support the visitor pattern via an Accept method that forwards the annotation to a visitor object. |
-+| `UnderlineAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |
-+| `WatermarkAnnotation` | WatermarkAnnotation enables adding a visual watermark to a PDF page and lets developers control its transparency. |
-+| `WidgetAnnotation` | WidgetAnnotation provides access to AcroForm field attributes such as ReadOnly, Required, Exportable, and DefaultAppearance. |
-+| `XYZExplicitDestination` | XYZExplicitDestination supplies explicit page view coordinates via Left(), Top() and Zoom() methods. |
 +
 +| Enumeration | Description |
 +|---|---|
@@ -1217,7 +1168,7 @@
  
  ```
  ├── include/
-@@ -502,416 +957,18 @@
+@@ -502,416 +908,18 @@
  └── CMakeLists.txt
  ```
  
@@ -1635,7 +1586,7 @@
  
  The compiled library links against nothing but the C++ standard library, and all codecs (TIFF,
  JPEG, PNG, and more) are implemented from scratch within the library. It bundles the Liberation
-@@ -921,15 +978,17 @@
+@@ -921,15 +929,17 @@
  GoogleTest (BSD 3-Clause) is fetched via CMake `FetchContent` for the test suite only and is not
  part of the shipped library. Full detail: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
  

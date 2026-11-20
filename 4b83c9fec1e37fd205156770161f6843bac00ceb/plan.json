@@ -8,20 +8,41 @@
   "api_hubs": [
     {
       "fact_ids": [
+        "example:002",
+        "example:004",
+        "example:005",
+        "public_symbol:aspose.pdf.document",
+        "public_symbol:aspose.pdf.documentinfo",
+        "public_symbol:aspose.pdf.loadoptions"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.pdf.document"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "example:005",
         "public_symbol:aspose.pdf.text",
         "public_symbol:aspose.pdf.text.textabsorber",
-        "public_symbol:aspose.pdf.text.textfragmentabsorber",
-        "public_symbol:aspose.pdf.text.textbuilder"
+        "public_symbol:aspose.pdf.text.textfragmentabsorber"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.text"
     },
     {
       "fact_ids": [
+        "example:002",
         "public_symbol:aspose.pdf.devices",
         "public_symbol:aspose.pdf.devices.pagedevice",
         "public_symbol:aspose.pdf.devices.resolution"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.devices"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:aspose.pdf.cryptoalgorithm",
+        "public_symbol:aspose.pdf.permissions"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.pdf.cryptoalgorithm"
     },
     {
       "fact_ids": [
@@ -34,8 +55,8 @@
     {
       "fact_ids": [
         "public_symbol:aspose.pdf.forms",
-        "public_symbol:aspose.pdf.forms.field",
-        "public_symbol:aspose.pdf.forms.formtype"
+        "public_symbol:aspose.pdf.forms.formtype",
+        "public_symbol:aspose.pdf.forms.textboxfield"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.forms"
     },
@@ -49,45 +70,42 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.cryptoalgorithm",
-        "public_symbol:aspose.pdf.permissions"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.cryptoalgorithm"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.drawing",
-        "public_symbol:aspose.pdf.drawing.graph"
-      ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.drawing"
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.pdf.table",
-        "public_symbol:aspose.pdf.row"
+        "public_symbol:aspose.pdf.row",
+        "public_symbol:aspose.pdf.cell"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.table"
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.pdf.drawing",
+        "public_symbol:aspose.pdf.drawing.graph",
+        "public_symbol:aspose.pdf.drawing.rectangle"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.pdf.drawing"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose.pdf.outlinecollection",
-        "public_symbol:aspose.pdf.outlineitemcollection"
+        "public_symbol:aspose.pdf.outlineitemcollection",
+        "public_symbol:aspose.pdf.nameddestinationcollection"
       ],
       "symbol_fact_id": "public_symbol:aspose.pdf.outlinecollection"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.nameddestinationcollection",
-        "public_symbol:aspose.pdf.annotations.xyzexplicitdestination"
+        "public_symbol:aspose.pdf.metadata",
+        "public_symbol:aspose.pdf.xmpvalue"
       ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.nameddestinationcollection"
+      "symbol_fact_id": "public_symbol:aspose.pdf.metadata"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.pdf.embeddedfilecollection",
-        "public_symbol:aspose.pdf.filespecification"
+        "public_symbol:aspose.pdf.pagecollection",
+        "public_symbol:aspose.pdf.page",
+        "public_symbol:aspose.pdf.pagelabelcollection"
       ],
-      "symbol_fact_id": "public_symbol:aspose.pdf.embeddedfilecollection"
+      "symbol_fact_id": "public_symbol:aspose.pdf.pagecollection"
     }
   ],
   "at_a_glance": {
@@ -190,18 +208,7 @@
       "title": "Facades API for legacy workflows"
     }
   ],
-  "deviations": [
-    {
-      "fact_ids": [
-        "public_symbol:aspose.pdf.document",
-        "public_symbol:aspose.pdf.pagecollection",
-        "public_symbol:aspose.pdf.documentinfo",
-        "public_symbol:aspose.pdf.metadata"
-      ],
-      "section_id": "api_reference",
-      "text": "Dropped hub:public_symbol:aspose.pdf.document at repair: claim_contradiction:0+claim_contradiction:1: the targeted repair blanked the slot"
-    }
-  ],
+  "deviations": [],
   "flagship_example_id": "example:007",
   "links": [
     {
@@ -289,6 +296,14 @@
       "section_id": "badges"
     },
     {
+      "link_fact_id": "link_target:008",
+      "section_id": "installation"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "license"
+    },
+    {
       "link_fact_id": "link_target:011",
       "section_id": "navigation"
     },
@@ -306,10 +321,6 @@
     },
     {
       "link_fact_id": "link_target:015",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:016",
       "section_id": "navigation"
     }
   ],
