@@ -7485,3 +7485,21 @@ unclearable `unsupported_claim` findings (an owner decision about the gate, not 
 at their origin; the K1 seals re-reviewed by the current reviewer through the production review.
 
 Backlog: BL-390
+
+## 2026-11-20: Owner decisions on the audit gate and the Sunday deliverable; pass 4 result; degrade diagnostics
+
+Owner (interactive form, 2026-11-20): (1) audit gate: keep it, no threshold change; merge the BL-390 scope fix, re-review
+the seals an older reviewer sealed, and run a same-bytes repeat audit to measure how much of the flagging is reviewer
+variance before deciding the gate; (2) Sunday 2026-11-22 deliverable: deploy every component on GitHub Actions and report
+the real numbers against the 85% bar; the bar is not lowered; no upstream PRs until both lanes pass (R15).
+Frozen-code pass 4 (main `7f39a29`, BL-330 to BL-370 merged): 24 of 40 Lane R cells hold a seal and recertify (pass 1: 21,
+pass 3: 23); one new seal (PDF C++); 17 of 40 job successes; 16 cells unsealed. Hosted logs show the BL-350 degrade fires
+on OMR (`printed_text_withheld`) yet the candidate is rejected again with the same finding and no re-review follows, and
+every provider call count is 0 (stored outputs replay), so the reason a degraded candidate is discarded was invisible.
+`cascade._degrade_settled` now prints why a candidate is discarded (no printed byte changed, a new failing check, or a
+blocking load that is not lower) and when nothing is kept, so the next targeted hosted re-run of the stuck cells (OMR,
+Slides C++, Font, PDF .NET, Page, PSD Python) can be diagnosed from the log. Independent acceptance is the other gate:
+the 2026-11-19 audit round accepted nothing (false-flag rate 0.353 over 17 controls, limit 0.1).
+
+Backlog: BL-290, BL-350, BL-390.
+
