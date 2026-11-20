@@ -69,7 +69,10 @@ from repo_presenter.readme.composition.authoring import (
     value_tokens,
 )
 from repo_presenter.readme.composition.coverage import states_all
-from repo_presenter.readme.composition.output_bounds import bound_authoring_citations
+from repo_presenter.readme.composition.output_bounds import (
+    bound_authoring_citations,
+    omittable_ids,
+)
 
 _SLOT_SET_ERROR = "units must fill exactly these slots once each"
 # Accepted units are shown to the narrowed ask so it does not repeat them; a long section shows
@@ -766,6 +769,7 @@ def recover_value_sentences(
 #: store (``.repaired-<attempt>.json``): R14, every deviation recorded with a rule id and evidence.
 TERMINAL_SAFE_RULE = "BL-220"
 TERMINAL_SAFE_RULE_370 = "BL-370"
+TERMINAL_SAFE_RULE_460 = "BL-460"
 
 
 def _fact_true_opening_unit(
@@ -860,6 +864,8 @@ def recover_opening_output(
     (``authoring.recover_opening_duplicates_preserved``), then the no-values deletion
     (:func:`recover_value_sentences`), then, for what still only restates the inherited paragraph,
     the format-facts floor (:func:`recover_restated_opening`, BL-220)."""
+    unowed = recover_unowed_omissions(output, task=task)
+    output = output if unowed is None else unowed
     headed = recover_heading_markers(output)
     output = output if headed is None else headed
     trimmed = recover_opening_duplicates_preserved(output, dispositions=dispositions, facts=facts)
@@ -867,7 +873,7 @@ def recover_opening_output(
     valued = recover_value_sentences(current, task=task, facts=facts, name=name)
     best = valued if valued is not None else trimmed
     if best is None:
-        best = headed
+        best = headed if headed is not None else unowed
     floored = recover_restated_opening(
         output if best is None else best,
         task=task, facts=facts, dispositions=dispositions, name=name,
@@ -1061,6 +1067,49 @@ def recover_failing_capabilities(
     return output
 
 
+def recover_unowed_omissions(output: dict[str, Any], *, task: SectionTask) -> dict[str, Any] | None:
+    """Terminal-safe correction for an ``omitted`` list longer than the section can owe (BL-460;
+    hosted Slides C++ run 44673592648: ``$.omitted: [...31 entries] is too long`` three times, the
+    units themselves accepted). The prompt asks every accepted fact a unit does not cite to be
+    listed with a reason; the model also listed the ``do_not_claim`` records (contradicted
+    examples, unresolved formats) and repeated ids, so the list outgrew the schema's bound, which
+    is the number of distinct facts the task offers (``output_bounds.omittable_ids``). An entry
+    for a fact the task never offered accounts for nothing owed (``carried_unit_errors`` reads only
+    the must-carry ids, which are offered), is never printed and is dropped; a repeated id keeps
+    its first entry. Every dropped entry is recorded in the repair notes (R14); ``run_job``
+    re-validates. ``None`` when every entry is an offered fact listed once."""
+    omitted = output.get("omitted")
+    if not isinstance(omitted, list):
+        return None
+    offered = omittable_ids(task)
+    kept: list[Any] = []
+    seen: set[str] = set()
+    notes: list[dict[str, Any]] = []
+    for item in omitted:
+        fact_id = item.get("fact_id") if isinstance(item, dict) else None
+        if not isinstance(fact_id, str):
+            kept.append(item)
+            continue
+        if fact_id not in offered or fact_id in seen:
+            notes.append(
+                {
+                    "fallback": "unowed_omission_dropped",
+                    "rule": TERMINAL_SAFE_RULE_460,
+                    "fact_id": fact_id,
+                    "why": "repeated" if fact_id in seen else "not offered to this section",
+                    "reason": item.get("reason"),
+                }
+            )
+            continue
+        seen.add(fact_id)
+        kept.append(item)
+    if not notes:
+        return None
+    output["omitted"] = kept
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
 def recover_authoring_output(
     output: dict[str, Any],
     *,
@@ -1073,6 +1122,8 @@ def recover_authoring_output(
     correction of this module, in order, ending with the API-row fallback
     (:func:`recover_failing_api_rows`) when the job's ``checks`` are given. With the product
     ``name``, a key-capability unit also loses a value it spells (:func:`recover_value_sentences`)."""
+    unowed = recover_unowed_omissions(output, task=task)
+    output = output if unowed is None else unowed
     headed = recover_heading_markers(output)
     output = output if headed is None else headed
     valued = recover_value_sentences(output, task=task, facts=facts, name=name)
@@ -1098,4 +1149,4 @@ def recover_authoring_output(
         )
         if floored is not None:
             return floored
-    return recovered
+    return recovered if recovered is not None else unowed
