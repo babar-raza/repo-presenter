@@ -136,11 +136,24 @@
    "run_id": "44656493448",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T08:36:47+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44701951432",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T01:57:25+00:00",
+  "at": "2026-11-20T08:36:47+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
     "example": "The public entry point is the `aspose_psd_foss` package. It provides the `aspose_psd_foss.PsdImage` class to load, inspect, and save Adobe Photoshop files, and the `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
@@ -150,7 +163,7 @@
      "api_reference.intro"
     ],
     "rule": "llm:factuality",
-    "scope": "fb4d311493cc210ff42ce92cfb7d796c660319cef2b4e1c71fc29ee8255ee8c9",
+    "scope": "44f8acb5519cc1e831a5ef9e28f92c1138d9a5f087fec463027c2665b5bb9600",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -173,7 +186,7 @@
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "695f96044b947d3be353603554160a9982a40ee9ded641546161660dee036cd1",
+    "scope": "d991f04cd0ebce971eaa55d5ab6ab26516c04ebfb2712ceed21407c2194a4e41",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -188,7 +201,7 @@
     "upstream": ""
    }
   },
-  "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
+  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -230,13 +243,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "82b8ccbac847b04cfc0b797f5099c0b1315cf2ab",
+  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F03",
+    "label": "F04",
     "outcome": "unrepairable",
     "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
     "section_id": "scope_limitations",
@@ -244,7 +257,7 @@
    },
    {
     "facts_defects": [],
-    "label": "F01+F02",
+    "label": "F01+F02+F03",
     "outcome": "repaired",
     "reason": "",
     "section_id": "api_reference",
@@ -252,8 +265,8 @@
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "44656493448",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44656493448",
+  "run_id": "44701951432",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44701951432",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
