@@ -204,21 +204,34 @@
    "run_id": "44717025933",
    "source_revision": "1d4f64934d567ee7e163f0b50b68483f803a1ab4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T14:38:07+00:00",
+   "classes": [
+    "BC-05|inherited_unit|superseded_unstated",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+   "findings": 79,
+   "outcome": "failure",
+   "run_id": "44745502021",
+   "source_revision": "03e882838470250fc30db78c346c879fae2c68ef",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T11:11:57+00:00",
+  "at": "2026-11-20T14:38:07+00:00",
   "classes": {
    "BC-05|inherited_unit|superseded_unstated": {
-    "example": "inherited_unit:581.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (number '2.8'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "example": "inherited_unit:496.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 4 piece(s) of it (span 'doc.validate(options?)'; span 'doc.validatepdfa(level, options?)'; span 'doc.validatepdfua(part, options?)'; span 'doc.validatepdfx(level, options?)'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "findings": 1,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:581.paragraph"
+     "inherited_unit:496.paragraph"
     ],
     "rule": "BC-05",
-    "scope": "5a329d158ed784abbf68e3829415515898fac2983b628728a8d62c112ede3df2",
+    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -232,43 +245,19 @@
     "sub_rule": "superseded_unstated",
     "upstream": ""
    },
-   "BC-14|unresolved|the_readme_says_its": {
-    "example": "the README says its count of public types is listed in what follows, but the table rows that follow list only 445; state the count of what is listed, or list every type",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-14",
-    "scope": "f10484650701c05da0d16f9c32c16064bb9b87de22b931348fa8ea2cc4583ea8",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
    "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:240.paragraph holds api_identifiers 'richTextToPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 102,
+    "example": "inherited_unit:244.paragraph holds api_identifiers 'richTextToPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 78,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:240.paragraph",
-     "inherited_unit:528.table",
-     "inherited_unit:303.paragraph",
-     "inherited_unit:409.paragraph",
-     "inherited_unit:437.table"
+     "inherited_unit:244.paragraph",
+     "inherited_unit:532.table",
+     "inherited_unit:307.paragraph",
+     "inherited_unit:413.paragraph",
+     "inherited_unit:441.table"
     ],
     "rule": "BC-17",
-    "scope": "5a329d158ed784abbf68e3829415515898fac2983b628728a8d62c112ede3df2",
+    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -281,59 +270,23 @@
     ],
     "sub_rule": "technical_content",
     "upstream": ""
-   },
-   "claim_contradiction|inherited_unit|the_readme_says_its": {
-    "example": "The public entry points are organized around `Document` and `Page` (the core object model),\n`Font`/`EmbeddedFont` (text authoring), `Annotation` and `Field` (interactive content), and\nper-capability builders such as `PageGraphics`, `Flow` and `Table` \u2014 533 public types plus 171\nfunctions, classes an",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:501.paragraph"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "1fd99e503bd7d394c4fb7e2bbb05104a0797cb3752d1367c10e57de9e0371b80",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
    }
   },
-  "code": "064d8eea5deb8902fbc58d24b230780950f5d42136cdb0e84a7cba0b1ff98fc0",
+  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says its count of public types is listed in what follows, but the table rows that follow list only 445; state the count of what is listed, or list every type)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "claim_contradiction",
-    "message": "line 3663 (COMPOSING): the README says its count of public types is listed in what follows, but the table rows that follow list only 445; state the count of what is listed, or list every type",
-    "origin": {
-     "id": "inherited_unit:501.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "The public entry points are organized around `Document` and `Page` (the core object model),\n`Font`/`EmbeddedFont` (text authoring), `Annotation` and `Field` (interactive content), and\nper-capability builders such as `PageGraphics`, `Flow` and `Table` \u2014 533 public types plus 171\nfunctions, classes an",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|the_readme_says_its",
-    "source": "review",
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
-   {
     "label": "BC-05",
-    "message": "inherited_unit:581.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (number '2.8'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
+    "message": "inherited_unit:496.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 4 piece(s) of it (span 'doc.validate(options?)'; span 'doc.validatepdfa(level, options?)'; span 'doc.validatepdfua(part, options?)'; span 'doc.validatepdfx(level, options?)'): a superseded unit's replacement must carry all of its substance; keep it (VERIFIED_PRESERVE/VERIFIED_MOVE), or PRESERVE_ATTRIBUTED when no fact confirms it",
     "origin": {
-     "id": "inherited_unit:581.paragraph",
+     "id": "inherited_unit:496.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -345,385 +298,10 @@
     "upstream": ""
    },
    {
-    "label": "BC-14",
-    "message": "the README says its count of public types is listed in what follows, but the table rows that follow list only 445; state the count of what is listed, or list every type",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_says_its",
-    "source": "validation",
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:240.paragraph holds api_identifiers 'richTextToPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:240.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'richTextToPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:528.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:240.paragraph holds api_identifiers 'RichTextPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:240.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:303.paragraph holds api_identifiers 'Field.SetStyle', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:303.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:409.paragraph holds api_identifiers 'ensureInfo()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:409.paragraph",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:437.table holds api_identifiers 'unembedSkipped', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:437.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:437.table holds api_identifiers 'report.jbig2', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:437.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:509.table holds api_identifiers 'annotation.AddReply', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:509.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'annotation.AddReply', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:528.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:509.table holds api_identifiers 'annotation.AddStateReply', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:509.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'annotation.AddStateReply', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:528.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:509.table holds api_identifiers 'decimalChar', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:509.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:513.table holds api_identifiers 'IMAGE_FORMATS', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:513.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'IMAGE_FORMATS', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:528.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:513.table holds api_identifiers 'IMAGE_MODES', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:513.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'IMAGE_MODES', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:528.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:513.table holds api_identifiers 'ImageOptions.mode', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:513.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'checkRevocation', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'crlStatus', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'ocspStatus', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'parseCrl', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'parseOcspResponse', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'parseTimeStampRequest', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'readDssCerts', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:519.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'readDssMaterial', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:244.paragraph holds api_identifiers 'richTextToPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:244.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -736,9 +314,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'verifyCertChain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'richTextToPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -751,9 +329,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'verifyCrlSignature', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:244.paragraph holds api_identifiers 'RichTextPlain', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:244.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -766,9 +344,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'verifyOcspSignature', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:307.paragraph holds api_identifiers 'Field.SetStyle', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:307.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -781,9 +359,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'findIssuer', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:413.paragraph holds api_identifiers 'ensureInfo()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:413.paragraph",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -796,9 +374,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds api_identifiers 'vriKey', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:441.table holds api_identifiers 'unembedSkipped', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:441.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -811,9 +389,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:521.table holds api_identifiers 'temperature', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:441.table holds api_identifiers 'report.jbig2', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:521.table",
+     "id": "inherited_unit:441.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -826,9 +404,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:521.table holds api_identifiers 'inputTokens', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.GetCollection()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:521.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -841,9 +419,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:521.table holds api_identifiers 'outputTokens', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.RemoveCollection()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:521.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -856,9 +434,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:521.table holds api_identifiers 'maxChunks', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.GetMetadata()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:521.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -871,9 +449,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:521.table holds api_identifiers 'autoTag', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.ClearMetadata()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:521.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -886,9 +464,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:521.table holds api_identifiers 'onFigure', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.Revisions', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:521.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -901,9 +479,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:523.table holds api_identifiers 'PDF17_NS', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.hasIncrementalUpdates', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:523.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -916,9 +494,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:523.table holds api_identifiers 'PDF20_NS', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'ReadOnly', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:523.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -931,9 +509,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:523.table holds api_identifiers 'MATHML_NS', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'field.Name', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:523.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -946,9 +524,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.GetCollection()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'field.Type', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -961,9 +539,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.RemoveCollection()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'field.Value', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -976,9 +554,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.GetMetadata()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'field.Options', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -991,9 +569,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.ClearMetadata()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'page.MediaBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1006,9 +584,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.Revisions', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'page.CropBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1021,9 +599,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.hasIncrementalUpdates', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'page.BleedBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1036,9 +614,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'ReadOnly', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'page.TrimBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1051,9 +629,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'field.Name', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'page.ArtBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1066,9 +644,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'field.Type', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'page.Contents', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1081,9 +659,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'field.Value', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'annotation.InReplyTo', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1096,9 +674,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'field.Options', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'annotation.ReplyType', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1111,9 +689,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'page.MediaBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'textAnnotation.State', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1126,9 +704,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'page.CropBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'textAnnotation.StateModel', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1141,9 +719,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'page.BleedBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'lineAnnotation.Measure', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1156,9 +734,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'page.TrimBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'polyAnnotation.Measure', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1171,9 +749,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'page.ArtBox', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'opts.width', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1186,9 +764,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'page.Contents', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'flow.AddRule', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1201,9 +779,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'annotation.InReplyTo', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'flow.AddCodeBlock', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1216,9 +794,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'annotation.ReplyType', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'flow.AddQuote', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1231,9 +809,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'textAnnotation.State', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'opts.shape', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1246,9 +824,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'textAnnotation.StateModel', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.FontSubstitutions', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1261,9 +839,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'lineAnnotation.Measure', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.ClearFontSubstitutions()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1276,9 +854,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'polyAnnotation.Measure', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'doc.RegisterRenderSystemFonts()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1291,9 +869,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'opts.width', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'suffix', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1306,9 +884,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'flow.AddRule', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'opts.region', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1321,9 +899,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'flow.AddCodeBlock', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'opts.ignoreCase', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1336,9 +914,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'flow.AddQuote', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'opts.wholeWord', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1351,9 +929,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'opts.shape', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'imageDir', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1366,9 +944,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.FontSubstitutions', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.Width', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1381,9 +959,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.ClearFontSubstitutions()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.Height', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1396,9 +974,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'doc.RegisterRenderSystemFonts()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.Bits', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1411,9 +989,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'suffix', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.ColorSpace', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1426,9 +1004,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'opts.region', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.Filter', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1441,9 +1019,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'opts.ignoreCase', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.RawData', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1456,9 +1034,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'opts.wholeWord', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'image.Decode()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1471,9 +1049,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'imageDir', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'inlineImage.Remove()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1486,9 +1064,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.Width', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'visitContent', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1501,9 +1079,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.Height', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'skipHidden', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1516,9 +1094,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.Bits', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'searchText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1531,9 +1109,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.ColorSpace', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'redactText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1546,9 +1124,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.Filter', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'replaceText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1561,9 +1139,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.RawData', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'searchAnnotations', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1576,9 +1154,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'image.Decode()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'searchAnnotationText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1591,9 +1169,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'inlineImage.Remove()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'extractTables', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1606,9 +1184,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'visitContent', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'extractTaggedTables', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1621,9 +1199,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'skipHidden', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'stitchTables', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1636,9 +1214,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'searchText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:532.table holds api_identifiers 'extractPaths', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:532.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1651,9 +1229,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'redactText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'ParseHtmlBytesOptions.encoding', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1666,9 +1244,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'replaceText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'quirks', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1681,9 +1259,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'searchAnnotations', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'publicId', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1696,9 +1274,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'searchAnnotationText', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'systemId', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1711,9 +1289,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'extractTables', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'attrs', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1726,9 +1304,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'extractTaggedTables', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'HtmlElement.ns', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1741,9 +1319,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'stitchTables', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'HtmlElement.content', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1756,9 +1334,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:528.table holds api_identifiers 'extractPaths', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'Page.AddDocx', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:528.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1771,9 +1349,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:559.table holds api_identifiers 'TextRun.link', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'resolveFamily', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:559.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1786,9 +1364,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:559.table holds api_identifiers 'faceFor', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:563.table holds api_identifiers 'resolveFamily', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:559.table",
+     "id": "inherited_unit:563.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1801,9 +1379,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:559.table holds api_identifiers 'resolveMarkdownStyle', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:541.table holds api_identifiers 'CONSTRUCTS', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:559.table",
+     "id": "inherited_unit:541.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1816,9 +1394,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:509.table holds versions '12.5.6.11', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:563.table holds api_identifiers 'TextRun.link', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:509.table",
+     "id": "inherited_unit:563.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1831,9 +1409,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:519.table holds versions '12.8.2.2', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:563.table holds api_identifiers 'faceFor', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:519.table",
+     "id": "inherited_unit:563.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1846,9 +1424,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:523.table holds versions '14.8.6', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:563.table holds api_identifiers 'resolveMarkdownStyle', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:523.table",
+     "id": "inherited_unit:563.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1861,9 +1439,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:437.table holds versions '2.2', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:441.table holds versions '2.2', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:437.table",
+     "id": "inherited_unit:441.table",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1876,9 +1454,9 @@
    },
    {
     "label": "BC-17",
-    "message": "inherited_unit:581.paragraph holds versions '2.8', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "message": "inherited_unit:572.006.list holds versions '6.9', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
     "origin": {
-     "id": "inherited_unit:581.paragraph",
+     "id": "inherited_unit:572.006.list",
      "kind": "inherited_unit"
     },
     "quote": "",
@@ -1891,15 +1469,15 @@
    }
   ],
   "lane": "R",
-  "main_sha": "d60d709b654238a01fa217a9c2cd6687694b9a90",
+  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44717025933",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44717025933",
+  "run_id": "44745502021",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745502021",
   "schema_version": 1,
-  "source_revision": "1d4f64934d567ee7e163f0b50b68483f803a1ab4",
+  "source_revision": "03e882838470250fc30db78c346c879fae2c68ef",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
