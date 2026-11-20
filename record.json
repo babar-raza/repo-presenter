@@ -5,7 +5,7 @@
   "provider_repository_id": 1323959290,
   "registry_revision": null,
   "active_transaction_id": "d6b0680b9b924f7599529729d61265d9",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T17:55:45.754991+00:00",
+    "resume_predicate": null,
+    "recovery_count": 3
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "cf6c907289c142228bf1affc3a92643e",
@@ -33,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 74,
+  "state_version": 75,
   "recent_trigger_dedup_keys": {
     "run:8e649857264d4662800e636edb31972a:aspose-psd-foss/Aspose.PSD-FOSS-for-Python": "705d38b81cc1458da4e45ccd702f2acc",
     "run:46877a5adfdd42b0b3ffea116f62b637:aspose-psd-foss/Aspose.PSD-FOSS-for-Python": "1840cdfab86b4ecc9a155549553518d6",
@@ -56,5 +63,5 @@
     "run:44701951432:aspose-psd-foss/Aspose.PSD-FOSS-for-Python": "34cb9ceea3ef482195b2b35f93436e21",
     "run:44709080830:aspose-psd-foss/Aspose.PSD-FOSS-for-Python": "d6b0680b9b924f7599529729d61265d9"
   },
-  "recovery_count": 2
+  "recovery_count": 3
 }
