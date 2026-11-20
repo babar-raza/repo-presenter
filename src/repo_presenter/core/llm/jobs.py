@@ -167,6 +167,45 @@ def _error_body(exc: APIStatusError, config: GatewayConfig) -> str:
     return ": " + redact(body[:_ERROR_BODY_LIMIT], [config.api_key])
 
 
+_CONTEXT_OVERFLOW = re.compile(
+    r"maximum context length is (\d+) tokens and your request has (\d+) input tokens"
+)
+
+
+class ContextWindowError(JobError):
+    """The gateway refused a request because its input leaves no room for ``max_tokens`` in the
+    model's context window (BL-450: PDF TypeScript, 258818 input tokens of 262144). A ``JobError``
+    for every caller that does not handle it; a job that can send a smaller request catches it,
+    with the measured size, instead of failing the run."""
+
+    def __init__(
+        self, message: str, *, context_tokens: int, input_tokens: int, request_chars: int
+    ) -> None:
+        super().__init__(message)
+        self.context_tokens = context_tokens
+        self.input_tokens = input_tokens
+        self.request_chars = request_chars
+
+
+def _context_overflow(exc: APIStatusError, payload: Mapping[str, Any]) -> tuple[int, int, int] | None:
+    """``(context tokens, input tokens, request characters)`` when ``exc`` is the gateway's
+    context-window refusal (HTTP 400 whose body says so), else ``None``."""
+    if exc.status_code != 400:
+        return None
+    try:
+        body = " ".join(str(exc.response.text or "").split())
+    except Exception:  # noqa: BLE001 -- an unreadable body is simply not recognised
+        return None
+    found = _CONTEXT_OVERFLOW.search(body)
+    if found is None:
+        return None
+    return (
+        int(found.group(1)),
+        int(found.group(2)),
+        len(json.dumps(payload, ensure_ascii=False)),
+    )
+
+
 @dataclass(frozen=True)
 class _Reply:
     content: str
@@ -438,10 +477,19 @@ class _Attempts:
                     f"HTTP {exc.status_code}",
                     retry_after_seconds=float(retry_after) if retry_after else None,
                 ) from None
-            raise JobError(
+            message = (
                 f"{self.manifest.manifest.prompt_id}: gateway answered HTTP {exc.status_code}"
                 f"{_error_body(exc, config)}"
-            ) from None
+            )
+            overflow = _context_overflow(exc, payload)
+            if overflow is not None:
+                raise ContextWindowError(
+                    message,
+                    context_tokens=overflow[0],
+                    input_tokens=overflow[1],
+                    request_chars=overflow[2],
+                ) from None
+            raise JobError(message) from None
         except APITimeoutError as exc:
             self._record(payload, started_at, started, "timeout", None, type(exc).__name__)
             raise RetryableOperationError("timeout") from None

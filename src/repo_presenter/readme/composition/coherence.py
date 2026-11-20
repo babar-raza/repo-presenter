@@ -28,6 +28,13 @@ from repo_presenter.readme.composition.audience import (
     unsupported_audience_sentences,
 )
 from repo_presenter.readme.composition.authoring import (
+    BOUND_RULE,
+    REQUEST_CHAR_CEILING,
+    _VALUE_CAP_LADDER,
+    _excerpt,
+    packet_chars,
+    schema_chars,
+    shorten_facts,
     _EXCEPTION_SUFFIXES,
     SectionTask,
     allowed_identifiers,
@@ -125,6 +132,69 @@ def coherence_packet(
             if not str(unit.get("slot", "")).startswith("type:")
         ],
     }
+
+
+def _bounded_document(document: str, cap: int) -> tuple[str, int]:
+    """``document`` with every blank-line-separated block longer than ``cap`` characters cut to
+    ``cap`` at a line boundary, an open code fence closed, and a marker saying how much is not
+    shown; the number of blocks cut. The model reads it to see the page's shape and avoid saying
+    twice what the page says; it is never edited and never printed."""
+    blocks = document.split("\n\n")
+    cut = 0
+    for index, block in enumerate(blocks):
+        if len(block) <= cap:
+            continue
+        shown = _excerpt(block, cap)
+        head, marker = shown.rsplit("\n", 1)
+        if head.count("```") % 2:
+            head += "\n```"
+        blocks[index] = f"{head}\n{marker}"
+        cut += 1
+    return "\n\n".join(blocks), cut
+
+
+def bound_coherence_packet(
+    packet: dict[str, Any], tasks: list[SectionTask], ceiling: int = REQUEST_CHAR_CEILING
+) -> tuple[dict[str, Any], tuple[dict[str, Any], ...]]:
+    """``packet`` whose request fits ``ceiling`` characters, with the R14 records of what was cut
+    (BL-450): itself, and no records, when it already does.
+
+    The packet carries the whole rendered document AND every accepted fact in full, so the
+    README's own inherited units are sent twice, and a repository whose README is 554k characters
+    (PDF TypeScript) sends over a million. At each cap of the ladder, longest first, the values of
+    the facts no slot is bound to and no must-carry unit needs, and the document's own long blocks
+    (the verbatim tables, lists and code the renderer prints), are cut to it; the first cap that
+    fits is used. The ids the units may cite and the units themselves are never touched."""
+    scoped = [task for task in tasks if not task.is_batch]
+    ids = coherence_citable_ids(scoped)
+    slots = sum(len(task.slots) for task in scoped)
+    fixed = schema_chars(ids, slots)
+    if fixed + packet_chars(packet) <= ceiling:
+        return packet, ()
+    protected = {i for task in scoped for bound in task.slot_facts.values() for i in bound}
+    protected |= {i for task in scoped for i in task.must_carry}
+    document = str(packet.get("rendered_document", ""))
+    candidate, notes = packet, []
+    for cap in _VALUE_CAP_LADDER:
+        shrunk, notes = shorten_facts(packet.get("accepted_facts", []), protected, cap)
+        shown, blocks = _bounded_document(document, cap)
+        if blocks:
+            notes.append(
+                {
+                    "fallback": "packet_document_bounded",
+                    "rule": BOUND_RULE,
+                    "blocks": blocks,
+                    "characters": len(document),
+                    "shown_characters": len(shown),
+                    "cap": cap,
+                }
+            )
+        candidate = {**packet, "accepted_facts": shrunk, "rendered_document": shown}
+        if fixed + packet_chars(candidate) <= ceiling:
+            return candidate, tuple(notes)
+    if notes:
+        notes[0] = {**notes[0], "still_over": True}
+    return candidate, tuple(notes)
 
 
 def coherence_citable_ids(tasks: list[SectionTask]) -> list[str]:

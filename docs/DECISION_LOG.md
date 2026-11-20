@@ -7698,3 +7698,38 @@ trim would find nothing and the reply would still fail closed, as before. R9: no
 R14: no README content dropped; only internal accounting entries, each recorded.
 
 Backlog: BL-460
+
+## 2026-11-20: BL-450 -- an authoring or coherence request is bounded before it is sent, and a context-window refusal is re-asked smaller (PDF TypeScript)
+
+Hosted re-run of PDF TypeScript Lane R (run 44673623844, main 3b07ba8) ended `JobError: section_authoring: gateway answered
+HTTP 400: ContextWindowExceededError ... your request has 258818 input tokens (8000 > 262144 - 258818)`, 36 minutes into
+the first settle round. First principles on what the request is made of: the author packet carries the full text of every
+inherited README unit a section places, and the coherence packet carries the whole rendered README (which prints those same
+units verbatim) AND every accepted fact in full, so the README twice. PDF TypeScript's README is 557,612 characters (605 units,
+553,956 characters); the largest sealed cell, PDF Java, has 109,592. Rebuilt offline with that README at the pinned revision
+(the real PDF TypeScript facts could not be extracted here: the facts job builds the examples and filled the disk), the
+coherence request is 1,217,754 characters, 230k to 265k tokens at the measured 4.6 to 5.3 characters per token (rebuilt
+authoring request hashes reproduce PDF C++'s call ledger 13 of 13), against the hosted 258,818; the largest author request is
+282,192 characters (about 60k tokens). So the refused request was most likely the coherence call; the log does not say.
+The class is sized in docs/investigations/2026-11-20-packet-size-bl450.md: across the 24 sealed Lane R cells the largest
+request per cell is median 85,223 and maximum 319,193 characters, the coherence request is the larger one in 18 of 24 and is
+2.4 to 3.1 times the cell's inherited README text. The 16 unsealed cells (the failing ones) cannot be sized offline.
+Decision (R27: fixes inside existing components): (1) a request estimated over 360,000 characters (at most about 140k tokens at
+the densest measured ratio, so every request that fits today is byte-identical: all 188 rebuilt authoring and coherence request
+hashes of the 24 sealed cells are unchanged) has the text shown for each fact the section merely sees cut to the longest of
+8000, 4000, 2000, 1000, 500 or 250 characters that fits, at a line boundary, with a marker, and, in coherence, the document's own
+long blocks likewise. Never cut: a fact a slot is bound to, a must-carry unit, identity and package facts, every id, the slots,
+the units, the schema; so binding, the checks and the renderer read the full facts exactly as before. Each cut is an R14 record
+(rule BL-450) beside the stored call, and a request that still does not fit at the shortest cap says so. Alternatives refused: a
+smaller `max_tokens` (the output is the part that must not shrink, BL-370), dropping facts from the packet (the closed set the
+model may cite and the checks read), asking per slot with the same full packet (the narrowed ask inherits the packet, so it
+would not shrink). A type batch over the ceiling is split in halves instead (every type keeps its facts). (2) the gateway's
+context refusal is `jobs.ContextWindowError` (a `JobError`) with the measured size, and authoring and coherence ask again at most
+twice with a ceiling sized from that request's own characters per token, so a mis-estimate costs one more ask, not the run.
+Property improved: robust and universal (a packet no longer grows with the repository), measured by the 21 tests in
+tests/readme/composition/test_packet_bound_bl450.py (they fail on origin/main: the names do not exist) and by the 188-hash
+identity above. Evidence: recertify --all origin/main vs branch byte-identical (59 rows, 0 provider calls: Lane L 34 and Lane R 25 RECERTIFIED unchanged, 1 Lane R row readme_changed true on both); recertify does not send or key stored requests, and every rebuilt request of the 24 sealed cells keeps its request hash, so no sealed output and no call-store key moves; recertify --gate OK (59 seals). This path is not exercised by recertify, so it proves no seal moves, not that the hosted cell is fixed. Unproven: hosted (R41); whether a cut document or cut facts make the model's coherence
+revisions worse is measured by the next hosted seal. R9: nothing public moves, the cut text is only what the model is shown.
+R10: no seal touched. R14: nothing is dropped from any README; the renderer prints the inherited units from the full facts.
+
+Backlog: BL-450

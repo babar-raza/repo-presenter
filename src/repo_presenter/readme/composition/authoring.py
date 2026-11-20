@@ -102,6 +102,22 @@ _FENCED_BLOCK = re.compile(r"^[ \t]*```([^\n`]*)\n(.*?)^[ \t]*```", re.DOTALL | 
 _COMMAND_FENCES = frozenset({"bash", "sh", "shell", "console", "zsh", "powershell", "pwsh", "cmd"})
 _MEMBER_CAP = 60
 _TYPE_BATCH = 40
+#: BL-450 (R46 robust, universal): the largest authoring request, in characters, sent as it was
+#: built. A packet grows with the repository (the inherited README units a section may cite carry
+#: their full text), and the gateway refuses a request whose input leaves no room for
+#: ``max_tokens`` (PDF TypeScript, hosted run 44673623844: 258818 input tokens of a 262144 window,
+#: its README alone 554k characters). Measured over every sealed Lane R bundle
+#: (docs/investigations/2026-11-20-packet-size-bl450.md) the largest request is 194k characters at
+#: 2.6 to 5.3 characters per token, so 360k characters is at most about 140k tokens and leaves
+#: every request that fits today byte-identical.
+REQUEST_CHAR_CEILING = 360_000
+#: The value lengths ``bound_task`` tries, longest first, for a fact the section does not own.
+_VALUE_CAP_LADDER = (8000, 4000, 2000, 1000, 500, 250)
+#: The prompt text, the schema skeleton and the per-slot citation enums around the packet.
+_REQUEST_FIXED_CHARS = 9_000
+#: One slot's unit skeleton in the call schema (measured 1.2k on a 40-slot type batch).
+_SLOT_SCHEMA_CHARS = 650
+BOUND_RULE = "BL-450"
 # An undocumented type has no verified statement of purpose, so its sentence states only what its
 # facts verify. Measured: the earlier objective asked for "what it represents" from the name, and
 # the independent review rejected every such gloss as unsupported (Aspose.3D-FOSS-for-Java hosted
@@ -624,6 +640,9 @@ class SectionTask:
     #: TypeScript's seal ``098d5af8fa90`` fails BC-04 on ``034.paragraph`` on every zero-call
     #: recertify that finds nothing left to restore).
     restored_out_ids: frozenset[str] = frozenset()
+    #: BL-450 (R14): what ``bound_task`` shortened in this packet, one record per fact (empty when
+    #: the request fit, which is every sealed cell measured so far). Not part of the request.
+    bounded: tuple[Mapping[str, Any], ...] = ()
 
     @property
     def label(self) -> str:
@@ -1216,15 +1235,21 @@ def type_unit_facts(type_fact: Fact, facts: FactsDocument) -> tuple[list[str], l
 
 
 def _type_batches(
-    entry: RegistryEntry, facts: FactsDocument, do_not_claim: list[dict[str, str]]
+    entry: RegistryEntry,
+    facts: FactsDocument,
+    do_not_claim: list[dict[str, str]],
+    ceiling: int = REQUEST_CHAR_CEILING,
 ) -> list[SectionTask]:
     """One bounded task per batch of undocumented types, each type carrying its own
-    implementation facts (``type_implementation_facts``) so a stub is never glossed as working."""
+    implementation facts (``type_implementation_facts``) so a stub is never glossed as working.
+    A batch whose request would exceed ``ceiling`` characters is split in halves (BL-450): every
+    type keeps its own facts in full, only fewer types share a request."""
     types = undocumented_types(facts)
     name = product_name(entry)
     tasks: list[SectionTask] = []
-    for index in range(0, len(types), _TYPE_BATCH):
-        batch = types[index : index + _TYPE_BATCH]
+    pending = [types[index : index + _TYPE_BATCH] for index in range(0, len(types), _TYPE_BATCH)]
+    while pending:
+        batch = pending.pop(0)
         given = {fact.id: type_unit_facts(fact, facts) for fact in batch}
         implementation = {fact_id: found for fact_id, (_, found) in given.items()}
         detail = [found for fact in batch for found in implementation[fact.id]]
@@ -1291,17 +1316,19 @@ def _type_batches(
             "rendered_document": "",
             "existing_units": [],
         }
-        number = index // _TYPE_BATCH + 1
-        tasks.append(
-            SectionTask(
-                "api_reference",
-                packet,
-                frozenset([*ids, *(found.id for found in detail)]),
-                slots,
-                key=f"api_reference#types-{number}",
-                slot_facts=slot_facts,
-            )
+        task = SectionTask(
+            "api_reference",
+            packet,
+            frozenset([*ids, *(found.id for found in detail)]),
+            slots,
+            key=f"api_reference#types-{len(tasks) + 1}",
+            slot_facts=slot_facts,
         )
+        if len(batch) > 1 and estimated_request_chars(task) > ceiling:
+            half = (len(batch) + 1) // 2
+            pending[:0] = [batch[:half], batch[half:]]
+            continue
+        tasks.append(task)
     return tasks
 
 
@@ -1389,6 +1416,105 @@ def owed_list_units(
     )
 
 
+def packet_chars(packet: Mapping[str, Any]) -> int:
+    """The characters a packet adds to a request: every field as ``render_messages`` prints it (a
+    JSON field indented, then escaped into the message)."""
+    total = 0
+    for value in packet.values():
+        text = (
+            value
+            if isinstance(value, str)
+            else json.dumps(value, indent=1, sort_keys=True, ensure_ascii=False)
+        )
+        total += len(json.dumps(text, ensure_ascii=False))
+    return total
+
+
+def schema_chars(citable_ids: Iterable[str], slots: int) -> int:
+    """The prompt text and call schema around a packet: the citation enums, sent twice (the prompt
+    and the response format), and one unit skeleton per slot."""
+    return (
+        _REQUEST_FIXED_CHARS
+        + 2 * sum(len(i) + 4 for i in citable_ids)
+        + _SLOT_SCHEMA_CHARS * 2 * slots
+    )
+
+
+def estimated_request_chars(task: SectionTask) -> int:
+    """The characters of the request ``task`` makes, estimated without the manifest."""
+    return packet_chars(task.packet) + schema_chars(
+        (i for slot in task.slots for i in citable(task, slot)), len(task.slots)
+    )
+
+
+def _excerpt(value: str, cap: int) -> str:
+    cut = value[:cap]
+    newline = cut.rfind("\n")
+    if newline >= cap // 2:
+        cut = cut[:newline]
+    cut = cut.rstrip()
+    return f"{cut}\n[... {len(value) - len(cut)} more characters are not shown]"
+
+
+def shorten_facts(
+    accepted: Sequence[Mapping[str, Any]], protected: Collection[str], cap: int
+) -> tuple[list[Any], list[dict[str, Any]]]:
+    """``accepted`` with every unprotected fact's value cut to ``cap`` characters (``_excerpt``),
+    and one R14 record per fact cut. Identity and package facts are never cut."""
+    shrunk: list[Any] = []
+    notes: list[dict[str, Any]] = []
+    for fact in accepted:
+        value = fact.get("value")
+        if (
+            not isinstance(value, str)
+            or len(value) <= cap
+            or fact["id"] in protected
+            or fact["id"].startswith(_NEUTRAL_KINDS)
+        ):
+            shrunk.append(fact)
+            continue
+        shown = _excerpt(value, cap)
+        shrunk.append({**fact, "value": shown})
+        notes.append(
+            {
+                "fallback": "packet_value_bounded",
+                "rule": BOUND_RULE,
+                "fact_id": fact["id"],
+                "characters": len(value),
+                "shown_characters": len(shown),
+                "cap": cap,
+            }
+        )
+    return shrunk, notes
+
+
+def bound_task(task: SectionTask, ceiling: int = REQUEST_CHAR_CEILING) -> SectionTask:
+    """``task`` whose request fits ``ceiling`` characters (BL-450): itself when it already does.
+
+    Only the text the model is shown for a fact is shortened, never the closed set it may cite
+    (every id stays in ``accepted_ids``, the packet and the schema's enums, so binding, the checks
+    and the renderer read the same full facts as before). Never shortened: a fact a slot is bound
+    to, a must-carry unit, identity and package facts. The rest (the inherited README units a
+    section merely sees) is cut to the longest cap of ``_VALUE_CAP_LADDER`` that fits, at a line
+    boundary, with a marker saying how much is not shown. Each cut is recorded in ``bounded``
+    (R14); a request that still exceeds ``ceiling`` at the shortest cap is returned at that cap,
+    flagged ``still_over``, never silently."""
+    if estimated_request_chars(task) <= ceiling:
+        return task
+    protected = {i for ids in task.slot_facts.values() for i in ids} | set(task.must_carry)
+    accepted = task.packet.get("accepted_facts", [])
+    candidate = task
+    notes: list[dict[str, Any]] = []
+    for cap in _VALUE_CAP_LADDER:
+        shrunk, notes = shorten_facts(accepted, protected, cap)
+        candidate = replace(task, packet={**task.packet, "accepted_facts": shrunk})
+        if estimated_request_chars(candidate) <= ceiling:
+            return replace(candidate, bounded=tuple(notes))
+    if notes:
+        notes[0] = {**notes[0], "still_over": True}
+    return replace(candidate, bounded=tuple(notes))
+
+
 def authoring_tasks(
     entry: RegistryEntry,
     facts: FactsDocument,
@@ -1397,8 +1523,10 @@ def authoring_tasks(
     plan: dict[str, Any],
     *,
     restored_out: Mapping[str, Collection[str]] | None = None,
+    ceiling: int = REQUEST_CHAR_CEILING,
 ) -> list[SectionTask]:
-    """One task per included section the LLM authors, in shell order.
+    """One task per included section the LLM authors, in shell order. Every task's request fits
+    ``ceiling`` characters (``bound_task``, BL-450); the identity for any request that already does.
 
     ``restored_out`` (from ``readme.repair.restore_units.vacated_sections``): ``{section_id:
     unit_ids}`` a zero-call restore pass this same judging round moved OUT of ``section_id``. Feeds
@@ -1544,8 +1672,8 @@ def authoring_tasks(
             )
         )
         if section == "api_reference":
-            tasks.extend(_type_batches(entry, facts, do_not_claim))
-    return tasks
+            tasks.extend(_type_batches(entry, facts, do_not_claim, ceiling))
+    return [bound_task(task, ceiling) for task in tasks]
 
 
 def verified_members(facts: FactsDocument) -> frozenset[str]:
