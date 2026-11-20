@@ -153,21 +153,33 @@
    "run_id": "44663351621",
    "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T04:58:51+00:00",
+   "classes": [
+    "job_error|job_error|JobError:section_authoring_gateway_answered_http"
+   ],
+   "code": "3f38d472f5bec702e2be15af7504c2ca380299efa2aa67206fc3eecebfeb6ceb",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44673623844",
+   "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T02:53:21+00:00",
+  "at": "2026-11-20T04:58:51+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+   "job_error|job_error|JobError:section_authoring_gateway_answered_http": {
+    "example": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 258818 input tokens (8000 > 262144 - 258818). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "OutputRejectedError"
+     "JobError"
     ],
     "rule": "job_error",
-    "scope": "42a1222084932bf07766d8554ed44e60177c5cbbaff2e71d1cf7da98a0101cc8",
+    "scope": "2b912455710b5335b2107946c67cf1a6c7e0efbce645ecafc795c0f73b617c21",
     "scope_paths": [
      "prompts",
      "pyproject.toml",
@@ -177,46 +189,46 @@
      "src/repo_presenter/readme/composition",
      "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "sub_rule": "JobError:section_authoring_gateway_answered_http",
     "upstream": ""
    }
   },
-  "code": "4b409040465b6fca8c670be0779f3a4bbaaffbfad677396c0f96e6e814116c97",
+  "code": "3f38d472f5bec702e2be15af7504c2ca380299efa2aa67206fc3eecebfeb6ceb",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 258818 input tokens (8000 > 262144 - 258818). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
+   "kind": "JobError",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit context: names the Enterprise Edition; the shell's closing sentence names it exactly once. Drop the name and any 'see ...' or 'these limitations don't apply to ...' clause and state only what the product adds, beginning 'It adds ...'",
+    "label": "JobError",
+    "message": "attempt under version set 75b35954c877: JobError: section_authoring: gateway answered HTTP 400: {\"error\":{\"message\":\"litellm.ContextWindowExceededError: litellm.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\\\"error\\\":{\\\"message\\\":\\\"'max_tokens' or 'max_completion_tokens' is too large: 8000. This model's maximum context length is 262144 tokens and your request has 258818 input tokens (8000 > 262144 - 258818). (parameter=max_tokens, value=8000)\\\",\\\"type\\\":\\\"BadRequestErr",
     "origin": {
-     "id": "OutputRejectedError",
+     "id": "JobError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "signature": "job_error|job_error|JobError:section_authoring_gateway_answered_http",
     "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_names_the_enterprise_edition",
+    "sub_rule": "JobError:section_authoring_gateway_answered_http",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "88a5d720628377c3f8c378ff3b2596149f490030",
+  "main_sha": "3b07ba82e5de09b15a992b4683e3f76518535061",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44663351621",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44663351621",
+  "run_id": "44673623844",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44673623844",
   "schema_version": 1,
-  "source_revision": "0e0036b6d670681e350db6bf96432ca5fd493c27",
+  "source_revision": "47760f0a8335c2862e63eec2b15660223169ddbd",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
