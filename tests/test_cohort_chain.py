@@ -82,9 +82,11 @@ def test_present_runs_the_planner_or_the_transaction_never_both(context, cohort,
 
 def test_a_no_target_call_cannot_fail_at_startup_and_passes_no_secret() -> None:
     inputs = _on(_load("present.yml"))["workflow_call"]["inputs"]
-    assert set(inputs) == {"repository", "ecosystem", "lane"}
-    for spec in inputs.values():
-        assert spec["required"] is False and spec["default"] == ""
+    assert set(inputs) == {"repository", "ecosystem", "lane", "refresh"}
+    for name, spec in inputs.items():
+        # BL-440: refresh is an optional boolean that defaults to false; the targets default to ""
+        assert spec["required"] is False
+        assert spec["default"] == (False if name == "refresh" else "")
     cohort = _load("present.yml")["jobs"]["cohort"]
     assert "secrets." not in json.dumps(cohort)
 

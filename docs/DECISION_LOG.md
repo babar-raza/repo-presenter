@@ -7628,3 +7628,38 @@ Then a third audit round over seals made by this code (same bytes sampled again 
 lines compared with this table (a repeat of the same line after a clean seal-time audit-packet sample would falsify the fix).
 
 Backlog: BL-430
+
+## 2026-11-20: BL-440 -- an explicit refresh of a sealed Lane R cell: a fresh seal only if every gate passes, the old seal otherwise untouched
+
+**Facts.** The independent audit can only accept seals made by code that includes the seal-time second review (BL-430) and the other
+class fixes. Seals are immutable (R10), and two things kept any of them from being re-made: `present` on a certified sealed cell
+returned on the preflight skip or on `recertify_instead` before any generation, and `seal_candidate` recorded a regenerated, differing
+candidate against a proven (READY_FOR_PROPOSAL) seal as a waiting update (VALID_UPDATE_AVAILABLE) with the proven files left in
+place. A third audit round would have drawn the same old seals and measured nothing new. BL-430 judged a refresh path "not small"; reading
+the seal writer shows the existing invalidation-supersede record already is the ordinary regeneration record, so the guarantee is small.
+
+**Decision.** One explicit option, no new component, no new record type. `present --refresh` (Lane R only; Lane L is refused and never
+receives it) is set from a run request `{"job":"present", ..., "lane":"R", "refresh":true}` (validated: JSON `true` only, `lane` written
+out as `R`, present jobs only, every other job already refuses extra fields), passed by `run-request-execute.yml` into `present.yml`
+as a boolean input (default false; also on `workflow_dispatch`), and added to the Lane R step only when true. With it, `_cascade_and_seal`
+skips both zero-call paths, drops the restored call store of this run's workdir (a replayed generation is not a fresh seal attempt; the
+calls and cost are measured, R45), runs the full cascade, and `seal_candidate(refresh=True)` writes a candidate that passed every gate
+over a proven or waiting seal through `_supersede_invalidated` (new ACCEPTED seal; the previous state, proof and sealing run kept under
+the existing `superseded` key, now marked `refresh: true`); a candidate byte-identical to the seal leaves it untouched. `publish`
+pushes the new bundle as a new commit whose parent is the old seal, so it stays reachable. The scheduled planner and its
+`gh workflow run` dispatch never mention refresh (tested), and nothing else sets it.
+
+**Why a failed refresh cannot demote (read, then tested).** Every failure (cascade error, REJECT, no model review, M8 block, leak) raises
+before `seal_candidate`, which is reached only after ACCEPT and stages to a sibling temp directory before it touches the bundle or
+`CURRENT`; the cascade writes only under the run's workdir; `run_present` never calls `publish` after a failure, so the bundle ref's tip
+stays the old seal, and every count reads bundle-ref history, not the durable record. The durable RECORD of a failed run still routes to
+INVALIDATED (as for any failed run since the version-set rules); no count or gate reads that state. Risk named: a refresh whose publish
+step fails after a local seal leaves the ref unchanged and the run failed; a rerun refreshes again, it does not republish.
+
+**R9/R10/R14.** R9: no README wording moves. R10: no seal is touched unless a full candidate passed every gate, and then the old one
+stays in history. R14: the candidate's own gates (the existing preserve-content checks) decide; nothing is dropped by this path.
+
+**Proof and what is not proven.** Zero-call tests in `tests/test_refresh_bl440.py` (a to e of the brief). Not proven: a hosted refresh
+run (R41); a refreshed README may be worse than the seal it would replace only in a way no gate sees, which is the audit's question.
+
+Backlog: BL-440

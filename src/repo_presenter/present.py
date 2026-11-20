@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -237,19 +238,33 @@ def _cascade_and_seal(
     config: GatewayConfig,
     prompts_path: Path,
     registry_path: Path,
+    refresh: bool = False,
 ) -> None:
-    decision = preflight_cascade(
-        repository, clone_path, facts_path=facts_path, candidates_root=candidates_root,
-        prompts_path=prompts_path,
-    )
-    print(f"preflight (Lane R): skip={decision.can_skip_provider_call}: {decision.reason}")
-    if decision.can_skip_provider_call:
-        return  # the proven sealed bundle stays exactly as sealed; no provider call is made
-    if decision.recertify and recertify_instead(
-        lane=LANE_R, repository=repository, clone_path=clone_path,
-        candidates_root=candidates_root, prompts_path=prompts_path, registry_path=registry_path,
-    ):
-        return  # re-certified under current code with zero provider calls
+    if refresh:
+        # BL-440: an explicit request to attempt a fresh seal of a cell that may already hold one.
+        # Neither zero-call path runs (no skip, no re-certification instead), the restored call
+        # store is dropped so the generation really calls the provider, and the seal below
+        # replaces the existing one ONLY when the new candidate passes every gate; any failure
+        # raises before a byte of the candidates root is touched, so the existing seal stays.
+        print(
+            "preflight (Lane R): refresh requested (BL-440): skip and re-certify-instead are "
+            "bypassed; the existing seal is replaced only if the new candidate passes every gate"
+        )
+        shutil.rmtree(workdir / "cascade" / "llm_cache", ignore_errors=True)
+    else:
+        decision = preflight_cascade(
+            repository, clone_path, facts_path=facts_path, candidates_root=candidates_root,
+            prompts_path=prompts_path,
+        )
+        print(f"preflight (Lane R): skip={decision.can_skip_provider_call}: {decision.reason}")
+        if decision.can_skip_provider_call:
+            return  # the proven sealed bundle stays exactly as sealed; no provider call is made
+        if decision.recertify and recertify_instead(
+            lane=LANE_R, repository=repository, clone_path=clone_path,
+            candidates_root=candidates_root, prompts_path=prompts_path,
+            registry_path=registry_path,
+        ):
+            return  # re-certified under current code with zero provider calls
     print("present progress: Lane R cascade start", file=sys.stderr, flush=True)
     result = run_cascade(
         repository,
@@ -308,6 +323,7 @@ def _cascade_and_seal(
             candidates_root=candidates_root,
             provider_calls=result.provider_calls,
             invocation=result.invocation,
+            refresh=refresh,
         )
     )
 
@@ -391,12 +407,15 @@ def _lane_l_and_seal(
     )
 
 
-def _lane_and_seal(lane: str, **kwargs: Any) -> None:
-    """The one place a lane is chosen: everything either lane needs is passed by name."""
+def _lane_and_seal(lane: str, *, refresh: bool = False, **kwargs: Any) -> None:
+    """The one place a lane is chosen: everything either lane needs is passed by name. ``refresh``
+    (BL-440) is Lane R only; Lane L never receives it."""
+    if refresh and lane != LANE_R:
+        raise ConfigError("refresh is Lane R only")
     if lane == LANE_L:
         _lane_l_and_seal(**kwargs)
     elif lane == LANE_R:
-        _cascade_and_seal(**kwargs)
+        _cascade_and_seal(**kwargs, refresh=refresh)
     else:
         raise ConfigError(f"unknown lane {lane!r}: expected one of {LANES}")
 
@@ -414,6 +433,7 @@ def cascade_pipeline(
     registry_path: Path,
     expected_facts_sha256: str | None = None,
     lane: str = LANE_R,
+    refresh: bool = False,
 ) -> None:
     """The credentialed half: runs no repository code and never builds facts. The facts artifact is
     verified and validated first; the clone is re-taken at exactly the revision the artifact records
@@ -443,6 +463,7 @@ def cascade_pipeline(
         config=config,
         prompts_path=prompts_path,
         registry_path=registry_path,
+        refresh=refresh,
     )
 
 
@@ -457,6 +478,7 @@ def combined_pipeline(
     prompts_path: Path,
     registry_path: Path,
     lane: str = LANE_R,
+    refresh: bool = False,
 ) -> None:
     """Facts and the lane in one process: local and offline use only, never hosted."""
     clone = pinned_read_only_clone(
@@ -483,6 +505,7 @@ def combined_pipeline(
         config=config,
         prompts_path=prompts_path,
         registry_path=registry_path,
+        refresh=refresh,
     )
 
 
@@ -612,7 +635,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="when no local bundle exists, export the lane's latest seal from its bundle ref first "
         "(so a mechanism-only change re-certifies it instead of regenerating)",
     )
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Lane R only (BL-440): attempt a fresh seal of a cell that already holds one -- no "
+        "skip, no re-certification instead, full generation; the existing seal is replaced only "
+        "if the new candidate passes every gate",
+    )
     args = parser.parse_args(argv)
+
+    if args.refresh and args.lane != LANE_R:
+        return _refuse("--refresh is Lane R only", ConfigError.exit_code)
 
     if (
         args.stage == "combined"
@@ -676,6 +709,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 prompts_path=args.prompts,
                 registry_path=args.registry,
                 lane=args.lane,
+                refresh=args.refresh,
             )
         else:
             cascade_pipeline(
@@ -690,6 +724,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 registry_path=args.registry,
                 expected_facts_sha256=args.expected_facts_sha256,
                 lane=args.lane,
+                refresh=args.refresh,
             )
 
     def publish() -> None:

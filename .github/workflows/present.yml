@@ -51,6 +51,11 @@ on:
         type: choice
         options: [both, R, L]
         default: both
+      refresh:
+        description: "Lane R only (BL-440): attempt a fresh seal of a cell that already holds one; the existing seal is replaced only if the new candidate passes every gate"
+        required: false
+        type: boolean
+        default: false
       dispatch_id:
         description: "set by the scheduled cohort job only: the budget reservation this run claims"
         required: false
@@ -85,6 +90,10 @@ on:
         required: false
         type: string
         default: ""
+      refresh:
+        required: false
+        type: boolean
+        default: false
   schedule:
     - cron: "17 * * * *"
 
@@ -453,10 +462,15 @@ jobs:
           # streamed one of the same length succeeds (measured 2026-11-04 and 2026-11-06).
           GPT_OSS_STREAMING: "1"
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+          # BL-440: only an explicit run request or dispatch sets it; the scheduled planner never does.
+          INPUT_REFRESH: ${{ inputs.refresh && 'true' || 'false' }}
         run: |
+          refresh_flag=""
+          if [ "$INPUT_REFRESH" = "true" ]; then refresh_flag="--refresh"; fi
           python -m repo_presenter.present \
             --stage cascade \
             --lane R \
+            ${refresh_flag} \
             --repository "$INPUT_REPOSITORY" \
             --ecosystem "$INPUT_ECOSYSTEM" \
             --state-remote "https://github.com/${GITHUB_REPOSITORY_SLUG}.git" \
