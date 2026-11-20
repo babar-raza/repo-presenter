@@ -63,6 +63,15 @@ _RENDERER_SENTENCES = tuple(
             r"It covers all \d+ (?:verified )?public types; the \[API Reference\]\(#api-reference\) "
             r"section above covers the essentials\."
         ),
+        # BL-500: the maintainers' own spelling of the same pointer on the full-reference link ("for all 968
+        # public types (the API Reference section above covers the essentials)"): the count is the one
+        # ``renderer.correct_stated_type_counts`` computes and the pointer is printed only when
+        # ``renderer._reference_pointer`` knows the section is rendered above.
+        (
+            r"(?i)[ \t]*(?:\bfor\s+all\s+[\d,]+\s+public\s+types\s*)?"
+            r"\((?:the\s+)?(?:\[API\s+reference\]\(#api-reference\)|API\s+reference)\s+section\s+above"
+            r"\s+covers\s+[^()]*\)"
+        ),
         r"These limitations don't apply to \[[^\]]*\]\([^)]*\)\.",
         r"See \[[^\]]* — Enterprise Edition\]\([^)]*\)\.",
         r"(?:- )?Found a bug or have a feature request\? \[Open an issue\]\([^)]*\)\.",
