@@ -24,10 +24,14 @@ from typing import Any
 
 import pytest
 
-from repo_presenter.core.facts import Evidence, Fact, FactsDocument
-from repo_presenter.extractors.platforms.cpp_format_declarations import format_declarations
+from repo_presenter.core.facts import Fact, FactsDocument
+from repo_presenter.extractors.platforms.cpp_format_declarations import (
+    format_declarations,
+)
 from repo_presenter.readme.composition.authoring_retry import _fact_true_opening_unit
-from repo_presenter.readme.composition.components.identity import product_name_of_repository
+from repo_presenter.readme.composition.components.identity import (
+    product_name_of_repository,
+)
 from repo_presenter.readme.review.clearances import (
     PROVENANCE_CLEARANCES,
     ClearanceContext,
@@ -38,7 +42,10 @@ from repo_presenter.readme.review.derivation import (
     lane_r_derivation,
     rederive_lane_r,
 )
-from repo_presenter.readme.review.findings import PROVENANCE_CLEARANCES_FOR_KIND, Finding
+from repo_presenter.readme.review.findings import (
+    PROVENANCE_CLEARANCES_FOR_KIND,
+    Finding,
+)
 from repo_presenter.readme.review.reply import review_from_reply
 from tests.readme.repair.test_accounting import ENTRY, UNITS, _dispositions, _plan
 from tests.readme.review.review_support import raw_finding, raw_reply
