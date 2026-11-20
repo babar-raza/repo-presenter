@@ -7733,3 +7733,51 @@ revisions worse is measured by the next hosted seal. R9: nothing public moves, t
 R10: no seal touched. R14: nothing is dropped from any README; the renderer prints the inherited units from the full facts.
 
 Backlog: BL-450
+
+
+## 2026-11-20 BL-470: BC-04 accepts a code span that composes fact values (OCR .NET `List<RecognitionResult>`)
+
+Finding: hosted refresh of Aspose.OCR-FOSS-for-.NET Lane R (run 44686944431) spent 32 calls and failed only on `BC-04: code span
+`List<RecognitionResult>` is not a fact value`. The facts hold it three ways: `OcrOutput` is a SUPPORTED symbol whose `bases`
+the extractor read from `src/OcrOutput.cs` as `List<RecognitionResult>`, `RecognitionResult` is a SUPPORTED symbol, and the
+inherited unit 052.list spells it. BC-04 compared the whole span with fact values and dotted suffixes, so a composition of two
+verified names was refused; the authoring check (`unit_checks`, identifier tokens) accepts the same text and the type batch
+hands the model the type's bases, so the producer was consistent and the check was the stricter side. Replay on the sealed
+bundle (zero calls): restoring 052.list verbatim in any destination passes BC-04, because a placed unit's own lines are
+skipped; the refused line is therefore authored prose.
+Class size (hosted failure records, which keep only the latest findings): spans recoverable for 2 cells, 3 spans: OCR .NET
+`List<RecognitionResult>` (composition, a false positive) and Words Python `aspose-words`, `aspose.words` (the commercial
+package a maintainer sentence names: not a composition, true positive under the current contract, producer side, BL-471);
+older BC-04 records (3D Python, PDF C++, BL-360 `examples`) keep the class signature but no span text, so they could not be
+re-judged and are not claimed.
+Alternatives (R36): (b) fix the producer so authored text never spells a generic: rejected, a base type such as
+`List<RecognitionResult>` is the true statement about `OcrOutput` and forbidding it removes accurate content (R14); (c) admit
+every identifier a cited or retained inherited unit spells anywhere: rejected, BC-04 deliberately restricts that pass to
+scope_limitations (item 44; it would let authored prose present maintainer text as verified), and it would not fix this span
+anyway; (d) add the whole span to the allowed set from `bases`: kept only as the verbatim route. Chosen (a), the smallest sound
+change on the check: `authoring.composed_identifier_allowed` (beside `identifier_allowed`), used by BC-04's span rule. A span is
+accepted when it has generic, array, optional or union syntax (`X<...>`, `X[...]`, `X?`, `a|b`) and either the extractor read it
+verbatim from the pinned source (SUPPORTED `public_symbol` attributes `bases` and `signature`) or every identifier in it is a
+fact value in type position (a fact value or its dotted suffix, never a bare method name) apart from the closed
+`GENERIC_TYPE_NAMES` (type constructors and primitives). A primitive never takes arguments; a lowercase head that is no
+constructor (`v<version>`) is a placeholder; a span with no such syntax is never composed, so everything refused before is
+still refused. No prompt, schema, renderer, threshold or version constant moves.
+Property improved: robust and universal (a verified generic type no longer costs the candidate after 32 calls), measured by
+`tests/readme/validation/test_code_span_composition_bl470.py` (31 cases from the logged span; negative controls that stay
+refused: an invented class in a generic, an invented method, a real type with a wrong member, a wrong member inside a generic,
+a call signature, a placeholder, a primitive with arguments, a bare wrapper, prose, and the external names `aspose-words` and
+`aspose.words`) and by the report-only run below.
+Evidence (checklist item 13, zero provider calls): report-only run over every stored README, 25 Lane R seals, 34 Lane L seals
+and 34 live READMEs, 8,739 + 11,177 + 11,218 code spans, judged against each seal's own facts, old rule against new: 20 spans
+newly accepted in 20 rows, 11 distinct, all type expressions over real facts (`List<RecognitionResult>`, `list[ExtractedBlock]`,
+`list[ExtractedLink]`, `list[ExtractedTable]`, `list[LinkValidationIssue]`, `ImageInfo[]`, `ShapeInfo[]`, `FVector4[]`,
+`IShapeCollection?`); none is an invented identifier, so 0 of 11 are false accepts (under 5%). Sealed Lane R READMEs: 2 spans
+newly accepted, both `ImageInfo[]`/`ShapeInfo[]` in Cells TypeScript. `recertify --all --json --remote origin` on origin/main
+807d60e vs the branch is byte-identical (59 rows: Lane R 25 RECERTIFIED, Lane L 34 RECERTIFIED; no seal newly fails, Lane L
+unchanged); `recertify --gate --remote origin --base-baseline <origin/main baseline>` OK (59 seals). Full suite 6951 passed,
+1 failed (the known container-only test_every_candidate_gets_an_honest_receipt), 29 skipped.
+Unproven: the hosted refresh re-run of OCR .NET (R41); Words Python's two spans are not fixed here (BL-471: the failing
+candidate is not stored, so its producing line could not be replayed). R9: no README wording moves. R10: no seal touched or
+demoted. R14: nothing dropped; the change only stops refusing true content.
+
+Backlog: BL-470
