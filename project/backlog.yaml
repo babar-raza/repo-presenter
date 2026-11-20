@@ -2534,6 +2534,7 @@ items:
     evidence:
       - "mechanism read from the log and the code: round 1 judged 0 blocking findings, so the loop's restore (require_clean_review=True) was refused when the restored pair carried the duplicate finding; the final restore (_restore_lost_content without require_clean_review) applied it; the degrade's flags (claim_flags, verdict_flags, duplicate_flags) all ignore a deterministic duplicate_opening_paragraph finding, so 0 flags were tried"
       - "reproduced zero-call in tests: with duplicate_opening_flags disabled the degrade prints 'degrade: nothing kept (0 flag(s) tried)' exactly as the hosted log"
+      - "recertify --all --json --remote origin on this branch (0 provider calls): 64 rows, Lane L 34 and Lane R 30 all RECERTIFIED; the one row with readme_changed true (Email Python Lane R) is identical on origin/main (same row, same version set), so no sealed README changes bytes because of this item; recertify --gate --remote origin --base-baseline data/recertification_baseline.json: OK, 64 seals checked (R10); full suite -n 3: 7049 passed, 29 skipped, 1 failed (test_every_candidate_gets_an_honest_receipt, container-only); tests/ops/test_gate_guard_tc005.py passed alone (it failed once under disk exhaustion, ENOSPC)"
     next_action: "supervisor integrates; hosted refresh of OCR .NET Lane R (R41)"
     updated: "2026-11-20"
 
@@ -2547,6 +2548,7 @@ items:
     acceptance: "(1) tests/readme/validation/test_java_bean_property_bl541.py from the exact maintainers' bullet; negative controls (net, python, go; a non-accessor method; the word 'fields'); (2) recertify --all: every seal RECERTIFIED, no README byte changes; recertify --gate OK; (3) hosted (R41, not proven): PSD Java Lane R refresh restores 010.list and reaches the model review"
     evidence:
       - "the published sentence read from a shallow clone of the pinned source (d808d1d): 'reads the header properties `getWidth()`, `getHeight()`, `getBitsPerChannel()`, `getColorMode()`, `getCompression()` and `getChannelsCount()`'; the facts record each as member_kind method (stored PSD Java facts)"
+      - "recertify --all --json --remote origin on this branch (0 provider calls): 64 rows, Lane L 34 and Lane R 30 all RECERTIFIED; the one row with readme_changed true (Email Python Lane R) is identical on origin/main (same row, same version set), so no sealed README changes bytes because of this item; recertify --gate --remote origin --base-baseline data/recertification_baseline.json: OK, 64 seals checked (R10); full suite -n 3: 7049 passed, 29 skipped, 1 failed (test_every_candidate_gets_an_honest_receipt, container-only); tests/ops/test_gate_guard_tc005.py passed alone (it failed once under disk exhaustion, ENOSPC)"
     next_action: "supervisor integrates; hosted refresh of PSD Java Lane R (R41); other Java cells that print 'properties' over accessors are covered by the same rule"
     updated: "2026-11-20"
 
@@ -2560,6 +2562,7 @@ items:
     acceptance: "(1) tests/readme/review/test_dependency_none_clearance_bl542.py: the stored PSD Java facts' line is clearable and cites dependency:none; negative controls: any reworded clause, a non-SUPPORTED marker and a listed required dependency are never cleared; (2) recertify --all unchanged; (3) hosted/audit (R41, not proven): PSD Java Lane R no longer flags line 83 in fresh audit samples"
     evidence:
       - "reproduced zero-call on the stored PSD Java bundle: before, derivation kept line 83 with 'no fact value in the line'; after, the line is clearable and cites dependency:none"
+      - "recertify --all --json --remote origin on this branch (0 provider calls): 64 rows, Lane L 34 and Lane R 30 all RECERTIFIED; the one row with readme_changed true (Email Python Lane R) is identical on origin/main (same row, same version set), so no sealed README changes bytes because of this item; recertify --gate --remote origin --base-baseline data/recertification_baseline.json: OK, 64 seals checked (R10); full suite -n 3: 7049 passed, 29 skipped, 1 failed (test_every_candidate_gets_an_honest_receipt, container-only); tests/ops/test_gate_guard_tc005.py passed alone (it failed once under disk exhaustion, ENOSPC)"
     next_action: "supervisor integrates; PSD Java still needs its refresh for the other findings (BL-541)"
     updated: "2026-11-20"
 
@@ -2574,5 +2577,6 @@ items:
     evidence:
       - "reproduced zero-call on the stored HTML Python bundle with inherited_unit:046 returned to VERIFIED_PRESERVE (the shape the hosted run printed): the line renders at 213, count_provenance returned None because 303 != 517 rows, and the line was not even derivable; after, line 213 and the Documentation line 820 are clearable with 'K05 verified: 303 public types = SUPPORTED class/enum public_symbol facts (302 classes + 1 enums = 303)'"
       - "the degrade is correctly unable to help (R14): omitting the paragraph loses its identifiers (BC-17 0 -> 3), so the fix is the clearance, not another degrade"
+      - "recertify --all --json --remote origin on this branch (0 provider calls): 64 rows, Lane L 34 and Lane R 30 all RECERTIFIED; the one row with readme_changed true (Email Python Lane R) is identical on origin/main (same row, same version set), so no sealed README changes bytes because of this item; recertify --gate --remote origin --base-baseline data/recertification_baseline.json: OK, 64 seals checked (R10); full suite -n 3: 7049 passed, 29 skipped, 1 failed (test_every_candidate_gets_an_honest_receipt, container-only); tests/ops/test_gate_guard_tc005.py passed alone (it failed once under disk exhaustion, ENOSPC)"
     next_action: "supervisor integrates; hosted refresh of HTML Python Lane R (R41); the compose of this cell took 3765 s (time-box 3000 s), a separate throughput class"
     updated: "2026-11-20"
