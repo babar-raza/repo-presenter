@@ -97,11 +97,25 @@
    "run_id": "44702264239",
    "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T13:42:46+00:00",
+   "classes": [
+    "BC-05|unresolved|section_fit",
+    "BC-17|inherited_unit|technical_content",
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "44745989095",
+   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T08:37:15+00:00",
+  "at": "2026-11-20T13:42:46+00:00",
   "classes": {
    "BC-05|unresolved|section_fit": {
     "example": "section fit: Scope and Limitations states the project's license, which the License section states: 'This project is licensed under the [MIT License](https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/blob/main'",
@@ -111,7 +125,7 @@
      "-"
     ],
     "rule": "BC-05",
-    "scope": "2cf9719b2996f82cbddb7e544312b844d042cfcf299a845da98d774f4966e65d",
+    "scope": "5eb2632186b1e4aa8f9bfeb77d573a255dc3f9d03b69dac768094f3711534dae",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -135,7 +149,7 @@
      "inherited_unit:002.badge_row"
     ],
     "rule": "BC-17",
-    "scope": "20a52933d320ef8bb891b1c057abe59286702ebd966d2bc20f51b5d7abcc1fba",
+    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -157,7 +171,7 @@
      "api_reference.intro"
     ],
     "rule": "duplicate_paragraph",
-    "scope": "7a1a0622dd91e9cc7ed08a03c1a8124afb263778d10d591b055634f882b6d7bc",
+    "scope": "70d8f67e33c86f747ede4f6e2911b968fde38f39f6ae7408fbd6c191bb96d4d8",
     "scope_paths": [
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
@@ -173,7 +187,7 @@
     "upstream": ""
    }
   },
-  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -230,7 +244,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
+  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -245,8 +259,8 @@
    {
     "facts_defects": [],
     "label": "duplicate_paragraph:0",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units[0].text' changed ('The primary entry point is `TeXJob`, which combines an `InputSource`, an `OutputDevice` (`PdfDevice`, `DviDevice`, or `SvgDevice`), and `TeXOptions` into one runnable job.' to 'The primary entry point is TeXJob, which combines an InputSource, an OutputDevice (PdfDevice, DviDevice, or SvgDevice), and TeXOptions into one runnable job.'), but the causal stage's own input and this revi",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": "api_reference",
     "stage": "S6"
    },
@@ -268,8 +282,8 @@
    }
   ],
   "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
-  "run_id": "44702264239",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44702264239",
+  "run_id": "44745989095",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745989095",
   "schema_version": 1,
   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
