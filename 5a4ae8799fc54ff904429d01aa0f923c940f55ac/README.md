@@ -4,7 +4,7 @@
 
 [![Aspose.PDF FOSS for Java](https://products.aspose.org/media/pdf/java/banner-readme.png)](https://products.aspose.org/pdf/java/)
 
-Aspose.PDF FOSS for Java reads and writes PDF documents, converts PDF to HTML and raster images, and supports basic text extraction and form handling.
+Aspose.PDF FOSS for Java reads and writes PDF documents. It creates and manipulates PDF content such as pages, text fragments, widget annotations, radio button fields, and cell structures. It supports setting annotation characteristics including border color, background color, and border style. It saves documents to the PDF format.
 
 ## Navigation
 
@@ -27,20 +27,15 @@ flowchart TB
   PRODUCT["Aspose.PDF FOSS for Java"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["Create and edit PDF<br/>documents"]
-    c2["Work with interactive<br/>forms"]
-    c3["Add and manage<br/>annotations"]
-    c4["Render pages to images"]
-    c5["Extract text and<br/>images"]
-    c6["Encrypt and sign<br/>documents"]
-    c7["Optimize document size"]
-    c8["Convert documents"]
+    c1["PDF document creation<br/>and editing"]
+    c2["Interactive form field<br/>handling"]
+    c3["Document security and<br/>encryption"]
+    c4["Document conversion<br/>and export"]
+    c5["Text extraction and<br/>manipulation"]
+    c6["Page operations and<br/>rendering"]
     c1 ~~~ c4
     c2 ~~~ c5
     c3 ~~~ c6
-    c4 ~~~ c7
-    c5 ~~~ c8
-    c6 ~~~ c8
   end
   PRODUCT --> Capabilities
   classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
@@ -49,38 +44,12 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Create and edit PDF documents.** It creates new PDF documents and edits existing ones by adding pages with `Page`, inserting text with `TextFragment`, and saving the result, as demonstrated by instantiating a `Document`, adding a page, appending a text fragment, and saving to a PDF file.
-- **Work with interactive forms.** It builds interactive forms by adding radio button options to cells within a page, setting option names, and preserving insertion order so options can be accessed sequentially.
-- **Add and manage annotations.** It adds and manages annotations by creating widget annotations with a specified rectangle, setting their border and background colors, and reading those color values back.
-- **Render pages to images.** It renders PDF pages to raster images using device classes such as `BmpDevice`, `GifDevice`, `JpegDevice`, `PngDevice`, and `TiffDevice` for multi-page TIFF output.
-- **Extract text and images.** It extracts plain text from PDF pages per page using `TextDevice`.
-- **Encrypt and sign documents.** It signs documents with PKCS#7 using `PdfSigner`, `PKCS7`, and `PKCS7Detached`, and verifies existing signatures with `SignatureVerificationResult`.
-- **Optimize document size.** It optimizes document size by removing unused objects, linking duplicate streams, recompressing streams, and subsetting images or fonts through `Document.optimizeResources()`.
-- **Convert documents.** It converts documents to PDF/A-1 through PDF/A-4 using `PdfAValidator`, `PdfAConverter`, and `PdfAValidationResult`.
-
-- Locate, extract, and replace text across a document with `TextFragmentAbsorber` and
-  `TextAbsorber`, including right-to-left and Arabic glyph shaping via `ArabicShaper`.
-- Draw shapes and gradients directly on a page with `Line`, `Rectangle`, `Circle`, `Arc`, `Curve`,
-  `Ellipse`, and `GradientAxialShading`.
-- Work with AcroForm fields — `TextBoxField`, `CheckboxField`, `ComboBoxField`, `ListBoxField`,
-  `RadioButtonField`, and `SignatureField` — through `Form`, plus XFA forms via `XfaForm`,
-  including JavaScript and FormCalc scripting and conversion to AcroForm with
-  `XfaAcroFormConverter` and `XfaFlattener`.
-- Import HTML, DOCX, XLSX, or Markdown into a PDF with `HtmlLoadOptions`, `DocLoadOptions`,
-  `ExcelLoadOptions`, and `MarkdownLoadOptions`, and export a PDF back to HTML, XML, DOCX, XLSX,
-  or Markdown with `HtmlSaveOptions`, `DocSaveOptions`, `ExcelSaveOptions`, `MarkdownSaveOptions`,
-  and `SaveFormat` — all on a shared structural-document engine with no new dependencies.
-- Turn a spreadsheet into an interactive PDF form with `ExcelLoadOptions.setInteractiveForms(true)`,
-  which maps cells to AcroForm fields and translates Excel formulas into PDF JavaScript calculation
-  actions.
-- Read and write document metadata with `XmpMetadata`, `XmpWriter`, and `XmpParser`.
-- Split, merge, insert, extract, and reorder pages with `PdfFileEditor`, and edit individual page
-  size and rotation with `PdfPageEditor`.
-- Read and write optional content groups (layers) with `Layer` and `SetOCGStateAction`.
-- Build and inspect tagged PDF structure with `TaggedContent` and the logical structure tree
-  rooted at `StructTreeRoot`.
-- Generate QR codes with the bundled `QrEncoder` (ISO/IEC 18004, Model 2) — no third-party
-  barcode library required.
+- **PDF document creation and editing.** It creates and edits PDF documents by adding pages, inserting text fragments, and placing interactive widgets such as radio button options with customizable borders and backgrounds.
+- **Interactive form field handling.** It handles interactive form fields including radio button options with named selections, widget annotations with appearance characteristics like border color and background fill, and border styles such as dashed lines.
+- **Document security and encryption.** It secures documents using standard security handlers with user and owner passwords.
+- **Document conversion and export.** It converts documents to PDF from HTML, DOCX, XLSX, and Markdown using dedicated load options, and exports PDF back to HTML, DOCX, XLSX, and Markdown via save options.
+- **Text extraction and manipulation.** It extracts and replaces text across a document using absorber classes and supports right-to-left and Arabic glyph shaping through dedicated shaper components.
+- **Page operations and rendering.** It performs page operations such as splitting, merging, inserting, extracting, and reordering using a file editor, and renders pages to raster formats including multi-page TIFF.
 
 ## Installation
 
@@ -122,7 +91,7 @@ No required third-party package dependencies; in `pom.xml`, every `<dependency>`
 
 ## Quick Start
 
-This example creates a new PDF document, adds a page, and inserts a widget annotation with a red border, then prints the RGB values of the border color.
+This example creates a new PDF document, adds a page, and inserts a widget annotation with a red border, then prints the RGB values of the border color to the console.
 
 ```java
 import java.io.*;
@@ -147,9 +116,9 @@ try (Document doc = new Document()) {
 
 ## Additional Examples
 
-The following workflows demonstrate creating a PDF from scratch, adding text, inserting form fields into table cells, and configuring widget annotation appearance.
+More real, verified snippets are collected below — mixing plain text with an interactive form field inside the same table cell.
 
-### Create a New PDF with a Text Fragment and Save It
+### Create a PDF with a Text Fragment and Save It to a File
 
 ```java
 import java.io.*;
@@ -170,7 +139,7 @@ try (Document doc = new Document()) {
 <details>
 <summary>View Additional Examples</summary>
 
-### Add a Text Fragment and Radio Button Option to a Table Cell
+### Add a Text Fragment and a Radio Button Option to a Table Cell
 
 ```java
 import java.io.*;
@@ -197,7 +166,7 @@ try (Document doc = new Document()) {
 }
 ```
 
-### Append Multiple Radio Button Options to a Cell in Order
+### Append Multiple Radio Button Options to a Cell in Insertion Order
 
 ```java
 import java.io.*;
@@ -240,7 +209,7 @@ try (Document doc = new Document()) {
 }
 ```
 
-### Set and Inspect the Border Style of a Radio Button Option
+### Set and Inspect the Border Style of a Radio Button Option Field
 
 ```java
 import java.io.*;
@@ -314,8 +283,6 @@ try (Document doc = new Document("form.pdf")) {
 </details>
 
 ## API Reference
-
-The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades — `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, and `PdfFileSignature`, among others.
 
 The public API has 1183 types.
 
@@ -663,7 +630,7 @@ The public API has 1183 types.
 | `ConditionalExpr` | test ? |
 | `ContinueStmt` | continue label?; |
 | `DebuggerStmt` | Debugger statement (parsed, no-op). |
-| `DoWhileStmt` | DoWhileStmt class holds a do-while loop's test condition, body, and source position via its test, body, and at members. |
+| `DoWhileStmt` | DoWhileStmt class holds a JavaScript do-while loop with a test condition, a body statement, and an at method that sets the source position and returns this for chaining. |
 | `EmptyStmt` | Lone; |
 | `ExprStmt` | Expression used as a statement. |
 | `ForInStmt` | for (left in right) body |
@@ -965,7 +932,7 @@ The public API has 1183 types.
 | `Variables` | Typed XFA template element variables. |
 | `XfaTemplateElements` | Registry of generated typed element constructors for this XFA grammar (element local name -> typed node). |
 | `XfaNamespaces` | Canonicalises XFA namespace URIs to their version-independent family. |
-| `XfaPacket` | XfaPacket class represents an XFA packet with a name, document reference, and dirty flag, and provides methods to get its document, name, source bytes, and mark itself dirty. |
+| `XfaPacket` | XfaPacket class represents an XFA packet with a constructor that creates a packet, a dirty property, a document property, and methods to get the document, name, source bytes, check for source bytes, and determine if it is dirty, as well as a markDirty method that marks this packet as modified so write-back re-serializes it. |
 | `XfaPacketReader` | Reads the AcroForm /XFA entry into a typed XfaPacketSet. |
 | `XfaPacketSet` | The full set of XFA packets parsed from a PDF's /XFA entry, with typed accessors per packet plus the assembled xdp document. |
 | `XfaPacketWriter` | Writes a modified XfaPacketSet back to the PDF /XFA entry, replacing the former XfaPacketParser write path. |
@@ -1341,7 +1308,7 @@ The public API has 1183 types.
 | `HtmlOutputMode` | Output mode for PDF &rarr; HTML conversion (HtmlSaveOptions)). |
 | `HtmlPageLayoutOption` | Page-layout adjustment applied when converting HTML to PDF (API-compatible with Aspose.PDF HtmlPageLayoutOption). |
 | `LettersPositioningMethods` | Strategy for positioning letters in CSS (Aspose LettersPositioningMethods). |
-| `LoadFormat` | LoadFormat enum lists the DocX, HTML, Markdown, PDF, and Xlsx file formats. |
+| `LoadFormat` | LoadFormat enum lists the DocX, HTML, Markdown, PDF and Xlsx file formats. |
 | `NumberingStyle` | Numbering style for headings and TOC entries. |
 | `PageCoordinateType` | Specifies which page box should be used as the coordinate space for rendering-related operations. |
 | `PageMode` | Document page mode — how the document should be displayed when opened. |
@@ -1519,15 +1486,15 @@ The public API has 1183 types.
 
 ### org
 
-The org namespace serves as the root package for the Aspose.PDF FOSS for Java library.
+The org namespace serves as the top-level package grouping for the Aspose.PDF FOSS for Java module.
 
 ### aspose
 
-The `org.aspose` namespace contains core classes and facades for working with PDF documents, including `Document`, `PageCollection`, `Page`, and editor classes such as `PdfContentEditor` and `PdfFileSignature`.
+The `org.aspose` namespace contains core classes such as `Document`, `Page`, `PageCollection`, and `Resources` that form the foundation of the PDF processing API.
 
 ### pdf
 
-The `org.aspose.pdf` namespace holds the primary types for PDF document manipulation, including `Document`, `Page`, `PageCollection`, `Resources`, and the full set of content, annotation, form, and structure classes defined by ISO 32000-1:2008.
+The `org.aspose.pdf` namespace provides the complete set of classes and interfaces for working with PDF documents, including content creation, editing, extraction, and conversion operations.
 
 | Class | Description |
 |---|---|
@@ -2231,99 +2198,6 @@ The `org.aspose.pdf` namespace holds the primary types for PDF document manipula
 
 | Class | Description |
 |---|---|
-| `BDC` | Begin marked content with properties operator (BDC). |
-| `BI` | Begin inline image operator (BI). |
-| `BMC` | Begin marked content operator (BMC). |
-| `BT` | Begin text object operator (BT). |
-| `BX` | Begin compatibility section operator (BX). |
-| `BasicSetColorAndPatternOperator` | Abstract base class for set-color operators that support pattern color spaces (ISO 32000-1:2008, §8.6.8). |
-| `BasicSetColorOperator` | Abstract base class for basic set-color operators (ISO 32000-1:2008, §8.6.8). |
-| `BlockTextOperator` | Abstract base class for text block operators (ISO 32000-1:2008, §9.4). |
-| `Clip` | Set clipping path operator (W) using the non-zero winding number rule. |
-| `ClosePath` | Close subpath operator (h). |
-| `ClosePathEOFillStroke` | Close, fill (even-odd), and stroke path operator (b*). |
-| `ClosePathFillStroke` | Close, fill, and stroke path operator (b). |
-| `ClosePathStroke` | Close and stroke path operator (s). |
-| `ConcatenateMatrix` | Concatenate matrix operator (cm). |
-| `CurveTo` | Cubic Bezier curve operator (c). |
-| `CurveTo1` | Cubic Bezier curve operator with initial point replicated (v). |
-| `CurveTo2` | Cubic Bezier curve operator with final point replicated (y). |
-| `DP` | Marked content point with properties operator (DP). |
-| `Do` | Invoke named XObject operator (Do). |
-| `EI` | End inline image operator (EI). |
-| `EMC` | End marked content operator (EMC). |
-| `EOClip` | Set clipping path operator (W*) using the even-odd rule. |
-| `EOFill` | Fill path operator (f*) using the even-odd rule. |
-| `EOFillStroke` | Fill and stroke path operator (B*) using the even-odd rule. |
-| `ET` | End text object operator (ET). |
-| `EX` | End compatibility section operator (EX). |
-| `EndPath` | End path operator (n) without filling or stroking. |
-| `Fill-operators` | Fill path operator (f) using the non-zero winding number rule. |
-| `FillStroke` | Fill and stroke path operator (B). |
-| `GRestore` | Restore graphics state operator (Q). |
-| `GS` | Set graphics state dictionary operator (gs). |
-| `GSave` | Save graphics state operator (q). |
-| `GlyphPosition` | Represents a single element in a TJ (show text with glyph positioning) array. |
-| `ID` | Begin inline image data operator (ID). |
-| `LineTo` | Line-to operator (l). |
-| `MP` | Marked content point operator (MP). |
-| `MoveTextPosition` | Move text position operator (Td). |
-| `MoveTextPositionSetLeading` | Move text position and set leading operator (TD). |
-| `MoveTo` | Move-to operator (m). |
-| `MoveToNextLine` | Move to start of next text line operator (T*). |
-| `MoveToNextLineShowText` | Move to next line and show text operator ('). |
-| `ObsoleteFill` | Obsolete fill path operator (F). |
-| `Re` | Rectangle operator (re). |
-| `SelectFont` | Select font and size operator (Tf). |
-| `SetAdvancedColor` | Set color for non-stroking operations with pattern support operator (scn). |
-| `SetAdvancedColorStroke` | Set color for stroking operations with pattern support operator (SCN). |
-| `SetCMYKColor` | Set CMYK color for non-stroking operations operator (k). |
-| `SetCMYKColorStroke` | Set CMYK color for stroking operations operator (K). |
-| `SetCharWidth` | Set char width operator for Type 3 fonts (d0). |
-| `SetCharWidthBoundingBox` | Set char width and bounding box operator for Type 3 fonts (d1). |
-| `SetCharacterSpacing` | Set character spacing operator (Tc). |
-| `SetColor` | Set color for non-stroking operations operator (sc). |
-| `SetColorOperator` | Abstract base class for all color-setting operators (ISO 32000-1:2008, §8.6.8). |
-| `SetColorRenderingIntent` | Set color rendering intent operator (ri). |
-| `SetColorSpace` | Set color space for non-stroking operations operator (cs). |
-| `SetColorSpaceStroke` | Set color space for stroking operations operator (CS). |
-| `SetColorStroke` | Set color for stroking operations operator (SC). |
-| `SetDash` | Set dash pattern operator (d). |
-| `SetFlat` | Set flatness tolerance operator (i). |
-| `SetGlyphsPositionShowText` | Show text with glyph positioning operator (TJ). |
-| `SetGray` | Set gray level for non-stroking operations operator (g). |
-| `SetGrayStroke` | Set gray level for stroking operations operator (G). |
-| `SetHorizontalTextScaling` | Set horizontal text scaling operator (Tz). |
-| `SetLineCap` | Set line cap style operator (J). |
-| `SetLineJoin` | Set line join style operator (j). |
-| `SetLineWidth` | Set line width operator (w). |
-| `SetMiterLimit` | Set miter limit operator (M). |
-| `SetRGBColor` | Set RGB color for non-stroking operations operator (rg). |
-| `SetRGBColorStroke` | Set RGB color for stroking operations operator (RG). |
-| `SetSpacingMoveToNextLineShowText` | Set spacing, move to next line, and show text operator ("). |
-| `SetTextLeading` | Set text leading operator (TL). |
-| `SetTextMatrix` | Set text matrix operator (Tm). |
-| `SetTextRenderingMode` | Set text rendering mode operator (Tr). |
-| `SetTextRise` | Set text rise operator (Ts). |
-| `SetWordSpacing` | Set word spacing operator (Tw). |
-| `ShFill` | Shading fill operator (sh). |
-| `ShowText` | Show text operator (Tj). |
-| `Stroke` | Stroke path operator (S). |
-| `TextOperator` | Abstract base class for all text-related operators (ISO 32000-1:2008, §9). |
-| `TextPlaceOperator` | Abstract base class for text positioning operators (ISO 32000-1:2008, §9.4.2). |
-| `TextShowOperator` | Abstract base class for text showing operators (ISO 32000-1:2008, §9.4.3). |
-| `TextStateOperator` | Abstract base class for text state operators (ISO 32000-1:2008, §9.3). |
-
-| Interface | Description |
-|---|---|
-| `IOperatorSelector` | Visitor interface for traversing an `OperatorCollection`. |
-
-| Class | Description |
-|---|---|
-| `OptimizationOptions` | Options controlling optimizeResources(OptimizationOptions). |
-
-| Class | Description |
-|---|---|
 | `TOCpageHasNoTitleException` | Exception thrown when attempting to link a TOC page title to a header element, but the TOC page does not have a title set via `TocInfo`. |
 
 | Class | Description |
@@ -2506,8 +2380,6 @@ mvn package
 mvn -B clean test
 ```
 
-To build from source instead:
-
 ```bash
 git clone https://github.com/aspose-pdf-foss/Aspose.PDF-FOSS-for-Java.git
 cd Aspose.PDF-FOSS-for-Java
@@ -2515,8 +2387,6 @@ mvn clean install
 ```
 
 - Java 11 or later (`maven.compiler.source`/`maven.compiler.target` are both pinned to `11` in `pom.xml`).
-
-- `org.junit.jupiter:junit-jupiter` 5.10.2 — test runner used by the Maven `test` phase; not needed to use the published library.
 
 The project builds with Maven 3 and targets Java 11+ (`maven.compiler.source`/`target` in `pom.xml`). Tests use JUnit 5 (Jupiter); each test builds any PDF fixture it needs in-memory or via `@TempDir`, so the repository ships no sample PDF corpus.
 

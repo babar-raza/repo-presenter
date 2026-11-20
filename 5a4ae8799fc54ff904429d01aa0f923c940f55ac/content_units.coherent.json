@@ -7,149 +7,38 @@
   },
   "degrade_records": [
     {
-      "action": "sentence_withheld",
+      "action": "printed_text_withheld",
+      "detail": "The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades — `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, and `PdfFileSignature`, among others. The public API surface spans 1183 public types across the module-grouped tables below.",
       "findings": [
-        "BC-14"
+        "llm:factuality"
       ],
       "rule": "BL-240",
-      "section": "api_reference",
-      "slot": "intro"
+      "section": "",
+      "slot": "printed_text"
     }
+  ],
+  "degraded_quotes": [
+    "The central class is `Document`, whose pages are reached through `PageCollection` and `Page`, each backed by a `Resources` dictionary. `Document`-level convenience operations are exposed through the facades — `PdfFileEditor`, `PdfContentEditor`, `PdfBookmarkEditor`, `PdfExtractor`, `PdfConverter`, and `PdfFileSignature`, among others. The public API surface spans 1183 public types across the module-grouped tables below."
   ],
   "omitted": [
     {
-      "fact_id": "build_test_asset:tests",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "dependency:none",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:001",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:002",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:005",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:007",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:008",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:009",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:001.heading",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "license:spdx",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:published_version",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "package:version",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:org.aspose",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:org.aspose.pdf",
-      "reason": "not relevant to opening capability description",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:003",
-      "reason": "unresolved example, not part of accepted facts",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:004",
-      "reason": "unresolved example, not part of accepted facts",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:006",
-      "reason": "unresolved example, not part of accepted facts",
-      "section": "opening"
-    },
-    {
-      "fact_id": "format:input.docx",
-      "reason": "unresolved format, not part of accepted facts",
-      "section": "opening"
-    },
-    {
-      "fact_id": "format:input.html",
-      "reason": "unresolved format, not part of accepted facts",
-      "section": "opening"
-    },
-    {
-      "fact_id": "inherited_unit:009.heading",
-      "reason": "Heading is rendered by the deterministic renderer; not a fact to cite.",
-      "section": "key_capabilities"
-    },
-    {
       "fact_id": "inherited_unit:010.list",
-      "reason": "List is rendered by the deterministic renderer; not a fact to cite.",
+      "reason": "The list is inherited from another section and not cited by any capability slot; it is omitted because the objective restricts this section to the six explicitly named capability slots.",
       "section": "key_capabilities"
     },
     {
       "fact_id": "identity:ecosystem",
-      "reason": "Omitted because ecosystem identity facts are not used in any unit of this section.",
+      "reason": "Omitted because ecosystem facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:family",
-      "reason": "Omitted because family identity facts are not used in any unit of this section.",
+      "reason": "Omitted because family facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:platform",
-      "reason": "Omitted because platform identity facts are not used in any unit of this section.",
+      "reason": "Omitted because platform facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
@@ -159,17 +48,17 @@
     },
     {
       "fact_id": "identity:repository",
-      "reason": "Omitted because repository identity facts are not used in any unit of this section.",
+      "reason": "Omitted because repository facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "Omitted because revision identity facts are not used in any unit of this section.",
+      "reason": "Omitted because revision facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:java_release",
-      "reason": "Omitted because Java release facts are not used in any unit of this section.",
+      "reason": "Omitted because java_release facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
@@ -179,7 +68,7 @@
     },
     {
       "fact_id": "package:published_version",
-      "reason": "Omitted because published version facts are not used in any unit of this section.",
+      "reason": "Omitted because published_version facts are not used in any unit of this section.",
       "section": "api_reference"
     },
     {
@@ -188,8 +77,268 @@
       "section": "api_reference"
     },
     {
+      "fact_id": "inherited_unit:052.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:054.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:056.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:058.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:060.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:062.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:064.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:066.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:068.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:070.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:072.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:074.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:076.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:078.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:080.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:083.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:085.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:087.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:089.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:091.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:093.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:095.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:097.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:099.heading",
+      "reason": "Omitted because heading facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:102.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:104.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:106.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:108.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:110.table",
+      "reason": "Omitted because table facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:113.001.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:113.002.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:113.003.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:113.004.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:115.001.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:115.002.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:115.003.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:117.002.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:117.003.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:119.001.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:119.002.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:119.003.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:119.004.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:119.005.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:121.001.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:121.002.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:121.003.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:123.002.list",
+      "reason": "Omitted because list facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:320dc9de136c",
+      "reason": "Omitted because confirmed_false_claim facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:6f29a51b8561",
+      "reason": "Omitted because confirmed_false_claim facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:5d46e873884c",
+      "reason": "Omitted because confirmed_false_claim facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:fb72132572ac",
+      "reason": "Omitted because confirmed_false_claim facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:fbba5efa9628",
+      "reason": "Omitted because confirmed_false_claim facts are not used in any unit of this section.",
+      "section": "api_reference"
+    },
+    {
       "fact_id": "inherited_unit:138.paragraph",
-      "reason": "The MIT License statement is about licensing terms of the FOSS package, not commercial product additions, and does not belong in the enterprise relationship context sentence.",
+      "reason": "The MIT License statement is about licensing terms of this FOSS package, not commercial product capabilities, and does not support any claim about what the commercial product adds.",
       "section": "enterprise_relationship"
     }
   ],
@@ -201,82 +350,77 @@
         "identity:family",
         "identity:platform",
         "package:java_release",
-        "package:name"
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "public_symbol:org.aspose.pdf",
+        "dependency:none",
+        "example:001",
+        "example:002",
+        "example:005",
+        "example:007",
+        "example:008",
+        "example:009"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.PDF FOSS for Java reads and writes PDF documents, converts PDF to HTML and raster images, and supports basic text extraction and form handling."
-    },
-    {
-      "fact_ids": [
-        "example:005",
-        "public_symbol:org.aspose",
-        "public_symbol:org.aspose.pdf"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:1",
-      "text": "It creates new PDF documents and edits existing ones by adding pages with Page, inserting text with TextFragment, and saving the result, as demonstrated by instantiating a Document, adding a page, appending a text fragment, and saving to a PDF file."
-    },
-    {
-      "fact_ids": [
-        "example:002",
-        "example:007",
-        "public_symbol:org.aspose.pdf"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:2",
-      "text": "It builds interactive forms by adding radio button options to cells within a page, setting option names, and preserving insertion order so options can be accessed sequentially."
+      "text": "Aspose.PDF FOSS for Java reads and writes PDF documents. It creates and manipulates PDF content such as pages, text fragments, widget annotations, radio button fields, and cell structures. It supports setting annotation characteristics including border color, background color, and border style. It saves documents to the PDF format."
     },
     {
       "fact_ids": [
         "example:001",
+        "example:002",
+        "example:005",
+        "public_symbol:org.aspose.pdf"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It creates and edits PDF documents by adding pages, inserting text fragments, and placing interactive widgets such as radio button options with customizable borders and backgrounds."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:007",
         "example:008",
         "example:009",
         "public_symbol:org.aspose.pdf"
       ],
       "section": "key_capabilities",
-      "slot": "capability:3",
-      "text": "It adds and manages annotations by creating widget annotations with a specified rectangle, setting their border and background colors, and reading those color values back."
+      "slot": "capability:2",
+      "text": "It handles interactive form fields including radio button options with named selections, widget annotations with appearance characteristics like border color and background fill, and border styles such as dashed lines."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose"
+        "public_symbol:org.aspose.pdf"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It secures documents using standard security handlers with user and owner passwords."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.pdf"
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It renders PDF pages to raster images using device classes such as BmpDevice, GifDevice, JpegDevice, PngDevice, and TiffDevice for multi-page TIFF output."
+      "text": "It converts documents to PDF from HTML, DOCX, XLSX, and Markdown using dedicated load options, and exports PDF back to HTML, DOCX, XLSX, and Markdown via save options."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose"
+        "public_symbol:org.aspose.pdf"
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It extracts plain text from PDF pages per page using TextDevice."
+      "text": "It extracts and replaces text across a document using absorber classes and supports right-to-left and Arabic glyph shaping through dedicated shaper components."
     },
     {
       "fact_ids": [
-        "public_symbol:org.aspose"
+        "public_symbol:org.aspose.pdf"
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "It signs documents with PKCS#7 using PdfSigner, PKCS7, and PKCS7Detached, and verifies existing signatures with SignatureVerificationResult."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:7",
-      "text": "It optimizes document size by removing unused objects, linking duplicate streams, recompressing streams, and subsetting images or fonts through Document.optimizeResources()."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:8",
-      "text": "It converts documents to PDF/A-1 through PDF/A-4 using PdfAValidator, PdfAConverter, and PdfAValidationResult."
+      "text": "It performs page operations such as splitting, merging, inserting, extracting, and reordering using a file editor, and renders pages to raster formats including multi-page TIFF."
     },
     {
       "fact_ids": [
@@ -284,21 +428,17 @@
       ],
       "section": "quick_start",
       "slot": "lead_in",
-      "text": "This example creates a new PDF document, adds a page, and inserts a widget annotation with a red border, then prints the RGB values of the border color."
+      "text": "This example creates a new PDF document, adds a page, and inserts a widget annotation with a red border, then prints the RGB values of the border color to the console."
     },
     {
       "fact_ids": [
-        "example:002",
-        "example:005",
-        "example:007",
-        "example:008",
-        "example:009",
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
         "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
+        "inherited_unit:029.paragraph",
         "package:java_release",
         "package:name",
         "package:published_version",
@@ -306,7 +446,7 @@
       ],
       "section": "additional_examples",
       "slot": "preview",
-      "text": "The following workflows demonstrate creating a PDF from scratch, adding text, inserting form fields into table cells, and configuring widget annotation appearance."
+      "text": "More real, verified snippets are collected below — mixing plain text with an interactive form field inside the same table cell."
     },
     {
       "fact_ids": [
@@ -324,7 +464,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:002",
-      "text": "Add a text fragment and radio button option to a table cell."
+      "text": "Add a text fragment and a radio button option to a table cell."
     },
     {
       "fact_ids": [
@@ -342,7 +482,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:005",
-      "text": "Create a new PDF with a text fragment and save it."
+      "text": "Create a PDF with a text fragment and save it to a file."
     },
     {
       "fact_ids": [
@@ -360,7 +500,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:007",
-      "text": "Append multiple radio button options to a cell in order."
+      "text": "Append multiple radio button options to a cell in insertion order."
     },
     {
       "fact_ids": [
@@ -396,7 +536,7 @@
       ],
       "section": "additional_examples",
       "slot": "workflow:example:009",
-      "text": "Set and inspect the border style of a radio button option."
+      "text": "Set and inspect the border style of a radio button option field."
     },
     {
       "fact_ids": [
@@ -404,7 +544,7 @@
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "The central class is Document, whose pages are reached through PageCollection and Page, each backed by a Resources dictionary. Document-level convenience operations are exposed through the facades — PdfFileEditor, PdfContentEditor, PdfBookmarkEditor, PdfExtractor, PdfConverter, and PdfFileSignature, among others."
+      "text": "The central class is Document, whose pages are reached through PageCollection and Page, each backed by a Resources dictionary. Document-level convenience operations are exposed through the facades — PdfFileEditor, PdfContentEditor, PdfBookmarkEditor, PdfExtractor, PdfConverter, and PdfFileSignature, among others. The public API surface spans 1181 public types across the module-grouped tables below."
     },
     {
       "fact_ids": [
@@ -412,7 +552,7 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:org",
-      "text": "The org namespace serves as the root package for the Aspose.PDF FOSS for Java library."
+      "text": "The org namespace serves as the top-level package grouping for the Aspose.PDF FOSS for Java module."
     },
     {
       "fact_ids": [
@@ -420,7 +560,7 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:org.aspose",
-      "text": "The org.aspose namespace contains core classes and facades for working with PDF documents, including Document, PageCollection, Page, and editor classes such as PdfContentEditor and PdfFileSignature."
+      "text": "The org.aspose namespace contains core classes such as Document, Page, PageCollection, and Resources that form the foundation of the PDF processing API."
     },
     {
       "fact_ids": [
@@ -428,7 +568,7 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:org.aspose.pdf",
-      "text": "The org.aspose.pdf namespace holds the primary types for PDF document manipulation, including Document, Page, PageCollection, Resources, and the full set of content, annotation, form, and structure classes defined by ISO 32000-1:2008."
+      "text": "The org.aspose.pdf namespace provides the complete set of classes and interfaces for working with PDF documents, including content creation, editing, extraction, and conversion operations."
     },
     {
       "fact_ids": [
@@ -444,7 +584,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:org.aspose.pdf.loadformat",
-      "text": "LoadFormat enum lists the DocX, HTML, Markdown, PDF, and Xlsx file formats."
+      "text": "LoadFormat enum lists the DocX, HTML, Markdown, PDF and Xlsx file formats."
     },
     {
       "fact_ids": [
@@ -453,7 +593,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:org.aspose.pdf.engine.script.js.ast.dowhilestmt",
-      "text": "DoWhileStmt class holds a do-while loop's test condition, body, and source position via its test, body, and at members."
+      "text": "DoWhileStmt class holds a JavaScript do-while loop with a test condition, a body statement, and an at method that sets the source position and returns this for chaining."
     },
     {
       "fact_ids": [
@@ -463,7 +603,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:org.aspose.pdf.engine.xfa.packet.xfapacket",
-      "text": "XfaPacket class represents an XFA packet with a name, document reference, and dirty flag, and provides methods to get its document, name, source bytes, and mark itself dirty."
+      "text": "XfaPacket class represents an XFA packet with a constructor that creates a packet, a dirty property, a document property, and methods to get the document, name, source bytes, check for source bytes, and determine if it is dirty, as well as a markDirty method that marks this packet as modified so write-back re-serializes it."
     }
   ]
 }
