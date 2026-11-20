@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "8fac8aeb8c2a421288c5a4e6b7b5db3b",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T08:11:40.185098+00:00",
+    "resume_predicate": null,
+    "recovery_count": 4
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "da5fa4abf5784e3a919e87a4ab4bec4c",
@@ -33,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 67,
+  "state_version": 68,
   "recent_trigger_dedup_keys": {
     "run:41130099384:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "d6359e88b22f4a22b5dccadc051b4f39",
     "run:41295852203:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "81a03b4a7a3e42c682358a2960d2fa81",
@@ -49,5 +56,5 @@
     "run:44366290226:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "3c65bf202b5d46a19e71fd9903491de3",
     "run:44556523392:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "8fac8aeb8c2a421288c5a4e6b7b5db3b"
   },
-  "recovery_count": 3
+  "recovery_count": 4
 }
