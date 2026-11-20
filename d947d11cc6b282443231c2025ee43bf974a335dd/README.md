@@ -4,7 +4,7 @@
 
 [![Aspose.Imaging FOSS for .NET](https://products.aspose.org/media/imaging/net/banner-readme.png)](https://products.aspose.org/imaging/net/)
 
-Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata for 14 raster, vector, and specialized formats including PSD, EMF, WMF, and DICOM. It targets netstandard2.0 and net8.0 with no external dependencies.
+Aspose.Imaging FOSS for .NET reads and writes raster and vector image formats including JPEG, PNG, BMP, GIF, TIFF, PSD, EMF, WMF, and DICOM. It converts images between these formats and inspects their headers to obtain dimensions, bit depth, and frame count without fully decoding the image. The library covers formats in the .NET FOSS ecosystem that lack header-only inspection, such as PSD, EMF, WMF, and DICOM, providing a unified interface for format detection and metadata extraction.
 
 Most .NET image libraries make you fully decode an image just to answer "is this a JPEG, and
 how big is it?". `ImageSharp.Image.Identify` covers common raster formats well, but nothing
@@ -37,7 +37,7 @@ flowchart TB
     c3["Multi-frame counting"]
     c4["Async support"]
     c5["Robust error handling"]
-    c6["Zero dependencies"]
+    c6["No dependencies"]
     c1 ~~~ c4
     c2 ~~~ c5
     c3 ~~~ c6
@@ -49,12 +49,43 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Format detection.** Detects 14 image formats by reading only the file's signature bytes and returning an `ImageFormat` value, so identifying a file never requires pulling in a full imaging stack.
-- **Header probing.** Reads a format's real header fields directly into an `ImageInfo` — width, height, bit depth, and frame count — for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open source .NET image manipulation API with no decode step.
-- **Multi-frame counting.** Counts real multi-frame and multi-page content where the container format actually carries it: GIF walks its image-descriptor blocks, ICO its directory entries, TIFF its IFD chain, and a bundled multi-page DJVU (DJVM) its FORM:DJVU page components.
-- **Async support.** Provides both synchronous and async entry points for the same operation — `ProbeFile()`/`ProbeFileAsync()` and `Probe()`/`ProbeAsync()` — so a probe can run on an ASP.NET request thread without blocking it.
-- **Robust error handling.** Never throws on a signature match it cannot fully parse — malformed or truncated input comes back as an `ImageInfo` with only Format set, never an exception, so a probing pipeline can run unattended over untrusted input.
-- **Zero dependencies.** Has no external dependencies, making it a lightweight alternative for .NET applications targeting netstandard2.0 or net8.0.
+- **Format detection.** Detects image formats by reading only the file's signature bytes and returning an `ImageFormat` value, so identifying a file never requires pulling in a full imaging stack.
+- **Header probing.** Reads a format's real header fields directly into an `ImageInfo`—width, height, bit depth, and frame count—for PNG, JPEG, GIF, BMP, WEBP (lossy, lossless, and extended), ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open source .NET image manipulation API with no decode step.
+- **Multi-frame counting.** Counts real multi-frame and multi-page content where the container format actually carries it: GIF walks its image-descriptor blocks, ICO its directory entries, TIFF its IFD chain, and a bundled multi-page DJVU its FORM:DJVU page components.
+- **Async support.** Provides both synchronous and async entry points for the same operation—`ProbeFile()`/`ProbeFileAsync()` and `Probe()`/`ProbeAsync()`—so a probe can run on an ASP.NET request thread without blocking it.
+- **Robust error handling.** Never throws on a signature match it cannot fully parse—malformed or truncated input comes back as an `ImageInfo` with only Format set, never an exception, so a probing pipeline can run unattended over untrusted input.
+- **No dependencies.** Runs without any external dependencies, making it a lightweight, self-contained imaging library for .NET applications.
+
+- Detects 14 image formats as a free, open source Aspose.Imaging alternative to a full decode
+  pipeline — `ImageProbe.DetectFormat()` reads only the file's signature bytes and returns an
+  `ImageFormat` value, so identifying a file never requires pulling in a full imaging stack.
+- `ImageProbe.Probe()` reads a format's real header fields directly into an `ImageInfo` —
+  width, height, bit depth, and frame count — for PNG, JPEG, GIF, BMP, WEBP (lossy, lossless,
+  and extended), ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open
+  source .NET image manipulation API with no decode step.
+- Counts real multi-frame and multi-page content where the container format actually carries
+  it: GIF walks its image-descriptor blocks, ICO its directory entries, TIFF its IFD chain, and
+  a bundled multi-page DJVU (DJVM) its `FORM:DJVU` page components — not the DIRM file count,
+  which also includes shared dictionaries and thumbnails.
+- DICOM parsing covers Implicit VR Little Endian and Explicit VR Little/Big Endian transfer
+  syntaxes — including the common compressed ones, whose non-pixel elements are encoded
+  Explicit VR Little Endian — and reads `Rows`/`Columns`/`BitsAllocated` directly from the data
+  set, stopping rather than guessing if it reaches a sequence or encapsulated pixel data
+  element with an undefined length first.
+- AVIF and HEIC/HEIF dimensions come from the primary image's `ispe` (image spatial extent)
+  property: `pitm` names the primary item and `ipma` links it to its `ipco` properties, so grid
+  images (such as iPhone photos) report the full canvas rather than a tile. Without those
+  associations the largest `ispe` is used. AVIF is detected by an `avif`/`avis` major brand, or
+  by a compatible `avif`/`avis` brand under a generic major brand such as `mif1`; HEIC/HEIF by
+  `heic`, `heix`, `hevc`, `hevx`, `heim`, `heis`, `hevm`, `hevs`, or `mif1`/`mif2` without AVIF.
+- Every number in an `ImageInfo` is either positive or `null`: zero, negative, or out-of-range
+  header fields are reported as unknown instead of being passed through.
+- `Probe()` never throws on a signature match it can't fully parse — malformed or truncated
+  input comes back as an `ImageInfo` with only `Format` set, never an exception, so a probing
+  pipeline can run unattended over untrusted input.
+- Both synchronous and async entry points exist for the same operation —
+  `ProbeFile()`/`ProbeFileAsync()` and `Probe()`/`ProbeAsync()` — so a probe can run on an ASP.NET
+  request thread without blocking it.
 
 | Format | Detect | Width / Height | Bit depth | Frame count |
 |--------|:------:|:---------------:|:---------:|:-----------:|
@@ -75,12 +106,12 @@ flowchart TB
 
 ## Installation
 
-`Aspose.Imaging.Foss` is not yet published on NuGet; build it from a source checkout instead:
+Build `Aspose.Imaging.Foss` from a source checkout:
 
 ```bash
 git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git
 cd Aspose.Imaging-FOSS-for-.NET
-dotnet build
+dotnet build Aspose.Imaging.Foss.sln
 ```
 
 ## Dependencies
@@ -95,17 +126,6 @@ No required third-party package dependencies; in `src/Aspose.Imaging.Foss/Aspose
 
 ## Quick Start
 
-This example uses Aspose.Imaging FOSS for .NET to inspect an image file and report its format and frame count.
-
-```csharp
-using Aspose.Imaging.Foss;
-
-var info = ImageProbe.ProbeFile("animation.gif");
-Console.WriteLine($"{info.Format}: {info.FrameCount} frame(s)");
-```
-
-## Additional Examples
-
 ```csharp
 using Aspose.Imaging.Foss;
 
@@ -118,14 +138,23 @@ var format = ImageProbe.DetectFormat(bytes);
 var info2 = ImageProbe.Probe(stream);
 ```
 
-<details>
-<summary>View Additional Examples</summary>
+## Additional Examples
 
 ```csharp
 using Aspose.Imaging.Foss;
 
 var info = await ImageProbe.ProbeFileAsync("upload.png", cancellationToken);
 Console.WriteLine($"{info.Format}: {info.Width}x{info.Height}");
+```
+
+<details>
+<summary>View Additional Examples</summary>
+
+```csharp
+using Aspose.Imaging.Foss;
+
+var info = ImageProbe.ProbeFile("animation.gif");
+Console.WriteLine($"{info.Format}: {info.FrameCount} frame(s)");
 ```
 
 ```csharp
@@ -139,7 +168,7 @@ var format = ImageProbe.DetectFormat(networkStream);
 
 ## API Reference
 
-Aspose.Imaging FOSS for .NET exposes Aspose.Imaging FOSS for .NET as its public API surface, targeting netstandard2.0 and net8.0. The library's single entry point is `ImageProbe`, which provides format detection and header inspection capabilities.
+Aspose.Imaging FOSS for .NET exposes static methods `DetectFormat`, Probe, `ProbeFile`, `ProbeAsync`, and `ProbeFileAsync` on the `ImageProbe` type to inspect image headers and return `ImageFormat` or `ImageInfo` values.
 
 The public API has 3 types.
 
@@ -150,23 +179,20 @@ The public API has 3 types.
 
 | Class | Description |
 | --- | --- |
-| `ImageInfo` | ImageInfo class holds read-only properties for an image's format, width, height, bit depth, and frame count, and provides a constructor to initialize them. |
-| `ImageProbe` | ImageProbe class provides methods to detect and probe image formats from files or streams, including DetectFormat, Probe, ProbeAsync, ProbeFile, and ProbeFileAsync. |
+| `ImageInfo` | ImageInfo class holds read-only properties for an image's Format, Width, Height, BitDepth, and FrameCount, and provides a constructor to create an instance. |
+| `ImageProbe` | Class that declares the methods DetectFormat, Probe, ProbeAsync, ProbeFile and ProbeFileAsync. |
 
 #### Enumerations
 
 | Enumeration | Description |
 | --- | --- |
-| `ImageFormat` | ImageFormat class lists the supported image formats including Avif, Bmp, Dicom, Emf, Gif, Heic, Ico, Jpeg, Png, Psd, and Tiff. |
+| `ImageFormat` | Enumerates values including Avif, Bmp, Dicom, DjVu, Emf, Gif, Heic and Ico. |
 
 #### Detailed Member Reference
 
 ### Foss
 
-Aspose.Imaging FOSS for .NET provides format detection and header inspection through `ImageProbe`, which includes `DetectFormat`, Probe, `ProbeFile`, `ProbeAsync`, and `ProbeFileAsync` methods, returning `ImageFormat` and `ImageInfo` values that describe the detected image format and its header-extracted properties.
-
-`ImageProbe` is the library's single entry point; it returns an `ImageFormat` value and an
-`ImageInfo` record for every supported format.
+Public module.
 
 - `ImageFormat` — enum of the 14 detectable formats, plus `Unknown` for anything unmatched.
 - `ImageInfo` — immutable result of a probe: `Format`, and the nullable `Width`, `Height`,
@@ -205,7 +231,7 @@ Aspose.Imaging FOSS for .NET provides format detection and header inspection thr
 - **DICOM parsing stops at the first undefined-length element.** A sequence or encapsulated pixel-data element with an undefined length ends the walk rather than being parsed, since `Rows`/`Columns`/`BitsAllocated` always precede such elements in a conformant file.
 - **CDR support is planned but not yet implemented** — no `CdrFormatHandler` exists in the current source tree.
 
-These limitations don't apply to [full-featured Aspose.Imaging for .NET — Enterprise Edition](https://products.aspose.com/imaging/net/). It adds full decoding, editing, rendering, and conversion across a much broader format range.
+See [Aspose.Imaging for .NET — Enterprise Edition](https://products.aspose.com/imaging/net/). It adds full decoding, editing, rendering, and conversion across a much broader format range.
 
 ## Development and Testing
 

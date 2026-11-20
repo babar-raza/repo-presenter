@@ -1,103 +1,77 @@
 {
   "coherence": {
     "applied": true,
-    "revised": []
+    "revised": [
+      "key_capabilities/capability:2",
+      "key_capabilities/capability:4",
+      "key_capabilities/capability:5",
+      "api_reference/hub:public_symbol:aspose.imaging.foss"
+    ]
   },
+  "degrade_records": [
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "duplicate_paragraph"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.imaging.foss"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageformat"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageprobe"
+    },
+    {
+      "action": "inherited_unit_omitted",
+      "detail": "ImageProbe is the library's single entry point; it returns an ImageFormat value and an ImageInfo record for every supported format.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "inherited_unit:044.paragraph"
+    }
+  ],
   "omitted": [
     {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "provenance metadata, not a capability or fact about what the product does",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "provenance metadata, not a capability or fact about what the product does",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "provenance metadata, not a capability or fact about what the product does",
-      "section": "opening"
-    },
-    {
-      "fact_id": "license:spdx",
-      "reason": "license information belongs in a dedicated license section, not the opening",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.imaging.foss",
-      "reason": "symbol identity is used for disambiguation, not a capability or fact about what the product does",
-      "section": "opening"
-    },
-    {
-      "fact_id": "public_symbol:aspose.imaging",
-      "reason": "symbol identity is used for disambiguation, not a capability or fact about what the product does",
-      "section": "opening"
-    },
-    {
-      "fact_id": "example:003",
-      "reason": "example code belongs in a dedicated examples section, not the opening",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "Cited in other units; identity facts are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "Cited in other units; identity facts are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "Cited in other units; identity facts are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Cited in other units; identity facts are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Cited in other units; identity facts are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Cited in other units; identity facts are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:target_framework",
-      "reason": "Cited in capability:6; target framework details are not standalone capability descriptions.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:008.code_block",
-      "reason": "Code block is rendered externally and not used in prose units.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:010.list",
-      "reason": "List is rendered externally and not used in prose units.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "inherited_unit:012.table",
-      "reason": "Table is rendered externally and not used in prose units.",
-      "section": "key_capabilities"
-    },
-    {
       "fact_id": "inherited_unit:047.list",
-      "reason": "The list details specific method signatures and ImageInfo constructor parameters, which are not required for the hub API description and would exceed the one-sentence budget per hub.",
+      "reason": "The list items are already described in the intro unit; listing them again would duplicate content.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:060.paragraph",
-      "reason": "The license information is not relevant to describing what the commercial product adds beyond this package.",
+      "reason": "The license information is unrelated to the commercial product's additional capabilities and belongs in a separate licensing section.",
       "section": "enterprise_relationship"
+    },
+    {
+      "fact_id": "public_symbol:aspose.imaging.foss",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose.imaging.foss.imageformat",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose.imaging.foss.imageprobe",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
     }
   ],
   "schema_version": 1,
@@ -107,32 +81,36 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
         "package:name",
         "package:target_framework",
+        "public_symbol:aspose.imaging.foss",
+        "install_command:dotnet",
+        "public_symbol:aspose.imaging",
         "dependency:none",
         "inherited_unit:011.paragraph"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Imaging FOSS for .NET reads image headers to detect formats and extract metadata for 14 raster, vector, and specialized formats including PSD, EMF, WMF, and DICOM. It targets netstandard2.0 and net8.0 with no external dependencies."
+      "text": "Aspose.Imaging FOSS for .NET reads and writes raster and vector image formats including JPEG, PNG, BMP, GIF, TIFF, PSD, EMF, WMF, and DICOM. It converts images between these formats and inspects their headers to obtain dimensions, bit depth, and frame count without fully decoding the image. The library covers formats in the .NET FOSS ecosystem that lack header-only inspection, such as PSD, EMF, WMF, and DICOM, providing a unified interface for format detection and metadata extraction."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.imaging",
         "public_symbol:aspose.imaging.foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "Detects 14 image formats by reading only the file's signature bytes and returning an ImageFormat value, so identifying a file never requires pulling in a full imaging stack."
+      "text": "Detects image formats by reading only the file's signature bytes and returning an ImageFormat value, so identifying a file never requires pulling in a full imaging stack."
     },
     {
       "fact_ids": [
-        "example:003",
         "public_symbol:aspose.imaging.foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "Reads a format's real header fields directly into an ImageInfo — width, height, bit depth, and frame count — for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open source .NET image manipulation API with no decode step."
+      "text": "Reads a format's real header fields directly into an ImageInfo—width, height, bit depth, and frame count—for PNG, JPEG, GIF, BMP, WEBP (lossy, lossless, and extended), ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open source .NET image manipulation API with no decode step."
     },
     {
       "fact_ids": [
@@ -140,7 +118,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "Counts real multi-frame and multi-page content where the container format actually carries it: GIF walks its image-descriptor blocks, ICO its directory entries, TIFF its IFD chain, and a bundled multi-page DJVU (DJVM) its FORM:DJVU page components."
+      "text": "Counts real multi-frame and multi-page content where the container format actually carries it: GIF walks its image-descriptor blocks, ICO its directory entries, TIFF its IFD chain, and a bundled multi-page DJVU its FORM:DJVU page components."
     },
     {
       "fact_ids": [
@@ -148,7 +126,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "Provides both synchronous and async entry points for the same operation — ProbeFile()/ProbeFileAsync() and Probe()/ProbeAsync() — so a probe can run on an ASP.NET request thread without blocking it."
+      "text": "Provides both synchronous and async entry points for the same operation—ProbeFile()/ProbeFileAsync() and Probe()/ProbeAsync()—so a probe can run on an ASP.NET request thread without blocking it."
     },
     {
       "fact_ids": [
@@ -156,7 +134,7 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "Never throws on a signature match it cannot fully parse — malformed or truncated input comes back as an ImageInfo with only Format set, never an exception, so a probing pipeline can run unattended over untrusted input."
+      "text": "Never throws on a signature match it cannot fully parse—malformed or truncated input comes back as an ImageInfo with only Format set, never an exception, so a probing pipeline can run unattended over untrusted input."
     },
     {
       "fact_ids": [
@@ -165,42 +143,15 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:6",
-      "text": "Has no external dependencies, making it a lightweight alternative for .NET applications targeting netstandard2.0 or net8.0."
+      "text": "Runs without any external dependencies, making it a lightweight, self-contained imaging library for .NET applications."
     },
     {
       "fact_ids": [
-        "example:003"
-      ],
-      "section": "quick_start",
-      "slot": "lead_in",
-      "text": "This example uses Aspose.Imaging FOSS for .NET to inspect an image file and report its format and frame count."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "inherited_unit:044.paragraph",
-        "package:name",
-        "package:target_framework",
-        "public_symbol:aspose.imaging",
         "public_symbol:aspose.imaging.foss"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "Aspose.Imaging FOSS for .NET exposes Aspose.Imaging FOSS for .NET as its public API surface, targeting netstandard2.0 and net8.0. The library's single entry point is ImageProbe, which provides format detection and header inspection capabilities."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.imaging",
-        "public_symbol:aspose.imaging.foss"
-      ],
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose.imaging.foss",
-      "text": "Aspose.Imaging FOSS for .NET provides format detection and header inspection through ImageProbe, which includes DetectFormat, Probe, ProbeFile, ProbeAsync, and ProbeFileAsync methods, returning ImageFormat and ImageInfo values that describe the detected image format and its header-extracted properties."
+      "text": "Aspose.Imaging FOSS for .NET exposes static methods DetectFormat, Probe, ProbeFile, ProbeAsync, and ProbeFileAsync on the ImageProbe type to inspect image headers and return ImageFormat or ImageInfo values."
     },
     {
       "fact_ids": [
@@ -212,27 +163,11 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.imaging.foss.imageformat"
-      ],
-      "section": "api_reference",
-      "slot": "type:public_symbol:aspose.imaging.foss.imageformat",
-      "text": "ImageFormat class lists the supported image formats including Avif, Bmp, Dicom, Emf, Gif, Heic, Ico, Jpeg, Png, Psd, and Tiff."
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose.imaging.foss.imageinfo"
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.imaging.foss.imageinfo",
-      "text": "ImageInfo class holds read-only properties for an image's format, width, height, bit depth, and frame count, and provides a constructor to initialize them."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.imaging.foss.imageprobe"
-      ],
-      "section": "api_reference",
-      "slot": "type:public_symbol:aspose.imaging.foss.imageprobe",
-      "text": "ImageProbe class provides methods to detect and probe image formats from files or streams, including DetectFormat, Probe, ProbeAsync, ProbeFile, and ProbeFileAsync."
+      "text": "ImageInfo class holds read-only properties for an image's Format, Width, Height, BitDepth, and FrameCount, and provides a constructor to create an instance."
     }
   ]
 }

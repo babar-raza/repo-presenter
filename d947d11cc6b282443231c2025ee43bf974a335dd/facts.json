@@ -408,20 +408,20 @@
     },
     {
       "attributes": null,
-      "confidence": 1.0,
+      "confidence": 0.5,
       "evidence": [
         {
           "detail": "lines 197-202; csharp fence; unit inherited_unit:038.code_block",
           "path": "README.md"
         },
         {
-          "detail": "example 3: EXECUTED; compiled against Aspose.Imaging.Foss.csproj; SDK 11.0.100",
+          "detail": "example 3: NEEDS_INPUT; compiled against Aspose.Imaging.Foss.csproj; SDK 11.0.100; System.IO.FileNotFoundException: the example opens an input the repository does not provide",
           "path": "receipts.json"
         }
       ],
       "id": "example:003",
       "kind": "example",
-      "polarity": "SUPPORTED",
+      "polarity": "UNRESOLVED",
       "value": "using Aspose.Imaging.Foss;\n\nvar info = ImageProbe.ProbeFile(\"animation.gif\");\nConsole.WriteLine($\"{info.Format}: {info.FrameCount} frame(s)\");\n"
     },
     {
@@ -1650,7 +1650,11 @@
     },
     {
       "attributes": {
-        "install_kind": "source"
+        "documented_command": "dotnet build Aspose.Imaging.Foss.sln",
+        "install_kind": "source_checkout",
+        "registry_command": "dotnet add package Aspose.Imaging.Foss",
+        "registry_state": "not_published",
+        "source_basis": "documented"
       },
       "confidence": 1.0,
       "evidence": [
@@ -1663,14 +1667,18 @@
           "path": "https://api.nuget.org/v3-flatcontainer/aspose.imaging.foss/index.json"
         },
         {
-          "detail": "verified source build: an example executed against this revision, proving the source compiles even though the registry does not yet list the package",
-          "path": "examples.json"
+          "detail": "the maintainers' README directs a source build from a clone and prints no registry install: 'git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git'",
+          "path": "README.md"
+        },
+        {
+          "detail": "documented source build, not run for this revision: the repository's own toolchain convention gives `dotnet build Aspose.Imaging.Foss.sln`",
+          "path": "Aspose.Imaging.Foss.sln"
         }
       ],
       "id": "install_command:dotnet",
       "kind": "install_command",
       "polarity": "SUPPORTED",
-      "value": "git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git\ncd Aspose.Imaging-FOSS-for-.NET\ndotnet build"
+      "value": "git clone https://github.com/aspose-imaging-foss/Aspose.Imaging-FOSS-for-.NET.git\ncd Aspose.Imaging-FOSS-for-.NET\ndotnet build Aspose.Imaging.Foss.sln"
     },
     {
       "attributes": {
