@@ -903,6 +903,43 @@ def link_target_description(target: Fact) -> str:
     return f"On {host}." if host else ""
 
 
+#: BL-500: the maintainers' pointer from the full-reference link to the API Reference section, in
+#: every spelling the published READMEs use ("(the [API reference](#api-reference) section above covers
+#: the essentials)", "(the API Reference section above covers the entry points)"), with the count
+#: clause that introduces it ("for all 968 public types").
+_REFERENCE_POINTER = re.compile(
+    r"(?i)[\s,;:-]*(?P<count>\bfor\s+all\s+[\d,]+\s+public\s+types\s*)?"
+    r"\((?:the\s+)?(?:\[API\s+reference\]\(#api-reference\)|API\s+reference)\s+section\s+above"
+    r"\s+covers\s+[^()]*\)"
+)
+
+
+def _reference_pointer(sentence: str, api_included: bool, count: int) -> str:
+    """The description of the full-reference link with its pointer to the API Reference section true by
+    construction (BL-500). Hosted Lane R PDF .NET (run 44709138381) ended on the model reviewer's "The API
+    Reference section above covers the essentials." against the maintainers' kept sentence (the count 968
+    corrected to the facts' computation, ``correct_stated_type_counts``). A pointer to "the section above" is
+    true only when that section is rendered: with it, the maintainers' words stay byte for byte (the review
+    scope, ``review.scope``, knows the pointer is the renderer's guarantee and does not show it as an
+    authored claim); without it the pointer goes, the count clause and the rest of the words stay."""
+    match = _REFERENCE_POINTER.search(sentence)
+    if api_included:
+        # A description that states no count is told the renderer's own (count and pointer), as before.
+        if "public types" in sentence:
+            return sentence
+        return (
+            f"{sentence} It covers all {count} public types; the "
+            "[API Reference](#api-reference) section above covers the essentials."
+        )
+    if match is None:
+        return sentence
+    head = sentence[: match.start()].rstrip(" ,;:-")
+    tail = sentence[match.end():].strip()
+    stated = match.group("count")
+    rest = f"{head} {stated.strip()}" if stated else head
+    return f"{rest}{tail}".strip() if tail.startswith((".", ";", ",")) else f"{rest} {tail}".strip()
+
+
 def _documentation_resources(context: RenderContext) -> list[str]:
     """One list, each item a bold link, an em dash, and the authored sentence."""
     sid = "documentation_resources"
@@ -936,12 +973,11 @@ def _documentation_resources(context: RenderContext) -> list[str]:
             else link_target_description(target)
         )
         host = (urlsplit(target.value).hostname or "").lower()
-        if host.startswith("reference.") and api_included and not (
-            target.id in described and "public types" in sentence
-        ):
-            # A maintainers' description that already states the count (Words .NET ``080.list``:
-            # "for all 617 public types (the API reference section above covers the essentials)",
-            # count-corrected below) is not told it twice.
+        if host.startswith("reference.") and described.get(target.id):
+            # BL-500: the maintainers' pointer to the API Reference section is printed only when that
+            # section is rendered above (``review.scope`` then treats it as the renderer's guarantee).
+            sentence = _reference_pointer(sentence, api_included, _public_type_count(context))
+        elif host.startswith("reference.") and api_included:
             count = _public_type_count(context)
             sentence += (
                 f" It covers all {count} public types; the "

@@ -7870,3 +7870,36 @@ tests/readme/reconciliation/test_s4_nested_unit_named_lever_bl490.py (11 tests, 
 Not proven: the hosted outcome (R41); the next S4 rejection may be a different class.
 
 Backlog: BL-490
+
+
+## 2026-11-20: The full-reference link's pointer to the API Reference section is the renderer's guarantee, not an authored claim shown to the review (BL-500, R9, R10, R14, R27, R36, R46)
+
+Measured, hosted Lane R PDF .NET (run 44709138381, 2026-11-20 09:15Z, main 6f5a176): the independent review ended on
+`F01 [llm:factuality] section=documentation_resources: The API Reference section above covers the essentials.` against
+`- **[Full API reference](https://reference.aspose.org/pdf/net/)** — the complete, browsable reference for all 968 public types (the API Reference section above covers the essentials).`,
+and four degrade candidates that dropped the line were discarded (`adds failing check(s) BC-05, BC-17`: the documentation link is a retained
+unit). Where the line comes from: `renderer._documentation_resources` prints one line per planned link from the link fact and the maintainers'
+kept description (`list_coverage.kept_link_descriptions`, the inherited "Full API reference" list item); the number is
+`correct_stated_type_counts` over the facts (SUPPORTED class and enum `public_symbol` facts, the K05 computation `derivation.count_provenance`
+verifies). First-principles reading of the count: it is correct (the renderer, the K05 check, the claim detector and the audit's `derived` lines
+all compute class plus enum; the locator count `renderer._public_type_count` equals it whenever `count_provenance` verifies). The 3D Python
+audit line "344 public types" against 337 facts (round 44588173276, line 713) was a sealed line from before that correction and the
+shipped-package narrowing (BL-065), not a renderer count defect today; HTML Python "The public API has 303 types." was verified supported.
+What the reviewer faulted is the pointer: `review.scope` strips only the renderer's own spelling of it ("It covers all N public types; the
+[API Reference](#api-reference) section above covers the essentials."), so the maintainers' spelling stayed in the text the reviewer is shown,
+where no fact value grounds it; and the line is not one `derivation.owned_lines` owns (its remaining description text is reviewable), so the
+BL-400 clearance could not answer it either.
+
+Decision: the pointer "the section above covers the essentials" is not a claim an author made; it is true by construction exactly when the
+renderer prints the API Reference section above the line, and false otherwise. Two changes, both inside existing components. (1)
+`renderer._reference_pointer`: when the API Reference section is not rendered, the maintainers' pointer (and only it) is dropped from the link
+line, the count clause and the other words stay; when it is rendered the maintainers' words are kept byte for byte. (2) `scope._RENDERER_SENTENCES`
+gains the maintainers' spelling of the same pointer with its count clause (the count is the facts' computation, the pointer the renderer's
+guarantee), so the review is not shown it as an authored claim; the same words anywhere else (a sentence outside the link line's parenthetical)
+are still shown. An earlier attempt rewrote the line into the renderer's sentence; `recertify --all` changed the README bytes of 12 certified
+Lane R seals (outcomes unchanged), which R10 refuses, so it was not shipped. With this change every sealed README is byte-identical.
+R9: no attribution wording. R14: nothing dropped from a README that renders the section; where it does not, the printed pointer would have been
+false. Property improved: reliable (a true-by-construction pointer is no longer a review lottery). Not proven: the hosted outcome (R41); the
+reviewer may fault another part of the line (the remaining maintainers' description).
+
+Backlog: BL-500
