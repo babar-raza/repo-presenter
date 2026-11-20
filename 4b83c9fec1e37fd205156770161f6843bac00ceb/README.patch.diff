@@ -105,7 +105,7 @@
 +- **Render pages to images.** It renders pages to raster images using Aspose.Pdf.Devices::PngDevice, `JpegDevice`, and `BmpDevice` for single-page output, and `TiffDevice` for single-page or multi-page ranges with median-cut palette quantisation or caller-supplied palette conversion.
 +- **Encrypt and sign documents.** It encrypts documents using Document::Encrypt with user and owner passwords, granular `Aspose.Pdf.Permissions` flags, and algorithms including RC4-40, RC4-128, AES-128, and AES-256, and signs documents with Aspose.Pdf.Facades::PdfFileSignature to add detached PKCS#7 signatures.
 +- **Create PDFs from scratch.** It builds documents from scratch using positioned text via Aspose.Pdf.Text::TextBuilder and `TextFragment`, tabular layout with `Aspose.Pdf.Table` (column widths, borders, background colours, and spanning cells), vector shapes via Aspose.Pdf.Drawing::Graph, and interactive AcroForm fields through `Aspose.Pdf.Forms`.
-+- **Support for standard fonts.** Public module.
++- **Support for standard fonts.** It supports the Standard-14 fonts without an embedded /FontFile, painting correctly via system fonts and falling back to bundled substitutes so glyphs render even in fontless environments.
 +- **Facades API for legacy workflows.** It provides the classic `Aspose.Pdf.Facades` API for legacy workflows, including `PdfConverter` for rasterisation, `PdfExtractor` for text extraction with page ranges, `PdfFileSecurity` for encryption and password changes, `PdfFileSignature` for signing, `PdfBookmarkEditor` for bookmarks, `PdfFileEditor` for concatenation and splitting, and `PdfFileStamp` for headers, footers, and page numbers.
 +
  - Extract text with `Text::TextAbsorber`, which walks a whole `Document` or a single `Page`, or
