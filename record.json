@@ -5,7 +5,7 @@
   "provider_repository_id": 1203447266,
   "registry_revision": null,
   "active_transaction_id": "ff3f50ce82d54e5d9dc5cd1da9956e8d",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T08:12:38.928887+00:00",
+    "resume_predicate": null,
+    "recovery_count": 17
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "720ddad5a4954e2787af4f9a4100fc01",
@@ -33,12 +40,12 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 122,
+  "state_version": 123,
   "recent_trigger_dedup_keys": {
     "run:41079914003:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "4d97c04cbe1e480eb97290b5bf8555e9",
     "run:41112824093:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "d19808bd67164e80b3ed9f9afdb9c69c",
     "run:44581568570:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "508e1af6eb2f4cd8ac672aed0e1be0bd",
     "run:44618498307:aspose-cells-foss/Aspose.Cells-FOSS-for-.NET": "ff3f50ce82d54e5d9dc5cd1da9956e8d"
   },
-  "recovery_count": 16
+  "recovery_count": 17
 }
