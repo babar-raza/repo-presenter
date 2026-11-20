@@ -7903,3 +7903,35 @@ false. Property improved: reliable (a true-by-construction pointer is no longer 
 reviewer may fault another part of the line (the remaining maintainers' description).
 
 Backlog: BL-500
+
+
+## 2026-11-20: A kept paragraph that promises its types are listed below stays above the table that lists them (BL-510, R9, R10, R14, R27, R36, R46)
+
+Measured, hosted Lane R PDF TypeScript (run 44717025933, main d60d709): the last cell to get through the whole pipeline (51 provider calls, 56
+minutes, past the 258k-token overflow and S4) ended on one deterministic finding, `claim_contradiction`: "the README says its count of public
+types is listed in what follows, but the table rows that follow list only 445". (a) The sentence is not authored: it is the maintainers' own
+paragraph `inherited_unit:501.paragraph` (live README at 1d4f649: "... 514 public types plus 171 functions, classes and constants, grouped below
+by capability. Every name `index.ts` exports appears in one of these tables."), kept in the API Reference with its count corrected to the facts'
+533 by `correct_stated_type_counts` (533 SUPPORTED class facts, extracted locally at that revision), so the count is right. (b) 445 against 533:
+the renderer's Core API table lists all 533, above; P4 (`placement.rows_not_rendered`) prints the kept maintainers' tables without the rows
+Core API already prints, and kept texts are appended after the rendered tables, so the paragraph ended up over the 445 rows P4 left. PDF Python
+(`inherited_unit:258.paragraph`, "388 public types are organized by module below.", 266 rows; passes 2, 4 and 5, run 44701575389) is the same
+shape, and the Cells C++ note in P4 (153 of 157 rows) is its first sighting. (c) `_blocking_load` sums, per failing blocking check, its
+details, plus the review's blocking findings: the hosted record holds 105 findings (BC-17 technical_content 102, BC-05 1, BC-14 1,
+claim_contradiction 1). The degrade omits the paragraph (an inherited unit), which removes the two count findings but turns the identifiers it
+names into BC-17 losses: 105 -> 105, discarded ("not lower"), then "nothing kept". The load is mostly standing BC-17 losses of a settle round the
+3000 s time-box cut (BL-511), not this finding, so the cell needs both.
+
+Alternatives weighed (R36): state the listed count in the maintainers' sentence (rewrites their text; the next sentence, "every name appears in
+one of these tables", would stay false of the tables beneath it); omit the paragraph (the degrade does, at the price of its identifiers); relax
+the check to count rows anywhere in the section (the claim's own words say "below", and a check change needs its own report-only run, checklist
+item 13). Decision: the paragraph is true exactly when it sits above a table that lists every type, which the rendered Core API table does by
+construction; so `renderer._listing_promises_first` prints it there (inside the same collapsed details, before `### Core API`) when the rows after
+its disposition position fall short of its count and the rows after the move reach it, using the detector's own reading of the sentence
+(`surface_claims.listing_promise`). The maintainers' words are byte for byte unchanged (R14: nothing dropped, only the position moves); R9: no
+wording added; R10: no sealed Lane R README carries such a sentence (scan of the 63 stored bundles: only four Lane L seals, each already stating
+"N of them listed below"), and `recertify --all --json --remote origin` origin/main vs branch (0 provider calls) is byte-identical on the 63 rows both runs hold (Lane L 34, Lane R 29 RECERTIFIED; the branch run also saw PDF .NET Lane R, sealed on hosted between the runs, 64 rows: RECERTIFIED, readme_changed false, identical when run alone on both trees), `recertify --gate --remote origin --base-baseline <origin/main baseline>` OK (64 seals checked), full suite -n 3 7017 passed, 29 skipped, 1 failed (test_every_candidate_gets_an_honest_receipt, container-only). Property improved: reliable (a deterministic finding no repair or degrade
+could clear no longer ends the cell), measured by tests/readme/composition/test_listing_promise_bl510.py (13 tests; the move disabled reproduces
+"list only 3"). Not proven: the hosted outcome (R41); PDF TypeScript still carries the BC-17/BC-05 losses of BL-511.
+
+Backlog: BL-510

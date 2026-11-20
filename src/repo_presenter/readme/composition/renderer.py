@@ -2166,6 +2166,8 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
             template = _MIT_DECLARED_PROSE if spdx.value == "MIT" else _GENERIC_DECLARED_PROSE
             lines.append(template.format(spdx=spdx.value, manifest=spdx.evidence[0].path))
     placed = context.printed(sid)
+    if sid == "api_reference":
+        lines, placed = _listing_promises_first(lines, placed, context.facts)
     if placed and section.visibility == "collapsible" and lines and lines[-1] == "</details>":
         closing = lines.pop()
         for verbatim in placed:
@@ -2196,6 +2198,41 @@ def _section_body(context: RenderContext, section: Section) -> list[str]:
             lines.append("")
             lines.append(closing)
     return [line for line in lines if line is not None]
+
+
+def _listing_promises_first(
+    lines: list[str], placed: list[str], facts: FactsDocument
+) -> tuple[list[str], list[str]]:
+    """BL-510: a kept maintainers' paragraph that says its N public types are "listed / grouped /
+    organized below" stays above the rendered Core API table, which lists every type, when printing
+    it after that table would leave fewer than N rows below it.
+
+    P4 prints a kept type table without the rows the Core API table already prints, so the
+    paragraph's promise ("533 public types ... grouped below by capability. Every name appears in
+    one of these tables") then sat over the 445 rows that remain: BC-14 "the table rows that follow
+    list only 445" (PDF TypeScript, hosted run 44717025933; PDF Python 388 over 266, run 44701575389).
+    The text is the maintainers' own, unchanged; only its position in the section moves (R14), and
+    only when the rows after it would fall short and the move supplies enough."""
+    from repo_presenter.readme.validation.surface_claims import listing_promise, table_rows_in
+
+    start = next((i for i, line in enumerate(lines) if line.startswith("### Core API")), None)
+    if start is None or not placed:
+        return lines, placed
+    promising: list[int] = []
+    for index, text in enumerate(placed):
+        stated = listing_promise(correct_stated_type_counts(text, facts))
+        if stated is None or table_rows_in("\n\n".join(placed[index + 1 :])) >= stated:
+            continue
+        if table_rows_in("\n".join(lines[start:])) >= stated:
+            promising.append(index)
+    if not promising:
+        return lines, placed
+    head = [text.rstrip("\n") for i, text in enumerate(placed) if i in promising]
+    moved = [line for text in head for line in (text, "")]
+    return (
+        [*lines[:start], *moved, *lines[start:]],
+        [text for i, text in enumerate(placed) if i not in promising],
+    )
 
 
 def render_readme(

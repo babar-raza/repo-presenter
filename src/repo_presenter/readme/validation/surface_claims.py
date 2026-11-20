@@ -79,6 +79,7 @@ from repo_presenter.readme.validation.claims import (
     ClaimFinding,
     _fact,
     _Line,
+    _lines,
     _paragraphs,
     _pep503,
     _sentence_spans,
@@ -240,6 +241,32 @@ def states_listed_count(sentence: str, listed: int) -> bool:
             rf"|\bof\s+which\s+(?:{number})(?![\w,])",
             sentence,
         )
+    )
+
+
+_STATES_OWN_LISTED = re.compile(r"(?i)\b\d[\d,]*\s+of\s+(?:them|these|those|which)\b|\bof\s+which\s+\d")
+
+
+def listing_promise(text: str) -> int | None:
+    """BL-510: the largest public-type count a sentence of ``text`` says is listed below (a type
+    count with a listing verb, as ``_count_findings`` reads it) and does not itself qualify with a
+    listed count ("238 of them listed below"), else ``None``. Pure; one reading shared with the
+    renderer, which keeps such a paragraph above the table that lists every type."""
+    stated: list[int] = []
+    for sentence, _first, _last in _sentences(_lines(text)):
+        plain = sentence.replace("`", "")
+        if not _LISTED_HERE.search(plain) or _STATES_OWN_LISTED.search(plain):
+            continue
+        for match in _TYPE_COUNT.finditer(plain):
+            if _PUBLIC_QUALIFIER.search(match.group("qualifiers")) or _PUBLIC_CONTEXT.search(plain):
+                stated.append(int(match.group("count").replace(",", "")))
+    return max(stated) if stated else None
+
+
+def table_rows_in(text: str) -> int:
+    """The type-table rows (`` | `Name` | ``) in ``text``, outside fenced code."""
+    return sum(
+        1 for line in _lines(text) if not line.in_fence and _TABLE_ROW.match(line.text)
     )
 
 
