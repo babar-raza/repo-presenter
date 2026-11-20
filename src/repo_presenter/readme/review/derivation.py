@@ -145,9 +145,12 @@ def count_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None
             return None
         # a total said to be listed/organized/summarized below is also held to the rows that follow
         # (rule (h)'s listed-count, widened to every "below" phrasing): PDF Python's "385 public types are
-        # organized by module below" heads 284 rows, Cells C++'s "195 ... is listed below" 157
+        # organized by module below" heads 284 rows, Cells C++'s "195 ... is listed below" 157. The rows
+        # must reach the total, as BC-14's ``_count_findings`` holds them (``listed < stated``); rows beyond
+        # it are the member tables under the types (BL-543: HTML Python's 303 over 517 rows, where this
+        # check said ``!=`` and BC-14 passed the same sentence)
         sentence = _SENTENCE_END.split(joined[match.start():], maxsplit=1)[0]
-        if _BELOW.search(sentence) and not _LISTED_OF_THEM.search(sentence) and value != listed:
+        if _BELOW.search(sentence) and not _LISTED_OF_THEM.search(sentence) and value > listed:
             return None
         stated.append(" ".join(match.group(0).split()))
     for match in _LISTED_OF_THEM.finditer(joined):
@@ -250,6 +253,10 @@ class Derivation(NamedTuple):
     provenance: Mapping[int, str] = {}
     #: clearable lines whose origin cites facts (a Lane L edit's, or the opening's format facts): their ids
     cited: Mapping[int, tuple[str, ...]] = {}
+    #: clearable lines that are the maintainers' kept text with the type count the renderer corrected to the
+    #: facts' computation (BL-543): a flag on one is cleared only when it is about that count
+    #: (``flag_is_about_count``), never for any other statement of the same paragraph
+    corrected: frozenset[int] = frozenset()
 
 
 def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
@@ -422,6 +429,8 @@ def derivation(
             number for number, origin in source_of.items()
             if origin and origin.get("source") == "renderer" and origin.get("fact_ids")
         }
+        # BL-543: the maintainers' kept line whose count the renderer corrected
+        owned = owned | {number for number, origin in source_of.items() if origin and origin.get("count_corrected")}
     derivable = frozenset(owned & set(source_of))
     refuted = refuted_lines(text, facts, repository, register) if derivable and (ask is None or ask) else {}
     kept: dict[int, str] = {}
@@ -439,7 +448,8 @@ def derivation(
                       clearable=clearable, kept=kept,
                       provenance={n: p for n, p in verified.items() if n in clearable},
                       cited={n: tuple(str(f) for f in (source_of[n] or {}).get("fact_ids") or ())
-                             for n in clearable if (source_of[n] or {}).get("fact_ids")})
+                             for n in clearable if (source_of[n] or {}).get("fact_ids")},
+                      corrected=frozenset(n for n in clearable if (source_of[n] or {}).get("count_corrected")))
 
 
 def _line_origins(text: str, spans: Sequence[tuple[int, int]], edits: Sequence[Any]) -> tuple[Mapping[str, Any], ...]:
@@ -519,6 +529,36 @@ def fact_true_opening_text(unit: Mapping[str, Any], facts: Any) -> str | None:
     return str(replaced["text"])
 
 
+def _count_corrected_rows(rows: Sequence[str], facts: Any, dispositions: Mapping[str, Any]) -> set[int]:
+    """0-based indices of the ``rows`` that print a kept inherited unit's text with the type count
+    ``renderer.correct_stated_type_counts`` corrected (the row is in the corrected unit and not in the original)."""
+    from repo_presenter.readme.composition.placement import PLACED
+    from repo_presenter.readme.composition.renderer import correct_stated_type_counts
+
+    kept = {str(r.get("unit_id")) for r in dispositions.get("dispositions", []) if r.get("disposition") in PLACED}
+    pairs: list[tuple[str, str]] = []
+    for fact in facts.by_kind("inherited_unit"):
+        if fact.id in kept and re.search(r"\d", fact.value):
+            fixed = correct_stated_type_counts(fact.value, facts)
+            if fixed != fact.value:
+                pairs.append((" ".join(fact.value.split()), " ".join(fixed.split())))
+    found: set[int] = set()
+    for index, row in enumerate(rows):
+        flat = " ".join(row.split())
+        if len(flat) >= 12 and re.search(r"\d", flat) and any(flat in fixed and flat not in raw for raw, fixed in pairs):
+            found.add(index)
+    return found
+
+
+def flag_is_about_count(claim: str, row: str) -> bool:
+    """Whether a model flag's ``claim`` text states one of the type counts ``row`` states (the K05 reading).
+    A flag on a count-corrected maintainers' line is answered by the count's provenance only when it is about
+    the count; a flag on any other statement of that paragraph is not."""
+    stated = {_count_value(m.group("count")) for m in _K05_COUNT.finditer(row)}
+    named = {_count_value(m.group(0)) for m in re.finditer(r"\d{1,3}(?:,\d{3})+|\d+", claim)}
+    return bool(stated & named)
+
+
 def rederive_lane_r(
     entry: Any, facts: Any, plan: Mapping[str, Any], units: Mapping[str, Any], dispositions: Mapping[str, Any],
 ) -> Rederived:
@@ -577,6 +617,32 @@ def rederive_lane_r(
         at = [j for j, row in enumerate(rows) if sentence and row.strip() == sentence]
         if len(at) == 1 and origins[at[0]].get("source") == "renderer":
             origins[at[0]] = {"source": "renderer", "fact_ids": tuple(str(f) for f in unit.get("fact_ids") or ())}
+    # BL-543: a kept maintainers' line whose type count the renderer corrected to the facts' computation
+    # (``renderer.correct_stated_type_counts``) is a deterministic stage's correction of text the maintainers
+    # wrote, not authored prose. The line is recognised by recomputing the correction over each kept inherited
+    # unit and finding the printed row in the corrected text and not in the original; the clearance still
+    # needs the count to verify (``count_provenance``) and the flag to be about the count.
+    for j in _count_corrected_rows(full.splitlines(), facts, dispositions):
+        origins[j] = {"source": "renderer", "count_corrected": True}
+    # BL-542: the "No required third-party package dependencies; in `pom.xml`, ..." line is the
+    # ``dependency:none`` fact's own evidence, printed word for word, and the renderer prints it only when no
+    # required dependency is on record; so the line states exactly that SUPPORTED fact, and its origin cites
+    # it (PSD Java 83, flagged in 4 of 4 audit samples because "provided" and "optional" occur in no fact
+    # VALUE, though the fact's evidence says every declared dependency is test, provided or optional). Only
+    # that exact line qualifies: any other wording stays unrecognised and keeps its flag.
+    from repo_presenter.readme.composition.renderer import no_required_dependencies_line
+
+    marker = next((f for f in facts.facts if f.id == "dependency:none"), None)
+    clause = no_required_dependencies_line(marker) if marker is not None else None
+    required = [
+        f for f in facts.facts
+        if f.kind == "dependency" and f.polarity == "SUPPORTED" and f.id != "dependency:none"
+        and not f.id.startswith(("dependency:optional.", "dependency:development."))
+    ]
+    if clause is not None and not required:
+        for j, row in enumerate(rows):
+            if row.strip() == clause and origins[j].get("source") == "renderer":
+                origins[j] = {"source": "renderer", "fact_ids": ("dependency:none",)}
     return Rederived(full, tuple(origins))
 
 

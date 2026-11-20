@@ -10,6 +10,7 @@ replies; the model review is replaced by a recorder, so these tests make no prov
 # Re-verified under BL-240 (last-resort degrade after repair fails; restore still runs first) -- TC-019c.
 # Re-verified under BL-350 (degrade reach: Enterprise clause, resource line, opening, four passes) -- TC-019c.
 # Re-verified under BL-511 (a restored unit that is itself a new loss is rolled back alone; a lead-in no longer drags its example fence) -- TC-019c.
+# Re-verified under BL-540 (the degrade answers a deterministic duplicate_opening_paragraph finding with the fact-true opening) -- TC-019c.
 
 from __future__ import annotations
 
