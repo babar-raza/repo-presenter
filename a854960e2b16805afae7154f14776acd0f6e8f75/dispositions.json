@@ -1,0 +1,636 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image badge row is superseded by the deterministic badges section which renders verified badges.",
+      "unit_id": "inherited_unit:001.badge_row"
+    },
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:registry_lag",
+        "package:version"
+      ],
+      "rationale": "The H1 product name heading is superseded by the identity section which renders the canonical product name.",
+      "unit_id": "inherited_unit:002.heading"
+    },
+    {
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The PyPI, license, and contributors badges are superseded by the deterministic badges section.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:platform",
+        "package:name",
+        "package:python_requires"
+      ],
+      "rationale": "The opening paragraph describes the library's purpose and pure-Python nature, supported by identity and package facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Features' heading is superseded by the key_capabilities section which renders verified capabilities.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "format:input.cff",
+        "format:input.eot",
+        "format:input.ttf",
+        "example:004",
+        "example:005",
+        "example:006",
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.cli"
+      ],
+      "rationale": "The features list is moved to opening to match the published README structure.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Scope' heading is superseded by the scope_limitations section which renders verified limitations.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_REWRITE",
+      "fact_ids": [
+        "format:input.cff",
+        "format:input.ttf",
+        "public_symbol:aspose_font.fontpreviewbuilder.render_cbdt_glyph_to_png",
+        "public_symbol:aspose_font.animation",
+        "public_symbol:aspose_font.ttf.font",
+        "public_symbol:aspose_font.eot.font",
+        "public_symbol:aspose_font.fontloader"
+      ],
+      "rationale": "The scope list is re-authored into scope_limitations using verified format and symbol facts.",
+      "unit_id": "inherited_unit:008.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The 'Installation' heading is superseded by the deterministic installation section.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The installation paragraph is superseded by the deterministic installation section.",
+      "unit_id": "inherited_unit:010.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The pip install command block is superseded by the deterministic installation section which renders the verified command.",
+      "unit_id": "inherited_unit:011.code_block"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0"
+      ],
+      "rationale": "The requirements and dependencies list is superseded by the deterministic dependencies section.",
+      "unit_id": "inherited_unit:012.list"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:tests"
+      ],
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:013.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp"
+      ],
+      "rationale": "The MCP server paragraph provides useful context for AI agent integration and is preserved as-is.",
+      "unit_id": "inherited_unit:014.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip",
+        "dependency:optional.mcp.mcp-1.0"
+      ],
+      "rationale": "The optional MCP install command is preserved as it provides a verified alternative installation path.",
+      "unit_id": "inherited_unit:015.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "identity:ecosystem"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:016.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:004"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose_font.fontloader",
+        "public_symbol:aspose_font.fontmetrics"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Omitted with the example it introduced: that example is contradicted (example:002), so its heading has nothing left to introduce.",
+      "unit_id": "inherited_unit:019.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The font conversion code block is omitted because its example fact is CONTRADICTED.",
+      "unit_id": "inherited_unit:020.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002",
+        "example:003",
+        "example:004"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002",
+        "example:003"
+      ],
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:022.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The variable font instancing code block is supported by example:004 and matches the verified example.",
+      "unit_id": "inherited_unit:024.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Heading owned by the renderer: additional examples prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:026.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The paragraph describing web font optimization is supported by example:005 and adds context.",
+      "unit_id": "inherited_unit:027.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Python:' label introduces the Python example and is kept as written.",
+      "unit_id": "inherited_unit:028.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The WebFontOptimizer Python code block matches the verified example:005.",
+      "unit_id": "inherited_unit:029.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'CLI:' label introduces the CLI example and is kept as written.",
+      "unit_id": "inherited_unit:030.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The CLI command for web optimization is a real, supported alternative and matches the CLI utility's purpose.",
+      "unit_id": "inherited_unit:031.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Generated Package Structure:' label introduces the package structure table and is kept as written.",
+      "unit_id": "inherited_unit:032.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The package structure listing describes the output of WebFontOptimizer and is supported by example:005.",
+      "unit_id": "inherited_unit:033.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "unit_id": "inherited_unit:034.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The QA reporting paragraph is supported by example:006 and adds context for the feature.",
+      "unit_id": "inherited_unit:035.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Python:' label introduces the Python QA example and is kept as written.",
+      "unit_id": "inherited_unit:036.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The FontQaReporter Python code block matches the verified example:006.",
+      "unit_id": "inherited_unit:037.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'CLI:' label introduces the CLI QA example and is kept as written.",
+      "unit_id": "inherited_unit:038.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The CLI command for QA reporting is a real, supported alternative and matches the CLI utility's purpose.",
+      "unit_id": "inherited_unit:039.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Generated Package Structure:' label introduces the QA package structure and is kept as written.",
+      "unit_id": "inherited_unit:040.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:tests"
+      ],
+      "rationale": "The QA package structure table is superseded by the development_testing section which already covers test assets.",
+      "unit_id": "inherited_unit:041.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading 'Release-Safe Variable Instance Packages' introduces unsupported promotional content.",
+      "unit_id": "inherited_unit:042.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:043.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli",
+        "public_symbol:aspose_font.cli.main"
+      ],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The 'Python:' label is moved to additional_examples where it introduces a Python...",
+      "unit_id": "inherited_unit:044.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The Python code block is contradicted by example:007 (polarity: CONTRADICTED).",
+      "unit_id": "inherited_unit:045.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli",
+        "public_symbol:aspose_font.cli.main"
+      ],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The 'CLI:' label is moved to additional_examples where it introduces CLI examples.",
+      "unit_id": "inherited_unit:046.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:docs",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "rationale": "The CLI example is unsupported; no fact confirms this exact command or its arguments.",
+      "unit_id": "inherited_unit:047.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.variableinstancebuilder",
+        "public_symbol:aspose_font.variableinstancepackage"
+      ],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The 'Generated Package Structure:' label is moved to additional_examples where it...",
+      "unit_id": "inherited_unit:048.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.variableinstancebuilder",
+        "public_symbol:aspose_font.variableinstancepackage"
+      ],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The output structure table is supported by variable instance builder symbols and...",
+      "unit_id": "inherited_unit:049.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The CLI heading is not supported by any fact and must be omitted.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli",
+        "public_symbol:aspose_font.cli.main"
+      ],
+      "rationale": "The CLI description is supported and preserved as-is in additional_examples.",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.cli",
+        "public_symbol:aspose_font.cli.main"
+      ],
+      "rationale": "The CLI command examples are supported by the CLI public symbols and preserved as-is.",
+      "unit_id": "inherited_unit:052.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The MCP heading is not supported by any fact and must be omitted.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The MCP description is supported and preserved as-is in additional_examples.",
+      "unit_id": "inherited_unit:054.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The MCP server start command is supported and preserved as-is.",
+      "unit_id": "inherited_unit:055.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The Claude Desktop configuration label is supported and preserved as-is.",
+      "unit_id": "inherited_unit:056.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "rationale": "The Claude Desktop configuration JSON is supported and preserved as-is.",
+      "unit_id": "inherited_unit:057.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.mcp.font_convert",
+        "public_symbol:aspose_font.mcp.font_subset",
+        "public_symbol:aspose_font.mcp.web_build"
+      ],
+      "rationale": "The MCP tools list is supported and preserved as-is.",
+      "unit_id": "inherited_unit:058.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "rationale": "The Development & Testing heading is supported and moved to development_testing.",
+      "unit_id": "inherited_unit:059.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "rationale": "The test and linting description is supported and preserved as-is in development_testing.",
+      "unit_id": "inherited_unit:060.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:build-command",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.build-1.2"
+      ],
+      "rationale": "The inherited test/lint/build commands are superseded by the verified make-based commands and dependencies.",
+      "unit_id": "inherited_unit:061.code_block"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "rationale": "The '## License' heading is superseded by the license section rendered from facts.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:006"
+      ],
+      "rationale": "The license statement is accurate and adds value; preserved with verified MIT license and file link.",
+      "unit_id": "inherited_unit:063.paragraph"
+    }
+  ]
+}

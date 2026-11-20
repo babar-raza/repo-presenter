@@ -1,0 +1,255 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:name"
+    ],
+    "text": "Web font engineers, font developers, and DevOps teams building or maintaining font workflows in CI/CD pipelines or serverless environments."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "format:input.cff",
+        "format:input.eot",
+        "format:input.ttf",
+        "public_symbol:aspose_font.cff.font",
+        "public_symbol:aspose_font.cff2.font",
+        "public_symbol:aspose_font.eot.font",
+        "public_symbol:aspose_font.fontloader.open",
+        "public_symbol:aspose_font.ttf.font",
+        "public_symbol:aspose_font.type1.font",
+        "public_symbol:aspose_font.woff2font",
+        "public_symbol:aspose_font.wofffont"
+      ],
+      "text": "Load TrueType (TTF), OpenType (OTF), CFF/CFF2, Type 1 (PFA/PFB), WOFF, WOFF2, and EOT fonts via FontLoader.open.",
+      "title": "Multi-format font loading"
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose_font.smartinstancer",
+        "public_symbol:aspose_font.smartinstancer.instantiate",
+        "public_symbol:aspose_font.ttffont.instantiate",
+        "public_symbol:aspose_font.ttffont.smart_instancer"
+      ],
+      "text": "Instantiate static fonts from variable fonts with HVAR awareness, gvar preservation, and naming strategies like ribbi-safe.",
+      "title": "Variable font instancing"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.webfontoptimizer.build_interactive_playground",
+        "public_symbol:aspose_font.webfontoptimizerpackage.write_to"
+      ],
+      "text": "Generate production-ready web font packages with WOFF2 compression, CSS @font-face rules, and interactive specimens.",
+      "title": "Web font optimization"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.fontsubsetter",
+        "public_symbol:aspose_font.fontsubsetter.subset_by_text",
+        "public_symbol:aspose_font.fontsubsetter.subset_by_presets",
+        "public_symbol:aspose_font.fontsubsetter.subset_for_web",
+        "public_symbol:aspose_font.fontsubsetter.available_presets"
+      ],
+      "text": "Subset fonts by text, codepoints, glyph IDs, or script presets (Latin, Cyrillic, Greek, Hebrew, Arabic, Devanagari, Thai).",
+      "title": "Font subsetting"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose_font.fontqareporter",
+        "public_symbol:aspose_font.fontqareport.write_html",
+        "public_symbol:aspose_font.fontqareport.write_json",
+        "public_symbol:aspose_font.fontqareport.write_markdown",
+        "public_symbol:aspose_font.fontqareport.write_pdf"
+      ],
+      "text": "Export structured QA reports in JSON, HTML, Markdown, and PDF formats with visual previews and delta analysis.",
+      "title": "QA reporting and diagnostics"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.fontpreviewbuilder.render_cbdt_glyph_to_png",
+        "public_symbol:aspose_font.fontpreviewbuilder.render_color_glyph",
+        "public_symbol:aspose_font.fontpreviewbuilder.render_svg_glyph_to_png",
+        "public_symbol:aspose_font.rasterizer.to_png",
+        "public_symbol:aspose_font.rasterizer.encode_apng_from_rgb"
+      ],
+      "text": "Render PNG and SVG previews, axis-grid sheets, comparison boards, and animated APNG sweeps.",
+      "title": "Visual proofing and rendering"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.mcp",
+        "public_symbol:aspose_font.mcp.font_convert",
+        "public_symbol:aspose_font.mcp.font_subset",
+        "public_symbol:aspose_font.mcp.main",
+        "public_symbol:aspose_font.mcp.web_build"
+      ],
+      "text": "Expose font tools via Model Context Protocol for integration with AI agents and automation workflows.",
+      "title": "MCP server integration"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.cli",
+        "public_symbol:aspose_font.cli.main"
+      ],
+      "text": "Run font operations via the aspose-font CLI utility for scriptable automation in CI/CD pipelines.",
+      "title": "Command-line automation"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "format:input.cff",
+        "format:input.ttf"
+      ],
+      "text": "No evidence of support for OTF-CFF1 static fonts beyond CFF/CFF2; only CFF and CFF2 input formats are listed."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.fontpreviewbuilder.render_cbdt_glyph_to_png",
+        "public_symbol:aspose_font.fontpreviewbuilder.render_sbix_glyph_to_png"
+      ],
+      "text": "No evidence of support for COLR/CPAL v0 or CBDT/CBLC color fonts beyond CBDT and SBIX rendering."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.animation",
+        "public_symbol:aspose_font.animationpreviewbuilder.build_axis_sweep"
+      ],
+      "text": "No evidence of support for variable font animation beyond APNG sweeps and axis-grid previews."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.ttf.font",
+        "public_symbol:aspose_font.cff.font"
+      ],
+      "text": "No evidence of support for font hinting or bytecode interpretation beyond outline rendering."
+    },
+    {
+      "fact_ids": [
+        "format:input.eot",
+        "public_symbol:aspose_font.eot.font"
+      ],
+      "text": "No evidence of support for font signing or digital signatures in EOT or other formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.fontloader",
+        "public_symbol:aspose_font.fontloader.open"
+      ],
+      "text": "No evidence of support for font merging or merging multiple fonts into one."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "example:005",
+        "format:output.ttf",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.webfontoptimizerpackage"
+      ],
+      "text": "Enables web font packaging with WOFF2 compression, unicode-range CSS, and interactive specimens without external toolchains."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose_font.smartinstancer",
+        "public_symbol:aspose_font.smartinstancer.instantiate"
+      ],
+      "text": "Supports variable font instancing with HVAR awareness, gvar preservation, and release-safe naming strategies."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose_font.fontqareporter",
+        "public_symbol:aspose_font.fontqareporter.build_package"
+      ],
+      "text": "Provides QA reporting in JSON, HTML, and visual PNG formats for font integrity and variable interpolation validation."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "package:python_requires",
+        "public_symbol:aspose_font"
+      ],
+      "text": "Eliminates native dependencies by offering 100% pure Python font processing compatible across Windows, Linux, and macOS."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.Font FOSS for Python is a pure-Python library for inspecting, converting, subsetting, optimizing, and instancing fonts without native runtime dependencies."
+  },
+  "uncertainties": [
+    "Whether the library supports OTF-CFF1 static fonts beyond CFF/CFF2 formats is unclear from the provided facts.",
+    "Support for COLR/CPAL v0 or CBDT/CBLC color fonts beyond CBDT and SBIX is not explicitly confirmed.",
+    "Variable font animation beyond APNG sweeps and axis-grid previews is not detailed beyond animation module symbols.",
+    "Font hinting or bytecode interpretation capabilities are not evident from the available public symbols.",
+    "Font signing or digital signature support for EOT or other formats is not confirmed.",
+    "Font merging or combining multiple fonts into one is not demonstrated in the examples or symbols.",
+    "The exact scope of MCP server capabilities beyond listed tools is not fully specified.",
+    "Whether the library supports font subsetting for less common scripts beyond listed presets is unclear."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose_font.fontloader",
+        "public_symbol:aspose_font.fontloader.open",
+        "public_symbol:aspose_font.loadedfont.is_variable",
+        "public_symbol:aspose_font.ttffont.axes"
+      ],
+      "name": "Load and inspect font",
+      "text": "Open a font file using FontLoader.open and inspect its variable axes, metrics, or encoding."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:aspose_font.webfontoptimizer",
+        "public_symbol:aspose_font.webfontoptimizer.build_interactive_playground",
+        "public_symbol:aspose_font.webfontoptimizerpackage.write_to"
+      ],
+      "name": "Subset font for web",
+      "text": "Build a web-optimized font package using WebFontOptimizer.build with script presets and text content."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose_font.fontqareporter",
+        "public_symbol:aspose_font.fontqareporter.build_package",
+        "public_symbol:aspose_font.fontqareport.write_html",
+        "public_symbol:aspose_font.fontqareport.write_json"
+      ],
+      "name": "Generate QA report",
+      "text": "Create a QA package with JSON, HTML, and preview PNG outputs using FontQaReporter.build_package."
+    },
+    {
+      "fact_ids": [
+        "example:004",
+        "public_symbol:aspose_font.smartinstancer",
+        "public_symbol:aspose_font.smartinstancer.instantiate",
+        "public_symbol:aspose_font.ttffont.instantiate"
+      ],
+      "name": "Create static instance",
+      "text": "Instantiate a static font from a variable font using SmartInstancer.instantiate with axis coordinates and naming strategy."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_font.cli",
+        "public_symbol:aspose_font.cli.main",
+        "public_symbol:aspose_font.mcp.main"
+      ],
+      "name": "Run CLI automation",
+      "text": "Execute font operations via the aspose-font CLI utility for scriptable automation in CI/CD."
+    }
+  ]
+}

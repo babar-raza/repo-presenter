@@ -1,0 +1,713 @@
+# Aspose.Font FOSS for Python
+
+[![PyPI](https://img.shields.io/pypi/v/aspose-font-foss.svg)](https://pypi.org/project/aspose-font-foss/) ![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt) [![Contributors](https://img.shields.io/github/contributors/aspose-font-foss/Aspose.Font-FOSS-for-Python)](https://github.com/aspose-font-foss/Aspose.Font-FOSS-for-Python/graphs/contributors)
+
+[![Aspose.Font FOSS for Python](https://products.aspose.org/media/font/python/banner-readme.png)](https://products.aspose.org/font/python/)
+
+It opens TrueType (`.ttf`), CFF (`.cff`), EOT (`.eot`), OpenType (.otf), Type 1, WOFF, and WOFF2 fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.smart_instancer.instantiate`, subsets fonts by text or script presets using `FontSubsetter.subset_by_text`, `FontSubsetter.subset_by_presets`, and `FontSubsetter.subset_for_web`, and generates QA reports using `FontQaReporter.build_package`. It renders visual specimens with `FontPreviewBuilder.render_color_glyph`, `FontPreviewBuilder.render_svg_glyph_to_png`, and `FontPreviewBuilder.render_cbdt_glyph_to_png`, and exports reports in JSON, HTML, Markdown, and PDF using `FontQaReport.write_json`, `FontQaReport.write_html`, `FontQaReport.write_markdown`, and `FontQaReport.write_pdf`.
+
+* **Multi-Format Support:** Load, inspect, and convert TrueType (TTF), OpenType (OTF), CFF/CFF2, Type 1 (PFA/PFB), WOFF, WOFF2, and EOT fonts.
+* **Subsetting & Compression:** Build lean web fonts from specific text, glyph IDs, unicode codepoints, or built-in script presets (Latin, Cyrillic, Greek, Hebrew, Arabic, Devanagari, Thai) with integrated WOFF2 Brotli compression.
+* **Web Font Optimization:** Generate complete browser-ready packages containing optimized WOFF2/WOFF files, copyable CSS `@font-face` rules with `unicode-range`, interactive specimen HTML with axis sliders, and machine-readable JSON manifests.
+* **Variable Font Instancing:** Explore axes, named instances, and coordinate spaces; resolve presets; and produce static instance fonts with horizontal metric (`HVAR`) awareness, variation delta (`gvar`) preservation, and release-safe naming strategies (`ribbi-safe`, `menu-safe`).
+* **Quality Assurance & Diagnostics:** Inspect metrics, validate variable font interpolation compatibility, check contour closure and segment mixing, calculate glyph deltas, and export structured QA reports in JSON, HTML, and visual PNG formats.
+* **Visual Proofing & Specimen Generation:** Render PNG and SVG previews, axis-grid sheets, before/after comparison boards with diff/overlay modes, waterfall specimens, and animated APNG sweeps.
+* **Metadata Sanitization:** Strip legacy sfnt metadata tables and outdated Mac `name` records prior to public web or commercial distribution.
+* **Automation & MCP:** Full-featured command-line interface (`aspose-font`) and built-in Model Context Protocol (MCP) server for seamless integration with AI agents and automated CI/CD workflows.
+* **Pure Python:** 100% pure Python with zero native compilation requirements; fully compatible across Windows, Linux, and macOS.
+
+This project is licensed under the [MIT License](https://github.com/aspose-font-foss/Aspose.Font-FOSS-for-Python/blob/main/LICENSE.txt).
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [Additional Examples](#additional-examples)
+- [API Reference](#api-reference)
+- [Scope and Limitations](#scope-and-limitations)
+- [Development and Testing](#development-and-testing)
+- [License](#license)
+
+## At a Glance
+
+```mermaid
+flowchart TB
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing CFF, EOT,<br/>or TTF file"]
+  end
+  PRODUCT["Aspose.Font FOSS for Python"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Multi-format font<br/>loading"]
+    c2["Variable font<br/>instancing"]
+    c3["Web font optimization"]
+    c4["Font subsetting"]
+    c5["QA reporting and<br/>diagnostics"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c5
+    subgraph cg1["Rasterizer"]
+      direction TB
+      c6["Visual proofing and<br/>rendering"]
+    end
+    subgraph cg2["Mcp"]
+      direction TB
+      c7["MCP server integration"]
+    end
+    subgraph cg3["Cli"]
+      direction TB
+      c8["Command-line<br/>automation"]
+    end
+    c4 ~~~ cg1
+    c5 ~~~ cg1
+    cg1 ~~~ cg2
+    cg2 ~~~ cg3
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["TTF file"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
+```
+
+## Key Capabilities
+
+- **Multi-format font loading.** It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `Font` objects that support multiple formats.
+- **Variable font instancing.** It creates static instances from variable fonts by accessing `aspose_font.TtfFont.smart_instancer` to obtain an `aspose_font.SmartInstancer`, then uses `aspose_font.SmartInstancer.instantiate` with named axis values and a naming strategy to produce a new font.
+- **Web font optimization.** It builds a web font package for a font using `aspose_font.WebFontOptimizer.build` with presets, text, and variable mode options, then writes the package to disk using `aspose_font.WebFontOptimizerPackage.write_to`.
+- **Font subsetting.** It subsets fonts by text or by preset coverage using `aspose_font.FontSubsetter.subset_for_web` or `aspose_font.FontSubsetter.subset_by_presets`, and provides `aspose_font.FontSubsetter.available_presets` to discover supported coverage sets.
+- **QA reporting and diagnostics.** It generates QA reports in JSON and HTML formats by calling `aspose_font.FontQaReporter.build_package` to obtain a package object containing paths to generated reports, then writes the report using `aspose_font.FontQaReport.write_json` and `aspose_font.FontQaReport.write_html` on the returned report object.
+- **Visual proofing and rendering.** It renders SVG glyphs to PNG using `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and renders color and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph` and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png` (`render_color_glyph` requires a TTF font with color glyphs, and `render_cbdt_glyph_to_png` and `render_svg_glyph_to_png` require TTF fonts and raise `FontNotSupportedException` for other formats). It converts rasterized content to PNG using a `Rasterizer` instance method `to_png` or animated PNG using `aspose_font.rasterizer.encode_apng_from_rgb`.
+- **MCP server integration.** Connect Aspose.Font directly to AI agents using the standard MCP protocol via `aspose_font.mcp.main`, supporting font conversion, subsetting, and web building through `aspose_font.mcp.font_convert`, `aspose_font.mcp.font_subset`, and `aspose_font.mcp.web_build`.
+- **Command-line automation.** It provides a command-line interface through `aspose_font.cli.main` that wraps the core functionality for batch processing and automation.
+
+## Installation
+
+Install the published package from PyPI (`aspose-font-foss`, version 26.11.6):
+
+```bash
+pip install aspose-font-foss
+```
+
+To work from a source checkout instead, install the clone with pip:
+
+```bash
+git clone https://github.com/aspose-font-foss/Aspose.Font-FOSS-for-Python.git
+cd Aspose.Font-FOSS-for-Python
+pip install .
+```
+
+Verify the install:
+
+```bash
+python -c "import aspose_font"
+```
+
+Requires Python 3.10 or later.
+
+## Dependencies
+
+### Required Package Dependencies
+
+No required third-party package dependencies; in `pyproject.toml`, no `project.dependencies` is declared.
+
+### Optional Dependencies
+
+- `mcp>=1.0` (extra `mcp`)
+
+### Native and System Requirements
+
+- Requires Python 3.10 or later.
+
+### Development Dependencies
+
+- `build>=1.2` (extra `dev`)
+- `pytest>=7.4` (extra `dev`)
+- `ruff>=0.4` (extra `dev`)
+
+## Quick Start
+
+This example opens a variable font, prints its axes, and creates a static instance with specific weight and width settings, then saves it as a new font file.
+
+```python
+from aspose_font import FontLoader
+
+font = FontLoader.open("Roboto-VariableFont_wdth,wght.ttf")
+if font.is_variable:
+    print(f"Variable axes: {[axis.tag for axis in font.axes]}")
+    # Create a static instance font
+    static_font = font.smart_instancer.instantiate(
+        {"wght": "Bold", "wdth": "Condensed"},
+        naming_strategy="ribbi-safe",
+        family_suffix="Beta",
+    )
+    static_font.save("Roboto-CondensedBold.ttf")
+```
+
+## Additional Examples
+
+Create web font packages and generate QA reports for variable fonts.
+
+### Build a Web Font Package with WOFF2, WOFF, and Specimen HTML
+
+```python
+from aspose_font import FontLoader, WebFontOptimizer
+
+font = FontLoader.open("testdata/Roboto-VariableFont_wdth,wght.ttf")
+package = WebFontOptimizer.build(
+    font,
+    presets=("latin",),
+    text="Variable Font Web Demo 0123456789",
+    variable_mode="auto",
+    include_woff=True,
+)
+package.write_to("demo/web_opt_demo")
+```
+
+<details>
+<summary>View Additional Examples</summary>
+
+### Generate a QA Report with JSON, HTML, and Visual Proof Outputs
+
+```python
+from aspose_font import FontLoader, FontQaReporter
+
+font = FontLoader.open("Roboto-VariableFont_wdth,wght.ttf")
+package = FontQaReporter.build_package(
+    font,
+    "qa-package",
+    presets=("latin",),
+    text="QA",
+    preview_instance_name="Bold",
+)
+print(f"JSON Report: {package.json_path}")
+print(f"HTML Report: {package.html_path}")
+print(f"Visual Proof: {package.preview_path}")
+```
+
+### 1. Load a Font & Inspect Metrics
+
+```python
+from aspose_font import FontLoader
+
+font = FontLoader.open("Roboto.ttf")
+print(f"Family:   {font.font_family}")
+print(f"Style:    {font.font_style}")
+print(f"Glyphs:   {font.num_glyphs}")
+print(f"Units/EM: {font.metrics.units_per_em}")
+```
+
+### 3. Subset Font for Web
+
+```python
+from aspose_font import FontLoader
+from aspose_font.subsetter import FontSubsetter
+
+font = FontLoader.open("Roboto.ttf")
+result = FontSubsetter.subset_for_web_with_coverage(
+    font,
+    presets=("latin",),
+    text="Aspose Font FOSS",
+)
+result.font.save("Roboto-subset.woff2", format="woff2")
+print(f"Retained {result.font.num_glyphs} glyphs (coverage: {result.coverage.covered_count})")
+```
+
+Generate a production-ready web font bundle including WOFF2/WOFF files, CSS `@font-face` declarations, interactive specimen HTML, and size/coverage manifests.
+
+**Python:**
+
+**CLI:**
+
+```bash
+aspose-font web-optimize testdata/Roboto-VariableFont_wdth,wght.ttf demo/web_opt_demo --preset latin --text "Variable Font Web Demo 0123456789"
+```
+
+**Generated Package Structure:**
+
+```
+demo/web_opt_demo/
+├── roboto-variablefont-wdth,wght.woff2          (WOFF2 font, ~28KB)
+├── roboto-variablefont-wdth,wght.woff           (WOFF fallback, ~32KB)
+├── fonts.css                                    (CSS @font-face with unicode-range)
+├── specimen.html                                (Interactive specimen with axis controls)
+├── web-manifest.json                            (Bundle manifest)
+└── optimizer-manifest.json                      (Optimizer package manifest)
+```
+
+Validate font integrity, check variable font compatibility across instances, identify glyph outline issues, and generate visual inspection reports.
+
+**Python:**
+
+**CLI:**
+
+```bash
+aspose-font qa-report Roboto-VariableFont_wdth,wght.ttf --preset latin --text "QA" --package-output qa-package --preview-instance-name Bold
+```
+
+**Generated Package Structure:**
+
+The package provides the `aspose-font` command-line utility for scriptable font automation:
+
+```bash
+# Web font optimization (WOFF2 + CSS + specimen + manifests)
+aspose-font web-optimize input.ttf ./web-dist --preset latin --text "Sample"
+
+# QA evidence report generation
+aspose-font qa-report input.ttf --package-output ./qa-dist --preview-instance-name Bold
+
+# Static instance extraction with safe naming
+aspose-font var-package input.ttf --instance-name Bold --naming-strategy ribbi-safe --output-dir ./instances
+
+# Compatibility check between variable instances
+aspose-font var-compat input.ttf --before-instance-name Regular --after-instance-name "Condensed Bold" --text "Test"
+
+# Delta inspection for glyph-level variations
+aspose-font var-delta input.ttf --instance-name Bold --char A
+
+# Font format conversion
+aspose-font convert input.ttf output.woff2 --to woff2
+
+# Clean legacy metadata tables
+aspose-font meta-clean input.ttf output-clean.ttf
+
+# Visual rendering preview
+aspose-font preview input.ttf preview.png --instance-name Bold --text "Preview Text"
+```
+
+Connect Aspose.Font directly to AI agents using the standard MCP protocol:
+
+```bash
+# Start MCP server
+python -m aspose_font.mcp
+```
+
+**Claude Desktop Configuration (`claude_desktop_config.json`):**
+
+```json
+{
+  "mcpServers": {
+    "aspose-font": {
+      "command": "python",
+      "args": ["-m", "aspose_font.mcp"]
+    }
+  }
+}
+```
+
+The MCP server exposes tools for font metadata inspection, format conversion, subsetting, variable-font compatibility checks, and automated web package generation.
+
+</details>
+
+## API Reference
+
+The `aspose_font` package provides core font processing capabilities through the `FontLoader` class for loading font files and the `SmartInstancer` class for instantiating variable font instances. The `WebFontOptimizer`, `FontSubsetter`, and `FontQaReporter` classes support web font optimization, subsetting, and quality assurance tasks respectively.
+
+The public API has 275 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `ActiveTupleSummary` | ActiveTupleSummary class provides a dictionary representation of active tuple data via the to_dict method. |
+| `AnimationAsset` | AnimationAsset class supports writing its data via the write_to method. |
+| `AnimationFramePackage` | AnimationFramePackage class supports writing its data via the write_to method. |
+| `AnimationPreset` | AnimationPreset class represents a named animation preset. |
+| `AnimationPreviewBuilder` | AnimationPreviewBuilder class provides methods to build axis sweep, named instance path, export package, path, path package, path review package, and path showcase package, and raises ValueError in build_axis_sweep and build_named_instance_path. |
+| `AnimationReviewPackage` | AnimationReviewPackage class supports writing its data via the write_to method. |
+| `AnimationShowcasePackage` | AnimationShowcasePackage class supports writing its data via the write_to method. |
+| `AnimationStep` | AnimationStep class represents a single step in an animation sequence. |
+| `AutonomousWorkflowDecision` | Automated decision result for font processing strategy. |
+| `AutonomousWorkflowResult` | Complete autonomous workflow result with all generated artifacts. |
+| `AxisDescription` | Human-readable description for a font axis. |
+| `AxisRecord` | AxisRecord class represents a single axis record in a font. |
+| `CSSHints` | CSS implementation hints for a font. |
+| `CapabilitySummary` | Plain-language summary of font capabilities. |
+| `Cff2Font` | High-level CFF2 variable font API. |
+| `CffFont` | CffFont class, derived from Font, provides read-only properties for charset, charstrings, encoding, font_family, font_name, font_style, font_type, and methods for get_kern_pairs. |
+| `ClosePath` | ClosePath class represents a path command that closes the current subpath. |
+| `CompatibilityChecker` | CompatibilityChecker class provides methods to compare fonts and variable instances, and compare_variable_instances raises FontNotSupportedException. |
+| `CompatibilityReport` | CompatibilityReport class provides a read-only property is_compatible and methods to_dict, to_json, and write_json. |
+| `CompositeComponentMovement` | CompositeComponentMovement class represents movement information for a composite component. |
+| `CompositeDependencyAudit` | Audit result for composite glyph component dependencies. |
+| `CompositeGlyphComponent` | CompositeGlyphComponent class represents a component of a composite glyph. |
+| `CorpusManifest` | JSON-serializable corpus manifest with coverage metrics and failure taxonomy. |
+| `CoverageGroup` | Coverage diagnostics for one request source such as a preset, text, or range. |
+| `CurveTo` | CurveTo class represents a cubic Bézier curve path command. |
+| `DeltaInspector` | DeltaInspector class provides methods to build delta comparison sheets, delta sheets, delta text comparison sheets, delta text sheets, and to compare and inspect variable glyphs and text, and raises ValueError in build_delta_text_comparison_sheet, build_delta_text_sheet, and compare_variable_text. |
+| `DeltaPoint` | DeltaPoint class provides a dictionary representation of delta point data via the to_dict method. |
+| `DeltaTupleReport` | DeltaTupleReport class provides a dictionary representation of delta tuple data via the to_dict method. |
+| `EotFont` | Embedded OpenType (EOT) wrapper over an inner TrueType/OpenType font. |
+| `FamilyReviewExportPackage` | FamilyReviewExportPackage class represents a package for exporting family review data. |
+| `FeatureAudit` | Audit result for GSUB/GPOS feature validation. |
+| `FixtureEntry` | Represents a single fixture file with coverage metadata. |
+| `aspose_font.Font` | Font class is the base class for font representations, and its to_bytes method raises NotImplementedError. |
+| `FontCapabilityBuilder` | Build plain-language capability reports for fonts. |
+| `FontCapabilityReport` | Complete capability report for a font. |
+| `FontCleaner` | Font metadata and technical table cleaner. |
+| `FontConversionException` | FontConversionException class represents an exception during font conversion. |
+| `FontEncoding` | FontEncoding class represents font encoding information. |
+| `FontException` | FontException class is the base exception for font-related errors. |
+| `FontFeatureDiscoveryMatrix` | Discovers OpenType feature support across major font tables. |
+| `FontLoader` | FontLoader class provides methods to load and open fonts, and load raises UnsupportedFontFormatException. |
+| `FontMetrics` | FontMetrics class represents font metrics data. |
+| `FontNotSupportedException` | FontNotSupportedException class represents an exception when a font format is not supported. |
+| `FontParseException` | FontParseException class represents an exception during font parsing. |
+| `FontPreviewBuilder` | FontPreviewBuilder class provides methods to build previews, compose difference and overlay previews, compose sheets, and render glyphs to PNG, and raises ValueError in compose_sheet and FontNotSupportedException in render_cbdt_glyph_to_png, render_color_glyph, render_sbix_glyph_to_png, and render_svg_glyph_to_png. |
+| `FontQaPackage` | Paths and report data for a self-contained QA report package. |
+| `FontQaReport` | Structured QA report with JSON and HTML writers. |
+| `FontQaReporter` | Build first-slice QA reports from existing public font APIs. |
+| `FontSourceInfo` | Describe the origin of loaded bytes. |
+| `FontSubsetter` | FontSubsetter class provides methods to analyze coverage, benchmark subsetting, and subset fonts, and benchmark_subsetting raises ValueError. |
+| `FontSubsettingAuditResult` | Complete audit result for a font subsetting operation. |
+| `FontSubsettingAuditor` | Validates font subsetting quality and correctness. |
+| `FvarTable` | FvarTable class provides methods to serialize its data to bytes via to_bytes. |
+| `Glyph` | Glyph class represents a single glyph in a font. |
+| `GlyphAccessor` | GlyphAccessor class provides access to glyphs in a font. |
+| `GlyphCompatibilityIssue` | GlyphCompatibilityIssue class provides a dictionary representation of glyph compatibility issues via the to_dict method. |
+| `GlyphCoverageAudit` | Audit result for glyph/character coverage comparison. |
+| `GlyphDeltaComparisonReport` | GlyphDeltaComparisonReport class provides read-only properties is_comparable and moved_point_count, and a to_dict method. |
+| `GlyphDeltaReport` | GlyphDeltaReport class provides a dictionary representation of glyph delta data via the to_dict method. |
+| `GlyphId` | GlyphId class represents a unique identifier for a glyph. |
+| `GlyphInterpolationIssue` | GlyphInterpolationIssue class provides a dictionary representation of glyph interpolation issues via the to_dict method. |
+| `GlyphLayout` | A single glyph positioned in world-space layout coordinates. |
+| `GlyphNotFoundException` | GlyphNotFoundException class represents an exception when a glyph is not found. |
+| `GlyphOutlineStats` | GlyphOutlineStats class provides a dictionary representation of glyph outline statistics via the to_dict method. |
+| `GlyphPath` | GlyphPath class represents a glyph path. |
+| `KernPair` | KernPair class represents a kerning pair. |
+| `LanguageProfile` | LanguageProfile class provides a dictionary representation of language profile data via the to_dict method. |
+| `LineTo` | LineTo class represents a line-to path command. |
+| `LoadedFont` | Friendly loader result that wraps a font plus source metadata. |
+| `LocalizationCoverage` | LocalizationCoverage class exposes available_count, matched_count, missing_count, and requested_count read-only properties and provides a dictionary representation via the to_dict method. |
+| `LocalizationResolution` | LocalizationResolution class exposes an is_exact_match read-only property and provides a dictionary representation via the to_dict method. |
+| `MoveTo` | MoveTo class represents a move-to path command. |
+| `NamedInstance` | NamedInstance class represents a named instance. |
+| `NamingPolicyPreview` | Dry-run result for generated static-instance name records. |
+| `PathCommand` | PathCommand class represents a path command. |
+| `PerformanceBaselineReport` | Complete performance baseline report for a workflow. |
+| `PerformanceBenchmark` | Performance baseline for a specific workflow. |
+| `PerformanceMeasurement` | Single measurement of a workflow performance. |
+| `PerformanceRegressionPackage` | Self-contained performance regression package. |
+| `PlatformNamingDiagnostics` | PlatformNamingDiagnostics class provides a dictionary representation of platform naming diagnostics via the to_dict method. |
+| `PreviewImage` | PreviewImage class provides a write_to method to write preview image data. |
+| `QuadraticTo` | QuadraticTo class represents a quadratic-to path command. |
+| `Rasterizer` | Scanline rasterizer for GlyphPath outlines with pure-Python PNG export. |
+| `ReleaseRisk` | Release risk flag with severity and explanation. |
+| `RequestedLanguageHint` | RequestedLanguageHint class exposes a has_requested_language_label read-only property and provides a dictionary representation via the to_dict method. |
+| `ResolvedInstance` | ResolvedInstance class exposes a label read-only property. |
+| `ScriptCoverage` | Summary of script coverage for a font. |
+| `SmartInstancer` | SmartInstancer class exposes an axes read-only property and provides methods such as build_axis_grid_previews, build_axis_grid_sheet, and build_axis_grid_web_bundles; its __init__, partial_instantiate, resolve, and resolve_axis_grid methods raise errors conditionally. |
+| `StatNamingDiagnostics` | StatNamingDiagnostics class provides a dictionary representation of STAT naming diagnostics via the to_dict method. |
+| `SubsetCoverage` | Aggregate Unicode coverage diagnostics for a subsetting request. |
+| `SubsetResult` | Subsetting output bundled with the coverage report used to produce it. |
+| `TextDeltaComparisonReport` | TextDeltaComparisonReport class exposes comparable_glyph_count, glyph_count, and moved_glyph_count read-only properties and provides a dictionary representation via the to_dict method. |
+| `TextDeltaReport` | TextDeltaReport class exposes active_glyph_count, glyph_count, and supported_glyph_count read-only properties and provides a dictionary representation via the to_dict method. |
+| `TextLayout` | Result of a TextRenderer.layout() call. |
+| `TextRenderer` | Lays out text using a font's glyph metrics and optional kern pairs. |
+| `TtfFont` | TtfFont class exposes available_naming_strategies, axes, cff_font, color_labels, color_palettes, colr_v1, cvar, and encoding read-only properties; its encoding getter, get_table_bytes, and glyph_accessor getter raise FontParseException conditionally. |
+| `TupleScalarDelta` | TupleScalarDelta class provides a dictionary representation of tuple scalar delta data via the to_dict method. |
+| `Type1Font` | Type1Font class exposes encoding, font_family, font_name, font_style, font_type, get_kern_pairs, glyph_accessor, and load_afm members. |
+| `UnsupportedFontFormatException` | UnsupportedFontFormatException class represents an exception for unsupported font formats. |
+| `VariableAxis` | VariableAxis class exposes available_languages, css_axis_tag, default_preset, and default_ratio read-only properties and provides clamp, denormalize, describe_value, and css_variation_setting methods. |
+| `VariableAxisPreset` | VariableAxisPreset class provides a to_presentation method. |
+| `VariableInstance` | VariableInstance class exposes available_languages, css_variation_settings, format_coordinates, label, language_profiles, localization_coverage, localization_resolution, and localized_labels members. |
+| `VariableInstanceBuilder` | Build variable instance release packages from variable fonts. |
+| `VariableInstancePackage` | Single-folder deliverable for variable font instance releases. |
+| `VariationDeltaAudit` | Audit result for gvar/HVAR delta consistency. |
+| `WebFontAsset` | WebFontAsset class represents a web font asset. |
+| `WebFontBuilder` | WebFontBuilder class provides build, build_family_matrix_preview, build_family_package, build_family_review_board, build_family_review_export_package, and build_family_waterfall_preview methods; its build_family_matrix_preview, build_family_package, build_family_review_board, build_family_review_export_package, and build_family_waterfall_preview methods raise ValueError conditionally. |
+| `WebFontBundle` | WebFontBundle class provides a write_to method. |
+| `WebFontFamilyPackage` | WebFontFamilyPackage class provides a write_to method. |
+| `WebFontOptimizer` | Extended WebFontOptimizer with interactive playground generation. |
+| `WebFontOptimizerDecision` | Automated decision result for web export mode. |
+| `WebFontOptimizerPackage` | WebFontOptimizerPackage class exposes notes, readiness, and size_summary read-only properties and provides a write_to method. |
+| `WebFontOptimizerPackageWithDecision` | Enhanced web package that includes optimization decision metadata. |
+| `Woff2Font` | Woff2Font class exposes encoding, font_family, font_name, font_style, font_type, get_kern_pairs, glyph_accessor, and inner_font read-only properties. |
+| `WoffFont` | WoffFont class exposes encoding, font_family, font_name, font_style, font_type, get_kern_pairs, glyph_accessor, and inner_font read-only properties. |
+| `AnimationExportPackage` | AnimationExportPackage class provides a write_to method. |
+| `BatchResult` | Per-font processing result. |
+| `BatchSummary` | Top-level batch processing summary. |
+| `CffCharset` | CffCharset class provides from_reader, gid_for, name_for, and standard methods; its from_reader method raises FontParseException conditionally. |
+| `CffDict` | CffDict class provides from_bytes, get, set, and to_bytes methods; its from_bytes method raises FontParseException conditionally. |
+| `CffEncoding` | CffEncoding class provides expert, from_reader, get_all_codepoints, standard, and unicode_to_gid methods; its unicode_to_gid method raises GlyphNotFoundException conditionally. |
+| `CffIndex` | CffIndex class provides from_reader and to_bytes methods; its from_reader method raises FontParseException conditionally. |
+| `PrivateDict` | PrivateDict class provides a from_dict method. |
+| `TopDict` | TopDict class provides a from_dict method. |
+| `Type2Interpreter` | Interprets Type 2 charstrings into GlyphPath commands. |
+| `PrivateDictOp` | PrivateDictOp class lists the CFF Private Dictionary operators BLUE_VALUES, DEFAULT_WIDTH_X, NOMINAL_WIDTH_X, OTHER_BLUES, STD_HW, STD_VW, and SUBRS. |
+| `TopDictOp` | TopDictOp class lists the CFF Top Dictionary operators CHARSET, CHARSTRINGS, CHARSTRING_TYPE, ENCODING, FAMILY_NAME, FONT_BBOX, FONT_MATRIX, FULL_NAME, IS_FIXED_PITCH, ITALIC_ANGLE, NOTICE, and PRIVATE. |
+| `SubroutineAnalysis` | Complete analysis result for a CFF/CFF2 font. |
+| `SubroutineInfo` | Statistics for a single subroutine. |
+| `Cff2Diagnostic` | JSON-serializable CFF2 font diagnostic report. |
+| `Cff2Instancer` | Instancer for CFF2 variable fonts. |
+| `Cff2DiagnosticAxis` | Single axis diagnostic record. |
+| `perf.PerformanceMetric` | Single benchmark measurement. |
+| `PerformanceRegressionError` | Raised when a performance benchmark exceeds its allowed threshold. |
+| `perf.RegressionReport` | Full regression analysis report. |
+| `perf_var_package.PerformanceMetric` | Single benchmark measurement. |
+| `perf_var_package.RegressionReport` | Full regression analysis report. |
+| `CurveAdapter` | CurveAdapter class provides methods convert_path_cubic_to_quad, convert_path_quad_to_cubic, cubic_to_quads, and quad_to_cubic, each of which raises FontConversionException conditionally. |
+| `FontConverter` | FontConverter class provides the convert method, which raises FontConversionException conditionally. |
+| `EotHeader` | EotHeader class represents the header of an EOT font file. |
+| `instancing.Font` | Wrapper to provide access to STAT synthesis for SmartInstancer. |
+| `CffSerializer` | CffSerializer class provides the serialize method, which raises FontParseException conditionally. |
+| `EotSerializer` | EotSerializer class provides the serialize method, which raises FontParseException conditionally. |
+| `TtfSerializer` | TtfSerializer class provides the serialize method, which raises FontParseException conditionally. |
+| `Type1Serializer` | Type1Serializer class provides the serialize_pfa and serialize_pfb methods. |
+| `JustificationPoint` | A position in glyph sequence where justification can be applied. |
+| `JustificationResult` | Justification analysis result for a text run. |
+| `VMetric` | Vertical metric for a glyph. |
+| `TtfTableSet` | TtfTableSet class provides the get_raw, gvar, and set_raw members. |
+| `TtcFaceRecord` | TtcFaceRecord class represents a face record in a TTC file. |
+| `TtfGlyphParser` | TtfGlyphParser class provides the parse method. |
+| `TtfInstancer` | TtfInstancer class provides the available_naming_strategies, instantiate, and preview_naming_policy methods, where instantiate raises FontNotSupportedException and FontParseException conditionally and preview_naming_policy raises FontNotSupportedException conditionally. |
+| `AvarTable` | AvarTable class provides the from_reader, map_normalized, and map_normalized_by_tag methods, where from_reader raises FontParseException conditionally. |
+| `BaseGlyphRecord` | BaseGlyphRecord class represents a base glyph record. |
+| `BaseGlyphV1Record` | BaseGlyphV1Record class represents a base glyph V1 record. |
+| `BaseTable` | OpenType BASE (Baseline) table parser. |
+| `BitmapRecord` | Represents a single bitmap glyph record in an sbix strike. |
+| `CbdtGlyphBitmap` | Single bitmap glyph record from CBDT table. |
+| `CbdtTable` | Color Bitmap Data Table (CBDT). |
+| `CblcIndexSubTableFormat17` | Format 17: Small metrics variant. |
+| `CblcIndexSubTableFormat18` | Format 18: Big metrics variant. |
+| `CblcMetricsBig` | Big metrics (32-bit values) for Format 18. |
+| `CblcMetricsSmall` | Small metrics (16-bit values) for Format 17. |
+| `CblcStrike` | Represents one bitmap strike (resolution) in the CBLC table. |
+| `CblcTable` | Color Bitmap Location Table (CBLC). |
+| `CmapTable` | CmapTable class provides the best_subtable, from_reader, and to_bytes methods, where best_subtable and to_bytes raise FontParseException conditionally. |
+| `ColorPalette` | ColorPalette class represents a color palette. |
+| `ColrTable` | ColrTable class provides the from_reader and get_glyph_animation methods, where from_reader raises FontParseException conditionally and get_glyph_animation extracts animation sequence for a glyph if animation data is present. |
+| `CpalTable` | CpalTable class provides the from_reader method. |
+| `CvarTable` | Parsed CVAR table with value records for custom metric variations. |
+| `DsigTable` | OpenType DSIG (Digital Signature) table parser. |
+| `FeatureVariationRecord` | FeatureVariationRecord class represents a feature variation record. |
+| `FeatureVariationTable` | FeatureVariationTable class provides the find_applicable_records, from_reader, and to_bytes methods, where from_reader raises FontParseException conditionally. |
+| `GaspRange` | Grid-fitting behavior recommendation for a PPEM range. |
+| `GaspTable` | OpenType gasp table parser. |
+| `GdefTable` | GdefTable class provides the from_reader, get_attachment_points, get_glyph_class, get_ligature_carets, get_mark_attachment_class, and to_bytes methods, where get_attachment_points returns list of attachment point indices for a glyph, get_glyph_class returns glyph class (1=Base, 2=Ligature, 3=Mark, 4=Component, 0=Unassigned), get_ligature_carets returns list of caret coordinates for a ligature glyph, and get_mark_attachment_class returns mark attachment class for a glyph. |
+| `GlyfTable` | GlyfTable class provides the from_reader, get_glyph_bytes, and to_bytes methods. |
+| `GlyphAssembly` | Glyph assembly for stretchy glyphs (parentheses, brackets, etc.). |
+| `GlyphPart` | Single part of a glyph assembly (used for stretchy symbols). |
+| `GposTable` | GposTable class provides the from_reader, get_kern_pairs, get_kerning_pair, get_script, list_all_features, list_features_for_script, list_scripts, and to_bytes methods, where get_kern_pairs extracts kern pairs from GPOS table, get_kerning_pair returns XAdvance delta for specified glyph pair, or 0 if not defined, get_script returns script record for given tag, and list_all_features returns all feature tags defined in the GPOS table. |
+| `GsubTable` | GsubTable class provides the from_reader, get_ligatures, get_script, get_single_substitutions, list_all_features, list_features_for_script, list_scripts, and to_bytes methods, where get_ligatures returns ligature substitutions for a specific feature, get_script returns script record for given tag, get_single_substitutions returns single substitution mappings for specified feature(s), and list_all_features returns all feature tags defined in the GSUB table. |
+| `HMetric` | HMetric class represents a horizontal metric. |
+| `HdmxRecord` | Single hdmx device record mapping PPEM to glyph widths. |
+| `HdmxTable` | OpenType hdmx (Horizontal Device Metrics) table. |
+| `HeadTable` | HeadTable class provides the from_reader and to_bytes methods. |
+| `HheaTable` | HheaTable class provides the from_reader and to_bytes methods. |
+| `HmtxTable` | HmtxTable class provides the from_reader, get_metric, and to_bytes methods. |
+| `HvarTable` | HvarTable class provides the advance_width_delta, compact_for_subset, from_reader, and to_bytes methods, where from_reader raises FontParseException conditionally and compact_for_subset compacts HVAR table for subset font. |
+| `JstfTable` | OpenType JSTF (Justification) table. |
+| `KernTable` | OpenType kern table with subtable metadata and parsed kern pairs. |
+| `LayerRecord` | LayerRecord class represents a layer record. |
+| `LayerV1Record` | LayerV1Record class represents a layer V1 record. |
+| `LocaTable` | LocaTable class provides the from_reader, glyph_length, glyph_offset, and to_bytes methods. |
+| `LtagTable` | OpenType ltag table parser. |
+| `LtshTable` | OpenType LTSH (Linear Threshold) table parser. |
+| `MathConstants` | MathConstants table for mathematical layout parameters. |
+| `MathGlyphConstruction` | MathGlyphConstruction subtable for glyph expansion. |
+| `MathGlyphInfo` | MathGlyphInfo table for glyph-level mathematical properties. |
+| `MathGlyphVariantRecord` | MathGlyphVariantRecord representing a sized variant of a math glyph. |
+| `MathTable` | OpenType MATH table parser for mathematical typesetting. |
+| `MathVariants` | MathVariants table for vertical and horizontal glyph constructions. |
+| `MaxpTable` | MaxpTable class provides the from_reader and to_bytes methods. |
+| `MetaTable` | OpenType meta table parser. |
+| `MvarTable` | Parsed MVAR table with value records for metric variations. |
+| `NameTable` | NameTable class provides the best_name, ensure_english_platform_names, ensure_name_record, from_reader, get, language_key, localized_names, and records_for methods. |
+| `Os2Table` | Os2Table class provides the from_reader and to_bytes methods. |
+| `PaintColrLayers` | PaintColrLayers class represents a paint COLR layers structure. |
+| `PaintGlyph` | PaintGlyph class represents a paint glyph structure. |
+| `PaintLinearGradient` | PaintLinearGradient class represents a paint linear gradient structure. |
+| `PaintRadialGradient` | PaintRadialGradient class represents a radial gradient paint table. |
+| `PaintRotate` | PaintRotate class represents a rotation paint table. |
+| `PaintScale` | PaintScale class represents a scale paint table. |
+| `PaintSkew` | PaintSkew class represents a skew paint table. |
+| `PaintSolid` | PaintSolid class represents a solid color paint table. |
+| `PaintTransform` | PaintTransform class represents a transform paint table. |
+| `PaintTranslate` | PaintTranslate class represents a translation paint table. |
+| `PostTable` | PostTable class provides methods to read PostScript table data, including from_reader to parse the table, glyph_name to retrieve a glyph name, and to_bytes to serialize the table. |
+| `SVGDocumentRecord` | Represents a single SVG document entry in the SVG table document list. |
+| `SVGTable` | OpenType SVG table containing SVG documents for color glyphs. |
+| `SbixTable` | OpenType sbix table containing bitmap emoji images. |
+| `SignatureRecord` | A single signature record within the DSIG table. |
+| `Strike` | Represents one bitmap strike (resolution) in the sbix table. |
+| `VdmxGroup` | Single vdmx group with vertical extents for a pixel height. |
+| `VdmxTable` | OpenType vdmx (Vertical Device Metrics) table. |
+| `VertOriginYMetric` | Per-glyph vertical origin Y offset. |
+| `VorgTable` | OpenType VORG (Vertical Origin) table parser. |
+| `VvarTable` | Parsed VVAR table with value records for vertical metric variations. |
+| `AvarAxisMap` | AvarAxisMap class represents an axis variation mapping table. |
+| `CblcIndexSubTable` | Base class for CBLC index subtables. |
+| `CmapSubtable` | CmapSubtable class provides a get_gid method to map a character code to a glyph identifier. |
+| `AnimationFrame` | Represents a single animation frame with paint reference. |
+| `GlyphAnimation` | Animation metadata for a single glyph. |
+| `CvarValueRecord` | Single CVAR value record mapping axis + metric to delta set index. |
+| `gpos.CoverageTable` | CoverageTable class represents a coverage table used in GPOS lookups. |
+| `gpos.FeatureTable` | FeatureTable class represents a feature table in GPOS. |
+| `gpos.LangSysTable` | LangSysTable class represents a language system table in GPOS. |
+| `PairAdjustmentRecord` | PairAdjustmentRecord class holds a pair adjustment record with an x_advance read-only property that returns the left glyph horizontal advance adjustment in font units. |
+| `PairPosFormat1Subtable` | PairPosFormat1Subtable class represents a pair positioning format 1 subtable. |
+| `PairPosFormat2Subtable` | PairPosFormat2Subtable class represents a pair positioning format 2 subtable. |
+| `PairSet` | PairSet class represents a pair set table in GPOS. |
+| `gpos.ScriptTable` | ScriptTable class represents a script table in GPOS. |
+| `gsub.CoverageTable` | CoverageTable class represents a coverage table used in GSUB lookups. |
+| `gsub.FeatureTable` | FeatureTable class represents a feature table in GSUB. |
+| `gsub.LangSysTable` | LangSysTable class represents a language system table in GSUB. |
+| `Ligature` | Ligature class represents a ligature entry in a ligature set. |
+| `LigatureSet` | LigatureSet class represents a ligature set table in GSUB. |
+| `LigatureSubstitutionFormat1` | LigatureSubstitutionFormat1 class represents a ligature substitution format 1 subtable that extends SubstitutionSubtable. |
+| `gsub.ScriptTable` | ScriptTable class represents a script table in GSUB. |
+| `SingleSubstitutionFormat1` | SingleSubstitutionFormat1 class represents a single substitution format 1 subtable that extends SubstitutionSubtable. |
+| `SingleSubstitutionFormat2` | SingleSubstitutionFormat2 class represents a single substitution format 2 subtable that extends SubstitutionSubtable. |
+| `SubstitutionSubtable` | SubstitutionSubtable class represents a substitution subtable base class in GSUB. |
+| `GvarTable` | GvarTable class provides methods to read glyph variation data, including from_reader to parse the table and glyph_variations to retrieve variations, both of which raise FontParseException conditionally. |
+| `TupleVariation` | TupleVariation class represents a tuple variation record. |
+| `DeltaSetIndex` | DeltaSetIndex class represents a delta set index. |
+| `DeltaSetIndexMap` | DeltaSetIndexMap class provides methods to manage delta set indices, including from_reader to parse the table, get to retrieve an index, compact to re-index for subset glyph mapping, and to_bytes to serialize the table, where from_reader raises FontParseException conditionally. |
+| `ItemVariationData` | ItemVariationData class provides methods to handle item variation data, including from_reader to parse the data, evaluate to compute variations, compact to restrict variation data to only used regions and inner indices, and to_bytes to serialize the data. |
+| `ItemVariationStore` | ItemVariationStore class provides methods to manage item variation store, including from_reader to parse the store, evaluate to compute variations, compact to restrict variation store to only used delta sets and regions, and to_bytes to serialize the store, where from_reader raises FontParseException conditionally. |
+| `VariationRegion` | VariationRegion class provides a scalar method to compute a scalar value for a given variation vector. |
+| `VariationRegionAxis` | VariationRegionAxis class provides a scalar method to compute a scalar value for a given variation vector axis. |
+| `JstfLangSys` | Represents a JSTF language system. |
+| `JstfLookup` | Represents a JSTF justification lookup table. |
+| `JstfPriority` | Represents a JSTF priority record with extension and shrink glyph lists. |
+| `JstfScript` | Represents a JSTF script with its language systems and priority records. |
+| `KernSubtable` | Represents one kern subtable with metadata and parsed data. |
+| `math.CoverageTable` | OpenType Coverage Table (Format 1 or 2). |
+| `MvarValueRecord` | Single MVAR value record mapping axis + metric to delta set index. |
+| `NameRecord` | NameRecord class represents a name record in the name table. |
+| `VvarValueRecord` | Single VVAR value record mapping axis + vertical metric to delta set index. |
+| `AfmData` | AfmData class represents data parsed from an AFM file. |
+| `AfmGlyphMetric` | AfmGlyphMetric class represents a glyph metric entry in an AFM file. |
+| `PfbSegment` | PfbSegment class represents a segment of a PFB file. |
+| `Type1FontData` | Type1FontData class holds Type 1 font data. |
+| `Type1Interpreter` | Type1Interpreter class provides the interpret method to process Type 1 font programs. |
+| `VisualProofBuilder` | Build visual proof packages for fonts or designspace directories. |
+
+#### Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+| `FontType` | FontType enum lists the CFF, EOT, OTF, TTF, TYPE1, TYPE1_PFA, WOFF, and WOFF2 font type values. |
+
+#### Detailed Member Reference
+
+### aspose_font
+
+The `aspose_font` module serves as the top-level namespace for font processing operations in Aspose.Font FOSS for Python.
+
+### FontLoader
+
+The `FontLoader` class provides the open method to load font files from disk.
+
+- `load`: Load a font and keep friendly metadata about where it came from.
+- `open`: Load a font from a file path, raw bytes, or stream.
+
+### SmartInstancer
+
+The `SmartInstancer` class provides the instantiate method to create specific instances from variable fonts.
+
+- `synthesize_missing_stat_table`: Synthesize STAT table for variable fonts that lack one.
+
+### WebFontOptimizer
+
+The `WebFontOptimizer` class provides the `build_interactive_playground` method to generate interactive web font previews.
+
+### FontSubsetter
+
+The `FontSubsetter` class provides the `subset_by_text` method to create font subsets based on provided text content.
+
+- `analyze_coverage`: Report which requested Unicode codepoints the font can encode.
+- `analyze_web_coverage`: Report coverage for combined preset, text, codepoint, and range inputs.
+- `benchmark_subsetting`: Run subsetting multiple times and return timing statistics in seconds.
+- `subset_for_web`: Subset a font for web use with optional preservation of variable-font tables.
+- `subset_for_web_with_coverage`: Subset from web selection inputs and include grouped coverage diagnostics.
+- `subset_with_coverage`: Subset by codepoints and return both the new font and coverage diagnostics.
+
+### FontQaReporter
+
+The `FontQaReporter` class provides the `build_package` method to generate quality assurance reports for font packages.
+
+### cli
+
+The CLI module provides the main entry point for command-line operations in Aspose.Font FOSS for Python.
+
+### mcp
+
+The mcp module provides the main entry point for Model Context Protocol server operations in Aspose.Font FOSS for Python.
+
+</details>
+
+## Scope and Limitations
+
+- `SVGTable`: `to_bytes` raises NotImplementedError.
+
+See [Aspose.Font — Enterprise Edition](https://products.aspose.com/font/). It adds variable font instancing and subsetting capabilities not present in this package.
+
+## Development and Testing
+
+The suite covers 198 test files under `tests/`. Project documentation lives under `docs/`.
+
+To build and run the tests from a clone, run:
+
+```bash
+make build
+make test
+```
+
+To enable the Model Context Protocol (MCP) server for integration with AI assistants (such as Claude Desktop or Cursor):
+
+```bash
+pip install "aspose-font-foss[mcp]"
+```
+
+```
+qa-package/
+├── qa-report.json                               (Diagnostic data with severity scoring)
+├── qa-report.html                               (Self-contained HTML visual report)
+└── preview.png                                  (Rendered proof with named instances)
+```
+
+Extract named static instances from variable fonts using menu-safe and RIBBI-compliant naming conventions for operating system and application compatibility.
+
+**CLI:**
+
+```bash
+aspose-font var-package Roboto-VariableFont_wdth,wght.ttf --instance-name Bold --naming-strategy ribbi-safe --family-suffix Beta --stat-policy static --preview-text "Review" --output-dir var-package-output
+```
+
+**Generated Package Structure:**
+
+```
+var-package-output/
+├── Roboto-Beta-Bold.ttf                         (Instanced static font)
+├── stat-evidence.json                           (STAT policy decisions & diagnostics)
+├── review-manifest.json                         (Release-ready review manifest)
+└── comparison-board.png                         (Side-by-side visual comparison board)
+```
+
+Run tests and code linting locally:
+
+```bash
+# Run test suite
+pytest tests/
+
+# Run linter
+ruff check src/ tests/
+
+# Build package distributions
+python package.py build
+```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE.txt). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.
