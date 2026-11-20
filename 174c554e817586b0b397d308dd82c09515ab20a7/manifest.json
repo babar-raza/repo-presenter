@@ -36,8 +36,8 @@
       "sha256": "94ecfe2f74368cd6f2cc7f1dbecbae6a754c86bf30931b1abf46d91c85c088a4"
     },
     "ledger.jsonl": {
-      "bytes": 79826,
-      "sha256": "c8b44878f5ea5c68247283cd9815806b3c640f15bc6bdefde8b75783a8b4f58a"
+      "bytes": 93580,
+      "sha256": "dfb77cd99bcffa0f5dc17240de11b61bbcb8051744405e1b5acf4d8353c8e5fe"
     },
     "plan.json": {
       "bytes": 7474,
@@ -51,26 +51,54 @@
   "lane": "R",
   "ledger_totals": {
     "audit_only": 0,
-    "cache_reuses": 4,
+    "cache_reuses": 16,
     "provider_calls": 60,
-    "records": 64,
+    "records": 76,
     "total_tokens": null
   },
-  "no_op_proof": null,
-  "provider_calls": 17,
+  "no_op_proof": {
+    "byte_identical": true,
+    "first_run": {
+      "identity": {
+        "boot_id": "boot:c1a48721-efce-4ea3-83a0-ee6465e9d8a4",
+        "nonce": "9e0660cf1fd3472a8f92ca3d8ea09dee",
+        "pid": 2672,
+        "started": "proc:9892"
+      },
+      "invocation_id": "ace80a235f4045fb97fde4f716bb919a",
+      "started_at": "2026-11-19T21:41:38Z"
+    },
+    "fresh_process": true,
+    "proven_at": "2026-11-20T00:22:56Z",
+    "provider_calls": 0,
+    "rerun": {
+      "cache_reuses": 12,
+      "identity": {
+        "boot_id": "boot:1cd55e55-4a75-4fab-850d-b6099e205142",
+        "nonce": "ac5a7cdc72a740f4acd89d7b20217db5",
+        "pid": 2455,
+        "started": "proc:3445"
+      },
+      "invocation_id": "5e857d7d0bb74cb6912c10c93567ed53",
+      "provider_calls": 0,
+      "records": 12,
+      "started_at": "2026-11-20T00:22:54Z"
+    }
+  },
+  "provider_calls": 0,
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
   "revision": "174c554e817586b0b397d308dd82c09515ab20a7",
   "schema_version": 2,
-  "sealed_at": "2026-11-19T21:48:09Z",
+  "sealed_at": "2026-11-20T00:22:56Z",
   "sealed_by": {
     "identity": {
-      "boot_id": "boot:c1a48721-efce-4ea3-83a0-ee6465e9d8a4",
-      "nonce": "9e0660cf1fd3472a8f92ca3d8ea09dee",
-      "pid": 2672,
-      "started": "proc:9892"
+      "boot_id": "boot:1cd55e55-4a75-4fab-850d-b6099e205142",
+      "nonce": "ac5a7cdc72a740f4acd89d7b20217db5",
+      "pid": 2455,
+      "started": "proc:3445"
     },
-    "invocation_id": "ace80a235f4045fb97fde4f716bb919a",
-    "started_at": "2026-11-19T21:41:38Z"
+    "invocation_id": "5e857d7d0bb74cb6912c10c93567ed53",
+    "started_at": "2026-11-20T00:22:54Z"
   },
-  "state": "ACCEPTED"
+  "state": "READY_FOR_PROPOSAL"
 }
