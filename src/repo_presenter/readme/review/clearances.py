@@ -32,12 +32,14 @@ the section; dropped: the content-unit citation shortcut and the unrestorable ti
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, replace
 
 from repo_presenter.core.facts import Fact, FactsDocument
+from repo_presenter.readme.review.derivation import Derivation
 from repo_presenter.readme.review.findings import (
     CLEARANCES_FOR_KIND,
+    PROVENANCE_CLEARANCES_FOR_KIND,
     Clearance,
     Finding,
     _seal_clearance,
@@ -54,11 +56,19 @@ from repo_presenter.readme.review.matching import (
 NAME_KINDS = frozenset({"public_symbol", "enum_member", "import_path", "identity", "format"})
 
 
+#: Which of a candidate's lines (1-based) a deterministic stage printed from SUPPORTED facts, asked lazily
+#: for the lines a finding cites (``review.derivation.lane_r_derivation``); ``None`` when it cannot say.
+Deriver = Callable[[Collection[int]], Derivation | None]
+
+
 @dataclass(frozen=True)
 class ClearanceContext:
     candidate_readme: str
     original_readme: str
     facts: FactsDocument
+    #: Lane R only, and only where the caller holds the plan, units and dispositions the candidate was
+    #: rendered from (the cascade). Absent: ``derived_from_supported_facts`` clears nothing.
+    derive: Deriver | None = None
 
 
 def _only(finding: Finding, kind: str) -> bool:
@@ -191,6 +201,60 @@ def omission_present(finding: Finding, context: ClearanceContext) -> Clearance |
     return _seal_clearance("omission_present", finding, tuple(proofs))
 
 
+def _quoted_lines(quote: str, rows: list[str]) -> frozenset[int] | None:
+    """The 1-based candidate lines ``quote`` is, whole line for whole line; ``None`` when any non-blank quoted
+    line is not exactly a candidate line (a fragment of a line is never located: an authored clause joined to a
+    printed lead-in is one line, and it is not the renderer's)."""
+    found: set[int] = set()
+    wanted = [row.strip() for row in quote.splitlines() if row.strip()]
+    if not wanted:
+        return None
+    for text in wanted:
+        hits = [number for number, row in enumerate(rows, 1) if row.strip() == text]
+        if not hits:
+            return None
+        found.update(hits)
+    return frozenset(found)
+
+
+def derived_from_supported_facts(finding: Finding, context: ClearanceContext) -> Clearance | None:
+    """BL-400: every line the finding quotes is printed by a deterministic stage from SUPPORTED facts.
+
+    The production review was shown lines the renderer prints from facts alone (the opening's format
+    sentence is an authored unit slot holding the sentence ``renderer._scope_statement`` prints), and a model
+    flag on one blocked the seal although the M9 audit clears the same line (``scripts/run_m9_auditor.py``,
+    ``review.derivation``: the same predicate, one implementation). A line qualifies only when the renderer's
+    own re-derivation reproduces it with every authored unit replaced by a sentinel (an authored sentence is
+    never cleared), every fact it states is SUPPORTED, no claim detector or open findings-register row
+    refutes it, and it is in no known-false class (counts, Enterprise Edition naming, accessor wording,
+    behaviour claims) unless its provenance verifies. Anything undecidable returns ``None``."""
+    if (
+        finding.source != "llm"
+        or not finding.blocking
+        or finding.claim_kind not in PROVENANCE_CLEARANCES_FOR_KIND
+        or context.derive is None
+    ):
+        return None
+    lines = _quoted_lines(finding.quote, context.candidate_readme.splitlines())
+    if not lines:
+        return None
+    derived = context.derive(lines)
+    if derived is None or not lines <= derived.clearable:
+        return None
+    evidence = tuple(
+        f"line {number} is printed from SUPPORTED facts by a deterministic stage (zero-call re-derivation); "
+        "no register row or claim detector refutes it; "
+        + (
+            f"verified by its provenance ({derived.provenance[number]})"
+            if number in derived.provenance
+            else "in no known-false class"
+        )
+        + (f"; cites {', '.join(derived.cited[number])}" if number in derived.cited else "")
+        for number in sorted(lines)
+    )
+    return _seal_clearance("derived_from_supported_facts", finding, evidence)
+
+
 Clearer = Callable[[Finding, ClearanceContext], Clearance | None]
 
 #: The whole catalogue. A test pins this to exactly the four names plan D3 lists.
@@ -202,13 +266,25 @@ CLEARANCES: Mapping[str, Clearer] = {
 }
 
 
+#: The provenance clearances (BL-400), kept apart from the four typed ones above: a test pins ``CLEARANCES`` to
+#: exactly plan D3's four names, and this catalogue to exactly the one name ``PROVENANCE_CLEARANCES_FOR_KIND``
+#: lists.
+PROVENANCE_CLEARANCES: Mapping[str, Clearer] = {
+    "derived_from_supported_facts": derived_from_supported_facts,
+}
+
+
 def apply_clearances(finding: Finding, context: ClearanceContext) -> Finding:
     """The finding, CLEARED by the first registered clearance for its claim kind that proves it,
     else unchanged. The one place in the code base that constructs a CLEARED finding."""
     if finding.source != "llm" or not finding.blocking:
         return finding
-    for name in CLEARANCES_FOR_KIND.get(finding.claim_kind, ()):
-        proof = CLEARANCES[name](finding, context)
+    catalogue = {**CLEARANCES, **PROVENANCE_CLEARANCES}
+    for name in (
+        *CLEARANCES_FOR_KIND.get(finding.claim_kind, ()),
+        *PROVENANCE_CLEARANCES_FOR_KIND.get(finding.claim_kind, ()),
+    ):
+        proof = catalogue[name](finding, context)
         if proof is not None:
             return replace(finding, status="CLEARED", clearance=proof)
     return finding
@@ -216,10 +292,13 @@ def apply_clearances(finding: Finding, context: ClearanceContext) -> Finding:
 
 __all__ = [
     "CLEARANCES",
+    "PROVENANCE_CLEARANCES",
     "ClearanceContext",
+    "Deriver",
     "absence_present",
     "absence_unsourced",
     "apply_clearances",
+    "derived_from_supported_facts",
     "names_supported",
     "omission_present",
 ]
