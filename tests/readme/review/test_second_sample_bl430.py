@@ -1,6 +1,6 @@
 """BL-430: the union of two review samples (``llm_review.merge_second_sample``), offline and zero calls.
 
-Hosted audit rounds 44588173276 and 44656897985: every flagged Lane R control had been accepted at seal by
+Hosted audit rounds 44588173276 and 44656899884: every flagged Lane R control had been accepted at seal by
 the production packet and flagged by the audit's packet on the same authored lines. A seal needs both
 samples. Negative controls: a finding on a line the renderer printed is not counted, a rejected first sample
 is never touched, a clean second sample changes no finding and no verdict byte but its own unit records.
