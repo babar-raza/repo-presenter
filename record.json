@@ -92,11 +92,24 @@
    "run_id": "44618175603",
    "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T00:06:21+00:00",
+   "classes": [
+    "BC-14|inherited_unit|the_readme_claims_fbx",
+    "claim_contradiction|inherited_unit|stub_format"
+   ],
+   "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+   "findings": 4,
+   "outcome": "failure",
+   "run_id": "44642769906",
+   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-19T21:25:23+00:00",
+  "at": "2026-11-20T00:06:21+00:00",
   "classes": {
    "BC-14|inherited_unit|the_readme_claims_fbx": {
     "example": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
@@ -106,7 +119,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "BC-14",
-    "scope": "c1ac97a5346085e6bf7a2b72749885ebd55f1d5829f5a77e358db82b352a90f0",
+    "scope": "d0b61170e85579bfc592273ec94b008b18685177ede12d9fe12a5eb566888e83",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -128,7 +141,7 @@
      "inherited_unit:050.table"
     ],
     "rule": "claim_contradiction",
-    "scope": "faa556ed3eedd0aab996788f53afbf354c661702c4b1c68f559efd8573ec1c5b",
+    "scope": "fb6c0cadfd50e33c0484542448d1d2ee4d0a4eb1e321b5e5e74d6363b547ac3a",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -142,7 +155,7 @@
     "upstream": "source_stub"
    }
   },
-  "code": "0ac39e1c0b4566f82ee97f849b9f5030e81fb30aa4aaf9da5a403ad093d07fcd",
+  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -214,7 +227,7 @@
    }
   ],
   "lane": "R",
-  "main_sha": "4a0d0a506ebb6aa39f029230f0b5343bc37e9efa",
+  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -228,8 +241,8 @@
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
-  "run_id": "44618175603",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44618175603",
+  "run_id": "44642769906",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44642769906",
   "schema_version": 1,
   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
