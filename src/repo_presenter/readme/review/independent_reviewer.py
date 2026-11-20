@@ -90,7 +90,7 @@ from repo_presenter.readme.composition.coverage import (
 )
 from repo_presenter.readme.composition.list_coverage import list_items, missing_items
 from repo_presenter.readme.composition.placement import PLACED
-from repo_presenter.readme.evidence.facts.links import extract_links
+from repo_presenter.readme.evidence.facts.links import extract_links, unverified_external_hrefs
 from repo_presenter.readme.parity_gate import (
     badge_row_replaced,
     badge_slot_replaced,
@@ -693,6 +693,9 @@ def live_readme_loss_rule(
             )
     new_targets = {link.href.rstrip("/") for link in extract_links(readme_text)}
     contradicted = _contradicted_links(facts)
+    # A target UNCHECKED is printed without the link (a label, or a badge's image alone; BL-360):
+    # the parity gate (BC-17) accounts for it on its UNRESOLVED fact, so this rule agrees.
+    unverified = unverified_external_hrefs(facts)
     inherited = _inherited_units(facts)
     kept_dead_links = {
         held.href
@@ -703,6 +706,8 @@ def live_readme_loss_rule(
     }
     for link in extract_links(original_readme):
         target = link.href.rstrip("/")
+        if link.href in unverified:
+            continue
         if target.startswith("#"):
             # An in-page anchor is its heading's address, not content of its own: the heading is
             # judged above, and the parity gate (BC-17, ``technical_content``) skips ``#`` links

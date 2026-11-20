@@ -7302,3 +7302,136 @@ content (7 cells), job cancels (3), PDF API-table rows, Enterprise Edition namin
 
 Backlog: BL-203, BL-270, BL-310, BL-320, BL-290.
 
+
+## 2026-11-19: BC-08 reads a kept unit's commands as a reader of the README does (BL-330, R46, R14)
+
+Class: frozen-code hosted passes on main 9476c1b left three cells failing on ONE BC-08 finding about an inherited
+command. Two share a root in how the check parses the unit, not in what the model wrote. (1) Page Python
+`inherited_unit:092.paragraph: VERIFIED_PRESERVE keeps the command 'make\nbuild'`: the unit has an inline code span wrapped
+across two source lines; a deterministic section prints the paragraph unwrapped (`unwrapped_form`), and Markdown reads a
+line ending inside a span as a space, but the check compared the span with its line break. (2) PDF Python
+`inherited_unit:280.list: VERIFIED_REWRITE keeps the command 'python\n  with Document(...'`: the list item holds a fenced
+block, and the span pattern read the fence's backticks as an inline span whose text starts with the info string `python`
+(which the command pattern accepts), so a rewrite could never print it and restore (already VERIFIED_PRESERVE or
+REWRITE) could not clear it. Decision, inside the existing check (R27, zero calls, no render change): `text.inline_spans`
+drops fenced regions and squashes a span's whitespace as Markdown renders it; BC-08 (`protected_fragments`) and
+`_fold_register_corrections` use it, and a span command compares whitespace-squashed with the README (code-block
+lines still compare exactly). The check is not weakened for a real command: an unprinted `pip install ...` in the same
+unit still fails (negative control). Nothing is dropped from any README (R14), nothing printed changes (R9, R10).
+Property improved: robust, universal (a check that cannot be satisfied by any text is a defect of the check).
+Not fixed here: PDF Go `inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run
+./_examples/feature_showcase'`. Reproduced offline on the published text: the unit's sentence "encryption (...) is covered in
+Encryption and Signing below." names a section the README does not have (BC-07), so S4 folds it to VERIFIED_REWRITE and
+`restore_lost_units` refuses to restore it (`dangling_pointer`); the rewrite prints no command. The honest alternative
+is a recorded sentence-level withhold of that one sentence while keeping the command; it needs BC-05, BC-07, BC-17 and
+the parity gate to read the withheld form the same way (a register-free citation channel), which was not built (R27) and
+cannot be proven offline without the stored bundle. Hosted outcome of Page Python and PDF Python after this fix is
+unproven.
+
+Backlog: BL-330
+
+## 2026-11-19: BC-02 contradicted package -- a source-build README corroborates the registry's "not published" (BL-340)
+
+Frozen-code hosted pass 2 left three cells on exactly one blocking BC-02 finding, `id_is_contradicted_package` (the
+registry lists no such package): GIS .NET, Imaging .NET, PSD Java. Verified, not assumed: the extractor's tier beneath the
+measured build (`unpublished.documented_source_install`) turns a 404 into a documented source install only when the
+maintainers' README says the package is unpublished; Imaging .NET's README never says so, it simply is a source-build
+README (`Build and install from a clone of the repository`, no NuGet install anywhere), so the two sources agree and the
+tier did not fire. R36 alternatives: (a) adopt aspose.org's approach (none published for these three repositories, so
+nothing to adopt); (b) print "not published" as a statement (rejected: the maintainers do not say it); (c) drop the
+install block with an R14 record (rejected: it loses true content); (d) render the source install the facts support,
+when the README itself directs it. Decided (d), in the existing tier, with the plain sentence "Build `X` from a source
+checkout:" (no publication claim) and guards: no registry install or listing anywhere in the README, no build measured
+to fail, registry reading `not_published`, a documented build. Not claimed: GIS .NET (no README and the product does not
+build, so a build command would be false; stays R24) and PSD Java (its README prints a Maven coordinate the registry
+404s, the case the existing tests deliberately keep refused; its README at the hosted revision could not be read here).
+Measured: see BL-340 evidence. R9 (no attribution wording), R10 (no seal changes) and R14 (no README content dropped:
+only a previously refused fact is now admitted) are respected; a passing README re-renders byte-identical.
+
+Backlog: BL-340.
+
+## 2026-11-19: The degrade reaches the single-claim shapes BL-240 left standing (BL-350, R46, R14)
+
+Class: after frozen-code hosted passes 1 and 2 (main 9476c1b, which contains BL-240) about eight Lane R cells ended on one or
+two model-reviewer findings the degrade did not remove. Read from the hosted logs and reproduced offline from the exact
+texts (zero provider calls; each shape returned `None` from `cascade._degrade_settled` before the change): (1) the closing
+Scope sentence `See [X - Enterprise Edition](url). It adds ...` (OMR, HTML, PSD Python): the quote spans the renderer's
+sentence and the authored clause, and the lever refused any slot that is not a capability or API row; (2) a Documentation
+and Resources line the maintainers describe (HTML Python, PDF .NET): the degrade dropped the whole line, BC-05 then failed
+on the kept list, so the state was not kept and no degrade line was logged; (3) an opening that is only the flagged text
+(Slides C++, Font Python); (4) findings that appear only after the second pass (PSD Python, 3D TypeScript); (5) Words Java
+failed three asks on `unit opening: text contains a Markdown heading ('#')`: the check matched `# ` anywhere, so `C# ` in
+the opening of the port of Words .NET (R28) counts as a heading. Decisions, all inside existing components (R27): (a)
+`must_correct._withhold_flagged` withholds the authored Enterprise clause (matched by its printed form, `which adds` prints
+`It adds`) and the renderer prints its own sentence alone, never when the unit cites an inherited unit (R14 must-carry);
+(b) `degrade_claims` replaces an authored opening that is only the flagged statement by the format-facts sentence
+(`authoring_retry._fact_true_opening_unit`, the words BL-220's floor and the scope statement already print; nothing
+invented), never when it cites an inherited unit or the facts state no format; (c) `renderer._documentation_resources`: a
+described resource line the degrade or the register flags keeps its link and prints the target's own fact-true
+description; (d) `cascade._degrade_settled` keeps a lever only if it changes a printed byte, and `MAX_DEGRADE_PASSES` goes
+from 2 to 4 (each pass is still kept only when it adds no failing check and strictly lowers the blocking load; cost is
+measured, never a block, R45); (e) the `# ` marker is anchored at the start of a unit, as `- ` and `* ` already are
+(`#`..`######` at the start still fails). Each change is an R14 record (`degrade_records`, rule `BL-240`, actions
+`enterprise_context_withheld`, `opening_fact_true`, `printed_text_withheld`); no public README wording is added (R9); a
+passing README never reaches the step (R10). Property improved: robust, universal. Not determined: the hosted outcome; why
+the second Font Python pass kept nothing; whether the model reviewer keeps faulting the renderer's own fact-true rows (3D
+TypeScript, BarCode); Cells C++ `names the Enterprise Edition` (nothing honest is left for BL-220's deletion; the same
+withholding as (a) in the authoring recover hook is the next step); the PDF TypeScript lane-step cancel.
+
+Backlog: BL-350
+
+## 2026-11-19: A link nothing could verify is printed without the link (BL-360, R36, R43)
+
+Frozen-code pass 3 left PDF C++ Lane R on one blocking finding, `BC-06 https://en.cppreference.com/w/cpp/20 is UNRESOLVED:
+UNCHECKED` (Slides Java had the same shape on `central.sonatype.com`, 5 findings, and passed on the next run). Root cause
+by first principles: the link check answers UNCHECKED when the host refuses or does not answer the runner (HTTP 401/403
+access gate, 429 or 5xx after the link_check retries, a transport error); that is neither "alive" nor "gone". The
+maintainers' C++20 badge is carried as written (`_carried_extra_badges`) whenever its target is not CONTRADICTED, so a
+host that blocks datacenter addresses failed the whole cell, run after run, though nothing about the README was wrong.
+Honest alternatives (R36), all but one rejected: (1) check it harder (a browser User-Agent, an archive lookup): cannot be
+proven offline (this container's proxy blocks both hosts), and an archive proves history, not liveness; (2) allow a host
+class: names no evidence and invites exactly the unverified claim BC-06 forbids; (3) leave it blocking: the cell never
+seals on a third party's bot policy; (4) print only verified targets (R43(2), already the rule for the renderer's own
+links): chosen. Decision: an http(s) `link_target` that is UNRESOLVED is printed as its label alone in a kept unit
+(`without_contradicted_links`, the form a CONTRADICTED link already takes) and as its image alone in a carried maintainers'
+badge; BC-17 and the independent reviewer account for the omitted link on the UNRESOLVED fact (Lane R only in BC-17).
+R14 record: nothing but the unverifiable destination goes, the label and the badge image stay, and the link returns by
+itself on any run where the host answers (a SUPPORTED fact prints it as before). mailto and other non-web targets are
+untouched. R9: no wording is added. R10: a SUPPORTED or CONTRADICTED link renders exactly as before and no check was
+tightened (a loss is exempted, never added), so no seal can newly fail. Property improved: reliable (a cell's verdict no
+longer depends on a third-party host's reaction to the runner), measured by the pareto count of
+`BC-06|unresolved|id_is_unresolved_unchecked` on the next frozen-code pass. Not a Lane R-wide fix for the Slides .NET
+`BC-06|unresolved|n_aspose_com_links` (4 aspose.com links over a ceiling of 2, a different class, not addressed here).
+
+Backlog: BL-360
+
+## 2026-11-19: Cut-off replies, a '#' in prose and a lone edition-name sentence no longer fail the run (BL-370, R46, R14)
+
+**Problem.** Frozen-code hosted pass 3 (main `4a0d0a5`, BL-220 included) left three Lane R cells ending as job errors on
+one failing slot: PDF Python `JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000);
+raise the budget or bound the output, never retry` (BL-220's own open item), Words Java `unit opening: text contains a
+Markdown heading ('#')` three times, PDF TypeScript `unit context: names the Enterprise Edition` after every ask. The job
+log prints the rejection reason and not the rejected reply, so the replies in the tests are synthesised from the reason
+and the slot context (the real texts are unproven offline). Roots: `run_job` raised on a cut reply although the narrowed
+ask for the missing slots already existed; the heading check matched `# ` anywhere in a one-paragraph unit, so `C# ` in a
+sentence was a heading; BL-220's edition recovery needed another sentence or a clause cut, so the single sentence the
+prompt itself asks to be written as 'It adds ...' (or one ending 'in the Enterprise Edition') had none.
+
+**Decision.** (1) A cut-off reply is treated like a rejected one when the job can be narrowed by part: the whole units
+it finished are kept, the missing slots are asked for alone (half of them when nothing was finished, so every ask is
+smaller than the one that was cut), at most three narrowed asks per cut reply, each recorded in the repair notes with
+rule BL-370; the merged reply is judged by the ordinary checks, so a slot still missing is rejected and falls to the
+existing recover hooks (an API row to the fact-true row, R43(4)); a job with no such hook still raises as before. No
+unit is replaced by the narrowing, so a must-carry unit is never dropped (R14). (2) A Markdown heading is a `#` run that
+begins the unit; a leading one is deleted and recorded, a `#` inside a sentence is prose. This loosens one check where it
+was provably wrong, so no sealed candidate can newly fail (R10). (3) The edition named only as a sentence subject is read
+as `It`, or a closing 'in/with ... Enterprise Edition' phrase is cut, the rest as written and recorded; a unit that is
+only the name still fails closed. No prompt, renderer, schema or version constant moves; no public README wording is added
+(R9). Property improved: robust (one slot no longer fails a whole run), measured by the pareto count of
+`job_error|*|OutputRejectedError:*` and `JobError:section_authoring_output_truncated_at` on the next frozen-code pass.
+
+**Not decided.** Whether three narrowed asks per cut reply is the right bound once hosted runs show how often a cut
+happens, and whether the cut is the model's reasoning or a long section (the narrowed ask answers both, the log does not
+say which).
+
+Backlog: BL-370

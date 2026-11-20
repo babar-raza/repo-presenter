@@ -416,6 +416,25 @@ def check_relative(href: str, tree_paths: Sequence[str]) -> LinkResult:
 _LINK_TEXT = re.compile(r"text '(.*)'$")
 
 
+def is_unverified_external(value: object, polarity: object) -> bool:
+    """Whether a ``link_target`` fact is an http(s) target the check could not answer (UNCHECKED:
+    access-gated, rate-limited or unreachable) -- neither verified nor shown gone (BL-360).
+
+    A mailto or other non-web link is also UNRESOLVED but is never checked by design, so only a web
+    target counts. One definition for the renderer, the kept-unit form, BC-17 and the reviewer."""
+    return polarity == "UNRESOLVED" and str(value).lower().startswith(("http://", "https://"))
+
+
+def unverified_external_hrefs(facts: object) -> frozenset[str]:
+    """Every http(s) ``link_target`` of ``facts`` that is UNRESOLVED: printed as its label (a kept
+    unit) or as its image alone (a badge), never as a link nothing verified (R43(2), BL-360)."""
+    return frozenset(
+        str(fact.value)
+        for fact in facts.by_kind("link_target")  # type: ignore[attr-defined]
+        if fact.value and is_unverified_external(fact.value, fact.polarity)
+    )
+
+
 def link_text(fact: Fact) -> str:
     """The words a reader clicks: the anchor text the source gave this target, else the URL.
 

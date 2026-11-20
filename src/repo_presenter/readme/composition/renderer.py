@@ -87,8 +87,9 @@ from repo_presenter.readme.evidence.facts.commands import (
     commands_in_text,
     matrix_axes,
 )
-from repo_presenter.readme.evidence.facts.links import link_text
+from repo_presenter.readme.evidence.facts.links import link_text, unverified_external_hrefs
 from repo_presenter.readme.evidence.facts.product_pages import banner_target, enterprise_target
+from repo_presenter.readme.evidence.facts.unpublished import README_STATEMENT_PHRASE
 
 # 35 (2026-11-06): no rendering change. BC-05 now fails a SUPERSEDE_REDUNDANT unit whose substance the
 # README does not state (validation/supersession.py), and no "validators" version is recorded in a
@@ -622,6 +623,10 @@ def _carried_extra_badges(
         for fact in context.facts.by_kind("link_target")
         if fact.polarity == "CONTRADICTED" and fact.value
     }
+    # A target nothing could verify (UNCHECKED: a host that refuses the runner, BL-360) is not
+    # linked: the maintainers' badge image stays as written, the link goes (R43(2); BC-06 blocks
+    # an unverified target and BC-17 accounts for the omitted link on the same fact).
+    unverified = {_badge_target(href) for href in unverified_external_hrefs(context.facts)}
     extras: list[str] = []
     verified = {
         _badge_target(fact.value)
@@ -639,10 +644,16 @@ def _carried_extra_badges(
         if badge_slot(markdown) in _LINK_VERIFIED_SLOTS and _badge_target(href) not in verified:
             continue
         carried.add(key)
+        if _badge_target(href) in unverified:
+            image_only = _UNLINK_BADGE.match(markdown)
+            if image_only is not None:
+                markdown = image_only.group(1)
         extras.append(_alt_without_edition_name(markdown))
     return extras
 
 
+#: A linked badge ``[![alt](image)](target)`` read as its image ``![alt](image)`` and its link.
+_UNLINK_BADGE = re.compile(r"^\[(!\[[^\]]*\]\([^)]*\))\]\([^)]*\)$")
 _BADGE_ALT = re.compile(r"^(\[!\[)([^\]]*)(\])")
 
 
@@ -936,7 +947,14 @@ def _documentation_resources(context: RenderContext) -> list[str]:
                 f" It covers all {count} public types; the "
                 "[API Reference](#api-reference) section above covers the essentials."
             )
-        lines.append(f"- **[{link_text(target)}]({target.value})** — {sentence}")
+        line = f"- **[{link_text(target)}]({target.value})** — {sentence}"
+        if described.get(target.id) and _register_refuted(context, line):
+            # BL-350: the maintainers' description of this link is the text a check or the findings
+            # register flags (the last-resort degrade records it in ``degraded_quotes``): the line
+            # keeps its link and prints the description of the link's own target, the fact-true
+            # form every link without a description gets, instead of being dropped whole.
+            line = f"- **[{link_text(target)}]({target.value})** — {link_target_description(target)}"
+        lines.append(line)
     if issues is not None:
         lines.append(f"- Found a bug or have a feature request? [Open an issue]({issues}).")
     return lines
@@ -1549,10 +1567,17 @@ def _installation(context: RenderContext) -> list[str]:
         and (install.attributes or {}).get(SOURCE_BASIS_ATTRIBUTE) == DOCUMENTED_SOURCE_BASIS
         and package is not None
     ):
+        # The "not published" sentence is the maintainers' own statement (or the registry's, beside
+        # it); a README that only directs a source build (BL-340) says nothing of publication, so
+        # the sentence says only what to run.
+        maintainers_say_unpublished = any(
+            (evidence.detail or "").startswith(README_STATEMENT_PHRASE)
+            for evidence in install.evidence
+        )
         lines.append(
             f"`{package.value}` is not published on {context.spec.registry} yet; to use it, build "
             "it from a source checkout:"
-            if context.spec.manifest_names_distribution
+            if context.spec.manifest_names_distribution and maintainers_say_unpublished
             else f"Build `{package.value}` from a source checkout:"
         )
         lines.append("")

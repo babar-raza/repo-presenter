@@ -255,7 +255,13 @@ _FORBIDDEN = (
     ("pip install", "a command"),
     ("$ ", "a command"),
 )
-_ANCHORED_ONLY = frozenset({"- ", "* "})
+#: Markers that open a Markdown block only at the start of the text (a unit is one paragraph): a
+#: list item, and a heading ``#`` .. ``######``. Mid-text they are prose: ``C# `` is not a heading
+#: (BL-350; hosted Words Java run 44590092142 failed three asks on "text contains a Markdown
+#: heading ('#')": the port of Words .NET names C#).
+_ANCHORED_ONLY = frozenset({"- ", "* ", "# "})
+_ANCHORED_FORMS = {"# ": "#{1,6} "}
+_HEADING_START = re.compile(r"\s*#{1,6}\s")  # BL-370: also a tab or a leading space
 _MARKUP_OPENER = re.compile(r"<[A-Za-z_/!?]")
 
 
@@ -1984,7 +1990,9 @@ def forbidden_text_pattern(extra: Sequence[str] = ()) -> str:
     anywhere = [fragment for fragment, _ in _FORBIDDEN if fragment not in _ANCHORED_ONLY]
     anywhere += list(extra)
     anywhere_alternation = "|".join(re.escape(fragment) for fragment in anywhere)
-    anchored_alternation = "|".join(re.escape(fragment) for fragment in _ANCHORED_ONLY)
+    anchored_alternation = "|".join(
+        _ANCHORED_FORMS.get(fragment) or re.escape(fragment) for fragment in sorted(_ANCHORED_ONLY)
+    )
     return f"^(?!(?:{anchored_alternation}))(?!(?:.|\\n)*(?:{anywhere_alternation}))(?:.|\\n)*$"
 
 
@@ -2382,8 +2390,16 @@ def unit_checks(
                 continue
             if marker == "<":
                 matched = _bare_angle_bracket(raw_text, placeholders)
+            elif marker == "# ":
+                matched = _HEADING_START.match(text) is not None
             else:
-                matched = text.startswith(marker) if marker in _ANCHORED_ONLY else marker in text
+                matched = (
+                    _HEADING_START.match(text) is not None
+                    if marker == "# "
+                    else text.startswith(marker)
+                    if marker in _ANCHORED_ONLY
+                    else marker in text
+                )
             if matched:
                 meanings.add(meaning)
                 found = f"{meaning} ({marker.strip()!r})"

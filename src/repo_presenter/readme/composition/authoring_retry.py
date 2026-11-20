@@ -146,6 +146,9 @@ def _defects(
     for error in rejection:
         if error.startswith(_SLOT_SET_ERROR):
             continue
+        if error.startswith(_TRUNCATED_PREFIX):
+            lines.append(_TRUNCATED_DEFECT)
+            continue
         owned = _slots_of(task, error) or []
         if set(owned) & set(slots):
             lines.append(error)
@@ -155,6 +158,70 @@ def _defects(
         elif produced[slot] > 1:
             lines.append(f"unit {slot}: returned {produced[slot]} times; return it exactly once")
     return lines
+
+
+_TRUNCATED_PREFIX = "output truncated"
+_TRUNCATED_DEFECT = (
+    "the earlier reply was cut off at the output limit before it returned these slots: keep each "
+    "unit short, one plain sentence where the slot allows, and leave the explanation of a fact "
+    "out rather than run long"
+)
+_UNITS_KEY = re.compile(r'"units"\s*:\s*\[')
+
+
+def completed_units(partial: str) -> list[dict[str, Any]]:
+    """The units a reply cut off mid-way finished before the cut, in order: the whole ones only,
+    never the half-written one. ``[]`` when the text holds no ``units`` array at all."""
+    found = _UNITS_KEY.search(partial)
+    if found is None:
+        return []
+    decoder = json.JSONDecoder()
+    position = found.end()
+    units: list[dict[str, Any]] = []
+    while True:
+        while position < len(partial) and partial[position] in " \t\r\n,":
+            position += 1
+        if position >= len(partial) or partial[position] != "{":
+            break
+        try:
+            unit, position = decoder.raw_decode(partial, position)
+        except json.JSONDecodeError:
+            break
+        if isinstance(unit, dict):
+            units.append(unit)
+    return units
+
+
+def _complete_truncated(
+    task: SectionTask, merged: str, partial: str
+) -> tuple[str, list[str]]:
+    """``merged`` extended with the units of a reply cut off at the output limit that were finished
+    (:func:`completed_units`, for the slots ``merged`` has none for yet), and the slots still
+    without exactly one unit, in the task's order (BL-370). ``""`` for the merged reply when no
+    unit exists at all."""
+    held = _units(merged) or []
+    have = {str(unit.get("slot")) for unit in held}
+    taken = list(held)
+    for unit in completed_units(partial):
+        slot = str(unit.get("slot"))
+        if slot in task.slots and slot not in have:
+            taken.append(unit)
+            have.add(slot)
+    if not taken:
+        return "", list(task.slots)
+    order = {slot: index for index, slot in enumerate(task.slots)}
+    taken.sort(key=lambda unit: order.get(str(unit.get("slot")), len(order)))
+    counted = Counter(str(unit.get("slot")) for unit in taken)
+    omitted: dict[str, Any] = {}
+    try:
+        document = json.loads(merged) if merged else {}
+    except json.JSONDecodeError:
+        document = {}
+    for item in document.get("omitted", []) if isinstance(document, dict) else []:
+        if isinstance(item, dict) and "fact_id" in item:
+            omitted[str(item["fact_id"])] = item
+    missing = [slot for slot in task.slots if counted[slot] != 1]
+    return json.dumps({"units": taken, "omitted": list(omitted.values())}), missing
 
 
 def _listing(units: Sequence[Mapping[str, Any]], limit: int) -> str:
@@ -300,6 +367,7 @@ def authoring_narrowing(task: SectionTask, manifest: LoadedManifest) -> Narrowin
         merge=lambda merged, narrowed, slots: _merge(task, merged, narrowed, slots),
         subject="the units still failing",
         repeated=repeated_slots,
+        truncated=lambda merged, partial: _complete_truncated(task, merged, partial),
     )
 
 
@@ -697,6 +765,7 @@ def recover_value_sentences(
 #: The rule id a terminal-safe fallback (BL-220, R46) writes into the repair notes beside the call
 #: store (``.repaired-<attempt>.json``): R14, every deviation recorded with a rule id and evidence.
 TERMINAL_SAFE_RULE = "BL-220"
+TERMINAL_SAFE_RULE_370 = "BL-370"
 
 
 def _fact_true_opening_unit(
@@ -791,10 +860,14 @@ def recover_opening_output(
     (``authoring.recover_opening_duplicates_preserved``), then the no-values deletion
     (:func:`recover_value_sentences`), then, for what still only restates the inherited paragraph,
     the format-facts floor (:func:`recover_restated_opening`, BL-220)."""
+    headed = recover_heading_markers(output)
+    output = output if headed is None else headed
     trimmed = recover_opening_duplicates_preserved(output, dispositions=dispositions, facts=facts)
     current = output if trimmed is None else trimmed
     valued = recover_value_sentences(current, task=task, facts=facts, name=name)
     best = valued if valued is not None else trimmed
+    if best is None:
+        best = headed
     floored = recover_restated_opening(
         output if best is None else best,
         task=task, facts=facts, dispositions=dispositions, name=name,
@@ -805,6 +878,35 @@ def recover_opening_output(
 _EDITION_NAME = "Enterprise Edition"
 #: Where a clause may be cut off before the edition name: a comma, semicolon, dash or bracket.
 _CLAUSE_CUT = re.compile(r"\s*(?:[,;(]|\s[\u2014\u2013-]\s)\s*")
+
+
+#: The edition name as the subject that opens a sentence ("The Enterprise Edition adds ...",
+#: "Aspose.Widget Enterprise Edition adds ...") and as the object of a closing prepositional phrase
+#: ("... available in the Enterprise Edition") (BL-370).
+_EDITION_SUBJECT = re.compile(
+    r"^(?:(?:The|This|That|Our)\s+)?(?:[A-Z][\w.\-]*\s+){0,6}?Enterprise Edition(?=\s+[a-z])"
+)
+_EDITION_TAIL = re.compile(
+    r"\s+(?:in|with|via|through|by|from|under|within|of)\s+(?:the\s+|our\s+|that\s+)?"
+    r"(?:[A-Z][\w.\-]*\s+){0,6}?Enterprise Edition\b[.!?]?$"
+)
+
+
+def _edition_phrase_removed(text: str) -> str | None:
+    """``text`` of one sentence with the edition named only as its subject read as ``It`` (the
+    shell's closing sentence has just named it, and the prompt asks for 'It adds ...'), or as the
+    object of a closing prepositional phrase cut off; the rest exactly as written. ``None`` when
+    neither applies or a mention is left."""
+    sentence = text.strip()
+    rewritten = _EDITION_SUBJECT.sub("It", sentence, count=1)
+    if rewritten != sentence and _EDITION_NAME not in rewritten:
+        return rewritten
+    tail = _EDITION_TAIL.search(sentence)
+    if tail is not None:
+        stem = sentence[: tail.start()].rstrip(" ,;")
+        if len(stem.split()) >= 4 and _EDITION_NAME not in stem:
+            return stem if stem.endswith((".", "!", "?")) else stem + "."
+    return None
 
 
 def _without_edition_name(text: str) -> str | None:
@@ -823,7 +925,43 @@ def _without_edition_name(text: str) -> str | None:
         stem = head[: match.start()].rstrip()
         if len(stem.split()) >= 4:
             return stem if stem.endswith((".", "!", "?")) else stem + "."
-    return None
+    return _edition_phrase_removed(text)
+
+
+_HEADING_LEAD = re.compile(r"^\s*#{1,6}\s+")
+
+
+def recover_heading_markers(output: dict[str, Any]) -> dict[str, Any] | None:
+    """Terminal-safe correction for a unit that still opens with a Markdown heading marker
+    (BL-370): the ``#`` run is deleted and the words stay exactly as written (a heading echo is
+    the only place a ``#`` can be a heading in a one-paragraph unit; ``C#`` inside a sentence is
+    prose and is no longer refused, ``authoring._HEADING_START``). Recorded in the repair notes;
+    ``run_job`` re-validates. ``None`` when no unit opens with one or nothing would be left."""
+    units = output.get("units")
+    if not isinstance(units, list):
+        return None
+    notes: list[dict[str, Any]] = []
+    for unit in units:
+        text = unit.get("text") if isinstance(unit, dict) else None
+        if not isinstance(text, str) or _HEADING_LEAD.match(text) is None:
+            continue
+        kept = _HEADING_LEAD.sub("", text, count=1).strip()
+        if not kept:
+            continue
+        notes.append(
+            {
+                "fallback": "heading_marker_deleted",
+                "rule": TERMINAL_SAFE_RULE_370,
+                "slot": str(unit.get("slot")),
+                "rejected_text": text,
+                "text": kept,
+            }
+        )
+        unit["text"] = kept
+    if not notes:
+        return None
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
 
 
 def recover_edition_name(output: dict[str, Any], *, task: SectionTask) -> dict[str, Any] | None:
@@ -935,6 +1073,8 @@ def recover_authoring_output(
     correction of this module, in order, ending with the API-row fallback
     (:func:`recover_failing_api_rows`) when the job's ``checks`` are given. With the product
     ``name``, a key-capability unit also loses a value it spells (:func:`recover_value_sentences`)."""
+    headed = recover_heading_markers(output)
+    output = output if headed is None else headed
     valued = recover_value_sentences(output, task=task, facts=facts, name=name)
     output = output if valued is None else valued
     restated = recover_restating_sentences(output, task=task, facts=facts)
@@ -943,6 +1083,8 @@ def recover_authoring_output(
         output if restated is None else restated, task=task, facts=facts
     )
     recovered = withdrawn if withdrawn is not None else restated
+    if recovered is None:
+        recovered = headed
     edition = recover_edition_name(output if recovered is None else recovered, task=task)
     recovered = edition if edition is not None else recovered
     if checks is not None:

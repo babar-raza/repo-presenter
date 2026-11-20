@@ -132,7 +132,7 @@ from repo_presenter.readme.reconciliation.destinations import (
     rehomed,
 )
 from repo_presenter.readme.validation.claims import install_identity_findings
-from repo_presenter.readme.validation.text import COMMAND, SPAN, installs_the_checkout
+from repo_presenter.readme.validation.text import COMMAND, inline_spans, installs_the_checkout
 
 DISPOSITIONS_FILENAME = "dispositions.json"
 # Ported 2026-10-23 for readme/validation/deferrals.py's NOT_CARRIED_BY_NAMED_SECTION class to
@@ -2081,7 +2081,7 @@ def _fold_register_corrections(output: dict[str, Any], facts: FactsDocument) -> 
         if entry.get("disposition") == "CORRECT_WITH_EVIDENCE"
         and str(entry.get("unit_id", "")).endswith(".paragraph")
         and entry.get("destination_section") in placeable_section_ids()
-        and any(COMMAND.match(span) for span in SPAN.findall(units.get(str(entry["unit_id"]), "")))
+        and any(COMMAND.match(span) for span in inline_spans(units.get(str(entry["unit_id"]), "")))
     ]
     if not candidates:
         return

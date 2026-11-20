@@ -19,6 +19,7 @@ from markdown_it import MarkdownIt
 from repo_presenter.readme.composition.components.shell import SEMANTIC_SHELL
 
 SPAN = re.compile(r"`([^`]+)`")
+_FENCED = re.compile(r"^[ \t]*(`{3,}|~{3,})[^\n]*\n.*?(?:^[ \t]*\1[`~]*[ \t]*$|\Z)", re.DOTALL | re.MULTILINE)
 LINK_DESTINATION = re.compile(r"\]\([^)]*\)")
 URL = re.compile(r"https?://\S+")
 # A command a README prints at the start of a line: a package tool or build tool, optionally
@@ -180,6 +181,14 @@ def located(readme: str, text: str, offset: int) -> str | None:
     sections = section_lines(readme)
     line = text.count("\n", 0, offset)
     return sections[line] if line < len(sections) else None
+
+
+def inline_spans(text: str) -> list[str]:
+    """The inline code spans of a kept paragraph or list as a reader sees them (BL-330): a fenced
+    block inside the unit is not a span (its info string and body made ``python\\n  with ...`` look
+    like a command), and a span wrapped across source lines reads with a space where the line
+    ended, exactly as Markdown renders it (``make\\nbuild`` is ``make build``)."""
+    return [" ".join(span.split()) for span in SPAN.findall(_FENCED.sub("", text))]
 
 
 def fence_body(value: str) -> tuple[str, str]:

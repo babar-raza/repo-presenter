@@ -36,7 +36,14 @@ class Narrowing:
     first did; ``ask`` is handed those parts as its last argument so the narrowed request can say
     the earlier text was returned twice and rejected twice, instead of repeating the question.
     ``None`` for a job whose narrowed ask already shows the model what the re-ask did not (the
-    silent units of a ``unit_ids`` job)."""
+    silent units of a ``unit_ids`` job).
+
+    ``truncated(merged, partial)`` (BL-370) is how a reply cut off at the output budget is
+    treated like a rejected one: it returns ``merged`` extended with every part ``partial`` (the
+    cut-off reply, possibly unparseable) completed before the cut, and the parts still missing.
+    ``run_job`` then asks for those alone, through ``ask`` and ``merge``, with a smaller ask each
+    time nothing was completed. ``None`` for a job that cannot be narrowed by part: a cut-off
+    reply of that job still fails closed."""
 
     pending: Callable[[str, Sequence[str]], list[str]]
     ask: Callable[
@@ -46,3 +53,4 @@ class Narrowing:
     merge: Callable[[str, str, Sequence[str]], str]
     subject: str = "the silent units"
     repeated: Callable[[str, str, Sequence[str]], list[str]] | None = None
+    truncated: Callable[[str, str], tuple[str, list[str]]] | None = None
