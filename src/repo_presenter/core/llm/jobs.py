@@ -825,7 +825,15 @@ def run_job(
     # Hosted logs print only the reason; the rejected reply itself (cut short) is what the next class
     # fix needs (supervisor diagnostics, 2026-11-20). It carries no secret: it is the model's README text.
     try:
-        print(f"{job}: last rejected reply (first 1500 chars): {str(content)[:1500]}", file=sys.stderr)
+        text = str(content)
+        print(f"{job}: last rejected reply ({len(text)} chars; first 1500): {text[:1500]}", file=sys.stderr)
+        # The unit a rejection names ("unit context: ...") is what the next fix needs; print it whole.
+        import re as _re
+
+        for slot in sorted(set(_re.findall(r"unit ([A-Za-z0-9_:.-]+):", "; ".join(rejection)))):
+            at = text.find(f'"slot": "{slot}"')
+            if at >= 0:
+                print(f"{job}: rejected unit {slot}: {text[max(0, at - 80):at + 1400]}", file=sys.stderr)
     except NameError:  # no reply was ever read
         pass
     if recovered_rejection:
