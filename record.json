@@ -99,21 +99,57 @@
    "run_id": "44643689454",
    "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T02:04:51+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|opening",
+    "llm:factuality|unresolved|key_capabilities"
+   ],
+   "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44656305270",
+   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:21:07+00:00",
+  "at": "2026-11-20T02:04:51+00:00",
   "classes": {
+   "llm:factuality|authored_unit|opening": {
+    "example": "It opens TrueType (`.ttf`), CFF (`.cff`), EOT (`.eot`), OpenType (.otf), Type 1, WOFF, and WOFF2 fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.sma",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "opening.opening"
+    ],
+    "rule": "llm:factuality",
+    "scope": "fb4d311493cc210ff42ce92cfb7d796c660319cef2b4e1c71fc29ee8255ee8c9",
+    "scope_paths": [
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "opening",
+    "upstream": ""
+   },
    "llm:factuality|unresolved|key_capabilities": {
-    "example": "- **Multi-format font loading.** It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `",
-    "findings": 3,
+    "example": "- **Visual proofing and rendering.** It renders SVG glyphs to PNG using `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and renders color and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph` and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png` (both req",
+    "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "da63402f2530f8eec8886174b1dbfedabc22a68726f57744f149c2e66206f7ea",
+    "scope": "695f96044b947d3be353603554160a9982a40ee9ded641546161660dee036cd1",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -128,54 +164,39 @@
     "upstream": ""
    }
   },
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+  "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "F01",
-    "message": "It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `aspose_font.WoffFont` objects.",
+    "message": "It opens TrueType (`.ttf`), CFF (`.cff`), EOT (`.eot`), OpenType (.otf), Type 1, WOFF, and WOFF2 fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.smart_instancer.instantiate`, subsets fonts by text or script presets using `FontSubsetter.subset_by_text`, `FontSubsetter.subset_by_presets`, and `FontSubsetter.subset_for_web`, and generates QA reports",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "opening.opening",
+     "kind": "authored_unit"
     },
-    "quote": "- **Multi-format font loading.** It reads `.cff`, `.eot`, and `.ttf` font files using the `aspose_font.FontLoader.open` method and exposes them as `aspose_font.cff.font`, `aspose_font.cff2.font`, `aspose_font.eot.font`, `aspose_font.ttf.font`, `aspose_font.type1.font`, `aspose_font.Woff2Font`, and `",
+    "quote": "It opens TrueType (`.ttf`), CFF (`.cff`), EOT (`.eot`), OpenType (.otf), Type 1, WOFF, and WOFF2 fonts using `FontLoader.open`, and writes optimized web font packages with `WebFontOptimizer.build` and `WebFontOptimizerPackage.write_to`. It creates static instances from variable fonts using `font.sma",
     "rule": "llm:factuality",
-    "section_id": "key_capabilities",
-    "signature": "llm:factuality|unresolved|key_capabilities",
+    "section_id": "opening",
+    "signature": "llm:factuality|authored_unit|opening",
     "source": "review",
-    "sub_rule": "key_capabilities",
+    "sub_rule": "opening",
     "upstream": ""
    },
    {
     "label": "F02",
-    "message": "It generates QA reports in JSON, HTML, Markdown, and PDF formats by calling `aspose_font.FontQaReporter.build_package` and writing the report using `aspose_font.FontQaReport.write_json`, `aspose_font.FontQaReport.write_html`, `aspose_font.FontQaReport.write_markdown`, and `aspose_font.FontQaReport.write_pdf`.",
+    "message": "It renders SVG glyphs to PNG using `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and renders color and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph` and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png` (both require TTF fonts and raise `FontNotSupportedException` for other formats). It converts rasterized content to PNG using a `Rasterizer` instance method `to_png` or animated PNG using `aspose_font.rasterizer.encode_apng_from_rgb`.",
     "origin": {
      "id": "-",
      "kind": "unresolved"
     },
-    "quote": "- **QA reporting and diagnostics.** It generates QA reports in JSON, HTML, Markdown, and PDF formats by calling `aspose_font.FontQaReporter.build_package` and writing the report using `aspose_font.FontQaReport.write_json`, `aspose_font.FontQaReport.write_html`, `aspose_font.FontQaReport.write_markdo",
-    "rule": "llm:factuality",
-    "section_id": "key_capabilities",
-    "signature": "llm:factuality|unresolved|key_capabilities",
-    "source": "review",
-    "sub_rule": "key_capabilities",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "It renders color glyphs, SVG glyphs, and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph`, `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png`, and converts rasterized content to PNG using `aspose_font.Rasterizer.to_png` or animated PNG using `aspose_font.rasterizer.encode_apng_from_rgb`.",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "- **Visual proofing and rendering.** It renders color glyphs, SVG glyphs, and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph`, `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png`, and converts rasterized",
+    "quote": "- **Visual proofing and rendering.** It renders SVG glyphs to PNG using `aspose_font.FontPreviewBuilder.render_svg_glyph_to_png`, and renders color and CBDT glyphs to PNG using `aspose_font.FontPreviewBuilder.render_color_glyph` and `aspose_font.FontPreviewBuilder.render_cbdt_glyph_to_png` (both req",
     "rule": "llm:factuality",
     "section_id": "key_capabilities",
     "signature": "llm:factuality|unresolved|key_capabilities",
@@ -185,30 +206,38 @@
    }
   ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "82b8ccbac847b04cfc0b797f5099c0b1315cf2ab",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F02+F03+F04+F05",
+    "label": "F16",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: unit capability:1: identifiers that are not accepted fact values: e.g",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F01+F02+F03+F04+F05",
+    "outcome": "repaired",
+    "reason": "",
     "section_id": "key_capabilities",
     "stage": "S6"
    },
    {
     "facts_defects": [],
-    "label": "F01",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "opening",
+    "label": "F06+F07+F08+F09+F10+F11+F12+F13+F14+F15",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "api_reference",
     "stage": "S6"
    }
   ],
   "repository": "aspose-font-foss/Aspose.Font-FOSS-for-Python",
-  "run_id": "44643689454",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44643689454",
+  "run_id": "44656305270",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44656305270",
   "schema_version": 1,
   "source_revision": "a854960e2b16805afae7154f14776acd0f6e8f75",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
