@@ -7535,3 +7535,36 @@ re-extracts with `.pptx` as the only output format and either seals or fails on 
 R9: no README wording moves. R10: no seal touched. R14: nothing dropped.
 
 Backlog: BL-400
+
+---
+
+## 2026-11-20: BL-420 -- the last S4 ask keeps a unit the check refuses as uncovered_supersession instead of failing the candidate (Slides C++)
+
+Hosted re-run of Slides C++ Lane R (run 44665731411, main a2d37f6) ended as a job error in the first model job, S4
+`source_reconciliation`: `inherited_unit:033.code_block` (the maintainers' PowerShell `Install-Package
+Aspose.Slides.Cpp.FOSS` under "Install From NuGet on Windows") was answered SUPERSEDE_REDUNDANT into `installation`
+three times, each rejection naming the lever (place it into `development_testing`, the nearest section that can hold it,
+or defer). The same unit failed run 41276299775 on 2026-11-01; that entry recorded a model-compliance gap and reverted a
+fold in `normalize`, because the sibling test requires the checks themselves to keep reporting `uncovered_supersession`
+loudly while a placement is still reachable. That reasoning holds for the first and second ask and is kept: the checks are
+unchanged. What was missing is the class BL-220 closed for authoring, a last step after the bounded asks. S4 already had
+one (`_settle_unresolved`, run by `reconciliation_narrowing.merge` after the narrowed ask) but it only kept units that were
+still omitted or deferred; a unit still superseded into a section that does not carry it fell outside it.
+Decision: `_settle_unresolved` also settles a unit still SUPERSEDE_REDUNDANT whose rejection line is
+`uncovered_supersession`: VERIFIED_PRESERVE (code block, or a unit citing only SUPPORTED facts) or PRESERVE_ATTRIBUTED into
+`nearest_holdable`, the lever the check names, with the existing rationale prefix recording that it was superseded by a
+section that does not carry it (R14). First principles on the honest disposition: the line is the maintainers' own, the
+NuGet package is real (published README badge, `nuget-release.yml`), no fact contradicts it, so preserving it prints no
+false install claim and OMIT_UNSUPPORTED would drop live content on no evidence; DEFER_UNRESOLVED is refused for an unverified
+code block (`uncited_redundant_defer`). Fail closed: a unit with no holdable home, a contradicted code unit, a unit citing a
+CONTRADICTED fact, shell-rendered kinds, and any unit not asked about are left as they were; run_job judges the settled
+reply through the real checks. Property improved: reliable (one unit's disposition no longer kills the candidate), measured
+offline by `tests/readme/reconciliation/test_s4_uncovered_supersession_settle.py` built from the run log's rejection text
+(2 of 8 fail on origin/main). Class size: 0 of 51 cells in pass4_failure_cells.json record this rejection (the run post-dates
+the snapshot); one other cell (PDF Go) records a different source_reconciliation error, a fact_ids schema bound, not changed.
+Evidence: recertify --all origin/main vs branch byte-identical (59 rows: Lane L 34 and Lane R 24 RECERTIFIED unchanged, 1 Lane R row
+readme_changed true on both); this path is not exercised by recertify, so it proves no seal moves, not that the hosted cell is
+fixed. Hosted re-run of Slides C++ is the proof (R41, unproven). R9: no README wording moves; the rationale is internal.
+R10: no seal touched. R14: nothing dropped, the change only keeps content.
+
+Backlog: BL-420
