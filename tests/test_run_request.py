@@ -312,13 +312,13 @@ def test_the_privileged_workflow_runs_from_main_on_workflow_run_and_validates_fi
         # its callee's permissions or GitHub refuses the file at startup (2026-11-13).
         expected = {"contents": "write", "actions": "write"} if name == "present" else {"contents": "write"}
         assert job["permissions"] == expected
-    assert set(wf["jobs"]["present"]["with"]) == {"repository", "ecosystem", "lane"}
+    assert set(wf["jobs"]["present"]["with"]) == {"repository", "ecosystem", "lane", "refresh"}
     assert "with" not in wf["jobs"]["mint"]
 
 
 def test_the_called_workflow_interfaces_are_unchanged():
     _, present_on = _wf("present.yml")
-    assert set(present_on["workflow_call"]["inputs"]) == {"repository", "ecosystem", "lane"}
+    assert set(present_on["workflow_call"]["inputs"]) == {"repository", "ecosystem", "lane", "refresh"}
     _, mint_on = _wf("tc-009a-mint-proof.yml")
     assert not (mint_on["workflow_call"] or {}).get("inputs")
 
