@@ -2792,7 +2792,9 @@ def _sections_packet(facts: FactsDocument) -> list[dict[str, Any]]:
     return sections
 
 
-_UNIT_ERROR = re.compile(r"\A(inherited_unit:\d+\.[a-z_]+): ")
+# A unit id has one numeric segment for a top-level unit and more for one nested under a numbered
+# heading (``014.002.list``); both are units a rejection names (BL-490).
+_UNIT_ERROR = re.compile(r"\A(inherited_unit:\d+(?:\.\d+)*\.[a-z_]+): ")
 _MISSING_UNITS = re.compile(r"\Ano disposition for inherited units: (.+)\Z")
 _DUPLICATED_UNITS = re.compile(r"\Amore than one disposition for: (.+)\Z")
 
