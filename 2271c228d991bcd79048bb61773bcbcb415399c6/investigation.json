@@ -1,0 +1,218 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "example:002"
+    ],
+    "text": "Python developers who need to inspect, modify, and save Adobe Photoshop document metadata, layers, masks, blend modes, and image resources without rendering."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.width",
+        "public_symbol:aspose_psd_foss.psdimage.height",
+        "public_symbol:aspose_psd_foss.psdimage.channels",
+        "public_symbol:aspose_psd_foss.psdimage.bits_per_channel",
+        "public_symbol:aspose_psd_foss.psdimage.color_mode",
+        "public_symbol:aspose_psd_foss.psdimage.version",
+        "public_symbol:aspose_psd_foss.psdimage.is_psb",
+        "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.resource_count",
+        "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.image_data_kind"
+      ],
+      "text": "PsdImage exposes width, height, channels, bits_per_channel, color_mode, version, is_psb, layer_count, resource_count, compression, and image_data_kind.",
+      "title": "Document metadata inspection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.layers.channelinformation",
+        "public_symbol:aspose_psd_foss.layers.blendmode"
+      ],
+      "text": "Layer provides name, bounds, top/left/bottom/right, width, height, opacity, is_visible, clipping, blend_mode_key, channels_count, and channel_information.",
+      "title": "Layer model access"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.blendmode",
+        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper"
+      ],
+      "text": "BlendMode enum and LayerBlendModeMapper map 4-character PSD keys to enum values for layer blending.",
+      "title": "Blend mode handling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.channelinformation",
+        "public_symbol:aspose_psd_foss.coreexceptions.notsupportedexception"
+      ],
+      "text": "ChannelInformation represents per-channel compression, length, and identifier; read-only with NotSupportedException on write.",
+      "title": "Channel information parsing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata"
+      ],
+      "text": "LayerMaskDataShort and LayerBlendingRangesData expose raw length and basic properties; mutations are not supported.",
+      "title": "Mask and blending ranges"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.resources.unknownresource",
+        "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
+        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+      ],
+      "text": "ImageResourcesSection parses unknown resources preserving raw payloads; UnknownResource offers resource_id, name, and data.",
+      "title": "Image resources parsing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.sections.imagedatastructure"
+      ],
+      "text": "ImageData parses RLE and ZIP structures without pixel decoding, exposing structure.kind, row_length_field_size, row_byte_counts, compressed_payload_length, and uses_prediction.",
+      "title": "Image data structure parsing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.save"
+      ],
+      "text": "PsdImage.save preserves all unmodified sections, enabling lossless save-load cycles.",
+      "title": "Byte-exact round-trip saving"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.channelinformation",
+        "public_symbol:aspose_psd_foss.coreexceptions.notsupportedexception"
+      ],
+      "text": "ChannelInformation is read-only; writing raises NotSupportedException."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata"
+      ],
+      "text": "LayerMaskDataShort and LayerBlendingRangesData do not support mutations."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "format:input.psd"
+      ],
+      "text": "No pixel decoding or rendering is performed; only metadata and structure inspection is supported."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "format:input.psd",
+        "public_symbol:aspose_psd_foss.psdimage"
+      ],
+      "text": "Enables programmatic inspection of .psd/.psb files including document metadata, layers, channels, masks, blend modes, and image resources."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.psdimage"
+      ],
+      "text": "Supports byte-exact round-trip saving, preserving unmodified sections to enable lossless save-load cycles."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.streamcontainer.stream",
+        "public_symbol:aspose_psd_foss.streamcontainer.stream-2"
+      ],
+      "text": "Provides non-seekable stream support for loading PSD files from sources that do not support seeking."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.resourceblock"
+      ],
+      "text": "Exposes raw layer and resource structures for precise manipulation while preserving original byte layout where possible."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:repository",
+      "format:input.psd"
+    ],
+    "text": "Aspose.PSD FOSS for Python is a pure-Python, open-source library for reading, inspecting, and saving Adobe Photoshop .psd/.psb files without rendering."
+  },
+  "uncertainties": [
+    "Whether the library supports saving .psb (large document) files beyond reading them is not explicitly confirmed.",
+    "The exact set of supported color modes beyond what is implied by ColorModes is not listed.",
+    "Whether all layer resource types are fully parsed or only some are supported is not specified.",
+    "Whether the library supports saving to non-seekable streams is not stated.",
+    "The behavior of PsdImage.save when the input stream is non-seekable is not documented.",
+    "Whether the library supports saving with different compression types beyond what is read is not stated.",
+    "Whether the library supports saving with custom ICC profiles is not confirmed.",
+    "The extent of layer mask data mutation support beyond what is stated is unclear."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose_psd_foss.psdimage.load",
+        "public_symbol:aspose_psd_foss.psdimage.width",
+        "public_symbol:aspose_psd_foss.psdimage.height",
+        "public_symbol:aspose_psd_foss.psdimage.color_mode",
+        "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.layer_count"
+      ],
+      "name": "Load and inspect PSD file",
+      "text": "Load a .psd file using PsdImage.load, then inspect width, height, color_mode, compression, layer_count, and other metadata properties."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose_psd_foss.psdimage.layers",
+        "public_symbol:aspose_psd_foss.layers.layer"
+      ],
+      "name": "Enumerate layers and bounds",
+      "text": "Iterate over PsdImage.layers to access each Layer's name, bounds, opacity, visibility, and blend mode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.psdimage.save"
+      ],
+      "name": "Modify layer properties",
+      "text": "Change layer name, visibility, opacity, blend mode, or bounds; changes are tracked and preserved during save."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
+        "public_symbol:aspose_psd_foss.sections.imageresourcessection",
+        "public_symbol:aspose_psd_foss.resources.unknownresource"
+      ],
+      "name": "Inspect image resources",
+      "text": "Access ImageResourcesSection to parse known and unknown resources, including raw payloads."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.sections.imagedatastructure"
+      ],
+      "name": "Parse image data structures",
+      "text": "Read RLE or ZIP compressed image data without pixel decoding, exposing structure.kind, row_byte_counts, and compressed_payload_length."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage.save"
+      ],
+      "name": "Save modified PSD file",
+      "text": "Call PsdImage.save to write the file, preserving unmodified sections for byte-exact round-trip."
+    }
+  ]
+}
