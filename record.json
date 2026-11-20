@@ -5,7 +5,7 @@
   "provider_repository_id": 1243410151,
   "registry_revision": null,
   "active_transaction_id": "73005a405a354ba1ab1e4f184d4999f6",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-20T13:33:17.873185+00:00",
+    "resume_predicate": null,
+    "recovery_count": 2
+  },
   "lease": null,
   "last_transition": {
     "transition_id": "70b1bd8638a04191b0a98eb11ddd4887",
@@ -33,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 77,
+  "state_version": 78,
   "recent_trigger_dedup_keys": {
     "run:41133491255:aspose-page-foss/Aspose.Page-FOSS-for-Python": "1082f5334e0c493b9e75c474ee4418d7",
     "run:41137901672:aspose-page-foss/Aspose.Page-FOSS-for-Python": "96321df3d3564c3b87f763ac86d749d8",
@@ -61,5 +68,5 @@
     "run:44656351405:aspose-page-foss/Aspose.Page-FOSS-for-Python": "ebb895bf6e53494095db4b1734bab46d",
     "run:44665689609:aspose-page-foss/Aspose.Page-FOSS-for-Python": "73005a405a354ba1ab1e4f184d4999f6"
   },
-  "recovery_count": 1
+  "recovery_count": 2
 }
