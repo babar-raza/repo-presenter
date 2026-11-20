@@ -39,28 +39,75 @@
    "run_id": "44643554566",
    "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T08:16:27+00:00",
+   "classes": [
+    "job_error|job_error|LaneStepFailure:the_lane_step_ended"
+   ],
+   "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44701010580",
+   "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
+   "version_set": ""
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:11:28+00:00",
-  "classes": {},
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-20T08:16:27+00:00",
+  "classes": {
+   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
+    "example": "LaneStepFailure: the lane step ended failure and left no failure record",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "LaneStepFailure"
+    ],
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "upstream": ""
+   }
+  },
+  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+  "durable_state": "",
+  "exit_code": null,
+  "failure": {
+   "classification": "unknown",
+   "detail": "LaneStepFailure: the lane step ended failure and left no failure record",
+   "kind": "LaneStepFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "LaneStepFailure",
+    "message": "LaneStepFailure: the lane step ended failure and left no failure record",
+    "origin": {
+     "id": "LaneStepFailure",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
+    "source": "job",
+    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
-  "run_id": "44643554566",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44643554566",
+  "run_id": "44701010580",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44701010580",
   "schema_version": 1,
   "source_revision": "c844a467cf7f2503819b655f4d6ceaef91056c40",
-  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  "version_set": ""
  },
  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Cpp",
  "schema_version": 1
