@@ -81,25 +81,82 @@
    "run_id": "44746193463",
    "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T17:09:53+00:00",
+   "classes": [
+    "duplicate_opening_paragraph|authored_unit|the_q_unit_restates"
+   ],
+   "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44775277577",
+   "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:41:49+00:00",
-  "classes": {},
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-20T17:09:53+00:00",
+  "classes": {
+   "duplicate_opening_paragraph|authored_unit|the_q_unit_restates": {
+    "example": "Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "opening.opening"
+    ],
+    "rule": "duplicate_opening_paragraph",
+    "scope": "d3873161570e5e397e02a3c5a5cbce96e0ea8e27ed3a89b25e7e2c2af35a5639",
+    "scope_paths": [
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "the_q_unit_restates",
+    "upstream": ""
+   }
+  },
+  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_opening_paragraph [quality] blocks until rule duplicate_opening_paragraph no longer finds it (preserved='Aspose.OCR.FOSS for .NET is a free, open-source OCR library for .NET Framework 4.8,\\n.NET Standard 2.0, and .NET 8+. It detects text lines in raster images and PDF documents,\\nrecognizes Latin-script text, and returns both the recognized text and the pixel coordinates of\\nevery detected line. The detection, refinement, and recognition models are embedded in the\\nassembly and run locally through ONNX Runtime.' authored='Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.')",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "duplicate_opening_paragraph",
+    "message": "the 'opening' unit restates the inherited preserved paragraph placed beside it rather than adding genuinely new content",
+    "origin": {
+     "id": "opening.opening",
+     "kind": "authored_unit"
+    },
+    "quote": "Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.",
+    "rule": "duplicate_opening_paragraph",
+    "section_id": "",
+    "signature": "duplicate_opening_paragraph|authored_unit|the_q_unit_restates",
+    "source": "review",
+    "sub_rule": "the_q_unit_restates",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
-  "run_id": "44746193463",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44746193463",
+  "run_id": "44775277577",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44775277577",
   "schema_version": 1,
   "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
