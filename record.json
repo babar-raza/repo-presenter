@@ -105,121 +105,83 @@
    "run_id": "44745854509",
    "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T18:13:51+00:00",
+   "classes": [
+    "BC-07|unresolved|internal_wording"
+   ],
+   "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44787829770",
+   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:57:27+00:00",
+  "at": "2026-11-20T18:13:51+00:00",
   "classes": {
-   "llm:presentation|inherited_unit|documentation_resources": {
-    "example": "- **[Publishing guide](PUBLISHING.md)** \u2014 In this repository.\n- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java/issues).\n\n- **[Publishing guide](PUBLISHING.md)** \u2014 how releases are built and published to Maven Central. Searchin",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:084.list"
-    ],
-    "rule": "llm:presentation",
-    "scope": "60895f6dd20d06d53be3cad1083dc684807c413d0b9b61427eae10114d32248b",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "documentation_resources",
-    "upstream": ""
-   },
-   "llm:presentation|unresolved|documentation_resources": {
-    "example": "- **[Full API reference](https://reference.aspose.org/slides/java/)** \u2014 the complete, browsable reference (the API Reference section above covers the essentials). It covers all 238 public types; the [API Reference](#api-reference) section above covers the essentials.",
+   "BC-07|unresolved|internal_wording": {
+    "example": "the public README prints internal evidence or analysis wording: 'The getFontName method is a public symbol exposed by certain text-related classes to retrieve the name of a font used in a presentation.'",
     "findings": 1,
     "origin_kind": "unresolved",
     "origins": [
      "-"
     ],
-    "rule": "llm:presentation",
-    "scope": "a3d3c5735774f8f2b267b8d8ab2d999732b138caa37a54a9f4350f026b38a6ab",
+    "rule": "BC-07",
+    "scope": "65e18a01ca6186e3d75504d0ab3a73b25fec819c54a76183dc2d1cc3d6104455",
     "scope_paths": [
+     "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
      "src/repo_presenter/extractors",
      "src/repo_presenter/readme/composition",
      "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
+     "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "documentation_resources",
+    "sub_rule": "internal_wording",
     "upstream": ""
    }
   },
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; S2-F01 [quality] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a quality claim); S2-F02 [quality] in documentation_resources blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a quality claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-07; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "S2-F01",
-    "message": "The unit duplicates the 'Publishing guide' link twice with conflicting descriptions, and includes unrelated cross-platform repository links that break the developer journey.",
-    "origin": {
-     "id": "inherited_unit:084.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "- **[Publishing guide](PUBLISHING.md)** \u2014 In this repository.\n- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-slides-foss/Aspose.Slides-FOSS-for-Java/issues).\n\n- **[Publishing guide](PUBLISHING.md)** \u2014 how releases are built and published to Maven Central. Searchin",
-    "rule": "llm:presentation",
-    "section_id": "documentation_resources",
-    "signature": "llm:presentation|inherited_unit|documentation_resources",
-    "source": "review",
-    "sub_rule": "documentation_resources",
-    "upstream": ""
-   },
-   {
-    "label": "S2-F02",
-    "message": "Line 769 contains a redundant self-reference ('the API Reference section above covers the essentials') that repeats content already stated in the inherited README without adding value.",
+    "label": "BC-07",
+    "message": "the public README prints internal evidence or analysis wording: 'The getFontName method is a public symbol exposed by certain text-related classes to retrieve the name of a font used in a presentation.'",
     "origin": {
      "id": "-",
      "kind": "unresolved"
     },
-    "quote": "- **[Full API reference](https://reference.aspose.org/slides/java/)** \u2014 the complete, browsable reference (the API Reference section above covers the essentials). It covers all 238 public types; the [API Reference](#api-reference) section above covers the essentials.",
-    "rule": "llm:presentation",
-    "section_id": "documentation_resources",
-    "signature": "llm:presentation|unresolved|documentation_resources",
-    "source": "review",
-    "sub_rule": "documentation_resources",
+    "quote": "",
+    "rule": "BC-07",
+    "section_id": "",
+    "signature": "BC-07|unresolved|internal_wording",
+    "source": "validation",
+    "sub_rule": "internal_wording",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "F01",
-    "outcome": "unrepairable",
-    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
-    "section_id": "scope_limitations",
-    "stage": null
-   },
-   {
-    "facts_defects": [],
-    "label": "F02+F03+F04+F05+F06",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:023.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"JDK 21 or later is required, and the library has no runtime dependencies beyond the JDK itself.\". Cite the supporting fact IDs or place the unit; do not omit it without a cited reason",
-    "section_id": "development_testing",
-    "stage": "S4"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-  "run_id": "44745854509",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745854509",
+  "run_id": "44787829770",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44787829770",
   "schema_version": 1,
   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
