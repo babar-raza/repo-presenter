@@ -66,11 +66,23 @@
    "run_id": "44746337326",
    "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T17:10:01+00:00",
+   "classes": [
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+   "findings": 9,
+   "outcome": "failure",
+   "run_id": "44775343067",
+   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:51:15+00:00",
+  "at": "2026-11-20T17:10:01+00:00",
   "classes": {
    "BC-17|inherited_unit|technical_content": {
     "example": "inherited_unit:010.list holds api_identifiers 'getBitsPerChannel()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
@@ -80,7 +92,7 @@
      "inherited_unit:010.list"
     ],
     "rule": "BC-17",
-    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
+    "scope": "823b12355e798b8483b7482a00374e0971659e2d7e638227c120558a42f37696",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -95,7 +107,7 @@
     "upstream": ""
    }
   },
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
@@ -242,10 +254,18 @@
    }
   ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
    {
     "facts_defects": [],
     "label": "BC-17",
@@ -256,8 +276,8 @@
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
-  "run_id": "44746337326",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44746337326",
+  "run_id": "44775343067",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44775343067",
   "schema_version": 1,
   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
