@@ -36,7 +36,7 @@ from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, replace
 
 from repo_presenter.core.facts import Fact, FactsDocument
-from repo_presenter.readme.review.derivation import Derivation
+from repo_presenter.readme.review.derivation import Derivation, flag_is_about_count
 from repo_presenter.readme.review.findings import (
     CLEARANCES_FOR_KIND,
     PROVENANCE_CLEARANCES_FOR_KIND,
@@ -241,6 +241,12 @@ def derived_from_supported_facts(finding: Finding, context: ClearanceContext) ->
     derived = context.derive(lines)
     if derived is None or not lines <= derived.clearable:
         return None
+    rows = context.candidate_readme.splitlines()
+    if any(
+        number in derived.corrected and not flag_is_about_count(finding.message, rows[number - 1])
+        for number in lines
+    ):
+        return None  # BL-543: a flag on another statement of a count-corrected paragraph stays
     evidence = tuple(
         f"line {number} is printed from SUPPORTED facts by a deterministic stage (zero-call re-derivation); "
         "no register row or claim detector refutes it; "

@@ -764,6 +764,17 @@ def _extra_bullet(fact: Fact) -> str:
     return f"- `{fact.value}`{suffix}"
 
 
+def no_required_dependencies_line(marker: Fact) -> str | None:
+    """The line printed under "Required Package Dependencies" when the manifest declares none: the
+    ``dependency:none`` fact's own evidence (path and detail), word for word. ``None`` when the fact is not
+    SUPPORTED or carries no evidence. One function for the renderer and for the review's re-derivation
+    (``review.derivation.rederive_lane_r``), so the line the re-derivation clears is exactly the one printed."""
+    if marker.polarity != "SUPPORTED" or not marker.evidence:
+        return None
+    clause = marker.evidence[0].detail or "the manifest declares none"
+    return f"No required third-party package dependencies; in `{marker.evidence[0].path}`, {clause}."
+
+
 def _dependencies(context: RenderContext) -> list[str]:
     """The dependency snapshot in four subsections."""
     facts = context.supported("dependency")
@@ -780,13 +791,9 @@ def _dependencies(context: RenderContext) -> list[str]:
     if required:
         lines.extend(["### Required Package Dependencies", ""])
         lines.extend(f"- `{fact.value}`" for fact in required)
-    elif marker is not None and marker.polarity == "SUPPORTED" and marker.evidence:
-        clause = marker.evidence[0].detail or "the manifest declares none"
+    elif marker is not None and no_required_dependencies_line(marker) is not None:
         lines.extend(["### Required Package Dependencies", ""])
-        lines.append(
-            "No required third-party package dependencies; in "
-            f"`{marker.evidence[0].path}`, {clause}."
-        )
+        lines.append(no_required_dependencies_line(marker) or "")
     else:
         # No manifest declared a dependency and no `dependency:none` marker exists (PSD Python has
         # no dependency manifest at all): the published README still prints a Dependencies section
