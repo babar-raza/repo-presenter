@@ -123,11 +123,24 @@
    "run_id": "44644561314",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T01:57:25+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|unresolved|scope_limitations"
+   ],
+   "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44656493448",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T00:29:05+00:00",
+  "at": "2026-11-20T01:57:25+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
     "example": "The public entry point is the `aspose_psd_foss` package. It provides the `aspose_psd_foss.PsdImage` class to load, inspect, and save Adobe Photoshop files, and the `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
@@ -137,7 +150,7 @@
      "api_reference.intro"
     ],
     "rule": "llm:factuality",
-    "scope": "a0c7e3b754582395fb2659e845651d9bae34f139b4e0b5558f10df6eaa6d5f7a",
+    "scope": "fb4d311493cc210ff42ce92cfb7d796c660319cef2b4e1c71fc29ee8255ee8c9",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -152,27 +165,6 @@
     "sub_rule": "api_reference",
     "upstream": ""
    },
-   "llm:factuality|renderer_fact|api_reference": {
-    "example": "Gets or sets the Aspose.PSD-compatible API version number.",
-    "findings": 1,
-    "origin_kind": "renderer_fact",
-    "origins": [
-     "public_symbol:aspose_psd_foss.psdimage.version"
-    ],
-    "rule": "llm:factuality",
-    "scope": "c85fc685a4f89d4115da4604759bf75cacd4be2435b5e6a54ab3310b12b9f4f3",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition/renderer.py",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
    "llm:factuality|unresolved|scope_limitations": {
     "example": "See [Aspose.PSD for Python \u2014 Enterprise Edition](https://products.aspose.com/psd/python-net/). It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment layers, and enterprise-grade features such as m",
     "findings": 1,
@@ -181,7 +173,7 @@
      "-"
     ],
     "rule": "llm:factuality",
-    "scope": "da63402f2530f8eec8886174b1dbfedabc22a68726f57744f149c2e66206f7ea",
+    "scope": "695f96044b947d3be353603554160a9982a40ee9ded641546161660dee036cd1",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -196,34 +188,19 @@
     "upstream": ""
    }
   },
-  "code": "929c09541cf92165124c9dbdaba7c1990ab569c422613bba25097550bc6426b2",
+  "code": "c961ec60efcbee7b6ccf72c9b111aefb4601cf71042111d5ac59e6978d7a836a",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [contradiction] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [contradiction] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
     "label": "F01",
-    "message": "The `aspose_psd_foss.PsdImage.version` property returns the Aspose.PSD-compatible API version number.",
-    "origin": {
-     "id": "public_symbol:aspose_psd_foss.psdimage.version",
-     "kind": "renderer_fact"
-    },
-    "quote": "Gets or sets the Aspose.PSD-compatible API version number.",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|renderer_fact|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "The `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
+    "message": "The public entry point is the `aspose_psd_foss` package. It provides the `aspose_psd_foss.PsdImage` class to load, inspect, and save Adobe Photoshop files, and the `aspose_psd_foss.layers.layer` class to represent individual layers within a PSD document.",
     "origin": {
      "id": "api_reference.intro",
      "kind": "authored_unit"
@@ -237,7 +214,7 @@
     "upstream": ""
    },
    {
-    "label": "F03",
+    "label": "F02",
     "message": "It extends Aspose.PSD FOSS for Python by adding support for additional file formats, advanced layer editing capabilities including layer masks and adjustment layers, and enterprise-grade features such as multi-threaded processing and cloud-based rendering.",
     "origin": {
      "id": "-",
@@ -253,13 +230,13 @@
    }
   ],
   "lane": "R",
-  "main_sha": "7f39a29b58478a4c477bae25b2af591edfa48057",
+  "main_sha": "82b8ccbac847b04cfc0b797f5099c0b1315cf2ab",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F04",
+    "label": "F03",
     "outcome": "unrepairable",
     "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
     "section_id": "scope_limitations",
@@ -267,24 +244,16 @@
    },
    {
     "facts_defects": [],
-    "label": "F01+F02+F03",
-    "outcome": "escalated",
-    "reason": "the revision would leave hub:public_symbol:aspose_psd_foss.psdimage, hub:public_symbol:aspose_psd_foss.psdimage.active_layer, hub:public_symbol:aspose_psd_foss.psdimage.has_color_mode_data, hub:public_symbol:aspose_psd_foss.psdimage.has_icc_profile, hub:public_symbol:aspose_psd_foss.psdimage.has_image_resources, hub:public_symbol:aspose_psd_foss.psdimage.has_layers, hub:public_symbol:aspose_psd_foss.psdimage.has_transparency_data, hub:public_symbol:aspose_psd_foss.psdimage.header, hub:public_sym",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01+F02+F03",
+    "label": "F01+F02",
     "outcome": "repaired",
     "reason": "",
-    "section_id": null,
-    "stage": "S5"
+    "section_id": "api_reference",
+    "stage": "S6"
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "44644561314",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44644561314",
+  "run_id": "44656493448",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44656493448",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
