@@ -1,6 +1,7 @@
 {
   "additional_example_ids": [
     "example:003",
+    "example:004",
     "example:005",
     "example:006",
     "example:007",
@@ -14,48 +15,107 @@
     {
       "fact_ids": [
         "public_symbol:aspose.note.document",
-        "public_symbol:aspose.note.page",
-        "public_symbol:aspose.note.pagehistory"
+        "example:002",
+        "example:004"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.document"
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.pagehistory",
+        "public_symbol:aspose.note.title"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.page"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.textrun",
-        "public_symbol:aspose.note.textstyle"
+        "public_symbol:aspose.note.textstyle",
+        "example:009",
+        "example:011"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.richtext"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.note.image",
-        "public_symbol:aspose.note.attachedfile"
+        "example:003"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.image"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.note.table",
-        "public_symbol:aspose.note.tablerow",
-        "public_symbol:aspose.note.tablecell"
+        "example:005"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.table"
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.note.attachedfile",
+        "example:006"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.attachedfile"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose.note.saveformat",
-        "public_symbol:aspose.note.saving"
+        "format:output.pdf",
+        "example:002"
       ],
       "symbol_fact_id": "public_symbol:aspose.note.saveformat"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.saving",
+        "example:010"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.saving"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.documentvisitor",
+        "example:008"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.documentvisitor"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.numberlist",
+        "example:012"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.numberlist"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.notetag",
+        "example:007"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.notetag"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.exceptions",
+        "public_symbol:aspose.note.filecorruptedexception",
+        "public_symbol:aspose.note.incorrectpasswordexception",
+        "public_symbol:aspose.note.unsupportedfileformatexception",
+        "public_symbol:aspose.note.unsupportedsaveformatexception"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.note.exceptions"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
-      "Parse OneNote documents from file or stream",
-      "Traverse document tree and extract content",
-      "Export pages to PDF with options",
-      "Extract images and attached files"
+      "Parse OneNote documents",
+      "Extract rich text and formatting",
+      "Extract images and attachments",
+      "Inspect tables and tags",
+      "Export to PDF",
+      "Traverse document tree",
+      "Inspect numbered lists",
+      "Handle document metadata"
     ],
     "input_format_ids": [
       "format:input.one"
@@ -67,28 +127,21 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "format:input.one",
+        "example:002",
+        "example:003",
         "example:004",
         "public_symbol:aspose.note.document",
-        "public_symbol:aspose.note.fileformat"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.note.document"
-      ],
-      "title": "Parse OneNote documents from file or stream"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.note.document",
-        "public_symbol:aspose.note.documentvisitor",
-        "public_symbol:aspose.note.node",
         "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.outline",
+        "public_symbol:aspose.note.outlineelement",
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.image",
         "public_symbol:aspose.note.table",
         "public_symbol:aspose.note.attachedfile"
       ],
       "shared_fact_ids": [
+        "example:002",
+        "example:003",
         "public_symbol:aspose.note.attachedfile",
         "public_symbol:aspose.note.document",
         "public_symbol:aspose.note.image",
@@ -96,32 +149,20 @@
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.table"
       ],
-      "title": "Traverse document tree and extract content"
+      "title": "Parse OneNote documents"
     },
     {
       "fact_ids": [
-        "example:009",
-        "example:011",
         "public_symbol:aspose.note.richtext",
         "public_symbol:aspose.note.textrun",
-        "public_symbol:aspose.note.textstyle"
+        "public_symbol:aspose.note.textstyle",
+        "example:009",
+        "example:011"
       ],
       "shared_fact_ids": [
         "public_symbol:aspose.note.richtext"
       ],
-      "title": "Extract rich text with per-run formatting"
-    },
-    {
-      "fact_ids": [
-        "example:002",
-        "example:010",
-        "format:output.pdf",
-        "public_symbol:aspose.note.saveformat",
-        "public_symbol:aspose.note.saving",
-        "dependency:optional.pdf.reportlab-3.6"
-      ],
-      "shared_fact_ids": [],
-      "title": "Export pages to PDF with options"
+      "title": "Extract rich text and formatting"
     },
     {
       "fact_ids": [
@@ -131,36 +172,70 @@
         "public_symbol:aspose.note.attachedfile"
       ],
       "shared_fact_ids": [
+        "example:003",
         "public_symbol:aspose.note.attachedfile",
         "public_symbol:aspose.note.image"
       ],
-      "title": "Extract images and attached files"
+      "title": "Extract images and attachments"
     },
     {
       "fact_ids": [
         "example:005",
         "example:007",
-        "example:012",
         "public_symbol:aspose.note.table",
-        "public_symbol:aspose.note.notetag",
-        "public_symbol:aspose.note.numberlist"
+        "public_symbol:aspose.note.tablerow",
+        "public_symbol:aspose.note.tablecell",
+        "public_symbol:aspose.note.tablecolumn",
+        "public_symbol:aspose.note.notetag"
       ],
       "shared_fact_ids": [
         "public_symbol:aspose.note.table"
       ],
-      "title": "Inspect tables, tags, and numbered lists"
+      "title": "Inspect tables and tags"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.note.document",
-        "public_symbol:aspose.note.pagehistory",
-        "public_symbol:aspose.note.page"
+        "example:002",
+        "example:010",
+        "public_symbol:aspose.note.saveformat",
+        "public_symbol:aspose.note.saving",
+        "format:output.pdf"
       ],
       "shared_fact_ids": [
+        "example:002"
+      ],
+      "title": "Export to PDF"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.node",
         "public_symbol:aspose.note.document",
+        "public_symbol:aspose.note.documentvisitor",
+        "example:008"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:aspose.note.document"
+      ],
+      "title": "Traverse document tree"
+    },
+    {
+      "fact_ids": [
+        "example:012",
+        "public_symbol:aspose.note.numberlist"
+      ],
+      "shared_fact_ids": [],
+      "title": "Inspect numbered lists"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.note.page",
+        "public_symbol:aspose.note.pagehistory",
+        "public_symbol:aspose.note.title"
+      ],
+      "shared_fact_ids": [
         "public_symbol:aspose.note.page"
       ],
-      "title": "Support for page history and revision metadata"
+      "title": "Handle document metadata"
     }
   ],
   "deviations": [
@@ -168,71 +243,43 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "section_id": "api_reference",
-      "text": "The 'Detailed Member Reference' heading and its content are omitted; member details are covered by the public_symbol facts and key capabilities."
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README is omitted per disposition; the section renders a deterministic flowchart instead."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "quick_start",
+      "text": "The first Quick Start example (load and inspect) is omitted per disposition; only the PDF export example is included."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "additional_examples",
+      "text": "The HTML details wrapper is omitted per disposition; examples are rendered directly under headings."
     },
     {
       "fact_ids": [
         "identity:ecosystem"
       ],
       "section_id": "api_reference",
-      "text": "The 'Document and Traversal' heading and its content are omitted; Document, PageHistory, and Node are covered by the public_symbol facts."
+      "text": "The HTML details wrapper is omitted per disposition; the API reference is rendered directly."
     },
     {
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "section_id": "api_reference",
-      "text": "The 'Document Structure' heading and its content are omitted; Page, Title, Outline, and OutlineElement are covered by the public_symbol facts."
+      "section_id": "development_testing",
+      "text": "The PDF golden tests HTML details wrapper is omitted per disposition; relevant content is included directly."
     },
     {
       "fact_ids": [
-        "identity:ecosystem"
+        "public_symbol:aspose.note.exceptions.asposenoteerror"
       ],
-      "section_id": "api_reference",
-      "text": "The 'Content' heading and its content are omitted; RichText, TextRun, ParagraphStyle, TextStyle, Image, AttachedFile, Table, and more are covered by the public_symbol facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The 'Load and Save Options' heading and its content are omitted; LoadOptions, SaveOptions, and PdfSaveOptions are covered by the public_symbol facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The 'Licensing' heading and its content are omitted; License and Metered are covered by the public_symbol facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The 'Enumerations' heading and its content are omitted; FileFormat, SaveFormat, HorizontalAlignment, NodeType, and TagStatus are covered by the public_symbol facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The 'Exceptions' heading and its content are omitted; exception types are covered by the public_symbol facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The 'Saving' heading and its content are omitted; PdfSaveOptions and SaveOptions are covered by the public_symbol facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The 'Core API' table is omitted; the public_symbol facts cover the essential classes."
+      "section_id": "scope_limitations",
+      "text": "The base exception name is corrected from AsposeNoteError to AsposeNoteError per evidence."
     }
   ],
   "flagship_example_id": "example:003",
@@ -256,11 +303,87 @@
     {
       "link_fact_id": "link_target:026",
       "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:029",
+      "section_id": "additional_examples"
+    },
+    {
+      "link_fact_id": "link_target:030",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:031",
+      "section_id": "third_party_notices"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "dependencies"
     }
   ],
   "material_limitations": [],
   "quick_start_example_id": "example:002",
-  "second_quick_start_example_id": "example:004",
+  "second_quick_start_example_id": null,
   "sections": [
     {
       "include": true,
