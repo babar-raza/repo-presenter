@@ -219,11 +219,25 @@
    "run_id": "44701575389",
    "source_revision": "aa648d79d0df7f985b0a0d7c6396d6dde94e4f30",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-20T14:18:46+00:00",
+   "classes": [
+    "BC-07|unresolved|dangling_reference_points_q",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "live_readme_loss|inherited_unit|code_block"
+   ],
+   "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+   "findings": 7,
+   "outcome": "failure",
+   "run_id": "44745223245",
+   "source_revision": "aa648d79d0df7f985b0a0d7c6396d6dde94e4f30",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T08:46:28+00:00",
+  "at": "2026-11-20T14:18:46+00:00",
   "classes": {
    "BC-07|unresolved|dangling_reference_points_q": {
     "example": "dangling reference: points 'below' but nothing follows it in this section: '- `actions`: What the document does around saving, printing and closing (/AA). - `add_attachment`: Embed *content* as a document-level file '",
@@ -233,7 +247,7 @@
      "-"
     ],
     "rule": "BC-07",
-    "scope": "2cf9719b2996f82cbddb7e544312b844d042cfcf299a845da98d774f4966e65d",
+    "scope": "5eb2632186b1e4aa8f9bfeb77d573a255dc3f9d03b69dac768094f3711534dae",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -249,53 +263,6 @@
     "sub_rule": "dangling_reference_points_q",
     "upstream": ""
    },
-   "BC-14|unresolved|the_readme_says_its": {
-    "example": "the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-14",
-    "scope": "2cf9719b2996f82cbddb7e544312b844d042cfcf299a845da98d774f4966e65d",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
-   "claim_contradiction|unresolved|the_readme_says_its": {
-    "example": "and delete workflows. 388 public types are organized by module below.",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "COMPOSING"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "9d8718c0db5adee11ad8279f1c2bb0c74b001f365c64471363b26f6cfe77f4f0",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve": {
     "example": "```python\nwith Document(\"manual.pdf\") as document:\n    document.export_bookmarks_csv(\"bookmarks.csv\", encoding=\"utf-8-sig\")\n\nwith Document(\"updated-manual.pdf\") as document:\n    added = document.import_bookmarks_csv(\"bookmarks.csv\", replace=True)\n    document.save(\"with-bookmarks.pdf\")\n```",
     "findings": 5,
@@ -308,7 +275,7 @@
      "inherited_unit:244.code_block"
     ],
     "rule": "disposition_coverage",
-    "scope": "18578a6ef73fe6ab81faedb8b05faa98fe53e7e457a03d18fb2845045c9df4ce",
+    "scope": "92d443dc513ef067be6b5b533735b9c59e5a97cbe8706b8c502666525a92fea9",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -329,7 +296,7 @@
      "inherited_unit:280.list"
     ],
     "rule": "live_readme_loss",
-    "scope": "18578a6ef73fe6ab81faedb8b05faa98fe53e7e457a03d18fb2845045c9df4ce",
+    "scope": "92d443dc513ef067be6b5b533735b9c59e5a97cbe8706b8c502666525a92fea9",
     "scope_paths": [
      "prompts",
      "src/repo_presenter/cascade.py",
@@ -343,31 +310,16 @@
     "upstream": ""
    }
   },
-  "code": "a87fbec7f23110d113526f5a33af92e45d6906a1af669bde700fd20a76f44786",
+  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 7 blocking finding(s) of 7; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:196.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:199.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_cove",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:196.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:199.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:220.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds i",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
-   {
-    "label": "claim_contradiction",
-    "message": "line 2859 (COMPOSING): the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
-    "origin": {
-     "id": "COMPOSING",
-     "kind": "unresolved"
-    },
-    "quote": "and delete workflows. 388 public types are organized by module below.",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|unresolved|the_readme_says_its",
-    "source": "review",
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
-   },
    {
     "label": "disposition_coverage",
     "message": "inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
@@ -472,31 +424,16 @@
     "source": "validation",
     "sub_rule": "dangling_reference_points_q",
     "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|unresolved|the_readme_says_its",
-    "source": "validation",
-    "sub_rule": "the_readme_says_its",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "f99c724f1acb81a624ef6bf61809b5a0be1c9d1c",
+  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4+disposition_coverage:5",
+    "label": "disposition_coverage:0+disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4",
     "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:142.code_block: uncited_prose_omit: OMIT_UNSUPPORTED on a code_block needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"```python\\nwith Document(\\\"manual.pdf\\\") as document:\\n    document.export_bookmarks_csv(\\\"bookmarks.csv\\\", encoding=\\\"utf-8-sig\\\")\\n\\nwith Document(\\\"updated-manual.pdf\\\") as document:\\n    added ",
     "section_id": null,
@@ -506,30 +443,30 @@
     "facts_defects": [],
     "label": "BC-14",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README says its count of public types is listed in what follows, but the table rows that follow list only 266; state the count of what is listed, or list every type",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README calls `PdfExtractor.password` a method ('The aspose_pdf.PdfExtractor class extracts text, images, and attachments from PDFs with bind_pdf, extract_text, get_text, extract_image, get_next_image, extract_attachment, get_attach_names, close, dispose, password, and has_next_image methods.'), but the facts record it as a property; call it by its k",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README calls `PdfExtractor.password` a method ('The aspose_pdf.PdfExtractor class extracts text, images, and attachments from PDFs with bind_pdf, extract_text, get_text, extract_image, get_next_image, extract_attachment, get_attach_names, close, dispose, password, and has_next_image methods.'), but the facts record it as a property; call it by its k",
     "section_id": "api_reference",
     "stage": "S6"
    },
    {
     "facts_defects": [],
     "label": "BC-07",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "outcome": "repaired",
+    "reason": "plan-level drop of hub:public_symbol:aspose_pdf.lowcode (blanked by the repair)",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "claim_contradiction:0",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:258.paragraph: uncited_prose_omit: OMIT_UNSUPPORTED on a paragraph needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"The `Document` class is the central entry point \u2014 it exposes `pages`, `form`, `outlines`, and\\n`tagged_content` for structural editing alongside `encrypt`, `decrypt`, `merge`, `optimize`, and\\n`flatt",
-    "section_id": "api_reference",
-    "stage": "S4"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
-  "run_id": "44701575389",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44701575389",
+  "run_id": "44745223245",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745223245",
   "schema_version": 1,
   "source_revision": "aa648d79d0df7f985b0a0d7c6396d6dde94e4f30",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
