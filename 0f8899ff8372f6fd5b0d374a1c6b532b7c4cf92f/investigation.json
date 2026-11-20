@@ -1,0 +1,177 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "package:target_framework",
+      "dependency:none"
+    ],
+    "text": "Developers needing fast, lightweight image format detection and header metadata for .NET applications without pulling in full imaging libraries."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging",
+        "package:name"
+      ],
+      "text": "Detects 14 image formats by reading file signatures only, returning ImageFormat values without decoding pixels.",
+      "title": "Format detection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging",
+        "package:name"
+      ],
+      "text": "Reads width, height, bit depth, and frame count directly from headers for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF.",
+      "title": "Header metadata extraction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "Counts frames in animated formats: APNG via acTL, WebP via ANMF chunks, GIF via image descriptors, TIFF via IFD chain, and bundled DJVU via FORM:DJVU components.",
+      "title": "Frame counting"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "Parses Implicit VR Little Endian and Explicit VR Little/Big Endian DICOM transfer syntaxes, reading Rows, Columns, and BitsAllocated from the dataset.",
+      "title": "DICOM support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "Provides async entry points ProbeAsync and ProbeFileAsync for non-blocking image probing on ASP.NET threads.",
+      "title": "Async probing"
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:name"
+      ],
+      "text": "No required third-party package dependencies; all format parsing is implemented natively within the library.",
+      "title": "Zero dependencies"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Only performs format detection and header parsing; does not decode, render, edit, or convert pixel data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "Non-placeable WMF is detected but yields no width/height since its header lacks a bounding rectangle."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "DICOM parsing stops at the first undefined-length element, such as a sequence or encapsulated pixel data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "FrameCount returns null for DICOM, AVIF, and HEIC/HEIF in current implementation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "CDR support is planned but not yet implemented; no CdrFormatHandler exists in the source tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss",
+        "public_symbol:aspose.imaging"
+      ],
+      "text": "Indirect (multi-file) DJVM and truncated bundled DJVU return null for FrameCount."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:dotnet",
+        "package:name",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Avoids full image decoding just to determine format and basic properties like dimensions and bit depth."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Provides format detection and header parsing for less common formats like PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF in a single library."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "text": "Enables non-blocking image probing via async entry points suitable for ASP.NET request threads."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:name",
+      "public_symbol:aspose.imaging.foss"
+    ],
+    "text": "Aspose.Imaging.Foss is a zero-dependency .NET library for detecting image formats and reading header metadata without decoding pixels."
+  },
+  "uncertainties": [
+    "The exact set of formats supported for frame counting is not fully enumerated beyond APNG, WebP, GIF, TIFF, and DJVU.",
+    "Whether AVIF grid images report tile or full-canvas dimensions depends on presence of ispe, pitm, and ipma associations.",
+    "The behavior of Probe on malformed headers for less common formats like DJVU or HEIC is not fully specified beyond returning null for missing fields.",
+    "The handling of truncated streams for formats like PSD or EMF is not detailed beyond propagating stream errors.",
+    "The exact behavior of DetectFormat on non-seekable streams for formats with variable-length headers is not specified.",
+    "The scope of DICOM compressed transfer syntaxes supported is not fully detailed beyond common ones.",
+    "The behavior of Probe when encountering multiple undefined-length elements in DICOM is not specified.",
+    "The exact conditions under which AVIF is detected via mif1/mif2 major brands are not fully detailed."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "install_command:dotnet"
+      ],
+      "name": "Build and test",
+      "text": "Clone the repository, build the solution with dotnet build, and run tests with dotnet test."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:ci-matrix"
+      ],
+      "name": "CI validation",
+      "text": "Continuous integration runs on Ubuntu and Windows using workflows in .github/workflows/."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow"
+      ],
+      "name": "Release publishing",
+      "text": "Tagged pushes trigger .github/workflows/release.yml to build and publish the package."
+    }
+  ]
+}

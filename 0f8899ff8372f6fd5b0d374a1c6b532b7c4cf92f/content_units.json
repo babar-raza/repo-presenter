@@ -1,0 +1,171 @@
+{
+  "omitted": [
+    {
+      "fact_id": "build_test_asset:test-command",
+      "reason": "The opening section does not describe build or test commands; that belongs in a Development and Testing section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "install_command:dotnet",
+      "reason": "The opening section does not describe installation steps; that belongs in an Installation section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.imaging",
+      "reason": "The public symbol Aspose.Imaging is not referenced in the opening; only Aspose.Imaging.Foss is used by the library's public API.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:047.list",
+      "reason": "The list of members and constructors for ImageProbe and ImageInfo is already rendered by the renderer in the hub slot; this unit's prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:060.paragraph",
+      "reason": "The license information is unrelated to the commercial product's additional capabilities and is not cited by any capability unit.",
+      "section": "enterprise_relationship"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:target_framework",
+        "public_symbol:aspose.imaging.foss",
+        "dependency:none",
+        "inherited_unit:011.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Imaging FOSS for .NET reads and writes raster and vector image formats including JPEG, PNG, BMP, GIF, TIFF, PSD, EMF, WMF, and DICOM. It converts images between these formats and inspects image headers to obtain dimensions, bit depth, and frame count without fully decoding the image. The library covers formats such as PSD, EMF/WMF, and DICOM that lack equivalent support in other .NET FOSS image libraries. It targets netstandard2.0 and net8.0 and has no external dependencies."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "Detects image formats by reading only the file's signature bytes and returning an ImageFormat value, so identifying a file never requires pulling in a full imaging stack."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "Reads a format's real header fields directly into an ImageInfo — width, height, bit depth, and frame count — for PNG, JPEG, GIF, BMP, WEBP, ICO, TIFF, PSD, EMF, WMF, DICOM, DJVU, AVIF, and HEIC/HEIF, as a free open source .NET image manipulation API with no decode step."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "Counts frames by reading the declared animation frame count from APNG and counting frame chunks in animated WebP, while GIF uses image descriptors, ICO uses the directory count, TIFF follows its IFD chain, and bundled DJVU counts FORM:DJVU page components."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "Parses DICOM files with Implicit VR Little Endian and Explicit VR Little/Big Endian transfer syntaxes, including common compressed ones, and reads Rows, Columns, and BitsAllocated directly from the data set, stopping rather than guessing if it reaches a sequence or encapsulated pixel data element with an undefined length first."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "Provides both synchronous and async entry points for the same operation — ProbeFile/ProbeFileAsync and Probe/ProbeAsync — so a probe can run on an ASP.NET request thread without blocking it."
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:name"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "Has no external dependencies, requiring only the netstandard2.0 or net8.0 runtime."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:044.paragraph",
+        "package:name",
+        "package:target_framework",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "Aspose.Imaging FOSS for .NET targets netstandard2.0;net8.0. The library's single entry point is ImageProbe, which returns an ImageFormat value and an ImageInfo result for every supported format."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "public_symbol:aspose.imaging",
+        "public_symbol:aspose.imaging.foss"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.imaging.foss",
+      "text": "Aspose.Imaging FOSS for .NET provides ImageProbe with static methods DetectFormat, Probe, ProbeFile, ProbeAsync, and ProbeFileAsync to inspect image headers and return ImageInfo objects containing Format, Width, Height, BitDepth, and FrameCount."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:053.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds full decoding, editing, rendering, and conversion across a much broader format range."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageformat",
+      "text": "ImageFormat class lists the supported image formats: Avif, Bmp, Dicom, DjVu, Emf, Gif, Heic, Ico, Jpeg, Png, Psd, and Tiff."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageinfo",
+      "text": "ImageInfo class holds read-only properties for an image's Format, Width, Height, BitDepth, and FrameCount, and provides a constructor to create an instance."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.imaging.foss.imageprobe"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.imaging.foss.imageprobe",
+      "text": "ImageProbe class provides methods DetectFormat, Probe, ProbeAsync, ProbeFile, and ProbeFileAsync to inspect image data and return an ImageInfo instance."
+    }
+  ]
+}
