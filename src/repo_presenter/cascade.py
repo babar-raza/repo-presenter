@@ -1233,6 +1233,14 @@ def _restore_lost_content(
         if not _strictly_fewer_failures(blocking_failures(settled.validation), failing) or len(
             verdict.blocking_findings
         ) > len(settled.verdict.blocking_findings):
+            # Observation only (BL-511): a discarded restore used to leave no trace in the log, so the
+            # losses it would have cleared looked like losses no restore could answer.
+            print(
+                f"restore: {len(restored)} unit(s) restored but discarded, not a strict improvement: "
+                f"blocking details {sum(len(c.get('details') or []) for c in blocking_failures(settled.validation))}"
+                f" -> {sum(len(c.get('details') or []) for c in failing)}",
+                file=sys.stderr,
+            )
             return discarded()
     elif require_clean_review and verdict.blocking_findings:
         return settled  # the S9 loop still has review defects to repair; write nothing yet
