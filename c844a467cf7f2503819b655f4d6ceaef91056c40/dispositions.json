@@ -57,7 +57,7 @@
         "link_target:product.homepage",
         "package:cxx_standard"
       ],
-      "rationale": "The badge row is rendered deterministically by the badges section from license and C++17 facts.",
+      "rationale": "The badge row is rendered deterministically by the badges section.",
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
@@ -67,10 +67,9 @@
         "link_target:005",
         "link_target:006",
         "link_target:product.banner",
-        "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The banner image links to the Aspose product page; moved to enterprise_relationship as a verified product illustration.",
+      "rationale": "The banner image links to the Aspose product homepage and is supported by verified product links.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
@@ -83,7 +82,7 @@
         "dependency:none",
         "public_symbol:aspose.email.foss"
       ],
-      "rationale": "The paragraph's substance is covered by the product_summary and problems_solved facts; rewritten for the opening section.",
+      "rationale": "The paragraph matches the product summary and is supported by multiple facts; it belongs in the opening.",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -97,7 +96,7 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The Navigation heading is rendered deterministically by the navigation section.",
+      "rationale": "The Navigation heading is rendered by the navigation section; the list below is also superseded.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
@@ -120,18 +119,16 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The At a Glance heading is rendered deterministically by the at_a_glance section.",
+      "rationale": "The At a Glance heading is rendered by the at_a_glance section.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
       "destination_section": "at_a_glance",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose",
-        "public_symbol:aspose.email",
-        "public_symbol:aspose.email.foss"
+        "identity:ecosystem"
       ],
-      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
+      "rationale": "The Mermaid diagram is superseded by the deterministic 'at_a_glance' section, which will render exactly one Mermaid flowchart based on verified inputs and the '",
       "unit_id": "inherited_unit:008.code_block"
     },
     {
@@ -140,48 +137,67 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Key Capabilities heading is rendered deterministically by the key_capabilities section.",
+      "rationale": "The Key Capabilities heading is rendered by the key_capabilities section.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_REWRITE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose.email.foss",
-        "public_symbol:aspose.email",
-        "public_symbol:aspose"
+        "public_symbol:aspose.email.foss.cfb.cfb_reader",
+        "public_symbol:aspose.email.foss.cfb.cfb_writer",
+        "public_symbol:aspose.email.foss.msg.msg_reader",
+        "public_symbol:aspose.email.foss.msg.msg_document",
+        "public_symbol:aspose.email.foss.msg.mapi_message",
+        "public_symbol:aspose.email.foss.msg.mapi_recipient",
+        "public_symbol:aspose.email.foss.msg.mapi_attachment",
+        "public_symbol:aspose.email.foss.msg.common_message_property_id"
       ],
-      "rationale": "The list items are covered by the capabilities facts; rewritten for the key_capabilities section.",
+      "rationale": "The list items are supported by public symbols and match the capabilities investigation; they belong in key_capabilities.",
       "unit_id": "inherited_unit:010.list"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Kept with the content under it (inherited_unit:013.code_block is kept in development_testing); it was DEFER_UNRESOLVED before. The Installation heading is rende",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "build_test_asset:tests",
+        "import_path:asposeemailfoss",
+        "package:cmake_minimum"
+      ],
+      "rationale": "Kept with the content under it (inherited_unit:012.paragraph is kept in development_testing); it was DEFER_UNRESOLVED before. The Installation heading is render",
       "unit_id": "inherited_unit:011.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "DEFER_UNRESOLVED",
-      "fact_ids": [],
-      "rationale": "The installation paragraph is superseded by the installation section, which renders the exact CMake command.",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:examples",
+        "build_test_asset:tests",
+        "import_path:asposeemailfoss",
+        "package:cmake_minimum"
+      ],
+      "rationale": "The paragraph describes build and install options; it belongs in development_testing as it is not the exact install command.",
       "unit_id": "inherited_unit:012.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The CMake add_subdirectory snippet is a real, supported build path; it is kept as written in development_testing since no installation section renders it verbat",
+      "fact_ids": [
+        "package:cmake_minimum",
+        "package:name",
+        "import_path:asposeemailfoss"
+      ],
+      "rationale": "The CMake snippet is a valid alternative to the install command and is not superseded by the installation section.",
       "unit_id": "inherited_unit:013.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "build_test_asset:tests"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The Build heading is covered by the development_testing section.",
       "unit_id": "inherited_unit:014.heading"
     },
     {
@@ -189,42 +205,53 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:examples",
-        "build_test_asset:tests"
+        "build_test_asset:tests",
+        "package:cmake_minimum"
       ],
-      "rationale": "Kept as written: the Installation section renders no verified command this block could be redundant with. The CMake build commands are rendered deterministicall",
+      "rationale": "The PowerShell build commands are supported by build_test_asset facts and belong in development_testing.",
       "unit_id": "inherited_unit:015.code_block"
-    },
-    {
-      "destination_section": null,
-      "disposition": "DEFER_UNRESOLVED",
-      "fact_ids": [],
-      "rationale": "The build configuration details are superseded by the installation section.",
-      "unit_id": "inherited_unit:016.paragraph"
-    },
-    {
-      "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "build_test_asset:tests"
-      ],
-      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
-      "unit_id": "inherited_unit:017.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:examples",
-        "build_test_asset:tests"
+        "build_test_asset:tests",
+        "import_path:asposeemailfoss",
+        "package:cmake_minimum"
       ],
-      "rationale": "Kept as written: the Installation section renders no verified command this block could be redundant with. The CMake install command is rendered deterministicall",
+      "rationale": "The paragraph explains the CMakePresets.json configuration and is supported by build_test_asset facts.",
+      "unit_id": "inherited_unit:016.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Install heading is covered by the development_testing section.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:cmake_minimum",
+        "package:name",
+        "import_path:asposeemailfoss"
+      ],
+      "rationale": "The install command is a valid alternative and is supported by the package facts.",
       "unit_id": "inherited_unit:018.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "DEFER_UNRESOLVED",
-      "fact_ids": [],
-      "rationale": "The install description is superseded by the installation section.",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:asposeemailfoss",
+        "package:cmake_minimum",
+        "package:name"
+      ],
+      "rationale": "The paragraph explains the install behavior and is supported by package facts.",
       "unit_id": "inherited_unit:019.paragraph"
     },
     {
@@ -233,7 +260,7 @@
       "fact_ids": [
         "dependency:none"
       ],
-      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
+      "rationale": "The Dependencies heading is rendered by the dependencies section.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
@@ -242,7 +269,7 @@
       "fact_ids": [
         "dependency:none"
       ],
-      "rationale": "The 'Required Package Dependencies' heading and its content are rendered by the dependencies section, which states no third-party dependencies.",
+      "rationale": "Dependencies section renders the fact that no third-party dependencies are required.",
       "unit_id": "inherited_unit:021.heading"
     },
     {
@@ -251,37 +278,36 @@
       "fact_ids": [
         "dependency:none"
       ],
-      "rationale": "The claim of no required third-party dependencies is already rendered by the dependencies section.",
+      "rationale": "Dependencies section renders the fact that no third-party dependencies are required.",
       "unit_id": "inherited_unit:022.paragraph"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "package:cmake_minimum",
-        "package:cxx_standard"
+        "package:cxx_standard",
+        "package:cmake_minimum"
       ],
-      "rationale": "The 'Native and System Requirements' heading is superseded because the scope_limitations section renders system requirements.",
+      "rationale": "Scope and Limitations section renders the C++17 and CMake 3.26+ requirements as limitations.",
       "unit_id": "inherited_unit:023.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "package:cmake_minimum",
-        "package:cxx_standard"
+        "package:cxx_standard",
+        "package:cmake_minimum"
       ],
-      "rationale": "Kept in development_testing: scope_limitations holds no install material. Kept as written (inherit-and-correct, R43(3)). The system requirements list is alre...",
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. Kept as written (inherit-and-correct, R43(3)). Scope and Limitations section render...",
       "unit_id": "inherited_unit:024.list"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:001",
         "identity:ecosystem"
       ],
-      "rationale": "Reprinted verbatim in Quick Start beside the unverified example it introduces.",
+      "rationale": "Quick Start section is not rendered because no example is verified as executed or compiled in isolation.",
       "unit_id": "inherited_unit:025.heading"
     },
     {
@@ -297,7 +323,6 @@
       "destination_section": "quick_start",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "build_test_asset:examples",
         "example:001"
       ],
       "rationale": "Reprinted verbatim in Quick Start with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
@@ -316,7 +341,6 @@
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "build_test_asset:examples",
         "example:002"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
@@ -326,39 +350,41 @@
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
+        "build_test_asset:examples",
         "link_target:018",
         "link_target:019",
         "link_target:020"
       ],
-      "rationale": "The paragraph points to examples that are supported by link_target facts; it belongs in development_testing.",
+      "rationale": "The paragraph points to examples in the verified examples directory and specific example files.",
       "unit_id": "inherited_unit:030.paragraph"
     },
     {
-      "destination_section": "additional_examples",
+      "destination_section": "development_testing",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "build_test_asset:examples"
       ],
-      "rationale": "The 'Additional Examples' heading is superseded because the additional_examples section is not rendered (no further verified example exists).",
+      "rationale": "Development and Testing section renders the examples directory as a build/test asset.",
       "unit_id": "inherited_unit:031.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
+        "build_test_asset:examples",
         "link_target:021",
         "link_target:022"
       ],
-      "rationale": "The paragraph describes examples directory and its README, both supported by link_target facts; it belongs in development_testing.",
+      "rationale": "The paragraph describes the examples directory and its README, which are verified build/test assets.",
       "unit_id": "inherited_unit:032.paragraph"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:003"
+        "identity:ecosystem"
       ],
-      "rationale": "The heading introduces an example that is CONTRADICTED (example:003); it is unsupported and harmful.",
+      "rationale": "The example code block under this heading is contradicted, so the heading and its content are omitted.",
       "unit_id": "inherited_unit:033.heading"
     },
     {
@@ -367,32 +393,33 @@
       "fact_ids": [
         "example:003"
       ],
-      "rationale": "The code block is a tracked example fact with CONTRADICTED polarity; it is unsupported and harmful.",
+      "rationale": "The example fact for this code block is CONTRADICTED, so it is omitted.",
       "unit_id": "inherited_unit:034.code_block"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:003"
+        "link_target:018",
+        "link_target:021"
       ],
-      "rationale": "The paragraph describes helpers for an example that is CONTRADICTED (example:003); it is unsupported and harmful.",
+      "rationale": "Redundant with the verified facts it names: link_target:018, link_target:021. The example code block under this heading is contradicted, so the paragraph is omi",
       "unit_id": "inherited_unit:035.paragraph"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "The HTML block is promotional and introduces collapsible content for unsupported examples; it is keyword-stuffed and harmful.",
+      "rationale": "The example code block under this heading is contradicted, so the HTML block is omitted.",
       "unit_id": "inherited_unit:036.html_block"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:004"
+        "identity:ecosystem"
       ],
-      "rationale": "The heading introduces an example that is CONTRADICTED (example:004); it is unsupported and harmful.",
+      "rationale": "The example code block under this heading is contradicted, so the heading and its content are omitted.",
       "unit_id": "inherited_unit:037.heading"
     },
     {
@@ -401,32 +428,34 @@
       "fact_ids": [
         "example:004"
       ],
-      "rationale": "The code block is a tracked example fact with CONTRADICTED polarity; it is unsupported and harmful.",
+      "rationale": "The example fact for this code block is CONTRADICTED, so it is omitted.",
       "unit_id": "inherited_unit:038.code_block"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:004"
+        "link_target:019",
+        "link_target:021"
       ],
-      "rationale": "The paragraph describes helpers for an example that is CONTRADICTED (example:004); it is unsupported and harmful.",
+      "rationale": "Redundant with the verified facts it names: link_target:019, link_target:021. The example code block under this heading is contradicted, so the paragraph is omi",
       "unit_id": "inherited_unit:039.paragraph"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "link_target:020"
+        "link_target:020",
+        "link_target:021"
       ],
-      "rationale": "The paragraph describes msg_summary.cpp, a supported example (link_target:020); it belongs in development_testing.",
+      "rationale": "Redundant with the verified facts it names: link_target:020, link_target:021. The example code block under this heading is contradicted, so the paragraph is omi",
       "unit_id": "inherited_unit:040.paragraph"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [],
-      "rationale": "The closing </details> tag is part of a collapsible section that is superseded by the API Reference section rendered from facts.",
+      "rationale": "The closing </details> tag is part of a collapsible section that is superseded by the generated API Reference section.",
       "unit_id": "inherited_unit:041.html_block"
     },
     {
@@ -435,21 +464,21 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The '## API Reference' heading is superseded by the API Reference section rendered from facts.",
+      "rationale": "The '## API Reference' heading is superseded by the generated API Reference section heading.",
       "unit_id": "inherited_unit:042.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The paragraph describes the primary high-level and low-level APIs and their relationships, which is supported by the public symbols and aligns with the API ref.",
+      "rationale": "Describes the primary high-level and low-level APIs, which are supported by the listed public symbols.",
       "unit_id": "inherited_unit:043.paragraph"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [],
-      "rationale": "The opening <details> tag is part of a collapsible section superseded by the API Reference section rendered from facts.",
+      "rationale": "The opening <details> tag is part of a collapsible section that is superseded by the generated API Reference section.",
       "unit_id": "inherited_unit:044.html_block"
     },
     {
@@ -458,12 +487,12 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The '### Foss' heading is superseded by the API Reference section rendered from facts.",
+      "rationale": "The '### Foss' heading is superseded by the generated API Reference section structure.",
       "unit_id": "inherited_unit:045.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose.email.foss.cfb.cfb_document",
         "public_symbol:aspose.email.foss.cfb.cfb_exception",
@@ -482,7 +511,7 @@
         "public_symbol:aspose.email.foss.msg.msg_reader",
         "public_symbol:aspose.email.foss.msg.msg_storage"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Lists core classes with descriptions that are supported by the public symbols and their documented roles.",
       "unit_id": "inherited_unit:046.table"
     },
     {
@@ -491,7 +520,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The '#### Structs' heading is superseded by the API Reference section rendered from facts.",
+      "rationale": "The '#### Structs' heading is superseded by the generated API Reference section structure.",
       "unit_id": "inherited_unit:047.heading"
     },
     {
@@ -510,7 +539,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The '#### Enumerations' heading is superseded by the API Reference section rendered from facts.",
+      "rationale": "The '#### Enumerations' heading is superseded by the generated API Reference section structure.",
       "unit_id": "inherited_unit:049.heading"
     },
     {
@@ -528,12 +557,12 @@
       "unit_id": "inherited_unit:050.table"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The '#### Detailed Member Reference' heading is superseded by the API Reference section rendered from facts.",
+      "rationale": "The '#### Detailed Member Reference' heading is unsupported and not rendered in the generated API Reference.",
       "unit_id": "inherited_unit:051.heading"
     },
     {
@@ -553,7 +582,7 @@
       "fact_ids": [
         "finding:6d38822c85aa"
       ],
-      "rationale": "The list of mapi_message methods is supported by the public symbol and aligns with the documented API surface.",
+      "rationale": "Lists mapi_message methods supported by the public symbol and their documented behavior.",
       "unit_id": "inherited_unit:053.list"
     },
     {
@@ -571,28 +600,28 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The list of low-level MSG classes and methods is supported by the public symbols and aligns with the documented API surface.",
+      "rationale": "Lists msg_reader methods supported by the public symbol.",
       "unit_id": "inherited_unit:055.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The list of msg_document methods is supported by the public symbol and aligns with the documented API surface.",
+      "rationale": "Lists msg_document methods supported by the public symbol.",
       "unit_id": "inherited_unit:055.002.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The list of msg_writer methods is supported by the public symbol and aligns with the documented API surface.",
+      "rationale": "Lists msg_writer methods supported by the public symbol.",
       "unit_id": "inherited_unit:055.003.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The list of msg_storage methods and properties is supported by the public symbol and aligns with the documented API surface.",
+      "rationale": "Lists msg_storage methods and properties supported by the public symbol.",
       "unit_id": "inherited_unit:055.004.list"
     },
     {
@@ -610,51 +639,51 @@
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The list of cfb_reader methods is supported by the public symbol and aligns with the documented API surface.",
+      "rationale": "Lists cfb_reader methods supported by the public symbol.",
       "unit_id": "inherited_unit:057.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CFB API table in api_reference covers cfb_document and its methods; this list duplicates t",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CFB API surface is fully covered by the API reference section's public symbol inventory.",
       "unit_id": "inherited_unit:057.002.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CFB API table in api_reference covers cfb_writer and its methods; this list duplicates tha",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CFB writer API surface is fully covered by the API reference section's public symbol inven",
       "unit_id": "inherited_unit:057.003.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CFB API table in api_reference covers cfb_storage and cfb_stream and their methods; this l",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The CFB storage/stream API surface is fully covered by the API reference section's public symb",
       "unit_id": "inherited_unit:057.004.list"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading is redundant with the api_reference section, which is generated from facts and will include the listed classes.",
+      "rationale": "The heading introduces a list of public symbols already covered by the API reference section; it adds no new substance.",
       "unit_id": "inherited_unit:058.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MSG API table in api_reference covers mapi_attachment and its methods; this list duplicate",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The mapi_attachment API surface is fully covered by the API reference section's public symbol ",
       "unit_id": "inherited_unit:059.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MSG API table in api_reference covers mapi_recipient and its properties; this list duplica",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The mapi_recipient API surface is fully covered by the API reference section's public symbol i",
       "unit_id": "inherited_unit:059.002.list"
     },
     {
@@ -663,35 +692,28 @@
       "fact_ids": [
         "finding:5d6facf1dfb3"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MSG API table in api_reference covers mapi_property_collection and its methods; this list ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The mapi_property_collection API surface is fully covered by the API reference section's publi",
       "unit_id": "inherited_unit:059.003.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The MSG API table in api_reference covers mapi_property and its methods; this list duplicates ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The mapi_property API surface is fully covered by the API reference section's public symbol in",
       "unit_id": "inherited_unit:059.004.list"
     },
     {
       "destination_section": null,
-      "disposition": "NON_CONTENT",
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "This is an HTML closing tag fragment with no semantic content.",
+      "rationale": "The closing HTML comment is non-content and adds no value to the generated README.",
       "unit_id": "inherited_unit:060.html_block"
     },
     {
       "destination_section": "documentation_resources",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "link_target:023",
-        "link_target:024",
-        "link_target:025",
-        "link_target:026",
-        "link_target:027",
-        "link_target:028"
-      ],
-      "rationale": "The heading matches the documentation_resources section and the list items below are verified links to real resources.",
+      "fact_ids": [],
+      "rationale": "The heading introduces verified documentation links that belong in the Documentation & Resources section.",
       "unit_id": "inherited_unit:061.heading"
     },
     {
@@ -705,16 +727,14 @@
         "link_target:027",
         "link_target:028"
       ],
-      "rationale": "All links in this list are verified and point to real, supported resources; the list adds value beyond the generated content.",
+      "rationale": "All listed documentation and resource links are verified and supported by the facts.",
       "unit_id": "inherited_unit:062.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "identity:family"
-      ],
-      "rationale": "The heading matches the scope_limitations section and the list items below are covered by the limitations in the accepted investigation.",
+      "fact_ids": [],
+      "rationale": "The heading introduces limitations that are already covered in the Scope and Limitations section.",
       "unit_id": "inherited_unit:063.heading"
     },
     {
@@ -723,7 +743,7 @@
       "fact_ids": [
         "identity:family"
       ],
-      "rationale": "The three limitations listed here are fully supported by the accepted investigation and add concrete detail to the generated content.",
+      "rationale": "The listed limitations match the facts and add no unsupported claims.",
       "unit_id": "inherited_unit:064.list"
     },
     {
@@ -732,28 +752,23 @@
       "fact_ids": [
         "link_target:product.enterprise"
       ],
-      "rationale": "This paragraph introduces the enterprise relationship and the link to the enterprise product page is verified.",
+      "rationale": "The paragraph relates the FOSS scope to the Enterprise Edition, which belongs in the enterprise relationship section.",
       "unit_id": "inherited_unit:065.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "build_test_asset:tests",
-        "build_test_asset:examples"
-      ],
-      "rationale": "The heading matches the development_testing section and the content below is supported by the build_test_asset facts.",
+      "fact_ids": [],
+      "rationale": "The heading introduces development and testing content that belongs in the Development and Testing section.",
       "unit_id": "inherited_unit:066.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "package:cmake_minimum",
-        "build_test_asset:tests",
-        "build_test_asset:examples"
+        "build_test_asset:tests"
       ],
-      "rationale": "The CMake/CTest commands in this block are the standard build/test workflow for this repository and are supported by the facts.",
+      "rationale": "The CTest commands are supported by the build_test_asset fact and match the actual test setup.",
       "unit_id": "inherited_unit:067.code_block"
     },
     {
@@ -762,17 +777,16 @@
       "fact_ids": [
         "build_test_asset:tests"
       ],
-      "rationale": "This paragraph describes the test executables and their purpose; the facts confirm the existence of the tests directory and test structure.",
+      "rationale": "The description of test executables is supported by the build_test_asset fact and adds useful detail.",
       "unit_id": "inherited_unit:068.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:examples",
-        "link_target:022"
+        "build_test_asset:examples"
       ],
-      "rationale": "This paragraph describes the examples build workflow and references the examples/README.md, both of which are verified.",
+      "rationale": "The description of example programs and build instructions is supported by the build_test_asset fact.",
       "unit_id": "inherited_unit:069.paragraph"
     },
     {
@@ -781,18 +795,17 @@
       "fact_ids": [
         "link_target:product.enterprise"
       ],
-      "rationale": "The heading matches the enterprise_relationship section and the paragraph below is supported by the facts.",
+      "rationale": "The heading introduces the enterprise relationship content that belongs in the enterprise relationship section.",
       "unit_id": "inherited_unit:070.heading"
     },
     {
-      "destination_section": "enterprise_relationship",
+      "destination_section": "license",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "license:file",
-        "license:spdx",
-        "link_target:product.enterprise"
+        "license:spdx"
       ],
-      "rationale": "This paragraph describes the MIT license and its terms; the license facts confirm the SPDX identifier and file existence.",
+      "rationale": "Superseded by the License section, which states the license from facts. The license paragraph is supported by the license facts and provides useful context abou",
       "unit_id": "inherited_unit:071.paragraph"
     }
   ]

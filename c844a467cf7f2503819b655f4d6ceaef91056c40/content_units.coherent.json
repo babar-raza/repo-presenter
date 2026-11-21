@@ -6,177 +6,216 @@
   "omitted": [
     {
       "fact_id": "identity:ecosystem",
-      "reason": "Ecosystem identity is not relevant to describing entry-point classes or their relationships.",
-      "section": "api_reference"
+      "reason": "Ecosystem identity is not used in the opening unit; it supports platform identification but does not describe actions or formats.",
+      "section": "opening"
     },
     {
       "fact_id": "identity:family",
-      "reason": "Family identity is not relevant to describing entry-point classes or their relationships.",
-      "section": "api_reference"
+      "reason": "Family identity is not used in the opening unit; it supports categorization but does not describe actions or formats.",
+      "section": "opening"
     },
     {
       "fact_id": "identity:platform",
-      "reason": "Platform identity is not relevant to describing entry-point classes or their relationships.",
-      "section": "api_reference"
+      "reason": "Platform identity is not used in the opening unit; it supports runtime context but does not describe actions or formats.",
+      "section": "opening"
     },
     {
       "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Knowledge refresh metadata is not relevant to describing entry-point classes or their relationships.",
-      "section": "api_reference"
+      "reason": "Knowledge refresh metadata is not used in the opening unit; it is provenance, not descriptive content.",
+      "section": "opening"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "Repository identity is not relevant to describing entry-point classes or their relationships.",
-      "section": "api_reference"
+      "reason": "Repository identity is not used in the opening unit; it is provenance, not descriptive content.",
+      "section": "opening"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "Revision identity is not relevant to describing entry-point classes or their relationships.",
-      "section": "api_reference"
+      "reason": "Revision identity is not used in the opening unit; it is provenance, not descriptive content.",
+      "section": "opening"
     },
     {
       "fact_id": "package:cmake_minimum",
-      "reason": "CMake minimum version is not relevant to describing entry-point classes or their relationships.",
+      "reason": "CMake minimum version is not used in the opening unit; it belongs in installation or build documentation.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:cxx_standard",
+      "reason": "C++ standard version is not used in the opening unit; it belongs in build or requirements documentation.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Package name is not used in the opening unit; the product name is used instead.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Package version is not used in the opening unit; the renderer prints version values separately.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "dependency:none",
+      "reason": "Dependency status is not used in the opening unit; it belongs in dependencies documentation.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "import_path:asposeemailfoss",
+      "reason": "Import path is not used in the opening unit; it belongs in API reference or usage examples.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The list items are the source for the five capability units; they are not omitted but used directly to construct each unit's prose.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:cmake_minimum",
+      "reason": "CMake version requirement is rendered by the renderer at Installation, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:cxx_standard",
-      "reason": "C++ standard is not relevant to describing entry-point classes or their relationships.",
+      "reason": "C++ standard requirement is rendered by the renderer at Dependencies, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:name",
-      "reason": "Package name is not relevant to describing entry-point classes or their relationships.",
+      "reason": "Package name is rendered by the renderer at Dependencies, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:version",
-      "reason": "Package version is not relevant to describing entry-point classes or their relationships.",
+      "reason": "Package version is rendered by the renderer at Dependencies, not in this section.",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:048.table",
-      "reason": "CFB header and directory_entry tables describe internal structures, not entry-point classes or their relationships.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:050.table",
-      "reason": "Enumerations describe internal type codes and flags, not entry-point classes or their relationships.",
+      "fact_id": "inherited_unit:052.heading",
+      "reason": "Heading text is rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:053.list",
-      "reason": "mapi_message method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:054.heading",
+      "reason": "Heading text is rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:055.001.list",
-      "reason": "msg_reader method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:055.002.list",
-      "reason": "msg_document method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:055.003.list",
-      "reason": "msg_writer method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:055.004.list",
-      "reason": "msg_storage method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:056.heading",
+      "reason": "Heading text is rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:057.001.list",
-      "reason": "cfb_reader method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:057.002.list",
-      "reason": "cfb_document method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:057.003.list",
-      "reason": "cfb_writer method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:057.004.list",
-      "reason": "cfb_storage/cfb_stream method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:059.001.list",
-      "reason": "mapi_attachment method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:059.002.list",
-      "reason": "mapi_recipient method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:059.003.list",
-      "reason": "mapi_property_collection method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:059.004.list",
-      "reason": "mapi_property method list is not needed in the intro unit; it belongs in a separate API reference section.",
+      "reason": "List items are rendered by the renderer, not in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:001",
-      "reason": "Examples are not relevant to describing entry-point classes or their relationships in the intro.",
+      "reason": "Examples are not cited in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:002",
-      "reason": "Examples are not relevant to describing entry-point classes or their relationships in the intro.",
+      "reason": "Examples are not cited in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:003",
-      "reason": "Examples are not relevant to describing entry-point classes or their relationships in the intro.",
+      "reason": "Examples are not cited in this section.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:004",
-      "reason": "Examples are not relevant to describing entry-point classes or their relationships in the intro.",
+      "reason": "Examples are not cited in this section.",
       "section": "api_reference"
     },
     {
-      "fact_id": "inherited_unit:071.paragraph",
-      "reason": "The MIT License statement is unrelated to the commercial product's capabilities and belongs in a license or permissions section, not the enterprise relationship context.",
-      "section": "enterprise_relationship"
+      "fact_id": "install_command:cmake",
+      "reason": "Installation commands are rendered by the renderer, not in this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:5d6facf1dfb3",
+      "reason": "False claims are not cited in this section.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "finding:6d38822c85aa",
+      "reason": "False claims are not cited in this section.",
+      "section": "api_reference"
     }
   ],
   "schema_version": 1,
   "units": [
     {
       "fact_ids": [
-        "identity:ecosystem",
-        "identity:family",
-        "identity:platform",
-        "identity:product-knowledge-refresh",
-        "identity:repository",
-        "identity:revision",
-        "package:cmake_minimum",
-        "package:cxx_standard",
-        "package:name",
-        "package:version",
-        "dependency:none",
         "public_symbol:aspose.email.foss",
         "public_symbol:aspose.email",
         "public_symbol:aspose"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.Email FOSS for Cpp reads and writes MSG, CFB, and EML files. It supports both low-level and high-level APIs for structural and semantic access to MAPI message objects."
+      "text": "Aspose.Email FOSS for Cpp reads and writes MSG and EML email formats. It converts email messages between MSG and EML representations. It creates new email messages and saves them in MSG or EML format. It loads existing email messages from streams or files and exposes their content."
     },
     {
       "fact_ids": [
@@ -186,17 +225,16 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It reads, builds, and writes generic Compound File Binary containers directly through cfb_reader, cfb_storage/cfb_stream, and cfb_writer, working with file paths, in-memory streams, or raw byte buffers."
+      "text": "Read, build, and write generic Compound File Binary containers directly through cfb_reader, cfb_storage/cfb_stream, and cfb_writer, working with file paths, in-memory streams, or raw byte buffers."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose",
         "public_symbol:aspose.email",
         "public_symbol:aspose.email.foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It parses and reconstructs the raw MSG directory/stream structure with msg_reader, msg_document, and msg_writer, including an optional strict-validation mode surfaced through validation_issues()."
+      "text": "Parse and reconstruct the raw MSG directory/stream structure with msg_reader, msg_document, and msg_writer, including an optional strict-validation mode surfaced through validation_issues()."
     },
     {
       "fact_ids": [
@@ -206,30 +244,34 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It creates, edits, saves, and reloads Outlook-style messages through mapi_message, setting the subject, plain-text and HTML bodies, and sender identity, or reaching arbitrary MAPI properties via set_property()/get_property_value() with common_message_property_id and property_type_code."
+      "text": "Create, edit, save, and reload Outlook-style messages through mapi_message, setting the subject, plain-text and HTML bodies, and sender identity, or reaching arbitrary MAPI properties via set_property()/get_property_value() with common_message_property_id and property_type_code."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose",
         "public_symbol:aspose.email",
         "public_symbol:aspose.email.foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It adds To/Cc/Bcc recipients with add_recipient(), attaches regular files from byte buffers or streams with add_attachment(), and nests a full mapi_message as an embedded-message attachment with add_embedded_message_attachment()."
+      "text": "Add To/Cc/Bcc recipients with add_recipient(), attach regular files from byte buffers or streams with add_attachment(), and nest a full mapi_message as an embedded-message attachment with add_embedded_message_attachment()."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose",
         "public_symbol:aspose.email",
         "public_symbol:aspose.email.foss"
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It saves an in-memory mapi_message to .eml and loads .eml back into a mapi_message, both through the library's own MIME engine, with no external MIME dependency."
+      "text": "Save an in-memory mapi_message to .eml and load .eml back into a mapi_message, both through the library's own MIME engine, with no external MIME dependency."
     },
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
         "inherited_unit:043.paragraph"
       ],
       "section": "api_reference",
@@ -244,7 +286,7 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.email.foss",
-      "text": "The aspose.email.foss namespace hosts the public API surface for MSG and CFB file handling, with mapi_message serving as the main entry point for message operations and supporting creation from scratch, loading from MSG/EML files or streams, and saving back to MSG or EML formats."
+      "text": "The aspose.email.foss namespace hosts the public API surface for MSG and CFB file handling, with mapi_message serving as the main entry point for message authoring and the low-level msg_reader, msg_document, msg_writer, cfb_reader, cfb_document, and cfb_writer classes providing direct access to the container structure."
     },
     {
       "fact_ids": [
@@ -276,7 +318,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfb_node",
-      "text": "cfb_node class represents a node in a Compound File Binary structure and provides access to its name, clsid, creation_time, modified_time, and indicates whether it is a storage or stream."
+      "text": "cfb_node class represents a node in a Compound File Binary structure and provides methods to access its name, clsid, creation_time, modified_time, and state whether it is a storage or stream."
     },
     {
       "fact_ids": [
@@ -284,7 +326,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfb_reader",
-      "text": "cfb_reader class reads a Compound File Binary document and provides access to its header, directory_entries, fat, mini_fat, difat, and methods to find and retrieve stream data."
+      "text": "cfb_reader class provides methods to read a Compound File Binary document from a buffer, bytes, file, or stream and exposes its header, directory_entries, fat, mini_fat, difat, and various entry and stream accessors."
     },
     {
       "fact_ids": [
@@ -292,7 +334,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfb_storage",
-      "text": "cfb_storage class represents a storage node in a Compound File Binary document and provides methods to add child storages and streams, and to access its children."
+      "text": "cfb_storage class represents a storage node in a Compound File Binary document and provides methods to add child storages or streams and access its children."
     },
     {
       "fact_ids": [
@@ -300,7 +342,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfb_stream",
-      "text": "cfb_stream class represents a stream node in a Compound File Binary document and provides methods to get and set its data."
+      "text": "cfb_stream class represents a stream node in a Compound File Binary document and provides methods to access and set its data."
     },
     {
       "fact_ids": [
@@ -308,7 +350,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.cfb_writer",
-      "text": "cfb_writer class writes a Compound File Binary document and provides methods to write to a file, stream, or return the result as bytes."
+      "text": "cfb_writer class provides methods to write a Compound File Binary document to bytes, a file, or a stream."
     },
     {
       "fact_ids": [
@@ -316,7 +358,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.directory_color_flag",
-      "text": "directory_color_flag enum lists the black and red color flags used in the directory of a Compound File Binary document."
+      "text": "directory_color_flag enum lists the black and red color flags used in directory entries."
     },
     {
       "fact_ids": [
@@ -324,7 +366,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.directory_entry",
-      "text": "directory_entry class represents an entry in the directory of a Compound File Binary document and provides access to its child_id, clsid, color_flag, creation_time, directory_entry_name_length, and indicates whether it is a root, storage, or stream."
+      "text": "directory_entry class represents a directory entry in a Compound File Binary document and provides fields for child_id, clsid, color_flag, creation_time, directory_entry_name_length, and methods to determine if it is the root, a storage, or a stream."
     },
     {
       "fact_ids": [
@@ -332,7 +374,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.directory_object_type",
-      "text": "directory_object_type enum lists the root_storage_object, storage_object, stream_object, and unknown_or_unallocated object types used in the directory of a Compound File Binary document."
+      "text": "directory_object_type enum lists the root_storage_object, storage_object, stream_object, and unknown_or_unallocated object types used in directory entries."
     },
     {
       "fact_ids": [
@@ -340,7 +382,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.header",
-      "text": "header class represents the header of a Compound File Binary document and provides access to its byte_order, first_difat_sector_location, first_directory_sector_location, first_mini_fat_sector_location, header_clsid, header_signature, and major_version."
+      "text": "header class represents the header of a Compound File Binary document and provides fields for byte_order, difat, first_difat_sector_location, first_directory_sector_location, first_mini_fat_sector_location, header_clsid, header_signature, and major_version."
     },
     {
       "fact_ids": [
@@ -348,7 +390,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.cfb.sector_marker",
-      "text": "sector_marker enum lists the difsect, endofchain, fatsect, and freesect markers used in the sector allocation tables of a Compound File Binary document."
+      "text": "sector_marker enum lists the difsect, endofchain, fatsect, and freesect sector markers used in the file allocation table."
     },
     {
       "fact_ids": [
@@ -356,7 +398,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.common_message_property_id",
-      "text": "common_message_property_id enum lists the attach_content_id, attach_data_binary, attach_filename, attach_long_filename, attach_method, attach_mime_tag, body, body_html, display_bcc, display_cc, display_name, and display_to property identifiers for MAPI messages."
+      "text": "common_message_property_id enum lists property identifiers such as attach_content_id, attach_data_binary, attach_filename, attach_long_filename, attach_method, attach_mime_tag, body, body_html, display_bcc, display_cc, display_name, and display_to."
     },
     {
       "fact_ids": [
@@ -364,7 +406,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapi_attachment",
-      "text": "mapi_attachment class represents a MAPI attachment and provides access to its content_id, data, embedded_message, filename, and methods to load data or determine if it is an embedded message."
+      "text": "mapi_attachment class represents a MAPI attachment and provides fields for content_id, data, embedded_message, filename, and methods to load from bytes or stream, determine if it is an embedded message, and load its data."
     },
     {
       "fact_ids": [
@@ -372,7 +414,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapi_message",
-      "text": "mapi_message class represents a MAPI message and provides methods to add attachments and recipients, and access its body and attachments."
+      "text": "mapi_message class represents a MAPI message and provides methods to add attachments, embedded messages, and recipients, and exposes the attachments and body."
     },
     {
       "fact_ids": [
@@ -380,7 +422,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapi_property",
-      "text": "mapi_property class represents a MAPI property and provides methods to get and set its flags, property_id, property_tag, property_type, and value."
+      "text": "mapi_property class represents a MAPI property and provides methods to access and set its flags, property_id, property_tag, property_type, and value."
     },
     {
       "fact_ids": [
@@ -388,7 +430,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapi_property_collection",
-      "text": "mapi_property_collection class represents a collection of MAPI properties and provides methods to add, get, set, remove, and access items."
+      "text": "mapi_property_collection class provides methods to add, get, set, remove, and access items in a collection of MAPI properties."
     },
     {
       "fact_ids": [
@@ -396,7 +438,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.mapi_recipient",
-      "text": "mapi_recipient class represents a MAPI recipient and provides access to its address_type, display_name, email_address, properties, and recipient_type."
+      "text": "mapi_recipient class represents a MAPI recipient and provides fields for address_type, display_name, email_address, properties, and recipient_type."
     },
     {
       "fact_ids": [
@@ -404,7 +446,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msg_document",
-      "text": "msg_document class represents a MSG document and provides methods to load it from a file, reader, or stream, and exposes its major_version, minor_version, root, and a method to convert it to a cfb_document."
+      "text": "msg_document class provides methods to load a MSG document from a file, reader, or stream, and exposes its major_version, minor_version, root, strict flag, and the ability to convert to a cfb_document."
     },
     {
       "fact_ids": [
@@ -420,7 +462,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msg_reader",
-      "text": "msg_reader class reads a MSG document and provides methods to load it from a file or stream, and exposes its cfb document and validation_issues."
+      "text": "msg_reader class provides methods to load a MSG document from a file or stream and exposes its cfb document, strict flag, and validation_issues."
     },
     {
       "fact_ids": [
@@ -428,7 +470,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msg_storage",
-      "text": "msg_storage class represents a storage node in a MSG document and provides access to its clsid, creation_time, modified_time, name, and methods to add child storages and streams."
+      "text": "msg_storage class represents a storage node in a MSG document and provides methods to add child storages or streams and access its clsid, creation_time, modified_time, name, and find child storages or streams."
     },
     {
       "fact_ids": [
@@ -444,7 +486,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msg_stream",
-      "text": "msg_stream class represents a stream node in a MSG document and provides access to its clsid, creation_time, data, modified_time, and name."
+      "text": "msg_stream class represents a stream node in a MSG document and provides fields for clsid, creation_time, data, modified_time, name, and state_bits."
     },
     {
       "fact_ids": [
@@ -452,7 +494,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.msg_writer",
-      "text": "msg_writer class writes a MSG document and provides methods to write to a file, stream, or return the result as bytes."
+      "text": "msg_writer class provides methods to write a MSG document to bytes, a file, or a stream."
     },
     {
       "fact_ids": [
@@ -460,7 +502,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose.email.foss.msg.property_type_code",
-      "text": "property_type_code enum lists the ptyp_binary, ptyp_boolean, ptyp_currency, ptyp_error_code, ptyp_floating32, ptyp_floating64, ptyp_floating_time, ptyp_guid, ptyp_integer16, ptyp_integer32, ptyp_integer64, and ptyp_multiple_binary property type codes for MAPI properties."
+      "text": "property_type_code enum lists property type codes such as ptyp_binary, ptyp_boolean, ptyp_currency, ptyp_error_code, ptyp_floating32, ptyp_floating64, ptyp_floating_time, ptyp_guid, ptyp_integer16, ptyp_integer32, ptyp_integer64, and ptyp_multiple_binary."
     }
   ]
 }

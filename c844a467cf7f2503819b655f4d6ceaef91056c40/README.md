@@ -4,7 +4,7 @@
 
 [![Aspose.Email FOSS for Cpp](https://products.aspose.org/media/email/cpp/banner-readme.png)](https://products.aspose.org/email/cpp/)
 
-Aspose.Email FOSS for Cpp reads and writes MSG, CFB, and EML files. It supports both low-level and high-level APIs for structural and semantic access to MAPI message objects.
+Aspose.Email FOSS for Cpp reads and writes MSG and EML email formats. It converts email messages between MSG and EML representations. It creates new email messages and saves them in MSG or EML format. It loads existing email messages from streams or files and exposes their content.
 
 ## Navigation
 
@@ -43,11 +43,28 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Low-level CFB access.** It reads, builds, and writes generic Compound File Binary containers directly through `cfb_reader`, `cfb_storage`/`cfb_stream`, and `cfb_writer`, working with file paths, in-memory streams, or raw byte buffers.
-- **Low-level MSG document model.** It parses and reconstructs the raw MSG directory/stream structure with `msg_reader`, `msg_document`, and `msg_writer`, including an optional strict-validation mode surfaced through `validation_issues()`.
-- **High-level message authoring.** It creates, edits, saves, and reloads Outlook-style messages through `mapi_message`, setting the subject, plain-text and HTML bodies, and sender identity, or reaching arbitrary MAPI properties via `set_property()`/`get_property_value()` with `common_message_property_id` and `property_type_code`.
-- **Recipients and attachments.** It adds To/Cc/Bcc recipients with `add_recipient()`, attaches regular files from byte buffers or streams with `add_attachment()`, and nests a full `mapi_message` as an embedded-message attachment with `add_embedded_message_attachment()`.
-- **MSG/EML interoperability.** It saves an in-memory `mapi_message` to .eml and loads .eml back into a `mapi_message`, both through the library's own MIME engine, with no external MIME dependency.
+- **Low-level CFB access.** Read, build, and write generic Compound File Binary containers directly through `cfb_reader`, `cfb_storage`/`cfb_stream`, and `cfb_writer`, working with file paths, in-memory streams, or raw byte buffers.
+- **Low-level MSG document model.** Parse and reconstruct the raw MSG directory/stream structure with `msg_reader`, `msg_document`, and `msg_writer`, including an optional strict-validation mode surfaced through `validation_issues()`.
+- **High-level message authoring.** Create, edit, save, and reload Outlook-style messages through `mapi_message`, setting the subject, plain-text and HTML bodies, and sender identity, or reaching arbitrary MAPI properties via `set_property()`/`get_property_value()` with `common_message_property_id` and `property_type_code`.
+- **Recipients and attachments.** Add To/Cc/Bcc recipients with `add_recipient()`, attach regular files from byte buffers or streams with `add_attachment()`, and nest a full `mapi_message` as an embedded-message attachment with `add_embedded_message_attachment()`.
+- **MSG/EML interoperability.** Save an in-memory `mapi_message` to .eml and load .eml back into a `mapi_message`, both through the library's own MIME engine, with no external MIME dependency.
+
+- **Low-level CFB access** — read, build, and write generic Compound File Binary containers
+  directly through `cfb_reader`, `cfb_storage`/`cfb_stream`, and `cfb_writer`, working with file
+  paths, in-memory streams, or raw byte buffers.
+- **Low-level MSG document model** — parse and reconstruct the raw MSG directory/stream structure
+  with `msg_reader`, `msg_document`, and `msg_writer`, including an optional strict-validation mode
+  surfaced through `validation_issues()`.
+- **High-level message authoring** — create, edit, save, and reload Outlook-style messages through
+  `mapi_message`, setting the subject, plain-text and HTML bodies, and sender identity, or reaching
+  arbitrary MAPI properties via `set_property()`/`get_property_value()` with
+  `common_message_property_id` and `property_type_code`.
+- **Recipients and attachments** — add To/Cc/Bcc recipients with `add_recipient()`, attach regular
+  files from byte buffers or streams with `add_attachment()`, and nest a full `mapi_message` as an
+  embedded-message attachment with `add_embedded_message_attachment()`.
+- **MSG/EML interoperability** — save an in-memory `mapi_message` to `.eml` and load `.eml` back
+  into a `mapi_message`, both through the library's own MIME engine, with no external MIME
+  dependency.
 
 ## Installation
 
@@ -118,67 +135,46 @@ The public API has 26 types.
 | --- | --- |
 | `cfb_document` | cfb_document class provides methods to load a Compound File Binary document from a buffer, bytes, file, reader, or stream, and exposes its major_version, minor_version, and root. |
 | `cfb_exception` | cfb_exception class represents an exception type for errors in Compound File Binary processing. |
-| `cfb_node` | cfb_node class represents a node in a Compound File Binary structure and provides access to its name, clsid, creation_time, modified_time, and indicates whether it is a storage or stream. |
-| `cfb_reader` | cfb_reader class reads a Compound File Binary document and provides access to its header, directory_entries, fat, mini_fat, difat, and methods to find and retrieve stream data. |
-| `cfb_storage` | cfb_storage class represents a storage node in a Compound File Binary document and provides methods to add child storages and streams, and to access its children. |
-| `cfb_stream` | cfb_stream class represents a stream node in a Compound File Binary document and provides methods to get and set its data. |
-| `cfb_writer` | cfb_writer class writes a Compound File Binary document and provides methods to write to a file, stream, or return the result as bytes. |
-| `directory_entry` | directory_entry class represents an entry in the directory of a Compound File Binary document and provides access to its child_id, clsid, color_flag, creation_time, directory_entry_name_length, and indicates whether it is a root, storage, or stream. |
-| `header` | header class represents the header of a Compound File Binary document and provides access to its byte_order, first_difat_sector_location, first_directory_sector_location, first_mini_fat_sector_location, header_clsid, header_signature, and major_version. |
-| `mapi_attachment` | mapi_attachment class represents a MAPI attachment and provides access to its content_id, data, embedded_message, filename, and methods to load data or determine if it is an embedded message. |
-| `mapi_message` | mapi_message class represents a MAPI message and provides methods to add attachments and recipients, and access its body and attachments. |
-| `mapi_property` | mapi_property class represents a MAPI property and provides methods to get and set its flags, property_id, property_tag, property_type, and value. |
-| `mapi_property_collection` | mapi_property_collection class represents a collection of MAPI properties and provides methods to add, get, set, remove, and access items. |
-| `mapi_recipient` | mapi_recipient class represents a MAPI recipient and provides access to its address_type, display_name, email_address, properties, and recipient_type. |
-| `msg_document` | msg_document class represents a MSG document and provides methods to load it from a file, reader, or stream, and exposes its major_version, minor_version, root, and a method to convert it to a cfb_document. |
+| `cfb_node` | cfb_node class represents a node in a Compound File Binary structure and provides methods to access its name, clsid, creation_time, modified_time, and state whether it is a storage or stream. |
+| `cfb_reader` | cfb_reader class provides methods to read a Compound File Binary document from a buffer, bytes, file, or stream and exposes its header, directory_entries, fat, mini_fat, difat, and various entry and stream accessors. |
+| `cfb_storage` | cfb_storage class represents a storage node in a Compound File Binary document and provides methods to add child storages or streams and access its children. |
+| `cfb_stream` | cfb_stream class represents a stream node in a Compound File Binary document and provides methods to access and set its data. |
+| `cfb_writer` | cfb_writer class provides methods to write a Compound File Binary document to bytes, a file, or a stream. |
+| `directory_entry` | directory_entry class represents a directory entry in a Compound File Binary document and provides fields for child_id, clsid, color_flag, creation_time, directory_entry_name_length, and methods to determine if it is the root, a storage, or a stream. |
+| `header` | header class represents the header of a Compound File Binary document and provides fields for byte_order, difat, first_difat_sector_location, first_directory_sector_location, first_mini_fat_sector_location, header_clsid, header_signature, and major_version. |
+| `mapi_attachment` | mapi_attachment class represents a MAPI attachment and provides fields for content_id, data, embedded_message, filename, and methods to load from bytes or stream, determine if it is an embedded message, and load its data. |
+| `mapi_message` | mapi_message class represents a MAPI message and provides methods to add attachments, embedded messages, and recipients, and exposes the attachments and body. |
+| `mapi_property` | mapi_property class represents a MAPI property and provides methods to access and set its flags, property_id, property_tag, property_type, and value. |
+| `mapi_property_collection` | mapi_property_collection class provides methods to add, get, set, remove, and access items in a collection of MAPI properties. |
+| `mapi_recipient` | mapi_recipient class represents a MAPI recipient and provides fields for address_type, display_name, email_address, properties, and recipient_type. |
+| `msg_document` | msg_document class provides methods to load a MSG document from a file, reader, or stream, and exposes its major_version, minor_version, root, strict flag, and the ability to convert to a cfb_document. |
 | `msg_exception` | msg_exception class represents an exception type for errors in MSG processing. |
-| `msg_reader` | msg_reader class reads a MSG document and provides methods to load it from a file or stream, and exposes its cfb document and validation_issues. |
-| `msg_storage` | msg_storage class represents a storage node in a MSG document and provides access to its clsid, creation_time, modified_time, name, and methods to add child storages and streams. |
-| `msg_stream` | msg_stream class represents a stream node in a MSG document and provides access to its clsid, creation_time, data, modified_time, and name. |
-| `msg_writer` | msg_writer class writes a MSG document and provides methods to write to a file, stream, or return the result as bytes. |
+| `msg_reader` | msg_reader class provides methods to load a MSG document from a file or stream and exposes its cfb document, strict flag, and validation_issues. |
+| `msg_storage` | msg_storage class represents a storage node in a MSG document and provides methods to add child storages or streams and access its clsid, creation_time, modified_time, name, and find child storages or streams. |
+| `msg_stream` | msg_stream class represents a stream node in a MSG document and provides fields for clsid, creation_time, data, modified_time, name, and state_bits. |
+| `msg_writer` | msg_writer class provides methods to write a MSG document to bytes, a file, or a stream. |
 
 #### Enumerations
 
 | Enumeration | Description |
 | --- | --- |
-| `directory_color_flag` | directory_color_flag enum lists the black and red color flags used in the directory of a Compound File Binary document. |
-| `directory_object_type` | directory_object_type enum lists the root_storage_object, storage_object, stream_object, and unknown_or_unallocated object types used in the directory of a Compound File Binary document. |
-| `sector_marker` | sector_marker enum lists the difsect, endofchain, fatsect, and freesect markers used in the sector allocation tables of a Compound File Binary document. |
-| `common_message_property_id` | common_message_property_id enum lists the attach_content_id, attach_data_binary, attach_filename, attach_long_filename, attach_method, attach_mime_tag, body, body_html, display_bcc, display_cc, display_name, and display_to property identifiers for MAPI messages. |
+| `directory_color_flag` | directory_color_flag enum lists the black and red color flags used in directory entries. |
+| `directory_object_type` | directory_object_type enum lists the root_storage_object, storage_object, stream_object, and unknown_or_unallocated object types used in directory entries. |
+| `sector_marker` | sector_marker enum lists the difsect, endofchain, fatsect, and freesect sector markers used in the file allocation table. |
+| `common_message_property_id` | common_message_property_id enum lists property identifiers such as attach_content_id, attach_data_binary, attach_filename, attach_long_filename, attach_method, attach_mime_tag, body, body_html, display_bcc, display_cc, display_name, and display_to. |
 | `msg_storage_role` | msg_storage_role enum lists the attachment, custom_attachment, embedded_message, generic, message, named_property_mapping, and recipient roles for MSG storages. |
-| `property_type_code` | property_type_code enum lists the ptyp_binary, ptyp_boolean, ptyp_currency, ptyp_error_code, ptyp_floating32, ptyp_floating64, ptyp_floating_time, ptyp_guid, ptyp_integer16, ptyp_integer32, ptyp_integer64, and ptyp_multiple_binary property type codes for MAPI properties. |
+| `property_type_code` | property_type_code enum lists property type codes such as ptyp_binary, ptyp_boolean, ptyp_currency, ptyp_error_code, ptyp_floating32, ptyp_floating64, ptyp_floating_time, ptyp_guid, ptyp_integer16, ptyp_integer32, ptyp_integer64, and ptyp_multiple_binary. |
 
 #### Detailed Member Reference
 
 ### foss
 
-The `aspose.email.foss` namespace hosts the public API surface for MSG and CFB file handling, with `mapi_message` serving as the main entry point for message operations and supporting creation from scratch, loading from MSG/EML files or streams, and saving back to MSG or EML formats.
+The `aspose.email.foss` namespace hosts the public API surface for MSG and CFB file handling, with `mapi_message` serving as the main entry point for message authoring and the low-level `msg_reader`, `msg_document`, `msg_writer`, `cfb_reader`, `cfb_document`, and `cfb_writer` classes providing direct access to the container structure.
 
 `mapi_message` is the primary high-level entry point for creating, editing, and reloading
 messages; the lower-level `msg_reader`/`msg_document`/`msg_writer` and
 `cfb_reader`/`cfb_document`/`cfb_writer` classes expose the underlying MSG and CFB container
 structure directly for callers that need it.
-
-| Class | Description |
-|---|---|
-| `cfb_document` | Mutable Compound File Binary (CFB) document — holds the root `cfb_storage` tree and header fields (major/minor version, transaction signature number); built via `from_reader`/`from_file`/`from_stream`/`from_bytes`/`from_buffer`. |
-| `cfb_exception` | Exception type thrown for malformed or unsupported Compound File Binary (CFB) content (a `std::runtime_error` subclass). |
-| `cfb_node` | Abstract base class for CFB tree nodes (`cfb_storage` or `cfb_stream`) — carries name, CLSID, state bits, and creation/modified timestamps common to both. |
-| `cfb_reader` | Reusable reader for parsed Compound File Binary (CFB) containers — exposes the header, FAT/mini-FAT/DIFAT chains, and directory entries, and resolves storage/stream data by ID or path. |
-| `cfb_storage` | Mutable CFB storage node — a directory-like container of child nodes (nested storages and streams), built with `add_storage`/`add_stream`. |
-| `cfb_stream` | Mutable CFB stream node holding a raw byte payload (`data()`). |
-| `cfb_writer` | Static serializer that writes a `cfb_document` to bytes, a file, or an output stream (`to_bytes`/`write_file`/`write_stream`). |
-| `mapi_attachment` | Mutable MAPI attachment — filename, raw `data`, MIME type, content ID, an optional embedded `mapi_message`, and its own MAPI properties; built via `from_bytes`/`from_stream`. |
-| `mapi_message` | Mutable high-level MSG object — creates, loads (`from_file`/`from_stream`/`load_from_eml`), edits, and saves Outlook `.msg` messages, with subject/body, recipients, attachments, and MAPI properties. |
-| `mapi_property` | A single MAPI property — numeric `property_id`, `property_type`, `value`, and `flags`, combined into a `property_tag`. |
-| `mapi_property_collection` | Ordered collection of `mapi_property` entries, keyed by (property ID, property type), with `set`/`add`/`get`/`remove` lookup. |
-| `mapi_recipient` | Mutable MAPI recipient — display name, email address, recipient type, address type, and its own `mapi_property_collection`. |
-| `msg_document` | Mutable MSG document model — wraps a `msg_storage` root, and converts to a `cfb_document` for CFB serialization via `to_cfb_document`. |
-| `msg_exception` | Exception type thrown for malformed or unsupported MSG structures (a `std::runtime_error` subclass). |
-| `msg_reader` | Reader for the MSG-specific container layout, built on top of a `cfb_reader` — validates the top-level MSG structure and records `validation_issues`. |
-| `msg_storage` | Mutable MSG storage node — name, role (`msg_storage_role`), CLSID/timestamps, and child `msg_stream`/`msg_storage` collections, with `add_stream`/`add_storage`/`find_stream`/`find_storage`. |
-| `msg_stream` | Mutable MSG stream node holding a name, raw byte payload, CLSID, and state/timestamp metadata. |
-| `msg_writer` | Static serializer that writes a `msg_document` to bytes, a file, or an output stream (`to_bytes`/`write_file`/`write_stream`). |
 
 | Struct | Description |
 |---|---|
@@ -278,11 +274,10 @@ structure directly for callers that need it.
 
 - **[Getting started guide](https://docs.aspose.org/email/cpp/)** — installation, walkthroughs, and feature guides for this library.
 - **[How-to guides & FAQ](https://kb.aspose.org/email/cpp/)** — task-focused answers for common MSG/EML/CFB processing questions.
-- **[Changelog](CHANGELOG.md)** — release history.
-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-Cpp/issues).
-
 - **[Full API reference](https://reference.aspose.org/email/cpp/)** — the complete, browsable reference for all 26 public types (the [API reference](#api-reference) section above covers the essentials).
 - **[Public API surface](PUBLIC_API.md)** — the stable public namespaces and headers this library commits to.
+- **[Changelog](CHANGELOG.md)** — release history.
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-email-foss/Aspose.Email-FOSS-for-Cpp/issues).
 
 ## Scope and Limitations
 
@@ -296,6 +291,8 @@ See [Aspose.Email for Cpp — Enterprise Edition](https://products.aspose.com/em
 
 The suite covers 3 test files under `tests/`.
 
+Build it from source with CMake and either add it as a subdirectory of your own build, or install it and consume it with `find_package(AsposeEmailFoss)`.
+
 ```cmake
 add_subdirectory(Aspose.Email-FOSS-for-Cpp)
 target_link_libraries(your_app PRIVATE AsposeEmailFoss::AsposeEmailFoss)
@@ -307,9 +304,13 @@ cmake --build --preset default
 ctest --preset default
 ```
 
+This uses the repo's own `CMakePresets.json` "default" configuration (Ninja generator, `RelWithDebInfo`, tests on, examples off). The library target is `AsposeEmailFoss` (alias `AsposeEmailFoss::AsposeEmailFoss`); no third-party dependency is fetched to build or test it.
+
 ```powershell
 cmake --install out\build\default --prefix out\install\default
 ```
+
+This installs the headers plus a CMake package config (`AsposeEmailFossConfig.cmake`) under the given prefix, so a downstream project can consume the library with `find_package(AsposeEmailFoss)` instead of vendoring the source tree.
 
 - CMake 3.26 or later — the version floor set by the project's own `cmake_minimum_required`.
 - Ninja — the generator configured by the repository's own `default` CMake preset (`CMakePresets.json`); any CMake-supported generator works if you configure the project directly instead of through that preset.
@@ -317,8 +318,6 @@ cmake --install out\build\default --prefix out\install\default
 For a full command-line workflow, see [`examples/create_msg_and_eml.cpp`](examples/create_msg_and_eml.cpp), [`examples/msg_reader.cpp`](examples/msg_reader.cpp), and [`examples/msg_summary.cpp`](examples/msg_summary.cpp) under Additional Examples below.
 
 Runnable CLI examples live in the [`examples/`](examples/) directory — turn on `ASPOSE_EMAIL_FOSS_BUILD_EXAMPLES` to build them (see [Development and Testing](#development-and-testing)); [`examples/README.md`](examples/README.md) maps each one to the specific API calls it exercises.
-
-[`examples/msg_summary.cpp`](examples/msg_summary.cpp) is a third example worth knowing about: it opens a `.msg` file through `mapi_message` and prints a high-level summary — subject, sender, recipients, attachments, and a body preview — including looking up an arbitrary MAPI property by ID and type when `--property-id`/`--property-type` are passed on the command line. Its `main()` is longer than is useful to reproduce here; see the file directly.
 
 ```powershell
 cmake --preset default
