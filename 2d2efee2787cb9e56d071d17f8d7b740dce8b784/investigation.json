@@ -1,0 +1,166 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:python_requires",
+      "import_path:aspose.words_foss"
+    ],
+    "text": "Python developers building document processing applications who need a pure-Python, dependency-light alternative to Microsoft Word automation for DOCX, DOC, RTF, Markdown, and plain-text files."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.reader_factory",
+        "format:input.md",
+        "format:input.txt"
+      ],
+      "text": "Automatically selects the appropriate reader (DOCX, DOC, RTF, Markdown, or plain text) based on file extension when constructing a Document.",
+      "title": "Read multiple input formats"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.docx_reader"
+      ],
+      "text": "Parses DOCX files using only the standard library zipfile and xml.etree modules, with no compiled dependencies.",
+      "title": "Pure-Python DOCX parsing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.doc_reader",
+        "dependency:olefile-0.46"
+      ],
+      "text": "Reads Word 97-2003 .doc binary files and RTF documents via olefile delegation.",
+      "title": "Legacy DOC support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.drawing"
+      ],
+      "text": "Embeds inline, captioned, table, and header/footer images as base64 data URIs in Markdown, renders them in PDF, and preserves them losslessly in DOCX round-trips.",
+      "title": "Image handling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_writer",
+        "public_symbol:aspose.words_foss.markdownloadoptions"
+      ],
+      "text": "Exports to Markdown using LdmMarkdownWriter with tunable options for heading style, list markers, code blocks, tables, links, and image embedding.",
+      "title": "Markdown export with options"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.pdf_writer",
+        "dependency:fpdf2-2.7.5"
+      ],
+      "text": "Exports to PDF using LdmPdfWriter backed by fpdf2, with built-in paragraph, table, and shape rendering and configurable options.",
+      "title": "PDF export with fpdf2"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.model",
+        "dependency:pydantic-2.0.0"
+      ],
+      "text": "Exposes a Light Document Model built with Pydantic models for sections, paragraphs, runs, tables, styles, and lists.",
+      "title": "Typed document model"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "text": "SaveFormat.DOC is defined for API compatibility but Document.save() does not implement a DOC writer; saving to DOC raises ValueError."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.loadoptions"
+      ],
+      "text": "OoxmlSaveOptions.compliance set to ISO29500_2008_STRICT raises NotImplementedError; only ECMA376_2006 and ISO29500_2008_TRANSITIONAL are implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.saving"
+      ],
+      "text": "Eight PdfSaveOptions fields (text_compression, embed_full_fonts, use_core_fonts, font_embedding_mode, page_mode, color_mode, preserve_form_fields, memory_optimization) are not yet consumed by the PDF writer."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:product-knowledge-refresh"
+      ],
+      "text": "Enables pure-Python document processing without requiring Microsoft Word, COM automation, or system-level Office dependencies."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.document",
+        "public_symbol:aspose.words_foss.light_document_model"
+      ],
+      "text": "Provides a unified Light Document Model to parse and convert between DOCX, DOC, RTF, Markdown, and plain-text formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.docx_writer"
+      ],
+      "text": "Supports round-trip editing of DOCX files while preserving headers, footers, images, bookmarks, and custom styles."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:product-knowledge-refresh",
+      "identity:repository",
+      "license:spdx",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.Words FOSS for Python is a free, open-source, MIT-licensed Python library for reading and writing Word documents without Microsoft Word or COM automation."
+  },
+  "uncertainties": [
+    "The exact set of public symbols and their completeness is not fully verifiable from the fact dossier alone.",
+    "Whether all 146 public types mentioned in the README are present cannot be confirmed from the provided public_symbol facts.",
+    "The behavior of Document.save() when no output format is specified and extension inference fails is not documented in facts.",
+    "The exact round-trip fidelity for complex DOCX features like form fields or watermarks is not specified beyond headers/footers and images.",
+    "Whether MarkdownSaveOptions.export_images_as_base64 affects only inline images or also header/footer images is not explicit.",
+    "The PDF writer's handling of right-to-left scripts or complex text layout is not mentioned in facts.",
+    "The exact behavior of MarkdownLoadOptions.preserve_empty_lines on input with multiple consecutive blank lines is not detailed.",
+    "Whether the Light Document Model supports document properties or custom XML parts is not stated in the facts."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.document",
+        "public_symbol:aspose.words_foss.saveformat",
+        "public_symbol:aspose.words_foss.saving"
+      ],
+      "name": "Load and convert document",
+      "text": "Construct a Document from a file path, then call save() with a SaveFormat constant or options instance to export to DOCX, Markdown, PDF, or plain text."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.markdown_reader",
+        "public_symbol:aspose.words_foss.md_import",
+        "format:input.md"
+      ],
+      "name": "Parse Markdown with structure",
+      "text": "Load Markdown files using MarkdownFileReader so headings, lists, emphasis, tables, and embedded images become typed nodes in the Light Document Model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.pdf_writer",
+        "dependency:fpdf2-2.7.5"
+      ],
+      "name": "Export to PDF with built-in renderer",
+      "text": "Use LdmPdfWriter backed by fpdf2 to render paragraphs, tables, and shapes to PDF without external engines or system fonts."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.document",
+        "format:output.txt"
+      ],
+      "name": "Extract plain text",
+      "text": "Call Document.get_text() or save with SaveFormat.TEXT to extract plain text from any loaded document."
+    }
+  ]
+}

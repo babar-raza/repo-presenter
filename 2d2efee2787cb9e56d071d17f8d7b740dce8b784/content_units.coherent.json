@@ -1,0 +1,757 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "enterprise_relationship/context"
+    ]
+  },
+  "degrade_records": [
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:4"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:7"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Round-trip DOCX editing: `DocumentReader` builds a shared Light Document Model from an existing `.docx`, and `LdmDocxWriter` writes it back out, preserving headers/footers, inline shapes and images, bookmarks, and custom paragraph styles.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "key_capabilities",
+      "slot": "inherited_unit:010.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Extract plain text from any loaded document with `Document.get_text()`, or save it directly with `SaveFormat.TEXT`.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "key_capabilities",
+      "slot": "inherited_unit:010.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Configure DOCX packaging through `OoxmlSaveOptions`: compression level, ECMA-376/ISO 29500 Transitional compliance, and pretty-printed XML.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "key_capabilities",
+      "slot": "inherited_unit:010.list"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:2"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:3"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:4"
+    },
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:5"
+    },
+    {
+      "action": "opening_fact_true",
+      "detail": "Aspose.Words FOSS for Python reads `.md`, `.txt`, .docx, and .doc files and writes `.md`, `.pdf`, and `.txt` files. It converts documents between these formats using its `Document` class and associated writers and readers. The package provides a `light_document_model` for memory-efficient processing and supports reading Markdown with `MarkdownLoadOptions`. It is implemented in Python and distributed under the MIT license.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "opening",
+      "slot": "opening"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "- Convert image-containing documents — inline images, captioned images, images in tables, and images in headers/footers — to every output format: images embed as base64 data URIs in Markdown by default, render through the built-in `ShapeRenderer` in PDF, and round-trip losslessly through DOCX.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "key_capabilities",
+      "slot": "inherited_unit:010.list"
+    }
+  ],
+  "omitted": [
+    {
+      "fact_id": "format:output.docx",
+      "reason": "The format:output.docx fact is present but not used in the opening unit because the opening focuses on input and output actions described by the accepted facts, and no output direction is specified for .docx in the accepted facts.",
+      "section": "opening"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "format:input.md",
+        "format:input.txt",
+        "format:output.md",
+        "format:output.pdf",
+        "format:output.txt"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.Words FOSS for Python reads MD and TXT files and writes MD, PDF and TXT files."
+    },
+    {
+      "fact_ids": [
+        "format:input.md",
+        "format:input.txt",
+        "public_symbol:aspose.words_foss.reader_factory"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It reads .md and .txt files using the aspose.words_foss.reader_factory, automatically selecting the appropriate reader based on the file extension."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:062.paragraph",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.document",
+        "public_symbol:aspose.words_foss.light_document_model",
+        "public_symbol:aspose.words_foss.saveformat",
+        "public_symbol:aspose.words_foss.saving"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The aspose.words_foss.Document class serves as the primary entry point for reading and writing documents, while the aspose.words_foss.light_document_model module provides an abstract representation used internally by readers and writers. It converts documents to and from DOCX, DOC, RTF, Markdown, and plain text formats, and can export to PDF using the aspose.words_foss.saving module."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.document",
+        "public_symbol:aspose.words_foss.light_document_model",
+        "public_symbol:aspose.words_foss.saveformat",
+        "public_symbol:aspose.words_foss.saving"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words_foss.document",
+      "text": "The aspose.words_foss.Document class represents a Word document and provides access to its content through properties such as sections, paragraphs, and styles; it supports loading from file paths or streams and saving to various formats using SaveFormat constants or save options."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.docx_reader",
+        "public_symbol:aspose.words_foss.docx_reader.documentreader"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words_foss.docx_reader",
+      "text": "The aspose.words_foss.docx_reader module provides the DocumentReader class, which reads DOCX files and produces an abstracted data structure via load_file, load_stream, or load_bytes methods followed by to_light_document."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.doc_reader",
+        "public_symbol:aspose.words_foss.doc_reader.docfilereader"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words_foss.doc_reader",
+      "text": "The aspose.words_foss.doc_reader module provides the DocFileReader class, which reads legacy DOC files and exposes a to_light_document method to convert them into the Light Document Model."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.markdownloadoptions",
+        "public_symbol:aspose.words_foss.md_writer"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words_foss.md_writer",
+      "text": "The aspose.words_foss.md_writer module provides the LdmMarkdownWriter class, which converts a document from the Light Document Model to a Markdown string, respecting options such as heading style, list marker, and link export mode defined in MarkdownLoadOptions."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.pdf_writer",
+        "public_symbol:aspose.words_foss.pdf_writer.ldmpdfwriter"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words_foss.pdf_writer",
+      "text": "The aspose.words_foss.pdf_writer module provides the LdmPdfWriter class, which converts a document from the Light Document Model to a PDF file using internal renderers for paragraphs, runs, tables, and shapes, and accepts PdfSaveOptions for compression, font embedding, and compliance settings."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose.words_foss.light_document_model",
+        "public_symbol:aspose.words_foss.model"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.words_foss.model",
+      "text": "The aspose.words_foss.model module exposes the Light Document Model, a set of classes such as Document, Section, Paragraph, and Table that provide a simplified, format-agnostic representation of document content used by readers and writers."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:102.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds strict ISO 29500 compliance for DOC writing, additional load/save formats, and page-layout features beyond this edition's scope."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.drawing.imagedata",
+        "public_symbol:aspose.words_foss.drawing.imagedata.content_type",
+        "public_symbol:aspose.words_foss.drawing.imagedata.from_mime"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.drawing.imagedata",
+      "text": "ImageData class holds image data and provides content_type read-only property for the MIME content-type string derived from image_type, and from_mime method to map a MIME content-type string to an ImageType constant."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.drawing.shape"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.drawing.shape",
+      "text": "Shape class represents a drawing shape in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.body",
+        "public_symbol:aspose.words_foss.light_document_model.body.get_child_nodes",
+        "public_symbol:aspose.words_foss.light_document_model.body.paragraphs",
+        "public_symbol:aspose.words_foss.light_document_model.body.tables"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.body",
+      "text": "Body class gives the paragraphs and tables of a section body, with paragraphs and tables read-only properties for direct Paragraph and Table children, and get_child_nodes method for child nodes optionally filtered by NodeType."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.bookmarkend"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.bookmarkend",
+      "text": "BookmarkEnd class represents the end node of a bookmark."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.border"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.border",
+      "text": "Border class represents a border of a document element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.cell"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.cell",
+      "text": "Cell class represents a table cell in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.cellformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.cellformat",
+      "text": "CellFormat class holds formatting properties for a table cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.doclist"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.doclist",
+      "text": "DocList class represents a list in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.fieldend"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.fieldend",
+      "text": "FieldEnd class represents the end node of a field."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.fieldseparator"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.fieldseparator",
+      "text": "FieldSeparator class represents the separator node of a field."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.fieldstart"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.fieldstart",
+      "text": "FieldStart class represents the start node of a field."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.font"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.font",
+      "text": "Font class holds font formatting properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.headerfooter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.headerfooter",
+      "text": "HeaderFooter class holds paragraphs and tables of a header or footer, with paragraphs and tables read-only properties for direct Paragraph and Table children."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.listformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.listformat",
+      "text": "ListFormat class holds list formatting properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.listlevel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.listlevel",
+      "text": "ListLevel class holds formatting properties for a list level."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.pagesetup"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.pagesetup",
+      "text": "PageSetup class holds page setup properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.paragraphformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.paragraphformat",
+      "text": "ParagraphFormat class holds paragraph formatting properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.row"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.row",
+      "text": "Row class represents a table row in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.rowformat"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.rowformat",
+      "text": "RowFormat class holds formatting properties for a table row."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.run"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.run",
+      "text": "Run class represents a run of text with the same formatting in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.section"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.section",
+      "text": "Section class represents a section in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.shading"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.shading",
+      "text": "Shading class holds shading properties for a document element."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.style"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.style",
+      "text": "Style class holds formatting properties for a style."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.tabstop"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.tabstop",
+      "text": "TabStop class represents a tab stop."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.tabstopcollection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.tabstopcollection",
+      "text": "TabStopCollection class holds a collection of tab stops with add, after, before, clear, and remove_by_position methods."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.table"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.table",
+      "text": "Table class represents a table in the document model with first_row and last_row read-only properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.textcolumn"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.textcolumn",
+      "text": "TextColumn class represents a text column."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.textcolumns"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.textcolumns",
+      "text": "TextColumns class holds a collection of text columns."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.light_document_model.unknownnode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.light_document_model.unknownnode",
+      "text": "UnknownNode class represents an unknown node type in the document model."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.markdown_reader.markdownreader",
+        "public_symbol:aspose.words_foss.markdown_reader.markdownreader.encoding",
+        "public_symbol:aspose.words_foss.markdown_reader.markdownreader.load_bytes",
+        "public_symbol:aspose.words_foss.markdown_reader.markdownreader.load_file",
+        "public_symbol:aspose.words_foss.markdown_reader.markdownreader.load_stream"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.markdown_reader.markdownreader",
+      "text": "MarkdownReader class reads Markdown content with encoding property for the text encoding used to decode the Markdown source, and load_bytes, load_file, and load_stream methods to load from raw bytes, a .md file from filepath, or a binary stream, respectively, and to_light_document method to convert the loaded content to a light document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.atxheadingblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.atxheadingblock",
+      "text": "AtxHeadingBlock class represents an ATX-style heading block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.autolinkblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.autolinkblock",
+      "text": "AutolinkBlock class represents an autolink block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.blocktype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.blocktype",
+      "text": "BlockType enum lists the ATX_HEADING, AUTOLINK, BOLD_INLINE, BULLET_LIST_ITEM, CELL, DOCUMENT, FENCED_CODE, FOOTNOTE_DEFINITION, FOOTNOTE_REFERENCE, HORIZONTAL_RULE, HTML_TAG, and INDEDENT_CODE block types."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.boldinlineblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.boldinlineblock",
+      "text": "BoldInlineBlock class represents a bold inline block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.bulletlistitemblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.bulletlistitemblock",
+      "text": "BulletListItemBlock class represents a bullet list item block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.cellblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.cellblock",
+      "text": "CellBlock class represents a table cell block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.documentblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.documentblock",
+      "text": "DocumentBlock class represents a document block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.fencedcodeblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.fencedcodeblock",
+      "text": "FencedCodeBlock class represents a fenced code block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.footnotedefinitionblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.footnotedefinitionblock",
+      "text": "FootnoteDefinitionBlock class represents a footnote definition block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.footnotereferenceblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.footnotereferenceblock",
+      "text": "FootnoteReferenceBlock class represents a footnote reference block in Markdown."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.headingblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.headingblock",
+      "text": "HeadingBlock class represents a heading block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.horizontalruleblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.horizontalruleblock",
+      "text": "HorizontalRuleBlock class represents a horizontal rule block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.indentedcodeblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.indentedcodeblock",
+      "text": "IndentedCodeBlock class represents an indented code block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.inlinecodeblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.inlinecodeblock",
+      "text": "InlineCodeBlock class represents an inline code block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.italicinlineblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.italicinlineblock",
+      "text": "ItalicInlineBlock class represents an italic inline element in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.linebreakblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.linebreakblock",
+      "text": "LineBreakBlock class represents a line break block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.linktextblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.linktextblock",
+      "text": "LinkTextBlock class represents a link text block in a Markdown document and exposes a read-only property has_destination."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.listitemblock",
+        "public_symbol:aspose.words_foss.md_import.listitemblock.get_level"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.listitemblock",
+      "text": "ListItemBlock class represents a list item block in a Markdown document and provides methods get_level and get_list_container."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.orderedlistitemblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.orderedlistitemblock",
+      "text": "OrderedListItemBlock class represents an ordered list item block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.paragraphblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.paragraphblock",
+      "text": "ParagraphBlock class represents a paragraph block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.quoteblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.quoteblock",
+      "text": "QuoteBlock class represents a quote block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.rowblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.rowblock",
+      "text": "RowBlock class represents a row block in a Markdown table and exposes a read-only property count."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.setextheadingblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.setextheadingblock",
+      "text": "SetextHeadingBlock class represents a Setext heading block in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.strikethroughblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.strikethroughblock",
+      "text": "StrikethroughBlock class represents a strikethrough element in a Markdown document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.tableblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.tableblock",
+      "text": "TableBlock class represents a table block in a Markdown document and exposes a read-only property columns_count."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.words_foss.md_import.underlineblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose.words_foss.md_import.underlineblock",
+      "text": "UnderlineBlock class represents an underline element in a Markdown document."
+    }
+  ]
+}
