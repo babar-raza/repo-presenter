@@ -12,42 +12,41 @@
     {
       "fact_ids": [
         "dependency:microsoft.ml.onnxruntime",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
-      "text": "Embeds detection, refinement, and recognition ONNX models directly in the assembly, running entirely on the local CPU via ONNX Runtime.",
+      "text": "Embeds detection, refinement, and recognition ONNX models directly in the assembly; inference runs locally via ONNX Runtime without external model files.",
       "title": "Local OCR with embedded models"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.asposeocr"
-      ],
-      "text": "Processes single raster images (`InputType.SingleImage`) and multi-page PDFs (`InputType.PDF`) with one API call.",
-      "title": "Multi-format input support"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.recognitionresult",
-        "public_symbol:aspose.ocr.linesresult"
-      ],
-      "text": "Returns `RecognitionResult` objects containing full text and `RecognitionLinesResult` with `System.Drawing.Rectangle` coordinates for each detected line.",
-      "title": "Line-level output with coordinates"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "text": "Recognizes Latin-script text including diacritical characters supported by the embedded recognition model.",
       "title": "Latin-script recognition"
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.ocr.linesresult",
+        "public_symbol:aspose.ocr.recognitionresult",
+        "dependency:system.drawing.common"
+      ],
+      "text": "Returns `RecognitionLinesResult` with `System.Drawing.Rectangle` coordinates for each detected text line.",
+      "title": "Line-level bounding boxes"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput"
+      ],
+      "text": "Processes multiple images or PDF pages in one `OcrInput` container, returning results in source order.",
+      "title": "Multi-input processing"
+    },
+    {
+      "fact_ids": [
         "package:target_framework"
       ],
-      "text": "Targets netstandard2.0, net48, net8.0, net9.0, and net10.0, enabling use across multiple .NET runtime versions.",
-      "title": "Cross-framework compatibility"
+      "text": "Supports .NET Framework 4.8, .NET Standard 2.0, .NET 8, .NET 9, and .NET 10.",
+      "title": "Cross-framework targeting"
     }
   ],
   "limitations": [
@@ -65,73 +64,74 @@
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.ocr.linesresult"
+      ],
+      "text": "Only axis-aligned text-line rectangles are returned; polygonal regions and layout labels are not supported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.recognitionresult"
+      ],
+      "text": "No runtime language selection API; recognition is limited to the embedded Latin-script model."
+    },
+    {
+      "fact_ids": [
         "dependency:microsoft.ml.onnxruntime"
       ],
-      "text": "No GPU execution support; inference uses CPU execution provider only."
+      "text": "No GPU execution provider is configured; inference uses CPU only."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.ocr.asposeocr"
       ],
-      "text": "No support for automatic rotation, deskewing, color inversion, or user-configurable preprocessing."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
-      ],
-      "text": "No confidence scores, font detection, table structure, or barcode detection."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
-      ],
-      "text": "No language selection API; recognition is limited to the embedded Latin alphabet."
+      "text": "No support for search PDF generation, confidence scores, font detection, table structure, or barcode detection."
     }
   ],
   "problems_solved": [
     {
       "fact_ids": [
         "dependency:microsoft.ml.onnxruntime",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
       "text": "Enables offline text recognition from images and PDFs without network calls or external model downloads."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.ocr.recognitionresult",
-        "public_symbol:aspose.ocr.linesresult"
+        "public_symbol:aspose.ocr.linesresult",
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
-      "text": "Provides structured output with both recognized text and spatial coordinates of detected lines."
+      "text": "Provides structured output with recognized text and line-level bounding box coordinates for layout-aware processing."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.asposeocr"
+        "public_symbol:aspose.ocr.ocroutput"
       ],
-      "text": "Supports batch processing of multiple images or PDF pages in a single API call while preserving order."
+      "text": "Supports batch processing of multiple images or PDF pages in a single API call while preserving input order."
     }
   ],
   "product_summary": {
     "fact_ids": [
-      "identity:repository",
       "identity:ecosystem",
       "identity:family",
       "identity:platform",
       "package:name",
-      "package:version"
+      "package:version",
+      "public_symbol:aspose",
+      "public_symbol:aspose.ocr",
+      "public_symbol:aspose.ocr.asposeocr"
     ],
-    "text": "Aspose.OCR.FOSS is a free, open-source OCR library for .NET that performs local text detection and recognition on raster images and PDF documents using embedded ONNX models."
+    "text": "Aspose.OCR.FOSS is a free, open-source OCR library for .NET that performs local text detection and Latin-script recognition on raster images and PDF documents using embedded ONNX models."
   },
   "uncertainties": [
-    "Whether the embedded ONNX models include support for non-Latin scripts beyond diacritical Latin characters.",
-    "How the library handles corrupted or malformed PDF files during rendering.",
-    "Whether the 150-DPI PDF rendering resolution can be adjusted in future versions.",
-    "Whether polygonal text regions or layout labels may be exposed in future API versions.",
-    "Whether the large package size due to embedded models will be addressed in future releases.",
-    "Whether input-level multithreading will be added to complement ONNX Runtime's intra-operation parallelism.",
-    "Whether the public API will evolve beyond its current compact shape as capabilities extend.",
-    "Whether non-Windows platforms will be supported if System.Drawing.Common dependencies change."
+    "The exact set of Latin characters supported by the embedded recognition model is not explicitly listed.",
+    "Whether the embedded ONNX models are quantized or their exact versions is not stated.",
+    "The behavior of `AsposeOcr.Recognize` when encountering corrupted or malformed PDFs is not documented in facts.",
+    "The maximum file size or page count supported in a single `OcrInput` is not specified.",
+    "Whether `System.Drawing.Common` has known cross-platform limitations beyond Windows is not detailed.",
+    "The impact of image preprocessing steps (e.g., resizing, grayscale conversion) on accuracy is not quantified.",
+    "The threading behavior of ONNX Runtime within a single inference call is described but not its interaction with application-level parallelism.",
+    "The licensing of the embedded ONNX models is referenced only via the MIT license file, not model-specific terms."
   ],
   "workflows": [
     {
@@ -152,11 +152,21 @@
     {
       "fact_ids": [
         "install_command:dotnet",
-        "package:name",
-        "package:published_version"
+        "package:name"
       ],
       "name": "Install via NuGet",
       "text": "Install the package using `dotnet add package Aspose.OCR.FOSS`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.asposeocr",
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult",
+        "public_symbol:aspose.ocr.inputtype"
+      ],
+      "name": "Recognize PDF pages",
+      "text": "Create an `OcrInput` with `InputType.PDF`, add PDF paths, call `AsposeOcr.Recognize`, and iterate over `RecognitionResult` objects."
     }
   ]
 }

@@ -4,7 +4,9 @@
     {
       "fact_ids": [
         "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "symbol_fact_id": "public_symbol:aspose.ocr.asposeocr"
     },
@@ -17,19 +19,40 @@
     },
     {
       "fact_ids": [
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.ocr.ocroutput"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose.ocr.recognitionresult",
         "public_symbol:aspose.ocr.linesresult"
       ],
       "symbol_fact_id": "public_symbol:aspose.ocr.recognitionresult"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.linesresult"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.ocr.linesresult"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.inputtype",
+        "enum_member:aspose.ocr.inputtype.singleimage",
+        "enum_member:aspose.ocr.inputtype.pdf"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.ocr.inputtype"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
       "Local OCR with embedded models",
-      "Multi-format input support",
-      "Line-level output with coordinates",
       "Latin-script recognition",
-      "Cross-framework compatibility"
+      "Line-level bounding boxes",
+      "Multi-input processing",
+      "Cross-framework targeting"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -38,72 +61,70 @@
     {
       "fact_ids": [
         "dependency:microsoft.ml.onnxruntime",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
-      ],
-      "shared_fact_ids": [
         "public_symbol:aspose.ocr.asposeocr"
       ],
+      "shared_fact_ids": [],
       "title": "Local OCR with embedded models"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.asposeocr"
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
-      ],
-      "title": "Multi-format input support"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.recognitionresult",
-        "public_symbol:aspose.ocr.linesresult"
-      ],
-      "shared_fact_ids": [],
-      "title": "Line-level output with coordinates"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "title": "Latin-script recognition"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.linesresult",
+        "public_symbol:aspose.ocr.recognitionresult",
+        "dependency:system.drawing.common"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:aspose.ocr.recognitionresult"
+      ],
+      "title": "Line-level bounding boxes"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput"
+      ],
+      "shared_fact_ids": [],
+      "title": "Multi-input processing"
     },
     {
       "fact_ids": [
         "package:target_framework"
       ],
       "shared_fact_ids": [],
-      "title": "Cross-framework compatibility"
+      "title": "Cross-framework targeting"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "inherited_unit:027.paragraph",
-        "inherited_unit:028.code_block"
+        "inherited_unit:008.code_block"
       ],
-      "section_id": "quick_start",
-      "text": "No verified examples are executable in isolation; the Quick Start section is omitted."
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README was omitted because it was not placeable in the semantic shell and no verified example fact supported its inclusion."
     },
     {
       "fact_ids": [
-        "inherited_unit:031.heading",
+        "inherited_unit:028.code_block"
+      ],
+      "section_id": "quick_start",
+      "text": "No Quick Start section is rendered because no verified example fact was available; all examples in the inherited README were marked as UNRESOLVED."
+    },
+    {
+      "fact_ids": [
         "inherited_unit:032.code_block",
-        "inherited_unit:033.html_block",
-        "inherited_unit:034.heading",
         "inherited_unit:036.code_block",
-        "inherited_unit:037.heading",
-        "inherited_unit:038.code_block",
-        "inherited_unit:039.html_block"
+        "inherited_unit:038.code_block"
       ],
       "section_id": "additional_examples",
-      "text": "All examples in the inherited README are UNRESOLVED and not citable; the Additional Examples section is omitted."
+      "text": "No Additional Examples section is rendered because no verified example fact was available; all examples in the inherited README were marked as UNRESOLVED."
     }
   ],
   "flagship_example_id": null,
@@ -113,11 +134,19 @@
       "section_id": "badges"
     },
     {
+      "link_fact_id": "link_target:002",
+      "section_id": "badges"
+    },
+    {
       "link_fact_id": "link_target:003",
       "section_id": "badges"
     },
     {
       "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:006",
       "section_id": "badges"
     },
     {
@@ -141,24 +170,16 @@
       "section_id": "navigation"
     },
     {
-      "link_fact_id": "link_target:013",
-      "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:014",
-      "section_id": "navigation"
-    },
-    {
       "link_fact_id": "link_target:016",
-      "section_id": "navigation"
+      "section_id": "api_reference"
     },
     {
       "link_fact_id": "link_target:017",
-      "section_id": "navigation"
+      "section_id": "documentation_resources"
     },
     {
       "link_fact_id": "link_target:018",
-      "section_id": "navigation"
+      "section_id": "scope_limitations"
     },
     {
       "link_fact_id": "link_target:019",
@@ -167,14 +188,6 @@
     {
       "link_fact_id": "link_target:020",
       "section_id": "navigation"
-    },
-    {
-      "link_fact_id": "link_target:002",
-      "section_id": "installation"
-    },
-    {
-      "link_fact_id": "link_target:006",
-      "section_id": "installation"
     },
     {
       "link_fact_id": "link_target:021",
@@ -194,7 +207,15 @@
     },
     {
       "link_fact_id": "link_target:007",
-      "section_id": "enterprise_relationship"
+      "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
     }
   ],
   "material_limitations": [],

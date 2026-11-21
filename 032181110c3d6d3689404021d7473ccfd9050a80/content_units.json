@@ -1,243 +1,243 @@
 {
   "omitted": [
     {
+      "fact_id": "public_symbol:aspose",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.ocr",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.ocr.asposeocr",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.ocr.linesresult",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.ocr.ocrinput",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.ocr.ocroutput",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose.ocr.recognitionresult",
+      "reason": "Symbol fact used only for identifier validation; not needed in prose.",
+      "section": "opening"
+    },
+    {
       "fact_id": "install_command:dotnet",
-      "reason": "The installation command is handled by a separate deterministic block and not part of the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "dependency:microsoft.ml.onnxruntime",
-      "reason": "Dependencies are handled by a separate deterministic block and not part of the opening prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Provenance metadata about knowledge refresh is not stated in prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Repository identity is not stated in prose.",
-      "section": "opening"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Revision hash is provenance metadata and not stated in prose.",
+      "reason": "Installation command belongs in a separate installation unit, not the opening.",
       "section": "opening"
     },
     {
       "fact_id": "package:version",
-      "reason": "Version is printed by the renderer and not stated in prose.",
+      "reason": "Version is printed by the renderer; not needed in prose.",
       "section": "opening"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "Ecosystem identity is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "Family identity is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "Platform identity is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Knowledge refresh provenance is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "Repository identity is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "Revision identity is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "package:name",
-      "reason": "Package name is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
     },
     {
       "fact_id": "package:published_version",
-      "reason": "Published version is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
+      "reason": "Published version is printed by the renderer; not needed in prose.",
+      "section": "opening"
     },
     {
-      "fact_id": "package:version",
-      "reason": "Version is not used in capability descriptions; it is printed by the renderer elsewhere.",
-      "section": "key_capabilities"
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Provenance metadata; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is printed by the renderer; not needed in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Revision identity is printed by the renderer; not needed in prose.",
+      "section": "opening"
     },
     {
       "fact_id": "example:001",
-      "reason": "Examples are not used in capability descriptions; they are omitted per instructions.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used for prose.",
+      "section": "opening"
     },
     {
       "fact_id": "example:002",
-      "reason": "Examples are not used in capability descriptions; they are omitted per instructions.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used for prose.",
+      "section": "opening"
     },
     {
       "fact_id": "example:003",
-      "reason": "Examples are not used in capability descriptions; they are omitted per instructions.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used for prose.",
+      "section": "opening"
     },
     {
       "fact_id": "example:004",
-      "reason": "Examples are not used in capability descriptions; they are omitted per instructions.",
-      "section": "key_capabilities"
+      "reason": "Unresolved example; not used for prose.",
+      "section": "opening"
     },
     {
       "fact_id": "format:input.pdf",
-      "reason": "Format identity is not used in capability descriptions; it is printed by the renderer elsewhere.",
+      "reason": "Format fact is not cited in the opening unit because the opening already states 'PDF documents' in prose and the renderer will print the .pdf extension elsewhere; citing it here would duplicate content and risk violating the rule against listing file extensions in prose.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The inherited list is already represented in the capability units through the described behaviors; listing it separately would duplicate content.",
       "section": "key_capabilities"
     },
     {
-      "fact_id": "inherited_unit:029.paragraph",
-      "reason": "Describes PDF page coordinate behavior but not required for the four required units.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:031.heading",
-      "reason": "Section heading not used in prose units.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:034.heading",
-      "reason": "Section heading not used in prose units.",
-      "section": "api_reference"
-    },
-    {
       "fact_id": "inherited_unit:035.paragraph",
-      "reason": "Describes multi-file input behavior but not required for the four required units.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:037.heading",
-      "reason": "Section heading not used in prose units.",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "inherited_unit:040.heading",
-      "reason": "Section heading not used in prose units.",
-      "section": "api_reference"
+      "reason": "The constraint that all files in one input container must have the same InputType is already covered by the multi-input processing capability description.",
+      "section": "key_capabilities"
     },
     {
       "fact_id": "inherited_unit:044.paragraph",
-      "reason": "Describes API design philosophy but not required for the four required units.",
+      "reason": "The inherited paragraph is a statement about API size, not a capability or identity; it is not cited by any slot and does not appear in the rendered document.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:047.heading",
+      "reason": "The heading is a rendering artifact, not a fact about the product; the renderer prints it, so it is omitted.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:048.list",
-      "reason": "Lists Recognize method behavior but not required for the four required units.",
+      "reason": "The list items are implementation details of AsposeOcr.Recognize behavior; they are not cited by any slot and are not stated in prose elsewhere.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:049.heading",
+      "reason": "The heading is a rendering artifact, not a fact about the product; the renderer prints it, so it is omitted.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:050.list",
-      "reason": "Lists OcrInput members but not required for the four required units.",
+      "reason": "The list items are implementation details of OcrInput members; they are not cited by any slot and are not stated in prose elsewhere.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:051.heading",
+      "reason": "The heading is a rendering artifact, not a fact about the product; the renderer prints it, so it is omitted.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:052.list",
-      "reason": "Describes RecognitionResult collection behavior but not required for the four required units.",
+      "reason": "The list items are implementation details of OcrOutput; they are not cited by any slot and are not stated in prose elsewhere.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:053.heading",
+      "reason": "The heading is a rendering artifact, not a fact about the product; the renderer prints it, so it is omitted.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:054.list",
-      "reason": "Lists RecognitionResult members but not required for the four required units.",
+      "reason": "The list items are implementation details of RecognitionResult; they are not cited by any slot and are not stated in prose elsewhere.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:055.heading",
+      "reason": "The heading is a rendering artifact, not a fact about the product; the renderer prints it, so it is omitted.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:056.list",
-      "reason": "Lists LinesResult members but not required for the four required units.",
+      "reason": "The list items are implementation details of LinesResult; they are not cited by any slot and are not stated in prose elsewhere.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:057.heading",
+      "reason": "The heading is a rendering artifact, not a fact about the product; the renderer prints it, so it is omitted.",
       "section": "api_reference"
     },
     {
       "fact_id": "inherited_unit:058.list",
-      "reason": "Lists InputType values but not required for the four required units.",
+      "reason": "The list items are implementation details of InputType; they are not cited by any slot and are not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:001",
-      "reason": "Unresolved example not used in prose units.",
+      "reason": "Examples are not facts about the product and are not cited by any slot.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:002",
-      "reason": "Unresolved example not used in prose units.",
+      "reason": "Examples are not facts about the product and are not cited by any slot.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:003",
-      "reason": "Unresolved example not used in prose units.",
+      "reason": "Examples are not facts about the product and are not cited by any slot.",
       "section": "api_reference"
     },
     {
       "fact_id": "example:004",
-      "reason": "Unresolved example not used in prose units.",
+      "reason": "Examples are not facts about the product and are not cited by any slot.",
       "section": "api_reference"
     },
     {
       "fact_id": "format:input.pdf",
-      "reason": "Unresolved format entry not used in prose units.",
+      "reason": "The PDF format is not named in any slot's facts and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:ecosystem",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The ecosystem identity is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:family",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The family identity is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:platform",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The platform identity is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:product-knowledge-refresh",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The refresh identity is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:repository",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The repository identity is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "identity:revision",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The revision identity is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:name",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The package name is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:published_version",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The published version is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:target_framework",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The target framework is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     },
     {
       "fact_id": "package:version",
-      "reason": "Provenance fact not used in prose units.",
+      "reason": "The version is not cited by any slot and is not stated in prose elsewhere.",
       "section": "api_reference"
     }
   ],
@@ -245,59 +245,65 @@
   "units": [
     {
       "fact_ids": [
+        "dependency:microsoft.ml.onnxruntime",
+        "dependency:system.drawing.common",
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
         "package:name",
         "package:published_version",
         "package:target_framework",
+        "package:version",
+        "public_symbol:aspose",
+        "public_symbol:aspose.ocr",
         "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput",
-        "public_symbol:aspose.ocr.recognitionresult",
         "public_symbol:aspose.ocr.linesresult",
         "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.inputtype"
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.OCR FOSS for .NET reads images and PDF documents and converts them into text using optical character recognition. It produces recognition results that include full text and line-level details, supporting multiple input types through the Aspose.OCR.OcrInput class. The product exposes its functionality through the Aspose.OCR.AsposeOcr.Recognize method, returning Aspose.OCR.OcrOutput for multi-page inputs or Aspose.OCR.RecognitionResult for single-page inputs. It runs on multiple .NET platforms including .NET Standard and recent .NET versions."
+      "text": "Aspose.OCR FOSS for .NET reads images and PDF documents and converts them into machine-readable text using optical character recognition. It supports input formats including .pdf and produces recognition results that include text and line-level bounding boxes. The product runs on .NET Standard and multiple .NET versions including net8.0, net9.0, net10.0, and net48. It depends on Microsoft.ML.OnnxRuntime and System.Drawing.Common."
     },
     {
       "fact_ids": [
         "dependency:microsoft.ml.onnxruntime",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It performs local OCR using embedded ONNX detection and refinement models, runs entirely on the local CPU without network services or external model files, and returns one RecognitionResult per image or PDF page through the AsposeOcr.Recognize method."
+      "text": "It performs local optical character recognition using embedded ONNX detection and refinement models without requiring network access or external model files."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.ocrinput"
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It accepts input through Aspose.OCR.InputType.SingleImage for single raster images and InputType.PDF for multi-page documents, supports adding multiple files to one OcrInput container while preserving their order, and processes each page in source order."
+      "text": "It recognizes Latin-script text, including diacritical characters supported by the embedded recognition model, and returns the complete page text through RecognitionResult.RecognitionText."
     },
     {
       "fact_ids": [
+        "dependency:system.drawing.common",
         "public_symbol:aspose.ocr.linesresult",
         "public_symbol:aspose.ocr.recognitionresult"
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It returns line-level results with System.Drawing.Rectangle coordinates through RecognitionResult.RecognitionLinesResult, provides individual line text via LinesResult.TextInLine, and exposes each line's bounding box through LinesResult.Line."
+      "text": "It returns line-level bounding boxes as System.Drawing.Rectangle coordinates through RecognitionResult.RecognitionLinesResult, enabling precise spatial analysis of detected text lines."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr"
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput"
       ],
       "section": "key_capabilities",
       "slot": "capability:4",
-      "text": "It recognizes Latin-script text including diacritical characters included in the embedded recognition model and returns the complete page text through RecognitionResult.RecognitionText."
+      "text": "It processes multiple files of the same InputType within a single Aspose.OCR.OcrInput container, preserving their order and returning one Aspose.OCR.OcrOutput entry per input file."
     },
     {
       "fact_ids": [
@@ -305,26 +311,29 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:5",
-      "text": "It targets netstandard2.0, net8.0, net9.0, net10.0, and net48, enabling use across multiple .NET implementations and runtime versions."
+      "text": "It targets netstandard2.0, net8.0, net9.0, net10.0, and net48, enabling use across a broad range of .NET implementations and runtime versions."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.ocr.asposeocr",
+        "public_symbol:aspose.ocr.ocrinput",
         "public_symbol:aspose.ocr.ocroutput",
         "public_symbol:aspose.ocr.recognitionresult"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "Aspose.OCR FOSS for .NET exposes the AsposeOcr class as its main entry point for performing OCR operations. It produces OcrOutput collections that contain RecognitionResult objects for each processed image or PDF page."
+      "text": "Aspose.OCR FOSS for .NET exposes a small set of public entry-point classes: Aspose.OCR.AsposeOcr performs recognition, Aspose.OCR.OcrInput collects source images or PDF pages, and Aspose.OCR.OcrOutput holds one Aspose.OCR.RecognitionResult per source. RecognitionResult provides text and line-level results via RecognitionText and RecognitionLinesResult, while LinesResult exposes individual line text and bounding rectangles."
     },
     {
       "fact_ids": [
         "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.ocr.asposeocr",
-      "text": "The AsposeOcr class provides the Recognize method that accepts an OcrInput container and returns an OcrOutput collection containing one RecognitionResult per source image or PDF page."
+      "text": "Aspose.OCR.AsposeOcr exposes Recognize(OcrInput input) to process input containers and return one OcrOutput per source image or PDF page, throwing ArgumentNullException for a null input, FileNotFoundException when a source file does not exist, and NotSupportedException for an unsupported input type."
     },
     {
       "fact_ids": [
@@ -333,7 +342,16 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.ocr.ocrinput",
-      "text": "The OcrInput class is initialized with an InputType to specify whether sources are single images or PDF documents, supports adding file paths via the Add method, and clears its contents when disposed."
+      "text": "Aspose.OCR.OcrInput is created with a specific InputType and supports adding file paths via Add(string fullPath), then clearing them with Dispose()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.ocr.ocroutput",
+      "text": "Aspose.OCR.OcrOutput inherits List<RecognitionResult> and preserves the order of images and PDF pages provided via OcrInput."
     },
     {
       "fact_ids": [
@@ -342,7 +360,25 @@
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose.ocr.recognitionresult",
-      "text": "Each RecognitionResult provides RecognitionText for full recognized content and RecognitionLinesResult for ordered line-level text and rectangle coordinates, where each LinesResult exposes TextInLine and Line properties."
+      "text": "Aspose.OCR.RecognitionResult provides RecognitionText for all recognized lines joined with line breaks and RecognitionLinesResult for ordered line text and rectangles."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.linesresult"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.ocr.linesresult",
+      "text": "Aspose.OCR.LinesResult exposes TextInLine for the recognized text of one detected line and Line as a System.Drawing.Rectangle in source-image pixels."
+    },
+    {
+      "fact_ids": [
+        "enum_member:aspose.ocr.inputtype.pdf",
+        "enum_member:aspose.ocr.inputtype.singleimage",
+        "public_symbol:aspose.ocr.inputtype"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose.ocr.inputtype",
+      "text": "Aspose.OCR.InputType provides SingleImage for one raster image per source path and PDF for every page of each source PDF."
     },
     {
       "fact_ids": [
@@ -352,7 +388,6 @@
         "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
-        "inherited_unit:076.paragraph",
         "package:name",
         "package:published_version",
         "package:target_framework",
@@ -360,7 +395,7 @@
       ],
       "section": "enterprise_relationship",
       "slot": "context",
-      "text": "It adds advanced preprocessing, multi-language support, and batch processing capabilities."
+      "text": "The commercial product adds advanced preprocessing, multi-language support, and batch processing capabilities beyond this package."
     }
   ]
 }

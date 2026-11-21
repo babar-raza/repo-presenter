@@ -15,7 +15,7 @@
         "package:target_framework",
         "package:version"
       ],
-      "rationale": "The H1 product name is rendered by the identity section from facts.",
+      "rationale": "The H1 product name is rendered deterministically by the identity section.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
@@ -50,7 +50,7 @@
         "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The badge row is rendered by the badges section from facts.",
+      "rationale": "The badge row is rendered deterministically by the badges section.",
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
@@ -60,24 +60,21 @@
         "link_target:007",
         "link_target:023"
       ],
-      "rationale": "The banner image links to the enterprise product page; moved to enterprise_relationship per policy.",
+      "rationale": "The banner image links to the enterprise product page; moved to enterprise_relationship where product relationships are described.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
       "destination_section": "opening",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:repository",
         "identity:ecosystem",
-        "identity:family",
         "identity:platform",
         "package:name",
         "package:version",
-        "dependency:microsoft.ml.onnxruntime",
         "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocroutput"
+        "dependency:microsoft.ml.onnxruntime"
       ],
-      "rationale": "Substance is supported by facts; re-written to match the product summary and capabilities.",
+      "rationale": "The paragraph's substance is covered by the product summary and capabilities facts; rewritten to match the opening section's required two-to-four-sentence style",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -91,7 +88,7 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation heading is rendered by the navigation section.",
+      "rationale": "The Navigation heading is rendered deterministically by the navigation section.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
@@ -105,16 +102,16 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation list is rendered by the navigation section.",
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
       "unit_id": "inherited_unit:006.list"
     },
     {
-      "destination_section": "at_a_glance",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The At a Glance heading is rendered by the at_a_glance section.",
+      "rationale": "The At a Glance heading is not placeable; its Mermaid diagram is unsupported by a verified example fact and has no placeable destination.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
@@ -122,9 +119,9 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "dependency:microsoft.ml.onnxruntime",
+        "dependency:system.drawing.common",
         "package:target_framework",
         "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
         "public_symbol:aspose.ocr.linesresult",
         "public_symbol:aspose.ocr.ocrinput",
         "public_symbol:aspose.ocr.ocroutput",
@@ -139,7 +136,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Key Capabilities heading is rendered by the key_capabilities section.",
+      "rationale": "The Key Capabilities heading is rendered deterministically by the key_capabilities section.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
@@ -153,9 +150,10 @@
         "public_symbol:aspose.ocr.inputtype",
         "public_symbol:aspose.ocr.linesresult",
         "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput",
         "public_symbol:aspose.ocr.recognitionresult"
       ],
-      "rationale": "Substance is supported by facts; re-written to match the capabilities summary.",
+      "rationale": "The list's substance is covered by verified capabilities facts; rewritten to match the key_capabilities section's required action-led style.",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -164,7 +162,7 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The Installation heading is rendered by the installation section.",
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
@@ -173,7 +171,7 @@
       "fact_ids": [
         "install_command:dotnet"
       ],
-      "rationale": "The paragraph about the NuGet package ID is superseded by the installation section.",
+      "rationale": "The paragraph's substance is covered by the install_command fact; the section renders the exact install command.",
       "unit_id": "inherited_unit:012.paragraph"
     },
     {
@@ -187,49 +185,44 @@
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "install_command:dotnet"
-      ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces an alternative installation method; it is valuable background and not contradicted by facts, so preserved as attributed in development.",
       "unit_id": "inherited_unit:014.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "package:name",
-        "package:version"
-      ],
-      "rationale": "The XML PackageReference snippet is a real, supported install path; placed in development_testing as a concrete example.",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The PackageReference XML snippet is a real, supported alternative installation path; preserved as it adds developer value and is not contradicted by facts.",
       "unit_id": "inherited_unit:015.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "package:target_framework",
-        "build_test_asset:build-command"
+        "package:target_framework"
       ],
-      "rationale": "The paragraph about target frameworks and build command is supported by facts; moved to development_testing.",
+      "rationale": "The paragraph about target frameworks is supported by the package:target_framework fact and adds useful build context; preserved in development_testing.",
       "unit_id": "inherited_unit:016.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "build_test_asset:build-command"
+        "build_test_asset:build-command",
+        "build_test_asset:ci"
       ],
-      "rationale": "The build command is supported by facts and adds value as a concrete example.",
+      "rationale": "The build command is verified and placeable in development_testing; it is not the exact text of the installation section.",
       "unit_id": "inherited_unit:017.code_block"
     },
     {
-      "destination_section": "scope_limitations",
-      "disposition": "CORRECT_WITH_EVIDENCE",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "dependency:system.drawing.common"
       ],
-      "rationale": "The blockquote states a Windows-only limitation for System.Drawing.Common, which is supported by the dependency fact.",
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The Windows-only limitation is supported by the dependency fact and placeable in sc...",
       "unit_id": "inherited_unit:018.blockquote"
     },
     {
@@ -241,7 +234,7 @@
         "dependency:system.drawing.common",
         "dependency:system.security.cryptography.pkcs"
       ],
-      "rationale": "The Dependencies heading is rendered by the dependencies section.",
+      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:019.heading"
     },
     {
@@ -253,7 +246,7 @@
         "dependency:system.drawing.common",
         "dependency:system.security.cryptography.pkcs"
       ],
-      "rationale": "The Required Package Dependencies heading is rendered by the dependencies section.",
+      "rationale": "The Required Package Dependencies heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
@@ -265,7 +258,7 @@
         "dependency:system.drawing.common",
         "dependency:system.security.cryptography.pkcs"
       ],
-      "rationale": "The dependency table is fully covered by the four verified dependency facts.",
+      "rationale": "The dependency table is fully covered by the four verified dependency facts; the table adds no new information.",
       "unit_id": "inherited_unit:021.table"
     },
     {
@@ -274,7 +267,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Section heading for content superseded by the dependencies section.",
+      "rationale": "The section heading 'Native and System Requirements' is superseded by 'Scope and Limitations' and 'Dependencies' which render the same facts.",
       "unit_id": "inherited_unit:022.heading"
     },
     {
@@ -294,16 +287,16 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Section heading for content superseded by the dependencies section.",
+      "rationale": "The 'Development Dependencies' heading is redundant; test tooling is covered under 'Development and Testing' if assets exist.",
       "unit_id": "inherited_unit:024.heading"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:test-command"
       ],
-      "rationale": "The paragraph describes test dependencies and execution, which belongs in development_testing.",
+      "rationale": "Kept as written: development_testing is rendered from facts plus kept maintainer text (R43(2)). The paragraph's substance is covered by the verified test comman",
       "unit_id": "inherited_unit:025.paragraph"
     },
     {
@@ -312,7 +305,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Section heading for content superseded by the quick_start section.",
+      "rationale": "The 'Quick Start' heading is reserved for a section that is not rendered at this revision (condition not met).",
       "unit_id": "inherited_unit:026.heading"
     },
     {
@@ -326,23 +319,18 @@
       "destination_section": "quick_start",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput",
-        "public_symbol:aspose.ocr.recognitionresult"
+        "example:001"
       ],
       "rationale": "Reprinted verbatim in Quick Start with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:028.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "package:name"
+        "dependency:aspose.pdf.foss"
       ],
-      "rationale": "Omitted by the BL-240 last-resort degrade (R14): a blocking check shows it contradicts the facts: Each `RecognitionResult` corresponds to one rendered PDF page.",
+      "rationale": "The DPI limitation is supported by the PDF rendering dependency fact; the paragraph adds concrete detail to the limitation.",
       "unit_id": "inherited_unit:029.paragraph"
     },
     {
@@ -351,104 +339,70 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Section heading for content superseded by the additional_examples section.",
+      "rationale": "The 'Additional Examples' heading is reserved for a section that is not rendered at this revision (condition not met).",
       "unit_id": "inherited_unit:030.heading"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput",
-        "public_symbol:aspose.ocr.recognitionresult"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The sub-heading is for an example not rendered; it adds no standalone value.",
       "unit_id": "inherited_unit:031.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:002",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.ocrinput"
+        "example:002"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:032.code_block"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:002",
-        "example:003"
-      ],
-      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML block is a collapsible toggle marker, not content; it is omitted as non-content.",
       "unit_id": "inherited_unit:033.html_block"
-    },
-    {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput",
-        "public_symbol:aspose.ocr.recognitionresult"
-      ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
-      "unit_id": "inherited_unit:034.heading"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "package:name"
+        "identity:ecosystem"
       ],
-      "rationale": "Omitted by the BL-240 last-resort degrade (R14): a blocking check shows it contradicts the facts: All files in one input container must have the same `InputType",
+      "rationale": "The sub-heading is for an example not rendered; it adds no standalone value.",
+      "unit_id": "inherited_unit:034.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput"
+      ],
+      "rationale": "The paragraph describes multi-input processing, which is a verified capability supported by the input/output public symbol facts.",
       "unit_id": "inherited_unit:035.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput"
+        "example:003"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:036.code_block"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput",
-        "public_symbol:aspose.ocr.recognitionresult"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The sub-heading is for an example not rendered; it adds no standalone value.",
       "unit_id": "inherited_unit:037.heading"
-    },
-    {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:004",
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.recognitionresult"
-      ],
-      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
-      "unit_id": "inherited_unit:038.code_block"
     },
     {
       "destination_section": "additional_examples",
@@ -456,35 +410,42 @@
       "fact_ids": [
         "example:004"
       ],
-      "rationale": "Reprinted verbatim in Additional Examples beside the unverified example it introduces.",
+      "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
+      "fact_ids": [],
+      "rationale": "The HTML block is a collapsible toggle marker, not content; it is omitted as non-content.",
       "unit_id": "inherited_unit:039.html_block"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:aspose.ocr.asposeocr",
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput",
-        "public_symbol:aspose.ocr.recognitionresult"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'How Recognition Works' heading is not a placeable section; its content is covered by other sections or omitted as unsupported.",
       "unit_id": "inherited_unit:040.heading"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Kept as written: scope_limitations is rendered from facts plus kept maintainer text (R43(2)). The detailed OCR pipeline steps are replaced by the scope_limitati",
+      "fact_ids": [
+        "dependency:aspose.pdf.foss",
+        "public_symbol:aspose.ocr.linesresult"
+      ],
+      "rationale": "Kept as written: scope_limitations is rendered from facts plus kept maintainer text (R43(2)). The detailed OCR pipeline description is superseded by the scope_l",
       "unit_id": "inherited_unit:041.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Kept as written: scope_limitations is rendered from facts plus kept maintainer text (R43(2)). ONNX Runtime parallelism details are superseded by the scope_limit",
+      "fact_ids": [
+        "dependency:microsoft.ml.onnxruntime"
+      ],
+      "rationale": "Kept as written: scope_limitations is rendered from facts plus kept maintainer text (R43(2)). ONNX Runtime threading behavior is covered by the scope_limitation",
       "unit_id": "inherited_unit:042.paragraph"
     },
     {
@@ -493,16 +454,14 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The API Reference heading is superseded by the deterministic api_reference section.",
+      "rationale": "The '## API Reference' heading is superseded by the deterministic api_reference section.",
       "unit_id": "inherited_unit:043.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
-      "fact_ids": [
-        "package:name"
-      ],
-      "rationale": "Omitted by the BL-240 last-resort degrade (R14): a blocking check shows it contradicts the facts: The public API deliberately remains small.",
+      "destination_section": "api_reference",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The statement about API size being deliberately small is maintainer insight not contradicted by facts.",
       "unit_id": "inherited_unit:044.paragraph"
     },
     {
@@ -516,105 +475,113 @@
         "public_symbol:aspose.ocr.linesresult",
         "public_symbol:aspose.ocr.inputtype"
       ],
-      "rationale": "The public API table matches verified public symbols and is preserved as written.",
+      "rationale": "The public API table matches verified public symbols and adds no unsupported claims.",
       "unit_id": "inherited_unit:045.table"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "The HTML details block is superseded by the deterministic api_reference section's member reference.",
+      "rationale": "HTML comment opening a details block is non-content markup.",
       "unit_id": "inherited_unit:046.html_block"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
-      "rationale": "The AsposeOcr heading is superseded by the deterministic api_reference section.",
+      "rationale": "The '### AsposeOcr' heading is moved to api_reference where its members are verified.",
       "unit_id": "inherited_unit:047.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The AsposeOcr method signatures and exceptions match verified public symbols.",
+      "rationale": "The AsposeOcr method signatures and exceptions are verified by the public symbol.",
       "unit_id": "inherited_unit:048.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "public_symbol:aspose.ocr.ocrinput"
       ],
-      "rationale": "The OcrInput heading is superseded by the deterministic api_reference section.",
+      "rationale": "The '### OcrInput' heading is moved to api_reference where its members are verified.",
       "unit_id": "inherited_unit:049.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The OcrInput constructor and methods match verified public symbols.",
+      "rationale": "The OcrInput constructor and methods are verified by the public symbol.",
       "unit_id": "inherited_unit:050.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "public_symbol:aspose.ocr.ocroutput"
       ],
-      "rationale": "The OcrOutput heading is superseded by the deterministic api_reference section.",
+      "rationale": "The '### OcrOutput' heading is moved to api_reference where its members are verified.",
       "unit_id": "inherited_unit:051.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose.ocr.ocroutput"
       ],
-      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "The OcrOutput inheritance and ordering behavior are verified by the public symbol.",
       "unit_id": "inherited_unit:052.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
-      "rationale": "The RecognitionResult heading is superseded by the deterministic api_reference section.",
+      "rationale": "The '### RecognitionResult' heading is moved to api_reference where its members are verified.",
       "unit_id": "inherited_unit:053.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The RecognitionResult properties match verified public symbols.",
+      "rationale": "The RecognitionResult properties are verified by the public symbol.",
       "unit_id": "inherited_unit:054.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "enum_member:aspose.ocr.inputtype.pdf",
+        "enum_member:aspose.ocr.inputtype.singleimage",
+        "link_target:016",
+        "public_symbol:aspose.ocr.asposeocr",
+        "public_symbol:aspose.ocr.inputtype",
+        "public_symbol:aspose.ocr.linesresult",
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.ocroutput",
+        "public_symbol:aspose.ocr.recognitionresult"
       ],
-      "rationale": "The LinesResult heading is superseded by the deterministic api_reference section.",
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:055.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The LinesResult properties match verified public symbols.",
+      "rationale": "The LinesResult properties are verified by the public symbol.",
       "unit_id": "inherited_unit:056.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "identity:ecosystem"
+        "public_symbol:aspose.ocr.inputtype"
       ],
-      "rationale": "The InputType heading is superseded by the deterministic api_reference section.",
+      "rationale": "The '### InputType' heading is moved to api_reference where its members are verified.",
       "unit_id": "inherited_unit:057.heading"
     },
     {
@@ -627,10 +594,10 @@
       "unit_id": "inherited_unit:058.list"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "NON_CONTENT",
       "fact_ids": [],
-      "rationale": "The closing HTML details block is superseded by the deterministic api_reference section.",
+      "rationale": "HTML closing details tag is non-content markup.",
       "unit_id": "inherited_unit:059.html_block"
     },
     {
@@ -639,14 +606,19 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Documentation & Resources heading is superseded by the deterministic documentation_resources section.",
+      "rationale": "The '## Documentation & Resources' heading is superseded by the deterministic documentation_resources section.",
       "unit_id": "inherited_unit:060.heading"
     },
     {
       "destination_section": "documentation_resources",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "Kept in documentation_resources: a list of resource links, not scope_limitations. The file structure list provides useful repository context and is not supersed",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "link_target:021",
+        "link_target:022",
+        "link_target:023",
+        "link_target:004"
+      ],
+      "rationale": "Kept in documentation_resources: a list of resource links, not scope_limitations. The file structure list is moved to scope_limitations as it provides context a",
       "unit_id": "inherited_unit:061.list"
     },
     {
@@ -655,7 +627,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading is superseded by the scope_limitations section which re-authors all limitation content.",
+      "rationale": "The heading '## Scope and Limitations' is superseded by the deterministic scope_limitations section.",
       "unit_id": "inherited_unit:062.heading"
     },
     {
@@ -664,11 +636,12 @@
       "fact_ids": [
         "dependency:system.drawing.common",
         "dependency:aspose.pdf.foss",
+        "public_symbol:aspose.ocr.linesresult",
+        "public_symbol:aspose.ocr.recognitionresult",
         "dependency:microsoft.ml.onnxruntime",
-        "public_symbol:aspose.ocr.asposeocr",
-        "package:target_framework"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
-      "rationale": "All listed limitations are supported by facts and add concrete detail beyond the summary.",
+      "rationale": "All listed limitations are supported by facts and add concrete detail to the scope_limitations section.",
       "unit_id": "inherited_unit:063.list"
     },
     {
@@ -677,7 +650,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading is superseded by the development_testing section which re-authors build and test workflows.",
+      "rationale": "The heading '## Development and Testing' is superseded by the deterministic development_testing section.",
       "unit_id": "inherited_unit:064.heading"
     },
     {
@@ -686,7 +659,7 @@
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The paragraph introduces the build-packages.bat workflow and is supported by the build command fact.",
+      "rationale": "The paragraph introduces the build-packages.bat workflow, which is supported by the build command fact.",
       "unit_id": "inherited_unit:065.paragraph"
     },
     {
@@ -695,16 +668,14 @@
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The code block matches the verified build command and is supported by the build_test_asset:build-command fact.",
+      "rationale": "The code block matches the verified build command and is kept as a concrete example.",
       "unit_id": "inherited_unit:066.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "build_test_asset:ci"
-      ],
-      "rationale": "The paragraph describes a script flag supported by CI workflow evidence.",
+      "fact_ids": [],
+      "rationale": "The note about --no-pause is maintainer insight for scripting and CI, not contradicted by facts.",
       "unit_id": "inherited_unit:067.paragraph"
     },
     {
@@ -713,7 +684,7 @@
       "fact_ids": [
         "build_test_asset:test-command"
       ],
-      "rationale": "The paragraph introduces the test workflow and is supported by the test command fact.",
+      "rationale": "The paragraph introduces the test workflow, which is supported by the test command fact.",
       "unit_id": "inherited_unit:068.paragraph"
     },
     {
@@ -723,7 +694,7 @@
         "build_test_asset:test-command",
         "build_test_asset:build-command"
       ],
-      "rationale": "The code block matches the verified test and build commands and is supported by those facts.",
+      "rationale": "The code block matches the verified test and build commands and is kept as a concrete example.",
       "unit_id": "inherited_unit:069.code_block"
     },
     {
@@ -732,7 +703,7 @@
       "fact_ids": [
         "package:target_framework"
       ],
-      "rationale": "The paragraph correctly states the target frameworks supported by the package.",
+      "rationale": "The target framework list is supported by the package fact and adds useful detail.",
       "unit_id": "inherited_unit:070.paragraph"
     },
     {
@@ -742,37 +713,30 @@
         "build_test_asset:test-command",
         "package:target_framework"
       ],
-      "rationale": "The code block matches the verified test command and framework targeting.",
+      "rationale": "The code block matches the verified test command and target framework, providing a concrete example.",
       "unit_id": "inherited_unit:071.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "package:name",
-        "package:version"
-      ],
-      "rationale": "The paragraph introduces the pack command and is supported by the package facts.",
+      "fact_ids": [],
+      "rationale": "The paragraph introduces the pack command, which is supported by the build_test_asset facts.",
       "unit_id": "inherited_unit:072.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "package:name",
-        "package:version"
-      ],
-      "rationale": "The code block matches the verified pack command and output path.",
+      "fact_ids": [],
+      "rationale": "The code block provides a concrete example of the pack command workflow.",
       "unit_id": "inherited_unit:073.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "package:name",
         "package:version"
       ],
-      "rationale": "The paragraph correctly states the generated package name and version.",
+      "rationale": "The version number is supported by the package fact and adds useful detail.",
       "unit_id": "inherited_unit:074.paragraph"
     },
     {
@@ -782,16 +746,17 @@
         "license:file",
         "license:spdx"
       ],
-      "rationale": "The heading is superseded by the license section which re-authors the license declaration.",
+      "rationale": "The heading '## License' is superseded by the deterministic license section.",
       "unit_id": "inherited_unit:075.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:product.enterprise"
+        "license:file",
+        "license:spdx"
       ],
-      "rationale": "Omitted by the BL-480 last-resort degrade (R14, R42): the independent review found no fact that supports what this paragraph says the commercial product adds, and this repository cannot verify a statement about a different product, so it is no longer made; the verified Enterprise Edition link stays in the closing sentence of Scope and Limitations",
+      "rationale": "Superseded by the License section, which states the license from facts. The license description is supported and adds maintainer insight on MIT permissions; pla",
       "unit_id": "inherited_unit:076.paragraph"
     }
   ]
