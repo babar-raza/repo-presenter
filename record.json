@@ -111,11 +111,24 @@
    "run_id": "44745989095",
    "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T16:39:24+00:00",
+   "classes": [
+    "BC-05|unresolved|section_fit",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "6a9036f4d9933209774e5055c68b931d382967575092d7e5236fd5df6223e8cc",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44924893253",
+   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:42:46+00:00",
+  "at": "2026-11-21T16:39:24+00:00",
   "classes": {
    "BC-05|unresolved|section_fit": {
     "example": "section fit: Scope and Limitations states the project's license, which the License section states: 'This project is licensed under the [MIT License](https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/blob/main'",
@@ -125,7 +138,7 @@
      "-"
     ],
     "rule": "BC-05",
-    "scope": "5eb2632186b1e4aa8f9bfeb77d573a255dc3f9d03b69dac768094f3711534dae",
+    "scope": "6a7bcac0d0ae4bd29fcc6833833a595eb8d6b31e7f595b76dbff37f19a849e13",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -149,7 +162,7 @@
      "inherited_unit:002.badge_row"
     ],
     "rule": "BC-17",
-    "scope": "5173ed1799a696c95cd4f427982b5458580e65a06d1f553917bbcae1277c5ef8",
+    "scope": "4baa2448e32fc8651d9f6e384e57daf0c54cf1f64ae810a8ed0c30cbb07dc8e7",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -162,56 +175,18 @@
     ],
     "sub_rule": "technical_content",
     "upstream": ""
-   },
-   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
-    "example": "The primary entry point is `TeXJob`, which combines an `InputSource`, an `OutputDevice` (`PdfDevice`, `DviDevice`, or `SvgDevice`), and `TeXOptions` into one runnable job.",
-    "findings": 1,
-    "origin_kind": "authored_unit",
-    "origins": [
-     "api_reference.intro"
-    ],
-    "rule": "duplicate_paragraph",
-    "scope": "70d8f67e33c86f747ede4f6e2911b968fde38f39f6ae7408fbd6c191bb96d4d8",
-    "scope_paths": [
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
-    ],
-    "sub_rule": "the_candidate_prints_the",
-    "upstream": ""
    }
   },
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+  "code": "6a9036f4d9933209774e5055c68b931d382967575092d7e5236fd5df6223e8cc",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-05, BC-17; nothing sealed",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
-   {
-    "label": "duplicate_paragraph",
-    "message": "the candidate prints the same prose paragraph more than once",
-    "origin": {
-     "id": "api_reference.intro",
-     "kind": "authored_unit"
-    },
-    "quote": "The primary entry point is `TeXJob`, which combines an `InputSource`, an `OutputDevice` (`PdfDevice`, `DviDevice`, or `SvgDevice`), and `TeXOptions` into one runnable job.",
-    "rule": "duplicate_paragraph",
-    "section_id": "",
-    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
-    "source": "review",
-    "sub_rule": "the_candidate_prints_the",
-    "upstream": ""
-   },
    {
     "label": "BC-05",
     "message": "section fit: Scope and Limitations states the project's license, which the License section states: 'This project is licensed under the [MIT License](https://github.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/blob/main'",
@@ -244,25 +219,17 @@
    }
   ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "11aa6b1a71fc6caf19622686c0d9cb0494ac2c81",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "disposition_coverage:1",
+    "label": "disposition_coverage:0",
     "outcome": "repaired",
     "reason": "",
     "section_id": null,
     "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "duplicate_paragraph:0",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "api_reference",
-    "stage": "S6"
    },
    {
     "facts_defects": [],
@@ -282,8 +249,8 @@
    }
   ],
   "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
-  "run_id": "44745989095",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44745989095",
+  "run_id": "44924893253",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44924893253",
   "schema_version": 1,
   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
