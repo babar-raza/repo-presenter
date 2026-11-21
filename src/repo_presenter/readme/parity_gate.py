@@ -71,6 +71,7 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote
 
 from markdown_it import MarkdownIt
 
@@ -371,6 +372,43 @@ def candidate_badge_slots(candidate_text: str) -> frozenset[str]:
     )
 
 
+_STATIC_BADGE = re.compile(
+    r"^https://img\.shields\.io/badge/(?P<label>[^/?#]+?)-(?P<value>[^/?#]+?)-[^-/?#]+?(?:\.svg|\.png)?(?:[?#].*)?$",
+    re.IGNORECASE,
+)
+
+
+def _badge_words(segment: str) -> str:
+    """A shields.io static-badge segment as the words it shows (``--`` is a literal hyphen, ``_`` and
+    ``%20`` a space), case-folded."""
+    text = unquote(segment).replace("--", "\x00").replace("_", " ").replace("-", " ").replace("\x00", "-")
+    return " ".join(text.casefold().split())
+
+
+def status_badge_stated(image: str, candidate_text: str) -> str | None:
+    """Why a maintainers' static ``img.shields.io/badge/<label>-<value>-<colour>`` badge that fills no
+    verified slot (``badge_slot_of_url`` is ``None``: a project-status or similar self-declared badge)
+    is accounted for rather than lost, or ``None`` (BL-620, R14).
+
+    No fact verifies such a badge, so the renderer never carries it (``renderer.
+    _extra_badge_asserts_only_verified``: BC-07 forbids a badge no fact supports) and no disposition
+    can print it (a badge row is rendered by the shell). It is nothing but a short statement, and
+    when the candidate states the same value in words (TeX Python: the badge "status: pre-alpha" and
+    the maintainers' own kept sentence "This is a Pre-Alpha release") the content is carried, only
+    the picture is not. A badge whose value the candidate never states stays a loss."""
+    if badge_slot_of_url(image) is not None:
+        return None
+    match = _STATIC_BADGE.match(image.strip())
+    if match is None:
+        return None
+    value = _badge_words(match.group("value"))
+    if len(value) < 3 or not re.search(r"[a-z]", value):
+        return None
+    if re.search(r"(?<![\w-])" + re.escape(value).replace(r"\ ", r"[\s-]") + r"(?![\w-])", candidate_text.casefold()) is None:
+        return None
+    return f"a static status badge no fact verifies is not printed (R14, BL-620); the candidate states '{value}' in words"
+
+
 def badge_slot_replaced(
     href: str,
     benchmark_text: str,
@@ -386,11 +424,16 @@ def badge_slot_replaced(
     own = badge_slot_of_url(href)
     if own is not None:
         return f"replaced by the candidate's verified {own} badge" if own in filled else None
+    stated = status_badge_stated(href, candidate_text)
+    if stated is not None:
+        return stated
     for image, target in _LINKED_BADGE.findall(benchmark_text):
         if target.strip().rstrip("/") == href.strip().rstrip("/"):
             slot = badge_slot_of_url(image)
             if slot is not None and slot in filled:
                 return f"link of a {slot} badge the candidate replaces with its verified one"
+            if slot is None and status_badge_stated(image, candidate_text) is not None:
+                return "link of a status badge the candidate states in words (R14, BL-620)"
     return None
 
 

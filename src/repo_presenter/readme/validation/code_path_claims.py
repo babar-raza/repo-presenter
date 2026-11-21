@@ -433,6 +433,24 @@ _FORMAT_ALIASES = {"collada": "dae", "wavefront": "obj"}
 _NEGATED = re.compile(r"(?i)\b(?:no|not|never|without|except|cannot|can't|unsupported|unreachable)\b(?:\s+\S+){0,3}\s*$")
 
 
+#: A verb word that is the first word of a NOUN phrase naming a configuration type ("Load options for
+#: FBX format", "Save options", "Import settings") describes that type; it does not say the format
+#: is loaded or saved. The maintainers' own docstring for ``FbxLoadOptions`` reads exactly so, and
+#: the README rows that copy it (3D Java ``FbxLoadOptions`` / ``FbxSaveOptions``, the live README
+#: aspose.org published) were read as ".fbx input" / ".fbx output" claims (BL-621).
+_VERB_AS_MODIFIER = re.compile(
+    r"^\s+(?:options?|settings?|parameters?|configuration|context|handlers?|callbacks?)\b", re.IGNORECASE
+)
+
+
+def _states_the_action(verb: re.Pattern[str], before: str, clause: str) -> bool:
+    """Whether ``before`` (the clause up to the format name) uses ``verb`` as a verb, not as the
+    modifier of a configuration noun (:data:`_VERB_AS_MODIFIER`)."""
+    return any(
+        _VERB_AS_MODIFIER.match(clause[match.end() : len(before)]) is None for match in verb.finditer(before)
+    )
+
+
 def _stubbed_formats(facts: FactsDocument) -> dict[tuple[str, str], str]:
     found: dict[tuple[str, str], str] = {}
     for fact in facts.by_kind("format"):
@@ -464,7 +482,7 @@ def _format_findings(sentences: Iterable[Sentence], facts: FactsDocument, make: 
                     continue
                 before = clause[: match.start()]
                 for direction, verb in (("output", _OUTPUT_VERB), ("input", _INPUT_VERB)):
-                    if verb.search(before) and (direction, extension) in stubbed:
+                    if (direction, extension) in stubbed and _states_the_action(verb, before, clause):
                         hits.append((direction, extension))
         for direction, extension in dict.fromkeys(hits):
             findings.append(

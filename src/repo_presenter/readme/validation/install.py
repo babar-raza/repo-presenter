@@ -89,6 +89,15 @@ def install_failures(candidate: Candidate) -> list[Failure]:
                 failures.extend(
                     _printed_unconfirmed_command_failures(candidate, fact, registry_less=True)
                 )
+            elif _claims_nothing_when_unpublished(fact):
+                # BL-623: the registry's own answer is "nothing is published" and no documented
+                # source install replaced the fact (the maintainers' README says nothing of
+                # publication, or there is none: Aspose.GIS-FOSS-for-.Net has no README and its
+                # build does not exit 0). That is true, and the renderer states it plainly
+                # ("`X` is not yet published on NuGet.") with no command. The fact is a claim only
+                # where the README prints its registry command, a line-level defect the repair
+                # stages can reach, not an extraction failure nothing can change.
+                failures.extend(_printed_unconfirmed_command_failures(candidate, fact, unpublished=True))
             else:
                 failures.append(Failure("EXTRACTING", _unestablished_install(fact)))
         elif problems := _documented_source_failures(candidate, fact):
@@ -191,6 +200,18 @@ def _claims_nothing_without_a_registry(fact: Fact) -> bool:
     no registry to ask. Such a fact is not a claim until the README prints its command; a
     CONTRADICTED one, or any other registry reading, is still refused at EXTRACTING."""
     return fact.polarity == "UNRESOLVED" and fact_registry_reading(fact) == "no_registry"
+
+
+def _claims_nothing_when_unpublished(fact: Fact) -> bool:
+    """Whether a non-SUPPORTED install fact is the registry command of a package the registry itself
+    lists as not published (``not_published``: a 404 or an empty listing, never an unreadable
+    registry). The README states that plainly; the fact claims nothing until the README prints its
+    command."""
+    return (
+        fact.polarity == "CONTRADICTED"
+        and fact_registry_reading(fact) == "not_published"
+        and (fact.attributes or {}).get("install_kind") not in SOURCE_KINDS
+    )
 
 
 def _unestablished_install(fact: Fact) -> str:
@@ -309,7 +330,7 @@ def _registry_install_lines(
 
 
 def _printed_unconfirmed_command_failures(
-    candidate: Candidate, fact: Fact, *, registry_less: bool = False
+    candidate: Candidate, fact: Fact, *, registry_less: bool = False, unpublished: bool = False
 ) -> list[Failure]:
     """Each README line that prints the install of an UNRESOLVED fact (the registry install of a
     package whose ownership is unconfirmed, or - ``registry_less`` - the source build no build
@@ -337,6 +358,11 @@ def _printed_unconfirmed_command_failures(
                 f"{fact.id}: the README prints {line!r}, the source build of a project whose "
                 f"build no run proved ({_unverified_reason(fact)}); remove the command or state "
                 "only what the repository documents"
+            )
+        elif unpublished:
+            detail = (
+                f"{fact.id}: the README prints {line!r}, the registry install of a package the "
+                f"registry lists as not published ({reading}); say plainly that it is not published"
             )
         else:
             detail = (
