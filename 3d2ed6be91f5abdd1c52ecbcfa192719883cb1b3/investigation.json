@@ -1,0 +1,174 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:java_release",
+      "install_command:maven"
+    ],
+    "text": "Java developers building or inspecting 3D scenes who need a free, open-source library with API compatibility to Aspose.3D for Java, targeting Java 21 or later."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Developers construct scenes using Scene, organize nodes via createChildNode and addChildNode, and attach geometry using addEntity.",
+      "title": "Build and traverse 3D scene graphs"
+    },
+    {
+      "fact_ids": [
+        "format:input.stl",
+        "format:output.stl",
+        "example:003"
+      ],
+      "text": "The library supports binary and ASCII STL import and export through Scene.fromFile and Scene.save with StlLoadOptions and StlSaveOptions.",
+      "title": "Import and export STL geometry"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "Developers create PbrMaterial instances with albedo, metallic, roughness, emissive, and occlusion properties, and assign them via Node.setMaterial.",
+      "title": "Define materials and assign them to nodes"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "NurbsCurve exposes control points, knot vectors, degree, and curve type; control points are added using Vector4.",
+      "title": "Model NURBS curves with control points"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:com",
+        "public_symbol:com.aspose",
+        "public_symbol:com.aspose.threed"
+      ],
+      "text": "The library provides Vector2, Vector3, Vector4, Matrix4, Quaternion, and BoundingBox for geometry and transform math.",
+      "title": "Perform 3D math operations"
+    },
+    {
+      "fact_ids": [
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "text": "FileFormat.detect enables automatic format detection from file paths or streams, and FileFormat.getFormatByExtension resolves format from extension.",
+      "title": "Detect file format automatically"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "text": "STL is the only format with fully functional import and export in the published 26.5.0 package; other formats have stub implementations."
+    },
+    {
+      "fact_ids": [
+        "format:input.obj"
+      ],
+      "text": "OBJ import is not functional in the published package despite having a parser in the upstream source; developers must build from source to use it."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "text": "NURBS curve sampling is not implemented; only control point and knot vector data are exposed."
+    },
+    {
+      "fact_ids": [
+        "identity:product-knowledge-refresh"
+      ],
+      "text": "Scene rendering is not implemented in this edition."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:product-knowledge-refresh",
+        "license:spdx",
+        "package:name"
+      ],
+      "text": "Provides a free, open-source alternative to the commercial Aspose.3D for Java library for basic 3D scene graph operations and STL format I/O."
+    },
+    {
+      "fact_ids": [
+        "format:input.obj",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "text": "Enables automatic format detection and explicit format resolution for 3D files via FileFormat.detect and FileFormat.getFormatByExtension."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "text": "Supports building 3D scenes using primitives like Box, Cylinder, Sphere, and Dish, each implementing toMesh() to produce Mesh geometry."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "identity:product-knowledge-refresh",
+      "identity:repository",
+      "license:spdx",
+      "package:name",
+      "package:version",
+      "public_symbol:com",
+      "public_symbol:com.aspose",
+      "public_symbol:com.aspose.threed"
+    ],
+    "text": "Aspose.3D FOSS for Java is a clean-room, MIT-licensed Java library implementing a 3D scene graph API compatible with the commercial Aspose.3D for Java product, exposing the com.aspose.threed.* package."
+  },
+  "uncertainties": [
+    "The README mentions OBJ import is not functional in the published package but does not clarify whether the upstream source includes a working parser.",
+    "It is unclear whether FileFormat.WAVEFRONTOBJ is fully implemented in the published artifact or only in the upstream source.",
+    "The exact set of formats with stub implementations beyond OBJ and STL is not fully specified in the facts.",
+    "It is unclear whether PbrSpecularMaterial accessors are present but unimplemented or entirely absent in the published package.",
+    "The behavior of loading or saving through unrecognized formats is described as failing silently, but no specific examples are provided in the facts.",
+    "The relationship between the FOSS edition and the commercial edition's API surface beyond com.aspose.threed.* is not detailed in the facts.",
+    "It is unclear whether the test suite covers all public symbols listed in the API reference section of the README.",
+    "The exact scope of excluded functionality such as License, Metered, cryptographic helpers, and ZIP-packaged file-system read/write is not fully detailed in the facts."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:ci",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "name": "Build and test from source",
+      "text": "Developers build the project using mvn package and run tests with mvn test; CI workflows are defined in .github/workflows/."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "format:input.stl",
+        "format:output.stl"
+      ],
+      "name": "Load and convert STL files",
+      "text": "Developers load an STL file using Scene.fromFile and save it using Scene.save, optionally specifying StlLoadOptions or StlSaveOptions."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "name": "Define NURBS curves",
+      "text": "Developers create NurbsCurve instances, set degree and control points using Vector4, and access knot vectors and curve type data."
+    }
+  ]
+}
