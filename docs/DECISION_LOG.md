@@ -8302,3 +8302,31 @@ Not fixed here: PDF TS (section_authoring truncated, BL-624) and GIS .NET (owner
 accounting or a deterministic repair instead of halting the candidate), universal and repeatable (the same frozen inputs give the same result). Hosted-unproven (R41).
 
 Backlog: BL-630, BL-631, BL-632, BL-633
+
+## 2026-11-21: Slides .NET, Words Python and PDF Python Lane R blockers re-read from the hosted logs and replayed zero-call from the pinned sources: five classes fixed at the root (BL-650, BL-651, BL-652)
+
+Context. R44 needs 34 of 40 Lane R cells sealed and accepted; 32 are sealed. Three cells failed on main b8a594e (hosted runs 44947970617 Slides .NET, 44947429600 Words Python, 44943413732 PDF Python).
+The hosted candidates are unreachable, so each cell was replayed zero-call: the real facts re-extracted from the pinned revision (shallow read-only fetch: Slides .NET 86c441b, Words Python 2d2efee, PDF Python 5e122e0),
+a deterministic reconciliation (every inherited unit kept at its natural section, `normalize`, `retain_unverified_examples`), and the real `recertify._rerun_lane_r` restore + validators + independent-review rules.
+PDF Python's example facts come from sandbox receipts, so 78 receipts were synthesised for its Python fences (EXECUTED with the verifier's import prelude, NEEDS_INPUT) to exercise the real renderer and rules.
+Classes (each a pipeline class; positive tests are the real failing shapes, each has negative controls and fails on the pre-fix code):
+- BL-650 (Slides .NET, BC-12): the maintainers' list of sibling editions '- [Aspose.Slides FOSS for Java](url)' is kept into Documentation and Resources and printed through its link facts; an item that is only its link had its
+  own label as its 'description', so the line read '**[Aspose.Slides FOSS for Java](url)** — Aspose.Slides FOSS for Java' and BC-12 read the prose copy as a short spelling of the product. The failure names no LLM-owned section, so
+  `validation_defects` routes it nowhere (settle round 2: 'repair start (0 defect(s))'). Fix at the producer: a description that only restates its label is not one; the line prints the fact-true 'On github.com.'. BC-12 is unchanged.
+- BL-651 (Words Python, BC-04): the same renderer line for the kept sentence 'The `ApiExamples/` scripts ... the commercial [`aspose-words`](url) package ... replacing `aspose.words_foss` with `aspose.words`' prints the
+  maintainers' spans on a line BC-04 judged as authored; this is the producing line BL-471 could not replay (it is inherited_unit:099.list, as the item's own evidence said). The description of a link line that a kept list holds is the
+  kept unit's words and is judged like a placed unit's lines; an authored line with the same spans is still refused (R14, R42: aspose.org's published README keeps the sentence).
+- BL-651 (Words Python, BC-14 + BC-17): the published README says 'Document ... loads a `.doc`, `.docx`, `.rtf`, `.txt`, or `.md` file'. The product declares LoadFormat (AUTO, DOC, DOCX, RTF, TEXT, MARKDOWN), but format facts come
+  from verified examples only (md, txt), so BC-14 rule (g) refused the kept unit; the restore that keeps it for BC-17 ('AUTO' lost) was rolled back for that BC-14, and the model's only other answer (omit) loses it again.
+  R36(b)(4) (question the check and its data): an extension a SUPPORTED member of a load-format enum names counts as stated for a sentence that is not about writing. Alternatives rejected: attribute the unit (the check ignores
+  attribution), omit it (R14), extend the Python format extractor to read enums (a new mechanism, R27). The check stays strict for every other extension, save sentences, non-SUPPORTED members and products without such an enum.
+- BL-652 (PDF Python, REJECT 36 of 36): (a) 15 kept example headings ('### Exchange Bookmarks as JSON' directly above the example it titles) were printed nowhere: a verified example printed under the authored task title only, and
+  a heading is never a verbatim placed unit; the example entry now uses the maintainers' heading when the README keeps it into the section. (b) 5 kept code fragments that lean on an import printed elsewhere ('with Document(...)'
+  with no import) were printed inside the verified program, the verifier's prelude first, so the fenced block text never matched; a kept code block is printed when its code appears whole inside such a fence. (c) BC-07
+  'points below but nothing follows' fired on the API Reference's own docstring bullets ('DPI is below ``min_dpi``'): 'is/are/as below' is a pointer only when the clause ends on 'below'.
+  Residual (R45, measured not blocking): the S9 time-box (3000s) ended after round 2 because S4 took 1881s for 320 units; re-measure on the next hosted run before widening it.
+Zero-call replay: Slides .NET BC-12 failure reproduced then cleared on the real 083.list; Words Python harness BC-04 and BC-14 findings cleared and the 084.list restore kept; PDF Python disposition_coverage findings 63 to 23 and
+code blocks 9 to 1 (the remainder are the harness's own naive dispositions: headings kept into api_reference and scope_limitations). R9: no README wording moves except the maintainers' own heading printed where the
+authored title was; R10: no seal touched; properties improved (R46): universal and robust (a deterministic class no longer halts a candidate that the model cannot repair). Hosted-unproven (R41).
+
+Backlog: BL-650, BL-651, BL-652

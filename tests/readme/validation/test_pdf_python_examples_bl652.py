@@ -145,3 +145,21 @@ def test_a_fragment_printed_inside_the_verified_program_is_printed_but_an_altere
     assert "inherited_unit:142.code_block" in {
         unit for unit, _ in unprinted_kept_units("# Title\n", facts=context.facts, dispositions=_dispositions())
     }
+
+
+def test_negative_control_only_imports_before_the_code_count_as_a_prelude() -> None:
+    context = _context(_dispositions())
+    elsewhere = (
+        '```python\nfrom aspose_pdf import Document\nprint("setup")\n\n'
+        + _body(CODE_142)
+        + "\n```"
+    )
+    assert "inherited_unit:142.code_block" in {
+        unit
+        for unit, _ in unprinted_kept_units(elsewhere, facts=context.facts, dispositions=_dispositions())
+    }
+    only_imports = "```python\nimport os\nfrom aspose_pdf import Document\n\n" + _body(CODE_142) + "\n```"
+    assert "inherited_unit:142.code_block" not in {
+        unit
+        for unit, _ in unprinted_kept_units(only_imports, facts=context.facts, dispositions=_dispositions())
+    }

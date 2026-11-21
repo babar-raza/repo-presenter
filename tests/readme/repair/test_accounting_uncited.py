@@ -288,10 +288,13 @@ def test_the_identity_fallback_never_overrides_a_precise_example_heading_citatio
 ):
     """The more specific ``_decide``/``_example_heading`` path must win when it can resolve the
     heading; the identity fallback is reached only when it returns None, never instead of it."""
+    # BL-652: a heading kept into Additional Examples directly above its verified example now titles
+    # that example's entry (printed, nothing to account), so the unprinted shape this test is about is
+    # a heading kept into another example section, which the example entry does not print.
     dispositions = _dispositions(
         **{
             "009.heading": _entry(
-                "009.heading", "VERIFIED_MOVE", "additional_examples", []
+                "009.heading", "VERIFIED_MOVE", "quick_start", []
             ),
         }
     )
