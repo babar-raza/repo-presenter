@@ -22428,6 +22428,39 @@
    ],
    "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
    "tokens": 1820998.0
+  },
+  {
+   "at": "2026-11-21T23:33:48Z",
+   "batch": "e2-035-hosted",
+   "cause": "rolling",
+   "epoch": 2,
+   "kind": "stop_notice",
+   "reason": "cost per sealed candidate over the last 12 settled hosted runs (248.5 calls) exceeds 2x the previous 12 runs' 64.8 calls (R43(1) rolling window)"
+  },
+  {
+   "after": "e2-035-hosted",
+   "at": "2026-11-21T23:33:48Z",
+   "basis": "R25: 1.5x the measured median of 1 run(s) in e2-035-hosted (9 calls, 786243 tokens) x 6",
+   "calls_cap": 81.0,
+   "epoch": 2,
+   "id": "e2-036-hosted",
+   "kind": "open_batch",
+   "tokens_cap": 7076187.0
+  },
+  {
+   "at": "2026-11-21T23:33:48Z",
+   "batch": "e2-036-hosted",
+   "calls": 67.0,
+   "epoch": 2,
+   "id": "run-44962314832-a1",
+   "kind": "reserve",
+   "lanes": [
+    "R"
+   ],
+   "main_sha": "f2f130c4e4fb8403ceef48b799edc015823676dd",
+   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
+   "run_id": "44962314832",
+   "tokens": 1706997.0
   }
  ],
  "schema_version": 1
