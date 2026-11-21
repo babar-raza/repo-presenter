@@ -151,77 +151,82 @@
    "run_id": "44910829035",
    "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T15:25:05+00:00",
+   "classes": [
+    "duplicate_opening_paragraph|authored_unit|the_q_unit_restates"
+   ],
+   "code": "5bb29b70bb205d1ddbddb520d5ff58c38d624dad52183505005448337105a2ea",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44916810423",
+   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T14:27:28+00:00",
+  "at": "2026-11-21T15:25:05+00:00",
   "classes": {
-   "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of": {
-    "example": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
+   "duplicate_opening_paragraph|authored_unit|the_q_unit_restates": {
+    "example": "Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "authored_unit",
     "origins": [
-     "ProviderCallBudgetError"
+     "opening.opening"
     ],
-    "rule": "job_error",
-    "scope": "6228659b08debb88e492b76691d646ad588a753f96ad85b9b4ee6a00b45301af",
+    "rule": "duplicate_opening_paragraph",
+    "scope": "3bada742045b6f21f9aff449dd79eeed7e460f4517bc7ed03fc94a55d9cae85e",
     "scope_paths": [
-     "prompts",
-     "pyproject.toml",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
     ],
-    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
+    "sub_rule": "the_q_unit_restates",
     "upstream": ""
    }
   },
-  "code": "1b113f3c2c88d28dc3b460190315c20f00d32db344f5bfbf6136dd2dd8fbd409",
+  "code": "5bb29b70bb205d1ddbddb520d5ff58c38d624dad52183505005448337105a2ea",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
-   "kind": "ProviderCallBudgetError",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_opening_paragraph [quality] blocks until rule duplicate_opening_paragraph no longer finds it (preserved='Aspose.HTML FOSS for Python is a free, open-source, MIT-licensed Python toolkit for parsing HTML into a standards-based DOM tree, applying CSS, and serializing markup back out. It provides WHATWG-style `HTMLDocument`/`Document`/`Element` APIs, CSS selector matching and CSSOM-based computed-style resolution, WHATWG `URL`/`URLSearchParams` handling, and byte-stream encoding detection, with an optional QuickJS-backed JavaScript execution bridge for running scripts against the parsed DOM.' authored='Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.')",
+   "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "ProviderCallBudgetError",
-    "message": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
+    "label": "duplicate_opening_paragraph",
+    "message": "the 'opening' unit restates the inherited preserved paragraph placed beside it rather than adding genuinely new content",
     "origin": {
-     "id": "ProviderCallBudgetError",
-     "kind": "job_error"
+     "id": "opening.opening",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
+    "quote": "Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.",
+    "rule": "duplicate_opening_paragraph",
     "section_id": "",
-    "signature": "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of",
-    "source": "job",
-    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
+    "signature": "duplicate_opening_paragraph|authored_unit|the_q_unit_restates",
+    "source": "review",
+    "sub_rule": "the_q_unit_restates",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "8bfb37873ac23306670ec3d5bf02943999271d0c",
+  "main_sha": "d5ac4f93534e9b7214723013b5186622f92f828e",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "F03",
-    "outcome": "unrepairable",
-    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
-    "section_id": "scope_limitations",
-    "stage": null
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
-  "run_id": "44910829035",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44910829035",
+  "run_id": "44916810423",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44916810423",
   "schema_version": 1,
   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
