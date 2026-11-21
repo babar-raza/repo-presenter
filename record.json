@@ -152,23 +152,45 @@
    "run_id": "44938950748",
    "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T19:57:48+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference"
+   ],
+   "code": "9115a8a6864f9cff85218c1eceb642eca03ddb6098be9c367e75ad5d40f31a19",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44942629147",
+   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T19:22:10+00:00",
+  "at": "2026-11-21T19:57:48+00:00",
   "classes": {
-   "job_error|job_error|unknown:no_valid_independent_review": {
-    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, documentation_resources): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F04: a contradiction finding must cite at least one product fact (not only inherited text)",
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "authored_unit",
     "origins": [
-     "unknown"
+     "api_reference.type:public_symbol:org.aspose.psd.layers.channelinformation"
     ],
-    "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "unknown:no_valid_independent_review",
+    "rule": "llm:factuality",
+    "scope": "d03650c240e8794065e511ad9e42309757be30bbc0ffd97f58b50bf678eb66d1",
+    "scope_paths": [
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
@@ -176,25 +198,25 @@
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, documentation_resources): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F04: a contradiction finding must cite at least one product fact (not only inherited text)",
-   "kind": "unknown",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 2; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "unknown",
-    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, documentation_resources): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F04: a contradiction finding must cite at least one product fact (not only inherited text)",
+    "label": "F01",
+    "message": "The public surface spans 60 classes and enumerations across 7 modules, summarized below.",
     "origin": {
-     "id": "unknown",
-     "kind": "job_error"
+     "id": "api_reference.type:public_symbol:org.aspose.psd.layers.channelinformation",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|unknown:no_valid_independent_review",
-    "source": "job",
-    "sub_rule": "unknown:no_valid_independent_review",
+    "quote": "| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
@@ -205,24 +227,24 @@
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F04",
-    "outcome": "unrepairable",
-    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
-    "section_id": "scope_limitations",
-    "stage": null
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "the causing section was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
+    "section_id": "api_reference",
+    "stage": "S6"
    },
    {
     "facts_defects": [],
-    "label": "F01+F02",
+    "label": "F01",
     "outcome": "repaired",
-    "reason": "api_reference: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change); api_reference#types-1: repaired",
+    "reason": "",
     "section_id": "api_reference",
-    "stage": "S6"
+    "stage": "S4"
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
-  "run_id": "44938950748",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44938950748",
+  "run_id": "44942629147",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44942629147",
   "schema_version": 1,
   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
