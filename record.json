@@ -91,178 +91,72 @@
    "run_id": "44898282006",
    "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T15:11:06+00:00",
+   "classes": [
+    "job_error|job_error|unknown:no_valid_independent_review"
+   ],
+   "code": "5bb29b70bb205d1ddbddb520d5ff58c38d624dad52183505005448337105a2ea",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44916882934",
+   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T11:29:12+00:00",
+  "at": "2026-11-21T15:11:06+00:00",
   "classes": {
-   "llm:factuality|authored_unit|api_reference": {
-    "example": "The `PsdImage` class serves as the library's entry point and returns editable per-layer metadata through its getLayers method. The `Layer` class carries the per-layer metadata, while `ResourceBlock` and `PsdLoadException` cover image resources and load errors.",
+   "job_error|job_error|unknown:no_valid_independent_review": {
+    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u4 (development_testing): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 300-300 are blank",
     "findings": 1,
-    "origin_kind": "authored_unit",
+    "origin_kind": "job_error",
     "origins": [
-     "api_reference.intro"
+     "unknown"
     ],
-    "rule": "llm:factuality",
-    "scope": "4eb9b5c5f7a5d46decafcabcb583ecfd41d00af34fe60f1cbeb052f0b2010fe8",
-    "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|inherited_unit|api_reference": {
-    "example": "| `PsdImageLoader` | Class that declares the method load. |",
-    "findings": 5,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:040.table",
-     "inherited_unit:042.table",
-     "inherited_unit:044.table",
-     "inherited_unit:046.table",
-     "inherited_unit:038.table"
-    ],
-    "rule": "llm:factuality",
-    "scope": "7396699098575fdd9be08796e02058e17c5a70e5b3a898701f66009bea8af093",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   },
-  "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
+  "code": "5bb29b70bb205d1ddbddb520d5ff58c38d624dad52183505005448337105a2ea",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 7; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised c",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u4 (development_testing): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 300-300 are blank",
+   "kind": "unknown",
+   "transient": true
   },
   "findings": [
    {
-    "label": "F01",
-    "message": "The `PsdImage` class serves as the library's entry point and returns editable per-layer metadata through its getLayers method. The `Layer` class carries the per-layer metadata, while `ResourceBlock` and `PsdLoadException` cover image resources and load errors.",
+    "label": "unknown",
+    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u4 (development_testing): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 300-300 are blank",
     "origin": {
-     "id": "api_reference.intro",
-     "kind": "authored_unit"
+     "id": "unknown",
+     "kind": "job_error"
     },
-    "quote": "The `PsdImage` class serves as the library's entry point and returns editable per-layer metadata through its getLayers method. The `Layer` class carries the per-layer metadata, while `ResourceBlock` and `PsdLoadException` cover image resources and load errors.",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "| `PsdImageLoader` | Class that declares the method load. |",
-    "origin": {
-     "id": "inherited_unit:040.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `PsdImageLoader` | Class that declares the method load. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "| `IndexedColorPalette` | Class that declares the methods getEntries, parse and toPublicInfo and the property entries and the field EXPECTED_RAW_LENGTH. |",
-    "origin": {
-     "id": "inherited_unit:042.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `IndexedColorPalette` | Class that declares the methods getEntries, parse and toPublicInfo and the property entries and the field EXPECTED_RAW_LENGTH. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "| `ImageResourcesSection` | Class that declares the methods getRawData, getResources, hasResources, load and save and the properties rawData and resources and the field EMPTY. |",
-    "origin": {
-     "id": "inherited_unit:044.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `ImageResourcesSection` | Class that declares the methods getRawData, getResources, hasResources, load and save and the properties rawData and resources and the field EMPTY. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F05",
-    "message": "| `PsdImageWriter` | Class that declares the method save. |",
-    "origin": {
-     "id": "inherited_unit:046.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `PsdImageWriter` | Class that declares the method save. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F06",
-    "message": "| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |",
-    "origin": {
-     "id": "inherited_unit:038.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|unknown:no_valid_independent_review",
+    "source": "job",
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "51f1d767694da5f8d2c9e2908ae701281ab0b137",
+  "main_sha": "d5ac4f93534e9b7214723013b5186622f92f828e",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "F01",
-    "outcome": "unrepairable",
-    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
-    "section_id": "scope_limitations",
-    "stage": null
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
-  "run_id": "44898282006",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44898282006",
+  "run_id": "44916882934",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44916882934",
   "schema_version": 1,
   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
