@@ -23,7 +23,7 @@ def _plan() -> dict:
                 "shared_fact_ids": [],
             },
             {"title": "Install with pip", "fact_ids": ["install_command:pip"], "shared_fact_ids": []},
-            {"title": "Work with the public API", "fact_ids": ["package:name"], "shared_fact_ids": []},
+            {"title": "Work with the public API", "fact_ids": ["package:name", "install_command:pip"], "shared_fact_ids": ["install_command:pip"]},
         ],
         "quick_start_example_id": "example:001",
         "second_quick_start_example_id": None,

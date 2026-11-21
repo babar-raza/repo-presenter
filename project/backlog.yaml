@@ -2803,3 +2803,59 @@ items:
       - "run_acceptance_writer.case_evidence picked the latest readable seal before BL-590; recertified is keyed by (repository, lane) -> latest revision seal"
     next_action: "investigate after the next audit round"
     updated: "2026-11-21"
+
+  - id: BL-600
+    title: "A planned Key Capabilities entry that cites only facts that name the product (identity:*, package name/version) is written and sealed with nothing the independent review can check it against (sealed PSD Java capabilities 1, 3, 4, 5 cite identity:family only; 3 of 4 fresh audit samples fault 3, 4, 5 although the facts hold CompressionMethod / ColorModes members)"
+    type: defect
+    source: "owner rulings R44, R46, R36, R41; BL-592 next_action (producer-side investigation of the four clean controls' flagged authored lines); sweep /home/user/.supervisor/pre_audit_sweep.json (PSD Java lines 47-50 flagged in 1, 1, 2, 3 of 4 samples, 'the quoted claim has no distinctive term to look up')"
+    priority: P1
+    status: active
+    implementation_path: "planning.plan_checks refuses a core_capabilities entry whose fact_ids are all naming facts (planning.naming_only_capability: identity:*, package:name/version/published_version) and tells the planner to cite the fact that states the capability or drop it; planning.recover_naming_only_capabilities (the final-attempt last resort in recover_planning_output) drops such entries on a recorded BL-600 note only when the plan keeps the policy minimum of 3. Existing seals, the validators and the review are untouched (a planning rule: it binds the producer, checklist item 13)"
+    acceptance: "(1) tests/readme/composition/test_naming_only_capability_bl600.py (3); (2) report-only run over the 30 sealed Lane R plans: 4 of 201 capabilities are naming-only, all in PSD Java (capabilities 1, 3, 4, 5), 0 elsewhere, so 0 passing seal elsewhere is touched; on the real PSD Java plan plan_checks names exactly those 4 and the last resort drops nothing (2 < 3 would remain, so the planner is asked again); (3) recertify --all gate OK (planning is not run by re-certification); (4) hosted (R41, not proven): a PSD Java refresh"
+    evidence:
+      - "scratchpad bl600/scan_caps2.py over refs/repository-presenter-state/bundles (30 Lane R seals, 201 capabilities): weak 4, flagged 3 of the 4, strong-cited and flagged 5, weak elsewhere 0"
+      - "scratchpad bl600/t_f2.py: plan_checks(real PSD Java plan) -> 4 naming-only errors; OCR, Page, Email 0"
+      - "live (R45 measured): the degraded PSD Java rendering (capabilities 2-5 withheld by the BL-240 degrade) is still faulted on capability 1, the other naming-only entry, in a fresh audit-packet draw (scratchpad bl600/t_live.py psdj degraded)"
+    next_action: "supervisor merges; refresh PSD Java (refresh:true) and read the BL-530 two-draw result"
+    updated: "2026-11-21"
+
+  - id: BL-601
+    title: "S4 files the maintainers' license paragraph under the Enterprise Edition section when the model does (13 of 30 sealed Lane R dispositions), the Enterprise clause is then authored from the license text, and the independent audit faults the closing line as promotional (OCR .NET line 261, 'quality', 4 of 4 samples); BL-480's lever answers only unsupported_claim, so it never ran"
+    type: defect
+    source: "owner rulings R44, R46, R36, R41, R14; BL-592 next_action; sweep line 261 (OCR .NET, flagged x4, llm:presentation); live audit-packet draw 2026-11-21: 'promotional link to the enterprise edition product (line 261) in a section that should focus on scope limitations'"
+    priority: P1
+    status: active
+    implementation_path: "reconciliation.dispositions.normalize (generation only; fit_sealed_sections / re-certification never call it): a paragraph that states the license (is_license_statement) and names no Enterprise Edition or commercial product, filed under enterprise_relationship, becomes SUPERSEDE_REDUNDANT into the License section (LICENSE_FIT_RATIONALE, the BL-004 outcome), citing the license facts; the Enterprise target fact normalize adds to every unit filed there is the shell's, not the paragraph's, and is what made the license fit refuse it. The Enterprise clause is then owed no carried text and the BL-350/BL-480 fallback (renderer prints the verified Enterprise Edition sentence alone) is the existing outcome"
+    acceptance: "(1) tests/readme/reconciliation/test_license_in_enterprise_bl600.py (3; the positive case fails without the change); (2) zero-call on the real OCR .NET dispositions and facts: 076.paragraph SUPERSEDE_REDUNDANT enterprise_relationship -> license, fact_ids license:file, license:spdx; (3) blast radius over the 30 sealed dispositions: 13 license paragraphs would be re-filed at the next generation, none at re-certification (R10); (4) recertify --all gate OK; (5) hosted (R41, not proven): an OCR .NET refresh"
+    evidence:
+      - "scratchpad bl600/scan_f1.py: 13 paragraphs in 13 seals (3D Python, BarCode Python, Cells Java, Cells Rust, Email .NET, Email C++, Email Python, HTML Python, Imaging .NET, OCR .NET, PDF C++, PDF Java, Slides Python)"
+      - "live: the OCR rendering with the Enterprise clause withheld (renderer's sentence alone) is ACCEPT, 0 blocking, in a fresh audit-packet sample (scratchpad bl600/t_live.py ocr degraded); the stored rendering is REJECT with the quality finding on line 261 and unsupported_claim on lines 50 and 51"
+    next_action: "supervisor merges; refresh OCR .NET (refresh:true). BL-603 records the general quality-kind gap"
+    updated: "2026-11-21"
+
+  - id: BL-602
+    title: "The four clean controls' remaining authored-prose flags (Email C++ API rows, OCR .NET capability bullets and Enterprise line, PSD Java capability bullets, Page Python opening) are all handled by the existing producer levers on a refresh (BL-240 row fallback and capability drop, BL-480 Enterprise withholding, BL-350/BL-400 fact-true opening); proven zero-call on the stored units, with negative controls; the seals carry them only because they predate the BL-430/BL-530 two-draw review"
+    type: gap
+    source: "owner rulings R44, R46, R36, R41, R14, R10; BL-592 acceptance (3) (the false-flag gate needs these four cells' authored lines to stop being flagged); audit round 4 (seed 44904444359, attempt 44920297353)"
+    priority: P1
+    status: active
+    implementation_path: "none beyond BL-600/BL-601: cascade.reviewed() asks the production review, then the audit-packet sample and a second independent draw (BL-430, BL-530), and feeds every blocking finding of either to the same S10 repair rounds and the same BL-240 degrade (must_correct.verdict_flags -> degrade_claims); second_sample_lines is the production authored scope (authored_table_lines excludes the renderer's fact-true rows, BL-560), so a replaced row is never re-asked. Producing the clean candidates is a refresh (R10: only a refresh changes certified bytes)"
+    acceptance: "(1) zero-call on the real stored units (scratchpad bl600/t_degrade.py): Email C++ rows 126-137 -> 12 api_row_fallback records, the renderer's fact-true rows print, validators clean; OCR .NET lines 50, 51 -> capability_dropped, line 261 -> enterprise_context_withheld + inherited_unit_omitted (BL-480), clean; Page Python line 7 -> opening_fact_true, clean; PSD Java capabilities 2-5 -> capability_dropped, clean; (2) the audit's own derivation (lane_r_derivation) marks every replaced Email, OCR and Page line derivable and clearable (a judge flag on it is cleared); PSD Java's returned maintainer paragraph is judge-owned (scratchpad bl600/t_deriv.py); (3) negative controls (scratchpad bl600/t_neg.py): a fabricated authored row, opening or capability is not derivable or clearable, and a flag on it is withheld by the same levers; (4) recertify --all gate OK; (5) hosted (R41, not proven): refresh:true for the four cells, expected false-flag controls of a re-audit 4/25 -> 0/25 if each refresh seals"
+    evidence:
+      - "live (R45 measured, 12 provider calls): OCR stored = REJECT (3 blocking: lines 50, 51 unsupported_claim, 261 quality); OCR after the degrade = ACCEPT, 0 blocking; PSD Java after the degrade = blocking only on installation lines the renderer prints (derivation-owned, not counted by merge_second_sample) and on capability 1 (BL-600)"
+      - "capability bullets whose cited facts do state the claim are still faulted when they end in a purposive tail (OCR 5 'enabling use across ...'); a tail ban would reject 24 of 201 capabilities (12%) that the review accepts, above the 5% report-only limit (checklist item 13), so it is not added"
+    next_action: "supervisor dispatches refresh:true for Email C++, OCR .NET, Page Python, PSD Java after merge; read each BL-530 two-draw record"
+    updated: "2026-11-21"
+
+  - id: BL-603
+    title: "A blocking model finding of a kind other than contradiction / unsupported_claim (quality, omission) has no degrade lever: must_correct.verdict_flags passes only the two false-claim kinds, so a refresh whose audit-packet draw faults authored text as quality ends REJECT with the old seal kept"
+    type: gap
+    source: "owner rulings R44, R46, R36; found while tracing OCR .NET line 261 for BL-601"
+    priority: P2
+    status: open
+    implementation_path: "investigate: whether a quality finding quoting the Enterprise closing paragraph should reach BL-480's withholding (structurally: _ENTERPRISE_SHELL_LEAD) with its own R14 rationale (BL-480's states 'no fact supports'); BL-601 removes the one observed cause"
+    acceptance: "a recorded decision with the count of quality findings the audit-packet draws raise on authored text across the 30 seals (sweep: 1 distinct line, OCR 261) and, if warranted, a lever with a test from the real shape"
+    evidence:
+      - "pre_audit_sweep.json: the only quality flag on a Lane R authored line is OCR .NET 261 (x4); 8 other quality/omission rows are on renderer lines (Page 109/113 Required Package Dependencies headings)"
+    next_action: "re-evaluate after the OCR .NET refresh"
+    updated: "2026-11-21"
