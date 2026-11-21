@@ -157,144 +157,35 @@
    "run_id": "44931307380",
    "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T20:00:11+00:00",
+   "classes": [],
+   "code": "995d2db693648c90d6d1c3f3bdddbba865f27a76e8a4b1c301ce496f161268a7",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "44943295713",
+   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T17:42:52+00:00",
-  "classes": {
-   "BC-14|inherited_unit|the_readme_claims_fbx": {
-    "example": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
-    "findings": 2,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:050.table"
-    ],
-    "rule": "BC-14",
-    "scope": "92dceedb66e52ec631f2647b08493487147d8dc83f6085e95c737a97ba73f068",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "the_readme_claims_fbx",
-    "upstream": ""
-   },
-   "claim_contradiction|inherited_unit|stub_format": {
-    "example": "| `FbxLoadOptions` | Load options for FBX format. |",
-    "findings": 2,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:050.table"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "8e8062dd4bdec5e8bb45a4e4b8a48f12793c6f0512955580a66781a85845cdfd",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "stub_format",
-    "upstream": "source_stub"
-   }
-  },
-  "code": "a5de3b74c7fc6087c718ccb5a7e7db41ea4635d6a6e15858a11f23a77f1d5477",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats); claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README claims .fbx output, but format:output.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the output formats)",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "claim_contradiction",
-    "message": "line 291 (COMPOSING): the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
-    "origin": {
-     "id": "inherited_unit:050.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `FbxLoadOptions` | Load options for FBX format. |",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|stub_format",
-    "source": "review",
-    "sub_rule": "stub_format",
-    "upstream": "source_stub"
-   },
-   {
-    "label": "claim_contradiction",
-    "message": "line 292 (COMPOSING): the README claims .fbx output, but format:output.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the output formats",
-    "origin": {
-     "id": "inherited_unit:050.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `FbxSaveOptions` | Save options for FBX format. |",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|stub_format",
-    "source": "review",
-    "sub_rule": "stub_format",
-    "upstream": "source_stub"
-   },
-   {
-    "label": "BC-14",
-    "message": "the README claims .fbx input, but format:input.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the input formats",
-    "origin": {
-     "id": "inherited_unit:050.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|inherited_unit|the_readme_claims_fbx",
-    "source": "validation",
-    "sub_rule": "the_readme_claims_fbx",
-    "upstream": ""
-   },
-   {
-    "label": "BC-14",
-    "message": "the README claims .fbx output, but format:output.fbx is reachable only through a stub (the dispatcher raises before reaching a real implementation): drop .fbx from the output formats",
-    "origin": {
-     "id": "inherited_unit:050.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-14",
-    "section_id": "api_reference",
-    "signature": "BC-14|inherited_unit|the_readme_claims_fbx",
-    "source": "validation",
-    "sub_rule": "the_readme_claims_fbx",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-21T20:00:11+00:00",
+  "classes": {},
+  "code": "995d2db693648c90d6d1c3f3bdddbba865f27a76e8a4b1c301ce496f161268a7",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "R",
-  "main_sha": "3a97735d5fecad7219c18abb978730f396f95cb4",
+  "main_sha": "a52759e7e717f8e77f1944f82d016731c48a57ad",
   "origin": "hosted",
-  "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": null,
-    "stage": "S4"
-   }
-  ],
+  "outcome": "success",
+  "repairs": [],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-Java",
-  "run_id": "44931307380",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44931307380",
+  "run_id": "44943295713",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44943295713",
   "schema_version": 1,
   "source_revision": "3d2ed6be91f5abdd1c52ecbcfa192719883cb1b3",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
