@@ -2409,6 +2409,14 @@ ENTERPRISE_CLAIM_OMISSION_REASON = (
     "Enterprise clause withheld (BL-480, R14): the independent review found no fact that supports it, "
     "so the renderer prints the verified Enterprise Edition sentence alone"
 )
+#: The reason of the omitted record that releases the slot of an authored paragraph unit the last-resort
+#: degrade dropped because another copy of the same paragraph prints (BL-561, R14): the other copy is
+#: the maintainers' own text (or an earlier authored paragraph), so the dropped unit is owed no more
+#: (BC-04) and the paragraph prints exactly once.
+DUPLICATE_UNIT_OMISSION_REASON = (
+    "Duplicate paragraph withheld (BL-561, R14): the same paragraph prints elsewhere, so this authored "
+    "copy is left out and its slot is owed no unit"
+)
 _ENTERPRISE_SECTION = "enterprise_relationship"
 
 
@@ -2430,10 +2438,18 @@ def api_row_fallback_slots(output: Mapping[str, Any], task: SectionTask) -> froz
         if isinstance(item, Mapping)
         and str(item.get("reason") or "").startswith(API_ROW_FALLBACK_REASON)
     }
+    duplicated = {
+        str(item.get("slot"))
+        for item in output.get("omitted", [])
+        if isinstance(item, Mapping)
+        and item.get("section") == task.section_id
+        and str(item.get("reason") or "").startswith(DUPLICATE_UNIT_OMISSION_REASON)
+    }
     return frozenset(
         slot
         for slot in task.slots
-        if slot.startswith(API_ROW_SLOT_PREFIXES) and slot.split(":", 1)[1] in fallen
+        if (slot.startswith(API_ROW_SLOT_PREFIXES) and slot.split(":", 1)[1] in fallen)
+        or slot in duplicated
     )
 
 

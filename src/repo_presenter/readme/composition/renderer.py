@@ -350,7 +350,61 @@ class RenderContext:
         fact_ids = (
             self.unit_fact_ids.get((section, slot), []) if section == "scope_limitations" else []
         )
-        return self.prose(self.units.get((section, slot), ""), fact_ids)
+        text = self.units.get((section, slot), "")
+        return self.prose(self._without_placed_paragraphs(slot, text), fact_ids)
+
+    def _without_placed_paragraphs(self, slot: str, text: str) -> str:
+        """``text`` without every paragraph the document already prints as a kept maintainers' unit
+        (BL-561, R14: the maintainers' copy is live content and always prints; the authored copy is the
+        model's). ``without_repeated_paragraphs`` removes a paragraph two authored units share; a unit
+        that carries an inherited paragraph verbatim while the placement prints it too printed it twice
+        and the reviewer's ``duplicate_paragraph`` rule rejected the candidate (hosted Cells C++ refresh
+        run 44900529375: "The library's public types live in the `Aspose::Cells_FOSS` namespace ...").
+        Only the paragraph slots, never the opening (the degrade owns that one), and only paragraphs the
+        reviewer's rule would compare (``_MIN_REPEATED_PARAGRAPH_CHARS``)."""
+        if (
+            not text
+            or self._unplaced
+            or slot == "opening"
+            or not _PARAGRAPH_SLOTS.fullmatch(slot)
+        ):
+            return text
+        keys = self._placed_paragraph_keys
+        if not keys:
+            return text
+        from repo_presenter.readme.review.matching import plain
+
+        parts = _PARAGRAPH_BREAK.split(text)
+        kept = [
+            part
+            for part in parts
+            if len(" ".join(plain(part).casefold().split())) < _MIN_REPEATED_PARAGRAPH_CHARS
+            or " ".join(plain(part).casefold().split()) not in keys
+        ]
+        return "\n\n".join(kept) if len(kept) != len(parts) else text
+
+    @property
+    def _placed_paragraph_keys(self) -> frozenset[str]:
+        """The normalized prose paragraphs (``_MIN_REPEATED_PARAGRAPH_CHARS`` or more) of every kept
+        unit the document places, as a reader sees them."""
+        cached = getattr(self, "_placed_keys_cache", None)
+        if cached is None:
+            from repo_presenter.readme.review.matching import plain
+
+            keys: set[str] = set()
+            for texts in self.placed.values():
+                for text in texts:
+                    for part in _PARAGRAPH_BREAK.split(text):
+                        stripped = part.strip()
+                        if stripped.startswith(("#", "|", "<", "```", "~~~", "- ", "* ", "+ ")):
+                            continue
+                        key = " ".join(plain(part).casefold().split())
+                        if len(key) >= _MIN_REPEATED_PARAGRAPH_CHARS:
+                            keys.add(key)
+            cached = frozenset(keys)
+            if not self._unplaced:
+                self._placed_keys_cache = cached
+        return cached
 
     def prose(self, text: str, fact_ids: Iterable[str] = ()) -> str:
         """Authored text with every fact-value identifier wrapped in a code span."""

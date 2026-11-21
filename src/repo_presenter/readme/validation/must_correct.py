@@ -607,6 +607,22 @@ def _withhold_flagged(
             and not slot.startswith(("capability:", "hub:", "type:"))
         ):
             records.append(_record(slot, section, covering, "duplicate_unit_dropped", rule))
+            # BL-561: the dropped slot is then owed no unit (BC-04), as an API row's is after its fallback;
+            # without the record every such drop added a failing BC-04 and the degrade discarded it
+            # (hosted Cells C++ refresh run 44900529375: "adds failing check(s) ['BC-04']").
+            from repo_presenter.readme.composition.authoring import DUPLICATE_UNIT_OMISSION_REASON
+
+            omitted.append(
+                {"fact_id": f"slot:{section}:{slot}", "slot": slot, "reason": DUPLICATE_UNIT_OMISSION_REASON,
+                 "section": section}
+            )
+            # The inherited unit the dropped copy cited is carried by the copy that still prints (a must-carry
+            # unit is cited or listed omitted with a reason, ``authoring.carried_unit_errors``).
+            for cited_fact in unit.get("fact_ids") or []:
+                if str(cited_fact).startswith("inherited_unit:"):
+                    omitted.append(
+                        {"fact_id": str(cited_fact), "reason": DUPLICATE_UNIT_OMISSION_REASON, "section": section}
+                    )
             status.update({i: "handled" for i in index_of(covering)})
             continue
         cites_inherited = any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or [])
