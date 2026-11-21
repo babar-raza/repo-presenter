@@ -135,86 +135,82 @@
    "run_id": "44787653565",
    "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T12:01:21+00:00",
+   "classes": [
+    "duplicate_paragraph|authored_unit|the_candidate_prints_the"
+   ],
+   "code": "b77f839c4a7634ec0ccdfa5734e284ecf0c5de392c1e6e7d0863fbb7576137ce",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44900529375",
+   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T18:15:10+00:00",
+  "at": "2026-11-21T12:01:21+00:00",
   "classes": {
-   "llm:factuality|authored_unit|api_reference": {
-    "example": "The `Workbook` class supports loading from files or streams using `LoadOptions` and saving to files or streams using `SaveOptions`, with `LoadFormat` and `SaveFormat` specifying the file format, and exposes workbook-level settings through `WorkbookProperties`, `WorkbookSettings`, and `WorkbookView`,",
-    "findings": 2,
+   "duplicate_paragraph|authored_unit|the_candidate_prints_the": {
+    "example": "The library's public types live in the Aspose::Cells_FOSS namespace, with `Workbook` as the root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph beneath it.",
+    "findings": 1,
     "origin_kind": "authored_unit",
     "origins": [
-     "api_reference.hub:public_symbol:aspose.cells_foss.workbook",
-     "api_reference.hub:public_symbol:aspose.cells_foss.worksheet"
+     "api_reference.intro"
     ],
-    "rule": "llm:factuality",
-    "scope": "8de9adae2d7d1c8f8e0fce3d033897a62264469e335656ca32d2b5f8c626312c",
+    "rule": "duplicate_paragraph",
+    "scope": "efe7bc7fe19ea9a2b1ad5e44dee781a05a7f69ab1788df67bb71d69977961b25",
     "scope_paths": [
-     "prompts",
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
      "src/repo_presenter/readme/composition/authoring.py",
      "src/repo_presenter/readme/composition/authoring_retry.py",
      "src/repo_presenter/readme/composition/coherence.py",
      "src/repo_presenter/readme/composition/text_hygiene.py",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
+     "src/repo_presenter/readme/review/independent_reviewer.py"
     ],
-    "sub_rule": "api_reference",
+    "sub_rule": "the_candidate_prints_the",
     "upstream": ""
    }
   },
-  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+  "code": "b77f839c4a7634ec0ccdfa5734e284ecf0c5de392c1e6e7d0863fbb7576137ce",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; S2-F03 [omission] in api_reference blocks until a revised candidate the reviewer no longer faults, or omission_present proving its omission claim false; S2-F04 [omission] in api_reference blocks until a revised candidate the reviewer no longer faults, or omission_present proving its omission claim false",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_paragraph [quality] blocks until rule duplicate_paragraph no longer finds it (the paragraph occurs 2 times)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "S2-F03",
-    "message": "The `Workbook` class supports loading from files or streams using `LoadOptions` and saving to files or streams using `SaveOptions`, with `LoadFormat` and `SaveFormat` specifying the file format, and exposes workbook-level settings through `WorkbookProperties`, `WorkbookSettings`, and `WorkbookView`, while `WorkbookProtection`, `WorkbookLoadException`, and `WorkbookSaveException` handle security and error conditions.",
+    "label": "duplicate_paragraph",
+    "message": "the candidate prints the same prose paragraph more than once",
     "origin": {
-     "id": "api_reference.hub:public_symbol:aspose.cells_foss.workbook",
+     "id": "api_reference.intro",
      "kind": "authored_unit"
     },
-    "quote": "The `Workbook` class supports loading from files or streams using `LoadOptions` and saving to files or streams using `SaveOptions`, with `LoadFormat` and `SaveFormat` specifying the file format, and exposes workbook-level settings through `WorkbookProperties`, `WorkbookSettings`, and `WorkbookView`,",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
+    "quote": "The library's public types live in the Aspose::Cells_FOSS namespace, with `Workbook` as the root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph beneath it.",
+    "rule": "duplicate_paragraph",
+    "section_id": "",
+    "signature": "duplicate_paragraph|authored_unit|the_candidate_prints_the",
     "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "S2-F04",
-    "message": "The `Worksheet` class provides access to worksheet content through the `Cells` collection, supports visibility control via `VisibilityType`, protects worksheets with `WorksheetProtection`, manages page layout with `PageSetup`, tracks defined names state with `WorksheetDefinedNamesState`, and organizes multiple worksheets within a workbook using `WorksheetCollection`.",
-    "origin": {
-     "id": "api_reference.hub:public_symbol:aspose.cells_foss.worksheet",
-     "kind": "authored_unit"
-    },
-    "quote": "The `Worksheet` class provides access to worksheet content through the `Cells` collection, supports visibility control via `VisibilityType`, protects worksheets with `WorksheetProtection`, manages page layout with `PageSetup`, tracks defined names state with `WorksheetDefinedNamesState`, and organiz",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
+    "sub_rule": "the_candidate_prints_the",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
+  "main_sha": "991899b0a232ffcaaec48ff537ef2d1b7c356657",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "S2-F03+S2-F04",
+    "label": "duplicate_paragraph:0",
     "outcome": "unrepairable",
     "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
     "section_id": "api_reference",
@@ -222,8 +218,8 @@
    }
   ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
-  "run_id": "44787653565",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44787653565",
+  "run_id": "44900529375",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44900529375",
   "schema_version": 1,
   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
