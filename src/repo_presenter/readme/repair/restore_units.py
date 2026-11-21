@@ -575,7 +575,7 @@ def fit_misfiled_units(
         str(e.get("unit_id")): (e.get("disposition"), e.get("destination_section"))
         for e in output.get("dispositions", [])
     }
-    fit_sealed_sections(output, facts)
+    fit_sealed_sections(output, facts, license_links=True)
     changes: list[dict[str, str]] = []
     for entry in output.get("dispositions", []):
         unit_id = str(entry.get("unit_id"))

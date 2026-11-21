@@ -8259,3 +8259,25 @@ Proof. Zero-call replays of both shapes through the real cascade/run_job with sc
 Properties improved (R46): robust and reliable. Hosted-unproven (R41): PDF TypeScript and PDF Python Lane R are the proof cells.
 
 Backlog: BL-610, BL-611, BL-612
+
+## 2026-11-21: Lane R deterministic blockers of six cells, classified; four classes fixed at the root, the rest recorded with their measured cause (BL-620, BL-621, BL-622, BL-623, BL-624)
+
+Context. R44 needs 34 of 40 Lane R cells sealed and accepted; 30 are sealed. The six unsealed cells named by the supervisor were read from the hosted logs of the 16:26-17:40Z
+runs on main 11aa6b1 / 3a97735 (run ids in BL-620..BL-624) and their failure records. Each ended on a deterministic check, not on the model.
+Classes fixed (each a pipeline class, not a cell; every positive test is the real failing shape, every class has negative controls):
+- BL-620 (BC-17, TeX Python): a maintainers' static status badge no fact verifies is withheld by the renderer, a badge row is shell-rendered, so no lever could clear the loss. Decision (R14, recorded in the accounting
+  reason): it is accounted for when the candidate states the badge's value in words ('Pre-Alpha' in the kept Scope sentence); a value never stated stays a loss. aspose.org's published README keeps the badge (R42); we cannot
+  print it without a verifying fact (BC-07), so the content is carried and the picture is not.
+- BL-621 (BC-14 stub format, 3D Java; R42): the rows 'FbxLoadOptions | Load options for FBX format.' are the maintainers' docstrings, kept as written by aspose.org's published README; a verb that opens a configuration
+  noun is no claim that the format is loaded. Real claims of the stub format still block.
+- BL-622 (BC-05 section fit, TeX Python): the license sentence's link to the license file is rendered by the License section, so the existing zero-call restore-time fold supersedes the sentence out of Scope
+  and Limitations, and the supersession substance check states a repository file's web link by the relative link to the same file. Restricted to restore time after the lean recertify of a first version
+  (which changed the S4 fold) turned Font Python's sealed unit 063 into a NEEDS_REPAIR; the final lean recertify is 64 of 64 RECERTIFIED, gate OK, 0 provider calls, readme_changed only on the pre-existing Email Python row.
+- BL-623 (BC-02 PACKAGE_ABSENT, GIS .NET): an EXTRACTING dead end for an unpublished package with no maintainers' README; now a claim only where the README prints the registry command. GIS .NET itself stays an owner
+  decision: no README, package absent, build did not exit 0 at the unchanged upstream revision 1d387580, no aspose.org publication; R24 BLOCKED_EXTERNAL was recorded 2026-11-10 for Lane R but data/terminal_cells.json
+  lists only its Lane L. Recommendation: record Lane R terminal (R24) and report the denominator as 39 with the exclusion, unless the owner wants the README without any example or install steps.
+Not fixed here (BL-624, measured cause recorded): Slides .NET (three restore interactions on one section), PDF TS (section_authoring cut off after the BL-370 narrowing), 3D TS (degrade over-withhold and a review
+reply citing unshown lines). R9: no README text touched; R10: no seal or sealed byte moves (recertify evidence in the backlog items); properties improved (R46): robust (a deterministic defect degrades to a recorded
+accounting instead of halting the candidate) and universal. Hosted-unproven (R41).
+
+Backlog: BL-620, BL-621, BL-622, BL-623, BL-624

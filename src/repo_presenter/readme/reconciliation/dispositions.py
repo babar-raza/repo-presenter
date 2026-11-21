@@ -53,7 +53,7 @@ import json
 import re
 from collections import Counter
 from collections.abc import Collection, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -398,6 +398,29 @@ def rendering_fact_ids(section: str, facts: FactsDocument) -> list[str]:
             if fact.id.startswith(DISTRIBUTION_FACT_PREFIX) and fact.polarity == "SUPPORTED"
         }
     return sorted(ids)
+
+
+def license_file_link_ids(facts: FactsDocument) -> frozenset[str]:
+    """The SUPPORTED ``link_target`` facts that are the web address (``/blob/``, ``/raw/``,
+    ``raw.githubusercontent.com``) of the ``license:file`` path (BL-622): the License section links that
+    very file, so a unit that carries such a link can be superseded by it."""
+    license_file = next(
+        (
+            fact.value.strip().strip("/")
+            for fact in facts.by_kind("license")
+            if fact.id == "license:file" and fact.polarity == "SUPPORTED" and fact.value.strip()
+        ),
+        "",
+    )
+    if not license_file:
+        return frozenset()
+    return frozenset(
+        fact.id
+        for fact in facts.by_kind("link_target")
+        if fact.polarity == "SUPPORTED"
+        and fact.value.split("#", 1)[0].split("?", 1)[0].rstrip("/").endswith("/" + license_file)
+        and any(mark in fact.value for mark in ("/blob/", "/raw/", "raw.githubusercontent.com"))
+    )
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1193,7 +1216,12 @@ _NOT_RESOURCES = frozenset({"scope_limitations", "key_capabilities"})
 
 
 def _fit_resource_and_license_units(
-    output: dict[str, Any], facts: FactsDocument, units: Mapping[str, Fact], ctx: _Coverage
+    output: dict[str, Any],
+    facts: FactsDocument,
+    units: Mapping[str, Fact],
+    ctx: _Coverage,
+    *,
+    license_links: bool = False,
 ) -> None:
     """Section fit, in place (BL-004, owner P0 on Aspose.3D FOSS for .NET: "Documentation &
     Resources is not complete because its content is shown in Scope and Limitations ... This
@@ -1209,6 +1237,13 @@ def _fit_resource_and_license_units(
       also says something else (it cites other facts) is left to the existing checks."""
     holdable = holdable_sections(facts)
     license_ids = rendering_fact_ids("license", facts)
+    if license_links and (linked := license_file_link_ids(facts)):
+        # BL-622, a settled candidate whose BC-05 section fit names the maintainers' license sentence
+        # (TeX Python, hosted run 44924893253): the sentence's link to the license file is rendered by
+        # the License section, which links that file. Only this zero-call restore-time fold counts it, so
+        # the S4 reply and a sealed disposition document (which may keep such a sentence where it is)
+        # are judged as before.
+        ctx = replace(ctx, rendered={**ctx.rendered, "license": ctx.rendered["license"] | linked})
     for entry in output.get("dispositions", []):
         if entry.get("disposition") not in PLACED:
             continue
@@ -1304,14 +1339,18 @@ def _license_paragraph_misfiled_as_enterprise(
     return sorted(shown | set(license_ids))
 
 
-def fit_sealed_sections(output: dict[str, Any], facts: FactsDocument) -> None:
+def fit_sealed_sections(
+    output: dict[str, Any], facts: FactsDocument, *, license_links: bool = False
+) -> None:
     """The section-fit folds of :func:`normalize` a sealed disposition document is held to by
     zero-call re-certification (P4, 2026-11-14), in place: the resource-links list and license
     paragraph fit (:func:`_fit_resource_and_license_units`, BL-004). Measured: 3D .NET, Cells C++
     and Words .NET seals predate BL-004 and print docs.aspose.org/kb/reference links under Scope
     and Limitations (BC-05 section fit)."""
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
-    _fit_resource_and_license_units(output, facts, units, coverage_context(facts))
+    _fit_resource_and_license_units(
+        output, facts, units, coverage_context(facts), license_links=license_links
+    )
 
 
 _PROSE_PRINTED_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
