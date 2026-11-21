@@ -8151,3 +8151,27 @@ re-asks only what has no valid stored reply. Properties improved: robust (one re
 reliable (a systematic line-number slip no longer fails a unit). R9: no README wording touched. Hosted-unproven (R41).
 
 Backlog: BL-571
+
+## 2026-11-21: A refreshed README never ends with the opening restating the preserved paragraph; the API Reference intro and renderer link descriptions answer the PSD Java findings (BL-580, BL-581, BL-582, R44, R46, R36, R41, R14)
+
+Problem (three classes, five hosted cells). (1) HTML Python 44916810423 (`degrade: nothing kept`), PSD Python 44898209273 and OCR .NET
+(`section_authoring: output rejected twice ... restates the inherited paragraph`): the last-resort answers to an opening that only restates the
+maintainers' paragraph printed beside it (BL-220 at authoring, BL-540 in the degrade) both replace it with the one sentence the FORMAT FACTS
+state. HTML Python's facts hold no format fact (nothing to say), and on PSD the sentence ("reads PSD files") is itself stated by the paragraph,
+so the floor is rejected as a restatement too. (2) PSD Java 44920305486 F01: the API Reference's authored `intro` has no renderer fallback, so a
+whole-text model finding on it fell to the degrade's "refused" tail (3 cells share `llm:factuality|authored_unit|api_reference`). (3) F03: the
+renderer's own fact-true link description "On github.com." was shown to the model reviewer as an author's claim, and the only lever on a line
+no unit owns deletes the link (BC-17 0 -> 3 in every degrade candidate).
+Decisions (smallest global changes, all zero-call): (1) when no fact-true opening exists, the authored opening that adds nothing the preserved
+paragraph lacks (the existing `uncovered` primitive, the trim's own test) is released on the record: an omission citing a fact, each inherited
+unit it cited listed omitted (all must be kept verbatim), `merge_units` drops the placeholder the job schema requires, BC-04 owes the slot no
+unit; the maintainers' paragraph is the opening (R14, nothing invented); the degrade does the same for a duplicate_opening_paragraph flag.
+An opening with new content, or one citing an inherited unit that would be lost, is untouched. Rejected: prompt-only guidance (the model
+already ignored the exact error twice), a generated opening from other facts (would invent). (2) the intro is withheld on the record
+(`intro_withheld`, rule BL-240 lever) and the renderer prints the verified count line and Core API table alone; one that cites an inherited
+unit stays on BL-562's path. (3) the renderer's fact-true link descriptions are renderer sentences in `review.scope` (as the "Open an issue"
+bullet); the text printed is unchanged. Audit: it shares the line scope and no longer shows those renderer-owned items; thresholds and judging
+rule untouched. R9: no README wording added. Properties improved: universal (every ecosystem, no format fact needed), robust (a restating
+opening or unsupported intro degrades the unit, never the candidate). Hosted-unproven (R41).
+
+Backlog: BL-580, BL-581, BL-582

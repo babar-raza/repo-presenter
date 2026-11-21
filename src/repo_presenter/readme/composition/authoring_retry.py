@@ -57,10 +57,14 @@ from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm.narrowing import Narrowing
 from repo_presenter.core.llm.prompts import LoadedManifest
 from repo_presenter.readme.composition.authoring import (
+    _VERBATIM_PRESERVED_DISPOSITIONS,
+    OPENING_RESTATED_OMISSION_REASON,
     VALUE_FREE_SECTIONS,
     SectionTask,
     authoring_schema,
     citable,
+    opening_adds_nothing,
+    opening_releasable,
     preserved_section_text,
     recover_opening_duplicates_preserved,
     restated_command_lines,
@@ -807,6 +811,57 @@ def _fact_true_opening_unit(
     return {**unit, "text": text, "fact_ids": cited}
 
 
+def _release_restated_opening(
+    output: dict[str, Any],
+    index: int,
+    unit: dict[str, Any],
+    placeholder: dict[str, Any] | None,
+    *,
+    task: SectionTask,
+    facts: FactsDocument,
+    dispositions: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """BL-580: the opening says nothing the maintainers' paragraph printed beside it lacks and no fact-true
+    sentence of its own adds anything (the facts state no format, or the format sentence is stated by that
+    paragraph too, hosted HTML Python 44916810423 and PSD Python 44898209273): the slot is released on the
+    record (``OPENING_RESTATED_OMISSION_REASON``, an R14 decision) and that paragraph is the opening. The
+    reply keeps a placeholder unit (the job's schema owes the section one), which ``merge_units`` drops; the
+    omission cites a fact, and each inherited unit the opening carried (all kept verbatim, else nothing is
+    released) is listed omitted with the reason so BC-04 and the carry rule still account for it. ``None``
+    when anything the opening says would be lost."""
+    kept = {
+        str(row.get("unit_id"))
+        for row in dispositions.get("dispositions", [])
+        if row.get("disposition") in _VERBATIM_PRESERVED_DISPOSITIONS
+    }
+    if not opening_releasable(unit, dispositions=dispositions, facts=facts):
+        return None
+    if any(str(fact_id) not in kept for fact_id in task.must_carry):
+        return None
+    known = {fact.id for fact in facts.facts}
+    cited = [
+        str(f) for f in unit.get("fact_ids") or [] if str(f).startswith("inherited_unit:") and str(f) in known
+    ]
+    cited += [str(f) for f in sorted(task.must_carry) if str(f) not in cited]
+    anchor = [fid for fid in ("package:name", "identity:repository") if fid in known][:1]
+    ids = list(dict.fromkeys(cited or anchor))
+    if not ids:
+        return None
+    if placeholder is not None:
+        output["units"][index] = placeholder
+    omitted = [item for item in output.get("omitted") or [] if isinstance(item, dict)]
+    omitted.extend({"fact_id": fid, "reason": OPENING_RESTATED_OMISSION_REASON} for fid in ids)
+    output["omitted"] = omitted
+    return {
+        "fallback": "opening_released_for_preserved_paragraph",
+        "rule": "BL-580",
+        "slot": str(unit.get("slot")),
+        "rejected_text": str(unit.get("text")),
+        "rejection": "restates the inherited paragraph the renderer preserves verbatim",
+        "text": "",
+    }
+
+
 def recover_restated_opening(
     output: dict[str, Any],
     *,
@@ -833,7 +888,19 @@ def recover_restated_opening(
         if not (states_all(preserved, text) or states_all(text, preserved)):
             continue
         replaced = _fact_true_opening_unit(unit, facts=facts, name=name)
+        placeholder = None
+        if replaced is not None and opening_adds_nothing(
+            replaced["text"], dispositions=dispositions, facts=facts
+        ):
+            # BL-580: the format sentence is itself stated by the maintainers' paragraph (hosted PSD
+            # Python 44898209273: "reads PSD files" against "reading ... Adobe Photoshop files").
+            placeholder, replaced = replaced, None
         if replaced is None:
+            released = _release_restated_opening(
+                output, index, unit, placeholder, task=task, facts=facts, dispositions=dispositions
+            )
+            if released is not None:
+                notes.append(released)
             continue
         units[index] = replaced
         notes.append(

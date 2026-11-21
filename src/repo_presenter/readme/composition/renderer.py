@@ -1536,7 +1536,9 @@ def _api_reference(context: RenderContext) -> list[str]:
     enums = sorted(by_kind.get("enum", []), key=lambda f: f.value)
     count = len(classes) + len(enums)
     names = api_reference_names(context.facts)
-    lines = [context.unit(sid, "intro"), "", f"The public API has {count} types."]
+    intro = context.unit(sid, "intro")
+    # BL-581: a released intro (the degrade withheld an unsupported one) leaves the count line alone.
+    lines = [intro, "", f"The public API has {count} types."] if intro else [f"The public API has {count} types."]
     lines += ["", "<details>", f"<summary>{API_SURFACE_SUMMARY}</summary>", ""]
     lines += ["### Core API", "", "| Class | Description |", "| --- | --- |"]
     lines += [f"| `{names[f.value]}` | {_symbol_description(context, f)} |" for f in classes]

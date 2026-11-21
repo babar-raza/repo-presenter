@@ -75,6 +75,17 @@ _RENDERER_SENTENCES = tuple(
         r"These limitations don't apply to \[[^\]]*\]\([^)]*\)\.",
         r"See \[[^\]]* — Enterprise Edition\]\([^)]*\)\.",
         r"(?:- )?Found a bug or have a feature request\? \[Open an issue\]\([^)]*\)\.",
+        # BL-582: a Documentation & Resources item whose description is the renderer's own fact-true one for
+        # the link's target (``renderer.link_target_description``: the product site, the repository path, the
+        # release page or the host) is a location the renderer computed, not a claim an author made. Hosted PSD
+        # Java 44920305486: the review faulted "- **[GitHub Repository](...)** — On github.com." and, the line
+        # being no unit's, the degrade could only delete the link (BC-17). The whole item is then not shown.
+        r"^\s*-\s+\*\*\[[^\]]*\]\([^)]*\)\*\*\s+\u2014\s+(?:"
+        r"A section of this README\.|In this repository\.|`[^`]+` in this repository\.|"
+        r"The `[^`]+` directory in this repository\.|Release history\.|The product page\.|"
+        r"Installation, walkthroughs, and feature guides for this library\.|"
+        r"Task-focused how-to articles and answers to common questions\.|"
+        r"The complete, browsable reference for the public API\.|On [A-Za-z0-9.-]+\.)\s*$",
     )
 )
 

@@ -797,6 +797,21 @@ def _withhold_flagged(
                 status.setdefault(i, "refused")
             kept.append(unit)
             continue
+        if rule == DEGRADE_RULE and (section, slot) == ("api_reference", "intro"):
+            # BL-581: the API Reference's authored intro has no renderer fallback of its own, so a whole-text
+            # flag was left for the checks and the candidate ended REJECT (hosted PSD Java 44920305486: "The
+            # `PsdImage` class serves as the main entry point ..."). The renderer prints the verified type
+            # count and the Core API table without it: the slot is released on the record (R14), as an API
+            # row's is after its fallback. Reached only for a unit that cites no inherited unit (above).
+            from repo_presenter.readme.composition.authoring import INTRO_CLAIM_OMISSION_REASON
+
+            omitted.append(
+                {"fact_id": f"slot:{section}:{slot}", "slot": slot, "reason": INTRO_CLAIM_OMISSION_REASON,
+                 "section": section}
+            )
+            records.append(_record(slot, section, involved, "intro_withheld", rule))
+            status.update({i: "handled" for i in index_of(involved)})
+            continue
         if slot.startswith("capability:") and slot.split(":", 1)[1].isdigit():
             dropped_caps.append(int(slot.split(":", 1)[1]))
             records.append(_record(slot, section, involved, "capability_dropped", rule))
@@ -1174,14 +1189,23 @@ def _cited_facts(detail: str, facts: Any) -> list[str]:
 
 
 def _opening_fact_true(
-    units: dict[str, Any], flags: Sequence[ClaimFlag], status: Mapping[int, str], facts: Any
+    units: dict[str, Any], flags: Sequence[ClaimFlag], status: Mapping[int, str], facts: Any,
+    dispositions: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """BL-350: an authored opening whose whole text is the flagged statement (the quote covers every
     sentence, so none can be withheld alone) becomes the one sentence the format facts state about
     the product, the words the renderer's own scope statement and BL-220's terminal-safe floor print
     (``authoring_retry._fact_true_opening_unit``); nothing is invented. Only an opening that cites no
     inherited unit and that exactly one flag owns; the facts must state a format, else it stays for
-    the checks to judge. Mutates ``units`` (a copy the caller owns); returns the R14 records."""
+    the checks to judge. BL-580: a ``duplicate_opening_paragraph`` flag whose opening has no fact-true
+    sentence of its own to give (no format fact, a cited inherited unit, or a sentence the maintainers'
+    paragraph states too) releases the opening slot for that paragraph on the record when the opening adds
+    nothing it lacks. Mutates ``units`` (a copy the caller owns); returns the R14 records."""
+    from repo_presenter.readme.composition.authoring import (
+        OPENING_RESTATED_OMISSION_REASON,
+        opening_adds_nothing,
+        opening_releasable,
+    )
     from repo_presenter.readme.composition.authoring_retry import _fact_true_opening_unit
     from repo_presenter.readme.composition.components.identity import product_name_of_repository
 
@@ -1198,12 +1222,44 @@ def _opening_fact_true(
         ):
             continue
         unit = owners[0]
-        if any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or []):
-            continue
-        replaced = _fact_true_opening_unit(
-            dict(unit), facts=facts, name=product_name_of_repository(facts.repository)
-        )
-        if replaced is None or replaced["text"] == unit.get("text"):
+        restated = flag.check == "duplicate_opening_paragraph" and dispositions is not None
+        replaced = None
+        if not any(str(f).startswith("inherited_unit:") for f in unit.get("fact_ids") or []):
+            replaced = _fact_true_opening_unit(
+                dict(unit), facts=facts, name=product_name_of_repository(facts.repository)
+            )
+        if replaced is not None and (
+            replaced["text"] == unit.get("text")
+            or (restated and opening_adds_nothing(replaced["text"], dispositions=dispositions, facts=facts))
+        ):
+            replaced = None
+        if replaced is None:
+            # BL-580: no fact-true sentence (the facts state no format, the opening cites the paragraph it
+            # restates, or the format sentence is stated by that paragraph too: hosted HTML Python
+            # 44916810423): the authored opening is released for the maintainers' paragraph, on the record,
+            # when it adds nothing that paragraph lacks (R14). Any other flag leaves it for the checks.
+            if restated and opening_releasable(unit, dispositions=dispositions, facts=facts):
+                known = {fact.id for fact in facts.facts}
+                ids = [
+                    str(f) for f in unit.get("fact_ids") or []
+                    if str(f).startswith("inherited_unit:") and str(f) in known
+                ] or [fid for fid in ("package:name", "identity:repository") if fid in known][:1]
+                if ids:
+                    all_units = units["units"] = [u for u in all_units if u is not unit]
+                    units["omitted"] = [
+                        *(units.get("omitted") or []),
+                        *(
+                            {"fact_id": fid, "reason": OPENING_RESTATED_OMISSION_REASON,
+                             "section": "opening", "slot": "opening"}
+                            for fid in ids
+                        ),
+                    ]
+                    records.append(
+                        {
+                            "rule": "BL-580", "slot": "opening", "section": "opening",
+                            "action": "opening_released", "findings": [flag.check], "detail": flag.detail,
+                        }
+                    )
             continue
         unit.update(text=replaced["text"], fact_ids=replaced["fact_ids"])
         records.append(
@@ -1306,7 +1362,9 @@ def degrade_claims(
     # A duplicate_paragraph flag (BL-320) never rewrites the opening (BL-350's fact-true opening is for a
     # model-judged claim, not for a repeated paragraph).
     records.extend(
-        _opening_fact_true(new_units, [flag for flag in flags if flag.check != "duplicate_paragraph"], status, facts)
+        _opening_fact_true(
+            new_units, [flag for flag in flags if flag.check != "duplicate_paragraph"], status, facts, dispositions
+        )
     )
     new_disp = copy.deepcopy(dict(dispositions))
     by_unit = {str(row.get("unit_id")): row for row in new_disp.get("dispositions", [])}
@@ -1374,7 +1432,7 @@ def degrade_claims(
     own = [
         r for r in records
         if r.get("action")
-        in {"inherited_unit_omitted", "inherited_text_withheld", "printed_text_withheld", "opening_fact_true"}
+        in {"inherited_unit_omitted", "inherited_text_withheld", "printed_text_withheld", "opening_fact_true", "opening_released"}
     ]
     if own:
         new_units[DEGRADE_RECORDS_KEY] = [*new_units.get(DEGRADE_RECORDS_KEY, []), *own]
