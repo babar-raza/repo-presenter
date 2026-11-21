@@ -252,7 +252,8 @@ def test_an_opening_is_left_when_the_facts_state_no_format(tmp_path: Path) -> No
 
 
 def test_the_degrade_may_run_more_than_twice_but_is_bounded() -> None:
-    assert 3 <= cascade_module.MAX_DEGRADE_PASSES <= 5
+    # BL-563: eight (hosted PSD Python run 44904441874 ended on fresh findings after four kept passes)
+    assert 3 <= cascade_module.MAX_DEGRADE_PASSES <= 8
 
 
 # --- Words Java: "text contains a Markdown heading ('#')" -------------------------------------
