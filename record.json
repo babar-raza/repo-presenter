@@ -139,206 +139,89 @@
    "run_id": "44898179900",
    "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T14:27:28+00:00",
+   "classes": [
+    "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of"
+   ],
+   "code": "1b113f3c2c88d28dc3b460190315c20f00d32db344f5bfbf6136dd2dd8fbd409",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44910829035",
+   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T12:07:11+00:00",
+  "at": "2026-11-21T14:27:28+00:00",
   "classes": {
-   "llm:factuality|authored_unit|api_reference": {
-    "example": "| `CSSStyleSheet` | Declares the fields css_rules and owner_node. |",
+   "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of": {
+    "example": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
     "findings": 1,
-    "origin_kind": "authored_unit",
+    "origin_kind": "job_error",
     "origins": [
-     "opening.opening"
+     "ProviderCallBudgetError"
     ],
-    "rule": "llm:factuality",
-    "scope": "4eb9b5c5f7a5d46decafcabcb583ecfd41d00af34fe60f1cbeb052f0b2010fe8",
+    "rule": "job_error",
+    "scope": "6228659b08debb88e492b76691d646ad588a753f96ad85b9b4ee6a00b45301af",
     "scope_paths": [
      "prompts",
-     "prompts/section_authoring.yaml",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|inherited_unit|api_reference": {
-    "example": "| `CSSLayerBlockRule` | Declares the fields name and css_rules. |",
-    "findings": 3,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:055.table",
-     "inherited_unit:010.list"
-    ],
-    "rule": "llm:factuality",
-    "scope": "7396699098575fdd9be08796e02058e17c5a70e5b3a898701f66009bea8af093",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|unresolved|api_reference": {
-    "example": "| `CSSRule` | Declares the fields parent_style_sheet and parent_rule (some members not implemented). |",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "api_table_row:CSSRule"
-    ],
-    "rule": "llm:factuality",
-    "scope": "962449e0e0a3daa862f8fb4124eb9e490f61ff0409ec049136a48e9b491b21ac",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
      "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "api_reference",
+    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
     "upstream": ""
    }
   },
-  "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
+  "code": "1b113f3c2c88d28dc3b460190315c20f00d32db344f5bfbf6136dd2dd8fbd409",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 6; nothing sealed; F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-   "kind": "PresentFailure",
+   "detail": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
+   "kind": "ProviderCallBudgetError",
    "transient": false
   },
   "findings": [
    {
-    "label": "F02",
-    "message": "| `CSSLayerBlockRule` | Declares the fields name and css_rules. |",
+    "label": "ProviderCallBudgetError",
+    "message": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 100 reached in this invocation; no further calls are made and the run stops",
     "origin": {
-     "id": "inherited_unit:055.table",
-     "kind": "inherited_unit"
+     "id": "ProviderCallBudgetError",
+     "kind": "job_error"
     },
-    "quote": "| `CSSLayerBlockRule` | Declares the fields name and css_rules. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "| `CSSMediaRule` | Declares the fields media_text and css_rules. |",
-    "origin": {
-     "id": "inherited_unit:010.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `CSSMediaRule` | Declares the fields media_text and css_rules. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "| `CSSRule` | Declares the fields parent_style_sheet and parent_rule (some members not implemented). |",
-    "origin": {
-     "id": "api_table_row:CSSRule",
-     "kind": "unresolved"
-    },
-    "quote": "| `CSSRule` | Declares the fields parent_style_sheet and parent_rule (some members not implemented). |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F05",
-    "message": "| `CSSStyleSheet` | Declares the fields css_rules and owner_node. |",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "| `CSSStyleSheet` | Declares the fields css_rules and owner_node. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F06",
-    "message": "| `CSSSupportsRule` | Declares the fields condition_text and css_rules. |",
-    "origin": {
-     "id": "inherited_unit:055.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `CSSSupportsRule` | Declares the fields condition_text and css_rules. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of",
+    "source": "job",
+    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "51f1d767694da5f8d2c9e2908ae701281ab0b137",
+  "main_sha": "8bfb37873ac23306670ec3d5bf02943999271d0c",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F09",
+    "label": "F03",
     "outcome": "unrepairable",
     "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
     "section_id": "scope_limitations",
     "stage": null
-   },
-   {
-    "facts_defects": [],
-    "label": "F10",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "scope_limitations",
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01+F03+F04+F05+F06+F07+F08",
-    "outcome": "repaired",
-    "reason": "api_reference: escalated (; escalated once to a plan-level repair at S5); api_reference#types-1: repaired; api_reference#types-4: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: change R01 claims 'units.10.text' changed ('| `CSSLayerBlockRule` | CSSLayerBlockRule class represents a @layer block at-rule and raises IndexSizeError and SyntaxError (conditionally) when delete_rule and insert_rule are called. |' to 'CSSLayerBlockRule class represents a @layer bloc",
-    "section_id": "api_reference",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01+F03+F04+F05+F06+F07+F08",
-    "outcome": "repaired",
-    "reason": "the causing plan was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
-    "section_id": null,
-    "stage": "S5"
    }
   ],
   "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
-  "run_id": "44898179900",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44898179900",
+  "run_id": "44910829035",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44910829035",
   "schema_version": 1,
   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
