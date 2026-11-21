@@ -193,11 +193,24 @@
    "run_id": "44924735824",
    "source_revision": "dfa75dbfb300e6eb5a8e5d2199f81d07ed602916",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T17:54:20+00:00",
+   "classes": [
+    "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "a5de3b74c7fc6087c718ccb5a7e7db41ea4635d6a6e15858a11f23a77f1d5477",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44931348614",
+   "source_revision": "dfa75dbfb300e6eb5a8e5d2199f81d07ed602916",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T16:52:04+00:00",
+  "at": "2026-11-21T17:54:20+00:00",
   "classes": {
    "BC-08|inherited_unit|id_verified_rewrite_keeps_the": {
     "example": "inherited_unit:025.paragraph: VERIFIED_REWRITE keeps the command 'go run ./_examples/feature_showcase' but the candidate does not render it",
@@ -207,7 +220,7 @@
      "inherited_unit:025.paragraph"
     ],
     "rule": "BC-08",
-    "scope": "4baa2448e32fc8651d9f6e384e57daf0c54cf1f64ae810a8ed0c30cbb07dc8e7",
+    "scope": "92dceedb66e52ec631f2647b08493487147d8dc83f6085e95c737a97ba73f068",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -229,7 +242,7 @@
      "inherited_unit:025.paragraph"
     ],
     "rule": "BC-17",
-    "scope": "4baa2448e32fc8651d9f6e384e57daf0c54cf1f64ae810a8ed0c30cbb07dc8e7",
+    "scope": "92dceedb66e52ec631f2647b08493487147d8dc83f6085e95c737a97ba73f068",
     "scope_paths": [
      "data/readme_findings.json",
      "prompts",
@@ -244,7 +257,7 @@
     "upstream": ""
    }
   },
-  "code": "6a9036f4d9933209774e5055c68b931d382967575092d7e5236fd5df6223e8cc",
+  "code": "a5de3b74c7fc6087c718ccb5a7e7db41ea4635d6a6e15858a11f23a77f1d5477",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
@@ -263,7 +276,7 @@
     },
     "quote": "",
     "rule": "BC-08",
-    "section_id": "additional_examples",
+    "section_id": "key_capabilities",
     "signature": "BC-08|inherited_unit|id_verified_rewrite_keeps_the",
     "source": "validation",
     "sub_rule": "id_verified_rewrite_keeps_the",
@@ -286,17 +299,17 @@
    }
   ],
   "lane": "R",
-  "main_sha": "11aa6b1a71fc6caf19622686c0d9cb0494ac2c81",
+  "main_sha": "3a97735d5fecad7219c18abb978730f396f95cb4",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
     "label": "BC-08",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S5"
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": "key_capabilities",
+    "stage": "S6"
    },
    {
     "facts_defects": [],
@@ -305,19 +318,11 @@
     "reason": "",
     "section_id": null,
     "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-08",
-    "outcome": "escalated",
-    "reason": "the revision cites inherited_unit:025.paragraph outside the slot's planned facts; escalated once to a plan-level repair at S5",
-    "section_id": "additional_examples",
-    "stage": "S6"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Go",
-  "run_id": "44924735824",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44924735824",
+  "run_id": "44931348614",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44931348614",
   "schema_version": 1,
   "source_revision": "dfa75dbfb300e6eb5a8e5d2199f81d07ed602916",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
