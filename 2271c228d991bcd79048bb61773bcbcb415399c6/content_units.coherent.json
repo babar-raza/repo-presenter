@@ -30,7 +30,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.active_layer"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.load"
     },
     {
       "action": "api_row_fallback",
@@ -39,16 +39,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_icc_profile"
-    },
-    {
-      "action": "api_row_fallback",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_transparency_data"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.save"
     },
     {
       "action": "api_row_fallback",
@@ -66,7 +57,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.resources"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.image_resources"
     },
     {
       "action": "api_row_fallback",
@@ -75,7 +66,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.image_data_info"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.compression"
     },
     {
       "action": "api_row_fallback",
@@ -84,7 +75,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.color_data_info"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.color_mode"
     },
     {
       "action": "api_row_fallback",
@@ -93,7 +84,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_color_mode_data"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.version"
     },
     {
       "action": "api_row_fallback",
@@ -102,7 +93,7 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_layers"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.is_psb"
     },
     {
       "action": "api_row_fallback",
@@ -111,31 +102,20 @@
       ],
       "rule": "BL-240",
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_image_resources"
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.resource_count"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.has_icc_profile"
     },
     {
       "action": "printed_text_withheld",
-      "detail": "The `has_icc_profile` property of `PsdImage` indicates whether an embedded ICC profile resource is present.",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "",
-      "slot": "printed_text"
-    },
-    {
-      "action": "printed_text_withheld",
-      "detail": "Gets or sets whether the first alpha channel contains transparency data.",
-      "findings": [
-        "llm:factuality"
-      ],
-      "rule": "BL-240",
-      "section": "",
-      "slot": "printed_text"
-    },
-    {
-      "action": "printed_text_withheld",
-      "detail": "Gets the active layer.",
+      "detail": "Gets or sets the PSD image resources.",
       "findings": [
         "llm:factuality"
       ],
@@ -146,99 +126,22 @@
   ],
   "degraded_quotes": [
     "- `PreservedResourceBlock`: `save` raises NotImplementedError.",
-    "### has_icc_profile\n\nGets whether an embedded ICC profile resource is present.",
-    "### has_transparency_data\n\nGets or sets whether the first alpha channel contains transparency data.",
-    "### active_layer\n\nGets the active layer."
+    "Gets or sets the PSD image resources."
   ],
   "omitted": [
     {
       "fact_id": "inherited_unit:002.paragraph",
-      "reason": "inherited_unit, not a fact about product behavior",
+      "reason": "This is an inherited unit containing badges and is not a prose fact about capabilities.",
       "section": "key_capabilities"
     },
     {
       "fact_id": "inherited_unit:008.code_block",
-      "reason": "inherited_unit, not a fact about product behavior",
+      "reason": "This is an inherited unit containing a Mermaid diagram and is not a prose fact about capabilities.",
       "section": "key_capabilities"
     },
     {
       "fact_id": "inherited_unit:010.list",
-      "reason": "inherited_unit, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:001",
-      "reason": "example, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:003",
-      "reason": "example, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:004",
-      "reason": "example, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "example:005",
-      "reason": "example, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "format:output.psd",
-      "reason": "format, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "link_target:005",
-      "reason": "link_target, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "link_target:017",
-      "reason": "link_target, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "link_target:018",
-      "reason": "link_target, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "link_target:019",
-      "reason": "link_target, not a fact about product behavior",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:ecosystem",
-      "reason": "identity fact, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:family",
-      "reason": "identity fact, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:platform",
-      "reason": "identity fact, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:product-knowledge-refresh",
-      "reason": "identity fact, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:repository",
-      "reason": "identity fact, not a capability",
-      "section": "key_capabilities"
-    },
-    {
-      "fact_id": "identity:revision",
-      "reason": "identity fact, not a capability",
+      "reason": "This is an inherited unit containing a list of features and is not a prose fact about capabilities.",
       "section": "key_capabilities"
     },
     {
@@ -247,17 +150,12 @@
       "section": "enterprise_relationship"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.active_layer",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.load",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
-      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
-      "section": "api_reference"
-    },
-    {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.has_transparency_data",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.save",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
@@ -267,32 +165,37 @@
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.resources",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.image_resources",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.image_data_info",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.compression",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.color_data_info",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.color_mode",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.has_color_mode_data",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.version",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.has_layers",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.is_psb",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     },
     {
-      "fact_id": "public_symbol:aspose_psd_foss.psdimage.has_image_resources",
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.resource_count",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
       "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
       "section": "api_reference"
     }
@@ -310,38 +213,46 @@
         "identity:repository",
         "identity:revision",
         "inherited_unit:004.paragraph",
-        "public_symbol:aspose_psd_foss.coreexceptions.notsupportedexception",
+        "install_command:pip",
+        "license:spdx",
+        "public_symbol:aspose_psd_foss",
+        "public_symbol:aspose_psd_foss.bigendianreader",
+        "public_symbol:aspose_psd_foss.bigendianreader.read_pascal_string",
+        "public_symbol:aspose_psd_foss.bigendianwriter",
         "public_symbol:aspose_psd_foss.layers.blendmode",
-        "public_symbol:aspose_psd_foss.layers.channelinformation",
         "public_symbol:aspose_psd_foss.layers.layer",
         "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
         "public_symbol:aspose_psd_foss.layers.layerblendmodemapper",
+        "public_symbol:aspose_psd_foss.layers.layermaskdata",
         "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
         "public_symbol:aspose_psd_foss.psdimage",
+        "public_symbol:aspose_psd_foss.psdimage.active_layer",
         "public_symbol:aspose_psd_foss.psdimage.bits_per_channel",
         "public_symbol:aspose_psd_foss.psdimage.channels",
         "public_symbol:aspose_psd_foss.psdimage.color_mode",
         "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
         "public_symbol:aspose_psd_foss.psdimage.height",
-        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
         "public_symbol:aspose_psd_foss.psdimage.is_psb",
         "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.layers",
         "public_symbol:aspose_psd_foss.psdimage.resource_count",
         "public_symbol:aspose_psd_foss.psdimage.save",
         "public_symbol:aspose_psd_foss.psdimage.version",
         "public_symbol:aspose_psd_foss.psdimage.width",
         "public_symbol:aspose_psd_foss.resourceblock",
-        "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
+        "public_symbol:aspose_psd_foss.resources.preservedresourceblock",
         "public_symbol:aspose_psd_foss.resources.unknownresource",
         "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.sections.imagedatakind",
         "public_symbol:aspose_psd_foss.sections.imagedatastructure",
-        "public_symbol:aspose_psd_foss.sections.imageresourcessection",
-        "public_symbol:aspose_psd_foss.streamcontainer.stream",
-        "public_symbol:aspose_psd_foss.streamcontainer.stream-2"
+        "public_symbol:aspose_psd_foss.streamcontainer",
+        "public_symbol:aspose_psd_foss.streamcontainer.stream"
       ],
       "section": "opening",
       "slot": "opening",
-      "text": "Aspose.PSD FOSS for Python reads Adobe Photoshop .psd files and writes them back, preserving layers, channel information, blend modes, masks, image resources, and image-data structures with RLE and ZIP compression. It inspects document metadata including width, height, channels, bits_per_channel, color_mode, version, is_psb, layer_count, resource_count, compression, and image_data_kind. The library supports saving modified documents using the PsdImage.save method and works with Stream objects for stream-based input and output. It depends only on the Python standard library."
+      "text": "Aspose.PSD FOSS for Python reads and writes Adobe Photoshop .psd files, preserving layers, image resources, blend modes, masks, and image-data structures with RLE and ZIP compression. It inspects document metadata including width, height, channels, bits per channel, color mode, version, compression type, and ICC profile presence. The library supports saving modified documents using the PsdImage.save method and exposes layer collections, active layers, and image resources through the PsdImage API."
     },
     {
       "fact_ids": [
@@ -349,8 +260,8 @@
         "public_symbol:aspose_psd_foss.psdimage.channels",
         "public_symbol:aspose_psd_foss.psdimage.color_mode",
         "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
         "public_symbol:aspose_psd_foss.psdimage.height",
-        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
         "public_symbol:aspose_psd_foss.psdimage.is_psb",
         "public_symbol:aspose_psd_foss.psdimage.layer_count",
         "public_symbol:aspose_psd_foss.psdimage.resource_count",
@@ -359,71 +270,78 @@
       ],
       "section": "key_capabilities",
       "slot": "capability:1",
-      "text": "It inspects document metadata by exposing width, height, channels, bits_per_channel, color_mode, version, is_psb, layer_count, resource_count, compression, and image_data_kind on the PsdImage class."
+      "text": "It inspects document metadata by exposing width, height, channels, bits_per_channel, color_mode, version, is_psb, layer_count, resource_count, compression, and has_icc_profile on PsdImage."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_psd_foss.layers.blendmode",
-        "public_symbol:aspose_psd_foss.layers.channelinformation",
-        "public_symbol:aspose_psd_foss.layers.layer"
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.psdimage.active_layer",
+        "public_symbol:aspose_psd_foss.psdimage.layers",
+        "public_symbol:aspose_psd_foss.psdimage.save"
       ],
       "section": "key_capabilities",
       "slot": "capability:2",
-      "text": "It provides access to the layer model through the layer class, which exposes name, bounds, opacity, visibility, and channelinformation per layer."
+      "text": "It provides access to the layer collection through PsdImage.layers and PsdImage.active_layer, and supports saving changes to layers while preserving raw bytes."
     },
     {
       "fact_ids": [
         "public_symbol:aspose_psd_foss.layers.blendmode",
-        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper"
+        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper",
+        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata"
       ],
       "section": "key_capabilities",
       "slot": "capability:3",
-      "text": "It handles blend modes using the blendmode enum and layerblendmodemapper to map between 4-character PSD keys and enum values."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_psd_foss.coreexceptions.notsupportedexception",
-        "public_symbol:aspose_psd_foss.layers.channelinformation"
-      ],
-      "section": "key_capabilities",
-      "slot": "capability:4",
-      "text": "It parses channel information using channelinformation to represent per-channel compression, length, and identifier, raising notsupportedexception on write attempts."
+      "text": "It handles blend modes using the BlendMode enum and LayerBlendModeMapper to map between 4-character PSD keys and enum values."
     },
     {
       "fact_ids": [
         "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
+        "public_symbol:aspose_psd_foss.layers.layermaskdata",
         "public_symbol:aspose_psd_foss.layers.layermaskdatashort"
       ],
       "section": "key_capabilities",
-      "slot": "capability:5",
-      "text": "It exposes raw length and basic properties of layer mask and blending range data without supporting mutations."
+      "slot": "capability:4",
+      "text": "It exposes mask and blending ranges data through LayerMaskDataShort and LayerBlendingRangesData, providing read-only access to their raw properties."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
-        "public_symbol:aspose_psd_foss.resources.unknownresource",
-        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
+        "public_symbol:aspose_psd_foss.resourceblock",
+        "public_symbol:aspose_psd_foss.resources.preservedresourceblock",
+        "public_symbol:aspose_psd_foss.resources.unknownresource"
       ],
       "section": "key_capabilities",
-      "slot": "capability:6",
-      "text": "It parses image resources using imageresourcessection, unknownresource, and psdresourceinfo to expose raw payloads and metadata such as resource_id and name."
+      "slot": "capability:5",
+      "text": "It parses image resources using PsdImage.image_resources, supporting UnknownResource and preserved resource blocks to retain raw payloads."
     },
     {
       "fact_ids": [
         "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.sections.imagedatakind",
         "public_symbol:aspose_psd_foss.sections.imagedatastructure"
       ],
       "section": "key_capabilities",
-      "slot": "capability:7",
-      "text": "It parses image data structure using imagedata and imagedatastructure to expose compression kind, row_length_field_size, row_byte_counts, compressed_payload_length, and uses_prediction without pixel decoding."
+      "slot": "capability:6",
+      "text": "It parses image data structures using ImageData, exposing the kind of structure, row length field size, row byte counts, compressed payload length, and whether prediction is used without pixel decoding."
     },
     {
       "fact_ids": [
+        "public_symbol:aspose_psd_foss.psdimage",
         "public_symbol:aspose_psd_foss.psdimage.save"
       ],
       "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It performs byte-exact round-trip saving by preserving all unmodified sections when PsdImage.save is called."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_psd_foss.bigendianreader",
+        "public_symbol:aspose_psd_foss.streamcontainer",
+        "public_symbol:aspose_psd_foss.streamcontainer.stream"
+      ],
+      "section": "key_capabilities",
       "slot": "capability:8",
-      "text": "It performs byte-exact round-trip saving using PsdImage.save, preserving all unmodified sections to enable lossless save-load cycles."
+      "text": "It supports non-seekable streams by loading from StreamContainer.Stream and BigEndianReader without requiring seeking capabilities."
     },
     {
       "fact_ids": [
@@ -435,43 +353,47 @@
     },
     {
       "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
         "inherited_unit:033.paragraph",
         "public_symbol:aspose_psd_foss.psdimage",
-        "public_symbol:aspose_psd_foss.layers.layer",
-        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+        "public_symbol:aspose_psd_foss.psdimage.load",
+        "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.imageloader.load_from_path",
+        "public_symbol:aspose_psd_foss.imageloader.load_from_stream"
       ],
       "section": "api_reference",
       "slot": "intro",
-      "text": "The public entry point is the aspose_psd_foss package. It provides the PsdImage class to load, inspect, and save Adobe Photoshop files, and exposes layer, resource, and section types for detailed manipulation."
+      "text": "The public entry point is the aspose_psd_foss package. It provides the PsdImage class to load, inspect, and save Photoshop files, and the ImageLoader class with load_from_path and load_from_stream methods to create PsdImage instances."
     },
     {
       "fact_ids": [
         "public_symbol:aspose_psd_foss.psdimage",
         "public_symbol:aspose_psd_foss.psdimage.color_mode",
-        "public_symbol:aspose_psd_foss.psdimage.compression",
         "public_symbol:aspose_psd_foss.psdimage.height",
-        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
-        "public_symbol:aspose_psd_foss.psdimage.is_psb",
-        "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
         "public_symbol:aspose_psd_foss.psdimage.layers",
         "public_symbol:aspose_psd_foss.psdimage.load",
-        "public_symbol:aspose_psd_foss.psdimage.resource_count",
-        "public_symbol:aspose_psd_foss.psdimage.resources",
         "public_symbol:aspose_psd_foss.psdimage.save",
         "public_symbol:aspose_psd_foss.psdimage.width"
       ],
       "section": "api_reference",
       "slot": "hub:public_symbol:aspose_psd_foss.psdimage",
-      "text": "The PsdImage class represents a Photoshop document and exposes properties such as width, height, color_mode, compression, layer_count, is_psb, resource_count, and methods like load and save to read and write files, as well as access to layers and resources."
+      "text": "The PsdImage class represents a loaded Photoshop document and exposes its width, height, color_mode, layers, and image_resources properties, as well as the load and save methods to work with files."
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_psd_foss.psdimage.header",
-        "public_symbol:aspose_psd_foss.sections.psdheader"
+        "public_symbol:aspose_psd_foss.layers.layer",
+        "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.layers"
       ],
       "section": "api_reference",
-      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.header",
-      "text": "The header property of PsdImage returns a psdheader object that contains the file's structural metadata."
+      "slot": "hub:public_symbol:aspose_psd_foss.psdimage.layer_count",
+      "text": "The PsdImage.layer_count property returns the number of layers in the document, and the PsdImage.layers collection provides access to individual aspose_psd_foss.layers.layer instances."
     },
     {
       "fact_ids": [
@@ -501,7 +423,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss.point",
-      "text": "Point class represents a point in two-dimensional space with members empty, equals, and is_empty."
+      "text": "Point class represents a coordinate with methods empty, equals, and a read-only property is_empty."
     },
     {
       "fact_ids": [
@@ -517,7 +439,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss.size",
-      "text": "Size class represents a size in two-dimensional space with members IsEmpty, empty, equals, and is_empty."
+      "text": "Size class represents dimensions with methods empty, equals, and read-only properties IsEmpty and is_empty."
     },
     {
       "fact_ids": [
@@ -525,7 +447,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss.layers.globallayermaskinfo.globallayermaskinfo",
-      "text": "GlobalLayerMaskInfo class provides an empty method for creating an empty instance."
+      "text": "GlobalLayerMaskInfo class provides an empty method."
     },
     {
       "fact_ids": [
@@ -536,7 +458,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss.layers.layer.layer",
-      "text": "Layer class provides properties such as IsVisible, additional_layer_data, blend_mode_key, blending_ranges_info, bottom, bounds, channel_info, and channel_information, where channel_information, layer_blending_ranges_data, and layer_mask_data setters raise NotSupportedException."
+      "text": "Layer class provides properties IsVisible, additional_layer_data, blend_mode_key, blending_ranges_info, bottom, bounds, channel_info, and channel_information, where channel_information, layer_blending_ranges_data, and layer_mask_data setters raise NotSupportedException."
     },
     {
       "fact_ids": [
@@ -623,7 +545,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss.resources.indexedcolorpalette.indexedcolorpalette",
-      "text": "IndexedColorPalette class provides read-only property entries and methods parse and to_public_info."
+      "text": "IndexedColorPalette class provides a read-only property entries, and methods parse and to_public_info."
     },
     {
       "fact_ids": [
@@ -647,7 +569,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.asposecompatibilitytests.testasposecompatibility",
-      "text": "TestAsposeCompatibility class provides test methods test_channels_officialshape_readsonly, test_image_load_official_returns_psd, test_image_setters_updatemetadata, test_layermask_officialshape_reads, test_metadata_officialtypes_reads, test_rectangle_mutableshape_updates, test_resources_officialshape_reads, and test_save_officialmutation_persists."
+      "text": "TestAsposeCompatibility class provides methods test_channels_officialshape_readsonly, test_image_load_official_returns_psd, test_image_setters_updatemetadata, test_layermask_officialshape_reads, test_metadata_officialtypes_reads, test_rectangle_mutableshape_updates, test_resources_officialshape_reads, and test_save_officialmutation_persists."
     },
     {
       "fact_ids": [
@@ -655,7 +577,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.colordatatests.testcolordata",
-      "text": "TestColorData class provides test methods test_load_cmykpayload_classifies, test_load_indexeddata_parsespalette, test_load_indexedfixture_readsdata, test_load_rgbpayload_classifies, test_load_toolongcolormode_throws, and test_save_indexedfixture_isbyteexact."
+      "text": "TestColorData class provides methods test_load_cmykpayload_classifies, test_load_indexeddata_parsespalette, test_load_indexedfixture_readsdata, test_load_rgbpayload_classifies, test_load_toolongcolormode_throws, and test_save_indexedfixture_isbyteexact."
     },
     {
       "fact_ids": [
@@ -663,7 +585,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.fixturedocumenttests.testfixturedocument",
-      "text": "TestFixtureDocument class provides test methods test_load_basiccmyk_readsmetadata, test_load_basicpsb_readsmetadata, test_load_basicrgb_readsmetadata, test_load_layeredpsb_readslayers, test_load_layervariants_readsflags, test_save_basiccmyk_isbyteexact, test_save_basicpsb_isbyteexact, and test_save_basicrgb_isbyteexact."
+      "text": "TestFixtureDocument class provides methods test_load_basiccmyk_readsmetadata, test_load_basicpsb_readsmetadata, test_load_basicrgb_readsmetadata, test_load_layeredpsb_readslayers, test_load_layervariants_readsflags, test_save_basiccmyk_isbyteexact, test_save_basicpsb_isbyteexact, and test_save_basicrgb_isbyteexact."
     },
     {
       "fact_ids": [
@@ -671,7 +593,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.imagedatatests.testimagedata",
-      "text": "TestImageData class provides test methods test_load_psbrle_readsstructure, test_load_psdrle_readsstructure, test_load_psdzip_readsstructure, test_load_rlefixture_readsimagedata, test_load_truncatedrlerows_throws, test_load_zipfixture_readsimagedata, test_save_rlefixture_isbyteexact, and test_save_zipfixture_isbyteexact."
+      "text": "TestImageData class provides methods test_load_psbrle_readsstructure, test_load_psdrle_readsstructure, test_load_psdzip_readsstructure, test_load_rlefixture_readsimagedata, test_load_truncatedrlerows_throws, test_load_zipfixture_readsimagedata, test_save_rlefixture_isbyteexact, and test_save_zipfixture_isbyteexact."
     },
     {
       "fact_ids": [
@@ -679,7 +601,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.imageresourcessectiontests.testimageresourcessection",
-      "text": "TestImageResourcesSection class provides test methods test_load_resources_reads_blocks, test_load_resourcesfixture_reads, test_save_resources_preserves_raw, and test_save_resourcesfixture_raw."
+      "text": "TestImageResourcesSection class provides methods test_load_resources_reads_blocks, test_load_resourcesfixture_reads, test_save_resources_preserves_raw, and test_save_resourcesfixture_raw."
     },
     {
       "fact_ids": [
@@ -687,7 +609,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.inspectiondtotests.inspectiondtotests",
-      "text": "InspectionDtoTests class provides test methods test_load_document_dtos_read_values and test_load_layer_dtos_read_values."
+      "text": "InspectionDtoTests class provides methods test_load_document_dtos_read_values and test_load_layer_dtos_read_values."
     },
     {
       "fact_ids": [
@@ -695,7 +617,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.layersectiontests.testlayersection",
-      "text": "TestLayerSection class provides test methods test_load_layerinspection_readsvalues, test_load_negativelayerextra_throws, test_load_psblayerrecord_reads, test_load_toolonglayerextra_throws, test_load_toolonglayermask_throws, test_save_changesblendmode, test_save_changesbounds, and test_save_changesclipping."
+      "text": "TestLayerSection class provides methods test_load_layerinspection_readsvalues, test_load_negativelayerextra_throws, test_load_psblayerrecord_reads, test_load_toolonglayerextra_throws, test_load_toolonglayermask_throws, test_save_changesblendmode, test_save_changesbounds, and test_save_changesclipping."
     },
     {
       "fact_ids": [
@@ -703,7 +625,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.pascalstringtests.testpascalstring",
-      "text": "TestPascalString class provides test methods test_read_aligned2_consumes_padding and test_read_aligned4_consumes_padding."
+      "text": "TestPascalString class provides methods test_read_aligned2_consumes_padding and test_read_aligned4_consumes_padding."
     },
     {
       "fact_ids": [
@@ -711,7 +633,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.psdheadertests.testpsdheadertests",
-      "text": "TestPsdHeaderTests class provides test methods test_load_invalid_header_field_throws, test_load_nonzero_reserved_throws, test_load_psbheader_reads_metadata, and test_load_psdheader_reads_metadata."
+      "text": "TestPsdHeaderTests class provides methods test_load_invalid_header_field_throws, test_load_nonzero_reserved_throws, test_load_psbheader_reads_metadata, and test_load_psdheader_reads_metadata."
     },
     {
       "fact_ids": [
@@ -719,7 +641,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.psdimageloadtests.testpsdimageload",
-      "text": "TestPsdImageLoad class provides test methods test_load_docinspection_reads, test_load_document_readsproperties, test_load_invalidsignature_throws, test_load_layer_readsproperties, test_load_layers_indexable, test_load_missingfile_throws, test_load_nonseekablestream_succeeds, and test_load_nullstream_throws."
+      "text": "TestPsdImageLoad class provides methods test_load_docinspection_reads, test_load_document_readsproperties, test_load_invalidsignature_throws, test_load_layer_readsproperties, test_load_layers_indexable, test_load_missingfile_throws, test_load_nonseekablestream_succeeds, and test_load_nullstream_throws."
     },
     {
       "fact_ids": [
@@ -727,7 +649,7 @@
       ],
       "section": "api_reference",
       "slot": "type:public_symbol:aspose_psd_foss_test.psdimagesavetests.testpsdimagesavetests",
-      "text": "TestPsdImagesaveTests class provides test methods test_save_changes_layer_name, test_save_changes_layer_opacity, test_save_changes_layer_visibility, test_save_mutation_preserves_flags, test_save_roundtrip_is_byte_exact, and test_save_roundtrip_loads_again."
+      "text": "TestPsdImagesaveTests class provides methods test_save_changes_layer_name, test_save_changes_layer_opacity, test_save_changes_layer_visibility, test_save_mutation_preserves_flags, test_save_roundtrip_is_byte_exact, and test_save_roundtrip_loads_again."
     }
   ]
 }

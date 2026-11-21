@@ -4,7 +4,7 @@
 
 [![Aspose.PSD FOSS for Python](https://products.aspose.org/media/psd/python/banner-readme.png)](https://products.aspose.org/psd/python/)
 
-Aspose.PSD FOSS for Python reads Adobe Photoshop `.psd` files and writes them back, preserving layers, channel information, blend modes, masks, image resources, and image-data structures with RLE and ZIP compression. It inspects document metadata including width, height, channels, `bits_per_channel`, `color_mode`, version, `is_psb`, `layer_count`, `resource_count`, compression, and `image_data_kind`. The library supports saving modified documents using the `PsdImage.save` method and works with Stream objects for stream-based input and output. It depends only on the Python standard library.
+Aspose.PSD FOSS for Python reads and writes Adobe Photoshop `.psd` files, preserving layers, image resources, blend modes, masks, and image-data structures with RLE and ZIP compression. It inspects document metadata including width, height, channels, bits per channel, color mode, version, compression type, and ICC profile presence. The library supports saving modified documents using the `PsdImage.save` method and exposes layer collections, active layers, and image resources through the `PsdImage` API.
 
 Aspose.PSD FOSS for Python is a free, open-source, pure-Python library for reading, inspecting and saving Adobe Photoshop `.psd`/`.psb` files without rendering. It runs on Python 3.7+ and depends only on the standard library. The library supports reading of document metadata, layers, channel information, blend modes, masks, image resources and image-data structures (RLE and ZIP compression).  
 
@@ -17,6 +17,7 @@ Aspose.PSD FOSS for Python is a free, open-source, pure-Python library for readi
 - [Quick Start](#quick-start)
 - [Additional Examples](#additional-examples)
 - [API Reference](#api-reference)
+- [Documentation & Resources](#documentation--resources)
 - [Scope and Limitations](#scope-and-limitations)
 - [Development and Testing](#development-and-testing)
 - [License](#license)
@@ -35,11 +36,11 @@ flowchart TB
     c1["Document metadata<br/>inspection"]
     c2["Layer model access"]
     c3["Blend mode handling"]
-    c4["Channel information<br/>parsing"]
-    c5["Mask and blending<br/>ranges"]
-    c6["Image resources<br/>parsing"]
-    c7["Image data structure<br/>parsing"]
-    c8["Byte-exact round-trip<br/>saving"]
+    c4["Mask and blending<br/>ranges"]
+    c5["Image resources<br/>parsing"]
+    c6["Image data structure<br/>parsing"]
+    c7["Byte-exact round-trip<br/>saving"]
+    c8["Non-seekable stream<br/>support"]
     c1 ~~~ c4
     c2 ~~~ c5
     c3 ~~~ c6
@@ -54,14 +55,14 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Document metadata inspection.** It inspects document metadata by exposing width, height, channels, `bits_per_channel`, `color_mode`, version, `is_psb`, `layer_count`, `resource_count`, compression, and `image_data_kind` on the `PsdImage` class.
-- **Layer model access.** It provides access to the layer model through the layer class, which exposes name, bounds, opacity, visibility, and channelinformation per layer.
-- **Blend mode handling.** It handles blend modes using the blendmode enum and layerblendmodemapper to map between 4-character PSD keys and enum values.
-- **Channel information parsing.** It parses channel information using channelinformation to represent per-channel compression, length, and identifier, raising notsupportedexception on write attempts.
-- **Mask and blending ranges.** It exposes raw length and basic properties of layer mask and blending range data without supporting mutations.
-- **Image resources parsing.** It parses image resources using imageresourcessection, unknownresource, and psdresourceinfo to expose raw payloads and metadata such as `resource_id` and name.
-- **Image data structure parsing.** It parses image data structure using imagedata and imagedatastructure to expose compression kind, `row_length_field_size`, `row_byte_counts`, `compressed_payload_length`, and `uses_prediction` without pixel decoding.
-- **Byte-exact round-trip saving.** It performs byte-exact round-trip saving using `PsdImage.save`, preserving all unmodified sections to enable lossless save-load cycles.
+- **Document metadata inspection.** It inspects document metadata by exposing width, height, channels, `bits_per_channel`, `color_mode`, version, `is_psb`, `layer_count`, `resource_count`, compression, and `has_icc_profile` on `PsdImage`.
+- **Layer model access.** It provides access to the layer collection through `PsdImage.layers` and `PsdImage.active_layer`, and supports saving changes to layers while preserving raw bytes.
+- **Blend mode handling.** It handles blend modes using the `BlendMode` enum and `LayerBlendModeMapper` to map between 4-character PSD keys and enum values.
+- **Mask and blending ranges.** It exposes mask and blending ranges data through `LayerMaskDataShort` and `LayerBlendingRangesData`, providing read-only access to their raw properties.
+- **Image resources parsing.** It parses image resources using `PsdImage.image_resources`, supporting `UnknownResource` and preserved resource blocks to retain raw payloads.
+- **Image data structure parsing.** It parses image data structures using `ImageData`, exposing the kind of structure, row length field size, row byte counts, compressed payload length, and whether prediction is used without pixel decoding.
+- **Byte-exact round-trip saving.** It performs byte-exact round-trip saving by preserving all unmodified sections when `PsdImage.save` is called.
+- **Non-seekable stream support.** It supports non-seekable streams by loading from `StreamContainer.Stream` and `BigEndianReader` without requiring seeking capabilities.
 
 [![PyPI version](https://img.shields.io/pypi/v/aspose-psd-foss.svg)](https://pypi.org/project/aspose-psd-foss/)  
 [![Python](https://img.shields.io/pypi/pyversions/aspose-psd-foss.svg)](https://pypi.org/project/aspose-psd-foss/)  
@@ -70,7 +71,6 @@ flowchart TB
 
 - **Layer model** – `Layer` provides `name`, `bounds`, `top/left/bottom/right`, `width`, `height`, `opacity`, `is_visible`, `clipping`, `blend_mode_key`, `channels_count`, `channel_information`. Mutations (name, visibility, opacity, blend mode, bounds) are tracked and saved preserving raw bytes when possible.
 - **Image data parsing** – `ImageData` parses RLE and ZIP structures without pixel decoding, exposing `structure.kind`, `row_length_field_size`, `row_byte_counts`, `compressed_payload_length`, `uses_prediction`.
-- **Non-seekable stream support** – loading works with streams that do not support seeking.
 
 ## Installation
 
@@ -99,8 +99,6 @@ with PsdImage.load("sample.psd") as img:
     for idx, layer in enumerate(img.layers):
         print(f"{idx}: {layer.name} – {layer.bounds}")
 ```
-
-Requires Python 3.7 or later.  
 
 ## Additional Examples
 
@@ -168,7 +166,7 @@ with open(input_path, "rb") as f:
 
 ## API Reference
 
-The public entry point is the `aspose_psd_foss` package. It provides the `PsdImage` class to load, inspect, and save Adobe Photoshop files, and exposes layer, resource, and section types for detailed manipulation.
+The public entry point is the `aspose_psd_foss` package. It provides the `PsdImage` class to load, inspect, and save Photoshop files, and the `ImageLoader` class with `load_from_path` and `load_from_stream` methods to create `PsdImage` instances.
 
 The public API has 77 types.
 
@@ -186,13 +184,13 @@ The public API has 77 types.
 | `ImageLoader` | Provides the load functionality for images. |
 | `LayerAndMaskSectionReader` | LayerAndMaskSectionReader class provides a load method to read layer and mask section data, which raises PsdLoadException under certain conditions. |
 | `LayerAndMaskSectionWriter` | Writes PSD/PSB Layer and Mask Information sections. |
-| `Point` | Point class represents a point in two-dimensional space with members empty, equals, and is_empty. |
+| `Point` | Point class represents a coordinate with methods empty, equals, and a read-only property is_empty. |
 | `PsdImage` | Represents a PSD image that can be loaded, inspected, and saved without rendering. |
 | `PsdSectionReader` | Provides bounded reads for PSD/PSB sections that are stored in memory by this implementation. |
 | `Rectangle` | Stores a set of four integers that represent the location and size of a rectangle. |
 | `RectangleF` | Stores a set of four floating-point numbers that represent the location and size of a rectangle. |
 | `ResourceBlock` | Represents a PSD image resource block. |
-| `Size` | Size class represents a size in two-dimensional space with members IsEmpty, empty, equals, and is_empty. |
+| `Size` | Size class represents dimensions with methods empty, equals, and read-only properties IsEmpty and is_empty. |
 | `StreamContainer` | Represents a stream container used by resource save APIs. |
 | `ArgumentNullException` | Exception that is thrown when argument is null. |
 | `NotSupportedException` | Exception that is thrown when operation is not supported. |
@@ -200,8 +198,8 @@ The public API has 77 types.
 | `PsdSaveException` | Initializes a new instance of the PsdSaveException class. |
 | `BlendRange` | Represents a PSD layer blend range. |
 | `ChannelInformation` | Represents PSD layer channel information. |
-| `GlobalLayerMaskInfo` | GlobalLayerMaskInfo class provides an empty method for creating an empty instance. |
-| `Layer` | Layer class provides properties such as IsVisible, additional_layer_data, blend_mode_key, blending_ranges_info, bottom, bounds, channel_info, and channel_information, where channel_information, layer_blending_ranges_data, and layer_mask_data setters raise NotSupportedException. |
+| `GlobalLayerMaskInfo` | GlobalLayerMaskInfo class provides an empty method. |
+| `Layer` | Layer class provides properties IsVisible, additional_layer_data, blend_mode_key, blending_ranges_info, bottom, bounds, channel_info, and channel_information, where channel_information, layer_blending_ranges_data, and layer_mask_data setters raise NotSupportedException. |
 | `LayerBlendingRangesData` | Represents PSD layer blending ranges data. |
 | `LayerBlendingRangesInfo` | LayerBlendingRangesInfo class provides read-only properties is_present and raw_data_length. |
 | `LayerBlendModeMapper` | LayerBlendModeMapper class provides methods get_blend_mode_key and parse_blend_mode_key. |
@@ -218,7 +216,7 @@ The public API has 77 types.
 | `RawLayerMaskSection` | RawLayerMaskSection class provides methods empty and load, and a read-only property raw_data, where load raises PsdLoadException under certain conditions. |
 | `PsdImageLoader` | PsdImageLoader class provides a load method that raises PsdLoadException under certain conditions. |
 | `ImageResourceIds` | Provides common PSD image resource identifiers used by tests and fixtures. |
-| `IndexedColorPalette` | IndexedColorPalette class provides read-only property entries and methods parse and to_public_info. |
+| `IndexedColorPalette` | IndexedColorPalette class provides a read-only property entries, and methods parse and to_public_info. |
 | `IndexedColorPaletteInfo` | Provides a read-only view over an indexed-color PSD palette. |
 | `PreservedResourceBlock` | Adapts a raw‑preserved image resource to the official ResourceBlock surface. |
 | `PsdResourceInfo` | Provides a read-only summary of one parsed PSD image resource block. |
@@ -233,18 +231,18 @@ The public API has 77 types.
 | `PsdImageDataInfo` | PsdImageDataInfo class provides read-only properties compressed_payload_length, kind, row_byte_counts, row_length_field_size, and uses_prediction. |
 | `PsdImageDocumentState` | Stores parsed PSD/PSB document sections used by PsdImage. |
 | `PsdImageWriter` | Writes parsed PSD/PSB document state to a stream. |
-| `TestAsposeCompatibility` | TestAsposeCompatibility class provides test methods test_channels_officialshape_readsonly, test_image_load_official_returns_psd, test_image_setters_updatemetadata, test_layermask_officialshape_reads, test_metadata_officialtypes_reads, test_rectangle_mutableshape_updates, test_resources_officialshape_reads, and test_save_officialmutation_persists. |
-| `TestColorData` | TestColorData class provides test methods test_load_cmykpayload_classifies, test_load_indexeddata_parsespalette, test_load_indexedfixture_readsdata, test_load_rgbpayload_classifies, test_load_toolongcolormode_throws, and test_save_indexedfixture_isbyteexact. |
-| `TestFixtureDocument` | TestFixtureDocument class provides test methods test_load_basiccmyk_readsmetadata, test_load_basicpsb_readsmetadata, test_load_basicrgb_readsmetadata, test_load_layeredpsb_readslayers, test_load_layervariants_readsflags, test_save_basiccmyk_isbyteexact, test_save_basicpsb_isbyteexact, and test_save_basicrgb_isbyteexact. |
-| `TestImageData` | TestImageData class provides test methods test_load_psbrle_readsstructure, test_load_psdrle_readsstructure, test_load_psdzip_readsstructure, test_load_rlefixture_readsimagedata, test_load_truncatedrlerows_throws, test_load_zipfixture_readsimagedata, test_save_rlefixture_isbyteexact, and test_save_zipfixture_isbyteexact. |
-| `TestImageResourcesSection` | TestImageResourcesSection class provides test methods test_load_resources_reads_blocks, test_load_resourcesfixture_reads, test_save_resources_preserves_raw, and test_save_resourcesfixture_raw. |
-| `InspectionDtoTests` | InspectionDtoTests class provides test methods test_load_document_dtos_read_values and test_load_layer_dtos_read_values. |
-| `TestLayerSection` | TestLayerSection class provides test methods test_load_layerinspection_readsvalues, test_load_negativelayerextra_throws, test_load_psblayerrecord_reads, test_load_toolonglayerextra_throws, test_load_toolonglayermask_throws, test_save_changesblendmode, test_save_changesbounds, and test_save_changesclipping. |
+| `TestAsposeCompatibility` | TestAsposeCompatibility class provides methods test_channels_officialshape_readsonly, test_image_load_official_returns_psd, test_image_setters_updatemetadata, test_layermask_officialshape_reads, test_metadata_officialtypes_reads, test_rectangle_mutableshape_updates, test_resources_officialshape_reads, and test_save_officialmutation_persists. |
+| `TestColorData` | TestColorData class provides methods test_load_cmykpayload_classifies, test_load_indexeddata_parsespalette, test_load_indexedfixture_readsdata, test_load_rgbpayload_classifies, test_load_toolongcolormode_throws, and test_save_indexedfixture_isbyteexact. |
+| `TestFixtureDocument` | TestFixtureDocument class provides methods test_load_basiccmyk_readsmetadata, test_load_basicpsb_readsmetadata, test_load_basicrgb_readsmetadata, test_load_layeredpsb_readslayers, test_load_layervariants_readsflags, test_save_basiccmyk_isbyteexact, test_save_basicpsb_isbyteexact, and test_save_basicrgb_isbyteexact. |
+| `TestImageData` | TestImageData class provides methods test_load_psbrle_readsstructure, test_load_psdrle_readsstructure, test_load_psdzip_readsstructure, test_load_rlefixture_readsimagedata, test_load_truncatedrlerows_throws, test_load_zipfixture_readsimagedata, test_save_rlefixture_isbyteexact, and test_save_zipfixture_isbyteexact. |
+| `TestImageResourcesSection` | TestImageResourcesSection class provides methods test_load_resources_reads_blocks, test_load_resourcesfixture_reads, test_save_resources_preserves_raw, and test_save_resourcesfixture_raw. |
+| `InspectionDtoTests` | InspectionDtoTests class provides methods test_load_document_dtos_read_values and test_load_layer_dtos_read_values. |
+| `TestLayerSection` | TestLayerSection class provides methods test_load_layerinspection_readsvalues, test_load_negativelayerextra_throws, test_load_psblayerrecord_reads, test_load_toolonglayerextra_throws, test_load_toolonglayermask_throws, test_save_changesblendmode, test_save_changesbounds, and test_save_changesclipping. |
 | `NonSeekableReadStream` | Wraps a readable in‑memory stream and intentionally disables seeking. |
-| `TestPascalString` | TestPascalString class provides test methods test_read_aligned2_consumes_padding and test_read_aligned4_consumes_padding. |
-| `TestPsdHeaderTests` | TestPsdHeaderTests class provides test methods test_load_invalid_header_field_throws, test_load_nonzero_reserved_throws, test_load_psbheader_reads_metadata, and test_load_psdheader_reads_metadata. |
-| `TestPsdImageLoad` | TestPsdImageLoad class provides test methods test_load_docinspection_reads, test_load_document_readsproperties, test_load_invalidsignature_throws, test_load_layer_readsproperties, test_load_layers_indexable, test_load_missingfile_throws, test_load_nonseekablestream_succeeds, and test_load_nullstream_throws. |
-| `TestPsdImagesaveTests` | TestPsdImagesaveTests class provides test methods test_save_changes_layer_name, test_save_changes_layer_opacity, test_save_changes_layer_visibility, test_save_mutation_preserves_flags, test_save_roundtrip_is_byte_exact, and test_save_roundtrip_loads_again. |
+| `TestPascalString` | TestPascalString class provides methods test_read_aligned2_consumes_padding and test_read_aligned4_consumes_padding. |
+| `TestPsdHeaderTests` | TestPsdHeaderTests class provides methods test_load_invalid_header_field_throws, test_load_nonzero_reserved_throws, test_load_psbheader_reads_metadata, and test_load_psdheader_reads_metadata. |
+| `TestPsdImageLoad` | TestPsdImageLoad class provides methods test_load_docinspection_reads, test_load_document_readsproperties, test_load_invalidsignature_throws, test_load_layer_readsproperties, test_load_layers_indexable, test_load_missingfile_throws, test_load_nonseekablestream_succeeds, and test_load_nullstream_throws. |
+| `TestPsdImagesaveTests` | TestPsdImagesaveTests class provides methods test_save_changes_layer_name, test_save_changes_layer_opacity, test_save_changes_layer_visibility, test_save_mutation_preserves_flags, test_save_roundtrip_is_byte_exact, and test_save_roundtrip_loads_again. |
 | `PsdTestFixtureBase` | Provides common temporary-file helpers and binary fixture builders for PSD tests. |
 
 #### Enumerations
@@ -266,7 +264,7 @@ The public API has 77 types.
 
 ### PsdImage
 
-The `PsdImage` class represents a Photoshop document and exposes properties such as width, height, `color_mode`, compression, `layer_count`, `is_psb`, `resource_count`, and methods like load and save to read and write files, as well as access to layers and resources.
+The `PsdImage` class represents a loaded Photoshop document and exposes its width, height, `color_mode`, layers, and `image_resources` properties, as well as the load and save methods to work with files.
 
 - `active_layer`: Gets the active layer.
 - `bits_per_channel`: Gets the number of bits stored per channel.
@@ -288,7 +286,6 @@ The `PsdImage` class represents a Photoshop document and exposes properties such
 - `height`: Gets the document height in pixels.
 - `image_data_info`: Gets a read-only summary of the parsed merged image data structure.
 - `image_data_kind`: Gets the structural kind of the merged image data payload.
-- `image_resources`: Gets or sets the PSD image resources.
 - `indexed_palette`: Gets the parsed indexed palette summary, when present.
 - `is_flatten`: Gets whether the PSD image is flattened.
 - `is_icc_profile_untagged`: Gets the parsed untagged ICC profile flag, when present.
@@ -307,41 +304,58 @@ The `PsdImage` class represents a Photoshop document and exposes properties such
 - `version`: Gets or sets the Aspose.PSD-compatible API version number.
 - `width`: Gets the document width in pixels.
 
+### load
+
+Loads a PSD image from a file path or a readable stream.
+
+### save
+
+Saves the image to a file path or a writable stream.
+
 ### layers
 
 Gets the parsed layer collection.
 
-### resources
+### image_resources
 
-Gets a read-only summary of the parsed image resource blocks.
+Defined as `def image_resources(self) -> List[ResourceBlock]`.
 
-### image_data_info
+### compression
 
-Gets a read-only summary of the parsed merged image data structure.
+Gets the compression method used by the merged image data section.
 
-### header
+### color_mode
 
-The header property of `PsdImage` returns a psdheader object that contains the file's structural metadata.
+Gets the PSD color mode reported by the header.
 
-### color_data_info
+### version
 
-Gets a read-only summary of the parsed Color Mode Data section.
+Gets or sets the Aspose.PSD-compatible API version number.
 
-### has_layers
+### is_psb
 
-Gets whether the document contains at least one parsed layer.
+Equivalent to is_large_document.
 
-### has_image_resources
+### layer_count
 
-Gets whether the document contains any parsed image resources.
+The `PsdImage.layer_count` property returns the number of layers in the document, and the `PsdImage.layers` collection provides access to individual `aspose_psd_foss.layers.layer` instances.
 
-### has_color_mode_data
+### resource_count
 
-Gets whether the document contains Color Mode Data bytes.
+Gets the number of parsed image resource blocks.
+
+### has_icc_profile
+
+Gets whether an embedded ICC profile resource is present.
 
 The public entry point is the `aspose_psd_foss` package.  
 
 </details>
+
+## Documentation & Resources
+
+- **[Aspose.PSD FOSS for Python](https://products.aspose.org/psd/python/)** — The product page.
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-psd-foss/Aspose.PSD-FOSS-for-Python/issues).
 
 ## Scope and Limitations
 
@@ -354,6 +368,10 @@ Tests live under `src/aspose_psd_foss_test/`. Example programs live under `sampl
 ```bash
 pip install aspose-psd-foss
 ```  
+
+Requires Python 3.7 or later.  
+
+- None.  
 
 - `pytest` ≥ 7.0.0 – test runner.  
 - `pytest-cov` ≥ 4.0.0 – coverage reporting.  

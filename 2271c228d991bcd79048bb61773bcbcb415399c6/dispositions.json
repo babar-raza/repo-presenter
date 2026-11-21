@@ -11,12 +11,12 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The H1 product name is rendered from facts in the identity section.",
+      "rationale": "The H1 product name is rendered deterministically from identity facts.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
         "link_target:001",
         "link_target:002",
@@ -25,7 +25,7 @@
         "link_target:006",
         "link_target:007"
       ],
-      "rationale": "The paragraph contains badges whose targets are verified; it provides context on version, Python compatibility, license, and contributors.",
+      "rationale": "The paragraph contains badges that are not rendered in the badges section (the License badge link is CONTRADICTED), so it is preserved in opening.",
       "unit_id": "inherited_unit:002.paragraph"
     },
     {
@@ -33,11 +33,10 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "link_target:008",
-        "link_target:009",
         "link_target:product.banner",
         "link_target:product.homepage"
       ],
-      "rationale": "The banner image is rendered from facts in the banner section.",
+      "rationale": "The banner image is rendered deterministically from verified product illustration and homepage facts.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
@@ -45,12 +44,13 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "identity:ecosystem",
-        "identity:family",
         "identity:platform",
-        "identity:repository",
-        "format:input.psd"
+        "format:input.psd",
+        "install_command:pip",
+        "license:spdx",
+        "public_symbol:aspose_psd_foss"
       ],
-      "rationale": "The paragraph describes what the library does and its key characteristics, supported by the product summary fact.",
+      "rationale": "The paragraph describes what the library does, problems it solves, and who uses it, matching the opening section requirements.",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -64,7 +64,7 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation heading is rendered by the deterministic navigation section.",
+      "rationale": "The navigation heading is rendered deterministically by the navigation section.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
@@ -78,7 +78,7 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation list is rendered by the deterministic navigation section.",
+      "rationale": "The navigation list is rendered deterministically by the navigation section.",
       "unit_id": "inherited_unit:006.list"
     },
     {
@@ -87,7 +87,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The At a Glance heading is rendered by the deterministic at_a_glance section.",
+      "rationale": "The At a Glance heading is rendered deterministically by the at_a_glance section.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
@@ -95,30 +95,37 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "format:input.psd",
-        "public_symbol:aspose_psd_foss.coreexceptions.notsupportedexception",
+        "public_symbol:aspose_psd_foss.bigendianreader",
         "public_symbol:aspose_psd_foss.layers.blendmode",
-        "public_symbol:aspose_psd_foss.layers.channelinformation",
         "public_symbol:aspose_psd_foss.layers.layer",
         "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
         "public_symbol:aspose_psd_foss.layers.layerblendmodemapper",
+        "public_symbol:aspose_psd_foss.layers.layermaskdata",
         "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
+        "public_symbol:aspose_psd_foss.psdimage",
+        "public_symbol:aspose_psd_foss.psdimage.active_layer",
         "public_symbol:aspose_psd_foss.psdimage.bits_per_channel",
         "public_symbol:aspose_psd_foss.psdimage.channels",
         "public_symbol:aspose_psd_foss.psdimage.color_mode",
         "public_symbol:aspose_psd_foss.psdimage.compression",
+        "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
         "public_symbol:aspose_psd_foss.psdimage.height",
-        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
         "public_symbol:aspose_psd_foss.psdimage.is_psb",
         "public_symbol:aspose_psd_foss.psdimage.layer_count",
+        "public_symbol:aspose_psd_foss.psdimage.layers",
         "public_symbol:aspose_psd_foss.psdimage.resource_count",
         "public_symbol:aspose_psd_foss.psdimage.save",
         "public_symbol:aspose_psd_foss.psdimage.version",
         "public_symbol:aspose_psd_foss.psdimage.width",
-        "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
+        "public_symbol:aspose_psd_foss.resourceblock",
+        "public_symbol:aspose_psd_foss.resources.preservedresourceblock",
         "public_symbol:aspose_psd_foss.resources.unknownresource",
         "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.sections.imagedatakind",
         "public_symbol:aspose_psd_foss.sections.imagedatastructure",
-        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+        "public_symbol:aspose_psd_foss.streamcontainer",
+        "public_symbol:aspose_psd_foss.streamcontainer.stream"
       ],
       "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
       "unit_id": "inherited_unit:008.code_block"
@@ -129,7 +136,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Key Capabilities heading is rendered by the deterministic key_capabilities section.",
+      "rationale": "The Key Capabilities heading is rendered deterministically by the key_capabilities section.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
@@ -141,11 +148,12 @@
         "public_symbol:aspose_psd_foss.layers.blendmode",
         "public_symbol:aspose_psd_foss.layers.channelinformation",
         "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
-        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
         "public_symbol:aspose_psd_foss.resources.unknownresource",
-        "public_symbol:aspose_psd_foss.sections.imagedata"
+        "public_symbol:aspose_psd_foss.sections.imagedata",
+        "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.streamcontainer"
       ],
-      "rationale": "The list provides detailed, actionable capability statements not fully captured by the summary list.",
+      "rationale": "The list items are action-led, grounded in facts, and match the key capabilities section requirements.",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -154,25 +162,23 @@
       "fact_ids": [
         "install_command:pip"
       ],
-      "rationale": "The Installation heading is rendered by the deterministic installation section.",
+      "rationale": "The Installation heading is rendered deterministically by the installation section.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:examples",
-        "build_test_asset:tests",
         "install_command:pip"
       ],
-      "rationale": "The pip install command contradicts the verified install command which uses git clone and PYTHONPATH.",
+      "rationale": "The pip install code block is preserved as written because the installation section uses a different workflow and does not render this exact command.",
       "unit_id": "inherited_unit:012.code_block"
     },
     {
-      "destination_section": "quick_start",
+      "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The Python version requirement is not contradicted by facts and provides useful context for users.",
+      "rationale": "The Python version requirement is preserved as written because it provides valuable context for development and testing.",
       "unit_id": "inherited_unit:013.paragraph"
     },
     {
@@ -181,7 +187,7 @@
       "fact_ids": [
         "package_trait:stdlib_only.python"
       ],
-      "rationale": "The Dependencies heading is rendered by the deterministic dependencies section.",
+      "rationale": "The Dependencies heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:014.heading"
     },
     {
@@ -190,7 +196,7 @@
       "fact_ids": [
         "package_trait:stdlib_only.python"
       ],
-      "rationale": "The Required subsection heading is rendered by the deterministic dependencies section.",
+      "rationale": "The Required subsection heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:015.heading"
     },
     {
@@ -209,8 +215,15 @@
       "fact_ids": [
         "package_trait:stdlib_only.python"
       ],
-      "rationale": "The Native / System subsection heading is rendered by the deterministic dependencies section.",
+      "rationale": "The Native / System subsection heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in development_testing: documentation_resources holds no install material. The native/system dependency list is preserved as written because it provides...",
+      "unit_id": "inherited_unit:018.list"
     },
     {
       "destination_section": "dependencies",
@@ -218,25 +231,17 @@
       "fact_ids": [
         "package_trait:stdlib_only.python"
       ],
-      "rationale": "The claim '- None.' for native dependencies lacks supporting evidence; moved to dependencies section for potential resolution.",
-      "unit_id": "inherited_unit:018.list"
-    },
-    {
-      "destination_section": "development_testing",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "rationale": "The Development subsection heading is rendered by the deterministic development_testing section.",
+      "rationale": "The Development subsection heading is rendered deterministically by the dependencies section.",
       "unit_id": "inherited_unit:019.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:tests"
+        "build_test_asset:tests",
+        "build_test_asset:examples"
       ],
-      "rationale": "The pytest and pytest-cov dependencies are valuable for developers and are preserved as they are not contradicted.",
+      "rationale": "The development dependencies list is preserved as written because it provides valuable context about testing requirements.",
       "unit_id": "inherited_unit:020.list"
     },
     {
@@ -265,16 +270,16 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'Additional Examples' heading is superseded by the deterministic section 'Additional Examples' which is not rendered at this revision.",
+      "rationale": "The 'Additional Examples' heading is superseded by the deterministic section of the same name.",
       "unit_id": "inherited_unit:023.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "build_test_asset:tests"
       ],
-      "rationale": "The heading 'Enumerate layers and bounds' is promotional and its content is covered by the deterministic 'Additional Examples' section which is not rendered.",
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:024.heading"
     },
     {
@@ -283,64 +288,59 @@
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "The code block is a verified example and provides useful development/testing context for layer enumeration.",
+      "rationale": "The code block is a verified example for layer enumeration and is preserved in development_testing.",
       "unit_id": "inherited_unit:025.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "build_test_asset:tests"
       ],
-      "rationale": "The heading 'Change layer blend mode' is promotional and its content is covered by the deterministic 'Additional Examples' section which is not rendered.",
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:026.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003",
-        "public_symbol:aspose_psd_foss.layers.blendmode.blendmode",
-        "public_symbol:aspose_psd_foss.layers.layer"
+        "example:003"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:027.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "build_test_asset:tests"
       ],
-      "rationale": "The heading 'Inspect image resources' is promotional and its content is covered by the deterministic 'Additional Examples' section which is not rendered.",
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:028.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:004",
-        "public_symbol:aspose_psd_foss.resources.imageresourceids.imageresourceids",
-        "public_symbol:aspose_psd_foss.sections.imageresourcessection"
+        "example:004"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:029.code_block"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "identity:ecosystem"
+        "build_test_asset:tests"
       ],
-      "rationale": "The heading 'Verify byte-exact round-trip' is promotional and its content is covered by the deterministic 'Additional Examples' section which is not rendered.",
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:030.heading"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:005",
-        "public_symbol:aspose_psd_foss.psdimage.save"
+        "example:005"
       ],
       "rationale": "Reprinted verbatim in Additional Examples with a not-verified note: its example is UNRESOLVED, which is neither supported nor contradicted.",
       "unit_id": "inherited_unit:031.code_block"
@@ -351,7 +351,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The 'API Reference' heading is superseded by the deterministic section 'API Reference' which will be rendered from facts.",
+      "rationale": "The 'API Reference' heading is superseded by the deterministic section of the same name.",
       "unit_id": "inherited_unit:032.heading"
     },
     {
@@ -360,14 +360,14 @@
       "fact_ids": [
         "public_symbol:aspose_psd_foss"
       ],
-      "rationale": "The paragraph about the public entry point is superseded by the deterministic section 'API Reference' which will list the public surface.",
+      "rationale": "The paragraph about the public entry point is superseded by the deterministic API Reference section.",
       "unit_id": "inherited_unit:033.paragraph"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "The HTML block is promotional, non-essential, and its content is superseded by the deterministic 'API Reference' section.",
+      "rationale": "The HTML block is promotional and not supported by facts; it is omitted.",
       "unit_id": "inherited_unit:034.html_block"
     },
     {
@@ -376,67 +376,44 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The heading 'Core' is promotional and its content is superseded by the deterministic 'API Reference' section.",
+      "rationale": "The heading introduces a table of types that is superseded by the deterministic API Reference section.",
       "unit_id": "inherited_unit:035.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "public_symbol:aspose_psd_foss.layers.blendmode",
-        "public_symbol:aspose_psd_foss.layers.channelinformation",
-        "public_symbol:aspose_psd_foss.layers.globallayermaskinfo",
+        "public_symbol:aspose_psd_foss.colormodes",
+        "public_symbol:aspose_psd_foss.imageloader.load_from_path",
+        "public_symbol:aspose_psd_foss.imageloader.load_from_stream",
         "public_symbol:aspose_psd_foss.layers.layer",
-        "public_symbol:aspose_psd_foss.layers.layerblendingrangesdata",
-        "public_symbol:aspose_psd_foss.layers.layerblendingrangesinfo",
-        "public_symbol:aspose_psd_foss.layers.layerblendmodemapper",
-        "public_symbol:aspose_psd_foss.layers.layermaskdata",
-        "public_symbol:aspose_psd_foss.layers.layermaskdatashort",
-        "public_symbol:aspose_psd_foss.layers.layermaskflags",
-        "public_symbol:aspose_psd_foss.layers.layermaskinfo",
-        "public_symbol:aspose_psd_foss.layers.layerrawdata",
-        "public_symbol:aspose_psd_foss.layers.psdlayerchannelinfo",
         "public_symbol:aspose_psd_foss.psdimage",
         "public_symbol:aspose_psd_foss.psdimage.active_layer",
-        "public_symbol:aspose_psd_foss.psdimage.color_data_info",
         "public_symbol:aspose_psd_foss.psdimage.color_mode",
         "public_symbol:aspose_psd_foss.psdimage.compression",
-        "public_symbol:aspose_psd_foss.psdimage.has_color_mode_data",
         "public_symbol:aspose_psd_foss.psdimage.has_icc_profile",
-        "public_symbol:aspose_psd_foss.psdimage.has_image_resources",
-        "public_symbol:aspose_psd_foss.psdimage.has_layers",
-        "public_symbol:aspose_psd_foss.psdimage.has_transparency_data",
-        "public_symbol:aspose_psd_foss.psdimage.header",
         "public_symbol:aspose_psd_foss.psdimage.height",
-        "public_symbol:aspose_psd_foss.psdimage.image_data_info",
-        "public_symbol:aspose_psd_foss.psdimage.image_data_kind",
+        "public_symbol:aspose_psd_foss.psdimage.image_resources",
         "public_symbol:aspose_psd_foss.psdimage.is_psb",
         "public_symbol:aspose_psd_foss.psdimage.layer_count",
         "public_symbol:aspose_psd_foss.psdimage.layers",
         "public_symbol:aspose_psd_foss.psdimage.load",
         "public_symbol:aspose_psd_foss.psdimage.resource_count",
-        "public_symbol:aspose_psd_foss.psdimage.resources",
         "public_symbol:aspose_psd_foss.psdimage.save",
+        "public_symbol:aspose_psd_foss.psdimage.version",
         "public_symbol:aspose_psd_foss.psdimage.width",
+        "public_symbol:aspose_psd_foss.psdversion",
         "public_symbol:aspose_psd_foss.resourceblock",
-        "public_symbol:aspose_psd_foss.resourceblockstate",
         "public_symbol:aspose_psd_foss.resources.imageresourceids",
-        "public_symbol:aspose_psd_foss.resources.indexedcolorpalette",
-        "public_symbol:aspose_psd_foss.resources.indexedcolorpaletteinfo",
-        "public_symbol:aspose_psd_foss.resources.preservedresourceblock",
         "public_symbol:aspose_psd_foss.resources.psdresourceinfo",
         "public_symbol:aspose_psd_foss.resources.psdresourcekind",
         "public_symbol:aspose_psd_foss.resources.unknownresource",
         "public_symbol:aspose_psd_foss.sections.colordata",
         "public_symbol:aspose_psd_foss.sections.imagedata",
-        "public_symbol:aspose_psd_foss.sections.imagedatakind",
         "public_symbol:aspose_psd_foss.sections.imagedatastructure",
-        "public_symbol:aspose_psd_foss.sections.imageresourcessection",
-        "public_symbol:aspose_psd_foss.sections.psdcolordatainfo",
-        "public_symbol:aspose_psd_foss.sections.psdcolordatakind",
         "public_symbol:aspose_psd_foss.sections.psdheader"
       ],
-      "rationale": "The table of public types is promotional, non-essential, and its content is superseded by the deterministic 'API Reference' section.",
+      "rationale": "The table of types is superseded by the deterministic API Reference section and is omitted.",
       "unit_id": "inherited_unit:036.table"
     },
     {
@@ -451,9 +428,9 @@
     },
     {
       "destination_section": "development_testing",
-      "disposition": "PRESERVE_ATTRIBUTED",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The paragraph describes the test suite scope and provides valuable maintainer insight not captured by facts.",
+      "rationale": "The paragraph describes the test suite and is preserved in development_testing.",
       "unit_id": "inherited_unit:038.paragraph"
     },
     {
@@ -463,17 +440,17 @@
         "license:file",
         "license:spdx"
       ],
-      "rationale": "The 'License' heading is superseded by the deterministic section 'License' which will be rendered from facts.",
+      "rationale": "The 'License' heading is superseded by the deterministic section of the same name.",
       "unit_id": "inherited_unit:039.heading"
     },
     {
-      "destination_section": "scope_limitations",
+      "destination_section": "api_reference",
       "disposition": "CORRECT_WITH_EVIDENCE",
       "fact_ids": [
-        "license:spdx",
-        "link_target:005"
+        "license:file",
+        "license:spdx"
       ],
-      "rationale": "The license statement is correct about MIT licensing but the path 'License/LICENSE.txt' is contradicted by the license fact which points to 'LICENSE.txt'.",
+      "rationale": "The license paragraph is corrected to reference the actual license file (LICENSE.txt) and SPDX identifier (MIT).",
       "unit_id": "inherited_unit:040.paragraph"
     }
   ]
