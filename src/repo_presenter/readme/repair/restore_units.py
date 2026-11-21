@@ -33,12 +33,15 @@ from repo_presenter.readme.reconciliation.destinations import (
     prints_unit,
 )
 from repo_presenter.readme.validation.links import unsafe_html_failures
+from repo_presenter.readme.validation.must_correct import DEGRADE_WITHHELD_KEY, omission_holds
 from repo_presenter.readme.validation.surface_claims import absent_type_rows, kept_table_form
 
 __all__ = [
     "choose_units",
     "failing_unit_ids",
+    "reference_sentences",
     "restore_lost_units",
+    "withhold_reference_sentences",
     "owed_citations",
     "cite_owed_units",
     "vacated_sections",
@@ -186,6 +189,18 @@ _HOLDS = re.compile(
 )
 
 
+def _badge_carried(item: str, covered: Collection[str], facts: FactsDocument, skip: Collection[str]) -> bool:
+    """Whether a status badge's value is stated by a unit already chosen (``choose_units``): its badge row has no
+    restore lever of its own, so it must not be chosen as a carrier of itself."""
+    from repo_presenter.readme.parity_gate import states_badge_value, status_badge_value
+
+    value = status_badge_value(item)
+    return value is not None and any(
+        fact.id in covered and states_badge_value(value, fact.value) and not fact.id.endswith(".badge_row")
+        for fact in facts.by_kind("inherited_unit")
+    )
+
+
 def choose_units(
     details: Sequence[str],
     facts: FactsDocument,
@@ -230,8 +245,27 @@ def choose_units(
     for item, units in holders.items():
         if restored.intersection(units):
             chosen.extend(unit for unit in dict.fromkeys(units) if unit not in restored)
+    # BL-640 (R14): a maintainers' status badge no fact verifies is never printed (BL-620), its value is carried by
+    # the candidate stating it in words. When BC-17 still names it, the unit that states the value ("This is a
+    # Pre-Alpha release", TeX Python 072.list) is the unit to keep: the badge row itself has no restore lever.
+    from repo_presenter.readme.parity_gate import states_badge_value, status_badge_value
+
+    for (category, item), units in holders.items():
+        value = status_badge_value(item) if category == "links" else None
+        if value is None:
+            continue
+        carriers = [
+            fact for fact in facts.by_kind("inherited_unit")
+            if fact.id not in skip and fact.id.rsplit(".", 1)[-1] in {"paragraph", "list"}
+            and states_badge_value(value, fact.value)
+        ]
+        if carriers and not any(fact.id in covered or fact.id in chosen for fact in carriers):
+            chosen.append(min(carriers, key=lambda fact: (len(fact.value), fact.id)).id)
     covered = covered | set(chosen)
-    pending = {item: units for item, units in holders.items() if not covered.intersection(units)}
+    pending = {
+        item: units for item, units in holders.items()
+        if not covered.intersection(units) and not (item[0] == "links" and _badge_carried(item[1], covered, facts, skip))
+    }
     while pending:
         tally: dict[str, int] = {}
         for units in pending.values():
@@ -441,7 +475,20 @@ def restore_lost_units(
     _follow_lead_ins(output, changes, payloads)
     if changes:
         # Only PLACED units are judged, and none of these was placed before, so none was flagged before.
-        flagged = {unit for unit, _, _ in dangling_pointers(output, facts)}
+        found = dangling_pointers(output, facts)
+        flagged = {unit for unit, _, _ in found}
+        # BL-640 (R14, R42): a restored paragraph whose only obstacle is the sentence that points at a section
+        # this README does not print is kept WITHOUT that sentence, recorded on its disposition (the BL-562
+        # withheld-text record every printer and BC-17 already read) -- the model's VERIFIED_REWRITE had dropped
+        # the pointer AND the command and link that stand beside it (hosted PDF Go 025.paragraph: BC-08 and
+        # BC-17 on every settle round, nothing restorable). Only the pointer sentence is withheld; a unit
+        # that would print nothing else, or whose pointer survives the trim, is rolled back as before.
+        trimmed = _withhold_pointer_sentences(output, facts, found, {c["unit_id"] for c in changes})
+        if trimmed:
+            for change in changes:
+                if change["unit_id"] in trimmed:
+                    change["withheld"] = " | ".join(trimmed[change["unit_id"]])[:300]
+            flagged = {unit for unit, _, _ in dangling_pointers(output, facts)}
         pointed = {change["unit_id"] for change in changes} & flagged
         if pointed:
             for entry in output.get("dispositions", []):
@@ -457,6 +504,7 @@ def restore_lost_units(
                     entry.pop("fact_ids", None)
                 else:
                     entry["fact_ids"] = fact_ids
+                entry.pop(DEGRADE_WITHHELD_KEY, None)
             if skipped is not None:
                 skipped.extend(
                     {"unit_id": unit_id, "reason": "dangling_pointer"}
@@ -465,6 +513,105 @@ def restore_lost_units(
                 )
             changes = [change for change in changes if change["unit_id"] not in pointed]
     return output, changes
+
+
+def _withhold_pointer_sentences(
+    output: dict[str, Any],
+    facts: FactsDocument,
+    found: Sequence[tuple[str, str, str]],
+    restored: Collection[str],
+) -> dict[str, list[str]]:
+    """``{unit_id: sentences}`` for each restored paragraph whose dangling-pointer sentences were recorded as
+    withheld on its disposition (``DEGRADE_WITHHELD_KEY``), only where that leaves the unit something to print
+    (``omission_holds``). Mutates the disposition rows it reports."""
+    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    wanted: dict[str, list[str]] = {}
+    for unit_id, sentence, _reason in found:
+        if unit_id in restored and unit_id.endswith(".paragraph") and sentence not in wanted.get(unit_id, []):
+            wanted.setdefault(unit_id, []).append(sentence)
+    done: dict[str, list[str]] = {}
+    for entry in output.get("dispositions", []):
+        unit_id = str(entry.get("unit_id", ""))
+        sentences = wanted.get(unit_id)
+        if not sentences or unit_id not in units:
+            continue
+        recorded = [str(q) for q in entry.get(DEGRADE_WITHHELD_KEY) or ()]
+        quotes = [*recorded, *(s for s in sentences if s not in recorded)]
+        if not omission_holds(unit_id, units[unit_id].value, quotes):
+            continue
+        entry[DEGRADE_WITHHELD_KEY] = quotes
+        done[unit_id] = sentences
+    return done
+
+
+_REFERENCE_SENTENCE = re.compile(
+    r"^(?P<unit>inherited_unit:\d+(?:\.\d+)*\.(?:paragraph|list)) is kept as written but "
+    r"(?:says|points|ends|refers)\b.*?: (?P<sentence>'(?:[^'\\]|\\.)*'|\"(?:[^\"\\]|\\.)*\")$",
+    re.DOTALL,
+)
+
+
+def reference_sentences(failing: Sequence[Mapping[str, Any]], restored: Collection[str]) -> dict[str, list[str]]:
+    """``{unit_id: [sentence prefix]}`` for each restored paragraph or list that a blocking BC-07 failure names
+    for a sentence pointing at something the README does not have ("the examples above" where no code
+    precedes it in the section): the sentence BC-07 printed, which is cut to its first 140 characters."""
+    import ast
+
+    found: dict[str, list[str]] = {}
+    for check in failing:
+        if str(check.get("id")) != "BC-07":
+            continue
+        for failure in check.get("failures") or []:
+            unit = failure.get("unit_id")
+            match = _REFERENCE_SENTENCE.match(str(failure.get("detail", "")))
+            if unit not in restored or match is None or match["unit"] != unit:
+                continue
+            try:
+                sentence = ast.literal_eval(match["sentence"])
+            except (ValueError, SyntaxError):
+                continue
+            if isinstance(sentence, str) and sentence.strip() and sentence not in found.setdefault(str(unit), []):
+                found[str(unit)].append(sentence)
+    return found
+
+
+def withhold_reference_sentences(
+    dispositions: dict[str, Any], facts: FactsDocument, wanted: Mapping[str, Sequence[str]]
+) -> dict[str, list[str]]:
+    """``{unit_id: sentences}`` for each kept unit whose pointing sentence (``reference_sentences``) is now
+    recorded as withheld on its disposition (BL-640, R14: the BL-562 record every printer and BC-17 read),
+    the sentence expanded from BC-07's cut prefix to the whole sentence of the unit's text. Only where the
+    unit keeps something else to print (``omission_holds``) and the sentence is not already withheld, so a
+    failure that survives its own withholding is left to the rollback. Mutates ``dispositions``."""
+    from repo_presenter.readme.composition.references import _SENTENCE_END, _SPACE
+
+    units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
+    done: dict[str, list[str]] = {}
+    for entry in dispositions.get("dispositions", []):
+        unit_id = str(entry.get("unit_id", ""))
+        prefixes = wanted.get(unit_id)
+        if not prefixes or unit_id not in units or entry.get("disposition") not in PLACED:
+            continue
+        # A list item's marker is no sentence boundary to BC-07 ("... use the plain macros. - LaTeX and ..."), so
+        # the next item would be withheld with the sentence: cut every sentence at the markers that open an item.
+        marked = re.sub(r"(?m)^[ \t]*(?:[-*+]|\d+[.)])[ \t]+", "\x00", units[unit_id].value)
+        pieces = [
+            segment.strip()
+            for piece in _SENTENCE_END.split(_SPACE.sub(" ", marked))
+            for segment in piece.split("\x00")
+            if segment.strip()
+        ]
+        recorded = [str(q) for q in entry.get(DEGRADE_WITHHELD_KEY) or ()]
+        added: list[str] = []
+        for prefix in prefixes:
+            squashed = " ".join(prefix.split())
+            whole = next((piece for piece in pieces if piece.startswith(squashed) or squashed.startswith(piece)), None)
+            if whole is not None and whole not in recorded and whole not in added:
+                added.append(whole)
+        if added and omission_holds(unit_id, units[unit_id].value, [*recorded, *added]):
+            entry[DEGRADE_WITHHELD_KEY] = [*recorded, *added]
+            done[unit_id] = added
+    return done
 
 
 _LEAD_IN_KINDS = frozenset({"paragraph", "list"})

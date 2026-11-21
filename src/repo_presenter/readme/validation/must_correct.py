@@ -252,6 +252,15 @@ def without_quoted_rows(text: str, quotes: Collection[str]) -> str:
 _LIST_ITEM = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
 
 
+def _is_reference_sentence(quote: str) -> bool:
+    """Whether ``quote`` is a sentence BC-07 reads as pointing at something the README does not have ("the
+    examples above"), standing alone: the only quote a list item is trimmed by sentence for (BL-640). Every
+    other quote (a register row, a flagged claim) withholds its item as before, so no sealed list moves."""
+    from repo_presenter.readme.composition.references import dangling_references
+
+    return bool(dangling_references(quote))
+
+
 def without_quoted_items(text: str, quotes: Collection[str]) -> str:
     """A kept list's printed form without the items (a marker line, its continuation lines and
     its nested sub-items) that print a cited register row's quote: the innermost item that prints
@@ -290,15 +299,26 @@ def without_quoted_items(text: str, quotes: Collection[str]) -> str:
     # one top-level type item, which withheld whole would withhold the whole list), else the
     # nearest enclosing item, as for a top-level item.
     dropped = [False] * len(blocks)
+    cut = False
     ends = [subtree_end(index) for index in range(len(blocks))]
     for quote in wanted:
         holding = [prints_quote(joined(index, ends[index]), quote) for index in range(len(blocks))]
         for index in range(len(blocks)):
             if not holding[index] or any(holding[child] for child in range(index + 1, ends[index])):
                 continue
+            # BL-640 (R14): an item of several sentences whose OWN text holds the quote as sentences keeps the
+            # others (TeX Python: "Plain TeX is the supported format. ... The examples above pass ..." loses
+            # only the pointing sentence, not the statement of the supported format).
+            own = "\n".join(blocks[index][1])
+            if prints_quote(own, quote) and _is_reference_sentence(quote):
+                trimmed = without_quoted_sentences(own, [quote])
+                if trimmed != own and _LIST_ITEM.sub("", trimmed, count=1).strip() and not prints_quote(trimmed, quote):
+                    blocks[index] = (blocks[index][0], trimmed.split("\n"))
+                    cut = True
+                    continue
             for member in range(index, ends[index]):
                 dropped[member] = True
-    if not any(dropped) or all(dropped):
+    if all(dropped) or not (any(dropped) or cut):
         return text
     kept = [line for (_depth, lines), drop in zip(blocks, dropped) if not drop for line in lines]
     return "\n".join([*lead, *kept])

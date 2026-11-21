@@ -62,6 +62,7 @@ from repo_presenter.readme.composition.components.shell import (
 from repo_presenter.readme.composition.components.terminology import LOWER_WORD, to_title_case
 from repo_presenter.readme.composition.coverage import Destinations
 from repo_presenter.readme.composition.placement import (
+    PLACED,
     Placement,
     api_reference_hub_methods,
     placed_attribution,
@@ -1001,6 +1002,14 @@ def _reference_pointer(sentence: str, api_included: bool, count: int) -> str:
     return f"{rest}{tail}".strip() if tail.startswith((".", ";", ",")) else f"{rest} {tail}".strip()
 
 
+def _restates_label(description: str, label: str) -> bool:
+    """Whether ``description`` says nothing but the link's own ``label`` (case, spacing and
+    punctuation aside): a list item that is only its link."""
+    squash = re.compile(r"[^0-9a-z+#]+")
+    said = squash.sub("", description.casefold())
+    return bool(said) and said == squash.sub("", label.casefold())
+
+
 def _documentation_resources(context: RenderContext) -> list[str]:
     """One list, each item a bold link, an em dash, and the authored sentence."""
     sid = "documentation_resources"
@@ -1025,16 +1034,22 @@ def _documentation_resources(context: RenderContext) -> list[str]:
         ):
             continue
         seen.add(target.value)
+        # BL-650: an item that is only its link ("- [Aspose.Slides FOSS for Java](...)" in a list of
+        # sibling editions) has no description: its "description" was the label again, printed as
+        # prose beside the link, where BC-12 reads the sibling edition's name as a short spelling of
+        # this product (hosted Lane R Slides .NET, run 44947970617). The line prints the fact-true
+        # description of the target instead, the form every link without a description gets.
+        own = described.get(target.id)
+        if own and _restates_label(own, link_text(target)):
+            own = None
         # R43(2): never an authored sentence. The maintainers' own description of the link (a
         # kept or superseded resource-links list), else a description of its target from the
         # link fact itself.
         sentence = (
-            canonicalise_name_variants(described[target.id], context.name)
-            if described.get(target.id)
-            else link_target_description(target)
+            canonicalise_name_variants(own, context.name) if own else link_target_description(target)
         )
         host = (urlsplit(target.value).hostname or "").lower()
-        if host.startswith("reference.") and described.get(target.id):
+        if host.startswith("reference.") and own:
             # BL-500: the maintainers' pointer to the API Reference section is printed only when that
             # section is rendered above (``review.scope`` then treats it as the renderer's guarantee).
             sentence = _reference_pointer(sentence, api_included, _public_type_count(context))
@@ -1045,7 +1060,7 @@ def _documentation_resources(context: RenderContext) -> list[str]:
                 "[API Reference](#api-reference) section above covers the essentials."
             )
         line = f"- **[{link_text(target)}]({target.value})** — {sentence}"
-        if described.get(target.id) and _register_refuted(context, line):
+        if own and _register_refuted(context, line):
             # BL-350: the maintainers' description of this link is the text a check or the findings
             # register flags (the last-resort degrade records it in ``degraded_quotes``): the line
             # keeps its link and prints the description of the link's own target, the fact-true
@@ -1961,12 +1976,70 @@ def capability_categories(plan: dict[str, Any], facts: FactsDocument) -> list[st
     return categories
 
 
+_EXAMPLE_CODE_UNIT = re.compile(r"unit inherited_unit:(\d+)\.code_block")
+_KEPT_HEADING = re.compile(r"^#{3,6}\s+(?P<title>\S.*?)\s*#*\s*$")
+
+
+def _kept_example_heading(context: RenderContext, sid: str, example: Fact) -> str | None:
+    """The maintainers' own heading of this verified example, when the README keeps it (BL-652).
+
+    A verified example prints from its receipt under a heading, and that heading used to be the
+    authored task title only. The published README's own heading directly above the example's code
+    block, kept as written into this section (VERIFIED_PRESERVE / VERIFIED_MOVE / PRESERVE_ATTRIBUTED),
+    printed nowhere else (a heading is never a verbatim placed unit), so the candidate lost it:
+    hosted Lane R PDF Python (run 44943413732) ended REJECT on 20 kept units and 16 headings of that
+    shape ('### Exchange Bookmarks as JSON' above the example it titles). The example's heading is
+    now that heading, in title case; with no kept heading directly above, or one kept elsewhere or
+    not at all, the authored title stands as before."""
+    match = next(
+        (m for e in example.evidence if (m := _EXAMPLE_CODE_UNIT.search(e.detail or "")) is not None),
+        None,
+    )
+    if match is None:
+        return None
+    ordinal = int(match.group(1))
+    heading = next(
+        (
+            fact
+            for fact in context.facts.by_kind("inherited_unit")
+            if fact.id.endswith(".heading") and _unit_ordinal_of(fact.id) == ordinal - 1
+        ),
+        None,
+    )
+    if heading is None:
+        return None
+    entry = next(
+        (
+            row
+            for row in context.dispositions.get("dispositions", [])
+            if row.get("unit_id") == heading.id
+        ),
+        None,
+    )
+    if (
+        entry is None
+        or entry.get("disposition") not in PLACED
+        or entry.get("destination_section") != sid
+    ):
+        return None
+    shown = _KEPT_HEADING.match(heading.value.strip())
+    return to_title_case(shown.group("title"), context.abbreviations) if shown else None
+
+
+def _unit_ordinal_of(unit_id: str) -> int | None:
+    found = re.match(r"inherited_unit:(\d+)\.", unit_id)
+    return int(found.group(1)) if found else None
+
+
 def _example_entry(context: RenderContext, sid: str, example_id: str) -> list[str]:
-    """One further example: its authored task heading, then the verified code verbatim."""
+    """One further example: its task heading, then the verified code verbatim. The heading is the
+    maintainers' own when the README keeps it (``_kept_example_heading``), else the authored task."""
     example = context.fact(example_id)
     assert example is not None
-    task = context.unit(sid, f"workflow:{example_id}").strip().rstrip(".")
-    heading = to_title_case(task, context.abbreviations)
+    heading = _kept_example_heading(context, sid, example)
+    if heading is None:
+        task = context.unit(sid, f"workflow:{example_id}").strip().rstrip(".")
+        heading = to_title_case(task, context.abbreviations)
     return ["", f"### {heading}", "", *_code_block(context.spec.fence, printed_example(example))]
 
 

@@ -228,6 +228,25 @@ def unit_failures(candidate: Candidate) -> list[Failure]:
         for line in texts.get("api_reference", "").splitlines()
         if line.startswith(("| ", "- `"))
     )
+    # BL-651: a Documentation and Resources link line prints the maintainers' own description of
+    # its link after the dash (``list_coverage.kept_link_descriptions``, R43(2)): a sentence of a
+    # kept resource-links list, spans included ("... the commercial `aspose-words` package ...,
+    # replacing `aspose.words_foss` with `aspose.words`", Words Python). Those words are the kept
+    # unit's, printed as the renderer's line, so they are judged like a placed unit's own lines;
+    # a line whose description is not one a kept list holds is still judged.
+    from repo_presenter.readme.composition.list_coverage import kept_link_descriptions
+
+    kept_descriptions = [
+        f" — {text}"
+        for text in kept_link_descriptions(candidate.dispositions, facts).values()
+        if text
+    ]
+    if kept_descriptions:
+        renderer_lines.update(
+            line
+            for line in texts.get("documentation_resources", "").splitlines()
+            if line.startswith("- **[") and any(item in line for item in kept_descriptions)
+        )
     seen: set[str] = set()
     # An unverified inherited example is reprinted as the project wrote it, with the renderer's
     # note, like a kept unit: its prose is not authored here.
