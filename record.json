@@ -245,68 +245,756 @@
    "run_id": "44924772455",
    "source_revision": "5e122e051e914e83b1ddbf3649055bc0d8ec1ea8",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T20:53:03+00:00",
+   "classes": [
+    "BC-07|unresolved|dangling_reference_points_q",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "live_readme_loss|inherited_unit|code_block",
+    "live_readme_loss|inherited_unit|heading"
+   ],
+   "code": "995d2db693648c90d6d1c3f3bdddbba865f27a76e8a4b1c301ce496f161268a7",
+   "findings": 37,
+   "outcome": "failure",
+   "run_id": "44943413732",
+   "source_revision": "5e122e051e914e83b1ddbf3649055bc0d8ec1ea8",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T16:37:52+00:00",
+  "at": "2026-11-21T20:53:03+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_t",
+   "BC-07|unresolved|dangling_reference_points_q": {
+    "example": "dangling reference: points 'below' but nothing follows it in this section: '- `actions`: What the document does around saving, printing and closing (/AA). - `add_attachment`: Embed *content* as a document-level file '",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "unresolved",
     "origins": [
-     "OutputRejectedError"
+     "-"
     ],
-    "rule": "job_error",
-    "scope": "0c00ce5cf88ebe0705c33d49985ff53de6caadb3b6176b6212d182cf00ee4bbd",
+    "rule": "BC-07",
+    "scope": "828caf95cdd182dcd7b5451b728f8f28be5d4c034fbad5e8af1ab559f7673f46",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "dangling_reference_points_q",
+    "upstream": ""
+   },
+   "disposition_coverage|inherited_unit|id_is_kept_verified_move": {
+    "example": "### Check Internal Links",
+    "findings": 7,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:158.heading",
+     "inherited_unit:161.heading",
+     "inherited_unit:165.heading",
+     "inherited_unit:170.heading",
+     "inherited_unit:237.heading"
+    ],
+    "rule": "disposition_coverage",
+    "scope": "a4e77cba8e08848e0bb2b3cdafd30e7044649f8158d3dc339e419101ea3dea7e",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
     ],
-    "sub_rule": "OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   "disposition_coverage|inherited_unit|id_is_kept_verified_preserve": {
+    "example": "### Exchange Bookmarks as JSON",
+    "findings": 13,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:138.heading",
+     "inherited_unit:141.heading",
+     "inherited_unit:142.code_block",
+     "inherited_unit:146.heading",
+     "inherited_unit:150.heading"
+    ],
+    "rule": "disposition_coverage",
+    "scope": "a4e77cba8e08848e0bb2b3cdafd30e7044649f8158d3dc339e419101ea3dea7e",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   "live_readme_loss|inherited_unit|code_block": {
+    "example": "with Document(\"report.pdf\") as document:\n    for block in document.extract_blocks(pages=[1]):\n        print(block.page_index, block.kind, block.text, block.rows)\n    document.export_blocks_json(\"report-structure.json\")",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:280.list"
+    ],
+    "rule": "live_readme_loss",
+    "scope": "a4e77cba8e08848e0bb2b3cdafd30e7044649f8158d3dc339e419101ea3dea7e",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "code_block",
+    "upstream": ""
+   },
+   "live_readme_loss|inherited_unit|heading": {
+    "example": "Exchange Bookmarks as JSON",
+    "findings": 15,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:138.heading",
+     "inherited_unit:141.heading",
+     "inherited_unit:146.heading",
+     "inherited_unit:150.heading",
+     "inherited_unit:158.heading"
+    ],
+    "rule": "live_readme_loss",
+    "scope": "a4e77cba8e08848e0bb2b3cdafd30e7044649f8158d3dc339e419101ea3dea7e",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/lane_l_review.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review/independent_reviewer.py"
+    ],
+    "sub_rule": "heading",
     "upstream": ""
    }
   },
-  "code": "6a9036f4d9933209774e5055c68b931d382967575092d7e5236fd5df6223e8cc",
+  "code": "995d2db693648c90d6d1c3f3bdddbba865f27a76e8a4b1c301ce496f161268a7",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_test_asset:test-command', 'build_test_asset:tests', 'dependency:asn1crypto-1.5', 'dependency:cryptography-50', 'dependency:development.dev.brotli-1.2', 'dependency:development.dev.build-1.2', 'dependency:development.dev.fonttools-4.60.2'] (and 1263 more allowed values; cite only an offered ID); $.dispositions[13].fact_ids[3]: 'public_symbol:aspose_pdf.document.registry_lag' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:exam",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 36 blocking finding(s) of 36; nothing sealed; disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:138.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:141.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inherited_unit:146.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README); disposition_coverage [omission] blocks until rule disposition_coverage no longer finds it (inhe",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected twice; last rejection: $.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one of ['build_test_asset:build-command', 'build_test_asset:ci', 'build_test_asset:ci-matrix', 'build_test_asset:examples', 'build_test_asset:release-workflow', 'build_t",
+    "label": "disposition_coverage",
+    "message": "inherited_unit:138.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "inherited_unit:138.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Exchange Bookmarks as JSON",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:141.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:141.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Edit Simple Bookmarks as CSV",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:142.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:142.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```python\nwith Document(\"manual.pdf\") as document:\n    document.export_bookmarks_csv(\"bookmarks.csv\", encoding=\"utf-8-sig\")\n\nwith Document(\"updated-manual.pdf\") as document:\n    added = document.import_bookmarks_csv(\"bookmarks.csv\", replace=True)\n    document.save(\"with-bookmarks.pdf\")\n```",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:146.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:146.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Inventory PDF Links",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:150.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:150.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Update URLs Across a PDF",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:158.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:158.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Check Internal Links",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:161.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:161.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Clean Up Review Annotations by Author or Date",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:165.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:165.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Exchange Annotations for Review",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:170.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:170.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Export Review Comments as XFDF",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:176.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:176.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Choose the First Visible List Option",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:185.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:185.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Merge PDF Files",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:196.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:196.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```python\nwith Document(\"input.pdf\") as document:\n    document.export_words_json(\"words.json\", pages=[1, 3], skip_artifacts=True)\n    document.export_words_csv(\"words.csv\", pages=[1, 3], encoding=\"utf-8-sig\")\n    payload = document.pages[1].export_words_json()\n```",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:199.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:199.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```python\nwith Document(\"input.pdf\") as document:\n    matches = document.search_text(\"Invoice\", context_chars=50, pages=[1, 3])\n    document.export_search_json(\"Invoice\", \"invoice-matches.json\")\n    document.export_search_csv(r\"INV-\\d+\", \"invoice-matches.csv\", regex=True)\n```",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:201.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:201.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Download Split PDF Parts as One ZIP",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:208.heading is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:208.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Split a Scan Batch at Blank Pages",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:220.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:220.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```python\nwith Document(\"batch.pdf\") as document:\n    removed = document.remove_duplicate_pages(keep=\"first\")\n    document.save(\"deduplicated.pdf\")\n```",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:237.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:237.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Compare PDF Text Revisions",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:240.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:240.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Compare PDF Page Views",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:244.code_block is kept (VERIFIED_PRESERVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:244.code_block",
+     "kind": "inherited_unit"
+    },
+    "quote": "```python\nwith Document(\"before.pdf\") as before, Document(\"after.pdf\") as after:\n    results = before.compare_visual(\n        after, ignore_regions=[(0, 0, 612, 36)], include_diff_images=True,\n    )\n```",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_preserve",
+    "upstream": ""
+   },
+   {
+    "label": "disposition_coverage",
+    "message": "inherited_unit:246.heading is kept (VERIFIED_MOVE) but its text is not printed in the README",
+    "origin": {
+     "id": "inherited_unit:246.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "### Measure Visible Content Without Cropping",
+    "rule": "disposition_coverage",
+    "section_id": "",
+    "signature": "disposition_coverage|inherited_unit|id_is_kept_verified_move",
+    "source": "review",
+    "sub_rule": "id_is_kept_verified_move",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Exchange Bookmarks as JSON'",
+    "origin": {
+     "id": "inherited_unit:138.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Exchange Bookmarks as JSON",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Edit Simple Bookmarks as CSV'",
+    "origin": {
+     "id": "inherited_unit:141.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Edit Simple Bookmarks as CSV",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Inventory PDF Links'",
+    "origin": {
+     "id": "inherited_unit:146.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Inventory PDF Links",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Update URLs Across a PDF'",
+    "origin": {
+     "id": "inherited_unit:150.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Update URLs Across a PDF",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Check Internal Links'",
+    "origin": {
+     "id": "inherited_unit:158.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Check Internal Links",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Clean Up Review Annotations by Author or Date'",
+    "origin": {
+     "id": "inherited_unit:161.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Clean Up Review Annotations by Author or Date",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Exchange Annotations for Review'",
+    "origin": {
+     "id": "inherited_unit:165.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Exchange Annotations for Review",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Export Review Comments as XFDF'",
+    "origin": {
+     "id": "inherited_unit:170.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Export Review Comments as XFDF",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Choose the First Visible List Option'",
+    "origin": {
+     "id": "inherited_unit:176.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Choose the First Visible List Option",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Merge PDF Files'",
+    "origin": {
+     "id": "inherited_unit:185.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Merge PDF Files",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Download Split PDF Parts as One ZIP'",
+    "origin": {
+     "id": "inherited_unit:201.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Download Split PDF Parts as One ZIP",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Split a Scan Batch at Blank Pages'",
+    "origin": {
+     "id": "inherited_unit:208.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Split a Scan Batch at Blank Pages",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Compare PDF Text Revisions'",
+    "origin": {
+     "id": "inherited_unit:237.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Compare PDF Text Revisions",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Compare PDF Page Views'",
+    "origin": {
+     "id": "inherited_unit:240.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Compare PDF Page Views",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: heading 'Measure Visible Content Without Cropping'",
+    "origin": {
+     "id": "inherited_unit:246.heading",
+     "kind": "inherited_unit"
+    },
+    "quote": "Measure Visible Content Without Cropping",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|heading",
+    "source": "review",
+    "sub_rule": "heading",
+    "upstream": ""
+   },
+   {
+    "label": "live_readme_loss",
+    "message": "live README content lost without an accounting disposition: code block 'with Document(\"report.pdf\") as document:'",
+    "origin": {
+     "id": "inherited_unit:280.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "with Document(\"report.pdf\") as document:\n    for block in document.extract_blocks(pages=[1]):\n        print(block.page_index, block.kind, block.text, block.rows)\n    document.export_blocks_json(\"report-structure.json\")",
+    "rule": "live_readme_loss",
+    "section_id": "",
+    "signature": "live_readme_loss|inherited_unit|code_block",
+    "source": "review",
+    "sub_rule": "code_block",
+    "upstream": ""
+   },
+   {
+    "label": "BC-07",
+    "message": "dangling reference: points 'below' but nothing follows it in this section: '- `actions`: What the document does around saving, printing and closing (/AA). - `add_attachment`: Embed *content* as a document-level file '",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:source_reconciliation_dispositions_n_fact_ids_n",
+    "rule": "BC-07",
+    "section_id": "api_reference",
+    "signature": "BC-07|unresolved|dangling_reference_points_q",
+    "source": "validation",
+    "sub_rule": "dangling_reference_points_q",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "11aa6b1a71fc6caf19622686c0d9cb0494ac2c81",
+  "main_sha": "a52759e7e717f8e77f1944f82d016731c48a57ad",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:0+disposition_coverage:1+disposition_coverage:2+disposition_coverage:3+disposition_coverage:4+disposition_coverage:5+disposition_coverage:6+disposition_coverage:7+disposition_coverage:8+disposition_coverage:9+disposition_coverage:10+disposition_coverage:12+disposition_coverage:13+disposition_coverage:14+disposition_coverage:15+disposition_coverage:16+disposition_coverage:17+disposition_coverage:18+disposition_coverage:19+disposition_coverage:20",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:142.code_block: uncited_prose_omit: OMIT_UNSUPPORTED on a code_block needs at least one fact ID that shows the claim unsupported, or the unit must be placed in a section the shell can hold; the unit's exact text is \"```python\\nwith Document(\\\"manual.pdf\\\") as document:\\n    document.export_bookmarks_csv(\\\"bookmarks.csv\\\", encoding=\\\"utf-8-sig\\\")\\n\\nwith Document(\\\"updated-manual.pdf\\\") as document:\\n    added ",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "live_readme_loss:31",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "additional_examples",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-07",
+    "outcome": "repaired",
+    "reason": "plan-level drop of hub:public_symbol:aspose_pdf.document.export_bookmarks_json (blanked by the repair)",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "disposition_coverage:11",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "additional_examples",
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-pdf-foss/Aspose-PDF-FOSS-for-Python",
-  "run_id": "44924772455",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44924772455",
+  "run_id": "44943413732",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44943413732",
   "schema_version": 1,
   "source_revision": "5e122e051e914e83b1ddbf3649055bc0d8ec1ea8",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
