@@ -1,0 +1,561 @@
+{
+  "additional_example_ids": [
+    "example:002",
+    "example:003",
+    "example:005",
+    "example:006"
+  ],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document.openaction",
+        "public_symbol:document.save",
+        "public_symbol:document.writeto"
+      ],
+      "symbol_fact_id": "public_symbol:document"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.render"
+      ],
+      "symbol_fact_id": "public_symbol:flow"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:form.addtextfield",
+        "public_symbol:form.addbarcodefield",
+        "public_symbol:form.flatten"
+      ],
+      "symbol_fact_id": "public_symbol:form"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotationcollection",
+        "public_symbol:annotationcollection.add",
+        "public_symbol:annotationcollection.delete",
+        "public_symbol:page.annotations"
+      ],
+      "symbol_fact_id": "public_symbol:annotationcollection"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.setencryption",
+        "public_symbol:encryptionoptions",
+        "public_symbol:document.sign",
+        "public_symbol:document.verifysignatures"
+      ],
+      "symbol_fact_id": "public_symbol:document.setencryption"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfua"
+      ],
+      "symbol_fact_id": "public_symbol:document.validatepdfa"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.savehtml",
+        "public_symbol:document.savesvg",
+        "public_symbol:document.savemarkdown",
+        "public_symbol:document.renderimage"
+      ],
+      "symbol_fact_id": "public_symbol:document.savehtml"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.newllmocrengine",
+        "public_symbol:ai.newimagedescriptioncopilot"
+      ],
+      "symbol_fact_id": "public_symbol:ai.summarycopilot"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.split",
+        "public_symbol:document.append",
+        "public_symbol:document.rotate",
+        "public_symbol:document.reorder"
+      ],
+      "symbol_fact_id": "public_symbol:document.split"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.newflow",
+        "public_symbol:flowoptions",
+        "public_symbol:flowoptions.tagged",
+        "public_symbol:flow.render"
+      ],
+      "symbol_fact_id": "public_symbol:document.newflow"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.addblankpage",
+        "public_symbol:document.deletepage",
+        "public_symbol:document.insertblankpage",
+        "public_symbol:document.pagecount"
+      ],
+      "symbol_fact_id": "public_symbol:document.addblankpage"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.flatten",
+        "public_symbol:form.flatten",
+        "public_symbol:annotation.flatten",
+        "public_symbol:document.applyredactions"
+      ],
+      "symbol_fact_id": "public_symbol:document.flatten"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Page operations and metadata",
+      "Encryption and digital signatures",
+      "Content authoring with Flow",
+      "Tables and vector graphics",
+      "AcroForms and annotations",
+      "PDF/A, PDF/UA, and validation",
+      "Conversion and rendering",
+      "AI copilots"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:document.split",
+        "public_symbol:document.append",
+        "public_symbol:document.rotate",
+        "public_symbol:document.reorder",
+        "public_symbol:document.setinfo",
+        "public_symbol:document.setxmp"
+      ],
+      "shared_fact_ids": [],
+      "title": "Page operations and metadata"
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:document.setencryption",
+        "public_symbol:document.sign",
+        "public_symbol:document.verifysignatures",
+        "public_symbol:signoptions.ltv"
+      ],
+      "shared_fact_ids": [],
+      "title": "Encryption and digital signatures"
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addtable",
+        "public_symbol:flow.addlist",
+        "public_symbol:flowoptions.tagged"
+      ],
+      "shared_fact_ids": [],
+      "title": "Content authoring with Flow"
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "public_symbol:page.drawline",
+        "public_symbol:page.drawrectangle",
+        "public_symbol:page.drawcircle",
+        "public_symbol:page.drawpath",
+        "public_symbol:document.createtilingpattern"
+      ],
+      "shared_fact_ids": [],
+      "title": "Tables and vector graphics"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form.addtextfield",
+        "public_symbol:form.addbarcodefield",
+        "public_symbol:page.annotations",
+        "public_symbol:redactannotation"
+      ],
+      "shared_fact_ids": [],
+      "title": "AcroForms and annotations"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfua"
+      ],
+      "shared_fact_ids": [],
+      "title": "PDF/A, PDF/UA, and validation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.savehtml",
+        "public_symbol:document.savesvg",
+        "public_symbol:document.savemarkdown",
+        "public_symbol:document.saveepub",
+        "public_symbol:document.renderimage"
+      ],
+      "shared_fact_ids": [],
+      "title": "Conversion and rendering"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ai.summarycopilot",
+        "public_symbol:ai.newllmocrengine",
+        "public_symbol:ai.chatcopilot",
+        "public_symbol:ai.newimagedescriptioncopilot"
+      ],
+      "shared_fact_ids": [],
+      "title": "AI copilots"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:go_version",
+        "package:name"
+      ],
+      "section_id": "identity",
+      "text": "The H1 product name is rendered from the identity section's repository fact."
+    },
+    {
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008"
+      ],
+      "section_id": "badges",
+      "text": "The badge row is rendered from the badges section's CI badge target fact."
+    },
+    {
+      "fact_ids": [
+        "link_target:011",
+        "link_target:012",
+        "link_target:039"
+      ],
+      "section_id": "banner",
+      "text": "The banner image links to the enterprise product page and is moved to the enterprise relationship section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision"
+      ],
+      "section_id": "navigation",
+      "text": "The navigation section is rendered from facts and the heading is redundant."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram is superseded by the at_a_glance section, whose content is built from the navigation link targets."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:buttonfield",
+        "public_symbol:cell.setcolspan",
+        "public_symbol:cell.setimage",
+        "public_symbol:collectionitem",
+        "public_symbol:curveto",
+        "public_symbol:document.autotag",
+        "public_symbol:document.booklet",
+        "public_symbol:document.collection"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The first list of capabilities is superseded by the key capabilities section's generated content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comparedocumentspagebypage",
+        "public_symbol:compareflatdocuments",
+        "public_symbol:comparisonresult",
+        "public_symbol:comparisonresult.savemarkup",
+        "public_symbol:document.addtextwatermark",
+        "public_symbol:document.attachinvoice",
+        "public_symbol:document.invoice",
+        "public_symbol:document.rendertiff"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The second list of capabilities is superseded by the key capabilities section's generated content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:defaultoptimizationoptions",
+        "public_symbol:document.createtype3font",
+        "public_symbol:document.loadfont",
+        "public_symbol:document.optimize",
+        "public_symbol:document.optimizeimages",
+        "public_symbol:document.removeunusedobjects",
+        "public_symbol:document.savelinearized",
+        "public_symbol:document.subsetfonts"
+      ],
+      "section_id": "key_capabilities",
+      "text": "The third list of capabilities is superseded by the key capabilities section's generated content."
+    },
+    {
+      "fact_ids": [
+        "install_command:go"
+      ],
+      "section_id": "installation",
+      "text": "The Installation heading is rendered from facts and the heading is redundant."
+    },
+    {
+      "fact_ids": [
+        "dependency:none"
+      ],
+      "section_id": "dependencies",
+      "text": "The Dependencies heading is rendered from facts and the heading is redundant."
+    }
+  ],
+  "flagship_example_id": "example:002",
+  "links": [
+    {
+      "link_fact_id": "link_target:032",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:033",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:034",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:035",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:036",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:037",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:038",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:039",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:040",
+      "section_id": "third_party_notices"
+    },
+    {
+      "link_fact_id": "link_target:041",
+      "section_id": "third_party_notices"
+    },
+    {
+      "link_fact_id": "link_target:042",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "key_capabilities"
+    },
+    {
+      "link_fact_id": "link_target:029",
+      "section_id": "key_capabilities"
+    }
+  ],
+  "material_limitations": [],
+  "quick_start_example_id": "example:001",
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "quick_start"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}
