@@ -93,70 +93,81 @@
    "run_id": "44775277577",
    "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T11:30:04+00:00",
+   "classes": [
+    "job_error|job_error|unknown:no_valid_independent_review"
+   ],
+   "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44898248412",
+   "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T17:09:53+00:00",
+  "at": "2026-11-21T11:30:04+00:00",
   "classes": {
-   "duplicate_opening_paragraph|authored_unit|the_q_unit_restates": {
-    "example": "Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.",
+   "job_error|job_error|unknown:no_valid_independent_review": {
+    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, structure, documentation_resources, structure): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F03: a omission finding must cite at least one product fact (not only inherited text); finding F04: a omission finding must cite at least one p",
     "findings": 1,
-    "origin_kind": "authored_unit",
+    "origin_kind": "job_error",
     "origins": [
-     "opening.opening"
+     "unknown"
     ],
-    "rule": "duplicate_opening_paragraph",
-    "scope": "d3873161570e5e397e02a3c5a5cbce96e0ea8e27ed3a89b25e7e2c2af35a5639",
-    "scope_paths": [
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
-    ],
-    "sub_rule": "the_q_unit_restates",
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   },
-  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+  "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_opening_paragraph [quality] blocks until rule duplicate_opening_paragraph no longer finds it (preserved='Aspose.OCR.FOSS for .NET is a free, open-source OCR library for .NET Framework 4.8,\\n.NET Standard 2.0, and .NET 8+. It detects text lines in raster images and PDF documents,\\nrecognizes Latin-script text, and returns both the recognized text and the pixel coordinates of\\nevery detected line. The detection, refinement, and recognition models are embedded in the\\nassembly and run locally through ONNX Runtime.' authored='Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.')",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, structure, documentation_resources, structure): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F03: a omission finding must cite at least one product fact (not only inherited text); finding F04: a omission finding must cite at least one product fact (not only inherited text)",
+   "kind": "unknown",
+   "transient": true
   },
   "findings": [
    {
-    "label": "duplicate_opening_paragraph",
-    "message": "the 'opening' unit restates the inherited preserved paragraph placed beside it rather than adding genuinely new content",
+    "label": "unknown",
+    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, structure, documentation_resources, structure): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F03: a omission finding must cite at least one product fact (not only inherited text); finding F04: a omission finding must cite at least one p",
     "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
+     "id": "unknown",
+     "kind": "job_error"
     },
-    "quote": "Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.",
-    "rule": "duplicate_opening_paragraph",
+    "quote": "",
+    "rule": "job_error",
     "section_id": "",
-    "signature": "duplicate_opening_paragraph|authored_unit|the_q_unit_restates",
-    "source": "review",
-    "sub_rule": "the_q_unit_restates",
+    "signature": "job_error|job_error|unknown:no_valid_independent_review",
+    "source": "job",
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
+  "main_sha": "51f1d767694da5f8d2c9e2908ae701281ab0b137",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   }
+  ],
   "repository": "aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET",
-  "run_id": "44775277577",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44775277577",
+  "run_id": "44898248412",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44898248412",
   "schema_version": 1,
   "source_revision": "032181110c3d6d3689404021d7473ccfd9050a80",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
