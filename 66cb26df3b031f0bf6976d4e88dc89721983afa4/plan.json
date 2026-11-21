@@ -1,0 +1,428 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.open",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer"
+      ],
+      "symbol_fact_id": "public_symbol:scene"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:node",
+        "public_symbol:node.addchildnode",
+        "public_symbol:node.addentity",
+        "public_symbol:node.childnodes",
+        "public_symbol:node.entities",
+        "public_symbol:node.globaltransform"
+      ],
+      "symbol_fact_id": "public_symbol:node"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh",
+        "public_symbol:mesh.addcontrolpoint",
+        "public_symbol:mesh.createpolygon",
+        "public_symbol:mesh.controlpoints",
+        "public_symbol:mesh.triangulate"
+      ],
+      "symbol_fact_id": "public_symbol:mesh"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationclip.createanimationnode",
+        "public_symbol:animationclip.animations"
+      ],
+      "symbol_fact_id": "public_symbol:animationclip"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:fileformat.canimport",
+        "public_symbol:fileformat.canexport",
+        "public_symbol:fileformat.getformatbyextension"
+      ],
+      "symbol_fact_id": "public_symbol:fileformat"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:quaternion",
+        "public_symbol:quaternion.slerp",
+        "public_symbol:quaternion.fromeulerangle",
+        "public_symbol:quaternion.tostring"
+      ],
+      "symbol_fact_id": "public_symbol:quaternion"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:boundingbox",
+        "public_symbol:boundingbox.minimum",
+        "public_symbol:boundingbox.maximum",
+        "public_symbol:boundingbox.contains"
+      ],
+      "symbol_fact_id": "public_symbol:boundingbox"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:property",
+        "public_symbol:property.name",
+        "public_symbol:property.value",
+        "public_symbol:property.valuetype"
+      ],
+      "symbol_fact_id": "public_symbol:property"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelementuv",
+        "public_symbol:vertexelementuv.uvdata",
+        "public_symbol:vertexelementuv.mappingmode"
+      ],
+      "symbol_fact_id": "public_symbol:vertexelementuv"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:material",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture"
+      ],
+      "symbol_fact_id": "public_symbol:material"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:camera.fieldofview",
+        "public_symbol:camera.projectiontype"
+      ],
+      "symbol_fact_id": "public_symbol:camera"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:light",
+        "public_symbol:light.lighttype",
+        "public_symbol:light.direction"
+      ],
+      "symbol_fact_id": "public_symbol:light"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "Scene graph construction",
+      "Mesh geometry creation",
+      "Material assignment",
+      "Camera and light entities",
+      "Animation support",
+      "Format I/O",
+      "Math utilities",
+      "Property system"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity",
+        "public_symbol:globaltransform",
+        "public_symbol:transform"
+      ],
+      "shared_fact_ids": [],
+      "title": "Scene graph construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh",
+        "public_symbol:geometry",
+        "public_symbol:vertexelementuv",
+        "public_symbol:vertexelementnormal",
+        "public_symbol:vertexelementvertexcolor"
+      ],
+      "shared_fact_ids": [],
+      "title": "Mesh geometry creation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial",
+        "public_symbol:phongmaterial",
+        "public_symbol:pbrmaterial",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture"
+      ],
+      "shared_fact_ids": [],
+      "title": "Material assignment"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:projectiontype",
+        "public_symbol:lighttype",
+        "public_symbol:camera.fieldofview"
+      ],
+      "shared_fact_ids": [],
+      "title": "Camera and light entities"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:animationchannel",
+        "public_symbol:keyframesequence",
+        "public_symbol:interpolation"
+      ],
+      "shared_fact_ids": [],
+      "title": "Animation support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer"
+      ],
+      "shared_fact_ids": [],
+      "title": "Format I/O"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector3",
+        "public_symbol:fmatrix4",
+        "public_symbol:quaternion",
+        "public_symbol:mathutils",
+        "public_symbol:boundingbox"
+      ],
+      "shared_fact_ids": [],
+      "title": "Math utilities"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:a3dobject.findproperty",
+        "public_symbol:a3dobject.getproperty",
+        "public_symbol:a3dobject.setproperty"
+      ],
+      "shared_fact_ids": [],
+      "title": "Property system"
+    }
+  ],
+  "deviations": [
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "at_a_glance",
+      "text": "No input or output format IDs are included because the formats field contains no verified input or output format facts."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "quick_start",
+      "text": "No verified examples exist; the examples field lists no selectable IDs."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "additional_examples",
+      "text": "No further verified examples exist; the examples field lists no selectable IDs."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera"
+      ],
+      "section_id": "api_reference",
+      "text": "The table for Camera in the inherited README incorrectly lists apertureMode as a property; this table is omitted entirely per the disposition."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:mesh",
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:customobject",
+        "dependency:development.adm-zip"
+      ],
+      "section_id": "api_reference",
+      "text": "The 3MF format section heading and table are preserved in api_reference per the disposition."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:mesh",
+        "public_symbol:fileformat",
+        "dependency:xmldom"
+      ],
+      "section_id": "api_reference",
+      "text": "The FBX and COLLADA format tables are preserved in api_reference per the disposition."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:a3dobject",
+        "public_symbol:customobject",
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:assetinfo",
+        "public_symbol:imagerenderoptions"
+      ],
+      "section_id": "api_reference",
+      "text": "The Properties System and Asset Info tables are preserved in api_reference per the disposition."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The HTML closing tag is omitted as non-content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera"
+      ],
+      "section_id": "api_reference",
+      "text": "The Camera table entry is omitted entirely per the disposition."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:mesh",
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:customobject",
+        "dependency:development.adm-zip"
+      ],
+      "section_id": "api_reference",
+      "text": "The 3MF heading and table are preserved in api_reference per the disposition."
+    }
+  ],
+  "flagship_example_id": null,
+  "links": [
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "documentation_resources"
+    }
+  ],
+  "material_limitations": [],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform"
+    ],
+    "text": "Developers building 3D applications in Node.js who need to construct, traverse, and convert scene graphs using TypeScript or JavaScript."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:entity",
+        "public_symbol:globaltransform",
+        "public_symbol:transform"
+      ],
+      "text": "Build hierarchical 3D scenes using Scene, Node, and Entity types with support for transforms, materials, and child node relationships.",
+      "title": "Scene graph construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh",
+        "public_symbol:geometry",
+        "public_symbol:vertexelementuv",
+        "public_symbol:vertexelementnormal",
+        "public_symbol:vertexelementvertexcolor"
+      ],
+      "text": "Create mesh geometry with control points, polygons, and vertex attribute channels including normals, UVs, and vertex colors.",
+      "title": "Mesh geometry creation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial",
+        "public_symbol:phongmaterial",
+        "public_symbol:pbrmaterial",
+        "public_symbol:material.gettexture",
+        "public_symbol:material.settexture"
+      ],
+      "text": "Assign shading materials including LambertMaterial, PhongMaterial, and PbrMaterial with texture mapping support.",
+      "title": "Material assignment"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:projectiontype",
+        "public_symbol:lighttype",
+        "public_symbol:camera.fieldofview"
+      ],
+      "text": "Add Camera and Light entities to scenes with configurable projection types, field of view, clip planes, and light types.",
+      "title": "Camera and light entities"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:animationchannel",
+        "public_symbol:keyframesequence",
+        "public_symbol:interpolation"
+      ],
+      "text": "Animate node properties using AnimationClip, AnimationNode, AnimationChannel, and KeyframeSequence with configurable interpolation and extrapolation.",
+      "title": "Animation support"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer"
+      ],
+      "text": "Read and write 3D interchange formats including glTF, OBJ, STL, FBX, COLLADA, and 3MF through dedicated importers and exporters.",
+      "title": "Format I/O"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fvector3",
+        "public_symbol:fmatrix4",
+        "public_symbol:quaternion",
+        "public_symbol:mathutils",
+        "public_symbol:boundingbox"
+      ],
+      "text": "Perform 3D math operations using vector, matrix, and quaternion types with utilities for intersection tests and normal calculations.",
+      "title": "Math utilities"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:property",
+        "public_symbol:propertycollection",
+        "public_symbol:a3dobject.findproperty",
+        "public_symbol:a3dobject.getproperty",
+        "public_symbol:a3dobject.setproperty"
+      ],
+      "text": "Manage metadata and custom properties on scene objects using the Property and PropertyCollection APIs.",
+      "title": "Property system"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:scene.render"
+      ],
+      "text": "Rendering is not implemented — Scene.render() throws an error."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh.union",
+        "public_symbol:mesh.difference",
+        "public_symbol:mesh.intersect",
+        "public_symbol:mesh.optimize",
+        "public_symbol:mesh.ismanifold"
+      ],
+      "text": "Boolean operations on meshes (union, difference, intersect), optimize(), and isManifold() throw 'not implemented' errors."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:vertexelement.setindices",
+        "public_symbol:vertexelement.clear"
+      ],
+      "text": "VertexElement.setIndices() and clear() throw 'not implemented' errors."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:node.selectsingleobject",
+        "public_symbol:node.selectobjects"
+      ],
+      "text": "Node.selectSingleObject() and selectObjects() throw 'not implemented' errors."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:filesystem.readfile",
+        "public_symbol:filesystem.writefile",
+        "public_symbol:filesystem.createzipfilesystem",
+        "public_symbol:filesystem.createlocalfilesystem",
+        "public_symbol:filesystem.createdummyfilesystem"
+      ],
+      "text": "FileSystem virtualization abstraction methods (readFile, writeFile, createZipFileSystem, etc.) all throw errors."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene.save"
+      ],
+      "text": "OBJ export only writes geometry attached at the top of the scene graph; child node geometry is silently omitted."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:mesh",
+        "public_symbol:material",
+        "public_symbol:camera",
+        "public_symbol:light"
+      ],
+      "text": "Enables programmatic construction of 3D scenes with hierarchical node trees, mesh geometry, materials, cameras, and lights using a consistent API."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fileformat",
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer"
+      ],
+      "text": "Supports reading and writing common 3D interchange formats including glTF, OBJ, STL, FBX, COLLADA, and 3MF through dedicated importers and exporters."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:animationchannel",
+        "public_symbol:keyframesequence",
+        "public_symbol:keyframe"
+      ],
+      "text": "Provides animation support via keyframe sequences, interpolation, and extrapolation for animating node transforms and properties."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:polygonmodifier.triangulate",
+        "public_symbol:boundingbox",
+        "public_symbol:fvector3",
+        "public_symbol:fmatrix4",
+        "public_symbol:mathutils"
+      ],
+      "text": "Offers utilities for mesh triangulation, bounding box calculations, and vector/matrix math operations for 3D geometry processing."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "license:spdx",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.3D FOSS for TypeScript is a free, open-source TypeScript/JavaScript library for building, converting, and manipulating 3D scenes in Node.js without native bindings."
+  },
+  "uncertainties": [
+    "OBJ import does not currently assign per-face materials from the source file regardless of load option value — confirmed by direct testing against a real fixture.",
+    "Binary GLB export currently fails for any non-empty mesh; JSON/ASCII form is unaffected. Binary GLB import works correctly.",
+    "Re-importing a scene this library exported to glTF can come back with extra, duplicate top-level nodes not present in the original.",
+    "A real npm packaging defect affects 3MF import/export — a normal package install does not pull in a dependency the 3MF code path needs at runtime.",
+    "The package.json entry point does not match the actual build output, causing import resolution failures in published installs.",
+    "Text watermarking is not currently functional — the identical defect independently confirmed on the sibling 3d/net platform."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:scene.fromfile",
+        "public_symbol:scene.open",
+        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.save",
+        "public_symbol:scene.savetobuffer"
+      ],
+      "name": "Load and save 3D scenes",
+      "text": "Load a scene from a file or buffer using Scene.open() or Scene.openFromBuffer(), then save it to another format using Scene.save() or Scene.saveToBuffer()."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mesh.addcontrolpoint",
+        "public_symbol:mesh.createpolygon",
+        "public_symbol:mesh.controlpoints",
+        "public_symbol:vertexelementuv",
+        "public_symbol:vertexelementnormal"
+      ],
+      "name": "Build mesh geometry",
+      "text": "Create a Mesh, add control points, and define polygons using Mesh.addControlPoint() and Mesh.createPolygon(), then attach vertex elements for normals, UVs, and colors."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:animationclip",
+        "public_symbol:animationnode",
+        "public_symbol:animationchannel",
+        "public_symbol:keyframesequence",
+        "public_symbol:keyframe"
+      ],
+      "name": "Construct animation clips",
+      "text": "Create an AnimationClip, add AnimationNode tracks, bind AnimationChannel instances to properties, and populate KeyframeSequence with KeyFrame samples."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lambertmaterial",
+        "public_symbol:phongmaterial",
+        "public_symbol:pbrmaterial",
+        "public_symbol:node.materials",
+        "public_symbol:material.settexture"
+      ],
+      "name": "Apply materials to meshes",
+      "text": "Instantiate material subclasses like LambertMaterial, PhongMaterial, or PbrMaterial, configure their properties, and assign them to Node.materials."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:polygonmodifier.triangulate",
+        "public_symbol:mesh.triangulate"
+      ],
+      "name": "Triangulate polygon meshes",
+      "text": "Use PolygonModifier.triangulate() on raw control points or call Mesh.triangulate() to convert existing mesh polygons to triangles."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:scene.rootnode",
+        "public_symbol:node.childnodes",
+        "public_symbol:node.entities",
+        "public_symbol:node.globaltransform"
+      ],
+      "name": "Traverse scene hierarchy",
+      "text": "Access the scene's root node and iterate through child nodes, entities, and their transforms using Scene.rootNode and Node.childNodes."
+    }
+  ]
+}
