@@ -263,6 +263,17 @@ def edition_substitute_failures(readme: str) -> list[Failure]:
     return failures
 
 
+def _published_aspose_links(benchmark: str | None) -> frozenset[str]:
+    """The Aspose web addresses the published README itself prints (trailing slash set aside)."""
+    if not benchmark:
+        return frozenset()
+    return frozenset(
+        target.href.rstrip("/")
+        for target in extract_links(benchmark)
+        if target.kind == "external" and _is_aspose((urlsplit(target.href).hostname or "").lower())
+    )
+
+
 def link_failures(candidate: Candidate) -> list[Failure]:
     """BC-06: local links resolve, external links are verified targets, Aspose links are within the
     ceilings the document's own size derives, edition names are canonical, and no unsafe raw HTML
@@ -279,6 +290,12 @@ def link_failures(candidate: Candidate) -> list[Failure]:
         if fact.id.startswith("link_target:product.") and fact.polarity == "SUPPORTED"
     }
     aspose_hrefs: list[str] = []
+    # BL-630: the ceiling bounds the Aspose links this README ADDS. A link the published README itself
+    # prints is the floor R2 holds the candidate to (BC-17 names it lost), so counting it against a
+    # ceiling derived from the candidate's size made the floor unsatisfiable: Slides .NET's maintainers'
+    # Documentation and support list links four aspose.com pages (hosted run 44924853748, "4 aspose.com
+    # links exceed the aspose.com ceiling of 2"), the same reasoning as ``effective_visible_lines_budget``.
+    published = _published_aspose_links(candidate.benchmark_readme)
     sections = section_lines(candidate.readme)
     for target in extract_links(candidate.readme):
         if target.kind == "anchor":
@@ -306,7 +323,11 @@ def link_failures(candidate: Candidate) -> list[Failure]:
                 )
         elif target.kind == "external":
             host = (urlsplit(target.href).hostname or "").lower()
-            if _is_aspose(host) and target.href not in mandated:
+            if (
+                _is_aspose(host)
+                and target.href not in mandated
+                and target.href.rstrip("/") not in published
+            ):
                 aspose_hrefs.append(target.href)
             fact = by_value.get(target.href)
             if fact is not None:

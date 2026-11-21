@@ -1293,6 +1293,56 @@ def _fit_resource_and_license_units(
         entry["rationale"] = (LICENSE_FIT_RATIONALE + reason)[:_RATIONALE_LIMIT].strip()
 
 
+#: BL-630: a resource-links list the model deferred, or filed in a section that cannot hold it, is kept in
+#: Documentation and Resources.
+LINK_LIST_KEPT_RATIONALE = (
+    "Kept in documentation_resources: a list of resource links whose every link is a verified link target; "
+    "{why}, so deferring it would only lose the links. "
+)
+_LINK_LIST_UNHOLDABLE = frozenset({"enterprise_relationship", "at_a_glance"})
+
+
+def _keep_resource_link_lists(
+    output: dict[str, Any], facts: FactsDocument, units: Mapping[str, Fact], absent: Collection[str]
+) -> None:
+    """In place (generation only: S4's ``normalize``, never a sealed document): a list whose every
+    item links a verified, plan-assignable link target (``planning.link_list_targets``) that the reply
+    defers, or files under a section no list can be printed in (the Enterprise Edition section, the
+    diagram, a section this repository does not have), is kept in Documentation and Resources, which prints
+    every one of its links as its own link line.
+
+    Nothing about such a list is unresolved: every link is verified. Deferring it, or leaving it where the
+    folds below turn it into a deferral, takes the links out of the README and BC-17 names them lost on
+    every settle round (Slides .NET ``083.list``, the three sibling-edition repositories, hosted run
+    44924853748): the repair kept answering 'enterprise_relationship' (offered as holdable) and the fold
+    for that section returned the unit to DEFER_UNRESOLVED, so the reply was refused as 'still
+    DEFER_UNRESOLVED' twice. The published README keeps the list as written (R42)."""
+    if "documentation_resources" not in holdable_sections(facts) or "documentation_resources" in absent:
+        return
+    for entry in output.get("dispositions", []):
+        unit_id = str(entry.get("unit_id", "?"))
+        unit = units.get(unit_id)
+        if unit is None or _unit_kind(unit_id) != "list":
+            continue
+        disposition, destination = entry.get("disposition"), entry.get("destination_section")
+        if disposition == "DEFER_UNRESOLVED":
+            why = "the reply deferred it"
+        elif disposition in PLACING and (destination in _LINK_LIST_UNHOLDABLE or destination in absent):
+            why = f"{destination} cannot print a list"
+        else:
+            continue
+        targets = link_list_targets(unit.value, facts)
+        if targets is None:
+            continue
+        cited = {str(i) for i in entry.get("fact_ids") or []}
+        entry["disposition"] = "VERIFIED_MOVE"
+        entry["destination_section"] = "documentation_resources"
+        entry["fact_ids"] = sorted(cited | set(targets))
+        entry["rationale"] = (
+            LINK_LIST_KEPT_RATIONALE.format(why=why) + str(entry.get("rationale") or "")
+        )[:_RATIONALE_LIMIT].strip()
+
+
 _ENTERPRISE_NAMED = re.compile(r"(?i)\benterprise\b|\bcommercial (?:product|edition|version|offering)s?\b")
 
 
@@ -1657,6 +1707,7 @@ def normalize(
     fold_deterministic_sections(output, facts)  # R43(2)
     _fold_register_corrections(output, facts)
     _fold_register_kept_units(output, facts)
+    _keep_resource_link_lists(output, facts, units_by_id, absent)
     for entry in output.get("dispositions", []):
         unit = str(entry.get("unit_id", "?"))
         destination = entry.get("destination_section")

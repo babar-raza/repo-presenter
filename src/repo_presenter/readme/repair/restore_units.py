@@ -43,6 +43,8 @@ __all__ = [
     "cite_owed_units",
     "vacated_sections",
     "fit_misfiled_units",
+    "pointer_gaps",
+    "colocate_pointed_blocks",
 ]
 
 _UNIT = re.compile(r"inherited_unit:\d+(?:\.\d+)*\.[a-z_]+")
@@ -537,6 +539,125 @@ def _follow_lead_ins(
             continue
         block["destination_section"] = target
         changed[payload]["now"] = f"{block.get('disposition')} -> {target}"
+
+
+_POINTER_GAP = re.compile(
+    r"(?P<unit>inherited_unit:\d+(?:\.\d+)*\.paragraph) is kept as written but says '[^']*' "
+    r"but no (?P<kind>table|list) follows it in this section"
+)
+
+
+def pointer_gaps(details: Sequence[str]) -> list[tuple[str, str]]:
+    """``(paragraph unit id, 'table' | 'list')`` for each kept maintainers' paragraph BC-07 says points
+    at a table or list below it that does not follow it in its section (BL-630: 'The table below was
+    measured ...' kept in one section while its table was kept, or restored, in another)."""
+    found: list[tuple[str, str]] = []
+    for detail in details:
+        check, _, rest = detail.partition(": ")
+        match = _POINTER_GAP.search(rest) if check == "BC-07" else None
+        if match is not None and (match["unit"], match["kind"]) not in found:
+            found.append((match["unit"], match["kind"]))
+    return found
+
+
+def _pointed_block(unit_id: str, kind: str, units: Sequence[Any]) -> str | None:
+    """The first ``kind`` block after ``unit_id`` in its own source section (before the next
+    heading): what the paragraph's 'the table below' means."""
+    ids = [fact.id for fact in units]
+    if unit_id not in ids:
+        return None
+    for fact in units[ids.index(unit_id) + 1 :]:
+        found = fact.id.rsplit(".", 1)[-1]
+        if found == "heading":
+            return None
+        if found == kind:
+            return fact.id
+    return None
+
+
+def colocate_pointed_blocks(
+    dispositions: Mapping[str, Any],
+    facts: FactsDocument,
+    details: Sequence[str],
+    holdable: Collection[str],
+    included: Collection[str] | None = None,
+    *,
+    skipped: list[dict[str, str]] | None = None,
+    exclude: Collection[str] = (),
+) -> tuple[dict[str, Any], list[dict[str, str]]]:
+    """``(new dispositions, changes)``: a kept paragraph that points at the table (or list) below it
+    follows that block, or the block follows it, so the two print in one section (BL-630).
+
+    BC-07 refuses a kept paragraph whose 'table below' has no table after it in the section. Restore
+    keeps what BC-05/BC-17 name, one unit at a time, so it could keep the table in one section
+    (the nearest that prints a table) while the paragraph stayed in another, or keep the paragraph
+    with the table left out: Slides .NET ``080.paragraph`` / ``081.table``, hosted run 44924853748,
+    restored three units and still ended on BC-07 on both settle rounds. The section that prints both
+    kinds is the block's own when it prints a paragraph, else the paragraph's own; a block not kept
+    yet is restored there (``restore_lost_units``: kept as written, attributed when no fact confirms
+    it). Nothing is dropped, no text is edited, and only a paragraph and a block the maintainers
+    wrote next to each other are joined; with no such section the pair is left to the checks and
+    the reason is recorded in ``skipped``. A unit in ``exclude`` (one a restore already refused or
+    rolled back) is never touched again, so a round cannot repeat a move the checks rejected."""
+    output = copy.deepcopy(dict(dispositions))
+    gaps = pointer_gaps(details)
+    if not gaps:
+        return output, []
+    inherited = list(facts.by_kind("inherited_unit"))
+    holdable_set = set(holdable) if included is None else set(holdable) & set(included)
+    changes: list[dict[str, str]] = []
+
+    def entry_of(unit_id: str) -> dict[str, Any] | None:
+        return next(
+            (e for e in output.get("dispositions", []) if e.get("unit_id") == unit_id), None
+        )
+
+    def prints_both(section: Any, kind: str) -> bool:
+        return (
+            section in holdable_set
+            and prints_unit(str(section), "paragraph")
+            and prints_unit(str(section), kind)
+        )
+
+    for paragraph_id, kind in gaps:
+        block_id = _pointed_block(paragraph_id, kind, inherited)
+        if paragraph_id in exclude or (block_id and block_id in exclude):
+            continue
+        paragraph, block = entry_of(paragraph_id), entry_of(block_id) if block_id else None
+        if paragraph is None or block is None or paragraph.get("disposition") not in PLACED:
+            continue
+        block_placed = block.get("disposition") in PLACED
+        homes = [block.get("destination_section")] if block_placed else []
+        homes.append(paragraph.get("destination_section"))
+        target = next((home for home in homes if prints_both(home, kind)), None)
+        if target is None:
+            if skipped is not None:
+                skipped.append({"unit_id": paragraph_id, "reason": "pointer_block_has_no_shared_section"})
+            continue
+        if not block_placed:
+            output, restored = restore_lost_units(
+                output, facts, [block_id], [target], [target], skipped=skipped
+            )
+            if not restored:
+                continue
+            changes.extend(restored)
+            block = entry_of(block_id)
+            block_placed = block is not None and block.get("disposition") in PLACED
+            if not block_placed:
+                continue
+        for entry in (entry_of(paragraph_id), entry_of(block_id)):
+            if entry is None or entry.get("destination_section") == target:
+                continue
+            was = f"{entry.get('disposition')} -> {entry.get('destination_section')}"
+            entry["destination_section"] = target
+            changes.append(
+                {
+                    "unit_id": str(entry.get("unit_id")),
+                    "was": was,
+                    "now": f"{entry.get('disposition')} -> {target}",
+                }
+            )
+    return output, changes
 
 
 def vacated_sections(changes: Sequence[Mapping[str, str]]) -> dict[str, set[str]]:

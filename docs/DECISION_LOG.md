@@ -8281,3 +8281,24 @@ reply citing unshown lines). R9: no README text touched; R10: no seal or sealed 
 accounting instead of halting the candidate) and universal. Hosted-unproven (R41).
 
 Backlog: BL-620, BL-621, BL-622, BL-623, BL-624
+
+## 2026-11-21: Slides .NET (three restore interactions) and 3D TypeScript (review citation) Lane R blockers: four classes fixed at the root (BL-630, BL-631, BL-632, BL-633)
+
+Context. R44 needs 34 of 40 Lane R cells sealed and accepted; 30 are sealed. BL-624 left Slides .NET and 3D TypeScript open with measured causes. Slides .NET has no stored bundle (never sealed), so
+the cell was reproduced zero-call from the pinned source (86c441b5, shallow read-only fetch; the real facts re-extracted with 5751 facts and the 95 inherited units) and, for the restore path, on the sealed Slides
+Java bundle re-shaped to the .NET section (the same real recertify restore code the cascade shares), with the logged hosted dispositions where the log shows them. Classes (each a pipeline class, positive tests are the real
+failing shapes, every class has negative controls):
+- BL-630 (BC-06, R2/R42): the Aspose-link ceiling bounds the links a README adds, not those the published README itself prints. The pinned README's Documentation and support list links four aspose.com pages
+  (BC-17 names them lost, BC-06 refused them at a ceiling of 2). aspose.org's candidate keeps the list as written; the same floor-must-be-satisfiable reasoning as the BC-07 line budget (2026-11-10).
+- BL-631 (BC-07): a kept paragraph pointing at 'the table below' is joined to its table (the lead-in/payload pattern applied to a pointer): the pair meets in the table's section when it prints a paragraph, else the
+  paragraph's; a missing block is restored there. Reproduced exactly on the Java bundle (paragraph in one section, table in another) before; none after. Nothing dropped, no text edited.
+- BL-632 (BC-17, R14, R42): a list of verified resource links is never deferred. The hosted repair answered 'enterprise_relationship' (offered as holdable) and S4's fold for that section returned DEFER_UNRESOLVED,
+  so both asks were refused as 'still DEFER_UNRESOLVED' (reproduced zero-call with patch_checks). normalize keeps such a list in documentation_resources. Generation-only, so no sealed disposition changes.
+  Residual recorded in the item: the cascade's own restore did not keep this list in the hosted run and that interaction could not be reproduced without the hosted artifacts (unreachable); the recertify restore keeps it.
+- BL-633 (3D TypeScript, review citation): the reviewer printed 'Line 0209:' in its text but cited lines [9] (and 26, 28, 29, 33 for 0226 .. 0233), so the one re-ask failed identically and the review was lost. The label
+  the model printed names the line; the existing BL-561 repair uses it when that line is shown and prints the finding's own words. The degrade was not at fault (33 withheld rows follow from the reviewer faulting each
+  authored row, BL-240 by design); the second sample's lines are those of the degraded candidate. No request byte changes; an invented citation is still refused; a no-review case is still never clean.
+Not fixed here: PDF TS (section_authoring truncated, BL-624) and GIS .NET (owner decision). R9: no README text touched; R10: lean recertify 64 of 64 RECERTIFIED, gate OK, 0 provider calls; properties improved (R46): robust (a defect degrades to a recorded
+accounting or a deterministic repair instead of halting the candidate), universal and repeatable (the same frozen inputs give the same result). Hosted-unproven (R41).
+
+Backlog: BL-630, BL-631, BL-632, BL-633
