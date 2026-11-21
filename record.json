@@ -78,206 +78,191 @@
    "run_id": "44775343067",
    "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T11:29:12+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference",
+    "llm:factuality|inherited_unit|api_reference"
+   ],
+   "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
+   "findings": 6,
+   "outcome": "failure",
+   "run_id": "44898282006",
+   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T17:10:01+00:00",
+  "at": "2026-11-21T11:29:12+00:00",
   "classes": {
-   "BC-17|inherited_unit|technical_content": {
-    "example": "inherited_unit:010.list holds api_identifiers 'getBitsPerChannel()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "findings": 9,
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "The `PsdImage` class serves as the library's entry point and returns editable per-layer metadata through its getLayers method. The `Layer` class carries the per-layer metadata, while `ResourceBlock` and `PsdLoadException` cover image resources and load errors.",
+    "findings": 1,
+    "origin_kind": "authored_unit",
+    "origins": [
+     "api_reference.intro"
+    ],
+    "rule": "llm:factuality",
+    "scope": "4eb9b5c5f7a5d46decafcabcb583ecfd41d00af34fe60f1cbeb052f0b2010fe8",
+    "scope_paths": [
+     "prompts",
+     "prompts/section_authoring.yaml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   "llm:factuality|inherited_unit|api_reference": {
+    "example": "| `PsdImageLoader` | Class that declares the method load. |",
+    "findings": 5,
     "origin_kind": "inherited_unit",
     "origins": [
-     "inherited_unit:010.list"
+     "inherited_unit:040.table",
+     "inherited_unit:042.table",
+     "inherited_unit:044.table",
+     "inherited_unit:046.table",
+     "inherited_unit:038.table"
     ],
-    "rule": "BC-17",
-    "scope": "823b12355e798b8483b7482a00374e0971659e2d7e638227c120558a42f37696",
+    "rule": "llm:factuality",
+    "scope": "7396699098575fdd9be08796e02058e17c5a70e5b3a898701f66009bea8af093",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
      "src/repo_presenter/cascade.py",
      "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
      "src/repo_presenter/readme/reconciliation",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "technical_content",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
-  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
+  "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-17; nothing sealed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 7; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised c",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getBitsPerChannel()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F01",
+    "message": "The `PsdImage` class serves as the library's entry point and returns editable per-layer metadata through its getLayers method. The `Layer` class carries the per-layer metadata, while `ResourceBlock` and `PsdLoadException` cover image resources and load errors.",
     "origin": {
-     "id": "inherited_unit:010.list",
-     "kind": "inherited_unit"
+     "id": "api_reference.intro",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "The `PsdImage` class serves as the library's entry point and returns editable per-layer metadata through its getLayers method. The `Layer` class carries the per-layer metadata, while `ResourceBlock` and `PsdLoadException` cover image resources and load errors.",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getCompression()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F02",
+    "message": "| `PsdImageLoader` | Class that declares the method load. |",
     "origin": {
-     "id": "inherited_unit:010.list",
+     "id": "inherited_unit:040.table",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "| `PsdImageLoader` | Class that declares the method load. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getChannelsCount()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F03",
+    "message": "| `IndexedColorPalette` | Class that declares the methods getEntries, parse and toPublicInfo and the property entries and the field EXPECTED_RAW_LENGTH. |",
     "origin": {
-     "id": "inherited_unit:010.list",
+     "id": "inherited_unit:042.table",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "| `IndexedColorPalette` | Class that declares the methods getEntries, parse and toPublicInfo and the property entries and the field EXPECTED_RAW_LENGTH. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getClipping()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F04",
+    "message": "| `ImageResourcesSection` | Class that declares the methods getRawData, getResources, hasResources, load and save and the properties rawData and resources and the field EMPTY. |",
     "origin": {
-     "id": "inherited_unit:010.list",
+     "id": "inherited_unit:044.table",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "| `ImageResourcesSection` | Class that declares the methods getRawData, getResources, hasResources, load and save and the properties rawData and resources and the field EMPTY. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getBlendModeKey()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F05",
+    "message": "| `PsdImageWriter` | Class that declares the method save. |",
     "origin": {
-     "id": "inherited_unit:010.list",
+     "id": "inherited_unit:046.table",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "| `PsdImageWriter` | Class that declares the method save. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getLeft()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "label": "F06",
+    "message": "| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |",
     "origin": {
-     "id": "inherited_unit:010.list",
+     "id": "inherited_unit:038.table",
      "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getTop()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:010.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getRight()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:010.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
-    "upstream": ""
-   },
-   {
-    "label": "BC-17",
-    "message": "inherited_unit:010.list holds api_identifiers 'getBottom()', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
-    "origin": {
-     "id": "inherited_unit:010.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "",
-    "rule": "BC-17",
-    "section_id": "",
-    "signature": "BC-17|inherited_unit|technical_content",
-    "source": "validation",
-    "sub_rule": "technical_content",
+    "quote": "| `ChannelInformation` | Describes one layer channel: its channel id and data length; the compression value it reports for a loaded channel is always `Raw`. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|inherited_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
+  "main_sha": "51f1d767694da5f8d2c9e2908ae701281ab0b137",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
-   },
-   {
-    "facts_defects": [],
-    "label": "BC-17",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": null,
-    "stage": "S4"
+    "label": "F01",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
    }
   ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Java",
-  "run_id": "44775343067",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44775343067",
+  "run_id": "44898282006",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44898282006",
   "schema_version": 1,
   "source_revision": "d808d1db34d4f051072e592ede9fe30e52f2af96",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
