@@ -990,9 +990,35 @@ def _disclaimed(sentence: str, start: int) -> bool:
     return _NEGATION_CUE.search(sentence[:start]) is not None
 
 
+# BL-651: an enum the product declares for what it loads ("LoadFormat", "InputFormat", ...).
+_LOAD_FORMAT_ENUM = re.compile(r"(?i)(?:^|\.)(?:load|input|import|read)\w*format$")
+# A sentence about writing, where a load enum says nothing.
+_SAVE_WORDING = re.compile(
+    r"(?i)\b(?:sav(?:e|es|ed|ing)|writ(?:e|es|ing|ten)|export(?:s|ed|ing)?|output)\b"
+)
+
+
+def _declared_load_extensions(facts: FactsDocument) -> frozenset[str]:
+    """The extensions a SUPPORTED member of a load-format enum names (Words Python
+    ``LoadFormat.DOC`` / ``DOCX`` / ``RTF`` -> ``doc``, ``docx``, ``rtf``).
+
+    ``format`` facts come from verified examples and plugin declarations only, so a product whose
+    loaders are enum-selected (``Document(path)`` picks ``LoadFormat.DOCX``) states most of what it
+    reads nowhere else; its own public declaration of the load formats is the statement (BL-651,
+    hosted Lane R Words Python, run 44947429600: aspose.org's published README says "loads a
+    ``.doc``, ``.docx``, ``.rtf``, ``.txt`` or ``.md`` file" and the facts said ``.md``/``.txt`` only)."""
+    return frozenset(
+        fact.value.rsplit(".", 1)[-1].lower()
+        for fact in facts.by_kind("enum_member")
+        if fact.polarity == "SUPPORTED"
+        and _LOAD_FORMAT_ENUM.search(str((fact.attributes or {}).get("enum") or ""))
+    )
+
+
 def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFinding]:
     """Rule (g): in a sentence listing file extensions, each claimed one is a SUPPORTED format.
-    An extension the sentence disclaims (see ``_NEGATION_CUE``) is not a claim at all."""
+    An extension the sentence disclaims (see ``_NEGATION_CUE``) is not a claim at all, and one a
+    load-format enum declares is stated for a sentence that is not about writing (BL-651)."""
     supported = {
         _extension(fact.value)
         for fact in facts.by_kind("format")
@@ -1000,6 +1026,7 @@ def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFind
     }
     if not supported:
         return []
+    loads = _declared_load_extensions(facts)
     findings: list[ClaimFinding] = []
     for line in lines:
         if line.in_fence:
@@ -1012,7 +1039,12 @@ def _format_findings(lines: list[_Line], facts: FactsDocument) -> list[ClaimFind
             ]
             if len(listed) < 2 or not any(_extension(item) in supported for item in listed):
                 continue
-            unsupported = [item for item in listed if _extension(item) not in supported]
+            reading = loads and _SAVE_WORDING.search(sentence) is None
+            unsupported = [
+                item
+                for item in listed
+                if _extension(item) not in supported and not (reading and _extension(item) in loads)
+            ]
             if unsupported:
                 findings.append(
                     ClaimFinding(

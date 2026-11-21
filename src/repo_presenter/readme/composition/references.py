@@ -72,8 +72,13 @@ _DIRECT = re.compile(
 # "the following table", "the following examples", "as follows".
 _FOLLOWING = re.compile(rf"\b(?:the\s+)?following\s+(?P<kind>{_KIND})\b", re.IGNORECASE)
 # "see below", "described below", "listed below" with no noun in front.
+# "is below" / "are below" / "as below" point only when the clause ends on "below": "the DPI is below
+# ``min_dpi``" and "images below a finite threshold" compare a value (BL-652: PDF Python's own
+# docstrings, printed by the API Reference, were read as pointers to content that does not follow).
 _BARE_BELOW = re.compile(
-    r"\b(?:see|are|is|as|listed|described|shown|given|follows?)\s+below\b", re.I
+    r"\b(?:see|listed|described|shown|given|follows?)\s+below\b"
+    r"|\b(?:are|is|as)\s+below(?=\s*(?:[,;:)\]]|$))",
+    re.I,
 )
 _BARE_ABOVE = re.compile(r"\b(?:see|listed|described|shown|given|as|mentioned)\s+above\b", re.I)
 # "the Scope and Limitations section", "see the 'What it cannot do' section".

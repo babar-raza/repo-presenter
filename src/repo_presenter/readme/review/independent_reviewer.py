@@ -367,6 +367,30 @@ def _table_rows_printed(unit_text: str, readme_text: str) -> bool:
     return is_type_table(unit_text) and rows_not_rendered(unit_text, readme_text) == ""
 
 
+def _code_printed_with_prelude(unit_text: str, readme_text: str) -> bool:
+    """Whether a kept code block's code is printed whole inside a fenced block of the README that
+    starts with the imports or usings the example's verifier supplied (BL-652).
+
+    A verified example prints as the program its receipt ran, ``printed_example``: the verifier's
+    prelude, then the maintainers' code. A maintainers' fragment that leans on an import printed
+    elsewhere in their README ("with Document(...) as document: ..." under a heading, no import) is
+    therefore printed inside that program, never as the fenced text it was written as. Measured:
+    hosted Lane R PDF Python (run 44943413732), five kept examples 'not printed' that the README
+    printed. Every line of the code must appear, in order and unbroken, in one README fence; the
+    fence's first line (its language) and any lines before the code are the prelude."""
+    from repo_presenter.readme.validation.text import fence_body
+
+    _, body = fence_body(unit_text)
+    code = _squeezed(body)
+    if len(code) < 20:  # a one-liner is too weak a match to account for a block with
+        return False
+    for fenced in re.findall(r"```[^\n]*\n(.*?)\n[ \t]*```", readme_text, flags=re.DOTALL):
+        printed = _squeezed(fenced)
+        if code in printed and printed != code:
+            return True
+    return False
+
+
 def _kept_text_printed(
     unit_text: str,
     unit_id: str,
@@ -389,6 +413,8 @@ def _kept_text_printed(
         # compares whole headings) reports it lost: the two rules must agree.
         return heading_printed(unit_text, readme_text)
     if _squeezed(unit_text) in _squeezed(readme_text):
+        return True
+    if unit_id.endswith(".code_block") and _code_printed_with_prelude(unit_text, readme_text):
         return True
     if unit_id.endswith(".paragraph"):
         # Placement's one formatting edit of a kept paragraph (BL-089): a closing colon that
