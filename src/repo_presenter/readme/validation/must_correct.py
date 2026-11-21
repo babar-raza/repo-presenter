@@ -974,6 +974,25 @@ def duplicate_flags(findings: Iterable[Any]) -> list[ClaimFlag]:
     return list(dict.fromkeys(flags))
 
 
+def duplicate_opening_flags(findings: Iterable[Any]) -> list[ClaimFlag]:
+    """The authored opening each blocking ``duplicate_opening_paragraph`` finding says only restates the
+    inherited paragraph printed beside it. The remedy is the one BL-220 applies inside authoring
+    (``authoring_retry.recover_restated_opening``) and BL-350 applies to a flagged opening: the unit becomes
+    the format-facts sentence (``_opening_fact_true``); the inherited paragraph is kept as it was (R14).
+    It is a separate class from ``duplicate_paragraph`` because that one withholds the authored copy
+    outright, and an opening is never dropped. Reached after authoring when a zero-call restore returned the
+    inherited paragraph to its own section AFTER the opening was authored (hosted OCR .NET 44775277577: the
+    restore kept the paragraph the opening had only paraphrased, so the final review rejected the pair)."""
+    flags = []
+    for finding in findings:
+        quote = str(getattr(finding, "quote", "") or "").strip()
+        if getattr(finding, "rule", "") == "duplicate_opening_paragraph" and len(_plain(quote)) >= _MIN_MATCH:
+            flags.append(
+                ClaimFlag(quote, str(getattr(finding, "message", "") or ""), "duplicate_opening_paragraph")
+            )
+    return list(dict.fromkeys(flags))
+
+
 def _inherited_holding(flag: ClaimFlag, dispositions: Mapping[str, Any], facts: Any) -> str | None:
     """The one inherited unit kept as written whose text prints the flag's quote, if exactly one."""
     from repo_presenter.readme.composition.placement import PLACED
@@ -1124,7 +1143,7 @@ def degrade_claims(
     for index, flag in enumerate(flags):
         if index in status:
             continue
-        if flag.check == "duplicate_paragraph":
+        if flag.check in ("duplicate_paragraph", "duplicate_opening_paragraph"):
             # No authored copy to withhold: the inherited copy is live content (R14), never dropped.
             continue
         unit_id = flag.unit or _inherited_holding(flag, new_disp, facts)

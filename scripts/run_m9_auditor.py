@@ -218,6 +218,7 @@ from repo_presenter.readme.review.derivation import (  # noqa: E402,F401
     count_provenance,
     derivation,
     enterprise_provenance,
+    flag_is_about_count,
     facts_in_line,
     keep_reason,
     not_thrown_provenance,
@@ -244,7 +245,11 @@ def apply_derivation(case_id: str, text: str, rows: Sequence[Mapping[str, Any]],
         if row.get("source") != "llm" or row.get("verdict") == "supported" or not row.get("located"):
             continue
         line = row.get("line")
-        if line in derived.clearable:
+        # BL-543: a flag on a count-corrected maintainers' paragraph is cleared only when it is about the count
+        if line in derived.clearable and (
+            line not in derived.corrected
+            or flag_is_about_count(str(row.get("claim") or ""), text.splitlines()[line - 1])
+        ):
             row["verdict"] = "supported"
             row["cleared_by"] = "derivation"
             proof = derived.provenance.get(line)

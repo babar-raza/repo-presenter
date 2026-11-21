@@ -1310,6 +1310,29 @@ def _misnamed_kinds(
     return target, member, {k for k in kinds if k}
 
 
+#: A JavaBeans accessor: the name a Java README calls a "property" when it lists ``getWidth()``,
+#: ``isVisible()`` or ``setOpacity(byte)`` under "properties" (BL-541).
+_BEAN_ACCESSOR = re.compile(r"^(?:get|is|set)[A-Z]\w*$")
+
+
+def _bean_property(claimed: str, ecosystem: str, member: str, kinds: set[str | None]) -> bool:
+    """Whether "property" names a Java method truthfully: in Java a getter/setter pair IS a bean property
+    (``getWidth()`` is the property ``width``), so a README that lists ``getWidth()`` among "the header
+    properties" calls the member what Java calls it, not a method a field. Decided on the member's NAME
+    (``get``/``is``/``set`` plus a capital) and only where the facts record a Java method; a method of any
+    other shape, any other ecosystem (C# properties are a language construct a method is not) and every
+    other kind word keep the finding. Hosted PSD Java Lane R (run 44775343067): the maintainers' bullet
+    "reads the header properties `getWidth()`, `getHeight()`, `getBitsPerChannel()` ..." printed by the
+    zero-call restore raised BC-14 three times, so the restore was rolled back and the BC-17 losses it
+    answered stayed, for three settle rounds."""
+    return (
+        claimed == "property"
+        and ecosystem == "java"
+        and kinds == {"method"}
+        and bool(_BEAN_ACCESSOR.match(member))
+    )
+
+
 #: The kind words a list's kind word is rewritten to when the facts refute it: "members" names
 #: every member kind truthfully.
 _NEUTRAL_KIND_WORD = {True: "members", False: "member"}
@@ -1419,7 +1442,7 @@ def _list_findings(
                     settables.append(None)
                     continue
                 allowed = _CLAIMED_MEMBER_KINDS[claimed]
-                if not kinds & allowed:
+                if not kinds & allowed and not _bean_property(claimed, ecosystem, member, kinds):
                     shown = "/".join(sorted("property, field or constant" if k == "nonmethod"
                                             else k for k in kinds))
                     findings.append(

@@ -147,3 +147,5 @@ def one_review_sample(monkeypatch: pytest.MonkeyPatch) -> None:
     tests of BL-430 (``tests/test_cascade_second_review.py``) turn it on explicitly with
     ``second_review=True`` and assert the production default separately."""
     monkeypatch.setattr("repo_presenter.cascade.SECOND_REVIEW", False)
+    # BL-530: the second audit-packet draw is likewise off by default; tests/test_cascade_second_draw.py turns it on.
+    monkeypatch.setattr("repo_presenter.cascade.SECOND_DRAW", False)
