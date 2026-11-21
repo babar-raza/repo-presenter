@@ -143,8 +143,10 @@ from repo_presenter.readme.repair.restore_units import (
     failing_unit_ids,
     fit_misfiled_units,
     pointer_gaps,
+    reference_sentences,
     restore_lost_units,
     vacated_sections,
+    withhold_reference_sentences,
 )
 from repo_presenter.readme.repair.targeted import (
     MAX_SETTLE_ROUNDS,
@@ -1254,6 +1256,23 @@ def _restore_lost_content(
                     investigation=investigation, tree_paths=tree_paths, original=original,
                     out_dir=out_dir,
                 )
+            if offenders:
+                # BL-640 (R14): a restored paragraph or list whose only new failure is BC-07's reference
+                # sentence ("the examples above" where no code precedes it in the section) is kept WITHOUT that
+                # sentence, recorded on its disposition, instead of being rolled back whole with everything
+                # else it states (hosted TeX Python 072.list: the Pre-Alpha status, the supported format and
+                # the unsupported commands all stayed lost, and with them the status badge's value).
+                pointing = reference_sentences(failing, {change["unit_id"] for change in restored})
+                trimmed = (
+                    withhold_reference_sentences(restored_dispositions, document, pointing) if pointing else {}
+                )
+                if trimmed:
+                    for change in restored:
+                        if change["unit_id"] in trimmed:
+                            change["withheld"] = " | ".join(trimmed[change["unit_id"]])[:300]
+                    offenders = {unit: check for unit, check in offenders.items() if unit not in trimmed}
+                    if not offenders:
+                        continue
             if not offenders:
                 break
             restored_dispositions = _rolled_back(

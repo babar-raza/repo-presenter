@@ -230,3 +230,53 @@ def test_negative_control_without_the_attribution_the_whole_restore_is_discarded
     settled, result = _drive(monkeypatch, tmp_path, _validate_new_loss)
     assert result.composed is settled.composed  # the guard discarded _GOOD's clean restore too
     assert not (tmp_path / "restored_units.json").exists()
+
+
+# --- BL-640: a restored unit whose only new failure is BC-07's reference sentence is trimmed, not rolled back ---
+
+_POINTING = "The examples above pass `load_format=False` to run a document from primitives alone."
+
+
+def _pointing_validate(candidate: Any, *a: Any, **k: Any) -> dict[str, Any]:
+    checks = _validate(candidate)["checks"]
+    row = next(r for r in candidate.dispositions["dispositions"] if r["unit_id"] == _BAD)
+    if row["disposition"] == "VERIFIED_PRESERVE" and "degrade_withheld" not in row:
+        detail = f"{_BAD} is kept as written but says 'examples above' but no code precedes it in this section: {_POINTING!r}"
+        checks = [c for c in checks if c["id"] != "BC-14"]
+        checks.append({"id": "BC-07", "details": [detail], "failures": [{"detail": detail, "unit_id": _BAD}]})
+    else:
+        checks = [c for c in checks if c["id"] != "BC-14"]
+    return {"checks": checks}
+
+
+def test_a_restored_unit_whose_only_new_failure_is_a_reference_sentence_is_trimmed_not_rolled_back(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    def withhold(dispositions: dict[str, Any], document: Any, wanted: dict[str, list[str]]) -> dict[str, list[str]]:
+        done = {}
+        for row in dispositions["dispositions"]:
+            if row["unit_id"] in wanted and row["unit_id"] == _BAD:
+                row["degrade_withheld"] = list(wanted[row["unit_id"]])
+                done[row["unit_id"]] = list(wanted[row["unit_id"]])
+        return done
+
+    monkeypatch.setattr(cascade_module, "withhold_reference_sentences", withhold)
+    monkeypatch.setattr(cascade_module, "reference_sentences", lambda failing, restored: {_BAD: [_POINTING]})  # parsing: test_reference_sentence_trim_bl640
+    settled, result = _drive(monkeypatch, tmp_path, _pointing_validate)
+    rows = {row["unit_id"]: row for row in result.composed.dispositions["dispositions"]}
+    assert rows[_BAD]["disposition"] == "VERIFIED_PRESERVE" and rows[_BAD]["degrade_withheld"] == [_POINTING]
+    assert result.validation["checks"] == []  # nothing left failing: the unit stayed restored, minus the sentence
+    assert _REFUSED == set()
+    record = json.loads((tmp_path / "restored_units.json").read_text(encoding="utf-8"))
+    assert {c["unit_id"] for c in record["restored"]} == {_GOOD, _BAD}
+    assert next(c for c in record["restored"] if c["unit_id"] == _BAD)["withheld"] == _POINTING
+
+
+def test_negative_control_a_reference_sentence_that_cannot_be_withheld_still_rolls_the_unit_back(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(cascade_module, "withhold_reference_sentences", lambda d, doc, wanted: {})
+    monkeypatch.setattr(cascade_module, "reference_sentences", lambda failing, restored: {_BAD: [_POINTING]})
+    _, result = _drive(monkeypatch, tmp_path, _pointing_validate)
+    rows = {row["unit_id"]: row["disposition"] for row in result.composed.dispositions["dispositions"]}
+    assert rows[_BAD] == "SUPERSEDE_REDUNDANT" and _REFUSED == {_BAD}

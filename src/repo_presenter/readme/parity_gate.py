@@ -159,7 +159,13 @@ _INSTALL = re.compile(
 _IDENT = re.compile(
     r"^[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::)[A-Za-z_][A-Za-z0-9_]*)*(?:\(\))?$"
 )
-_VERSION = re.compile(r"(?<![\w.])v?(\d+\.\d+(?:\.\d+){0,2})(?![\w.]*\d)")
+# BL-640 (R36(b)(4): the check's data): a decimal that quantifies something is a measurement, not a version -- "a new
+# 2.8 MB blob per commit" (PDF TypeScript 589.paragraph) was read as the version '2.8' and BC-17 named it lost on every
+# settle round. Only a number directly followed by a size, duration, rate or percentage unit is set aside.
+_MEASURE_UNIT = r"(?:[KMGTP]i?B|bytes?|ms|µs|ns|secs?|seconds?|minutes?|hours?|px|dpi|fps)\b|%"
+_VERSION = re.compile(
+    r"(?<![\w.])v?(\d+\.\d+(?:\.\d+){0,2})(?![\w.]*\d)(?!s\b)(?!\s?(?:" + _MEASURE_UNIT + r"))"
+)
 _MD_DEST = re.compile(r"\]\([^)]*\)")
 _BARE_URL = re.compile(r"https?://\S+")
 _GH_BLOB = re.compile(
@@ -385,6 +391,26 @@ def _badge_words(segment: str) -> str:
     return " ".join(text.casefold().split())
 
 
+def status_badge_value(image: str) -> str | None:
+    """The words a maintainers' static ``img.shields.io/badge/<label>-<value>-<colour>`` status badge shows as its
+    value, or ``None`` when ``image`` is no such badge (a verified slot, a dynamic badge, another host, a value
+    shorter than three characters or without a letter)."""
+    if badge_slot_of_url(image) is not None:
+        return None
+    match = _STATIC_BADGE.match(image.strip())
+    if match is None:
+        return None
+    value = _badge_words(match.group("value"))
+    if len(value) < 3 or not re.search(r"[a-z]", value):
+        return None
+    return value
+
+
+def states_badge_value(value: str, text: str) -> bool:
+    """Whether ``text`` states the badge value ``value`` in words (whole words; a space matches a hyphen)."""
+    return re.search(r"(?<![\w-])" + re.escape(value).replace(r"\ ", r"[\s-]") + r"(?![\w-])", text.casefold()) is not None
+
+
 def status_badge_stated(image: str, candidate_text: str) -> str | None:
     """Why a maintainers' static ``img.shields.io/badge/<label>-<value>-<colour>`` badge that fills no
     verified slot (``badge_slot_of_url`` is ``None``: a project-status or similar self-declared badge)
@@ -396,15 +422,8 @@ def status_badge_stated(image: str, candidate_text: str) -> str | None:
     when the candidate states the same value in words (TeX Python: the badge "status: pre-alpha" and
     the maintainers' own kept sentence "This is a Pre-Alpha release") the content is carried, only
     the picture is not. A badge whose value the candidate never states stays a loss."""
-    if badge_slot_of_url(image) is not None:
-        return None
-    match = _STATIC_BADGE.match(image.strip())
-    if match is None:
-        return None
-    value = _badge_words(match.group("value"))
-    if len(value) < 3 or not re.search(r"[a-z]", value):
-        return None
-    if re.search(r"(?<![\w-])" + re.escape(value).replace(r"\ ", r"[\s-]") + r"(?![\w-])", candidate_text.casefold()) is None:
+    value = status_badge_value(image)
+    if value is None or not states_badge_value(value, candidate_text):
         return None
     return f"a static status badge no fact verifies is not printed (R14, BL-620); the candidate states '{value}' in words"
 
