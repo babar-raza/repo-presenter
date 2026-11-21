@@ -125,31 +125,69 @@
    "run_id": "44943539728",
    "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T20:45:30+00:00",
+   "classes": [
+    "BC-04|unresolved|code_span_q_is",
+    "BC-17|inherited_unit|technical_content"
+   ],
+   "code": "995d2db693648c90d6d1c3f3bdddbba865f27a76e8a4b1c301ce496f161268a7",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "44947429600",
+   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T19:59:24+00:00",
+  "at": "2026-11-21T20:45:30+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple document formats', 'Markdown export with configurable options', 'PDF export with built-in renderer']",
-    "findings": 1,
-    "origin_kind": "job_error",
+   "BC-04|unresolved|code_span_q_is": {
+    "example": "code span 'aspose-words' is not a fact value",
+    "findings": 2,
+    "origin_kind": "unresolved",
     "origins": [
-     "OutputRejectedError"
+     "-"
     ],
-    "rule": "job_error",
-    "scope": "03889bca231ed62d5c94f27bf93394bb01f09f637fc9b71b612224c485d3c693",
+    "rule": "BC-04",
+    "scope": "828caf95cdd182dcd7b5451b728f8f28be5d4c034fbad5e8af1ab559f7673f46",
     "scope_paths": [
+     "data/readme_findings.json",
      "prompts",
-     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
+     "src/repo_presenter/extractors",
      "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
     ],
-    "sub_rule": "OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
+   "BC-17|inherited_unit|technical_content": {
+    "example": "inherited_unit:084.list holds api_identifiers 'AUTO', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:084.list"
+    ],
+    "rule": "BC-17",
+    "scope": "0086f3d3aa08fbc83a9da0faa316d9096a2f4fa3b0e23e2a194dea6a90592684",
+    "scope_paths": [
+     "data/readme_findings.json",
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/parity_gate.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/validation"
+    ],
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   },
@@ -157,25 +195,55 @@
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple document formats', 'Markdown export with configurable options', 'PDF export with built-in renderer']",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-04, BC-17; nothing sealed",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: presentation_planning: output rejected twice; last rejection: at_a_glance capabilities are not core capabilities: ['DOCX round-trip editing', 'Load and parse multiple document formats', 'Markdown export with configurable options', 'PDF export with built-in renderer']",
+    "label": "BC-04",
+    "message": "code span 'aspose-words' is not a fact value",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "-",
+     "kind": "unresolved"
     },
     "quote": "",
-    "rule": "job_error",
+    "rule": "BC-04",
     "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:presentation_planning_at_a_glance_capabilities_are_not",
+    "signature": "BC-04|unresolved|code_span_q_is",
+    "source": "validation",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
+   {
+    "label": "BC-04",
+    "message": "code span 'aspose.words' is not a fact value",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "",
+    "rule": "BC-04",
+    "section_id": "",
+    "signature": "BC-04|unresolved|code_span_q_is",
+    "source": "validation",
+    "sub_rule": "code_span_q_is",
+    "upstream": ""
+   },
+   {
+    "label": "BC-17",
+    "message": "inherited_unit:084.list holds api_identifiers 'AUTO', which the published README prints and this candidate loses (technical_content): keep it (VERIFIED_PRESERVE/VERIFIED_MOVE, or PRESERVE_ATTRIBUTED when no fact confirms it), or omit it citing the fact that contradicts it",
+    "origin": {
+     "id": "inherited_unit:084.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "",
+    "rule": "BC-17",
+    "section_id": "",
+    "signature": "BC-17|inherited_unit|technical_content",
+    "source": "validation",
+    "sub_rule": "technical_content",
     "upstream": ""
    }
   ],
@@ -183,10 +251,19 @@
   "main_sha": "a52759e7e717f8e77f1944f82d016731c48a57ad",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: this revision makes BC-14 fail: the README lists the format(s) .doc, .docx, .rtf, but no SUPPORTED format fact states them",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Python",
-  "run_id": "44943539728",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44943539728",
+  "run_id": "44947429600",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44947429600",
   "schema_version": 1,
   "source_revision": "2d2efee2787cb9e56d071d17f8d7b740dce8b784",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
