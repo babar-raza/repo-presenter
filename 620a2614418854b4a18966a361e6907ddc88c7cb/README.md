@@ -4,7 +4,9 @@
 
 [![Aspose.Slides FOSS for Java](https://products.aspose.org/media/slides/java/banner-readme.png)](https://products.aspose.org/slides/java/)
 
-Aspose.Slides FOSS for Java is a free, open-source, pure-Java library for creating, reading, and editing PowerPoint .pptx presentations. The `Presentation` class is the root of the object model — it owns slides, shapes, images, comment authors, and document properties — and every operation runs without Microsoft Office, COM automation, or any proprietary runtime. Unknown XML content encountered while loading a presentation is never silently discarded on save.
+Aspose.Slides FOSS for Java reads and writes Office Open XML presentation files with the .pptx extension. It creates and modifies slides, shapes, text, connectors, comments, notes slides, and document properties inside the presentation package. It builds the Office Open XML package itself, so it needs no PowerPoint installation, no native code, and no runtime dependencies at all — the CycloneDX SBOM the build produces lists zero components.
+
+Aspose.Slides FOSS for Java is a free, open-source, pure-Java library for creating, reading, and editing PowerPoint `.pptx` presentations. The `Presentation` class is the root of the object model — it owns slides, shapes, images, comment authors, and document properties — and every operation runs without Microsoft Office, COM automation, or any proprietary runtime. Unknown XML content encountered while loading a presentation is never silently discarded on save. The sections below walk through its core features, installation, and full API surface.
 
 It builds the Office Open XML package itself, so it needs no PowerPoint installation, no native
 code, and no runtime dependencies at all — the CycloneDX SBOM the build produces lists zero
@@ -40,16 +42,11 @@ flowchart TB
     c2["Add and format shapes"]
     c3["Format text content"]
     c4["Apply visual effects"]
-    c5["Manage comments and<br/>notes"]
-    c6["Embed images"]
-    c7["Clone and manage<br/>slides"]
-    c8["Set document<br/>properties"]
+    c5["Manage slides and<br/>comments"]
+    c6["Embed images and add<br/>notes"]
     c1 ~~~ c4
     c2 ~~~ c5
     c3 ~~~ c6
-    c4 ~~~ c7
-    c5 ~~~ c8
-    c6 ~~~ c8
   end
   PRODUCT --> Capabilities
   classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
@@ -58,16 +55,12 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Create and edit presentations.** It creates and edits presentations by instantiating the `Presentation` class, adding or removing slides via `SlideCollection` methods, and saving to PPTX, PPSX, or POTX formats using save methods.
-- **Add and format shapes.** It adds and formats shapes by inserting AutoShapes, PictureFrames, Tables, and Connectors through `ShapeCollection` methods, then configuring their fill, line, and geometry properties.
-- **Format text content.** It formats text content by setting font height, bold, fill color, and other character attributes at the `Portion` level, paragraph alignment and bullets at the `Paragraph` level, and text frame margins and autofit at the `TextFrame` level.
-- **Apply visual effects.** It applies visual effects such as outer shadow, inner shadow, glow, soft edge, reflection, blur, preset shadow, and fill overlay to shapes via `EffectFormat` methods.
-- **Manage comments and notes.** It manages comments and notes by adding comment authors and threaded comments with timestamps and positions, and by creating speaker notes per slide through `NotesSlideManager`.
-- **Embed images.** It embeds images by loading them from bytes, files, or streams into the `ImageCollection` and attaching them to slides as PictureFrames.
-- **Clone and manage slides.** It clones and manages slides by duplicating existing slides with addClone, inserting empty slides, removing slides by index, and controlling slideshow visibility with setHidden.
-- **Set document properties.** It sets document properties such as title, subject, author, keywords, category, and custom values through the `IDocumentProperties` interface.
-
-Aspose.Slides FOSS for Java is a free, open-source, pure-Java library for creating, reading, and editing PowerPoint `.pptx` presentations. The `Presentation` class is the root of the object model — it owns slides, shapes, images, comment authors, and document properties — and every operation runs without Microsoft Office, COM automation, or any proprietary runtime. Unknown XML content encountered while loading a presentation is never silently discarded on save. The sections below walk through its core features, installation, and full API surface.
+- **Create and edit presentations.** It creates and edits presentations by instantiating the `Presentation` class, adding or removing slides through `SlideCollection` methods, and saving the result in PPTX, PPSX, or POTX format.
+- **Add and format shapes.** It adds and formats shapes including rectangles, connectors, and tables by calling `ShapeCollection` methods such as addAutoShape, addConnector, and addTable, then configures their fill, line, and position properties.
+- **Format text content.** It formats text content at the portion, paragraph, and text frame level using `PortionFormat`, `ParagraphFormat`, and `TextFrameFormat` to control font height, bold style, fill color, and alignment.
+- **Apply visual effects.** It applies visual effects such as outer shadow, glow, and blur to shapes by enabling effect types through `EffectFormat` and configuring their parameters like blur radius, direction, distance, and color.
+- **Manage slides and comments.** It manages slides and comments by cloning or inserting slides via `SlideCollection` methods and adding threaded comments with author, text, position, and timestamp through `CommentAuthor` and `CommentCollection`.
+- **Embed images and add notes.** It embeds images and adds speaker notes by loading image data into `ImageCollection`, attaching images to slides with addPictureFrame, and writing notes text to a slide's `NotesSlide` through `NotesSlideManager`.
 
 Everything below was exercised through the public API and then confirmed by reading the XML
 inside the file that came out — not by asking the library to read its own file back.
@@ -131,7 +124,7 @@ No required third-party package dependencies; in `pom.xml`, every `<dependency>`
 
 ## Quick Start
 
-This example creates a new presentation, clears the first slide, adds a solid blue rectangle shape, and saves it as a PPTX file named `hello.pptx`.
+This example creates a new presentation, clears the first slide, adds a solid blue rectangle shape, and saves the result as a PPTX file.
 
 ```java
 import java.io.*;
@@ -160,6 +153,8 @@ try (Presentation pres = new Presentation()) {
 The published jar declares `Automatic-Module-Name: org.aspose.slides.foss`, so it can go on the
 module path under a stable name.
 
+JDK 21 or later is required, and the library has no runtime dependencies beyond the JDK itself.
+
 Compiled against this tree and run, this leaves a real, working `hello.pptx` behind that opens
 directly in PowerPoint. Three
 things worth knowing before the second program you write:
@@ -175,9 +170,9 @@ things worth knowing before the second program you write:
 
 ## Additional Examples
 
-The following examples demonstrate common tasks in Aspose.Slides FOSS for Java.
+The following workflows demonstrate creating connectors, adding comments, setting document properties, applying effects, adding speaker notes, cloning slides, saving to streams, formatting text, and creating tables.
 
-### Add a Connector Between Two Shapes
+### Create a Connector Between Two Shapes
 
 ```java
 import java.io.*;
@@ -238,7 +233,7 @@ try (Presentation pres = new Presentation()) {
 }
 ```
 
-### Set Document Properties
+### Set Document Properties on a Presentation
 
 ```java
 import java.io.*;
@@ -315,7 +310,7 @@ try (Presentation pres = new Presentation()) {
 }
 ```
 
-### Clone a Slide
+### Clone a Slide Within a Presentation
 
 ```java
 import java.io.*;
@@ -424,11 +419,6 @@ try (Presentation pres = new Presentation(Path.of("Presentation.pptx").toString(
 }
 ```
 
-### Save a Subset of Slides
-
-`save(path, slides, format)` takes a zero-based slide-index array; repeats are ignored and the
-slides kept stay in document order:
-
 ```java
 import org.aspose.slides.foss.Presentation;
 import org.aspose.slides.foss.export.SaveFormat;
@@ -442,7 +432,7 @@ try (Presentation pres = new Presentation("deck.pptx")) {
 
 ## API Reference
 
-The primary entry point is `Presentation`, which owns an `ISlideCollection` of `Slide` objects; each slide exposes an `IShapeCollection` of `Shape`-derived objects (`AutoShape`, `Connector`, `Table`, `PictureFrame`) built through `ShapeCollection`'s `addAutoShape()`, `addConnector()`, `addTable()`, and `addPictureFrame()` methods. The `org.aspose.slides` package hosts these core classes.
+The primary entry point is `Presentation`, which owns an `ISlideCollection` of `Slide` objects; each slide exposes an `IShapeCollection` of `Shape`-derived objects (`AutoShape`, `Connector`, `Table`, `PictureFrame`) built through `ShapeCollection`'s `addAutoShape()`, `addConnector()`, `addTable()`, and `addPictureFrame()` methods. It reads and writes presentations in PowerPoint formats and supports shapes, text, comments, and effects.
 
 The public API has 238 types.
 
@@ -699,25 +689,25 @@ The public API has 238 types.
 
 #### Detailed Member Reference
 
+### org
+
+The org package namespace hosts the top-level packages for Aspose.Slides FOSS for Java, including `org.aspose` and `org.aspose.slides`.
+
 ### aspose
 
-The `org.aspose` package serves as the top-level namespace for Aspose.Slides FOSS for Java, under which the `org.aspose.slides` subpackage provides the presentation processing API.
+The `org.aspose` package namespace contains core types shared across Aspose products, with `org.aspose.slides` providing the presentation-specific API.
 
 ### slides
 
-The `org.aspose.slides` package contains the core classes for working with presentations, including `Presentation`, `Slide`, `Shape`, and their associated collections and formatting interfaces.
-
-### org
-
-The org package is the root namespace for Java libraries, and `org.aspose` is the top-level package for Aspose products.
-
-### Relationship
-
-The `Relationship` class represents a relationship between parts in a presentation package, typically used when working with Open Packaging Conventions.
+The `org.aspose.slides` package namespace provides the complete API for working with presentations, including `Presentation`, `ISlide`, `IShapeCollection`, and all shape types.
 
 ### getFontName
 
-The getFontName method retrieves the name of a font used in a text portion or format.
+The getFontName method is part of the text formatting API and retrieves the name of the font used for a text portion.
+
+### Relationship
+
+The `Relationship` class represents relationships between parts in a presentation package, supporting package-level navigation and metadata.
 
 The primary entry point is `Presentation`, which owns an `ISlideCollection` of `Slide` objects; each slide exposes an `IShapeCollection` of `Shape`-derived objects (`AutoShape`, `Connector`, `Table`, `PictureFrame`) built through `ShapeCollection`'s `addAutoShape()`, `addConnector()`, `addTable()`, and `addPictureFrame()` methods.
 
@@ -848,7 +838,7 @@ This section is the point of this file. Nothing here is a "coming soon"; it is w
 
 </details>
 
-See [Aspose.Slides for Java — Enterprise Edition](https://products.aspose.com/slides/java/). It adds full format export (PDF, HTML, XPS, images, and more), charts, animations, VBA macro support, and every other capability outside this FOSS build's scope.
+See [Aspose.Slides for Java — Enterprise Edition](https://products.aspose.com/slides/java/).
 
 ## Development and Testing
 
@@ -862,8 +852,6 @@ mvn test
 ```
 
 **Before you depend on `26.7.0`, read this.** It predates a hardening fix: every parser and serializer in the current source is created by a secure XML factory that refuses a `<!DOCTYPE>` declaration outright and disables external entities, external DTD loading, and XInclude. `26.7.0` does not have that fix, and [SECURITY.md](SECURITY.md) lists it as not supported for that reason — before the fix, a `.pptx` part could declare an external entity that got resolved while loading the file, so opening a presentation from an untrusted source could read a local file or open a network connection. If your program opens `.pptx` files that come from somewhere you do not control, build from source (below) rather than depending on `26.7.0`.
-
-JDK 21 or later is required, and the library has no runtime dependencies beyond the JDK itself.
 
 - JDK 21 or later — `maven.compiler.release` is pinned to `21` in `pom.xml`, and the build fails on an older JDK with a readable message rather than silently targeting a downlevel bytecode version. This is enforced, not just declared: the sources use `List.getFirst()`, `List.removeLast()`, and an unconditional `instanceof` pattern, none of which compile below 21.
 

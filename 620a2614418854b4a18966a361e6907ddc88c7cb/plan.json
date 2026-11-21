@@ -13,22 +13,6 @@
   "api_hubs": [
     {
       "fact_ids": [
-        "public_symbol:org.aspose",
-        "public_symbol:org.aspose.slides",
-        "public_symbol:org"
-      ],
-      "symbol_fact_id": "public_symbol:org.aspose"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:org.aspose.slides",
-        "public_symbol:org.aspose",
-        "public_symbol:org"
-      ],
-      "symbol_fact_id": "public_symbol:org.aspose.slides"
-    },
-    {
-      "fact_ids": [
         "public_symbol:org",
         "public_symbol:org.aspose",
         "public_symbol:org.aspose.slides"
@@ -37,15 +21,37 @@
     },
     {
       "fact_ids": [
-        "public_symbol:relationship"
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.slides"
       ],
-      "symbol_fact_id": "public_symbol:relationship"
+      "symbol_fact_id": "public_symbol:org.aspose"
     },
     {
       "fact_ids": [
-        "public_symbol:getfontname"
+        "public_symbol:org.aspose.slides",
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:008"
+      ],
+      "symbol_fact_id": "public_symbol:org.aspose.slides"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:getfontname",
+        "example:001",
+        "example:002",
+        "example:011",
+        "example:012"
       ],
       "symbol_fact_id": "public_symbol:getfontname"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:relationship",
+        "example:005"
+      ],
+      "symbol_fact_id": "public_symbol:relationship"
     }
   ],
   "at_a_glance": {
@@ -54,10 +60,8 @@
       "Add and format shapes",
       "Format text content",
       "Apply visual effects",
-      "Manage comments and notes",
-      "Embed images",
-      "Clone and manage slides",
-      "Set document properties"
+      "Manage slides and comments",
+      "Embed images and add notes"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -66,27 +70,15 @@
     {
       "fact_ids": [
         "example:001",
-        "example:002",
-        "example:003",
-        "example:004",
-        "example:005",
-        "example:006",
-        "example:008",
         "example:010",
-        "example:011",
-        "example:012"
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.slides"
       ],
       "shared_fact_ids": [
         "example:001",
-        "example:002",
-        "example:003",
-        "example:004",
-        "example:005",
-        "example:006",
-        "example:008",
-        "example:010",
-        "example:011",
-        "example:012"
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.slides"
       ],
       "title": "Create and edit presentations"
     },
@@ -94,88 +86,56 @@
       "fact_ids": [
         "example:001",
         "example:002",
-        "example:012"
+        "example:011",
+        "example:012",
+        "public_symbol:getfontname"
       ],
       "shared_fact_ids": [
         "example:001",
-        "example:002",
-        "example:012"
+        "example:011",
+        "public_symbol:getfontname"
       ],
       "title": "Add and format shapes"
     },
     {
       "fact_ids": [
-        "example:011"
+        "example:011",
+        "public_symbol:getfontname"
       ],
       "shared_fact_ids": [
-        "example:011"
+        "example:011",
+        "public_symbol:getfontname"
       ],
       "title": "Format text content"
     },
     {
       "fact_ids": [
-        "example:005"
+        "example:005",
+        "public_symbol:relationship"
       ],
-      "shared_fact_ids": [
-        "example:005"
-      ],
+      "shared_fact_ids": [],
       "title": "Apply visual effects"
     },
     {
       "fact_ids": [
         "example:003",
-        "example:006"
-      ],
-      "shared_fact_ids": [
-        "example:003",
-        "example:006"
-      ],
-      "title": "Manage comments and notes"
-    },
-    {
-      "fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:004",
-        "example:005",
-        "example:006",
         "example:008",
-        "example:010",
-        "example:011",
-        "example:012"
+        "public_symbol:org.aspose.slides"
       ],
       "shared_fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:004",
-        "example:005",
+        "public_symbol:org.aspose.slides"
+      ],
+      "title": "Manage slides and comments"
+    },
+    {
+      "fact_ids": [
         "example:006",
-        "example:008",
-        "example:010",
-        "example:011",
-        "example:012"
-      ],
-      "title": "Embed images"
-    },
-    {
-      "fact_ids": [
-        "example:008"
+        "public_symbol:org.aspose"
       ],
       "shared_fact_ids": [
-        "example:008"
+        "public_symbol:org.aspose"
       ],
-      "title": "Clone and manage slides"
-    },
-    {
-      "fact_ids": [
-        "example:004"
-      ],
-      "shared_fact_ids": [
-        "example:004"
-      ],
-      "title": "Set document properties"
+      "title": "Embed images and add notes"
     }
   ],
   "deviations": [
@@ -207,58 +167,59 @@
         "link_target:012"
       ],
       "section_id": "banner",
-      "text": "The product illustration and enterprise homepage are verified and support a product link."
+      "text": "The product illustration and homepage link are verified and belong in the enterprise relationship section."
     },
     {
       "fact_ids": [
         "identity:ecosystem",
-        "identity:family",
-        "identity:platform"
+        "identity:platform",
+        "package:name",
+        "package:published_version"
       ],
-      "section_id": "navigation",
-      "text": "The Navigation heading and list are rendered deterministically by the navigation section."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "at_a_glance",
-      "text": "The At a Glance heading is rendered by the deterministic at_a_glance section."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "key_capabilities",
-      "text": "The Key Capabilities heading is rendered by the deterministic key_capabilities section."
+      "section_id": "opening",
+      "text": "The opening paragraph describes what the library does and its core value proposition, supported by identity and package facts."
     },
     {
       "fact_ids": [
         "install_command:maven"
       ],
       "section_id": "installation",
-      "text": "The Installation heading is rendered by the deterministic installation section."
+      "text": "The Installation heading is rendered deterministically by the installation section."
     },
     {
       "fact_ids": [
         "dependency:none"
       ],
       "section_id": "dependencies",
-      "text": "The Dependencies heading and subsections are rendered by the deterministic dependencies section."
+      "text": "The '## Dependencies' heading is superseded by the deterministic dependencies section."
     },
     {
       "fact_ids": [
         "identity:ecosystem"
       ],
       "section_id": "quick_start",
-      "text": "The Quick Start heading is superseded by the deterministic 'Quick Start' section."
+      "text": "The '## Quick Start' heading is superseded by the deterministic quick_start section."
     },
     {
       "fact_ids": [
         "identity:ecosystem"
       ],
       "section_id": "additional_examples",
-      "text": "The Additional Examples heading is superseded by the deterministic 'Additional Examples' section."
+      "text": "The '## Additional Examples' heading is superseded by the deterministic additional_examples section."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'API Reference' heading is redundant with the API Reference section."
+    },
+    {
+      "fact_ids": [
+        "link_target:013"
+      ],
+      "section_id": "scope_limitations",
+      "text": "The 'Scope and Limitations' heading is preserved and moved to the matching section."
     }
   ],
   "flagship_example_id": "example:002",
@@ -289,15 +250,15 @@
     },
     {
       "link_fact_id": "link_target:035",
-      "section_id": "enterprise_relationship"
+      "section_id": "scope_limitations"
     },
     {
       "link_fact_id": "link_target:036",
-      "section_id": "enterprise_relationship"
+      "section_id": "scope_limitations"
     },
     {
       "link_fact_id": "link_target:037",
-      "section_id": "enterprise_relationship"
+      "section_id": "scope_limitations"
     },
     {
       "link_fact_id": "link_target:038",
