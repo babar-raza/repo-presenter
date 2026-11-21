@@ -20024,6 +20024,39 @@
    "sealed": [],
    "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
    "tokens": 1736136.0
+  },
+  {
+   "at": "2026-11-21T12:33:35Z",
+   "batch": "e2-016-hosted",
+   "cause": "rolling",
+   "epoch": 2,
+   "kind": "stop_notice",
+   "reason": "cost per sealed candidate over the last 12 settled hosted runs (339.3 calls) exceeds 2x the previous 12 runs' 84.8 calls (R43(1) rolling window)"
+  },
+  {
+   "after": "e2-016-hosted",
+   "at": "2026-11-21T12:33:35Z",
+   "basis": "R25: 1.5x the measured median of 1 run(s) in e2-016-hosted (47 calls, 1.01688e+06 tokens) x 6",
+   "calls_cap": 423.0,
+   "epoch": 2,
+   "id": "e2-017-hosted",
+   "kind": "open_batch",
+   "tokens_cap": 9151911.0
+  },
+  {
+   "at": "2026-11-21T12:33:35Z",
+   "batch": "e2-017-hosted",
+   "calls": 48.0,
+   "epoch": 2,
+   "id": "run-44904441874-a1",
+   "kind": "reserve",
+   "lanes": [
+    "R"
+   ],
+   "main_sha": "991899b0a232ffcaaec48ff537ef2d1b7c356657",
+   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
+   "run_id": "44904441874",
+   "tokens": 1722061.0
   }
  ],
  "schema_version": 1
