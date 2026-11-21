@@ -295,7 +295,7 @@ def link_failures(candidate: Candidate) -> list[Failure]:
     # ceiling derived from the candidate's size made the floor unsatisfiable: Slides .NET's maintainers'
     # Documentation and support list links four aspose.com pages (hosted run 44924853748, "4 aspose.com
     # links exceed the aspose.com ceiling of 2"), the same reasoning as ``effective_visible_lines_budget``.
-    published = _published_aspose_links(candidate.benchmark_readme)
+    published = _published_aspose_links(getattr(candidate, "benchmark_readme", None))
     sections = section_lines(candidate.readme)
     for target in extract_links(candidate.readme):
         if target.kind == "anchor":
