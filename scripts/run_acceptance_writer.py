@@ -240,20 +240,26 @@ def case_evidence(
     history: Mapping[tuple[str, str], Sequence[Any]],
     recertified: Recertified,
     clearable_for: Callable[[Any, str, str], frozenset[int] | None] | None = None,
+    texts: Mapping[str, str] | None = None,
 ) -> dict[str, CaseEvidence]:
     """``CaseEvidence`` for every case whose audited seal is readable in ``history``. ``clearable_for``
     (the hosted writer: ``auditor_clearable``) narrows the derived lines to those the auditor's own
     clearance accepts: printed from SUPPORTED facts, refuted by no register row or claim detector, in no
-    known-false class (a derived line is only consistent with the facts, not necessarily true)."""
+    known-false class (a derived line is only consistent with the facts, not necessarily true). ``texts`` (case id
+    -> the audited text) binds each case to the seal its text was taken from, not the newest seal of the
+    revision (BL-590)."""
     from repo_presenter.core.facts import read_facts
+    from repo_presenter.core.state.bundle_store import seal_matching_text
 
     found: dict[str, CaseEvidence] = {}
     for entry in case_index:
         repository, lane, revision = str(entry["repository"]), str(entry["lane"]), str(entry["revision"])
-        seal = next((s for s in reversed(list(history.get((repository, lane), ())))
-                     if s.revision == revision and getattr(s, "bundle", None) is not None and not s.error), None)
-        if seal is None:
+        readable = [s for s in history.get((repository, lane), ())
+                    if s.revision == revision and getattr(s, "bundle", None) is not None and not s.error]
+        if not readable:
             continue
+        text = (texts or {}).get(str(entry["case_id"]))
+        seal = (seal_matching_text(readable, text) if text is not None and len(readable) > 1 else None) or readable[-1]
         bundle = Path(seal.bundle)
         try:
             facts = read_facts(bundle / "facts.json")
@@ -529,10 +535,10 @@ def main(
         else:
             recertified, history = recertified_with_history(args.remote, Path(work))
         clear = auditor_clearable(Path(work), findings)
-        cases = (evidence or (lambda index, recert: case_evidence(index, history, recert, clear)))(case_index, recertified)
-        derived = deterministic_adjudications(
-            findings, read_texts(case_index, args.case_index.parent / "candidates"), cases
-        )
+        case_texts = read_texts(case_index, args.case_index.parent / "candidates")
+        cases = (evidence or (lambda index, recert: case_evidence(index, history, recert, clear, case_texts)))(
+            case_index, recertified)
+        derived = deterministic_adjudications(findings, case_texts, cases)
     print(f"deterministic adjudication: {sum(a['adjudication'] == 'confirmed' for a in derived)} confirmed, "
           f"{sum(a['adjudication'] == 'refuted' for a in derived)} refuted")
     adjudications = [*adjudications, *derived]

@@ -8175,3 +8175,34 @@ rule untouched. R9: no README wording added. Properties improved: universal (eve
 opening or unsupported intro degrades the unit, never the candidate). Hosted-unproven (R41).
 
 Backlog: BL-580, BL-581, BL-582
+
+## 2026-11-21: Audit round 4's false flags on clean controls: one real audit defect fixed (frozen text re-derived from a newer seal), one deterministic line clearance, the rest are the judge's flags on authored prose and stay blocking (BL-590, BL-591, BL-592, BL-593)
+
+Problem. Round 4 (seed run 44904444359, audit attempt 44920297353, code 11aa6b1a) scored seeded recall 39/39 = 1.000 and false flags 5/25 = 0.20 (round 3: 6/25).
+The five flagged clean controls are Email C++, OCR .NET, Page Python, PSD Java, PSD Python (Lane R); every other flagged Lane R case carries a seeded defect
+(3D .NET/Cells C++/Cells Rust/Cells Java "incredibly powerful" or reorder seeds, 3D Python "344" against the sealed 337, Words .NET "622/615" count, Cells Python
+AgileEncryptionParameters row, Cells Go AlignmentGhost, Cells .NET AutoFilter row: all real seeds, correctly flagged, recall unchanged).
+The classes listed as open in the brief were, in the round-4 frozen findings, already CLEARED rows (28 rows `verdict: supported`, `cleared_by: derivation`): the
+plain "The public API has N types." sentence (BarCode Python 51, Cells Python 160, Cells Rust 115, Email C++ 26, Cells C++ 195: K05 provenance recorded, N equals the
+facts' computation), the Install/NuGet/Maven lines (PSD .NET 56/63, PSD Java 57/83, Cells C++ 87), Slides C++ Development Dependencies (116-119), PDF Java
+template/facades rows (922-959), 3D Python Viewport. Zero-call replay on the stored seals under this branch confirms each is still cleared; a count that is not the
+computed one is never cleared (negative control added to tests/acceptance/test_m9_k05_k10_provenance.py).
+Root cause of two of the five (BL-590). `run_m9_auditor.seal_for` took the NEWEST seal of the case's revision, while the case text is the seal the seeder read at
+12:32. PSD Python was re-sealed at 15:20 and OCR .NET at 12:45; the audit re-rendered the NEWER pinned inputs and compared them with the older frozen text, so every
+line the newer render does not reproduce was flagged "no deterministic stage writes this line": PSD Python 13 lines (38-42, 291, 314, 318, ... 338; the model
+reviewer itself returned ACCEPT with no findings), OCR .NET 6 (31-35, 38). Zero-call on the stored seals reproduces exactly those lines with the newest seal and
+0 with the seal the text came from. Decision (a, audit-side): the audit and the acceptance writer bind a case to the seal whose README its text is (the closest
+seal for a seeded text; latest on a tie, latest when no text); no check, threshold or derivation rule changes. Negative controls: every seeding operator
+(A, D, D9, D14, D15) on both texts still picks the seed-time seal and the seeded line stays underived (flagged).
+BL-591 (a, deterministic): the renderer's "- Requires Python 3.10 or later." line is printed only from the SUPPORTED `package:python_requires` fact; its origin now
+cites the fact (BL-542 pattern), so Page Python line 115 ("omission", kept for "no fact value in the line") is cleared; reworded, mismatched or non-SUPPORTED stay.
+BL-592 (c, left blocking, not derivable): the flags that remain on clean controls are the model judge's on AUTHORED prose: Email C++ seven API rows ("X class
+represents ... provides access to its <members>"), OCR .NET capability bullets (50 Aspose.OCR.OcrInput/InputType, 51 target frameworks) and the preserved Enterprise
+clause (261, a [quality] note), PSD Java capability bullets (48, 50), Page Python opening (line 7: supported by the ps_to_pdf/to_pdf facts but authored). They are
+neither renderer-printed nor corrected maintainer text, so no fact derives them; clearing them would weaken the judge, which the owner ruled out (thresholds
+0.90/0.10 and the single-sample rule unchanged). Expected effect on a re-audit of the same batch: false flags 5/25 -> 4/25 (0.16, PSD Python clean; OCR, Page,
+PSD Java and Email C++ remain), still above 0.10; the gate needs two of those four cells to stop being flagged, which is a producer-side question (BL-592).
+BL-593: the writer's re-certification pairing uses the same latest-seal rule (recorded, investigate). R9: no README text touched; R10: no seal or sealed byte moved.
+Properties improved (R46): reliable and repeatable (the audit judges one README of a case, not two). Hosted-unproven (R41).
+
+Backlog: BL-590, BL-591, BL-592, BL-593

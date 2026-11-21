@@ -2750,3 +2750,56 @@ items:
       - "renderer.link_target_description returns f'On {host}.' for any other host; the line is printed when no kept resource-links list describes the link, or when BL-350 replaced a register-refuted maintainers' description with it"
     next_action: "supervisor merges; hosted Lane R refresh of PSD Java"
     updated: "2026-11-21"
+
+  - id: BL-590
+    title: "The M9 audit re-derives a frozen case text from the NEWEST seal of its revision, so a clean control re-sealed between the seed and the audit is flagged on every line the newer render does not reproduce (hosted round 44904444359: PSD Python 13 lines, OCR .NET 6, 2 of the 5 false-flag controls)"
+    type: defect
+    source: "owner rulings R44, R46, R36, R41; audit round 4 (seed run 44904444359, audit attempt 44920297353, scorecard false_flag_rate 5/25 = 0.20, round 3 6/25); frozen findings audit-findings/run-44904444359"
+    priority: P0
+    status: active
+    implementation_path: "bundle_store.seal_matching_text (exact README match, else the seal sharing the most lines with the text, latest on a tie); run_m9_auditor.seal_for(..., text) used by cmd_audit for both the reviewer packet and the derivation; run_acceptance_writer.case_evidence(..., texts) for the writer's evidence. Request bytes, thresholds, single-sample judging and every derivation rule are untouched"
+    acceptance: "(1) tests/test_m9_seal_skew_bl590.py (6); (2) zero-call replay on the stored seals: PSD Python and OCR .NET, case text = the seed-time seal's README, newest seal re-sealed since: 13 and 7 underived lines with the newest seal (the 13 are exactly the lines of the frozen findings), 0 with the matched seal; (3) negative controls: every seeding operator (A, D, D9, D14, D15) on the same texts still picks the seed-time seal and its seeded line stays underived; (4) recertify --all gate OK; seeded-defect suites pass; (5) hosted (R41, not proven): the next audit round"
+    evidence:
+      - "git: refs/repository-presenter-state/bundles/aspose-psd-foss__Aspose.PSD-FOSS-for-Python has seals 95fdafa1 (2026-11-20 13:37) and 82dafc0f (2026-11-21 15:20); OCR .NET 366b237a and 34e736b7 (2026-11-21 12:45); the seed ran 12:32 and the audit ~16:00; the audit log shows 'PSD Python R ACCEPT: 13 findings' (the model reviewer found nothing; all 13 were 'no deterministic stage writes this line')"
+      - "scratchpad cc/proof2.out: before/after counts and the seeded negative controls"
+    next_action: "supervisor merges; next audit round; consider BL-593 (the writer's controls_not_recertified uses the same latest-seal pairing)"
+    updated: "2026-11-21"
+
+  - id: BL-591
+    title: "The renderer's '- Requires Python 3.10 or later.' line is printed from the package:python_requires fact but the derivation records no fact for it, so a model 'omission' flag on it is kept ('no fact value in the line': the value is '>=3.10') -- Page Python, a clean control in round 4"
+    type: defect
+    source: "owner rulings R44, R46, R36, R41; audit round 4 finding on Page Python line 115 (kept_because 'no fact value in the line'); round 3 flagged the same line"
+    priority: P1
+    status: active
+    implementation_path: "review.derivation.rederive_lane_r: the line equal to '- ' + renderer.python_floor_sentence(<floor>) for a SUPPORTED package:python_requires fact of the '>=N' shape, printed by the renderer, cites that fact (the BL-542 pattern); any other wording, a different floor or a non-SUPPORTED fact keeps the flag"
+    acceptance: "(1) tests/readme/review/test_python_floor_clearance_bl591.py (3; the positive case fails without the change); (2) zero-call on the stored Page Python seal: line 115 cleared with the fact cited; (3) recertify --all gate OK"
+    evidence:
+      - "frozen round-4 finding on eca191d20bb4949f line 115: kept_because 'no fact value in the line'; renderer.python_floor_sentence is the only writer of the line"
+    next_action: "supervisor merges; next audit round"
+    updated: "2026-11-21"
+
+  - id: BL-592
+    title: "Audit round 4 flag classes that the supervisor listed as open are already cleared by derivation (type-count sentence, Install lines, Slides C++ Development Dependencies, PDF Java template/facades, count lines); the flags that remain on clean controls are the model judge's on AUTHORED prose (Email C++ API rows, OCR .NET and PSD Java capability bullets, Page Python opening): not derivable, left blocking"
+    type: gap
+    source: "owner rulings R44, R46, R36; frozen round-4 findings (f4: 28 rows verdict supported / cleared_by derivation with K05 provenance) and the round-3 records"
+    priority: P1
+    status: active
+    implementation_path: "none to the audit: a line is cleared only when deterministically derivable from a SUPPORTED fact (owner decision unchanged). Candidate producer-side fixes (R27: fixes to existing components): author the API row descriptions deterministically from member facts on a rejected/unstable row (R43 API-row fallback), and state each capability bullet from cited facts only"
+    acceptance: "(1) the table in the decision log entry for 2026-11-21 (per class: round-4 state, decision, evidence); (2) tests/acceptance/test_m9_k05_k10_provenance.py::test_the_renderers_plain_count_sentence_clears_only_for_the_computed_count (a count that is not the computed one is never cleared); (3) after BL-590/591 the expected false-flag controls of the same batch are 4 of 25 (Email C++, OCR .NET, Page Python, PSD Java), still above 0.10, so the batch gate needs those four cells' authored lines to stop being flagged"
+    evidence:
+      - "zero-call replay (scratchpad cc/proof_all.out) of the frozen findings under this branch's derivation on the stored seals"
+    next_action: "producer-side investigation of the four cells' flagged authored lines (is each a real unsupported statement or judge noise: Email C++ rows read member names from the facts; Page line 7 'converts them to PDF' is supported by ps_to_pdf/to_pdf facts)"
+    updated: "2026-11-21"
+
+  - id: BL-593
+    title: "The acceptance writer pairs a control's re-certification with the NEWEST seal of its revision (recertify.portfolio_recertification), while the audited bytes may come from an older seal: audit and writer can judge different READMEs of one case"
+    type: defect
+    source: "owner rulings R10, R44, R46; found while fixing BL-590 (run_acceptance_writer.recertified_with_history / case_evidence)"
+    priority: P2
+    status: open
+    implementation_path: "investigate: bind controls_not_recertified and candidate_identity to the seal the audited text came from (seal_matching_text), or record the seed's seal commit in the public case index"
+    acceptance: "a control whose seal changed between seed and audit is judged, re-certified and accepted on one README; a test with two seals of one revision"
+    evidence:
+      - "run_acceptance_writer.case_evidence picked the latest readable seal before BL-590; recertified is keyed by (repository, lane) -> latest revision seal"
+    next_action: "investigate after the next audit round"
+    updated: "2026-11-21"

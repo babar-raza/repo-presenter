@@ -15,6 +15,7 @@ republish of identical content pushes nothing.
 from __future__ import annotations
 
 import subprocess
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -373,6 +374,35 @@ def _read_seal(git_dir: Path, commit: str, repository: str, lane: str, scratch: 
         recertified_from=recertified if isinstance(recertified, dict) else None,
         bundle=bundle,
     )
+
+
+def seal_matching_text(seals: Sequence[SealRecord], text: str) -> SealRecord | None:
+    """The seal among ``seals`` (oldest first, one repository, lane and revision) that ``text`` was taken
+    from, or the closest one when ``text`` is a seal's README with a seeded defect (BL-590).
+
+    The M9 audit judges a case text the seeder read from one seal, but re-derives it from the seal the
+    bundle ref holds when the audit runs; a refresh sealed in between changes the pinned inputs (and the
+    README) under the frozen text, and every line the newer render does not reproduce was flagged as one
+    "no deterministic stage writes" (hosted round 44904444359: PSD Python 13 lines, OCR .NET 6, on seals
+    re-sealed 15:20 and 12:45 after the 12:32 seed; the older seal re-derives both texts with 0 underived).
+    An exact README match wins (the latest of several identical ones); otherwise the seal sharing the most
+    lines with ``text`` (a seeded text differs from its seal in a few lines, a refreshed README in many),
+    the latest on a tie; ``None`` when no seal carries a README."""
+    from collections import Counter
+
+    wanted = text.encode("utf-8")
+    carrying = [s for s in seals if getattr(s, "readme", None) is not None]
+    exact = [s for s in carrying if bytes(s.readme) == wanted]
+    if exact:
+        return exact[-1]
+    if not carrying:
+        return None
+    mine = Counter(text.splitlines())
+
+    def shared(seal: SealRecord) -> int:
+        return sum((mine & Counter(bytes(seal.readme).decode("utf-8", errors="replace").splitlines())).values())
+
+    return max(reversed(carrying), key=shared)
 
 
 def seal_history(

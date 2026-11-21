@@ -643,6 +643,19 @@ def rederive_lane_r(
         for j, row in enumerate(rows):
             if row.strip() == clause and origins[j].get("source") == "renderer":
                 origins[j] = {"source": "renderer", "fact_ids": ("dependency:none",)}
+    # BL-591: the "- Requires Python 3.10 or later." line under "Native and System Requirements" is the
+    # ``package:python_requires`` fact's floor in aspose.org's words (``renderer.python_floor_sentence``), printed
+    # only for a SUPPORTED floor of that exact shape; its origin cites the fact (Page Python line 115, flagged as an
+    # "omission" because ">=3.10" is the fact VALUE and the line says "3.10 or later"). Any other wording keeps its flag.
+    from repo_presenter.readme.composition.renderer import _FLOOR, PYTHON_FLOOR_FACT_ID, python_floor_sentence
+
+    floor_fact = next((f for f in facts.facts if f.id == PYTHON_FLOOR_FACT_ID and f.polarity == "SUPPORTED"), None)
+    floor = _FLOOR.fullmatch(str(floor_fact.value).strip()) if floor_fact is not None else None
+    if floor is not None:
+        printed = f"- {python_floor_sentence(floor.group(1))}"
+        for j, row in enumerate(rows):
+            if row.strip() == printed and origins[j].get("source") == "renderer":
+                origins[j] = {"source": "renderer", "fact_ids": (PYTHON_FLOOR_FACT_ID,)}
     return Rederived(full, tuple(origins))
 
 

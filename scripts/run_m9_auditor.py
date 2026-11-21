@@ -278,12 +278,24 @@ def apply_derivation(case_id: str, text: str, rows: Sequence[Mapping[str, Any]],
 # --- sources: each case's own seal, as the reviewer's evidence -----------------------------------------
 
 
-def seal_for(history: Mapping[tuple[str, str], Sequence[Any]], repository: str, lane: str, revision: str) -> Any:
-    """The latest materialized seal of ``(repository, lane)`` at ``revision`` (the seeder takes the latest)."""
-    for seal in reversed(list(history.get((repository, lane), ()))):
-        if seal.revision == revision and seal.bundle is not None and not seal.error:
-            return seal
-    raise AuditError(f"no readable seal of {repository} lane {lane} at {revision}")
+def seal_for(
+    history: Mapping[tuple[str, str], Sequence[Any]], repository: str, lane: str, revision: str, text: str | None = None,
+) -> Any:
+    """The materialized seal of ``(repository, lane)`` at ``revision`` the case was taken from: the latest one
+    (the seeder takes the latest), or -- BL-590, with the case ``text`` -- the one whose README the text is
+    (``bundle_store.seal_matching_text``), so a refresh sealed between the seed and the audit cannot move the
+    pinned inputs under the frozen text."""
+    readable = [s for s in history.get((repository, lane), ())
+                if s.revision == revision and s.bundle is not None and not s.error]
+    if not readable:
+        raise AuditError(f"no readable seal of {repository} lane {lane} at {revision}")
+    if text is not None and len(readable) > 1:
+        from repo_presenter.core.state.bundle_store import seal_matching_text
+
+        matched = seal_matching_text(readable, text)
+        if matched is not None:
+            return matched
+    return readable[-1]
 
 
 def source_for(seal: Any, case_id: str) -> Any:
@@ -424,11 +436,12 @@ def cmd_audit(args: argparse.Namespace) -> int:
     review = live_reviewer(work / "ledger.jsonl", work / "calls", args.max_calls)
 
     def sources(entry: Mapping[str, Any]) -> Any:
-        seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]))
+        seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]),
+                        texts.get(str(entry["case_id"])))
         return str(entry["lane"]), source_for(seal, str(entry["case_id"]))
 
     def derive(entry: Mapping[str, Any], text: str, asked: frozenset[int]) -> Derivation | None:
-        seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]))
+        seal = seal_for(history, str(entry["repository"]), str(entry["lane"]), str(entry["revision"]), text)
         return case_derivation(seal, text, work / "trees", ask=asked)
 
     try:
