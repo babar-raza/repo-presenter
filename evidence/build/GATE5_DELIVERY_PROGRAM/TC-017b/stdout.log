@@ -4,7 +4,7 @@ $ python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/
 --- stdout ---
 ........................................................................ [ 71%]
 .............................                                            [100%]
-101 passed in 0.89s
+101 passed in 6.37s
 
 --- stderr ---
 
@@ -14,7 +14,7 @@ $ python -m pytest tests/readme/validation/test_line_provenance.py tests/readme/
 --- stdout ---
 ........................................................................ [ 71%]
 .............................                                            [100%]
-101 passed in 0.90s
+101 passed in 26.10s
 
 --- stderr ---
 
@@ -51,7 +51,7 @@ src/repo_presenter/readme/composition/authoring.py:67: in <module>
     from repo_presenter.readme.composition.placement import placements
 src/repo_presenter/readme/composition/placement.py:44: in <module>
     from repo_presenter.readme.validation.surface_claims import fence_withheld_form, kept_unit_form
-E     File "/home/user/repo-presenter/.claude/worktrees/fix-abc/.gatectl-worktrees/wt-f47r2unj/src/repo_presenter/readme/validation/surface_claims.py", line 770
+E     File "/home/user/repo-presenter/.claude/worktrees/integ30/.gatectl-worktrees/wt-z5bcmyph/src/repo_presenter/readme/validation/surface_claims.py", line 770
 E       _disabled_def _table_findings(
 E                     ^^^^^^^^^^^^^^^
 E   SyntaxError: invalid syntax
@@ -75,7 +75,7 @@ ____ ERROR collecting tests/readme/validation/test_surface_claims_probes.py ____
     exec(co, module.__dict__)
 tests/readme/validation/test_surface_claims_probes.py:16: in <module>
     from repo_presenter.readme.validation.surface_claims import surface_findings
-E     File "/home/user/repo-presenter/.claude/worktrees/fix-abc/.gatectl-worktrees/wt-f47r2unj/src/repo_presenter/readme/validation/surface_claims.py", line 770
+E     File "/home/user/repo-presenter/.claude/worktrees/integ30/.gatectl-worktrees/wt-z5bcmyph/src/repo_presenter/readme/validation/surface_claims.py", line 770
 E       _disabled_def _table_findings(
 E                     ^^^^^^^^^^^^^^^
 E   SyntaxError: invalid syntax
@@ -83,7 +83,7 @@ E   SyntaxError: invalid syntax
 ERROR tests/readme/validation/test_claims_mechanical.py
 ERROR tests/readme/validation/test_surface_claims_probes.py
 !!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
-2 errors in 0.56s
+2 errors in 0.97s
 
 --- stderr ---
 
