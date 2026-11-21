@@ -7,21 +7,22 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision",
-        "license:spdx",
         "package:license",
         "package:name",
         "package:python_requires",
         "package:version"
       ],
-      "rationale": "The H1 product name is rendered deterministically from identity and package facts.",
+      "rationale": "The H1 product name is rendered deterministically from identity facts.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
       "destination_section": "badges",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "license:spdx",
         "link_target:001",
         "link_target:002",
         "link_target:003",
@@ -53,43 +54,39 @@
         "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The badge row is rendered deterministically from link_target facts for license and contributors.",
+      "rationale": "The license badge is rendered deterministically from license facts.",
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
       "destination_section": "banner",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "link_target:005",
-        "link_target:006",
         "link_target:product.banner",
         "link_target:product.homepage"
       ],
-      "rationale": "The banner image link is rendered deterministically from product banner and homepage link_target facts.",
+      "rationale": "The product illustration banner is rendered deterministically from link_target facts.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
       "destination_section": "opening",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "identity:repository",
         "identity:ecosystem",
         "identity:family",
-        "identity:platform",
         "package:name",
+        "package:version",
         "package:license",
-        "license:spdx",
         "import_path:aspose_html",
-        "public_symbol:aspose_html",
+        "public_symbol:aspose_html.htmldocument",
         "public_symbol:aspose_html.dom",
         "public_symbol:aspose_html.cssom",
         "public_symbol:aspose_html.url",
         "public_symbol:aspose_html.encoding",
-        "public_symbol:aspose_html.js",
-        "dependency:skia-python-87.0-145",
-        "dependency:optional.js.quickjs-1.19-2",
-        "example:001"
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.serialise"
       ],
-      "rationale": "The paragraph describes the product, its capabilities, and optional JS execution; all are supported by facts.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -99,6 +96,7 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
         "identity:revision"
       ],
@@ -112,81 +110,103 @@
         "identity:ecosystem",
         "identity:family",
         "identity:platform",
+        "identity:product-knowledge-refresh",
         "identity:repository",
-        "identity:revision",
-        "link_target:007",
-        "link_target:008",
-        "link_target:009",
-        "link_target:010",
-        "link_target:011",
-        "link_target:012",
-        "link_target:013",
-        "link_target:014",
-        "link_target:015",
-        "link_target:016",
-        "link_target:017"
+        "identity:revision"
       ],
-      "rationale": "The navigation list items are rendered deterministically from link_target facts for section anchors.",
+      "rationale": "The navigation list is rendered by the deterministic navigation section.",
       "unit_id": "inherited_unit:006.list"
     },
     {
-      "destination_section": "at_a_glance",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "The At a Glance heading is rendered by the deterministic at_a_glance section.",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'At a Glance' heading is not placeable per the destination sections; the section is not placeable and the diagram is superseded by the at_a_glance section.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
       "destination_section": "at_a_glance",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:001",
-        "example:002",
-        "example:003",
-        "example:004",
-        "example:005",
-        "example:006",
-        "example:007",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssstylerule",
         "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.dom.computedstyledeclaration",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.htmlcollection",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmlheadingelement",
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.nodelist",
+        "public_symbol:aspose_html.dom.xmlserializer",
         "public_symbol:aspose_html.encoding.detect_encoding",
+        "public_symbol:aspose_html.encoding.encodingdetectionresult",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment",
         "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.jsevaluationerror",
+        "public_symbol:aspose_html.js.modulenotfounderror",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.boxroot",
+        "public_symbol:aspose_html.layout.build_box_tree",
+        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.layout.paginate_fragments",
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.tokenizer.commenttoken",
+        "public_symbol:aspose_html.tokenizer.doctypetoken",
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
         "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.serialise"
+        "public_symbol:aspose_html.tree.parse_html",
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams",
+        "public_symbol:aspose_html.xmlserializer"
       ],
-      "rationale": "The Mermaid diagram is superseded by the at_a_glance section, which regenerates the flowchart from verified examples and public symbols.",
+      "rationale": "Superseded by the At a Glance diagram the renderer draws from the verified formats and capabilities.",
       "unit_id": "inherited_unit:008.code_block"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "The Key Capabilities heading is rendered by the deterministic key_capabilities section.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom",
+        "public_symbol:aspose_html.cssom",
+        "public_symbol:aspose_html.url",
+        "public_symbol:aspose_html.encoding",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.serialise"
+      ],
+      "rationale": "The Key Capabilities heading is placeable and the list items are supported by public symbols and examples.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
       "destination_section": "key_capabilities",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom",
+        "public_symbol:aspose_html.cssom",
+        "public_symbol:aspose_html.url",
+        "public_symbol:aspose_html.encoding",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.serialise",
         "example:001",
         "example:002",
         "example:003",
-        "example:004",
         "example:005",
         "example:006",
-        "example:007",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.serialise"
+        "example:007"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "The list items are supported by public symbols and examples, and match the capabilities and workflows in the accepted investigation.",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -195,61 +215,65 @@
       "fact_ids": [
         "install_command:pip"
       ],
-      "rationale": "The Installation heading is rendered by the deterministic installation section.",
+      "rationale": "The Installation heading is rendered deterministically from the install_command fact.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "install_command:pip"
+        "install_command:pip",
+        "build_test_asset:tests",
+        "build_test_asset:examples"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "The paragraph describes source checkout usage and PYTHONPATH setup, which is supported by the install_command and build_test_asset facts.",
       "unit_id": "inherited_unit:012.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "install_command:pip",
         "build_test_asset:tests",
-        "build_test_asset:examples",
-        "build_test_asset:test-command",
-        "dependency:development.test.pytest-8"
+        "build_test_asset:examples"
       ],
-      "rationale": "The install code block is moved to development_testing as it is not printed by the installation section but is a real build/test setup step.",
+      "rationale": "The code block matches the install_command fact and is used for source checkout setup.",
       "unit_id": "inherited_unit:013.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "install_command:pip"
+        "install_command:pip",
+        "build_test_asset:tests",
+        "build_test_asset:examples"
       ],
-      "rationale": "The PYTHONPATH instruction is moved to development_testing as it is part of the source checkout workflow.",
+      "rationale": "The paragraph continues the source checkout setup instructions and is supported by the install_command and build_test_asset facts.",
       "unit_id": "inherited_unit:014.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "dependency:optional.js.quickjs-1.19-2",
         "dependency:skia-python-87.0-145",
         "import_path:aspose_html",
+        "install_command:pip",
         "package:name",
         "package:python_requires",
         "public_symbol:aspose_html"
       ],
-      "rationale": "Lead-in of the block that follows: kept in its section, with it.",
+      "rationale": "The paragraph describes the package name, import path, Python version requirement, and optional JavaScript dependency, all of which are supported by facts.",
       "unit_id": "inherited_unit:015.paragraph"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "install_command:pip",
         "dependency:optional.js.quickjs-1.19-2"
       ],
-      "rationale": "The quickjs install command is moved to development_testing as an optional dependency setup step.",
+      "rationale": "The code block installs the optional quickjs dependency, which is supported by the dependency fact.",
       "unit_id": "inherited_unit:016.code_block"
     },
     {
@@ -260,7 +284,7 @@
         "dependency:optional.js.quickjs-1.19-2",
         "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The Dependencies heading is rendered by the deterministic dependencies section.",
+      "rationale": "The Dependencies heading is rendered deterministically from dependency facts.",
       "unit_id": "inherited_unit:017.heading"
     },
     {
@@ -271,18 +295,16 @@
         "dependency:optional.js.quickjs-1.19-2",
         "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The Required Package Dependencies heading is rendered by the deterministic dependencies section.",
+      "rationale": "The 'Required Package Dependencies' heading is rendered deterministically from the dependency section.",
       "unit_id": "inherited_unit:018.heading"
     },
     {
-      "destination_section": "dependencies",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "dependency:development.test.pytest-8",
-        "dependency:optional.js.quickjs-1.19-2",
         "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The required dependency list is rendered deterministically from the skia-python dependency fact.",
+      "rationale": "The list item describes the required skia-python dependency, which is supported by the dependency fact.",
       "unit_id": "inherited_unit:019.list"
     },
     {
@@ -293,45 +315,37 @@
         "dependency:optional.js.quickjs-1.19-2",
         "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The Optional Dependencies heading is rendered by the deterministic dependencies section.",
+      "rationale": "The 'Optional Dependencies' heading is rendered deterministically from the dependency section.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
-      "destination_section": "dependencies",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "dependency:development.test.pytest-8",
-        "dependency:optional.js.quickjs-1.19-2",
-        "dependency:skia-python-87.0-145"
+        "dependency:optional.js.quickjs-1.19-2"
       ],
-      "rationale": "The dependency on quickjs is already captured in the dependencies section as an optional dependency.",
+      "rationale": "The list item correctly states the optional `quickjs` dependency and its version constraint, which is verified by the dependency fact.",
       "unit_id": "inherited_unit:021.list"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
-      "fact_ids": [],
-      "rationale": "The heading 'Native and System Requirements' is not supported by any fact; system requirements are not documented.",
-      "unit_id": "inherited_unit:022.heading"
-    },
-    {
       "destination_section": "dependencies",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "dependency:development.test.pytest-8",
         "dependency:optional.js.quickjs-1.19-2",
-        "dependency:skia-python-87.0-145",
-        "package:python_requires"
+        "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The Python version requirement (>=3.10) is already captured in the dependencies section via the package:python_requires fact.",
-      "unit_id": "inherited_unit:023.list"
+      "rationale": "The heading 'Native and System Requirements' is superseded by the 'Dependencies' section which renders system requirements from facts.",
+      "unit_id": "inherited_unit:022.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
-      "fact_ids": [],
-      "rationale": "The heading 'Development Dependencies' is not supported by any fact; development dependencies are not documented separately.",
-      "unit_id": "inherited_unit:024.heading"
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "package:python_requires"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no install material. The requirement for Python 3.10 or later is verified by the package fact and correc...",
+      "unit_id": "inherited_unit:023.list"
     },
     {
       "destination_section": "dependencies",
@@ -341,14 +355,26 @@
         "dependency:optional.js.quickjs-1.19-2",
         "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The pytest dependency is already captured in the dependencies section as a development dependency.",
+      "rationale": "The heading 'Development Dependencies' is superseded by the 'Dependencies' section which renders development dependencies from facts.",
+      "unit_id": "inherited_unit:024.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "dependency:development.test.pytest-8"
+      ],
+      "rationale": "The list item correctly states `pytest>=8` as a development dependency, verified by both the test command and dependency facts.",
       "unit_id": "inherited_unit:025.list"
     },
     {
       "destination_section": "quick_start",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [],
-      "rationale": "The 'Quick Start' heading is placeable in the quick_start section and matches the section ID.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading 'Quick Start' is superseded by the 'Quick Start' section which renders a minimal verified example.",
       "unit_id": "inherited_unit:026.heading"
     },
     {
@@ -366,7 +392,7 @@
       "fact_ids": [
         "example:001"
       ],
-      "rationale": "The code block matches the verified example:001 and is supported as a Quick Start example.",
+      "rationale": "The code block matches the verified example fact and is preserved as the minimal Quick Start example.",
       "unit_id": "inherited_unit:028.code_block"
     },
     {
@@ -384,32 +410,35 @@
       "fact_ids": [
         "example:002"
       ],
-      "rationale": "The code block matches the verified example:002 and is supported as an Additional Example.",
+      "rationale": "The code block matches the verified example fact and is preserved under Additional Examples.",
       "unit_id": "inherited_unit:030.code_block"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [],
-      "rationale": "The 'Additional Examples' heading is placeable in the additional_examples section and matches the section ID.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The heading 'Additional Examples' is superseded by the 'Additional Examples' section which renders further verified examples.",
       "unit_id": "inherited_unit:031.heading"
     },
     {
       "destination_section": "additional_examples",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "VERIFIED_MOVE",
       "fact_ids": [
-        "build_test_asset:examples"
+        "build_test_asset:examples",
+        "link_target:018"
       ],
-      "rationale": "The paragraph points to the examples/ directory, which is verified as a build_test_asset.",
+      "rationale": "The paragraph pointing to the examples directory is preserved and moved to Additional Examples where it belongs.",
       "unit_id": "inherited_unit:032.paragraph"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:003"
+        "link_target:018"
       ],
-      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "rationale": "Heading owned by the renderer: additional examples prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:033.heading"
     },
     {
@@ -418,23 +447,23 @@
       "fact_ids": [
         "example:003"
       ],
-      "rationale": "The code block matches the verified example:003 and is supported as an Additional Example.",
+      "rationale": "The code block matches the verified example fact and is preserved under Additional Examples.",
       "unit_id": "inherited_unit:034.code_block"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "The HTML block is not supported by any fact and introduces no verifiable content.",
+      "rationale": "The HTML block is promotional, non-functional, and adds no verifiable value; it is omitted.",
       "unit_id": "inherited_unit:035.html_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:004"
+        "link_target:018"
       ],
-      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "rationale": "Heading owned by the renderer: additional examples prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:036.heading"
     },
     {
@@ -443,16 +472,16 @@
       "fact_ids": [
         "example:004"
       ],
-      "rationale": "The code block matches the verified example:004 and is supported as an Additional Example.",
+      "rationale": "The code block matches the verified example fact and is preserved under Additional Examples.",
       "unit_id": "inherited_unit:037.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:005"
+        "link_target:018"
       ],
-      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "rationale": "Heading owned by the renderer: additional examples prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:038.heading"
     },
     {
@@ -461,16 +490,16 @@
       "fact_ids": [
         "example:005"
       ],
-      "rationale": "The code block matches the verified example:005 and is supported as an Additional Example.",
+      "rationale": "The code block matches the verified example fact and is preserved under Additional Examples.",
       "unit_id": "inherited_unit:039.code_block"
     },
     {
       "destination_section": "additional_examples",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "example:006"
+        "link_target:018"
       ],
-      "rationale": "Heading owned by the renderer: the example section prints its own title for the example this heading introduced.",
+      "rationale": "Heading owned by the renderer: additional examples prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:040.heading"
     },
     {
@@ -479,7 +508,7 @@
       "fact_ids": [
         "example:006"
       ],
-      "rationale": "The code block matches example:006 exactly and demonstrates JSContext usage, fitting Additional Examples.",
+      "rationale": "The code block matches example:006 exactly and demonstrates JavaScript execution, a verified capability.",
       "unit_id": "inherited_unit:041.code_block"
     },
     {
@@ -488,7 +517,7 @@
       "fact_ids": [
         "example:006"
       ],
-      "rationale": "The heading 'Drive The Tokenizer Directly' introduces a code block superseded by the example under Additional Examples.",
+      "rationale": "The heading 'Drive The Tokenizer Directly' introduces a code block superseded by example:006 under 'Additional Examples'.",
       "unit_id": "inherited_unit:042.heading"
     },
     {
@@ -497,264 +526,169 @@
       "fact_ids": [
         "example:007"
       ],
-      "rationale": "The code block matches example:007 exactly and demonstrates tokenizer control, fitting Additional Examples.",
+      "rationale": "The code block matches example:007 exactly and demonstrates tokenizer control, a verified capability.",
       "unit_id": "inherited_unit:043.code_block"
     },
     {
-      "destination_section": "additional_examples",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "example:007"
-      ],
-      "rationale": "The closing </details> tag is paired with the preceding heading and code block, both superseded by Additional Examples.",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The closing </details> tag is orphaned and serves no purpose without a matching opening tag in the inherited content.",
       "unit_id": "inherited_unit:044.html_block"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The 'API Reference' heading is appropriate for the API Reference section and is supported by the public symbol inventory.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html",
+        "public_symbol:aspose_html.dom",
+        "public_symbol:aspose_html.cssom",
+        "public_symbol:aspose_html.encoding",
+        "public_symbol:aspose_html.js"
+      ],
+      "rationale": "The 'API Reference' heading is superseded by the deterministic API Reference section that lists the complete public surface.",
       "unit_id": "inherited_unit:045.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_REWRITE",
-      "fact_ids": [
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.js.jscontext"
-      ],
-      "rationale": "The paragraph's claim of 243 public types is unsupported; the sentence is re-authored to remove the dangling pointer while preserving the API Reference context.",
+      "disposition": "PRESERVE_ATTRIBUTED",
+      "fact_ids": [],
+      "rationale": "The paragraph describes the primary entry point and public surface size; it adds context not fully captured by the symbol list.",
       "unit_id": "inherited_unit:046.paragraph"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.js.jscontext"
-      ],
-      "rationale": "The HTML summary block is paired with the API Reference heading and superseded by the API Reference section content.",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "The opening <details> tag is orphaned and serves no purpose without a matching closing tag in the inherited content.",
       "unit_id": "inherited_unit:047.html_block"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The 'Core API' heading is appropriate for the Core API subsection in the API Reference section.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom.document"
+      ],
+      "rationale": "The 'Core API' heading and its table are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:048.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_html.htmldocument"
+        "public_symbol:aspose_html.htmldocument",
+        "public_symbol:aspose_html.dom.document"
       ],
-      "rationale": "The table entry for HTMLDocument is supported by the public symbol and fits the API Reference structure.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table is superseded by the deterministic API Reference section that lists all public symbo",
       "unit_id": "inherited_unit:049.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
         "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.cssom.cssstylerule"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'CSS' heading and its table are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:050.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssmediarule",
-        "public_symbol:aspose_html.cssom.cssstylesheet"
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.cssom.cssstylerule"
       ],
-      "rationale": "The CSSOM selector classes listed are supported by public symbols and fit the API Reference structure.",
+      "rationale": "The table is superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:051.table"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [],
-      "rationale": "The 'Enumerations' heading is appropriate for the CSSOM enumerations subsection in the API Reference section.",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssstylerule"
+      ],
+      "rationale": "The 'Enumerations' heading and its table are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:052.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_html.cssom.cssrule",
         "public_symbol:aspose_html.cssom.cssstylerule"
       ],
-      "rationale": "The CSSOM enumerations listed are supported by public symbols and fit the API Reference structure.",
+      "rationale": "The table is superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:053.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssrule"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'CSSOM' heading and its table are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:054.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssmediarule"
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssrule"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table is superseded by the deterministic API Reference section that lists all public symbo",
       "unit_id": "inherited_unit:055.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.dom",
+        "public_symbol:aspose_html.dom.document"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'DOM' heading and its table are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:056.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.dom.attr"
+        "public_symbol:aspose_html.dom",
+        "public_symbol:aspose_html.dom.document"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table is superseded by the deterministic API Reference section that lists all public symbo",
       "unit_id": "inherited_unit:057.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.encoding",
+        "public_symbol:aspose_html.encoding.detect_encoding"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'Encoding' heading and its table are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:058.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.encoding.unsupportedencodingerror"
+        "public_symbol:aspose_html.encoding",
+        "public_symbol:aspose_html.encoding.detect_encoding"
       ],
-      "rationale": "The encoding classes listed are supported by public symbols and fit the API Reference structure.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table is superseded by the deterministic API Reference section that lists all public symbo",
       "unit_id": "inherited_unit:059.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.js",
+        "public_symbol:aspose_html.js.jscontext"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "The 'JS' heading and its implied content are superseded by the deterministic API Reference section that lists all public symbols.",
       "unit_id": "inherited_unit:060.heading"
     },
     {
@@ -763,43 +697,24 @@
       "fact_ids": [
         "public_symbol:aspose_html.js.jscontext",
         "public_symbol:aspose_html.js.jsevaluationerror",
-        "public_symbol:aspose_html.js.modulenotfounderror",
-        "public_symbol:aspose_html.js.moduleregistry"
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.js.modulenotfounderror"
       ],
-      "rationale": "The table lists JSContext-related classes already covered by the API Reference section's public symbol inventory.",
+      "rationale": "Lists core JSContext-related classes and their purpose; facts confirm these symbols exist and are used in JavaScript execution.",
       "unit_id": "inherited_unit:061.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "identity:ecosystem"
       ],
-      "rationale": "The '### Layout' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "rationale": "The 'Layout' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:062.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose_html.layout.blockfragment",
         "public_symbol:aspose_html.layout.boxnode",
@@ -814,14 +729,16 @@
         "public_symbol:aspose_html.layout.pagemarginboxes",
         "public_symbol:aspose_html.layout.shapedrun"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Lists layout-related classes and descriptions; facts confirm these symbols exist and are part of the layout infrastructure.",
       "unit_id": "inherited_unit:063.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "The '### Tokenizer' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Tokenizer' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:064.heading"
     },
     {
@@ -842,54 +759,37 @@
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "The '#### Enumerations' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:066.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose_html.tokenizer.tokenizerstate"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Lists TokenizerState enumeration; fact confirms this symbol exists and represents tokeniser states.",
       "unit_id": "inherited_unit:067.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "identity:ecosystem"
       ],
-      "rationale": "The '### Tree' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "rationale": "The 'Tree' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:068.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_html.tree.parse_fragment",
+        "public_symbol:aspose_html.tree.treebuilder",
         "public_symbol:aspose_html.tree.parse_html",
-        "public_symbol:aspose_html.tree.treebuilder"
+        "public_symbol:aspose_html.tree.parse_fragment"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:069.table"
@@ -897,14 +797,18 @@
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [],
-      "rationale": "The '#### Enumerations' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Enumerations' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:070.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "PRESERVE_ATTRIBUTED",
-      "fact_ids": [],
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_html.tree.treebuilder"
+      ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:071.table"
     },
@@ -912,130 +816,78 @@
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "identity:ecosystem"
       ],
-      "rationale": "The '### URL' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "rationale": "The 'URL' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:072.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_PRESERVE",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:aspose_html.url.url",
         "public_symbol:aspose_html.url.urlparseerror",
         "public_symbol:aspose_html.url.urlsearchparams"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Lists URL-related classes and descriptions; facts confirm these symbols exist and are used for URL parsing and manipulation.",
       "unit_id": "inherited_unit:073.table"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
-      "fact_ids": [],
-      "rationale": "No fact supports a 'Detailed Member Reference' section; the API Reference section covers the public surface without this heading.",
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Detailed Member Reference' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:074.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "identity:ecosystem"
       ],
-      "rationale": "The '### HTML Parsing and Documents' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "rationale": "The 'HTML Parsing and Documents' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:075.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment",
         "public_symbol:aspose_html.tree.parse_html"
       ],
-      "rationale": "The list of parsing methods duplicates the API Reference section's public symbol inventory.",
+      "rationale": "Lists key HTML parsing methods and lower-level pipeline components; facts confirm these symbols exist and are used for parsing.",
       "unit_id": "inherited_unit:076.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.xmlserializer"
+        "identity:ecosystem"
       ],
-      "rationale": "The '### DOM Core' heading is superseded by the API Reference section's structured public symbol inventory.",
+      "rationale": "The 'DOM Core' heading is superseded by the API Reference section which will re-author all API surface under its own structure.",
       "unit_id": "inherited_unit:077.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The Document/Element API list duplicates the API Reference section's public symbol inventory.",
+      "rationale": "Lists Document and Element methods and attributes; facts confirm these symbols exist and are used for DOM manipulation.",
       "unit_id": "inherited_unit:078.001.list"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The Element API list duplicates the API Reference section's public symbol inventory.",
+      "rationale": "Lists Element methods and attributes; facts confirm these symbols exist and are used for attribute and style access.",
       "unit_id": "inherited_unit:078.002.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose_html.dom.node",
         "public_symbol:aspose_html.dom.nodelist",
@@ -1043,64 +895,83 @@
         "public_symbol:aspose_html.dom.attr",
         "public_symbol:aspose_html.dom.namednodemap"
       ],
-      "rationale": "The Node API list duplicates the API Reference section's public symbol inventory.",
+      "rationale": "Lists Node and related types; facts confirm these symbols exist and form the DOM core hierarchy.",
       "unit_id": "inherited_unit:078.003.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
+        "public_symbol:aspose_html.dom.treewalker",
         "public_symbol:aspose_html.dom.nodeiterator",
         "public_symbol:aspose_html.dom.range",
-        "public_symbol:aspose_html.dom.selection",
         "public_symbol:aspose_html.dom.staticrange",
-        "public_symbol:aspose_html.dom.treewalker"
+        "public_symbol:aspose_html.dom.selection"
       ],
-      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists DOM traversal and range/selection APIs supported by the library, confirmed by public sym",
       "unit_id": "inherited_unit:078.004.list"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:aspose_html.dom.customevent",
         "public_symbol:aspose_html.dom.event",
-        "public_symbol:aspose_html.dom.eventtarget",
+        "public_symbol:aspose_html.dom.customevent",
+        "public_symbol:aspose_html.dom.mouseevent",
+        "public_symbol:aspose_html.dom.keyboardevent",
         "public_symbol:aspose_html.dom.focusevent",
         "public_symbol:aspose_html.dom.inputevent",
-        "public_symbol:aspose_html.dom.keyboardevent",
-        "public_symbol:aspose_html.dom.mouseevent",
+        "public_symbol:aspose_html.dom.eventtarget",
         "public_symbol:aspose_html.dom.mutationobserver"
       ],
-      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists DOM event and mutation-observation APIs supported by the library, confirmed by public sy",
       "unit_id": "inherited_unit:078.005.list"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.cssom.cssmediarule",
         "public_symbol:aspose_html.cssom.cssstylerule",
         "public_symbol:aspose_html.cssom.cssstylesheet",
         "public_symbol:aspose_html.dom.computedstyledeclaration",
         "public_symbol:aspose_html.dom.document",
         "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
+        "public_symbol:aspose_html.dom.htmlcollection",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmlheadingelement",
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.nodelist",
+        "public_symbol:aspose_html.dom.xmlserializer",
         "public_symbol:aspose_html.encoding.detect_encoding",
         "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.htmldocument",
         "public_symbol:aspose_html.htmldocument.load",
         "public_symbol:aspose_html.htmldocument.parse",
         "public_symbol:aspose_html.htmldocument.parse_fragment",
         "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.jsevaluationerror",
+        "public_symbol:aspose_html.js.modulenotfounderror",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.boxroot",
+        "public_symbol:aspose_html.layout.build_box_tree",
+        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.layout.paginate_fragments",
         "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.tokenizer.commenttoken",
+        "public_symbol:aspose_html.tokenizer.doctypetoken",
         "public_symbol:aspose_html.tokenizer.starttagtoken",
         "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.parse_html",
+        "public_symbol:aspose_html.tree.treebuilder",
         "public_symbol:aspose_html.url.url",
         "public_symbol:aspose_html.url.urlsearchparams",
         "public_symbol:aspose_html.xmlserializer"
       ],
-      "rationale": "The heading '### CSS And CSSOM' is not supported as a distinct section; CSSOM capabilities are integrated into Key Capabilities.",
+      "rationale": "Heading owned by the renderer: key capabilities prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:079.heading"
     },
     {
@@ -1109,100 +980,155 @@
       "fact_ids": [
         "finding:0d79c4711d58"
       ],
-      "rationale": "Kept in api_reference: key_capabilities holds no api material. The list item describes CSSOM classes and style declarations, which are covered by the Key Cap...",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists CSSOM parsing and stylesheet/rule objects supported by the library, confirmed by public ",
       "unit_id": "inherited_unit:080.list"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:aspose_html.encoding.detect_encoding"
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.dom.computedstyledeclaration",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.htmlcollection",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmlheadingelement",
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.nodelist",
+        "public_symbol:aspose_html.dom.xmlserializer",
+        "public_symbol:aspose_html.encoding.detect_encoding",
+        "public_symbol:aspose_html.encoding.encodingdetectionresult",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.jsevaluationerror",
+        "public_symbol:aspose_html.js.modulenotfounderror",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.boxroot",
+        "public_symbol:aspose_html.layout.build_box_tree",
+        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.layout.paginate_fragments",
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.tokenizer.commenttoken",
+        "public_symbol:aspose_html.tokenizer.doctypetoken",
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.parse_html",
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams",
+        "public_symbol:aspose_html.xmlserializer"
       ],
-      "rationale": "The heading '### URL And Encoding' is not supported as a distinct section; URL and encoding capabilities are integrated into Key Capabilities.",
+      "rationale": "Heading owned by the renderer: key capabilities prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:081.heading"
     },
     {
-      "destination_section": "scope_limitations",
+      "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose_html.encoding.detect_encoding"
       ],
-      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists URL and encoding utilities supported by the library, confirmed by public symbols.",
       "unit_id": "inherited_unit:082.list"
     },
     {
-      "destination_section": "api_reference",
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2"
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.css.select",
+        "public_symbol:aspose_html.cssom.cssmediarule",
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.dom.computedstyledeclaration",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.htmlcollection",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmlheadingelement",
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.nodelist",
+        "public_symbol:aspose_html.dom.xmlserializer",
+        "public_symbol:aspose_html.encoding.detect_encoding",
+        "public_symbol:aspose_html.encoding.encodingdetectionresult",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.parse_fragment",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.jsevaluationerror",
+        "public_symbol:aspose_html.js.modulenotfounderror",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.boxroot",
+        "public_symbol:aspose_html.layout.build_box_tree",
+        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.layout.paginate_fragments",
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.tokenizer.commenttoken",
+        "public_symbol:aspose_html.tokenizer.doctypetoken",
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.parse_html",
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.url.urlsearchparams",
+        "public_symbol:aspose_html.xmlserializer"
       ],
-      "rationale": "The heading '### JavaScript Bridge (Optional)' is not supported as a distinct section; JavaScript execution is covered under Key Capabilities.",
+      "rationale": "Heading owned by the renderer: key capabilities prints its own headings, so this inherited heading is not printed as written.",
       "unit_id": "inherited_unit:083.heading"
     },
     {
       "destination_section": "api_reference",
-      "disposition": "SUPERSEDE_REDUNDANT",
-      "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2"
-      ],
-      "rationale": "Not printed again: api reference already states this material from the facts it cites, so the kept unit is redundant.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists JavaScript execution features supported by the library, confirmed by public symbols.",
       "unit_id": "inherited_unit:084.list"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "The closing HTML tag '</details>' is not a material unit and has no supporting fact; it is non-content.",
+      "rationale": "HTML closing tag without context or matching opening tag; non-content separator.",
       "unit_id": "inherited_unit:085.html_block"
     },
     {
       "destination_section": "documentation_resources",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "link_target:014",
-        "link_target:019",
-        "link_target:020",
-        "link_target:021",
-        "link_target:022",
-        "link_target:018",
-        "link_target:023",
-        "link_target:024",
-        "link_target:025",
-        "link_target:026"
-      ],
-      "rationale": "The heading '## Documentation & Resources' is preserved as-is and moved to the Documentation & Resources section, which is placeable and supported by the listed",
+      "fact_ids": [],
+      "rationale": "The heading 'Documentation & Resources' introduces a list of documentation links that belong under Documentation & Resources.",
       "unit_id": "inherited_unit:086.heading"
     },
     {
       "destination_section": "documentation_resources",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "link_target:018",
         "link_target:019",
         "link_target:020",
         "link_target:021",
         "link_target:022",
+        "link_target:018",
         "link_target:023",
         "link_target:024",
         "link_target:025",
         "link_target:026"
       ],
-      "rationale": "Kept as written (inherit-and-correct, R43(3)). Not printed again: documentation resources already states this material from the facts it cites, so the kept unit",
+      "rationale": "Lists verified documentation, reference, and resource links supported by link targets.",
       "unit_id": "inherited_unit:087.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "link_target:015",
-        "public_symbol:aspose_html.css.select",
-        "public_symbol:aspose_html.css.element_matches",
-        "public_symbol:aspose_html.cssom.cssrule",
-        "public_symbol:aspose_html.dom.validitystate",
-        "public_symbol:aspose_html.layout.blockfragment",
-        "public_symbol:aspose_html.layout.pagefragment"
-      ],
-      "rationale": "The heading '## Scope and Limitations' is preserved as-is and moved to the Scope and Limitations section, which is placeable and supported by the listed facts.",
+      "fact_ids": [],
+      "rationale": "The heading 'Scope and Limitations' introduces a list of limitations that belong under Scope and Limitations.",
       "unit_id": "inherited_unit:088.heading"
     },
     {
@@ -1210,68 +1136,54 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:aspose_html.css.select",
-        "public_symbol:aspose_html.css.element_matches",
         "public_symbol:aspose_html.cssom.cssrule",
         "public_symbol:aspose_html.dom.validitystate",
-        "public_symbol:aspose_html.layout.blockfragment",
-        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.layout.boxnode",
         "public_symbol:aspose_html.js.jscontext",
         "finding:8a52c20d0bd1"
       ],
-      "rationale": "The list of limitations is supported by public symbols and facts and placed in the Scope and Limitations section.",
+      "rationale": "Lists limitations confirmed by public symbols and examples, including CSS selector scope, CSSOM stubs, unimplemented APIs, and JS execution constraints.",
       "unit_id": "inherited_unit:089.list"
     },
     {
-      "destination_section": "enterprise_relationship",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "link_target:027",
         "link_target:product.enterprise"
       ],
-      "rationale": "The paragraph about the Enterprise Edition is supported by verified product links and moved to the Enterprise Relationship section.",
+      "rationale": "Omitted by the BL-480 last-resort degrade (R14, R42): the independent review found no fact that supports what this paragraph says the commercial product adds, and this repository cannot verify a statement about a different product, so it is no longer made; the verified Enterprise Edition link stays in the closing sentence of Scope and Limitations",
       "unit_id": "inherited_unit:090.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
-      "fact_ids": [
-        "link_target:016",
-        "build_test_asset:test-command",
-        "build_test_asset:examples",
-        "build_test_asset:tests"
-      ],
-      "rationale": "The heading '## Development and Testing' is preserved as-is and moved to the Development and Testing section, which is placeable and supported by build/test资产.",
+      "fact_ids": [],
+      "rationale": "The heading 'Development and Testing' introduces test setup instructions that belong under Development and Testing.",
       "unit_id": "inherited_unit:091.heading"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "build_test_asset:test-command",
-        "install_command:pip"
-      ],
-      "rationale": "The paragraph describing testing setup is supported by test-command and install facts and preserved in Development and Testing.",
+      "fact_ids": [],
+      "rationale": "Describes the test setup using the same checkout as installation, which is consistent with the install command fact.",
       "unit_id": "inherited_unit:092.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "install_command:pip",
         "build_test_asset:test-command",
         "dependency:development.test.pytest-8",
         "dependency:skia-python-87.0-145"
       ],
-      "rationale": "The pytest install and run command is supported by install_command and dependency facts and preserved in Development and Testing.",
+      "rationale": "Lists the test dependencies and command verified by build_test_asset and dependency facts.",
       "unit_id": "inherited_unit:093.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
-      "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2"
-      ],
-      "rationale": "The paragraph about quickjs for JS tests is supported by the optional.js dependency fact and preserved in Development and Testing.",
+      "fact_ids": [],
+      "rationale": "Describes the optional `quickjs` extra for JavaScript tests, consistent with the optional JS dependency fact.",
       "unit_id": "inherited_unit:094.paragraph"
     },
     {
@@ -1280,28 +1192,27 @@
       "fact_ids": [
         "dependency:optional.js.quickjs-1.19-2"
       ],
-      "rationale": "The quickjs install command is supported by the optional.js dependency fact and preserved in Development and Testing.",
+      "rationale": "Lists the `quickjs` dependency verified by the dependency fact.",
       "unit_id": "inherited_unit:095.code_block"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "dependency:optional.js.quickjs-1.19-2",
-        "dependency:skia-python-87.0-145",
         "import_path:aspose_html",
         "public_symbol:aspose_html"
       ],
-      "rationale": "The paragraph about conditional test skipping is supported by dependency facts and preserved in Development and Testing.",
+      "rationale": "Describes conditional test skipping for JS and Skia, consistent with optional dependency facts.",
       "unit_id": "inherited_unit:096.paragraph"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "build_test_asset:tests"
+        "build_test_asset:tests",
+        "build_test_asset:examples"
       ],
-      "rationale": "The paragraph lists specific test directories (e.g., test_html/, test_dom/, tokenizer/, etc.) but the only verified test asset fact confirms a generic 'tests/''",
+      "rationale": "Kept as written (inherit-and-correct, R43(3)). The list of test modules is redundant with the development_testing section, which will summarize test structure f",
       "unit_id": "inherited_unit:097.paragraph"
     },
     {
@@ -1311,19 +1222,17 @@
         "license:file",
         "license:spdx"
       ],
-      "rationale": "The '## License' heading is superseded by the deterministic license section, which renders the license declaration.",
+      "rationale": "The '## License' heading is superseded by the license section, which renders from license facts.",
       "unit_id": "inherited_unit:098.heading"
     },
     {
-      "destination_section": "enterprise_relationship",
+      "destination_section": "license",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "license:file",
-        "license:spdx",
-        "link_target:product.enterprise",
-        "package:license"
+        "license:spdx"
       ],
-      "rationale": "The paragraph's substance about the MIT License and its permissions is supported by the license facts and fits the enterprise relationship section as a license.",
+      "rationale": "Superseded by the License section, which states the license from facts. The license summary paragraph is factual, supported by license facts, and adds useful co",
       "unit_id": "inherited_unit:099.paragraph"
     }
   ]

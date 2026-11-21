@@ -1,33 +1,63 @@
 {
   "acceptance_label": "uncalibrated",
   "calibration_status": "NOT_PASSED",
-  "findings": [],
+  "findings": [
+    {
+      "absent": [],
+      "causal_stage": "S6",
+      "claim_kind": "unsupported_claim",
+      "clearance": {
+        "digest": "879b9339f2a76956024b511d1c2acd0ebb1b0519c80740918164668ff0068ed6",
+        "evidence": [
+          "line 229 is printed from SUPPORTED facts by a deterministic stage (zero-call re-derivation); no register row or claim detector refutes it; verified by its provenance (K05 verified: 303 public types = SUPPORTED class/enum public_symbol facts (302 classes + 1 enums = 303; by source root: src/aspose_html 303), after the build's package list (recertify.shipped_facts))"
+        ],
+        "name": "derived_from_supported_facts"
+      },
+      "criterion": "factuality",
+      "evidence": "audit: distinctive terms ['HTMLDocument', 'Document', 'Node', 'Element', 'HTMLElement', 'JSContext', '303']; found in SUPPORTED fact values: HTMLDocument -> example:001, Document -> enum_member:aspose_html.dom.documentposition.document_position_contained_by, Node -> implementation:returns.aspose_html.dom.cdatasection.node_name.getter, Element -> example:001, HTMLElement -> implementation:returns.aspose_html.dom.htmlelement.access_key_label.getter, JSContext -> example:006; in no SUPPORTED fact value and not in the original README: ['303']; no registered clearance proves an unsupported claim false, so it blocks until the candidate is revised",
+      "fact_ids": [],
+      "finding_id": "F01",
+      "message": "The library exposes 303 public types in total, listed below by module, with curated highlights following.",
+      "omission": null,
+      "quote": "The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and the specialized `HTMLElement` subclasses. The DOM tree can be queried and mutated directly, styled through the CSS/CSSOM surface, serialized back to markup, and optionally scripted through `JSContext`. The library exposes 303 public types in total, listed below by module, with curated highlights following.",
+      "repair": "Change '303' to '243' to match the fact that the library exposes 243 public types in total.",
+      "rule": "llm:factuality",
+      "section_id": "api_reference",
+      "source": "llm",
+      "status": "CLEARED",
+      "unsupported_names": []
+    }
+  ],
   "model_served": "qwen3-next",
-  "model_verdict": "ACCEPT",
-  "prompt_version": "17",
+  "model_verdict": "REJECT_FACTUAL",
+  "prompt_version": "21",
   "reason": "",
-  "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "a2c94cb80330c7644f8a176de0cb0a79b03dbfe8e7e858cb1b54a5f729ba7ae6",
+  "reply_sha256": "a0054936a90ac52acfff27d39400319dfd0b1db13a12e07f017e306c69bc1b26",
+  "request_sha256": "20be08aea829dedcfc774ec1c6934cd49b0895d4e3701875685271dafecdca85",
   "retryable": false,
-  "reviewer_logic_version": "6",
+  "reviewer_logic_version": "10",
   "schema_version": 2,
   "unit_reviews": [
     {
       "findings": 0,
       "lines": [
         7,
-        194,
+        131,
         13
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "3c56c1aa0ad700b7b8f550360daa76e255e863ab27bef02e180ac701fbc017db",
+      "request_sha256": "72a26ddfdaab8c5e318bfb10456dfa4c1d209b9b0cd2a7671ad63b4913694b6f",
       "sections": [
         "opening",
         "key_capabilities",
-        "quick_start",
-        "additional_examples"
+        "quick_start"
       ],
       "status": "reviewed",
       "unit": "u1"
@@ -35,38 +65,268 @@
     {
       "findings": 0,
       "lines": [
-        200,
-        580,
-        17
+        153,
+        216,
+        2
       ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "2d0338106102b6f41018a64fc31fa235a0c685914ac12e856868de0880a25d08",
+      "request_sha256": "1aa33446d407eead185fc71e974b52bfdb38ec029ee5d4640f35e5fac38a8a51",
       "sections": [
-        "api_reference",
-        "documentation_resources"
+        "additional_examples"
       ],
       "status": "reviewed",
       "unit": "u2"
     },
     {
-      "findings": 0,
+      "findings": 1,
       "lines": [
-        585,
-        637,
-        22
+        222,
+        266,
+        32
       ],
-      "model_verdict": "ACCEPT",
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "REJECT_FACTUAL",
       "reason": "",
-      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "71a6e41e39a4c6bfcd12b4832eebd9a2c875e74e5a4cd8884253c229e633a578",
+      "reply_sha256": "a0054936a90ac52acfff27d39400319dfd0b1db13a12e07f017e306c69bc1b26",
+      "request_sha256": "213982eea8236e13d42b6684bbc79f032ec6cda7c93442bfcfbd313360099767",
       "sections": [
-        "scope_limitations",
-        "development_testing"
+        "api_reference"
       ],
       "status": "reviewed",
       "unit": "u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        267,
+        321,
+        44
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "6af666f137e393fe7b895f2a86d7bdac8b029394f8cbbce2f1717e184dc33194",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u4"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        322,
+        362,
+        41
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "860f85e3675618a6a6182e0527aea888991ac8aa5de5b21588b5b5571eef7f1f",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u5"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        363,
+        403,
+        41
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "53b245940c1fd1f5dfc76a42ca03ef694540fd4a48df9921542ef4b78aecb05b",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u6"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        404,
+        449,
+        46
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "a9c35ba9d930a9e2b8cd80cfe940258af6d63c42248cf0d1844c153c70509b59",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u7"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        450,
+        490,
+        41
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "f428b5a17de9b8d75f88c8267a3563ca681f7fa8abbf51dfa534b0e3e8a6a4a4",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u8"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        491,
+        531,
+        40
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "3c4113526ed6cb5cba08082551cca63387b1861429fc3289927e6d743b24f98d",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u9"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        532,
+        618,
+        40
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "90787a50176fdf94c3eb36c086087a6d3d2e23320dd53618d2a40ee9888c6c14",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u10"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        619,
+        756,
+        57
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "9e2bc79ab38018ee32986ef0b08dd313053ca0e55ee0d81f16ac886de93c3c65",
+      "sections": [
+        "api_reference"
+      ],
+      "status": "reviewed",
+      "unit": "u11"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        757,
+        850,
+        44
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "b16a229a301888b03d9d148e6c3671cee1ba1f3e147719ade764d8ccdad71e57",
+      "sections": [
+        "api_reference",
+        "documentation_resources",
+        "scope_limitations"
+      ],
+      "status": "reviewed",
+      "unit": "u12"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        856,
+        895,
+        11
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "5370854e77dc3ce4804e331b9c77734e696981af9fc0d03292db34ec10ea5031",
+      "sections": [
+        "development_testing"
+      ],
+      "status": "reviewed",
+      "unit": "u13"
     }
   ],
   "verdict": "ACCEPT"

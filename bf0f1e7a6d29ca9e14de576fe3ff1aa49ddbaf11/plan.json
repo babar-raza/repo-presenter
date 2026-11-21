@@ -19,7 +19,7 @@
       "fact_ids": [
         "public_symbol:aspose_html.dom.document",
         "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text"
+        "public_symbol:aspose_html.dom.nodelist"
       ],
       "symbol_fact_id": "public_symbol:aspose_html.dom.document"
     },
@@ -48,14 +48,14 @@
     {
       "fact_ids": [
         "public_symbol:aspose_html.js.jscontext",
-        "dependency:optional.js.quickjs-1.19-2"
+        "public_symbol:aspose_html.js.moduleregistry"
       ],
       "symbol_fact_id": "public_symbol:aspose_html.js.jscontext"
     },
     {
       "fact_ids": [
         "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.serialiser.outer_html"
       ],
       "symbol_fact_id": "public_symbol:aspose_html.serialise"
     },
@@ -65,18 +65,32 @@
         "public_symbol:aspose_html.tokenizer.starttagtoken"
       ],
       "symbol_fact_id": "public_symbol:aspose_html.tokenizer.tokenizer"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.build_box_tree",
+        "public_symbol:aspose_html.layout.boxnode"
+      ],
+      "symbol_fact_id": "public_symbol:aspose_html.layout.build_box_tree"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.tree.parse_html"
+      ],
+      "symbol_fact_id": "public_symbol:aspose_html.tree.treebuilder"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
       "Parse HTML into DOM",
-      "DOM manipulation",
-      "CSSOM styling",
-      "URL handling",
-      "Encoding detection",
+      "DOM manipulation and querying",
+      "CSSOM styling and resolution",
+      "URL and encoding utilities",
       "JavaScript execution",
       "Serialization",
-      "Tokenizer control"
+      "Tokenizer control",
+      "Layout infrastructure"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -84,8 +98,6 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "example:001",
-        "example:004",
         "public_symbol:aspose_html.htmldocument.parse",
         "public_symbol:aspose_html.htmldocument.parse_fragment",
         "public_symbol:aspose_html.htmldocument.load",
@@ -94,79 +106,69 @@
         "public_symbol:aspose_html.tokenizer.tokenizer"
       ],
       "shared_fact_ids": [
-        "example:001",
         "public_symbol:aspose_html.tokenizer.tokenizer"
       ],
       "title": "Parse HTML into DOM"
     },
     {
       "fact_ids": [
-        "example:001",
         "public_symbol:aspose_html.dom.document",
         "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.text",
-        "public_symbol:aspose_html.dom.attr",
-        "public_symbol:aspose_html.dom.domstringmap",
-        "public_symbol:aspose_html.dom.domtokenlist"
+        "public_symbol:aspose_html.dom.nodelist",
+        "public_symbol:aspose_html.dom.htmlcollection",
+        "public_symbol:aspose_html.dom.htmlheadingelement",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmlinputelement"
       ],
-      "shared_fact_ids": [
-        "example:001"
-      ],
-      "title": "DOM manipulation"
+      "shared_fact_ids": [],
+      "title": "DOM manipulation and querying"
     },
     {
       "fact_ids": [
-        "example:002",
         "public_symbol:aspose_html.cssom.cssstylesheet",
         "public_symbol:aspose_html.cssom.cssstylerule",
         "public_symbol:aspose_html.cssom.cssmediarule",
         "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.css.select",
-        "public_symbol:aspose_html.css.element_matches"
+        "public_symbol:aspose_html.css.element_matches",
+        "public_symbol:aspose_html.css.select"
       ],
       "shared_fact_ids": [],
-      "title": "CSSOM styling"
+      "title": "CSSOM styling and resolution"
     },
     {
       "fact_ids": [
-        "example:003",
         "public_symbol:aspose_html.url.url",
         "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.url.urlparseerror"
-      ],
-      "shared_fact_ids": [],
-      "title": "URL handling"
-    },
-    {
-      "fact_ids": [
-        "example:005",
         "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult",
-        "public_symbol:aspose_html.encoding.unsupportedencodingerror"
+        "public_symbol:aspose_html.encoding.encodingdetectionresult"
       ],
       "shared_fact_ids": [],
-      "title": "Encoding detection"
+      "title": "URL and encoding utilities"
     },
     {
       "fact_ids": [
-        "example:001",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "public_symbol:aspose_html.js.jsevaluationerror",
+        "public_symbol:aspose_html.js.modulenotfounderror"
+      ],
+      "shared_fact_ids": [],
+      "title": "JavaScript execution"
+    },
+    {
+      "fact_ids": [
         "public_symbol:aspose_html.serialise",
         "public_symbol:aspose_html.serialiser.outer_html",
-        "public_symbol:aspose_html.serialiser.inner_html",
-        "public_symbol:aspose_html.xmlserializer"
+        "public_symbol:aspose_html.xmlserializer",
+        "public_symbol:aspose_html.dom.xmlserializer"
       ],
-      "shared_fact_ids": [
-        "example:001"
-      ],
+      "shared_fact_ids": [],
       "title": "Serialization"
     },
     {
       "fact_ids": [
-        "example:007",
         "public_symbol:aspose_html.tokenizer.tokenizer",
         "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.endtagtoken",
-        "public_symbol:aspose_html.tokenizer.charactertoken",
         "public_symbol:aspose_html.tokenizer.commenttoken",
         "public_symbol:aspose_html.tokenizer.doctypetoken"
       ],
@@ -174,9 +176,48 @@
         "public_symbol:aspose_html.tokenizer.tokenizer"
       ],
       "title": "Tokenizer control"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.boxroot",
+        "public_symbol:aspose_html.layout.pagefragment",
+        "public_symbol:aspose_html.layout.build_box_tree",
+        "public_symbol:aspose_html.layout.paginate_fragments"
+      ],
+      "shared_fact_ids": [],
+      "title": "Layout infrastructure"
     }
   ],
-  "deviations": [],
+  "deviations": [
+    {
+      "fact_ids": [
+        "inherited_unit:008.code_block"
+      ],
+      "section_id": "at_a_glance",
+      "text": "The inherited Mermaid diagram is omitted; the renderer draws a deterministic diagram from verified capabilities and formats."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:049.table",
+        "inherited_unit:051.table",
+        "inherited_unit:053.table",
+        "inherited_unit:055.table",
+        "inherited_unit:057.table",
+        "inherited_unit:059.table"
+      ],
+      "section_id": "api_reference",
+      "text": "The inherited API tables are omitted; the renderer draws a deterministic API reference from verified public symbols."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:035.html_block",
+        "inherited_unit:044.html_block"
+      ],
+      "section_id": "additional_examples",
+      "text": "The promotional <details> wrapper is omitted; the renderer renders Additional Examples without it."
+    }
+  ],
   "flagship_example_id": "example:006",
   "links": [
     {
@@ -197,7 +238,7 @@
     },
     {
       "link_fact_id": "link_target:018",
-      "section_id": "documentation_resources"
+      "section_id": "additional_examples"
     },
     {
       "link_fact_id": "link_target:023",
