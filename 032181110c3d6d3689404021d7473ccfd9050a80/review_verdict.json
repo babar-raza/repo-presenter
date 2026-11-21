@@ -7,7 +7,7 @@
   "prompt_version": "21",
   "reason": "",
   "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-  "request_sha256": "f5435736108bab2ca9a097fcbc6a4467fb219e7ffd0f4c721ac47c2b40d8c7da",
+  "request_sha256": "1ef9c6ab54ceefe786957a36ed202975ef87de172b7f4780035156649bcb4ee1",
   "retryable": false,
   "reviewer_logic_version": "10",
   "schema_version": 2,
@@ -16,8 +16,8 @@
       "findings": 0,
       "lines": [
         7,
-        232,
-        26
+        224,
+        21
       ],
       "m8": {
         "shape": null,
@@ -27,7 +27,7 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "11774079fd6bafd38f4850aea19086858c5cd99647e687d36d290db9dea4d268",
+      "request_sha256": "9ebf9aa76de389b0e33a9a1a5c988da8f2c227836b44b3e66714360d2d627de6",
       "sections": [
         "opening",
         "key_capabilities",
@@ -40,9 +40,9 @@
     {
       "findings": 0,
       "lines": [
-        236,
-        261,
-        22
+        228,
+        306,
+        33
       ],
       "m8": {
         "shape": null,
@@ -52,9 +52,10 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "ec29ee8163084e4855df7e87bcdeb0339cbccc950f4f784dd2083a2339f14382",
+      "request_sha256": "23dee47888528c1bb875f2b7946e793e2d3a2ea1fd1000215d861992c2cf10a8",
       "sections": [
-        "scope_limitations"
+        "scope_limitations",
+        "development_testing"
       ],
       "status": "reviewed",
       "unit": "u2"
@@ -62,9 +63,9 @@
     {
       "findings": 0,
       "lines": [
-        265,
-        323,
-        18
+        1,
+        148,
+        34
       ],
       "m8": {
         "shape": null,
@@ -74,12 +75,160 @@
       "model_verdict": "ACCEPT",
       "reason": "",
       "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
-      "request_sha256": "9ac3f16a5afbdf224b5cd706c32d1a7b5d835b340c265898d30390b059cfe497",
+      "request_sha256": "1a5bf85ca625a95d65ea30f933d36fdc64c15e4ec86bcc59d4fa10dcb63a9082",
+      "sample": "audit_packet",
       "sections": [
-        "development_testing"
+        "opening",
+        "structure",
+        "navigation",
+        "structure",
+        "key_capabilities",
+        "structure",
+        "installation",
+        "structure",
+        "dependencies",
+        "structure"
       ],
       "status": "reviewed",
-      "unit": "u3"
+      "unit": "s2-u1"
+    },
+    {
+      "findings": 8,
+      "lines": [
+        150,
+        226,
+        45
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "REJECT_FACTUAL",
+      "reason": "",
+      "reply_sha256": "8727fe03799380d6607edd9268fb6109caa0d99287c5cbc0c084d5b7f8fcb8b0",
+      "request_sha256": "fd4f237800ba6e4d90339b1de54fac6570dc875b080edac2c90ca319814fca61",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference",
+        "structure",
+        "documentation_resources",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u2"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        228,
+        310,
+        37
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "ab9b027e0904df3492dd1aef5c25e54ac5a8890455b9db83a1fc30398aa30c47",
+      "sample": "audit_packet",
+      "sections": [
+        "scope_limitations",
+        "structure",
+        "development_testing",
+        "structure",
+        "license"
+      ],
+      "status": "reviewed",
+      "unit": "s2-u3"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        1,
+        148,
+        34
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "569e21ec7aa448bf06ff84b6d560e2b735cb64e70f2158cd53ce322cf8f2f19a",
+      "sample": "audit_packet",
+      "sections": [
+        "opening",
+        "structure",
+        "navigation",
+        "structure",
+        "key_capabilities",
+        "structure",
+        "installation",
+        "structure",
+        "dependencies",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s3-u1"
+    },
+    {
+      "findings": 5,
+      "lines": [
+        150,
+        226,
+        45
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "REJECT_FACTUAL",
+      "reason": "",
+      "reply_sha256": "4bf2a0fa9827e30b8ac5340ed8cc4fd93723783fa9c763da6c0dc3c2232f20d9",
+      "request_sha256": "9009a671089c83e5a6fbc7e2862c4e1c0d8b8bf2c8f85b521c68a63056cb2985",
+      "sample": "audit_packet",
+      "sections": [
+        "api_reference",
+        "structure",
+        "documentation_resources",
+        "structure"
+      ],
+      "status": "reviewed",
+      "unit": "s3-u2"
+    },
+    {
+      "findings": 0,
+      "lines": [
+        228,
+        310,
+        37
+      ],
+      "m8": {
+        "shape": null,
+        "status": "not_run",
+        "verdict": null
+      },
+      "model_verdict": "ACCEPT",
+      "reason": "",
+      "reply_sha256": "a8982e5a2a122d8be27fa3f5a03e727ec27743078e9323788fda9bc02b044b7a",
+      "request_sha256": "50797b5062b2e15bd8767c9441a7a2750080fc8e41e58b8b69cfd54e24a9f93e",
+      "sample": "audit_packet",
+      "sections": [
+        "scope_limitations",
+        "structure",
+        "development_testing",
+        "structure",
+        "license"
+      ],
+      "status": "reviewed",
+      "unit": "s3-u3"
     }
   ],
   "verdict": "ACCEPT"

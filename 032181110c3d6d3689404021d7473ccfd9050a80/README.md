@@ -4,7 +4,7 @@
 
 [![Aspose.OCR FOSS for .NET](https://products.aspose.org/media/ocr/net/banner-readme.png)](https://products.aspose.org/ocr/net/)
 
-Aspose.OCR FOSS for .NET reads images and PDF documents and converts them into machine-readable text. It supports input formats including single images and multi-page PDFs, and produces recognition results containing text and line-level bounding boxes. The product runs on .NET Standard and multiple .NET versions, as well as .NET Framework, and depends on `Microsoft.ML.OnnxRuntime` and `System.Drawing.Common`.
+Aspose.OCR FOSS for .NET reads images and PDF documents and converts them into text using optical character recognition. It produces recognition results that include full text and line-level details, supporting multiple input types through the `Aspose.OCR.OcrInput` class. The product exposes its functionality through the `Aspose.OCR.AsposeOcr.Recognize` method, returning `Aspose.OCR.OcrOutput` for multi-page inputs or `Aspose.OCR.RecognitionResult` for single-page inputs. It runs on multiple .NET platforms including .NET Standard and recent .NET versions.
 
 ## Navigation
 
@@ -28,14 +28,13 @@ flowchart TB
   subgraph Capabilities["Core Capabilities"]
     direction TB
     c1["Local OCR with<br/>embedded models"]
-    c2["Latin-script<br/>recognition"]
-    c3["Line-level coordinates"]
-    c4["PDF and image input"]
-    c5["Cross-framework<br/>targeting"]
-    c6["Batch input handling"]
+    c2["Multi-format input<br/>support"]
+    c3["Line-level output with<br/>coordinates"]
+    c4["Latin-script<br/>recognition"]
+    c5["Cross-framework<br/>compatibility"]
     c1 ~~~ c4
     c2 ~~~ c5
-    c3 ~~~ c6
+    c3 ~~~ c5
   end
   PRODUCT --> Capabilities
   classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
@@ -44,15 +43,11 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Local OCR with embedded models.** It performs local optical character recognition using embedded ONNX models, requiring no network access or external model files, and returns text and line coordinates through `Aspose.OCR.OcrOutput`.
-- **Latin-script recognition.** It recognizes Latin-script text, including diacritical characters, and provides full-page text through `RecognitionResult.RecognitionText` and per-line results through `RecognitionResult.RecognitionLinesResult`.
-- **Line-level coordinates.** It returns individual line bounding boxes as System.Drawing.Rectangle coordinates through `RecognitionResult.RecognitionLinesResult`, enabling pixel-precise layout analysis.
-- **PDF and image input.** It accepts raster images and PDF documents through `Aspose.OCR.OcrInput`, supporting `InputType`.SingleImage for individual images and `InputType`.PDF for multi-page documents.
-- **Cross-framework targeting.** It targets netstandard2.0, net48, net8.0, net9.0, and net10.0, enabling use across modern and legacy .NET applications.
-- **Batch input handling.** It processes multiple files of the same `InputType` in a single `OcrInput` container, preserving their order and returning one `RecognitionResult` per input file.
-
-They are processed sequentially
-and returned in the order in which they were added.
+- **Local OCR with embedded models.** It performs local OCR using embedded ONNX detection and refinement models, runs entirely on the local CPU without network services or external model files, and returns one `RecognitionResult` per image or PDF page through the `AsposeOcr.Recognize` method.
+- **Multi-format input support.** It accepts input through `Aspose.OCR.InputType.SingleImage` for single raster images and `InputType`.PDF for multi-page documents, supports adding multiple files to one `OcrInput` container while preserving their order, and processes each page in source order.
+- **Line-level output with coordinates.** It returns line-level results with System.Drawing.Rectangle coordinates through `RecognitionResult.RecognitionLinesResult`, provides individual line text via `LinesResult.TextInLine`, and exposes each line's bounding box through `LinesResult.Line`.
+- **Latin-script recognition.** It recognizes Latin-script text including diacritical characters included in the embedded recognition model and returns the complete page text through `RecognitionResult.RecognitionText`.
+- **Cross-framework compatibility.** It targets netstandard2.0, net8.0, net9.0, net10.0, and net48, enabling use across multiple .NET implementations and runtime versions.
 
 ## Installation
 
@@ -152,7 +147,7 @@ foreach (RecognitionResult.LinesResult line in result.RecognitionLinesResult)
 
 ## API Reference
 
-Aspose.OCR FOSS for .NET exposes a small set of public entry-point classes. The `AsposeOcr` class performs recognition, `OcrInput` collects source images or PDF pages, and `RecognitionResult` holds the extracted text and line-level data.
+Aspose.OCR FOSS for .NET exposes the `AsposeOcr` class as its main entry point for performing OCR operations. It produces `OcrOutput` collections that contain `RecognitionResult` objects for each processed image or PDF page.
 
 The public API has 6 types.
 
@@ -179,13 +174,13 @@ The public API has 6 types.
 
 ### AsposeOcr
 
-The `AsposeOcr.Recognize` method accepts an `OcrInput` container and returns an `OcrOutput` collection, where each element corresponds to one source image or PDF page.
+The `AsposeOcr` class provides the Recognize method that accepts an `OcrInput` container and returns an `OcrOutput` collection containing one `RecognitionResult` per source image or PDF page.
 
 - `Recognize`: Recognizes all files in the supplied input container.
 
 ### OcrInput
 
-The `OcrInput` class is constructed with an `InputType` to specify whether sources are single raster images or PDF pages, and provides Add and Dispose members to populate and clear the container.
+The `OcrInput` class is initialized with an `InputType` to specify whether sources are single images or PDF documents, supports adding file paths via the Add method, and clears its contents when disposed.
 
 - `Add`: Adds a file to the input container.
 - `Dispose`: Releases the references held by this input container.
@@ -193,12 +188,10 @@ The `OcrInput` class is constructed with an `InputType` to specify whether sourc
 
 ### RecognitionResult
 
-Each `RecognitionResult` exposes `RecognitionText` for the full-page text and `RecognitionLinesResult` for ordered line text and bounding rectangles, with `LinesResult` providing `TextInLine` and Line members.
+Each `RecognitionResult` provides `RecognitionText` for full recognized content and `RecognitionLinesResult` for ordered line-level text and rectangle coordinates, where each `LinesResult` exposes `TextInLine` and Line properties.
 
 - `RecognitionLinesResult`: Gets recognized lines together with their source-image coordinates.
 - `RecognitionText`: Gets or sets all recognized lines joined with line breaks.
-
-The public API deliberately remains small.
 
 - `Recognize(OcrInput input) -> OcrOutput`
   - Returns one result per source image or PDF page.
@@ -220,7 +213,6 @@ The public API deliberately remains small.
 
 ## Documentation & Resources
 
-- **[Documentation & Resources](#documentation--resources)** — A section of this README.
 - **[src/](src/)** — library source code, ONNX integration, and embedded models.
 - **[tests/](tests/)** — xUnit validation and end-to-end OCR tests with sample documents.
 - **[Aspose.Ocr.Foss.sln](Aspose.Ocr.Foss.sln)** — solution for Visual Studio and the .NET CLI.
@@ -232,8 +224,6 @@ The public API deliberately remains small.
 - [`LICENSE`](LICENSE) — MIT license text.
 
 ## Scope and Limitations
-
-Each `RecognitionResult` corresponds to one rendered PDF page. Rectangle coordinates use the 150-DPI page image produced internally by the PDF renderer.
 
 1. **Input validation** — all source paths and the selected `InputType` are validated before the ONNX sessions are created.
 2. **PDF rendering** — PDF pages are rendered to 24-bit RGB images at 150 DPI with `Aspose.PDF.FOSS`. Raster images are loaded directly.
@@ -258,11 +248,9 @@ ONNX Runtime uses parallel graph execution with eight intra-operation worker thr
 - There is no dedicated input-level multithreading API. A single call processes files and PDF pages sequentially, although ONNX Runtime parallelizes operations inside each inference session.
 - The NuGet package is large because the three models are embedded into every target-framework assembly.
 
-See [Aspose.OCR for .NET — Enterprise Edition](https://products.aspose.com/ocr/net/). This project is licensed under the MIT License. The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.
+See [Aspose.OCR for .NET — Enterprise Edition](https://products.aspose.com/ocr/net/).
 
 ## Development and Testing
-
-The suite covers 2 test files under `tests/`. Project documentation lives under `docs/`.
 
 ```bash
 dotnet add package Aspose.OCR.FOSS --version 26.10.0
@@ -279,11 +267,6 @@ Building all five targets from source requires the .NET 10 SDK; use `-f net8.0`,
 ```bash
 dotnet build src/Aspose.Ocr.Foss.csproj -c Release
 ```
-
-> [!IMPORTANT]
-> Image processing uses `System.Drawing.Common 8.0.0`. On .NET 6 and later,
-> `System.Drawing.Common` is supported on Windows only. The modern builds are marked with
-> `SupportedOSPlatform("windows")` so platform analyzers report this requirement to consumers.
 
 - Windows for OCR image processing with `System.Drawing.Common 8.0.0`.
 - .NET Framework 4.8, a .NET Standard 2.0-compatible runtime, or .NET 8 or later.

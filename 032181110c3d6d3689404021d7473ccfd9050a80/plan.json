@@ -26,11 +26,10 @@
   "at_a_glance": {
     "capability_titles": [
       "Local OCR with embedded models",
+      "Multi-format input support",
+      "Line-level output with coordinates",
       "Latin-script recognition",
-      "Line-level coordinates",
-      "PDF and image input",
-      "Cross-framework targeting",
-      "Batch input handling"
+      "Cross-framework compatibility"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -43,88 +42,74 @@
         "public_symbol:aspose.ocr.ocroutput"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.ocr.ocroutput"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
       "title": "Local OCR with embedded models"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.inputtype",
+        "public_symbol:aspose.ocr.ocrinput",
+        "public_symbol:aspose.ocr.asposeocr"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:aspose.ocr.asposeocr"
+      ],
+      "title": "Multi-format input support"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.ocr.recognitionresult",
         "public_symbol:aspose.ocr.linesresult"
       ],
+      "shared_fact_ids": [],
+      "title": "Line-level output with coordinates"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.ocr.asposeocr"
+      ],
       "shared_fact_ids": [
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.recognitionresult"
+        "public_symbol:aspose.ocr.asposeocr"
       ],
       "title": "Latin-script recognition"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.recognitionresult",
-        "dependency:system.drawing.common"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.ocr.linesresult",
-        "public_symbol:aspose.ocr.recognitionresult"
-      ],
-      "title": "Line-level coordinates"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.inputtype",
-        "public_symbol:aspose.ocr.ocrinput",
-        "dependency:aspose.pdf.foss"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.ocr.ocrinput"
-      ],
-      "title": "PDF and image input"
-    },
-    {
-      "fact_ids": [
-        "package:target_framework",
-        "package:version"
+        "package:target_framework"
       ],
       "shared_fact_ids": [],
-      "title": "Cross-framework targeting"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput"
-      ],
-      "shared_fact_ids": [
-        "public_symbol:aspose.ocr.ocrinput",
-        "public_symbol:aspose.ocr.ocroutput"
-      ],
-      "title": "Batch input handling"
+      "title": "Cross-framework compatibility"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "identity:repository"
+        "inherited_unit:027.paragraph",
+        "inherited_unit:028.code_block"
       ],
       "section_id": "quick_start",
-      "text": "No verified example was found that runs in isolation; the Quick Start section is omitted."
+      "text": "No verified examples are executable in isolation; the Quick Start section is omitted."
     },
     {
       "fact_ids": [
-        "identity:repository"
+        "inherited_unit:031.heading",
+        "inherited_unit:032.code_block",
+        "inherited_unit:033.html_block",
+        "inherited_unit:034.heading",
+        "inherited_unit:036.code_block",
+        "inherited_unit:037.heading",
+        "inherited_unit:038.code_block",
+        "inherited_unit:039.html_block"
       ],
       "section_id": "additional_examples",
-      "text": "No further verified examples exist beyond the unplaced Quick Start; the Additional Examples section is omitted."
+      "text": "All examples in the inherited README are UNRESOLVED and not citable; the Additional Examples section is omitted."
     }
   ],
   "flagship_example_id": null,
   "links": [
     {
       "link_fact_id": "link_target:001",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:002",
       "section_id": "badges"
     },
     {
@@ -136,20 +121,60 @@
       "section_id": "badges"
     },
     {
-      "link_fact_id": "link_target:006",
-      "section_id": "badges"
-    },
-    {
-      "link_fact_id": "link_target:007",
+      "link_fact_id": "link_target:008",
       "section_id": "banner"
     },
     {
+      "link_fact_id": "link_target:009",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
       "link_fact_id": "link_target:016",
-      "section_id": "api_reference"
+      "section_id": "navigation"
     },
     {
       "link_fact_id": "link_target:017",
-      "section_id": "documentation_resources"
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:018",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:019",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:020",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "installation"
+    },
+    {
+      "link_fact_id": "link_target:006",
+      "section_id": "installation"
     },
     {
       "link_fact_id": "link_target:021",
@@ -168,7 +193,7 @@
       "section_id": "license"
     },
     {
-      "link_fact_id": "link_target:008",
+      "link_fact_id": "link_target:007",
       "section_id": "enterprise_relationship"
     }
   ],
