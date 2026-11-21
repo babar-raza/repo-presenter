@@ -330,3 +330,102 @@ def test_a_quality_finding_against_authored_text_is_still_valid() -> None:
         cited("quality", at("SvgExporter class"), criterion="specificity")
     )
     assert errors(reply) == []
+
+
+# ---------------------------------------------------------------------------
+# BL-561: a one-line citation that points at the wrong line is moved to the line that prints the text
+# ---------------------------------------------------------------------------
+
+from repo_presenter.readme.review.reply import ReviewScope, repair_miscited_lines  # noqa: E402
+
+BLANK = LINES.index("") + 1  # the first blank line of CANDIDATE (line 2)
+
+
+def _miscited(kind: str, wrong: int, text: str, **overrides: Any) -> dict[str, Any]:
+    return cited(kind, wrong, text=text, **overrides)
+
+
+def test_a_blank_line_cite_moves_to_the_one_line_that_prints_the_text() -> None:
+    n = at("Exports SVG through the SvgExporter class.")
+    reply = raw_reply(
+        "REJECT_FACTUAL",
+        [_miscited("unsupported_claim", n + 1, "Exports SVG through the SvgExporter class.")],
+    )
+    assert resolve_cited_lines(copy.deepcopy(reply), CANDIDATE)  # refused as the model wrote it
+    repair_miscited_lines(reply, CANDIDATE)
+    assert reply["findings"][0]["lines"] == [n]
+    assert resolve_cited_lines(reply, CANDIDATE) == []
+    assert reply["findings"][0]["quote"] == LINES[n - 1]
+    repair_miscited_lines(reply, CANDIDATE)  # idempotent
+    assert reply["findings"][0]["lines"] == [n]
+
+
+def test_a_line_the_unit_did_not_show_is_repaired_inside_the_unit_only() -> None:
+    n = at("Exports SVG through the SvgExporter class.")
+    other = at("Renders a Widget to PNG")
+    scope = ReviewScope(frozenset({n}), frozenset({n}))
+    reply = raw_reply(
+        "REJECT_FACTUAL",
+        [_miscited("contradiction", other, "Exports SVG through the SvgExporter class.")],
+    )
+    repair_miscited_lines(reply, CANDIDATE, scope)
+    assert reply["findings"][0]["lines"] == [n]
+    # the text prints only on a line the unit did not show: nothing to move to, the error stands
+    outside = ReviewScope(frozenset({other}), frozenset({other}))
+    reply = raw_reply(
+        "REJECT_FACTUAL",
+        [_miscited("contradiction", BLANK, "Exports SVG through the SvgExporter class.")],
+    )
+    repair_miscited_lines(reply, CANDIDATE, outside)
+    assert reply["findings"][0]["lines"] == [BLANK]
+    assert resolve_cited_lines(reply, CANDIDATE, outside)
+
+
+def test_a_valid_citation_is_never_moved_even_when_the_text_prints_elsewhere() -> None:
+    n = at("Exports SVG through the SvgExporter class.")
+    m = at("Renders a Widget to PNG")
+    reply = raw_reply(
+        "REJECT_FACTUAL",
+        [_miscited("unsupported_claim", m, "Exports SVG through the SvgExporter class.")],
+    )
+    repair_miscited_lines(reply, CANDIDATE)
+    assert reply["findings"][0]["lines"] == [m] != [n]
+
+
+def test_an_ambiguous_short_or_whole_section_text_is_not_repaired() -> None:
+    dup = "| Widget | The main class. |"
+    candidate = CANDIDATE.replace("| SvgExporter | Writes SVG. |", dup + "\n" + dup)
+    reply = raw_reply("REJECT_FACTUAL", [_miscited("unsupported_claim", 2, dup)])
+    repair_miscited_lines(reply, candidate)
+    assert reply["findings"][0]["lines"] == [2]  # two lines print it: which one is not arithmetic
+    short = raw_reply("REJECT_FACTUAL", [_miscited("unsupported_claim", 2, "MIT.")])
+    repair_miscited_lines(short, CANDIDATE)
+    assert short["findings"][0]["lines"] == [2]
+    whole = raw_reply(
+        "REJECT_FACTUAL",
+        [_miscited("quality", 2, "Exports SVG through the SvgExporter class.")],
+    )
+    repair_miscited_lines(whole, CANDIDATE)
+    assert whole["findings"][0]["lines"] == [2]
+    span = raw_reply(
+        "REJECT_FACTUAL",
+        [cited("unsupported_claim", 2, 3, text="Exports SVG through the SvgExporter class.")],
+    )
+    repair_miscited_lines(span, CANDIDATE)
+    assert span["findings"][0]["lines"] == [2, 3]
+
+
+def test_review_checks_accepts_the_reply_the_audit_round_4_reviewer_kept_writing() -> None:
+    """Hosted audit round 4: the sentence on line N cited as the blank line N+1, again after the re-ask."""
+    from repo_presenter.readme.review.llm_review import review_checks
+
+    n = at("Exports SVG through the SvgExporter class.")
+    reply = raw_reply(
+        "REJECT_FACTUAL",
+        [_miscited("unsupported_claim", n + 1, "- Exports SVG through the SvgExporter class.")],
+    )
+    problems = review_checks(
+        reply, candidate_readme=CANDIDATE, facts=FACTS, plan={}, scope=None, changed=None
+    )
+    assert reply["findings"][0]["lines"] == [n]
+    assert not any("blank" in p for p in problems)

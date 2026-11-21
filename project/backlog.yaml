@@ -2694,3 +2694,19 @@ items:
       - "run 44910829035: 100 provider calls, 2.13M tokens, 'provider-call budget of 100 reached in this invocation'"
     next_action: "supervisor integrates; re-run HTML Python refresh"
     updated: "2026-11-21"
+
+  - id: BL-571
+    title: "M9 audit round 4 dies on one case: the reviewer cites the sentence on line 199 as the blank line 200 (twice, again after the re-ask), the unit has no valid review, and the whole 64-case batch is discarded; the call store is lost between attempts so a retry re-asks every case"
+    type: defect
+    source: "owner rulings R37, R44, R46, R36, R41; hosted audit-seed runs 44904444359 (attempt 1) and 44910840625 (audit-r4b, attempt 2): 'FAIL: case b57e5312651e6209: no valid review (unit u3 (api_reference): the reviewer's reply broke the contract after the one re-ask); no findings written', exit 1; MAX_AUDIT_ATTEMPTS=3 so one attempt remained"
+    priority: P0
+    status: active
+    implementation_path: "reply.repair_miscited_lines (called first in llm_review.review_checks): a contradiction or unsupported claim that cites ONE line the contract refuses (blank, not shown to the unit, out of range) is moved to the one shown line that prints the finding's own text verbatim (12+ characters, unique match). Request bytes, valid citations, whole-section kinds, spans and ambiguous texts are untouched, so stored calls replay identically. scripts/run_m9_auditor.audit_cases tries every case and fails closed at the end naming each case with no valid review (never clean, no partial findings). audit-seed.yml restores and saves the reviewer call store (actions/cache, keyed by seed run, content-addressed) so a retry re-asks only the cases with no stored valid reply."
+    acceptance: "(1) tests: test_cited_lines.py (5 new), test_m9_autonomous_round.py (1 new), test_audit_seed_workflow.py (1 new); (2) the real failing request (Cells Python Lane R, unit u3, 52 KB packet) reviews validly 4 of 4 live samples with the fix, where 3 of 5 ended 'lines 200-200 are blank' without it; (3) zero-call recertify --all gate OK under the fixed code (R10, R41); (4) hosted: the audit-seed attempt after the merge completes round 4"
+    evidence:
+      - "zero-call reproduction with the audit's own functions (source_for, audit_scope, planned_requests) on the stored Cells Python seal: unit u3 is api_reference lines 197-261 (57 lines, 52 KB packet), NOT oversized; the rejected reply in the hosted log cites F01 'The public API has 160 types.' at line [200], which the seal prints at 199 (200 is blank, shown to the unit as an unnumbered gap)"
+      - "live reproduction (llm.professionalize.com via the normal gateway config, fresh call store each): 5 samples of the u3 request: 3 UNAVAILABLE with 'output rejected twice; last rejection: finding F01: lines 200-200 are blank' (both asks cite 200), 1 ACCEPT, 1 REJECT with 3 valid findings; with the fix 4 of 4 valid"
+      - "BL-560 did not change this request: the u3 request hash 1884e2e5b8d7 is computed from main 8bfb3787 for both the failing and the fixed code (the fix does not change request bytes)"
+      - "root cause of the batch loss: audit_cases raised on the first case with no review; the work directory (call store included) lives in RUNNER_TEMP, so each of the 3 attempts re-asked all 64 cases"
+    next_action: "supervisor merges; dispatch the last audit-seed attempt; hosted round 4 completes or names every failing case"
+    updated: "2026-11-21"
