@@ -3659,7 +3659,11 @@ def dangling_pointers(
         ):
             continue
         if _unit_kind(unit) in _POINTER_REFERENTS or unit in commands:
-            text = resolve_intra_document_anchors(fact.value, shell_slugs)
+            from repo_presenter.readme.validation.must_correct import DEGRADE_WITHHELD_KEY, withheld_form
+
+            # A pointer sentence the disposition records as withheld (BL-640) is not printed, so it points at nothing.
+            recorded = [str(q) for q in entry.get(DEGRADE_WITHHELD_KEY) or ()]
+            text = resolve_intra_document_anchors(withheld_form(unit, fact.value, recorded), shell_slugs)
             kept.setdefault(str(destination), []).append((unit, text))
     found: list[tuple[str, str, str]] = []
     for destination, units in kept.items():
