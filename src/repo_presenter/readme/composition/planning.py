@@ -963,6 +963,15 @@ def plan_checks(
     common = " ".join([*(values[i] for i in sorted(neutral) if i in values), name]).lower()
     for index, item in enumerate(capabilities, start=1):
         title = str(item.get("title", ""))
+        if naming_only_capability(item):
+            errors.append(
+                f"core_capabilities {index} ({title!r}) cites only facts that name the product "
+                f"({', '.join(str(i) for i in item.get('fact_ids', [])) or 'none'}), which state no "
+                "capability: the unit written from it has nothing to be checked against and the independent "
+                "review faults it. Cite the fact that states what the capability is (a public type or "
+                "enum, an enum member, a format, an example, a dependency, a documented unit), or drop "
+                "the capability"
+            )
         cited = " ".join(values.get(i, "") for i in item.get("fact_ids", [])).lower()
         unsupported = sorted(
             term
@@ -1184,6 +1193,51 @@ def plan_checks(
     return errors
 
 
+#: The ``package`` facts that only name or number the product: they state no capability either (BL-600).
+_NAMING_PACKAGE_FACTS = frozenset({"package:name", "package:version", "package:published_version"})
+
+
+def naming_only_capability(item: Mapping[str, Any]) -> bool:
+    """Whether a planned capability cites nothing but facts that name the product (``identity:*``, the package
+    name and its versions): BL-600. The capability unit authored from such a plan entry rests on no fact that
+    states what it claims, so the independent review has nothing to check it against, and faults it in every
+    sample (hosted-sealed PSD Java: capabilities 3 to 5 cite only ``identity:family`` and were flagged by 3 of
+    4 fresh audit samples although the facts hold ``CompressionMethod`` / ``ColorModes`` members). Measured
+    over the 30 sealed Lane R plans: 4 of 201 capabilities, all PSD Java; no other seal is touched."""
+    ids = [str(i) for i in item.get("fact_ids", []) if isinstance(i, str)]
+    return all(i.startswith("identity:") or i in _NAMING_PACKAGE_FACTS for i in ids)
+
+
+def recover_naming_only_capabilities(
+    output: dict[str, Any], policy: PlanningPolicy = DEFAULT_POLICY
+) -> dict[str, Any] | None:
+    """Last-resort correction for ``run_job``'s final rejected attempt only (BL-600): a capability that cites
+    only naming facts is left out of the plan (a recorded fallback, R14: the planner had no fact for it), when
+    the plan keeps at least the policy's minimum number of capabilities; its title leaves the At a Glance
+    list too. ``None`` when nothing applies, so a plan that cannot afford the loss stays rejected."""
+    capabilities = output.get("core_capabilities")
+    if not isinstance(capabilities, list):
+        return None
+    weak = [c for c in capabilities if isinstance(c, dict) and naming_only_capability(c)]
+    if not weak or len(capabilities) - len(weak) < policy.capabilities_min:
+        return None
+    gone = {str(c.get("title", "")) for c in weak}
+    output["core_capabilities"] = [c for c in capabilities if c not in weak]
+    glance = output.get("at_a_glance")
+    if isinstance(glance, dict) and isinstance(glance.get("capability_titles"), list):
+        glance["capability_titles"] = [t for t in glance["capability_titles"] if t not in gone]
+    output[_RECOVERY_NOTES_KEY] = [
+        *output.get(_RECOVERY_NOTES_KEY, []),
+        {
+            "fallback": "naming_only_capability_dropped",
+            "rule": "BL-600",
+            "path": "$.core_capabilities",
+            "dropped": sorted(gone),
+        },
+    ]
+    return output
+
+
 def recover_uncited_capability_titles(
     output: dict[str, Any], facts: FactsDocument
 ) -> dict[str, Any] | None:
@@ -1304,7 +1358,10 @@ def recover_planning_output(
     base = current if deduplicated is None else deduplicated
     retitled = recover_uncited_capability_titles(base, facts)
     if retitled is not None:
-        return retitled
+        return recover_naming_only_capabilities(retitled) or retitled
+    dropped = recover_naming_only_capabilities(base)
+    if dropped is not None:
+        return dropped
     return deduplicated if deduplicated is not None else pinned
 
 
