@@ -490,11 +490,11 @@ def _withheld_on_evidence(command: str, entry: Mapping[str, Any], candidate: Can
     row the disposition cites, which the renderer leaves out (``must_correct.withheld_form``).
     Every other command of the unit is still held to the README."""
     from repo_presenter.readme.validation.must_correct import (
-        cited_finding_quotes,
+        withheld_quotes,
         withheld_text_holds,
     )
 
-    quotes = cited_finding_quotes(entry.get("fact_ids") or (), candidate.facts.repository)
+    quotes = withheld_quotes(entry, candidate.facts.repository)
     if not quotes:
         return False
     unit_id = str(entry.get("unit_id", ""))

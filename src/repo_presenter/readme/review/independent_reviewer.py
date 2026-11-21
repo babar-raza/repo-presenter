@@ -451,7 +451,7 @@ def unprinted_kept_units(
         resolve_intra_document_anchors,
     )
     from repo_presenter.readme.validation.must_correct import (
-        cited_finding_quotes,
+        withheld_quotes,
         withheld_rows_form,
     )
 
@@ -462,7 +462,7 @@ def unprinted_kept_units(
     def printed(unit: str, row: Mapping[str, Any]) -> bool:
         # The renderer's own form (``placement.placements``): a kept code block citing an OPEN
         # findings-register row prints without the lines that row confirms false.
-        false_quotes = cited_finding_quotes(row.get("fact_ids") or (), facts.repository)
+        false_quotes = withheld_quotes(row, facts.repository)
         text = fence_withheld_form(
             unit,
             kept_unit_form(

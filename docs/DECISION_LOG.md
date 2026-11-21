@@ -8094,3 +8094,41 @@ robust (a degrade that reached a fact-true row ends in a verdict, not a loop) an
 the model wrote). Hosted-unproven (R41).
 
 Backlog: BL-560, BL-561, BL-562
+
+## 2026-11-21 - BL-570: provider-call guard raised from 100 to 300
+
+HTML Python Lane R refresh stopped at "provider-call budget of 100 reached in this invocation" (run 44910829035). The guard was ported unmeasured; measured hosted invocations run 68 to 100+ calls. R45: spend is measured, never blocks, so the guard is raised to 300 as a runaway-loop bound. Hosted-unproven (R41).
+
+Backlog: BL-570
+
+## 2026-11-21: An unsupported maintainers' sentence or row is withheld on its own, keeping what its unit also carries; the degrade runs on while it makes progress (BL-562, BL-563, R46, R14, R10)
+Hosted Lane R refresh runs PSD Java 44898282006 (F01, F06 left blocking by BL-560) and PSD Python 44904441874 (S2-F09, S2-F10), read from
+their logs and failure records (the artifacts are not downloadable from the container). (A) PSD Java F01 and F06 are the maintainers' own
+wording in the live README of the pinned revision (d808d1db, read-only shallow fetch): "`Layer` carries the editable per-layer metadata it
+returns from `getLayers()`" and the `ChannelInformation` row "the compression value it reports for a loaded channel is always `Raw`".
+Checked against the source (R36 (a)(1)): both are TRUE (`Layer` has setters; `Layer.getChannelInformation` builds every loaded channel through
+`ChannelInformation.fromLayerChannelInfo`, which sets `CompressionMethod.Raw`), but no SUPPORTED fact states either, so the independent
+review calls them unsupported and no clearance can disprove them. Alternatives (R36): keep them blocking (the candidate is never sealed, the
+cell is lost for two true sentences); omit the whole unit (the degrade's old lever: every other row of the table goes, BC-17); add facts
+for setters and constructors (new extractor behaviour, R27); withhold only the flagged text with a recorded decision. Decision: the last.
+Recorded as R14: (1) a kept maintainers' unit that a flag only partly covers stays kept and its disposition row carries
+`degrade_withheld` (the quote), so the renderer prints it without exactly that row, item or sentence, and BC-17, the reviewer's printed test
+and BC-08 read the same quotes as a cited findings-register row (`must_correct.withheld_quotes`: one reader, no disagreement); the record
+rule is BL-562 and the wording says "withheld as unsupported by the facts", not "false". (2) An authored unit that restates a maintainers'
+paragraph and loses the flagged sentence keeps the public symbols that sentence named, that the maintainers' paragraph also names and that
+nothing else prints (here `getLayers`), as one clause built only from SUPPORTED symbol facts ("The public API includes the `getLayers`
+method of `PsdImage`."); a symbol printed elsewhere, shared by two symbols, or absent from the maintainers' text is not added, and a unit that
+cites no maintainers' text is dropped plainly as before. A latent defect fixed on the way: the sentence-level withhold compared the quote
+without code-span backticks with the unit text with them, so an authored sentence containing a code span never matched. R9: the clause is a
+plain factual sentence, no provenance wording. Properties improved: universal (one class lever for tables, lists, paragraphs and authored
+carriers) and robust (a degrade that finds an unsupported maintainers' sentence ends in a candidate, not a discard). Hosted-unproven (R41).
+(B) PSD Python: the two last findings are authored Core API rows ("... raises PsdLoadException (conditionally).", "... read-only property
+entries and methods parse and to_public_info."), not the renderer's own rows, so BL-560 does not cover them (zero-call over the stored seal:
+both rows are in the production review's scope under the BL-560 code), and BL-561 is the duplicate-paragraph class. The stored seal prints
+the same IndexedColorPalette row and passed the review: this is review-draw noise on a long Core API table, which the degrade answers one
+batch of rows per pass. All four passes of the run kept their lever (each strictly lowered the load) and a fifth was never run. Decision: the
+pass bound goes from 4 to 8 with a time allowance (a pass after the first does not start more than 1200 s after the cascade's time-box), a
+measurement, never a spend cap (R45); a pass that keeps nothing still ends the loop. Properties improved: robust, reliable. Hosted-unproven
+(R41).
+
+Backlog: BL-562, BL-563

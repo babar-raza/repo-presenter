@@ -95,10 +95,10 @@ from repo_presenter.readme.validation.blocking import JUDGES
 from repo_presenter.readme.validation.failures import Candidate
 from repo_presenter.readme.validation.rules import effective_visible_lines_budget
 from repo_presenter.readme.validation.must_correct import (
-    cited_finding_quotes,
     omission_holds,
     open_finding_citations,
     withheld_form,
+    withheld_quotes,
 )
 from repo_presenter.readme.reconciliation.dispositions import (
     bound_rationales,
@@ -717,7 +717,7 @@ def _withholds_quoted_lines(
     disposition cites the OPEN register rows confirming that text false: the renderer then prints
     it without exactly those lines or sentences (``must_correct.withheld_form``)."""
     held = [quote for quote in quotes if quote and _squash(quote) in _squash(text)]
-    cited = cited_finding_quotes(entry.get("fact_ids") or (), repository)
+    cited = withheld_quotes(entry, repository)
     printed = _squash(withheld_form(unit, text, cited))
     return bool(held) and omission_holds(unit, text, cited) and all(
         _squash(quote) not in printed for quote in held

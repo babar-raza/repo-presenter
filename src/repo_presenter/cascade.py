@@ -1289,7 +1289,17 @@ def _restore_lost_content(
 #: the model reviewer raises only once the pass before has withheld what was flagged (BL-350: hosted
 #: PSD Python and 3D TypeScript still ended on fresh findings after two passes; every pass is kept
 #: only when it strictly lowers the blocking load, so four is a bound, not a target).
-MAX_DEGRADE_PASSES = 4
+#: BL-563: eight. Hosted PSD Python run 44904441874 kept all four passes (each one strictly lowered the
+#: load: 5 hub rows, then 3 type rows, then more) and still ended on two fresh findings the fifth would have
+#: withheld; the reviewer's draws name different authored rows each time, so the number of passes a long
+#: Core API table needs is not fixed. A pass that keeps nothing still ends the loop, and
+#: ``DEGRADE_GRACE_SECONDS`` keeps a later pass inside the job's timeout (a measurement, never a spend cap, R45).
+MAX_DEGRADE_PASSES = 8
+
+#: BL-563: a degrade pass after the first does not start more than this long after the cascade's time-box
+#: (``CASCADE_TIMEBOX_SECONDS``): a pass is one zero-call lever and one model re-review, 60 to 170 s measured
+#: on hosted runs, and the ``present`` job is cancelled at 90 minutes with nothing recorded.
+DEGRADE_GRACE_SECONDS = 1200.0
 
 #: BL-270: the wall-clock time-box of one cascade, in seconds from its start. A measurement of time,
 #: not a spend budget (R45 is unaffected): once it has passed no new repair round starts and the
@@ -1378,7 +1388,7 @@ def _degrade_settled(
                 plan, units, document, investigation, composed.dispositions
             )
         plan, units, dispositions, _records = degrade_claims(
-            plan, units, composed.dispositions, subset, document
+            plan, units, composed.dispositions, subset, document, readme=composed.readme
         )
         return plan, units, dispositions
 
@@ -1731,6 +1741,9 @@ def run_cascade(
     for _degrade in range(MAX_DEGRADE_PASSES):
         # The last resort (BL-240): only after repair has ended with the candidate still failing.
         if verdict.verdict == "ACCEPT" and not blocking_failures(settled.validation):
+            break
+        if _degrade and clock() - started >= timebox_seconds + DEGRADE_GRACE_SECONDS:
+            progress(f"degrade stopped before pass {_degrade + 1}: the job time allowance is nearly used")
             break
         progress(f"degrade pass {_degrade + 1} start")
         try:

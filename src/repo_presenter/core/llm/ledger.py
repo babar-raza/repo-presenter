@@ -31,10 +31,12 @@ CallOutcome = Literal[
     "cache_stale",
 ]
 LEDGER_FILENAME = "calls.jsonl"
-# The most provider calls one process may make: one `present` invocation. Ported from the old
-# repository's own calibration (its own measured clean full draws ran 10-33 calls); not
-# re-calibrated here since this repository has made no provider calls of its own yet.
-PROVIDER_CALL_BUDGET = 100
+# The most provider calls one process may make: one `present` invocation. A runaway-loop guard,
+# not a spend limit (R45: spend is measured, never blocks). It was 100, ported from the old
+# repository's calibration; measured hosted Lane R invocations now run 70 to 100+ calls (the
+# second audit draw, degrade and settle rounds), and HTML Python was stopped at 100 (BL-570),
+# so the guard sits well above the measured range.
+PROVIDER_CALL_BUDGET = 300
 
 
 @dataclass(frozen=True)
