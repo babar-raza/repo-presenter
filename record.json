@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: source_reconciliation: output rejected three times (the third a narrowed ask for the units a rejection actually named); last rejection: inherited_unit:013.code_block: uncited_redundant_defer: DEFER_UNRESOLVED on a code_block that is not a tracked example is never correct, cited or not -- choose a real disposition (VERIFIED_PRESERVE/MOVE if it is kept as written, SUPERSEDE_REDUNDANT if another section already renders it, OMIT_UNSUPPORTED with a cited reason if nothing supports it); a deferral with no destination leaves it unaccounted for later, as if the content had simply vanished",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-21T17:44:06.465149+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44931342990",
     "acquired_at": "2026-11-21T17:42:04.581410+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 59,
+  "state_version": 60,
   "recent_trigger_dedup_keys": {
     "run:43423583472:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "bc7d3ab280ba423e9e47c20b498683ab",
     "run:44559904278:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "06a8768688a24d8e98fc0303de43bf96",
