@@ -3,22 +3,20 @@
   "card": "TC-024",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-14T21:45:41Z",
-  "base_rev": "f59a6e93deae23aa1d9944a253157e788e98fbe7",
-  "head_rev": "ae56329d53155e08eaf05ec8d8f1f5dc3bec2e4c",
+  "generated_at": "2026-11-21T09:34:19Z",
+  "base_rev": "978067eb6be0a554e3f6c2d88495d5526a5400c0",
+  "head_rev": "4d1d39c2e6204623c6fe1dba5ec94f39b1ee3b57",
   "card_sha256": "50de597d0a321cfdbc958519e738fd9edac7109193dd92297a724001e9761879",
-  "checker_fileset_sha256": "9c7bf5eca72288484acbcee2a3d16f0c45a1a69392699b465b39b459610b0cd6",
+  "checker_fileset_sha256": "7ce1c7b5f3d8429181dab6ffa878f97e123f2359159fe19ff61fa0612da4cc18",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.18",
-    "platform": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39"
+    "platform": "Linux-6.18.44-fc-v726-x86_64-with-glibc2.39"
   },
   "scope": {
     "ok": true,
     "changed_paths": [
-      "src/repo_presenter/readme/bundle/seal.py",
-      "src/repo_presenter/recertify.py",
-      "tests/test_recertify.py"
+      "tests/readme/review/test_llm_review.py"
     ],
     "violations": [],
     "evaluated": true
@@ -30,20 +28,20 @@
         {
           "command": "python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q",
           "exit_code": 0,
-          "duration_s": 14.211,
-          "stdout_sha256": "c1478986bf2ab7dae283e4c01e96ecf697205b0cbc02c452b1d46f48f9e4839d"
+          "duration_s": 13.18,
+          "stdout_sha256": "7dd0353b3831043076c8f844f8f3b1b1e435791be73670e865890d6516806289"
         },
         {
           "command": "python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q",
           "exit_code": 0,
-          "duration_s": 1.296,
-          "stdout_sha256": "fc05f5cc250b146f86c108a9eb1f3166bf9c628d6a432377f56a8673a8eac18e"
+          "duration_s": 1.96,
+          "stdout_sha256": "6cce73b87880e32e1639cc60e981e4468418a527b3a543f93b3a482b2f37598c"
         },
         {
           "command": "python -m pytest tests/test_owner_rulings_enforced.py -q",
           "exit_code": 0,
-          "duration_s": 2.068,
-          "stdout_sha256": "c80c6f74deb3313133b762d8770f96f3f3a64917afe74bd411c30b01310ee09d"
+          "duration_s": 2.868,
+          "stdout_sha256": "4ed0fa40d4c3d28f678d2f234f1d7e0f95ae2ecb3765e5b7b0cbd941f083b1ab"
         }
       ],
       "all_passed": true
@@ -54,19 +52,19 @@
         {
           "command": "python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q",
           "exit_code": 0,
-          "duration_s": 13.67,
-          "stdout_sha256": "2fcbb83d25e108c4c2d16b547280102d86d6615c7e0814284f2d08a838028e60"
+          "duration_s": 13.655,
+          "stdout_sha256": "062cef43707df6b4c148ecf21d8e99bff71bb61f56fee2fe2947983c447f48c3"
         },
         {
           "command": "python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q",
           "exit_code": 0,
-          "duration_s": 1.301,
-          "stdout_sha256": "db510cbb77bb02599d00e961dc8f4c57d973fbc2b5a5b05c6e13701e5388bd2a"
+          "duration_s": 1.584,
+          "stdout_sha256": "827ddcc4b6d1a1a93d16ee5d4110069b645d4b08851dcb41ce3c086eeb70b9be"
         },
         {
           "command": "python -m pytest tests/test_owner_rulings_enforced.py -q",
           "exit_code": 0,
-          "duration_s": 2.464,
+          "duration_s": 2.429,
           "stdout_sha256": "1ecdd1643bc82d14abb7343ca3eb8dd27f3a31e97c6229702f65020cc3f9aa2d"
         }
       ],
