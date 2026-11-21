@@ -5,7 +5,7 @@
   "provider_repository_id": 1276603134,
   "registry_revision": null,
   "active_transaction_id": "f7c62541ce314dd6acd5d23e93f5f27d",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_opening_paragraph [quality] blocks until rule duplicate_opening_paragraph no longer finds it (preserved='Aspose.HTML FOSS for Python is a free, open-source, MIT-licensed Python toolkit for parsing HTML into a standards-based DOM tree, applying CSS, and serializing markup back out. It provides WHATWG-style `HTMLDocument`/`Document`/`Element` APIs, CSS selector matching and CSSOM-based computed-style resolution, WHATWG `URL`/`URLSearchParams` handling, and byte-stream encoding detection, with an optional QuickJS-backed JavaScript execution bridge for running scripts against the parsed DOM.' authored='Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.')",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-21T15:24:59.472364+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-21T21:41:30.436226+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 18
   },
   "lease": null,
   "last_transition": {
@@ -40,11 +40,11 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 100,
+  "state_version": 101,
   "recent_trigger_dedup_keys": {
     "run:41130110127:aspose-html-foss/Aspose.HTML-FOSS-for-Python": "61d0f0555b8d437f873ea3eb8aa436bf",
     "run:41295846898:aspose-html-foss/Aspose.HTML-FOSS-for-Python": "f7c62541ce314dd6acd5d23e93f5f27d",
     "run:bfd6a5cbb0bb4368996da61c8a0bf8a5:aspose-html-foss/Aspose.HTML-FOSS-for-Python": "f7c62541ce314dd6acd5d23e93f5f27d"
   },
-  "recovery_count": 17
+  "recovery_count": 18
 }
