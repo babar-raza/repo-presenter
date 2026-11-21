@@ -290,6 +290,7 @@ def repair_miscited_lines(
             continue
         if not resolve_cited_lines({"findings": [dict(finding)]}, candidate_readme, scope):
             continue
+        label, body = _line_label(str(finding.get("text") or ""))
         text = spaced(str(finding.get("text") or ""))
         if len(text) < MIN_REPAIR_CHARS:
             continue
@@ -300,6 +301,36 @@ def repair_miscited_lines(
         ]
         if len(found) == 1:
             finding["lines"] = [found[0]]
+            continue
+        # BL-630: the packet numbers a line ``0209| ...`` and the reviewer writes ``Line 0209: ...`` in
+        # its text but a truncated ``lines: [9]`` (hosted 3D TypeScript run 44924648803: lines 9, 26,
+        # 28, 29, 33 for 0209, 0226, 0228, 0229, 0233, so the whole review was lost twice). The label
+        # the model itself printed names the line; it is used only when that line is shown and prints
+        # the finding's own words once the table or list markup around them is set aside.
+        loose = _loosely(body)
+        if label in shown and len(loose) >= MIN_REPAIR_CHARS:
+            row = _loosely(rows[label - 1])
+            if len(row) >= MIN_REPAIR_CHARS and (loose in row or row in loose):
+                finding["lines"] = [label]
+
+
+#: ``Line 0209:`` / ``line 209 -`` / ``0209|`` at the start of a finding's text: the packet's own line label.
+_LINE_LABEL = re.compile(r"^\s*(?:lines?\s+)?0*([0-9]{1,6})\s*(?:[:|)\]]|-+|\.\s)\s*", re.IGNORECASE)
+
+
+def _line_label(text: str) -> tuple[int | None, str]:
+    """The line number a finding's text labels itself with, and the text without the label."""
+    match = _LINE_LABEL.match(text)
+    if match is None or not match.group(1):
+        return None, text
+    return int(match.group(1)), text[match.end():]
+
+
+def _loosely(text: str) -> str:
+    """``text`` compared without table pipes, list markers, backticks and emphasis, so the sentence a
+    finding quotes matches the row or bullet that prints it."""
+    stripped = re.sub(r"[|`*_]", " ", text)
+    return spaced(re.sub(r"^\s*(?:[-+]|[0-9]+\.)\s+", "", stripped.strip()))
 
 
 def _repeat_key(finding: Mapping[str, Any]) -> tuple[Any, ...]:

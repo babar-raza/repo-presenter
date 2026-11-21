@@ -139,8 +139,10 @@ from repo_presenter.readme.repair.accounting import (
 )
 from repo_presenter.readme.repair.restore_units import (
     choose_units,
+    colocate_pointed_blocks,
     failing_unit_ids,
     fit_misfiled_units,
+    pointer_gaps,
     restore_lost_units,
     vacated_sections,
 )
@@ -1140,7 +1142,14 @@ def _restore_lost_content(
         if not failing_ids & RESTORABLE_CHECKS and getattr(settled.verdict, "blocking_findings", None)
         else []
     )
-    if not failing_ids & RESTORABLE_CHECKS and not unprinted:
+    # BL-630: BC-07's "'table below' but no table follows" names a kept paragraph the restore can
+    # join to its table; it enters the restore like the checks above, and only while it is failing.
+    pointed = bool(
+        pointer_gaps(
+            [f"{c['id']}: {d}" for c in failing for d in c.get("details") or []]
+        )
+    )
+    if not failing_ids & RESTORABLE_CHECKS and not unprinted and not pointed:
         return settled
     # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
     # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -1189,16 +1198,21 @@ def _restore_lost_content(
                 and unit not in {s["unit_id"] for s in skipped}
             ),
         ]
-        if not unit_ids:
-            break
-        dispositions, changes = restore_lost_units(
-            dispositions, document, unit_ids, holdable, included, skipped=skipped
-        )
-        if not changes:
+        changes: list[dict[str, str]] = []
+        if unit_ids:
             dispositions, changes = restore_lost_units(
-                dispositions, document, unit_ids, holdable, included, include_api_tables=True,
-                skipped=skipped,
+                dispositions, document, unit_ids, holdable, included, skipped=skipped
             )
+            if not changes:
+                dispositions, changes = restore_lost_units(
+                    dispositions, document, unit_ids, holdable, included, include_api_tables=True,
+                    skipped=skipped,
+                )
+        dispositions, joined = colocate_pointed_blocks(
+            dispositions, document, details, holdable, included, skipped=skipped,
+            exclude=[s["unit_id"] for s in skipped],
+        )
+        changes = [*changes, *joined]
         if not changes:
             break
         restored.extend(changes)

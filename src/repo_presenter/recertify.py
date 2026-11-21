@@ -588,6 +588,7 @@ def _rerun_lane_r(
     from repo_presenter.readme.reconciliation.destinations import holdable_sections
     from repo_presenter.readme.repair.restore_units import (
         choose_units,
+        colocate_pointed_blocks,
         cite_owed_units,
         owed_citations,
         restore_lost_units,
@@ -621,9 +622,12 @@ def _rerun_lane_r(
     restored: list[dict[str, str]] = []
     for _round in range(RESTORE_ROUNDS):
         unit_ids = choose_units(details, document, [c["unit_id"] for c in restored])
-        if not unit_ids:
-            break
-        dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        changes: list[dict[str, str]] = []
+        if unit_ids:
+            dispositions, changes = restore_lost_units(dispositions, document, unit_ids, holdable, included)
+        # BL-630: a kept paragraph pointing at 'the table below' prints with that table.
+        dispositions, joined = colocate_pointed_blocks(dispositions, document, details, holdable, included)
+        changes = [*changes, *joined]
         if not changes:
             break
         restored.extend(changes)
