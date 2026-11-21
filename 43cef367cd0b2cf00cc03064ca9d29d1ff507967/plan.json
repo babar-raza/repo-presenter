@@ -2,60 +2,79 @@
   "additional_example_ids": [
     "example:003",
     "example:004",
-    "example:005"
+    "example:005",
+    "example:006"
   ],
   "api_hubs": [
     {
       "fact_ids": [
-        "example:001",
-        "example:004",
-        "example:005",
+        "public_symbol:aspose.page",
+        "public_symbol:aspose.page.ps",
+        "public_symbol:aspose.page.xps",
+        "public_symbol:aspose.page.pdf",
+        "public_symbol:aspose.page.image",
         "public_symbol:aspose.page.mcp"
       ],
-      "symbol_fact_id": "public_symbol:aspose.page.mcp"
+      "symbol_fact_id": "public_symbol:aspose.page"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.page.ps",
-        "format:input.ps",
-        "format:input.eps"
+        "public_symbol:aspose.page.ps.dsc.dscmetadata",
+        "public_symbol:aspose.page.ps.context.executioncontext",
+        "public_symbol:aspose.page.ps.fonts.fontresolver",
+        "public_symbol:aspose.page.ps.font_cache.fontcache"
       ],
       "symbol_fact_id": "public_symbol:aspose.page.ps"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.page.xps",
-        "format:input.xps"
+        "public_symbol:aspose.page.xps.xpsdocument",
+        "public_symbol:aspose.page.xps.editing.xpsdocumentbuilder",
+        "public_symbol:aspose.page.xps.package.xpspackage",
+        "public_symbol:aspose.page.xps.parser.xpsparser"
       ],
       "symbol_fact_id": "public_symbol:aspose.page.xps"
     },
     {
       "fact_ids": [
-        "example:001",
-        "example:003",
-        "example:005",
-        "public_symbol:aspose.page.pdf"
+        "public_symbol:aspose.page.pdf",
+        "public_symbol:aspose.page.pdf.pdfwriter",
+        "public_symbol:aspose.page.pdf.pdfmetadata",
+        "public_symbol:aspose.page.pdf.writer.rectwrapper"
       ],
       "symbol_fact_id": "public_symbol:aspose.page.pdf"
     },
     {
       "fact_ids": [
-        "example:006",
-        "public_symbol:aspose.page.image"
+        "public_symbol:aspose.page.image",
+        "public_symbol:aspose.page.image.raster_renderer.rasterrenderer",
+        "public_symbol:aspose.page.image.raster_writer.defaultrasterwriter",
+        "public_symbol:aspose.page.image.skia_raster_writer.skiarasterwriter"
       ],
       "symbol_fact_id": "public_symbol:aspose.page.image"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose.page.mcp",
+        "public_symbol:aspose.page.mcp.handlers",
+        "public_symbol:aspose.page.mcp.types",
+        "public_symbol:aspose.page.mcp.create_server",
+        "public_symbol:aspose.page.mcp.run"
+      ],
+      "symbol_fact_id": "public_symbol:aspose.page.mcp"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
       "Read and parse PS/EPS documents",
-      "Read and parse XPS documents",
+      "Read and parse XPS packages",
       "Author PS and XPS documents",
-      "Convert to PDF output",
-      "Rasterize to image formats",
-      "MCP tool exposure",
-      "Programmatic page building",
-      "Font embedding for PDF"
+      "Programmatic page construction",
+      "Write PDF output",
+      "Rasterize to common image formats",
+      "MCP tool exposure"
     ],
     "input_format_ids": [
       "format:input.eps",
@@ -72,35 +91,31 @@
   "core_capabilities": [
     {
       "fact_ids": [
-        "public_symbol:aspose.page.ps",
-        "public_symbol:aspose.page.pdf",
         "format:input.ps",
-        "format:input.eps"
+        "format:input.eps",
+        "public_symbol:aspose.page.ps"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose.page.pdf",
         "public_symbol:aspose.page.ps"
       ],
       "title": "Read and parse PS/EPS documents"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose.page.xps",
-        "format:input.xps"
+        "format:input.xps",
+        "public_symbol:aspose.page.xps"
       ],
       "shared_fact_ids": [
         "public_symbol:aspose.page.xps"
       ],
-      "title": "Read and parse XPS documents"
+      "title": "Read and parse XPS packages"
     },
     {
       "fact_ids": [
         "public_symbol:aspose.page.ps",
-        "public_symbol:aspose.page.xps",
-        "example:003"
+        "public_symbol:aspose.page.xps"
       ],
       "shared_fact_ids": [
-        "example:003",
         "public_symbol:aspose.page.ps",
         "public_symbol:aspose.page.xps"
       ],
@@ -108,30 +123,34 @@
     },
     {
       "fact_ids": [
-        "example:001",
         "example:003",
-        "example:005",
-        "public_symbol:aspose.page.pdf"
+        "public_symbol:aspose.page.image"
       ],
       "shared_fact_ids": [
-        "example:001",
-        "example:003",
-        "example:005",
-        "public_symbol:aspose.page.pdf"
+        "example:003"
       ],
-      "title": "Convert to PDF output"
+      "title": "Programmatic page construction"
     },
     {
       "fact_ids": [
-        "example:006",
-        "format:output.png",
-        "format:output.jpeg",
+        "example:003",
+        "public_symbol:aspose.page.pdf"
+      ],
+      "shared_fact_ids": [
+        "example:003"
+      ],
+      "title": "Write PDF output"
+    },
+    {
+      "fact_ids": [
         "format:output.bmp",
+        "format:output.jpeg",
+        "format:output.png",
         "format:output.tiff",
         "dependency:skia-python"
       ],
       "shared_fact_ids": [],
-      "title": "Rasterize to image formats"
+      "title": "Rasterize to common image formats"
     },
     {
       "fact_ids": [
@@ -140,43 +159,38 @@
         "example:005",
         "public_symbol:aspose.page.mcp"
       ],
-      "shared_fact_ids": [
-        "example:001",
-        "example:005"
-      ],
+      "shared_fact_ids": [],
       "title": "MCP tool exposure"
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.page.image",
-        "public_symbol:aspose.page.pdf"
-      ],
-      "shared_fact_ids": [
-        "example:003",
-        "public_symbol:aspose.page.pdf"
-      ],
-      "title": "Programmatic page building"
-    },
-    {
-      "fact_ids": [
-        "example:003",
-        "public_symbol:aspose.page.pdf"
-      ],
-      "shared_fact_ids": [
-        "example:003",
-        "public_symbol:aspose.page.pdf"
-      ],
-      "title": "Font embedding for PDF"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "link_target:product.enterprise"
+        "identity:ecosystem"
       ],
-      "section_id": "enterprise_relationship",
-      "text": "The Enterprise Edition reference is moved to the enterprise relationship section."
+      "section_id": "at_a_glance",
+      "text": "The Mermaid diagram from the inherited README is omitted; the section renders a deterministic flowchart based on facts instead."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "api_reference",
+      "text": "The 'Detailed Member Reference' heading and its contents are omitted as promotional boilerplate with no factual basis."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "additional_examples",
+      "text": "The 'Example Results' section and its image references are omitted as unverified promotional content."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "section_id": "additional_examples",
+      "text": "The 'Run the MCP Server' heading and its example are omitted because the example is marked CONTRADICTED."
     }
   ],
   "flagship_example_id": "example:003",
@@ -191,16 +205,36 @@
     },
     {
       "link_fact_id": "link_target:027",
-      "section_id": "api_reference"
+      "section_id": "documentation_resources"
     },
     {
       "link_fact_id": "link_target:028",
       "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "banner"
     }
   ],
   "material_limitations": [],
   "quick_start_example_id": "example:001",
-  "second_quick_start_example_id": "example:006",
+  "second_quick_start_example_id": null,
   "sections": [
     {
       "include": true,

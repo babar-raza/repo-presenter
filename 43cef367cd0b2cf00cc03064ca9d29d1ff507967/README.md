@@ -4,7 +4,7 @@
 
 [![Aspose.Page FOSS for Python](https://products.aspose.org/media/page/python/banner-readme.png)](https://products.aspose.org/page/python/)
 
-Aspose.Page FOSS for Python reads PostScript (`.ps`), Encapsulated PostScript (`.eps`), and XML Paper Specification (`.xps`) files, and converts them to PDF. It writes raster images in PNG (`.png`), JPEG (`.jpeg`), BMP (`.bmp`), and TIFF (`.tiff`) formats. It provides modules for working with PostScript, EPS, XPS, PDF, and image formats through the `aspose.page.mcp`, `aspose.page.ps`, `aspose.page.xps`, `aspose.page.pdf`, and `aspose.page.image` packages.
+Aspose.Page FOSS for Python reads PostScript (`.ps`), Encapsulated PostScript (`.eps`), and XML Paper Specification (`.xps`) files, and converts them to PDF. It also writes output in BMP (`.bmp`), JPEG (`.jpeg`), PNG (`.png`), and TIFF (`.tiff`) formats. It provides a model for building render documents with text and rendering them to raster images using the skia-python dependency.
 
 ## Navigation
 
@@ -31,29 +31,34 @@ flowchart TB
   PRODUCT["Aspose.Page FOSS for Python"]
   subgraph Capabilities["Core Capabilities"]
     direction TB
-    c1["Read and parse PS/EPS<br/>documents"]
     c3["Author PS and XPS<br/>documents"]
-    c5["Rasterize to image<br/>formats"]
-    c7["Programmatic page<br/>building"]
-    c1 ~~~ c5
-    c3 ~~~ c7
-    subgraph cg1["Xps"]
+    c6["Rasterize to common<br/>image formats"]
+    subgraph cg1["Ps"]
       direction TB
-      c2["Read and parse XPS<br/>documents"]
+      c1["Read and parse PS/EPS<br/>documents"]
     end
-    subgraph cg2["Pdf"]
+    subgraph cg2["Xps"]
       direction TB
-      c4["Convert to PDF output"]
-      c8["Font embedding for PDF"]
+      c2["Read and parse XPS<br/>packages"]
     end
-    subgraph cg3["Mcp"]
+    subgraph cg3["Image"]
       direction TB
-      c6["MCP tool exposure"]
+      c4["Programmatic page<br/>construction"]
     end
-    c5 ~~~ cg1
-    c7 ~~~ cg1
+    subgraph cg4["Pdf"]
+      direction TB
+      c5["Write PDF output"]
+    end
+    subgraph cg5["Mcp"]
+      direction TB
+      c7["MCP tool exposure"]
+    end
+    c3 ~~~ cg1
+    c6 ~~~ cg1
     cg1 ~~~ cg2
     cg2 ~~~ cg3
+    cg3 ~~~ cg4
+    cg4 ~~~ cg5
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -66,14 +71,13 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Read and parse PS/EPS documents.** It reads and parses `.ps` and `.eps` documents using a full PostScript interpreter and extracts DSC/EPS metadata.
-- **Read and parse XPS documents.** It reads and parses `.xps` documents by walking fixed pages and print tickets through the XPS parser and renderer.
-- **Author PS and XPS documents.** It authors PS and XPS documents from scratch using the `RenderModelBuilder` API to construct paths, text, and images, then writes them back to the source format.
-- **Convert to PDF output.** It converts PS and XPS documents to PDF output using `PdfWriter` with font embedding resolved through `FontResolver` and `FontCache`.
-- **Rasterize to image formats.** It rasterizes PS/EPS content to `.png`, `.jpeg`, `.bmp`, or `.tiff` using the Skia backend, with a pure-Python fallback available for PS/EPS-to-image conversion.
-- **MCP tool exposure.** It exposes conversion and metadata operations as MCP tools including `ps_to_pdf`, `xps_to_pdf`, and `eps_metadata` for FastMCP-based automation.
-- **Programmatic page building.** It builds page content programmatically using `RenderModelBuilder` to construct paths, text, images, and a clip/state stack, producing a `RenderDocument`.
-- **Font embedding for PDF.** It embeds TrueType and Type1 fonts in PDF output by resolving them through `FontResolver` and `FontCache` during `PdfWriter.write()`.
+- **Read and parse PS/EPS documents.** It reads and parses PostScript and Encapsulated PostScript documents using a full PostScript interpreter and extracts metadata.
+- **Read and parse XPS packages.** It reads and parses XML Paper Specification packages by walking fixed pages and print tickets through the parser and renderer.
+- **Author PS and XPS documents.** It creates and edits PostScript and XML Paper Specification documents from scratch using the canvas API or document builder, then saves them back to the source format.
+- **Programmatic page construction.** It builds page content programmatically with `RenderModelBuilder`, supporting paths, text, images, and a clip/state stack to produce a render document.
+- **Write PDF output.** It writes Portable Document Format output with `PdfWriter`, embedding fonts resolved through font resolver and font cache.
+- **Rasterize to common image formats.** It rasterizes PostScript content to bitmap, JPEG, PNG, or TIFF using the Skia backend by default, with a pure-Python fallback available for PS/EPS-to-image conversion only.
+- **MCP tool exposure.** It exposes conversion tools such as `ps_to_pdf`, `eps_metadata`, and `xps_to_pdf` through the MCP module for FastMCP-based automation.
 
 - Read and parse PS/EPS documents with `PsDocument.from_file()` / `from_bytes()`, backed by a
   full PostScript interpreter (`PsInterpreter`, `PsParser`, `PsTokenizer`, `OperatorRegistry`)
@@ -89,8 +93,6 @@ flowchart TB
   renderer (`DefaultRasterWriter`) remains available — set `ASPOSE_PAGE_RASTERIZER=python` or
   pass a writer through `ImageSaveOptions.raster_writer`. XPS-to-image conversion has no such
   fallback — it always needs the Skia backend (see Scope and Limitations).
-- Expose every conversion as an MCP tool (`ps_to_pdf`, `ps_to_image`, `xps_to_pdf`,
-  `xps_to_image`, `eps_metadata`) through `create_server()`, for FastMCP-based automation.
 
 ## Installation
 
@@ -122,7 +124,7 @@ Requires Python 3.10 or later.
 
 ## Quick Start
 
-This example converts a PostScript file to PDF using the `ps_to_pdf` handler from the aspose-page-foss package.
+This example converts a PostScript file to PDF using the `ps_to_pdf` handler from the aspose-page-foss library.
 
 ```python
 from aspose.page.mcp.handlers import ps_to_pdf
@@ -134,29 +136,14 @@ result = ps_to_pdf(
 )
 ```
 
-This example renders a simple blank page to a PNG image using the `RasterRenderer` and `encode_png` functions from the aspose-page-foss package.
-
-```python
-import aspose.page.ps  # works around a module import-order issue in aspose.page.image.raster_renderer
-from aspose.page.common.render_model import RenderDocument, RenderPage
-from aspose.page.image.raster_renderer import RasterRenderer
-from aspose.page.image.encoders import encode_png
-
-doc = RenderDocument()
-doc.pages.append(RenderPage(width=200, height=100))
-
-surface = RasterRenderer(dpi=144).render(doc)
-png_bytes = encode_png(surface, dpi=144)
-
-with open("blank.png", "wb") as f:
-    f.write(png_bytes)
-```
+The library targets Python 3.10+ (`pyproject.toml`'s `requires-python = ">=3.10"`). See
+[Dependencies](#dependencies) below for the full required/optional/native breakdown.
 
 ## Additional Examples
 
-The following workflows demonstrate building a PDF from a render model, extracting EPS metadata, and converting XPS to PDF.
+The following workflows demonstrate building a PDF from the render model, extracting EPS metadata, converting XPS to PDF, and rendering a document to PNG.
 
-### Build a PDF Directly from the Render Model
+### Create a PDF from the Render Model Using `add_text` and Write
 
 ```python
 import aspose.page.ps  # works around a module import-order issue in aspose.page.pdf.writer
@@ -180,7 +167,7 @@ pdf_bytes = writer.write(doc)
 <details>
 <summary>View Additional Examples</summary>
 
-### Extract EPS Metadata
+### Extract EPS Metadata Using `eps_metadata`
 
 ```python
 from aspose.page.mcp.handlers import eps_metadata
@@ -190,7 +177,7 @@ meta = eps_metadata(McpInput(input_path="input.eps", input_bytes_b64=None))
 print(meta["bounding_box"], meta["title"])
 ```
 
-### Convert XPS to PDF via the MCP Handler
+### Convert XPS to PDF Using `xps_to_pdf`
 
 ```python
 from aspose.page.mcp.handlers import xps_to_pdf
@@ -200,6 +187,24 @@ result = xps_to_pdf(
     McpInput(input_path="input.xps", input_bytes_b64=None),
     McpOutput(output_path="output.pdf", return_bytes=False),
 )
+```
+
+### Render a Document to PNG Using Render And `encode_png`
+
+```python
+import aspose.page.ps  # works around a module import-order issue in aspose.page.image.raster_renderer
+from aspose.page.common.render_model import RenderDocument, RenderPage
+from aspose.page.image.raster_renderer import RasterRenderer
+from aspose.page.image.encoders import encode_png
+
+doc = RenderDocument()
+doc.pages.append(RenderPage(width=200, height=100))
+
+surface = RasterRenderer(dpi=144).render(doc)
+png_bytes = encode_png(surface, dpi=144)
+
+with open("blank.png", "wb") as f:
+    f.write(png_bytes)
 ```
 
 Convert a PS or EPS file to a raster image directly through the document API:
@@ -243,7 +248,7 @@ PS/EPS-to-image conversion:
 
 ## API Reference
 
-Aspose.Page FOSS for Python provides entry points through the `aspose.page.mcp` module for high-level conversions and metadata extraction, and through dedicated modules for PostScript, EPS, XPS, PDF, and image processing. The `aspose.page.mcp` module offers handlers that wrap lower-level APIs to convert between formats and inspect document properties.
+The primary entry points are `PsDocument` and `XpsDocument`, which read, author, and convert PS/EPS and XPS content respectively; both delegate PDF output to `PdfWriter` and raster output to `RasterRenderer`, once page content has passed through the shared `RenderModelBuilder` / `RenderDocument` model.
 
 The public API has 139 types.
 
@@ -259,15 +264,15 @@ The public API has 139 types.
 | `ColorSpacePaint` | ColorSpacePaint class represents a paint based on a color space. |
 | `DeviceColorSpace` | DeviceColorSpace class represents a device color space. |
 | `DeviceNColorSpace` | Defined as `class DeviceNColorSpace`. |
-| `ExponentialFunction` | ExponentialFunction class represents an exponential function; its evaluate method raises ValueError (conditionally). |
+| `ExponentialFunction` | ExponentialFunction class represents an exponential function whose evaluate method raises ValueError (conditionally). |
 | `IndexedColorSpace` | IndexedColorSpace class represents an indexed color space. |
 | `PatternColorSpace` | PatternColorSpace class represents a pattern color space. |
 | `PatternPaint` | PatternPaint class represents a paint based on a pattern. |
 | `RadialShading` | RadialShading class represents a radial shading pattern. |
-| `SampledFunction` | SampledFunction class represents a sampled function; its evaluate method raises ValueError (conditionally). |
+| `SampledFunction` | SampledFunction class represents a sampled function whose evaluate method raises ValueError (conditionally). |
 | `SeparationColorSpace` | SeparationColorSpace class represents a separation color space. |
 | `ShadingPattern` | ShadingPattern class represents a shading pattern. |
-| `StitchingFunction` | StitchingFunction class represents a stitching function; its evaluate method raises ValueError (conditionally). |
+| `StitchingFunction` | StitchingFunction class represents a stitching function whose evaluate method raises ValueError (conditionally). |
 | `TilingPattern` | TilingPattern class represents a tiling pattern. |
 | `ClipCommand` | Set the current clipping path. |
 | `ImageCommand` | Render an image resource with a transform. |
@@ -289,9 +294,9 @@ The public API has 139 types.
 | `TextCommand` | Render text using a font reference and transform. |
 | `RasterRenderer` | Render a RenderDocument to a raster surface. |
 | `RasterSurface` | In-memory RGBA pixel surface. |
-| `DefaultRasterWriter` | DefaultRasterWriter class is a default implementation of RenderModelRasterWriter for raster writing. |
-| `RasterWriter` | RasterWriter class is a protocol for writing raster data; its write method renders a document to raster bytes. |
-| `RenderModelRasterWriter` | RenderModelRasterWriter class is a raster writer that uses a render model; its write method renders a document to raster bytes using the render model and raises ValueError (conditionally). |
+| `DefaultRasterWriter` | DefaultRasterWriter class is a default implementation of RenderModelRasterWriter for rendering a document to raster bytes using the render model. |
+| `RasterWriter` | RasterWriter class is a protocol for writing raster data with a write method that renders a document to raster bytes. |
+| `RenderModelRasterWriter` | RenderModelRasterWriter class is a class for rendering a document to raster bytes using the render model whose write method raises ValueError (conditionally). |
 | `SkiaRasterWriter` | Rasterize a RenderDocument using Skia (requires skia-python). |
 | `McpConversionOptions` | Conversion options for MCP operations. |
 | `McpInput` | MCP input payload. |
@@ -300,15 +305,15 @@ The public API has 139 types.
 | `ImageResource` | Image resource payload for PDF XObject embedding. |
 | `PdfMetadata` | PDF metadata fields for the document info dictionary. |
 | `PdfWriter` | Serialize a render document into PDF 1.4 bytes. |
-| `PdfEmbeddedFont` | PdfEmbeddedFont class represents an embedded font in a PDF document. |
-| `RectWrapper` | RectWrapper class wraps a rectangle; its x_min and y_min getters always return 0.0. |
-| `ImageSaveOptions` | ImageSaveOptions class holds options for saving images. |
-| `PdfSaveOptions` | PdfSaveOptions class holds options for saving PDF documents. |
+| `PdfEmbeddedFont` | PdfEmbeddedFont class represents a PDF embedded font. |
+| `RectWrapper` | RectWrapper class represents a rectangle wrapper whose x_min and y_min getters always return 0.0, and whose x_max and y_max getters are read-only properties. |
+| `ImageSaveOptions` | ImageSaveOptions class represents options for saving an image. |
+| `PdfSaveOptions` | PdfSaveOptions class represents options for saving a PDF. |
 | `PsDocument` | Represents a loaded or editable PS/EPS document. |
-| `ClipType` | ClipType class represents a clipping type. |
-| `Clipper` | Clipper class performs clipping operations; its build_intersect_list, do_maxima, execute, process_horizontal, process_intersections, and update_edge_into_ael methods raise ClipperException (conditionally). |
-| `ClipperBase` | ClipperBase class is a base class for clipper implementations; its add_path method raises ClipperException (conditionally). |
-| `ClipperException` | ClipperException class represents an exception thrown by the clipper. |
+| `ClipType` | ClipType class represents a clip type. |
+| `Clipper` | Clipper class is a clipping engine with methods such as add_edge_to_sel, add_ghost_join, add_join, add_local_max_poly, add_local_min_poly, add_out_pt, append_polygon, and area, and its build_intersect_list, do_maxima, execute, process_horizontal, process_intersections, and update_edge_into_ael methods raise ClipperException (conditionally). |
+| `ClipperBase` | ClipperBase class is a base class for clipping operations with methods such as add_bounds_to_lml, add_path, add_paths, all_horizontal, ascend_to_max, clear, descend_to_min, and do_minima_lml, and its add_path method raises ClipperException (conditionally). |
+| `ClipperException` | ClipperException class represents an exception thrown by the clipping engine. |
 | `Direction` | Direction class represents a direction. |
 | `DoublePoint` | DoublePoint class represents a point with double coordinates. |
 | `EdgeSide` | EdgeSide class represents an edge side. |
@@ -322,12 +327,12 @@ The public API has 139 types.
 | `OutPt` | OutPt class represents an output point. |
 | `OutRec` | OutRec class represents an output record. |
 | `PolyFillType` | PolyFillType class represents a polygon fill type. |
-| `PolyNode` | PolyNode class represents a polygon node; its add_child method adds a child node, and its child_count, contour, and is_hole members provide read-only properties. |
+| `PolyNode` | PolyNode class represents a polygon node with methods such as add_child and read-only properties such as child_count, contour, and is_hole. |
 | `PolyOffsetBuilder` | PolyOffsetBuilder class provides methods to build polygon offsets, including add_point, build, do_miter, do_round, do_square, and offset_point. |
-| `PolyTree` | PolyTree class, which extends PolyNode, provides methods to manage polygon trees, including clear, get_first, and the total read-only property. |
-| `PolyType` | PolyType class represents a polygon type in the clipping library. |
-| `Scanbeam` | Scanbeam class is part of the clipping algorithm's internal data structures. |
-| `TEdge` | TEdge class represents an edge in the clipping algorithm. |
+| `PolyTree` | PolyTree class represents a tree of polygons and provides methods clear, get_first, and the read-only property total. |
+| `PolyType` | PolyType class is a class defined in the Aspose.Page PS Clipper module. |
+| `Scanbeam` | Scanbeam class is a class defined in the Aspose.Page PS Clipper module. |
+| `TEdge` | TEdge class is a class defined in the Aspose.Page PS Clipper module. |
 | `ExecutionContext` | Holds interpreter stacks, dictionaries, and metadata for execution. |
 | `GraphicsState` | Tracks current graphics state parameters. |
 | `DscMetadata` | Container for DSC metadata extracted from PS/EPS comments. |
@@ -335,37 +340,37 @@ The public API has 139 types.
 | `PsImage` | Raster image container for embedding in PS/EPS. |
 | `PsPage` | Editable PS/EPS page. |
 | `PsError` | Base PostScript error. |
-| `PsIOError` | PsIOError class is an error type for input/output failures in PostScript processing. |
-| `PsInvalidAccess` | PsInvalidAccess class is an error type for invalid access attempts in PostScript processing. |
-| `PsLimitCheck` | PsLimitCheck class is an error type for limit check violations in PostScript processing. |
+| `PsIOError` | PsIOError class is an error type in the Aspose.Page PS errors module. |
+| `PsInvalidAccess` | PsInvalidAccess class is an error type in the Aspose.Page PS errors module. |
+| `PsLimitCheck` | PsLimitCheck class is an error type in the Aspose.Page PS errors module. |
 | `PsQuit` | Internal non-error signal used by PostScript quit. |
-| `PsRangeError` | PsRangeError class is an error type for range errors in PostScript processing. |
-| `PsSyntaxError` | PsSyntaxError class is an error type for syntax errors in PostScript processing. |
-| `PsTypeError` | PsTypeError class is an error type for type errors in PostScript processing. |
-| `PsUndefinedError` | PsUndefinedError class is an error type for undefined errors in PostScript processing. |
+| `PsRangeError` | PsRangeError class is an error type in the Aspose.Page PS errors module. |
+| `PsSyntaxError` | PsSyntaxError class is an error type in the Aspose.Page PS errors module. |
+| `PsTypeError` | PsTypeError class is an error type in the Aspose.Page PS errors module. |
+| `PsUndefinedError` | PsUndefinedError class is an error type in the Aspose.Page PS errors module. |
 | `FilterResult` | Result of decoding a filter chain. |
-| `FontCache` | FontCache class provides methods to manage font resources, including find_font, load, and metrics_for, where metrics_for raises PsTypeError conditionally. |
-| `FontMetrics` | FontMetrics class holds font metrics data. |
-| `FontRecord` | FontRecord class represents a font record in the font cache. |
-| `EmbeddedType42` | EmbeddedType42 class represents an embedded Type 42 font. |
+| `FontCache` | FontCache class provides methods find_font, load, and metrics_for, where metrics_for raises PsTypeError conditionally. |
+| `FontMetrics` | FontMetrics class is a class defined in the Aspose.Page PS font cache module. |
+| `FontRecord` | FontRecord class is a class defined in the Aspose.Page PS font cache module. |
+| `EmbeddedType42` | EmbeddedType42 class is a class defined in the Aspose.Page PS fonts module. |
 | `FontResolver` | Resolve fonts from names or PostScript dictionaries. |
 | `FontResource` | Represents a resolved font resource. |
 | `ImageInfo` | Decoded raster image data. |
 | `PsImageResource` | Represents a decoded image resource. |
 | `PsImageStore` | Store image resources by id. |
 | `PsInterpreter` | Execute PostScript/EPS objects using a registry of operators. |
-| `PsArray` | PsArray class represents a PostScript array object. |
-| `PsDict` | PsDict class represents a PostScript dictionary object. |
-| `PsFile` | PsFile class represents a PostScript file object. |
-| `PsFontId` | PsFontId class represents a PostScript font identifier. |
-| `PsGState` | PsGState class represents a PostScript graphics state object. |
-| `PsMark` | PsMark class represents a PostScript mark object. |
-| `PsName` | PsName class represents a PostScript name object. |
-| `PsOperator` | PsOperator class represents a PostScript operator object. |
-| `PsPattern` | PsPattern class represents a PostScript pattern object. |
-| `PsProcedure` | PsProcedure class represents a PostScript procedure object. |
-| `PsSave` | PsSave class represents a PostScript save object. |
-| `PsString` | PsString class represents a PostScript string object. |
+| `PsArray` | PsArray class is a class defined in the Aspose.Page PS objects module. |
+| `PsDict` | PsDict class is a class defined in the Aspose.Page PS objects module. |
+| `PsFile` | PsFile class is a class defined in the Aspose.Page PS objects module. |
+| `PsFontId` | PsFontId class is a class defined in the Aspose.Page PS objects module. |
+| `PsGState` | PsGState class is a class defined in the Aspose.Page PS objects module. |
+| `PsMark` | PsMark class is a class defined in the Aspose.Page PS objects module. |
+| `PsName` | PsName class is a class defined in the Aspose.Page PS objects module. |
+| `PsOperator` | PsOperator class is a class defined in the Aspose.Page PS objects module. |
+| `PsPattern` | PsPattern class is a class defined in the Aspose.Page PS objects module. |
+| `PsProcedure` | PsProcedure class is a class defined in the Aspose.Page PS objects module. |
+| `PsSave` | PsSave class is a class defined in the Aspose.Page PS objects module. |
+| `PsString` | PsString class is a class defined in the Aspose.Page PS objects module. |
 | `OperatorEntry` | Descriptor for a registered PostScript operator. |
 | `OperatorRegistry` | Register and resolve PostScript operator implementations. |
 | `PsParser` | Parse PostScript/EPS tokens into language objects. |
@@ -373,10 +378,10 @@ The public API has 139 types.
 | `PsStack` | Simple stack implementation for PostScript execution. |
 | `PsToken` | Represents a token from a PostScript/EPS input stream. |
 | `PsTokenizer` | Tokenize PostScript/EPS bytes into language tokens. |
-| `GlyphPoint` | GlyphPoint class represents a point in a TrueType glyph outline. |
-| `TrueTypeFont` | TrueTypeFont class provides methods to access TrueType font metrics and outlines, including glyph_advance, glyph_id_for_code, glyph_outline, glyph_sideways_advance, glyph_top_origin_x, glyph_top_origin_y_and_descender, glyph_vertical_advance, and glyph_vertical_metrics. |
-| `Type1Metrics` | Type1Metrics class holds metrics data for Type 1 fonts. |
-| `PsSaveState` | PsSaveState class represents a PostScript save state object. |
+| `GlyphPoint` | GlyphPoint class is a class defined in the Aspose.Page PS TrueType outline module. |
+| `TrueTypeFont` | TrueTypeFont class provides methods glyph_advance, glyph_id_for_code, glyph_outline, glyph_sideways_advance, glyph_top_origin_x, glyph_top_origin_y_and_descender, glyph_vertical_advance, and glyph_vertical_metrics. |
+| `Type1Metrics` | Type1Metrics class is a class defined in the Aspose.Page PS Type1 parser module. |
+| `PsSaveState` | PsSaveState class is a class defined in the Aspose.Page PS virtual machine module. |
 | `XpsDocument` | Represents a loaded or editable XPS document. |
 | `XpsCanvas` | XPS canvas element for grouping content. |
 | `XpsDocumentBuilder` | Builder for XPS document creation/editing. |
@@ -385,7 +390,7 @@ The public API has 139 types.
 | `XpsImage` | XPS image element. |
 | `XpsPath` | XPS path element. |
 | `XpsImageResource` | Decoded image resource. |
-| `XpsImageStore` | XpsImageStore class manages image resources, providing get to return a previously registered image resource and register to register an image resource and return its ID, where get raises ValueError conditionally. |
+| `XpsImageStore` | XpsImageStore class provides methods get, which returns a previously registered image resource, and register, which registers an image resource and returns its ID, where get raises ValueError conditionally. |
 | `XpsPackage` | Represents an XPS package. |
 | `XpsParser` | Parse XPS package relationships to locate pages. |
 | `PrintTicket` | Print ticket payload descriptor. |
@@ -401,25 +406,29 @@ The public API has 139 types.
 
 #### Detailed Member Reference
 
-### mcp
+### page
 
-The `aspose.page.mcp` module provides high-level handlers such as `ps_to_pdf`, `eps_metadata`, and `xps_to_pdf` that accept `McpInput` and `McpOutput` objects to convert PostScript, EPS, and XPS documents to PDF or image formats and extract metadata.
+The `aspose.page` package provides the core render model types including `RenderModelBuilder`, `RenderDocument`, and `RenderPage`, which form the shared intermediate representation used by all format-specific readers and writers.
 
 ### ps
 
-The `aspose.page.ps` module supports reading and writing PostScript and Encapsulated PostScript (`.ps` and `.eps`) files through classes like `PsDocument`, `PsCanvas`, and `DscMetadata`, enabling document creation, modification, and conversion to PDF or raster images.
+The `aspose.page.ps` module supports reading and writing PostScript and EPS files through `PsDocument`, with font resolution handled by `FontResolver` and font metrics cached by `FontCache`, while `DscMetadata` captures document-level DSC comments.
 
 ### xps
 
-The `aspose.page.xps` module enables working with XML Paper Specification (`.xps`) documents through classes like `XpsDocument`, `XpsDocumentBuilder`, and `XpsCanvas`, supporting document loading, editing, and conversion to PDF or raster images.
+The `aspose.page.xps` module provides `XpsDocument` for loading and editing XPS documents, `XpsDocumentBuilder` for programmatic creation, `XpsPackage` for low-level package access, and `XpsParser` for parsing XPS package relationships.
 
 ### pdf
 
-The `aspose.page.pdf` module provides `PdfWriter` to serialize render model documents into PDF 1.4 bytes, with `PdfMetadata` for document information dictionary fields and `PdfSaveOptions` for conversion settings.
+The `aspose.page.pdf` module exposes `PdfWriter` to serialize the shared render model into PDF 1.4 bytes, `PdfMetadata` for document info dictionary fields, and `RectWrapper` for bounding box coordinates.
 
 ### image
 
-The `aspose.page.image` module offers `RasterRenderer` to render `RenderDocument` instances to raster surfaces and encode them as PNG, with `DefaultRasterWriter` and `SkiaRasterWriter` supporting direct document-to-image conversion.
+The `aspose.page.image` module provides `RasterRenderer` for rendering the shared render model to raster surfaces, with `DefaultRasterWriter` and `SkiaRasterWriter` offering different backends for writing rendered output.
+
+### mcp
+
+The `aspose.page.mcp` module offers MCP server integration via `create_server` and run, with handlers in handlers and data types in types supporting `ps_to_pdf`, `ps_to_image`, `xps_to_pdf`, `xps_to_image`, and `eps_metadata` operations.
 
 | Class | Description |
 |---|---|
@@ -566,9 +575,8 @@ The `aspose.page.image` module offers `RasterRenderer` to render `RenderDocument
 
 - **[Getting started guide](https://docs.aspose.org/page/python/)** — installation, walkthroughs, and feature guides for this library.
 - **[How-to guides & FAQ](https://kb.aspose.org/page/python/)** — task-focused answers for common PS/EPS/XPS-processing questions.
-- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-page-foss/Aspose.Page-FOSS-for-Python/issues).
-
 - **[Full API reference](https://reference.aspose.org/page/python/)** — the complete, browsable reference for all 139 public types.
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-page-foss/Aspose.Page-FOSS-for-Python/issues).
 
 ## Scope and Limitations
 
@@ -602,11 +610,7 @@ python package.py verify
 
 The wheel version comes from `local/Version.txt`. `verify` installs it with all dependencies in `.package-venv` and tests PS/XPS to PDF/PNG conversion. To upload the built wheel, use `python package.py publish-test` for TestPyPI or `python package.py publish` for PyPI; these commands read credentials from the matching files in `local/`.
 
-The library targets Python 3.10+ (`pyproject.toml`'s `requires-python = ">=3.10"`). See [Dependencies](#dependencies) below for the full required/optional/native breakdown.
-
 - `skia-python` — the Skia rasterization backend behind PNG, JPEG, BMP, and TIFF output; it has native components and is installed automatically with the package. XPS-to-image conversion always needs it; PS/EPS-to-image rendering uses it by default and can fall back to the pure-Python renderer (`DefaultRasterWriter`).
-
-Sync dependencies and run the test suite with `uv`:
 
 ```bash
 make sync
