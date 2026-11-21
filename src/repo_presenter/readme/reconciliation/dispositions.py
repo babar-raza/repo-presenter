@@ -70,7 +70,7 @@ from repo_presenter.core.facts import (
     bounded_records,
     has_no_package_manifest,
 )
-from repo_presenter.core.llm.binding import collect_ids
+from repo_presenter.core.llm.binding import collect_ids, resolve_symbol_ids
 from repo_presenter.core.llm.narrowing import Narrowing
 from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
 from repo_presenter.core.package_registry import (
@@ -3793,6 +3793,68 @@ def bound_rationales(output: dict[str, Any], limit: int = _RATIONALE_LIMIT) -> l
             entry["rationale"] = bounded
             changed.append(str(entry.get("unit_id", "?")))
     return changed
+
+
+#: Dispositions whose reading rests on the facts they cite: one left citing nothing by a deletion
+#: is not a correction but a claim without evidence, so the recovery refuses it (fails closed).
+_EVIDENCE_DISPOSITIONS = frozenset(
+    {
+        "VERIFIED_PRESERVE",
+        "VERIFIED_REWRITE",
+        "VERIFIED_MOVE",
+        "CORRECT_WITH_EVIDENCE",
+        "PRESERVE_ATTRIBUTED",
+    }
+)
+_UNCITABLE_RULE = "BL-610"
+
+
+def recover_uncitable_fact_ids(
+    output: dict[str, Any], citable: Collection[str], facts: FactsDocument | None = None
+) -> dict[str, Any] | None:
+    """Terminal-safe correction for a reconciliation reply that cites a fact id outside the
+    batch's offered enum after both asks (BL-610, R46 robust; the planning job's BL-220 class on the
+    S4 job; hosted PDF Python run 44924772455 failed closed after 3 calls with
+    ``$.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one
+    of the offered ids`` - the same invented id three times in one array, beside two valid ones):
+    each id outside ``citable`` is deleted from its array (a repeat of a kept id too), nothing
+    else touched, because an id no fact has proves nothing and is never replaced by a guess at the
+    nearest one. A disposition that rests on its facts (VERIFIED_*, CORRECT_WITH_EVIDENCE,
+    PRESERVE_ATTRIBUTED) left with no id fails closed, and so does everything else the job's
+    checks refuse afterwards. Each deletion is recorded (R14). ``None`` when no id is outside the
+    enum or nothing honest remains."""
+    allowed = set(citable)
+    dispositions = output.get("dispositions") if isinstance(output, dict) else None
+    if not allowed or not isinstance(dispositions, list):
+        return None
+    if facts is not None:
+        # The job's own binding first rewrites a symbol cited by its read path to its fact.
+        resolve_symbol_ids(output, facts)
+    notes: list[dict[str, Any]] = []
+    for index, entry in enumerate(dispositions):
+        ids = entry.get("fact_ids") if isinstance(entry, dict) else None
+        if not isinstance(ids, list):
+            continue
+        dropped = [i for i in ids if not isinstance(i, str) or i not in allowed]
+        if not dropped:
+            continue
+        kept = list(dict.fromkeys(i for i in ids if isinstance(i, str) and i in allowed))
+        if not kept and entry.get("disposition") in _EVIDENCE_DISPOSITIONS:
+            return None
+        entry["fact_ids"] = kept
+        notes.append(
+            {
+                "fallback": "uncitable_fact_id_dropped",
+                "rule": _UNCITABLE_RULE,
+                "path": f"$.dispositions[{index}].fact_ids",
+                "unit_id": entry.get("unit_id"),
+                "dropped": list(dict.fromkeys(str(i) for i in dropped)),
+            }
+        )
+    if not notes:
+        return None
+    output["_recovery_notes"] = [*output.get("_recovery_notes", []), *notes]
+    return output
 
 
 def reconcile_checks(
