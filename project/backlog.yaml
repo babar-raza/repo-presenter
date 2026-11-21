@@ -2664,3 +2664,16 @@ items:
       - "classified only from the log; the artifact host is blocked from the container"
     next_action: "download the run artifact outside the container (gh run download 44898282006 -n present-java-44898282006) and replay the cascade's degrade zero-call (R36), or approve option (a)"
     updated: "2026-11-21"
+
+  - id: BL-570
+    title: "The per-invocation provider-call guard (PROVIDER_CALL_BUDGET = 100, ported unmeasured from the old repository) stops a legitimate Lane R refresh: HTML Python run 44910829035 ended 'ProviderCallBudgetError: provider-call budget of 100 reached in this invocation' after 100 calls with no seal"
+    type: defect
+    source: "owner rulings R44, R45 (budgets measure, never block), R46; hosted Lane R refresh HTML Python run 44910829035; earlier hosted invocations ran 72, 85 and 68 calls"
+    priority: P0
+    status: active
+    implementation_path: "core/llm/ledger.PROVIDER_CALL_BUDGET 100 -> 300 as a runaway-loop guard above the measured range (spend stays measured per seal, R45); no other behaviour changes"
+    acceptance: "(1) the constant and its comment record why; (2) tests/core pass; (3) hosted: HTML Python refresh is not stopped by the guard (R41, not yet proven)"
+    evidence:
+      - "run 44910829035: 100 provider calls, 2.13M tokens, 'provider-call budget of 100 reached in this invocation'"
+    next_action: "supervisor integrates; re-run HTML Python refresh"
+    updated: "2026-11-21"

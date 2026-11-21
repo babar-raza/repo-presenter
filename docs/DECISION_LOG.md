@@ -8094,3 +8094,9 @@ robust (a degrade that reached a fact-true row ends in a verdict, not a loop) an
 the model wrote). Hosted-unproven (R41).
 
 Backlog: BL-560, BL-561, BL-562
+
+## 2026-11-21 - BL-570: provider-call guard raised from 100 to 300
+
+HTML Python Lane R refresh stopped at "provider-call budget of 100 reached in this invocation" (run 44910829035). The guard was ported unmeasured; measured hosted invocations run 68 to 100+ calls. R45: spend is measured, never blocks, so the guard is raised to 300 as a runaway-loop bound. Hosted-unproven (R41).
+
+Backlog: BL-570
