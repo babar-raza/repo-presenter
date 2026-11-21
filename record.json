@@ -5,7 +5,7 @@
   "provider_repository_id": 1185437353,
   "registry_revision": null,
   "active_transaction_id": "1faf68d5a6fe485da0939d0c32eceff5",
-  "state": "FAILED_INTERNAL",
+  "state": "SNAPSHOTTING",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -33,20 +33,20 @@
     "fencing_token": 1
   },
   "last_transition": {
-    "transition_id": "39b7b92a6f5449d6bb11d35f2eb6176b",
-    "transaction_id": "dfba251a636d4bdc9e7801be9dbc3cb4",
+    "transition_id": "af4349577238475ba0eff029689766f6",
+    "transaction_id": "1faf68d5a6fe485da0939d0c32eceff5",
     "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
-    "from_state": "OBSERVED",
-    "to_state": "FAILED_INTERNAL",
-    "event": "present.yml hosted transaction failed",
-    "occurred_at": "2026-10-30T22:54:07.000218+00:00",
+    "from_state": "FAILED_INTERNAL",
+    "to_state": "SNAPSHOTTING",
+    "event": "present.yml hosted transaction completed (one coarse receipt spanning the local pipeline's own stages - see core/state/present_transaction.py's module docstring)",
+    "occurred_at": "2026-11-21T23:05:49.045776+00:00",
     "actor": "runtime",
     "input_manifest": "registry:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET",
     "output_manifest": "candidates/aspose-slides-foss__Aspose.Slides-FOSS-for-.NET/CURRENT",
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 64,
+  "state_version": 65,
   "recent_trigger_dedup_keys": {
     "run:41140560040:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET": "dfba251a636d4bdc9e7801be9dbc3cb4",
     "run:41284665612:aspose-slides-foss/Aspose.Slides-FOSS-for-.NET": "e12398acdb094b118c07725fbe56827b",
