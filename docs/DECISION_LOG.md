@@ -8327,6 +8327,6 @@ Classes (each a pipeline class; positive tests are the real failing shapes, each
   Residual (R45, measured not blocking): the S9 time-box (3000s) ended after round 2 because S4 took 1881s for 320 units; re-measure on the next hosted run before widening it.
 Zero-call replay: Slides .NET BC-12 failure reproduced then cleared on the real 083.list; Words Python harness BC-04 and BC-14 findings cleared and the 084.list restore kept; PDF Python disposition_coverage findings 63 to 23 and
 code blocks 9 to 1 (the remainder are the harness's own naive dispositions: headings kept into api_reference and scope_limitations). R9: no README wording moves except the maintainers' own heading printed where the
-authored title was; R10: no seal touched; properties improved (R46): universal and robust (a deterministic class no longer halts a candidate that the model cannot repair). Hosted-unproven (R41).
+authored title was; R10: no seal touched, lean recertify 64 of 64 RECERTIFIED (Lane L 34, Lane R 30), gate OK, 0 provider calls; full suite 7184 passed, 1 failed (the known container-only test_every_candidate_gets_an_honest_receipt; the dashboard check excluded for disk); properties improved (R46): universal and robust (a deterministic class no longer halts a candidate that the model cannot repair). Hosted-unproven (R41).
 
 Backlog: BL-650, BL-651, BL-652
