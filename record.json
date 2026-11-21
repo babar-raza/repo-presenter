@@ -163,70 +163,115 @@
    "run_id": "44916810423",
    "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T22:29:19+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference"
+   ],
+   "code": "c6f694d87085c7bc8f8bcc1648bfa848ed697e7338a8e1e37b535395d46d9a01",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44952681784",
+   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T15:25:05+00:00",
+  "at": "2026-11-21T22:29:19+00:00",
   "classes": {
-   "duplicate_opening_paragraph|authored_unit|the_q_unit_restates": {
-    "example": "Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.",
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "| `aspose_html.DOMParser` | DOMParser class provides a parse method that parses a string into a DOM document and raises NotSupportedError (conditionally). |",
     "findings": 1,
     "origin_kind": "authored_unit",
     "origins": [
-     "opening.opening"
+     "api_reference.type:public_symbol:aspose_html.domparser"
     ],
-    "rule": "duplicate_opening_paragraph",
-    "scope": "3bada742045b6f21f9aff449dd79eeed7e460f4517bc7ed03fc94a55d9cae85e",
+    "rule": "llm:factuality",
+    "scope": "89532de9785917fddfcfe875c89ab81dc31489492374eacdf74ca4498165f899",
     "scope_paths": [
+     "prompts",
      "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/lane_l_review.py",
      "src/repo_presenter/readme/composition/authoring.py",
      "src/repo_presenter/readme/composition/authoring_retry.py",
      "src/repo_presenter/readme/composition/coherence.py",
      "src/repo_presenter/readme/composition/text_hygiene.py",
      "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review/independent_reviewer.py"
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "the_q_unit_restates",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
-  "code": "5bb29b70bb205d1ddbddb520d5ff58c38d624dad52183505005448337105a2ea",
+  "code": "c6f694d87085c7bc8f8bcc1648bfa848ed697e7338a8e1e37b535395d46d9a01",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_opening_paragraph [quality] blocks until rule duplicate_opening_paragraph no longer finds it (preserved='Aspose.HTML FOSS for Python is a free, open-source, MIT-licensed Python toolkit for parsing HTML into a standards-based DOM tree, applying CSS, and serializing markup back out. It provides WHATWG-style `HTMLDocument`/`Document`/`Element` APIs, CSS selector matching and CSSOM-based computed-style resolution, WHATWG `URL`/`URLSearchParams` handling, and byte-stream encoding detection, with an optional QuickJS-backed JavaScript execution bridge for running scripts against the parsed DOM.' authored='Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.')",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 2; nothing sealed; F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "duplicate_opening_paragraph",
-    "message": "the 'opening' unit restates the inherited preserved paragraph placed beside it rather than adding genuinely new content",
+    "label": "F02",
+    "message": "| `aspose_html.DOMParser` | DOMParser class provides a parse method that parses a string into a DOM document and raises NotSupportedError (conditionally). |",
     "origin": {
-     "id": "opening.opening",
+     "id": "api_reference.type:public_symbol:aspose_html.domparser",
      "kind": "authored_unit"
     },
-    "quote": "Aspose.HTML FOSS for Python parses HTML into a DOM tree, manipulates elements and attributes, queries the document with selectors, computes CSS styles, handles URLs and encodings, executes JavaScript, and serializes the DOM back to HTML.",
-    "rule": "duplicate_opening_paragraph",
-    "section_id": "",
-    "signature": "duplicate_opening_paragraph|authored_unit|the_q_unit_restates",
+    "quote": "| `aspose_html.DOMParser` | DOMParser class provides a parse method that parses a string into a DOM document and raises NotSupportedError (conditionally). |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
-    "sub_rule": "the_q_unit_restates",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "d5ac4f93534e9b7214723013b5186622f92f828e",
+  "main_sha": "9e410e710900fa0eb651981e22ef1495143499f1",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F11",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "F01+F03+F04+F05+F06+F07+F08+F09",
+    "outcome": "repaired",
+    "reason": "the causing plan was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
+    "section_id": null,
+    "stage": "S5"
+   },
+   {
+    "facts_defects": [],
+    "label": "F07",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "scope_limitations",
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01+F03+F04+F05+F06+F07+F08+F09",
+    "outcome": "repaired",
+    "reason": "api_reference: repaired (the causing section was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding); api_reference#types-1: escalated (the revision would leave type:public_symbol:aspose_html.cssom.csscounterstylerule, type:public_symbol:aspose_html.cssom.cssfontfacerule, type:public_symbol:aspose_html.cssom.cssimportrule, type:public_symbol:aspose_html.cssom.csskeyframerule, type:public_symbol:aspose_html.cssom.csskeyframesrul",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
   "repository": "aspose-html-foss/Aspose.HTML-FOSS-for-Python",
-  "run_id": "44916810423",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44916810423",
+  "run_id": "44952681784",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44952681784",
   "schema_version": 1,
   "source_revision": "bf0f1e7a6d29ca9e14de576fe3ff1aa49ddbaf11",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
