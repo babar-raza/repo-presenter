@@ -5,7 +5,7 @@
   "provider_repository_id": 1426901814,
   "registry_revision": null,
   "active_transaction_id": "5073002602e84d8ebf2d79701cae92ea",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; duplicate_opening_paragraph [quality] blocks until rule duplicate_opening_paragraph no longer finds it (preserved='Aspose.OCR.FOSS for .NET is a free, open-source OCR library for .NET Framework 4.8,\\n.NET Standard 2.0, and .NET 8+. It detects text lines in raster images and PDF documents,\\nrecognizes Latin-script text, and returns both the recognized text and the pixel coordinates of\\nevery detected line. The detection, refinement, and recognition models are embedded in the\\nassembly and run locally through ONNX Runtime.' authored='Aspose.OCR FOSS for .NET reads raster images and PDF documents, detects text lines, refines regions, and recognizes Latin text, returning recognition results with text and pixel coordinates.')",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-20T17:09:46.172103+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-21T11:17:33.353725+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 9
   },
   "lease": null,
   "last_transition": {
@@ -40,10 +40,10 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 56,
+  "state_version": 57,
   "recent_trigger_dedup_keys": {
     "run:43423561117:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "c2fe112917fc4cbaa4d7c9d0a6680343",
     "run:43672437897:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "5073002602e84d8ebf2d79701cae92ea"
   },
-  "recovery_count": 8
+  "recovery_count": 9
 }
