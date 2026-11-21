@@ -8069,3 +8069,28 @@ printed from SUPPORTED `dependency:development.*` facts and all four lines are c
 stored bundle). R9: no README wording is added. Properties improved: robust, repeatable. Hosted-unproven (R41).
 
 Backlog: BL-550, BL-551
+
+## 2026-11-21: Three refresh failures, two classes: the renderer's own fallback row re-faulted by the review, and an authored paragraph printed twice beside the maintainers' copy (BL-560, BL-561, BL-562, R46, R10, R14)
+Hosted refresh runs HTML Python 44898179900, PSD Java 44898282006 and Cells C++ 44900529375, read from their logs (the artifacts are not
+downloadable from the container). (A, B) The BL-240 degrade did what it should: it replaced each authored API row the review faulted with
+the renderer's fact-true row (`api_row_fallback`, R43(4)). The review of the degraded README then faulted those fact-true rows
+("Declares the fields condition_text and css_rules.", "Class that declares the method save."), and every further flag was "no printed byte
+changed": a renderer-printed row no unit owns has no lever. The review packet lists a type's method names only (`authoring.type_members`),
+so a field or property the describer names was never shown to the reviewer. Decision (R36 alternatives: widen the packet for every row;
+clear by term presence; leave the renderer's own row out of the production review): the renderer's own fact-true row is not an author's
+claim, so it leaves the production review's scope exactly like "Public class." and "Defined as ..." already do; term-presence clearance
+was rejected because it would clear a row whose terms are in SUPPORTED facts but whose statement is false (the audit's own evidence shows
+all 35 sweep rows pass that test), the real-defect case the owner asked to keep. A row an author wrote, or a describer row with one
+member changed, is still reviewed (negative controls); the audit still shows every row and its type facts; BC-14/BC-18 still judge each
+row. Why BarCode Python, Email C++ and Note Python refreshed: their sealed READMEs hold 0 fallback rows of 47/52/72 authored-type rows,
+the model's own rows passed, no fallback was needed. (C) Cells C++: the maintainers' paragraph (`inherited_unit:041.paragraph`) printed
+once as placed text and again from an authored unit; the BL-320 lever dropped the authored copy but the slot stayed owed (BC-04), so the
+degrade discarded it twice. Decision: the renderer prints a paragraph the placement already prints once (the maintainers' copy, R14),
+and the degrade's drop records the slot as owed nothing, as an API row's fallback does. 30 of 30 stored Lane R seals render byte for
+byte the same with and without the renderer change (R10). (B, residual) PSD Java F01 (a paragraph claiming "editable" metadata) and F06
+(a row claiming the compression is "always Raw") are probably the maintainers' wording and the degrade cannot withhold them without
+BC-17: recorded UNFIXED in BL-562 with the options (R36); the artifact is needed. R9: no README wording is added. Properties improved:
+robust (a degrade that reached a fact-true row ends in a verdict, not a loop) and repeatable (a paragraph prints once whichever copy
+the model wrote). Hosted-unproven (R41).
+
+Backlog: BL-560, BL-561, BL-562

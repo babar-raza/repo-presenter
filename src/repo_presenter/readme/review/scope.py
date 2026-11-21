@@ -140,7 +140,66 @@ def authored_table_lines(readme: str, facts: FactsDocument) -> frozenset[int]:
     the signature), but this function skipped it, so the production review never showed
     Aspose.Note Python's 15 authored rows and the M9 audit, which shows every row, flagged 14 of
     them (hosted round 44588173276). The rule now matches the producer's."""
-    return frozenset(authored_type_rows(readme, facts))
+    return frozenset(authored_type_rows(readme, facts, reviewable=True))
+
+
+def fact_true_row_forms(fact: Fact, facts: FactsDocument) -> frozenset[str]:
+    """Every normalized description the renderer prints for ``fact``'s Core API row when NO author
+    wrote a sentence for it and the type has no doc comment: the shared fact-true description of both
+    lanes (``type_description.TypeDescriber``: "Declares the fields a and b.", "Class that declares the
+    method load.", an enum's "Enumerates A, B and C.") with the row's optional stub marker
+    (``renderer._stub_marked``) and "Not implemented.".
+
+    BL-560 (hosted refresh runs 44898179900 HTML Python and 44898282006 PSD Java): after the BL-240
+    degrade replaced every authored row the review faulted with this row, the production review faulted
+    the fact-true rows themselves (``unsupported_claim`` on "Declares the fields condition_text and
+    css_rules."): the packet lists a type's method names only, so a field or property the describer
+    names is never shown to the reviewer, and no lever can change a row no unit owns. The row is the
+    renderer's own text, derived from SUPPORTED facts by the one describer; it is not an author's
+    claim (the same reasoning as ``renderer_row_descriptions``), so it is not reviewed as one."""
+    from repo_presenter.readme.composition.authoring import type_values
+    from repo_presenter.readme.correction.detectors.type_description import (
+        DESCRIBED_VALUES,
+        describer_for,
+    )
+
+    texts: list[str] = []
+    described = describer_for(facts).describe(fact)[0]
+    if described:
+        texts.append(described)
+    if (fact.attributes or {}).get("symbol_kind") == "enum":
+        values = type_values(fact, facts, limit=len(facts.facts))
+        shown = values[:DESCRIBED_VALUES]
+        if shown:
+            listed = ", ".join(shown[:-1]) + (" and " if len(shown) > 1 else "") + shown[-1]
+            lead = "Enumerates values including" if len(values) > len(shown) else "Enumerates"
+            texts.append(f"{lead} {listed}.")
+    forms = {"not implemented."}
+    for text in texts:
+        text = text.replace("|", "/").replace("`", "")
+        # ``renderer._described`` also words a member list the facts refute as "members" (BL-080).
+        for variant in dict.fromkeys((text, _kind_true(text, fact, facts))):
+            forms.add(_row_form(variant))
+            forms.add(_row_form(f"{variant.rstrip().removesuffix('.')} (some members not implemented)."))
+    return frozenset(forms)
+
+
+def _kind_true(text: str, fact: Fact, facts: FactsDocument) -> str:
+    """``text`` as ``renderer._kind_true`` words it (``surface_claims.kind_true_text``)."""
+    from repo_presenter.readme.validation.surface_claims import MemberIndex, kind_true_text
+
+    cache = getattr(_kind_true, "_cache", None)
+    if cache is None or cache[0] is not facts:
+        cache = (facts, MemberIndex(facts))
+        _kind_true._cache = cache  # type: ignore[attr-defined]
+    return kind_true_text(text, fact, facts, cache[1])
+
+
+def _row_form(text: str) -> str:
+    """``text`` as the fact-true comparison reads it: Markdown, case and spacing aside."""
+    from repo_presenter.readme.review.matching import plain
+
+    return " ".join(plain(text).casefold().split())
 
 
 def renderer_row_descriptions(fact: Fact) -> frozenset[str]:
@@ -158,9 +217,15 @@ def renderer_row_descriptions(fact: Fact) -> frozenset[str]:
     return frozenset(out)
 
 
-def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
+def authored_type_rows(
+    readme: str, facts: FactsDocument, *, reviewable: bool = False
+) -> dict[int, Fact]:
     """``authored_table_lines`` with the type fact each row describes: the fact whose
-    ``type:<fact id>`` unit the row's description is (``renderer._symbol_description``)."""
+    ``type:<fact id>`` unit the row's description is (``renderer._symbol_description``).
+
+    ``reviewable`` (the production review's scope, ``authored_table_lines``) leaves out a row whose
+    description is the renderer's own fact-true row for its type (``fact_true_row_forms``, BL-560); the
+    default keeps it, because the independent audit shows every row and needs each row's type facts."""
     from repo_presenter.readme.composition.renderer import api_reference_names
 
     names = api_reference_names(facts)
@@ -180,6 +245,7 @@ def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
         return {}
     owners = section_lines(readme)
     found: dict[int, Fact] = {}
+    true_forms: dict[str, frozenset[str]] = {}
     for number, row in enumerate(readme.splitlines(), 1):
         if owners[number - 1] != "api_reference":
             continue
@@ -188,6 +254,12 @@ def authored_type_rows(readme: str, facts: FactsDocument) -> dict[int, Fact]:
             continue
         description = match.group(2).strip()
         if description and description not in fallbacks[match.group(1)]:
+            if reviewable:
+                fact = authored_types[match.group(1)]
+                if fact.id not in true_forms:
+                    true_forms[fact.id] = fact_true_row_forms(fact, facts)
+                if _row_form(description) in true_forms[fact.id]:
+                    continue
             found[number] = authored_types[match.group(1)]
     return found
 
