@@ -17,7 +17,14 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": null,
+  "failure": {
+    "classification": "transient",
+    "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, structure, documentation_resources, structure): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F03: a omission finding must cite at least one product fact (not only inherited text); finding F04: a omission finding must cite at least one product fact (not only inherited text)",
+    "resume_state": "SNAPSHOTTING",
+    "occurred_at": "2026-11-21T11:29:58.465016+00:00",
+    "resume_predicate": null,
+    "recovery_count": 0
+  },
   "lease": {
     "holder_id": "present:44898248412",
     "acquired_at": "2026-11-21T11:17:35.623993+00:00",
@@ -39,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 59,
+  "state_version": 60,
   "recent_trigger_dedup_keys": {
     "run:43423561117:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "c2fe112917fc4cbaa4d7c9d0a6680343",
     "run:43672437897:aspose-ocr-foss/Aspose.OCR-FOSS-for-.NET": "5073002602e84d8ebf2d79701cae92ea"
