@@ -617,11 +617,11 @@ def withheld_by_finding(
     BC-18 forbids printing the quote; the register row is the recorded, evidenced decision (R14).
     An item outside the withheld text gets no exemption."""
     from repo_presenter.readme.validation.must_correct import (
-        cited_finding_quotes,
+        withheld_quotes,
         withheld_text_holds,
     )
 
-    quotes = cited_finding_quotes(row.get("fact_ids") or (), None)
+    quotes = withheld_quotes(row, None)
     wanted = " ".join(item.split())
     if not wanted or not quotes:
         return False
@@ -663,7 +663,7 @@ class Accounting:
 
         if isinstance(document, FactsDocument) and unit is not None:
             from repo_presenter.readme.validation.must_correct import (
-                cited_finding_quotes,
+                withheld_quotes,
                 withheld_rows_form,
             )
             from repo_presenter.readme.validation.surface_claims import (
@@ -673,7 +673,7 @@ class Accounting:
 
             row = self.rows.get(unit_id) or {}
             text = str(unit.get("value") or "")
-            quotes = cited_finding_quotes(row.get("fact_ids") or (), document.repository)
+            quotes = withheld_quotes(row, document.repository)
             try:
                 printed = fence_withheld_form(
                     unit_id,
@@ -844,12 +844,12 @@ class Accounting:
             # refuted sentence, row or item: ``must_correct.withheld_form``); that form is what
             # the section carries (BL-088: PSD .NET 033.paragraph, Words .NET 083.list).
             from repo_presenter.readme.validation.must_correct import (
-                cited_finding_quotes,
                 withheld_form,
+                withheld_quotes,
             )
 
             text = str(self.units[unit_id].get("value") or "")
-            quotes = cited_finding_quotes(row.get("fact_ids") or (), None)
+            quotes = withheld_quotes(row, None)
             if quotes:
                 text = withheld_form(unit_id, text, quotes)
             carried = audit.coverage(text, self.candidate.readme)

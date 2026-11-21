@@ -130,6 +130,25 @@ def cited_finding_quotes(
     return [rows[fid].quote for fid in cited if fid in rows]
 
 
+#: The key of a disposition row that records text of its kept inherited unit the last-resort degrade
+#: withholds (BL-562): the row, item or sentence a blocking check flags as unsupported, a list of
+#: quotes. It is the recorded R14 decision for exactly that text, read wherever a cited findings-register
+#: row is read (``withheld_quotes``), so placement, BC-17 and the reviewer cannot disagree about it.
+DEGRADE_WITHHELD_KEY = "degrade_withheld"
+
+
+def withheld_quotes(
+    entry: Mapping[str, Any], repository: str | None, path: Path | None = None
+) -> list[str]:
+    """Every quote a kept unit's disposition withholds on a recorded decision: the OPEN findings-register
+    rows its ``fact_ids`` cite (``cited_finding_quotes``) and the text the last-resort degrade withheld
+    from it (``DEGRADE_WITHHELD_KEY``, BL-562). Empty for a row that records neither."""
+    quotes = cited_finding_quotes(entry.get("fact_ids") or (), repository, path)
+    recorded = entry.get(DEGRADE_WITHHELD_KEY) or ()
+    quotes.extend(str(q) for q in recorded if str(q).strip())
+    return quotes
+
+
 def quoted_lines(text: str, quotes: Collection[str]) -> list[int]:
     """The indexes of the lines inside ``text``'s code fence that print one of ``quotes`` (both
     whitespace-squashed, as BC-18 matches). The fence lines themselves never count."""
@@ -166,11 +185,15 @@ def without_quoted_lines(text: str, quotes: Collection[str]) -> str:
 _SENTENCE_END = re.compile(r"(?<=[.!?])\s+(?=[A-Z`\[(*_])")
 
 
-def without_quoted_sentences(text: str, quotes: Collection[str]) -> str:
+def without_quoted_sentences(text: str, quotes: Collection[str], *, plain: bool = False) -> str:
     """A kept paragraph's printed form without the sentences that print a cited register row's
     quote (the shortest run of consecutive sentences holding it, whitespace-squashed as BC-18
     matches). Every other sentence is printed exactly as written. Unchanged when no sentence run
-    holds a quote, or when the quote takes the whole paragraph (that unit is withheld, not kept)."""
+    holds a quote, or when the quote takes the whole paragraph (that unit is withheld, not kept).
+
+    ``plain`` also matches a quote whose code-span backticks were left out (the degrade's flags compare
+    ``_plain`` text, BL-562): an authored sentence printed with ``Layer`` in backticks is the sentence a
+    quote naming ``Layer`` flags."""
     wanted = [_squash(quote) for quote in quotes if _squash(quote)]
     if not wanted:
         return text
@@ -181,7 +204,8 @@ def without_quoted_sentences(text: str, quotes: Collection[str]) -> str:
         best: tuple[int, int] | None = None
         for first in range(len(spans)):
             for last in range(first, len(spans)):
-                if prints_quote(text[spans[first][0] : spans[last][1]], quote):
+                run = text[spans[first][0] : spans[last][1]]
+                if prints_quote(run, quote) or (plain and _plain(quote) in _plain(run)):
                     if best is None or last - first < best[1] - best[0]:
                         best = (first, last)
                     break
@@ -512,6 +536,88 @@ class FlaggedText:
         return self.label
 
 
+_BARE_IDENTIFIER = re.compile(r"(?<![\w.`])[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+(?![\w`])|(?<![\w.`])[a-z]+(?:_[a-z0-9]+)+(?![\w`])")
+_CODE_SPAN = re.compile(r"`([^`\n]+)`")
+
+
+def _identifier_clause(
+    unit: Mapping[str, Any],
+    text: str,
+    kept: str,
+    facts: Any,
+    readme: str | None,
+    rows: Sequence[Any],
+) -> tuple[str, list[str]]:
+    """BL-562: ``(clause, fact ids)`` naming the public symbols a withheld sentence of an authored unit carried
+    that the maintainers' text it restates also carries and that nothing else the candidate prints holds, or
+    ``("", [])`` when there are none (the plain withholding then stands).
+
+    Hosted Lane R refresh, PSD Java run 44898282006: the API Reference introduction restated the maintainers'
+    paragraph ("... returns editable per-layer metadata through its getLayers method"), the independent review
+    found no fact that supports "editable", and withholding the sentence lost ``getLayers()`` (BC-17), the
+    one place the candidate named it, so the degrade was discarded. The identifier is not the unsupported
+    claim: the clause states only what the symbol facts state (a public class or enum, a public member of its
+    owner), so nothing is invented and the unsupported statement stays withheld.
+
+    A symbol qualifies when (a) it is a SUPPORTED public symbol the withheld text names (a code span, or a bare
+    camelCase / snake_case word), (b) the maintainers' README prints it in a code span (what BC-17 counts as an
+    API identifier of the published README, whichever unit carries it), and (c) neither the unit's kept text
+    nor the rest of ``readme`` (the quoted text excised) prints it. With no ``readme`` only (a)-(b) and the
+    kept text are tested, so the clause is never short of what BC-17 asks for."""
+    spans = " ".join(
+        span
+        for fact in facts.by_kind("inherited_unit")
+        if not fact.id.endswith(".code_block")
+        for span in _CODE_SPAN.findall(fact.value)
+    )
+    removed_text = " ".join(str(getattr(r, "quote", "")) for r in rows)
+    named = {m.strip().removesuffix("()") for m in _CODE_SPAN.findall(removed_text)} | set(
+        _BARE_IDENTIFIER.findall(removed_text)
+    )
+    by_name: dict[str, list[Any]] = {}
+    for fact in facts.by_kind("public_symbol"):
+        if fact.polarity != "SUPPORTED":
+            continue
+        simple = re.split(r"\.|::", fact.value.removesuffix("()"))[-1]
+        if simple in named or fact.value.removesuffix("()") in named:
+            by_name.setdefault(simple, []).append(fact)
+    # A name two public symbols share cannot be stated without choosing one: it stays with the plain withholding.
+    symbols = {name: found[0] for name, found in by_name.items() if len(found) == 1}
+    elsewhere = kept
+    if readme is not None:
+        wanted = [flat_squash(getattr(r, "quote", "")) for r in rows]
+        lines = []
+        for line in readme.splitlines():
+            squashed = flat_squash(line)
+            held = [w for w in wanted if w and w in squashed]
+            if held:
+                # the quoted text is excised: a line that is nothing else goes whole, a paragraph keeps
+                # its other sentences
+                line = "" if squashed in held else without_quoted_sentences(line, held)
+            lines.append(line)
+        elsewhere = "\n".join([*lines, kept])
+
+    def prints(name: str, haystack: str) -> bool:
+        return re.search(r"(?<![\w.])" + re.escape(name) + r"(?![\w])", haystack) is not None
+
+    required = {
+        name: fact
+        for name, fact in symbols.items()
+        if prints(name, spans) and not prints(name, elsewhere)
+    }
+    if not required:
+        return "", []
+    types = [(n, f) for n, f in required.items() if (f.attributes or {}).get("symbol_kind") in {"class", "enum"}]
+    members = [(n, f) for n, f in required.items() if (n, f) not in types]
+    parts = [f"the `{n}` {(f.attributes or {}).get('symbol_kind')}" for n, f in sorted(types)]
+    for name, fact in sorted(members):
+        owner = re.split(r"\.|::", fact.value.removesuffix("()"))[-2:-1]
+        kind = "property" if (fact.attributes or {}).get("member_kind") == "property" else "method"
+        parts.append(f"the `{name}` {kind}" + (f" of `{owner[0]}`" if owner else ""))
+    listed = parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + f" and {parts[-1]}"
+    return f"The public API includes {listed}.", [f.id for f in required.values()]
+
+
 def _withhold_flagged(
     plan: Mapping[str, Any],
     units: Mapping[str, Any],
@@ -519,6 +625,8 @@ def _withhold_flagged(
     *,
     rule: str = REGISTER_CORRECTION_RULE,
     guard_inherited: bool = False,
+    facts: Any = None,
+    readme: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]], dict[int, str]]:
     """The one withholding both ``register_corrected`` (rows of the findings register, BL-210) and
     the last-resort degrade (``degrade_claims``, BL-240) apply: ``(plan, units, records, status)``.
@@ -527,7 +635,11 @@ def _withhold_flagged(
     stand without it dropped) or ``"refused"`` (an authored unit prints it but no slot lever
     applies: left for the check to judge). An index absent from it matched no authored unit.
     ``guard_inherited`` refuses to drop a whole unit that cites an inherited unit: that is a
-    must-carry carrier and the degrade never touches it (R14)."""
+    must-carry carrier and the degrade never touches it (R14).
+
+    ``facts`` and ``readme`` (the degrade passes them, BL-562) let a withheld sentence that carries an
+    identifier the maintainers' text it restates holds, and that nothing else prints, leave that identifier
+    behind as a fact-true clause (``_identifier_clause``) instead of dropping it with the sentence (BC-17)."""
     import copy
 
     unit_list = [u for u in units.get("units", []) if isinstance(u, Mapping)]
@@ -584,14 +696,21 @@ def _withhold_flagged(
         # (Cells C++ opening: one row quotes the whole paragraph, another its third sentence).
         partial = [r for r in inside if _plain(r.quote) != plain]
         if partial:
-            corrected = without_quoted_sentences(text, [_plain(r.quote) for r in partial]).strip()
+            corrected = without_quoted_sentences(text, [_plain(r.quote) for r in partial], plain=True).strip()
             if (
                 corrected
                 and corrected != text
                 and not any(_plain(r.quote) in _plain(corrected) for r in rows)
             ):
+                action = "sentence_withheld"
+                if rule == DEGRADE_RULE and facts is not None:
+                    clause, symbol_ids = _identifier_clause(unit, text, corrected, facts, readme, partial)
+                    if clause:
+                        corrected = f"{corrected} {clause}"
+                        unit["fact_ids"] = list(dict.fromkeys([*(unit.get("fact_ids") or []), *symbol_ids]))
+                        action = "sentence_rewritten"
                 unit["text"] = corrected
-                records.append(_record(slot, section, inside, "sentence_withheld", rule))
+                records.append(_record(slot, section, inside, action, rule))
                 status.update({i: "handled" for i in index_of(inside)})
                 kept.append(unit)
                 continue
@@ -656,6 +775,23 @@ def _withhold_flagged(
             )
             status.update({i: "handled" for i in index_of(involved)})
             continue
+        if (
+            guard_inherited
+            and cites_inherited
+            and facts is not None
+            and slot != "opening"
+            and not slot.startswith(("capability:", "hub:", "type:"))
+        ):
+            # BL-562: the carrier of a maintainers' paragraph whose whole text is flagged keeps the
+            # identifiers that paragraph holds and nothing else prints, as one fact-true clause.
+            clause, symbol_ids = _identifier_clause(unit, text, "", facts, readme, involved)
+            if clause:
+                unit["text"] = clause
+                unit["fact_ids"] = list(dict.fromkeys([*(unit.get("fact_ids") or []), *symbol_ids]))
+                records.append(_record(slot, section, involved, "unit_rewritten", rule))
+                status.update({i: "handled" for i in index_of(involved)})
+                kept.append(unit)
+                continue
         if guard_inherited and cites_inherited:
             for i in index_of(involved):
                 status.setdefault(i, "refused")
@@ -1121,12 +1257,38 @@ def _omit_enterprise_paragraphs(
     return out
 
 
+#: The rule of the recorded decision to withhold one row, item or sentence of a kept maintainers' unit that
+#: a blocking check flags as unsupported, keeping the rest of the unit (BL-562, R14).
+INHERITED_TEXT_RULE = "BL-562"
+
+
+def _withhold_inherited_text(
+    entry: dict[str, Any], unit_id: str, flag: ClaimFlag, facts: Any
+) -> bool:
+    """BL-562: record on the kept unit's disposition that the flagged row (a table), item (a list) or sentence
+    (a paragraph) is withheld, and report whether that applies: only when the flag is a part of the unit and
+    withholding it leaves something of the unit to print (``omission_holds``). A flag that is the whole unit
+    is not this lever's (the unit is omitted whole, as before). The unit stays kept, so every other row it
+    prints, every identifier it carries and its must-carry citations are untouched; BC-17 reads the record
+    through ``withheld_quotes`` and accounts only for the text withheld. Mutates ``entry`` only when it applies."""
+    unit = next((f for f in facts.by_kind("inherited_unit") if f.id == unit_id), None)
+    if unit is None:
+        return False
+    quote = flag.quote.strip()
+    recorded = [str(q) for q in entry.get(DEGRADE_WITHHELD_KEY) or ()]
+    if quote in recorded or not omission_holds(unit_id, unit.value, [*recorded, quote]):
+        return False
+    entry[DEGRADE_WITHHELD_KEY] = [*recorded, quote]
+    return True
+
+
 def degrade_claims(
     plan: Mapping[str, Any],
     units: Mapping[str, Any],
     dispositions: Mapping[str, Any],
     flags: Sequence[ClaimFlag],
     facts: Any,
+    readme: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
     """``(plan, units, dispositions, records)`` with each flagged statement withheld at its origin
     (see the BL-240 note above). Pure; zero calls; the inputs come back unchanged, with no
@@ -1139,7 +1301,7 @@ def degrade_claims(
         return dict(plan), dict(units), dict(dispositions), []
     rows = [FlaggedText(flag.quote, flag.check, flag.check == "duplicate_paragraph") for flag in flags]
     new_plan, new_units, records, status = _withhold_flagged(
-        plan, units, rows, rule=DEGRADE_RULE, guard_inherited=True
+        plan, units, rows, rule=DEGRADE_RULE, guard_inherited=True, facts=facts, readme=readme
     )
     # A duplicate_paragraph flag (BL-320) never rewrites the opening (BL-350's fact-true opening is for a
     # model-judged claim, not for a repeated paragraph).
@@ -1170,11 +1332,21 @@ def degrade_claims(
             if (
                 entry is None
                 or entry.get("disposition") not in PLACED
-                or unit_id in cited
                 or unit_id.endswith((".heading", ".badge_row", ".html_block"))
             ):
                 continue
             section = str(entry.get("destination_section") or "")
+            if _withhold_inherited_text(entry, unit_id, flag, facts):
+                records.append(
+                    {
+                        "rule": INHERITED_TEXT_RULE, "slot": unit_id, "section": section,
+                        "action": "inherited_text_withheld", "findings": [flag.check],
+                        "detail": flag.detail,
+                    }
+                )
+                continue
+            if unit_id in cited:
+                continue  # an authored unit cites it: a must-carry carrier is never omitted whole
             entry["disposition"] = "OMIT_UNSUPPORTED"
             entry["destination_section"] = None
             entry["fact_ids"] = _cited_facts(flag.detail, facts)
@@ -1201,7 +1373,8 @@ def degrade_claims(
     # ``_withhold_flagged`` filed its own records under the units; this driver's own ride with them.
     own = [
         r for r in records
-        if r.get("action") in {"inherited_unit_omitted", "printed_text_withheld", "opening_fact_true"}
+        if r.get("action")
+        in {"inherited_unit_omitted", "inherited_text_withheld", "printed_text_withheld", "opening_fact_true"}
     ]
     if own:
         new_units[DEGRADE_RECORDS_KEY] = [*new_units.get(DEGRADE_RECORDS_KEY, []), *own]
