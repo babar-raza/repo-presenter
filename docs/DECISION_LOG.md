@@ -8094,3 +8094,22 @@ robust (a degrade that reached a fact-true row ends in a verdict, not a loop) an
 the model wrote). Hosted-unproven (R41).
 
 Backlog: BL-560, BL-561, BL-562
+
+## 2026-11-21: Audit round 4 stuck on one miscited line, and one failure discarding 63 reviewed cases (BL-563, R37, R44, R46, R10, R41)
+
+Problem: the blind audit (`scripts/run_m9_auditor.py`) failed every attempt on case b57e5312651e6209 (Cells Python, Lane R) with "unit u3
+(api_reference): the reviewer's reply broke the contract after the one re-ask". Root cause (zero-call reproduction plus 9 sparing live
+calls): not size. Unit u3 is 57 lines; the reviewer flags "The public API has 160 types." correctly but cites line 200 for a sentence on
+line 199, line 200 is blank, the contract refuses it ("lines 200-200 are blank"), and the model repeats the same number after the re-ask
+(3 of 5 live samples). Owner decisions unchanged: SEEDED_RECALL_MIN, FALSE_FLAG_RATE_MAX and the single-sample judging stay as they are; a
+case with no valid review is never clean. Decision (class fix, global, both lanes): when a contradiction or unsupported claim cites one
+line the contract would refuse and its own `text` is verbatim in exactly one line the unit showed, the citation is moved to that line
+(`reply.repair_miscited_lines`); the words and the verdict are the model's, only the number is corrected, and a valid citation, a span, a
+whole-section kind or an ambiguous text is never touched. Request bytes are unchanged, so every stored call replays. Rejected: chunking the
+unit (no size problem exists), a fatter re-ask (the model already ignored the exact error), consensus or lenient clean-counting (owner
+decided). Robustness: `audit_cases` now tries every case and fails closed at the end naming each failing case (no partial findings, none
+recorded clean), and audit-seed.yml restores and saves the reviewer call store with actions/cache (precedent: present.yml), so a retry
+re-asks only what has no valid stored reply. Properties improved: robust (one reviewer failure no longer discards the batch's work) and
+reliable (a systematic line-number slip no longer fails a unit). R9: no README wording touched. Hosted-unproven (R41).
+
+Backlog: BL-563

@@ -255,6 +255,53 @@ def resolve_cited_lines(
     return problems
 
 
+#: Shortest ``text`` (and shortest line) the citation repair will match by content: shorter strings
+#: occur in too many lines to say which one a finding is about.
+MIN_REPAIR_CHARS = 12
+
+
+def repair_miscited_lines(
+    reply: Any, candidate_readme: str, scope: ReviewScope | None = None
+) -> None:
+    """Move a single-line citation the contract would refuse to the one shown line that prints the
+    finding's own ``text`` (BL-561). The reviewer numbers a line it quotes correctly in ``text`` one or
+    two off (hosted audit round 4: the sentence on line 199 cited as the blank line 200, repeated after
+    the re-ask, so the unit had no valid review and the whole batch died). The words are the model's, the
+    place is arithmetic: when the finding's ``text`` is verbatim in exactly one shown line, that line
+    is the one it is about. Applied only where ``resolve_cited_lines`` would refuse the citation, to a
+    contradiction or unsupported claim citing one line, and only when the match is unique; a valid
+    citation, a whole-section kind, a span and a text that locates nowhere or in several lines are
+    untouched, so a stored valid reply replays identically. Edits ``reply`` in place; idempotent."""
+    findings = reply.get("findings") if isinstance(reply, Mapping) else None
+    if not isinstance(findings, list):
+        return
+    rows = candidate_readme.splitlines()
+    shown = [
+        n for n in (sorted(scope.lines) if scope is not None else range(1, len(rows) + 1))
+        if 1 <= n <= len(rows) and rows[n - 1].strip()
+    ]
+    for finding in findings:
+        if not isinstance(finding, dict) or finding.get("claim_kind") in WHOLE_SECTION_KINDS:
+            continue
+        cited = finding.get("lines")
+        if not isinstance(cited, list) or not cited or not all(_whole(n) for n in cited):
+            continue
+        if len(cited) not in (1, 2) or cited[0] != cited[-1]:
+            continue
+        if not resolve_cited_lines({"findings": [dict(finding)]}, candidate_readme, scope):
+            continue
+        text = spaced(str(finding.get("text") or ""))
+        if len(text) < MIN_REPAIR_CHARS:
+            continue
+        found = [
+            n for n in shown
+            if text in spaced(rows[n - 1])
+            or (len(spaced(rows[n - 1])) >= MIN_REPAIR_CHARS and spaced(rows[n - 1]) in text)
+        ]
+        if len(found) == 1:
+            finding["lines"] = [found[0]]
+
+
 def _repeat_key(finding: Mapping[str, Any]) -> tuple[Any, ...]:
     omission = finding.get("omission")
     return (

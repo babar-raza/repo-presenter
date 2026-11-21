@@ -199,6 +199,18 @@ jobs:
       - name: Record this attempt (bounded retries, run_m9_seeder.MAX_AUDIT_ATTEMPTS)
         run: git push origin "HEAD:refs/heads/audit-attempt/run-${SEED}-${GITHUB_RUN_ID}"
 
+      # BL-561: a reviewer reply that passed the contract is stored under its request hash. A runner starts
+      # empty, so a retry (MAX_AUDIT_ATTEMPTS) would re-ask every case of the batch for one failed case;
+      # the call store is restored here and saved below, so a retry re-asks only what has no valid reply.
+      # Content-addressed (a request hash names the exact bytes it answers): a stale or partial restore
+      # can only cost a re-ask, never change a verdict; a cache miss is a fresh audit.
+      - name: Restore this seed's reviewer call store
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/m9-audit/work/calls
+          key: m9-audit-calls-${{ needs.gate.outputs.seed_run_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: m9-audit-calls-${{ needs.gate.outputs.seed_run_id }}-
+
       - name: Blind audit with the existing independent reviewer
         env:
           GPT_OSS_ENDPOINT: ${{ secrets.GPT_OSS_ENDPOINT }}
@@ -212,6 +224,13 @@ jobs:
             --candidates "$RUNNER_TEMP/m9-audit/in/candidates" \
             --work "$RUNNER_TEMP/m9-audit/work" \
             --out "$RUNNER_TEMP/m9-audit/findings.json"
+
+      - name: Save this seed's reviewer call store for a retry
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/m9-audit/work/calls
+          key: m9-audit-calls-${{ needs.gate.outputs.seed_run_id }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Success, failure or timeout: the audit's measured calls and tokens (its own call ledger only --
       # the work directory also holds the audited seals' ledgers) go to the durable ledger, so the

@@ -342,12 +342,13 @@ def audit_cases(
     retries: int = 1,
     derive: Callable[[Mapping[str, Any], str, frozenset[int]], Derivation | None] | None = None,
 ) -> list[dict[str, Any]]:
-    """Every case reviewed, in case-index order; ``AuditError`` when any case has no valid review after
-    ``retries`` more attempts (a partial findings file is never returned). ``derive`` (the hosted run:
+    """Every case reviewed, in case-index order; ``AuditError`` (after every case was tried) when any case has no
+    valid review after ``retries`` more attempts (a partial findings file is never returned). ``derive`` (the hosted run:
     ``case_derivation``) gives each case's zero-call re-derivation, applied by ``apply_derivation``."""
     from repo_presenter.readme.review.verdict import ReviewUnavailable
 
     findings: list[dict[str, Any]] = []
+    failed: list[str] = []
     for entry in case_index:
         case_id = str(entry["case_id"])
         if case_id not in texts:
@@ -361,7 +362,13 @@ def audit_cases(
             except ReviewUnavailable as error:
                 problem = error
         if verdict is None:
-            raise AuditError(f"case {case_id}: no valid review ({getattr(problem, 'reason', problem)})")
+            # BL-561: one case with no valid review no longer ends the batch where it stands. Every other
+            # case is still reviewed (each valid reply lands in the call store, which the next attempt
+            # replays for free), and the audit fails closed at the end naming every such case. Nothing is
+            # recorded for a case with no review: it is never clean and no partial findings are returned.
+            failed.append(f"case {case_id}: no valid review ({getattr(problem, 'reason', problem)})")
+            print(failed[-1], file=sys.stderr)
+            continue
         rows = findings_for(case_id, texts[case_id], verdict.findings)
         if derive is not None:
             asked = frozenset(r["line"] for r in rows if r.get("source") == "llm" and r.get("located")
@@ -369,6 +376,8 @@ def audit_cases(
             rows = apply_derivation(case_id, texts[case_id], rows, derive(entry, texts[case_id], asked))
         findings.extend(rows)
         print(f"{case_id} {entry.get('lane')} {verdict.verdict}: {len(rows)} findings", file=sys.stderr)
+    if failed:
+        raise AuditError("; ".join(failed))
     return findings
 
 

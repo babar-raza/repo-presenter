@@ -356,3 +356,23 @@ def test_the_attestation_signer_is_still_exactly_acceptance_write_on_main():
         if "./.github/workflows/audit-seed.yml" in path.read_text(encoding="utf-8")
     }
     assert seed_callers == {"run-request-execute.yml"}
+
+
+def test_one_failed_case_does_not_stop_the_other_cases_and_none_is_recorded_clean():
+    """BL-561: every case is tried; the audit then fails closed naming each case with no valid review."""
+    case_index, _ = _cases()
+    texts = {e["case_id"]: e["text"] for e in case_index}
+    bad = {case_index[3]["case_id"], case_index[5]["case_id"]}
+    asked = []
+
+    def flaky(source, text):
+        asked.append(source)
+        if source in bad:
+            raise ReviewUnavailable("the reviewer's reply broke the contract", [])
+        return SimpleNamespace(verdict="ACCEPT", findings=())
+
+    with pytest.raises(auditor.AuditError) as error:
+        auditor.audit_cases(case_index, texts, lambda e: e["case_id"], flaky)
+    for case_id in bad:
+        assert f"case {case_id}: no valid review" in str(error.value)
+    assert {e["case_id"] for e in case_index} <= set(asked)  # the cases after the failures were still reviewed

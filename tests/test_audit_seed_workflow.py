@@ -67,3 +67,17 @@ def test_candidates_and_manifest_are_uploaded_as_ephemeral_artifacts_not_committ
     # commitment hash and the (non-secret) case index are.
     assert "git add -f evidence" in text
     assert "seed_manifest.enc" not in text.split("git add -f")[-1]
+
+
+def test_the_reviewer_call_store_is_restored_before_and_saved_after_the_blind_audit():
+    """BL-561: a retried attempt re-asks only the cases with no stored valid reply."""
+    doc, _text = _load()
+    steps = doc["jobs"]["audit"]["steps"]
+    names = [s.get("name", "") for s in steps]
+    audit = names.index("Blind audit with the existing independent reviewer")
+    restore = next(i for i, s in enumerate(steps) if str(s.get("uses", "")).startswith("actions/cache/restore"))
+    save = next(i for i, s in enumerate(steps) if str(s.get("uses", "")).startswith("actions/cache/save"))
+    assert restore < audit < save
+    assert steps[save]["if"] == "always()"
+    for index in (restore, save):
+        assert steps[index]["with"]["path"].endswith("/m9-audit/work/calls")

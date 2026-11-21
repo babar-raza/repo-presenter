@@ -70,6 +70,7 @@ from repo_presenter.readme.review.reply import (
     MAX_FINDINGS,
     ReviewScope,
     merge_repeated_findings,
+    repair_miscited_lines,
     resolve_cited_lines,
     review_from_reply,
     validate_review_reply,
@@ -297,6 +298,7 @@ def review_checks(
     merged, then the Phase 1 contract (scoped to the unit); the errors are quoted back to the model
     in the one re-ask. ``changed`` (Lane L edit scope only, see :func:`edit_scope`) adds the rule
     that a finding must cite at least one changed line."""
+    repair_miscited_lines(output, candidate_readme, scope)
     cited = resolve_cited_lines(output, candidate_readme, scope)
     if cited:
         return cited
