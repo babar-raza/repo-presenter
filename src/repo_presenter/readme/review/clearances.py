@@ -32,6 +32,7 @@ the section; dropped: the content-unit citation shortcut and the unrestorable ti
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, replace
 
@@ -174,6 +175,39 @@ def names_supported(finding: Finding, context: ClearanceContext) -> Clearance | 
     return _seal_clearance("names_supported", finding, tuple(resolved))
 
 
+def _api_symbol_rendered(fact: Fact, facts: FactsDocument, scope: str) -> str:
+    """How the API Reference prints SUPPORTED public symbol ``fact``, or ``""`` when it does not (BL-551).
+
+    The renderer never prints a symbol's qualified value ("Aspose.Cells_FOSS.Workbook.Save"): a type is a
+    ``| `Workbook` |`` row or a ``### Workbook`` heading, a member a ``- `Save`:`` bullet under its owner's
+    ``### Workbook`` heading (``renderer._api_reference``, ``api_reference_names``). An omission claim naming
+    such a fact as absent from ``api_reference`` therefore could never be cleared by the literal-value test,
+    although the section prints it (hosted Cells C++ refresh run 44787653565, S2-F03/S2-F04 on the Workbook and
+    Worksheet rows). It is cleared only for a symbol printed exactly where the renderer prints it: a member's
+    bullet counts only inside its own owner's block, and a bare common word elsewhere in the section counts for
+    nothing."""
+    if fact.kind != "public_symbol":
+        return ""
+    from repo_presenter.readme.composition.renderer import api_reference_names
+
+    names = api_reference_names(facts)
+    kind = (fact.attributes or {}).get("symbol_kind", "")
+    if kind in ("class", "enum"):
+        name = re.escape(names.get(fact.value, fact.value.rsplit(".", 1)[-1]))
+        found = re.search(rf"(?m)^(?:\|\s*`{name}`\s*\||###\s+{name}\s*$)", scope)
+        return f"`{names.get(fact.value, '')}`" if found else ""
+    owner_value, _, member = fact.value.rpartition(".")
+    owner = next((f for f in facts.by_kind("public_symbol") if f.value == owner_value), None)
+    if owner is None or owner.polarity != "SUPPORTED" or not member:
+        return ""
+    owner_name = re.escape(names.get(owner_value, owner_value.rsplit(".", 1)[-1]))
+    block = re.search(rf"(?ms)^###\s+{owner_name}\s*$(.*?)(?=^###\s|^</details>|\Z)", scope)
+    if block is None:
+        return ""
+    found = re.search(rf"(?m)^-\s+`{re.escape(member)}`\s*:", block.group(1))
+    return f"`{member}` under {owner_name}" if found else ""
+
+
 def omission_present(finding: Finding, context: ClearanceContext) -> Clearance | None:
     claim = finding.omission
     if not _only(finding, "omission") or claim is None or claim.is_empty():
@@ -187,13 +221,16 @@ def omission_present(finding: Finding, context: ClearanceContext) -> Clearance |
     proofs: list[str] = []
     for fact_id in claim.missing_ids:
         fact = by_id.get(fact_id)
-        if (
-            fact is None
-            or fact.polarity != "SUPPORTED"
-            or not present(fact.value, scope)
-        ):
+        if fact is None or fact.polarity != "SUPPORTED":
             return None
-        proofs.append(f"{fact_id} is rendered by section {finding.section_id}")
+        if present(fact.value, scope):
+            proofs.append(f"{fact_id} is rendered by section {finding.section_id}")
+        elif finding.section_id == "api_reference" and (
+            shown := _api_symbol_rendered(fact, context.facts, scope)
+        ):
+            proofs.append(f"{fact_id} is rendered by section {finding.section_id} as {shown}")
+        else:
+            return None
     for quote in claim.missing_quotes:
         if not present(quote, scope):
             return None

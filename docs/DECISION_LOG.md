@@ -8042,3 +8042,30 @@ before/after recorded in the backlog items. Not proven: all four are hosted-unpr
 degrade can answer; a count the facts prove is cleared the same way on every sample), proven locally by zero-call tests with negative controls.
 
 Backlog: BL-540, BL-541, BL-542, BL-543
+
+## 2026-11-21: Two classes behind the Slides Java and Cells C++ refresh failures: a hub paragraph's analysis wording, and an omission claim naming a symbol the API Reference prints (BL-550, BL-551, R46, R10, R14)
+Hosted refresh runs 44787829770 (Slides Java) and 44787653565 (Cells C++), read from their logs and failure records (the run
+artifacts are not downloadable from the container; the stored seal bundles were replayed zero-call). (A) Slides Java: BC-07 failed on
+the authored Detailed Member Reference hub sentence "The getFontName method is a public symbol exposed by ...". Only Core API rows
+went through `_symbol_description` (BL-087); the hub paragraph printed unfiltered. BC-07's failure names no LLM-owned section, so
+`validation_defects` yields no repairable defect ("repair start (0 defect(s))"), the degrade has no flag for a deterministic BC-07
+finding ("nothing kept (0 flag(s) tried)"), and with a blocking check failing no review is made ("deterministic-only verdict is never
+sealed"). Decision (R36 alternatives: attribute BC-07 lines to sections for a repair ask; add a degrade flag; fix at the renderer that
+owns the paragraph): the renderer applies the BL-087 row rule to the hub paragraph (`_hub_description`): the authored sentence untouched
+when clean, else the type's fact-true description. Replace, never drop (R14); a clean sentence prints as written, and a sealed README
+never carries the wording, so no sealed byte moves (R10). (B) Cells C++: S2-F03/S2-F04 are `omission` findings of the audit-packet second
+sample on the Workbook and Worksheet hub rows. The omission claim's ids are not in the log or failure record and the artifact is
+unreachable; 10 live audit draws of the stored seal did not reproduce it. What the code shows: `omission_present` searched a fact's
+qualified value ("Aspose.Cells_FOSS.Workbook.Save"), which the README never prints (a `| `Workbook` |` row, a `### Workbook` heading,
+a `- `Save`:` bullet under its owner), so a claim naming a symbol the section does print could never be cleared. Decision: in
+`api_reference`, a SUPPORTED public symbol counts as rendered when printed exactly where the renderer prints it (type row/heading;
+member bullet inside its own owner's block); unlisted members, another owner's bullet and other sections still stand (no
+real-omission detection is weakened). Also `blocked_predicate` now names the ids/phrases an omission demands, so the next failure
+record shows them (the one datum missing here). Not established: that the hosted claim named a printed symbol; if it demanded
+unlisted members of a type (the hub bullet list is bounded by design), that is a different class and is recorded UNFIXED in BL-551
+(R36). Also checked, no code change: the Slides Java Enterprise clause is the BL-480 shape (the stored unit cites
+`inherited_unit:089.paragraph`) and is reached once the review is made; Slides C++'s "Development Dependencies" bullets are renderer-
+printed from SUPPORTED `dependency:development.*` facts and all four lines are clearable by the BL-400 derivation (zero-call on the
+stored bundle). R9: no README wording is added. Properties improved: robust, repeatable. Hosted-unproven (R41).
+
+Backlog: BL-550, BL-551

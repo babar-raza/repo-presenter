@@ -786,7 +786,13 @@ def blocked_predicate(verdict: ReviewVerdict) -> str:
                 f"a revised candidate the reviewer no longer faults (no clearance can disprove "
                 f"a {finding.claim_kind} claim)"
             )
-        parts.append(f"{label} [{finding.claim_kind}]{where} blocks until {needed}")
+        claim = finding.omission
+        named = (
+            f" (names {', '.join([*claim.missing_ids, *(repr(q) for q in claim.missing_quotes)])[:400]})"
+            if claim is not None and not claim.is_empty()
+            else ""
+        )
+        parts.append(f"{label} [{finding.claim_kind}]{where}{named} blocks until {needed}")
     if not parts:
         parts.append(f"{verdict.fold.reason or 'the review did not accept'}")
     return "; ".join(parts)

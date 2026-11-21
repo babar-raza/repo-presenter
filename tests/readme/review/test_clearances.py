@@ -448,3 +448,86 @@ def test_omission_claims_round_trip_through_a_record() -> None:
         "key_capabilities", ("example:001",), ("x y z",)
     )
     assert FACTS.facts  # the shared facts document is non-empty
+
+
+# ---------------------------------------------------------------------------
+# omission_present: a symbol the API Reference prints by its short name (BL-551)
+# ---------------------------------------------------------------------------
+
+_API = """# Aspose.Widget FOSS for Cpp
+
+## API Reference
+
+<details>
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `Widget` | The main class. |
+| `Gadget` | A gadget. |
+
+#### Detailed Member Reference
+
+### Widget
+
+The `Widget` class renders.
+
+- `Render`: Renders the widget.
+
+### Gadget
+
+The `Gadget` class gadgets.
+
+</details>
+
+## License
+
+MIT.
+"""
+
+
+def _api_facts() -> FactsDocument:
+    def sym(fid: str, value: str, kind: str) -> Fact:
+        return Fact(fid, "public_symbol", value, (Evidence("src/w.h", "line 1"),), attributes={"symbol_kind": kind})
+
+    return FactsDocument(
+        "aspose/Aspose.Widget", "a" * 40,
+        (
+            sym("public_symbol:ns.widget", "Ns.Widget", "class"),
+            sym("public_symbol:ns.gadget", "Ns.Gadget", "class"),
+            sym("public_symbol:ns.sprocket", "Ns.Sprocket", "class"),
+            sym("public_symbol:ns.widget.render", "Ns.Widget.Render", "method"),
+            sym("public_symbol:ns.widget.save", "Ns.Widget.Save", "method"),
+            sym("public_symbol:ns.gadget.render", "Ns.Gadget.Render", "method"),
+        ),
+    )
+
+
+def _omission(*ids: str) -> Finding:
+    return llm("omission", section_id="api_reference", omission=("api_reference", ids, ()))
+
+
+def test_omission_present_clears_a_type_and_a_member_the_api_reference_prints_by_short_name() -> None:
+    ctx = ClearanceContext(_API, "", _api_facts())
+    proof = omission_present(_omission("public_symbol:ns.widget", "public_symbol:ns.widget.render"), ctx)
+    assert proof is not None and proof.name == "omission_present"
+
+
+def test_negative_control_a_type_or_member_the_section_does_not_print_stays_blocking() -> None:
+    ctx = ClearanceContext(_API, "", _api_facts())
+    assert omission_present(_omission("public_symbol:ns.sprocket"), ctx) is None  # no row
+    assert omission_present(_omission("public_symbol:ns.widget.save"), ctx) is None  # no bullet
+    # one printed id does not clear a claim that also names an unprinted one
+    assert omission_present(_omission("public_symbol:ns.widget", "public_symbol:ns.widget.save"), ctx) is None
+
+
+def test_negative_control_a_member_bullet_under_another_owner_does_not_count() -> None:
+    ctx = ClearanceContext(_API, "", _api_facts())
+    # Gadget has no Render bullet; Widget's must not stand in for it
+    assert omission_present(_omission("public_symbol:ns.gadget.render"), ctx) is None
+
+
+def test_negative_control_the_short_name_clears_only_in_api_reference() -> None:
+    finding = llm("omission", section_id="key_capabilities", omission=("key_capabilities", ("public_symbol:ns.widget",), ()))
+    assert omission_present(finding, ClearanceContext(_API, "", _api_facts())) is None
