@@ -172,6 +172,11 @@ _CONTEXT_OVERFLOW = re.compile(
 )
 
 
+def is_truncation(error: BaseException) -> bool:
+    """Whether ``error`` is ``run_job``'s refusal of a reply cut off at ``max_output_tokens``."""
+    return bool(getattr(error, "truncated", False))
+
+
 class ContextWindowError(JobError):
     """The gateway refused a request because its input leaves no room for ``max_tokens`` in the
     model's context window (BL-450: PDF TypeScript, 258818 input tokens of 262144). A ``JobError``
@@ -778,11 +783,15 @@ def run_job(
                 else None
             )
             if merged_reply is None:
-                raise JobError(
+                truncation = JobError(
                     f"{job}: output truncated at the manifest's max_output_tokens "
                     f"({manifest.manifest.sampling.max_output_tokens}); raise the budget or bound "
                     "the output, never retry"
                 )
+                # BL-610: a caller that can ask for less (a smaller batch) tells this refusal from
+                # the others by the attribute; the type and message stay as failures.py classifies.
+                truncation.truncated = True  # type: ignore[attr-defined]
+                raise truncation
             reply = replace(reply, content=merged_reply, finish_reason="stop")
             healed = True
         content = reply.content

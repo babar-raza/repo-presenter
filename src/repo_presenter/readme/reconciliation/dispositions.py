@@ -53,7 +53,7 @@ import json
 import re
 from collections import Counter
 from collections.abc import Collection, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -70,7 +70,7 @@ from repo_presenter.core.facts import (
     bounded_records,
     has_no_package_manifest,
 )
-from repo_presenter.core.llm.binding import collect_ids
+from repo_presenter.core.llm.binding import collect_ids, resolve_symbol_ids
 from repo_presenter.core.llm.narrowing import Narrowing
 from repo_presenter.core.llm.prompts import LoadedManifest, PromptManifest
 from repo_presenter.core.package_registry import (
@@ -398,6 +398,29 @@ def rendering_fact_ids(section: str, facts: FactsDocument) -> list[str]:
             if fact.id.startswith(DISTRIBUTION_FACT_PREFIX) and fact.polarity == "SUPPORTED"
         }
     return sorted(ids)
+
+
+def license_file_link_ids(facts: FactsDocument) -> frozenset[str]:
+    """The SUPPORTED ``link_target`` facts that are the web address (``/blob/``, ``/raw/``,
+    ``raw.githubusercontent.com``) of the ``license:file`` path (BL-622): the License section links that
+    very file, so a unit that carries such a link can be superseded by it."""
+    license_file = next(
+        (
+            fact.value.strip().strip("/")
+            for fact in facts.by_kind("license")
+            if fact.id == "license:file" and fact.polarity == "SUPPORTED" and fact.value.strip()
+        ),
+        "",
+    )
+    if not license_file:
+        return frozenset()
+    return frozenset(
+        fact.id
+        for fact in facts.by_kind("link_target")
+        if fact.polarity == "SUPPORTED"
+        and fact.value.split("#", 1)[0].split("?", 1)[0].rstrip("/").endswith("/" + license_file)
+        and any(mark in fact.value for mark in ("/blob/", "/raw/", "raw.githubusercontent.com"))
+    )
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1193,7 +1216,12 @@ _NOT_RESOURCES = frozenset({"scope_limitations", "key_capabilities"})
 
 
 def _fit_resource_and_license_units(
-    output: dict[str, Any], facts: FactsDocument, units: Mapping[str, Fact], ctx: _Coverage
+    output: dict[str, Any],
+    facts: FactsDocument,
+    units: Mapping[str, Fact],
+    ctx: _Coverage,
+    *,
+    license_links: bool = False,
 ) -> None:
     """Section fit, in place (BL-004, owner P0 on Aspose.3D FOSS for .NET: "Documentation &
     Resources is not complete because its content is shown in Scope and Limitations ... This
@@ -1209,6 +1237,13 @@ def _fit_resource_and_license_units(
       also says something else (it cites other facts) is left to the existing checks."""
     holdable = holdable_sections(facts)
     license_ids = rendering_fact_ids("license", facts)
+    if license_links and (linked := license_file_link_ids(facts)):
+        # BL-622, a settled candidate whose BC-05 section fit names the maintainers' license sentence
+        # (TeX Python, hosted run 44924893253): the sentence's link to the license file is rendered by
+        # the License section, which links that file. Only this zero-call restore-time fold counts it, so
+        # the S4 reply and a sealed disposition document (which may keep such a sentence where it is)
+        # are judged as before.
+        ctx = replace(ctx, rendered={**ctx.rendered, "license": ctx.rendered["license"] | linked})
     for entry in output.get("dispositions", []):
         if entry.get("disposition") not in PLACED:
             continue
@@ -1304,14 +1339,18 @@ def _license_paragraph_misfiled_as_enterprise(
     return sorted(shown | set(license_ids))
 
 
-def fit_sealed_sections(output: dict[str, Any], facts: FactsDocument) -> None:
+def fit_sealed_sections(
+    output: dict[str, Any], facts: FactsDocument, *, license_links: bool = False
+) -> None:
     """The section-fit folds of :func:`normalize` a sealed disposition document is held to by
     zero-call re-certification (P4, 2026-11-14), in place: the resource-links list and license
     paragraph fit (:func:`_fit_resource_and_license_units`, BL-004). Measured: 3D .NET, Cells C++
     and Words .NET seals predate BL-004 and print docs.aspose.org/kb/reference links under Scope
     and Limitations (BC-05 section fit)."""
     units = {fact.id: fact for fact in facts.by_kind("inherited_unit")}
-    _fit_resource_and_license_units(output, facts, units, coverage_context(facts))
+    _fit_resource_and_license_units(
+        output, facts, units, coverage_context(facts), license_links=license_links
+    )
 
 
 _PROSE_PRINTED_KINDS = frozenset({"paragraph", "list", "table", "blockquote"})
@@ -3857,6 +3896,68 @@ def bound_rationales(output: dict[str, Any], limit: int = _RATIONALE_LIMIT) -> l
             entry["rationale"] = bounded
             changed.append(str(entry.get("unit_id", "?")))
     return changed
+
+
+#: Dispositions whose reading rests on the facts they cite: one left citing nothing by a deletion
+#: is not a correction but a claim without evidence, so the recovery refuses it (fails closed).
+_EVIDENCE_DISPOSITIONS = frozenset(
+    {
+        "VERIFIED_PRESERVE",
+        "VERIFIED_REWRITE",
+        "VERIFIED_MOVE",
+        "CORRECT_WITH_EVIDENCE",
+        "PRESERVE_ATTRIBUTED",
+    }
+)
+_UNCITABLE_RULE = "BL-610"
+
+
+def recover_uncitable_fact_ids(
+    output: dict[str, Any], citable: Collection[str], facts: FactsDocument | None = None
+) -> dict[str, Any] | None:
+    """Terminal-safe correction for a reconciliation reply that cites a fact id outside the
+    batch's offered enum after both asks (BL-610, R46 robust; the planning job's BL-220 class on the
+    S4 job; hosted PDF Python run 44924772455 failed closed after 3 calls with
+    ``$.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one
+    of the offered ids`` - the same invented id three times in one array, beside two valid ones):
+    each id outside ``citable`` is deleted from its array (a repeat of a kept id too), nothing
+    else touched, because an id no fact has proves nothing and is never replaced by a guess at the
+    nearest one. A disposition that rests on its facts (VERIFIED_*, CORRECT_WITH_EVIDENCE,
+    PRESERVE_ATTRIBUTED) left with no id fails closed, and so does everything else the job's
+    checks refuse afterwards. Each deletion is recorded (R14). ``None`` when no id is outside the
+    enum or nothing honest remains."""
+    allowed = set(citable)
+    dispositions = output.get("dispositions") if isinstance(output, dict) else None
+    if not allowed or not isinstance(dispositions, list):
+        return None
+    if facts is not None:
+        # The job's own binding first rewrites a symbol cited by its read path to its fact.
+        resolve_symbol_ids(output, facts)
+    notes: list[dict[str, Any]] = []
+    for index, entry in enumerate(dispositions):
+        ids = entry.get("fact_ids") if isinstance(entry, dict) else None
+        if not isinstance(ids, list):
+            continue
+        dropped = [i for i in ids if not isinstance(i, str) or i not in allowed]
+        if not dropped:
+            continue
+        kept = list(dict.fromkeys(i for i in ids if isinstance(i, str) and i in allowed))
+        if not kept and entry.get("disposition") in _EVIDENCE_DISPOSITIONS:
+            return None
+        entry["fact_ids"] = kept
+        notes.append(
+            {
+                "fallback": "uncitable_fact_id_dropped",
+                "rule": _UNCITABLE_RULE,
+                "path": f"$.dispositions[{index}].fact_ids",
+                "unit_id": entry.get("unit_id"),
+                "dropped": list(dict.fromkeys(str(i) for i in dropped)),
+            }
+        )
+    if not notes:
+        return None
+    output["_recovery_notes"] = [*output.get("_recovery_notes", []), *notes]
+    return output
 
 
 def reconcile_checks(

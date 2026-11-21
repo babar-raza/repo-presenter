@@ -54,10 +54,18 @@ from pathlib import Path
 from typing import Any
 
 from repo_presenter.core.config import GatewayConfig
-from repo_presenter.core.errors import PresenterError
+from repo_presenter.core.errors import JobError, PresenterError
 from repo_presenter.core.facts import FactsDocument, read_facts, write_facts
 from repo_presenter.core.git_safety.git import run_git
-from repo_presenter.core.llm.jobs import CallStore, ContextWindowError, JobContext, run_job
+from repo_presenter.core.llm.jobs import (
+    CallStore,
+    ContextWindowError,
+    JobContext,
+    effective_model,
+    is_truncation,
+    request_hash,
+    run_job,
+)
 from repo_presenter.core.llm.ledger import Ledger
 from repo_presenter.core.llm.prompts import PromptRegistry, load_manifests
 from repo_presenter.core.noop_proof import Invocation, count_provider_calls, measure_invocation
@@ -108,6 +116,7 @@ from repo_presenter.readme.investigation.dossier import (
 )
 from repo_presenter.readme.reconciliation.destinations import holdable_sections
 from repo_presenter.readme.reconciliation.dispositions import (
+    citable_fact_ids,
     coordinate_neighbor_promises,
     merge_dispositions,
     reconcile_checks,
@@ -116,6 +125,7 @@ from repo_presenter.readme.reconciliation.dispositions import (
     reconciliation_narrowing,
     reconciliation_packet,
     reconciliation_schema,
+    recover_uncitable_fact_ids,
     write_dispositions,
 )
 from repo_presenter.readme.reconciliation.retained_examples import (
@@ -273,9 +283,16 @@ def _run_reconciliation(
         # the WHOLE batch rather than touching only what was named.
         narrow = reconciliation_narrowing(entry, batch_units, batch_facts, investigation, loaded)
 
+        citable = citable_fact_ids(batch_facts, loaded.manifest, batch_units, investigation)
+
+        def recover(output: dict, batch_facts=batch_facts, citable=citable) -> dict | None:
+            # BL-610: an id outside the offered enum after both asks is deleted, never guessed.
+            return recover_uncitable_fact_ids(output, citable, batch_facts)
+
         result = run_job(
             loaded, packet, config=config, facts=batch_facts, ledger=ledger, store=store,
             context=context, call_schema=call_schema, checks=checks, narrow=narrow,
+            recover=recover,
         )
         outputs.append(result.output)
     # coordinate_neighbor_promises is documented (dispositions.py's own module docstring, and its
@@ -399,8 +416,7 @@ def _run_coherence(
     name = product_name(entry)
     tasks = authoring_tasks(entry, document, investigation, dispositions, plan)
     batches = coherence_batches(tasks)
-    current = units_document
-    for _batch_id, batch_tasks in batches:
+    def run_batch(batch_tasks: list, current: dict) -> dict:
         existing = coherence_batch_units(current.get("units", []), batch_tasks)
         call_schema = coherence_schema(loaded, existing, batch_tasks)
 
@@ -435,11 +451,43 @@ def _run_coherence(
                 ceiling = min(
                     ceiling - 1, _tighter_ceiling(exc, loaded.manifest.sampling.max_output_tokens)
                 )
+            except JobError as exc:
+                if not is_truncation(exc):
+                    raise
+                # BL-610: the batch's echoed reply does not fit max_output_tokens (hosted PDF
+                # TypeScript run 44924813052: "section_authoring: output truncated ... (8000)"
+                # after 48 calls). Coherence only revises units that already passed authoring, so
+                # ask for less: two smaller batches, down to one section, whose units are left
+                # exactly as authored when even that reply is cut off. Batches that completed
+                # before are untouched (same requests, same hashes).
+                if len(batch_tasks) > 1:
+                    half = len(batch_tasks) // 2
+                    return run_batch(batch_tasks[half:], run_batch(batch_tasks[:half], current))
+                sections = sorted({task.section_id for task in batch_tasks})
+                store.record_repairs(
+                    request_hash(
+                        loaded, packet, call_schema, model=effective_model(loaded, context)
+                    ),
+                    0, loaded.manifest.prompt_id, [],
+                    notes=[{
+                        "fallback": "coherence_section_left_unrevised",
+                        "rule": "BL-610",
+                        "sections": sections,
+                        "reason": "the revised reply was cut off at max_output_tokens even for "
+                                  "this section alone; its authored units stand as accepted",
+                    }],
+                )
+                return current
         if bounded:
             store.record_repairs(
                 result.request_sha256, 0, loaded.manifest.prompt_id, [], notes=bounded
             )
-        current, _revised = apply_coherence(current, result.output)
+        revised_units, _revised = apply_coherence(current, result.output)
+        return revised_units
+
+    current = units_document
+    for _batch_id, batch_tasks in batches:
+        current = run_batch(batch_tasks, current)
     return current
 
 

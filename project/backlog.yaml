@@ -2859,3 +2859,111 @@ items:
       - "pre_audit_sweep.json: the only quality flag on a Lane R authored line is OCR .NET 261 (x4); 8 other quality/omission rows are on renderer lines (Page 109/113 Required Package Dependencies headings)"
     next_action: "re-evaluate after the OCR .NET refresh"
     updated: "2026-11-21"
+
+  - id: BL-610
+    title: "Lane R: a coherence batch whose revised reply is cut off at max_output_tokens failed the whole run (hosted PDF TypeScript 44924813052: 'JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000)' after 48 calls, 2.58M tokens)"
+    type: defect
+    source: "owner rulings R44, R46, R41; hosted run 44924813052 (PDF TypeScript, run head 11aa6b1a); the coherence batch cap (BL-450 era, 20000 characters) bounded the packet, not the echoed reply"
+    priority: P0
+    status: active
+    implementation_path: "cascade._run_coherence asks a cut-off batch again as two smaller batches (down to one section); a section whose own reply is still cut off keeps its authored units, recorded (R14); run_job marks the truncation refusal (jobs.is_truncation) without changing its type or text"
+    acceptance: "a truncated coherence reply is answered by smaller batches and the run goes on (tests/test_cascade_bl610.py); a non-truncation error and the failures.py class string are unchanged; recertify --all 64 RECERTIFIED and the R10 gate OK; hosted: PDF TypeScript Lane R gets past composition"
+    evidence:
+      - "hosted log 44924813052: S9 compose started 16:33, failed 17:13 at provider call 48 (a passing TS run, 44745502021, makes 54 calls); the failure record holds no unit name; the truncated reply is not logged, so the job could not be attributed from artifacts"
+      - "authoring already heals a cut-off reply through its narrowing (BL-370); coherence passes no narrowing, so it is the one call with no smaller ask"
+    next_action: "hosted PDF TypeScript Lane R; if the same error recurs from authoring, log the cut-off reply (truncation path prints nothing today)"
+    updated: "2026-11-21"
+
+  - id: BL-611
+    title: "Lane R: S4 source_reconciliation failed closed on a fact id outside the offered enum after both asks (hosted PDF Python 44924772455: $.dispositions[13].fact_ids[2..4] 'public_symbol:aspose_pdf.document.registry_lag' is not one of [...], the same invented id three times beside valid ones, 3 calls)"
+    type: defect
+    source: "owner rulings R44, R46, R41; hosted run 44924772455 (PDF Python); the planning job's BL-220 class on the S4 job, which had no recover="
+    priority: P0
+    status: active
+    implementation_path: "dispositions.recover_uncitable_fact_ids wired as _run_reconciliation's recover=: ids outside the batch's citable set are deleted (repeats folded), recorded (R14); a VERIFIED_*/CORRECT_WITH_EVIDENCE/PRESERVE_ATTRIBUTED disposition left with no id fails closed; never a nearest-id substitution"
+    acceptance: "the exact rejection replays to an accepted reply (tests/test_cascade_bl610.py); a preserve left with no cited fact still raises 'is not one of'; recertify --all 64 RECERTIFIED and the R10 gate OK; hosted: PDF Python Lane R passes S4"
+    evidence:
+      - "run 44924772455: rejected reply 10197 chars, only the three ids named, no unit named, so the narrowed ask could not run (narrowing.pending empties on a line naming no unit)"
+      - "the supervisor brief called the cells Words Python and PDF Go; the run ids belong to PDF TypeScript and PDF Python; Words Python's latest failure is BC-04/BC-17 (not a model-output class) and PDF Go's earlier fact-id class (runs 44313168971, 44366309808) is the same one"
+    next_action: "hosted PDF Python and PDF Go Lane R"
+    updated: "2026-11-21"
+
+  - id: BL-612
+    title: "Lane R: PSD Java S4 fails closed after 4 calls on 'inherited_unit:013.code_block: uncited_redundant_defer' (hosted 44931342990): the model answers DEFER_UNRESOLVED on a code block that is not a tracked example in all three asks"
+    type: defect
+    source: "owner rulings R44, R46; found while attributing the BL-611 run ids"
+    priority: P1
+    status: open
+    implementation_path: "investigate: a deterministic settle of a repeated DEFER_UNRESOLVED code_block (the narrowed ask already steers; see _settle_unresolved)"
+    acceptance: "the stored rejection replays to an accepted disposition; negative control: a tracked example's deferral is untouched"
+    evidence:
+      - "run 44931342990 log: output rejected three times (the third a narrowed ask); last rejection names inherited_unit:013.code_block"
+    next_action: "investigate"
+    updated: "2026-11-21"
+
+  - id: BL-620
+    title: "A maintainers' static status badge no fact verifies (TeX Python 'status-pre--alpha-orange') is never printed by the renderer and a badge row is rendered by the shell, so BC-17 named it lost on every settle round and no disposition could restore it: the cell failed 'no LLM review ... BC-17' although the cascade's review was ACCEPT"
+    type: defect
+    source: "owner rulings R9, R10, R14, R27, R36, R41, R42, R44, R46; hosted Lane R refresh TeX Python run 44924893253 (2026-11-21, main 11aa6b1, 10 provider calls): 'restore: 3 unit(s) restored but blocking still fails: ... BC-17 inherited_unit:002.badge_row holds links https://img.shields.io/badge/status-pre--alpha-orange.svg', 'repair repaired BC-17: VERIFIED_PRESERVE' then 'blocking BC-17', 'cascade end: ACCEPT' then 'no LLM review of this candidate was made ... blocking checks still fail: BC-05, BC-17'; failure record refs/repository-presenter-state/failures/aspose-tex-foss__Aspose.TeX-FOSS-for-Python"
+    priority: P0
+    status: active
+    implementation_path: "readme/parity_gate.status_badge_stated, called by the ONE badge judgement badge_slot_replaced (so BC-17 technical_content, badge_row_replaced, live_readme_loss and disposition_coverage agree): a static img.shields.io/badge/<label>-<value>-<colour> image that fills no verified slot (badge_slot_of_url None) is accounted for (R14 record rule BL-620, reason text in the accounting) when the candidate states the badge's value in words (TeX: 'pre-alpha' in the kept Scope sentence 'This is a Pre-Alpha release'); its link follows it. aspose.org's published README keeps the badge (R42); the renderer cannot print it (BC-07/badge_problems forbid a badge no fact supports, and the extractors record no Development Status fact), so the content is carried in words and only the picture is not."
+    acceptance: "(1) tests/readme/test_status_badge_stated_bl620.py: the exact TeX header row is accounted when the candidate says Pre-Alpha, its link too, badge_row_replaced true; negative controls: a candidate that never states the value keeps the loss (image, link and whole row), a body image, a non-shields host, a runtime-slot badge, a dynamic badge and a 2-character value are not covered; (2) recertify --all: 64 RECERTIFIED, gate OK (a loosening of one accounting reason moves no sealed byte); (3) hosted (R41, not proven): TeX Python Lane R refresh"
+    evidence:
+      - "pinned source 07db3203 README.md line 3: three badges, the third '[![Status: Pre--Alpha](https://img.shields.io/badge/status-pre--alpha-orange.svg)](...#scope-and-limitations)'; line 332 'This is a Pre-Alpha release'; pyproject.toml classifier 'Development Status :: 2 - Pre-Alpha' (no fact records it, so a fact-verified badge was not the lever)"
+      - "renderer._extra_badge_asserts_only_verified returns False for a static badge whose slot is not runtime (read in the code); restore_units._SHELL_RENDERED and dispositions._SHELL_OWNED name badge_row as never printed from the unit: no restore lever exists for it"
+    next_action: "supervisor integrates; hosted refresh of TeX Python Lane R (R41)"
+    updated: "2026-11-21"
+
+  - id: BL-621
+    title: "BC-14 / claim_contradiction read a verb that opens a configuration noun ('Load options for FBX format.', 'Save options for FBX format.') as a claim that the format is loaded or saved: the maintainers' own docstring rows FbxLoadOptions / FbxSaveOptions in the live README aspose.org published for 3D Java were flagged as '.fbx input / .fbx output reachable only through a stub' and the degrade kept nothing (2 flags tried)"
+    type: defect
+    source: "owner rulings R9, R14, R36, R41, R42, R44, R46; hosted Lane R refresh 3D Java run 44931307380 (2026-11-21, main 3a97735, 2 provider calls): 'finding claim_contradiction ... line 291 (COMPOSING): the README claims .fbx input, but format:input.fbx is reachable only through a stub' and line 292 (.fbx output), 'degrade: nothing kept (2 flag(s) tried)', 'independent review returned REJECT with 2 blocking finding(s) of 2'; earlier run 44924606015 (4 calls) the same two lines; failure record refs/repository-presenter-state/failures/aspose-3d-foss__Aspose.3D-FOSS-for-Java"
+    priority: P0
+    status: active
+    implementation_path: "readme/validation/code_path_claims._format_findings (rule j5): a verb word that is the first word of a noun phrase naming a configuration type (verb followed by options/settings/parameters/configuration/handler/callback) is not a verb (_states_the_action); every other verb use, and the existing negation/limitation clauses, are unchanged. R42: aspose.org's published README keeps both rows as written (the class exists in the source, FbxLoadOptions.java 'Load options for FBX format.'); the supported-format statements still come from the format facts, which exclude .fbx, so the README states the stub honestly where it states formats at all."
+    acceptance: "(1) tests/readme/validation/test_stub_format_options_bl621.py from the exact rows; negative controls: 'Load FBX files into a scene', 'load options and open FBX files', 'saves scenes to .fbx', 'Loads FBX format scenes' still block; tests/readme/validation/test_code_path_claims.py unchanged and green; (2) recertify --all: 64 RECERTIFIED, gate OK; (3) hosted (R41, not proven): 3D Java Lane R refresh"
+    evidence:
+      - "pinned source 3d2ed6be: README.md lines 291-292 are the maintainers' rows; src/main/java/com/aspose/threed/FbxLoadOptions.java and FbxSaveOptions.java exist with those javadoc sentences; FileFormat.java lists the FBX versions; Scene.java rendering is a documented UnsupportedOperationException stub (the stub facts are real, the rows are not claims of them)"
+    next_action: "supervisor integrates; hosted refresh of 3D Java Lane R (R41)"
+    updated: "2026-11-21"
+
+  - id: BL-622
+    title: "The maintainers' license sentence that links the license file's web address ('This project is licensed under the [MIT License](https://github.com/<repo>/blob/main/LICENSE)') rested on a link_target fact the License section 'does not render', so the section-fit fold left it in Scope and Limitations and BC-05 section fit named it on every settle round with no unit to re-disposition (TeX Python)"
+    type: defect
+    source: "owner rulings R9, R10, R14, R27, R36, R41, R44, R46; hosted Lane R refresh TeX Python run 44924893253: 'repair unrepairable BC-05: no stored disposition of an inherited unit is named by this defect', 'blocking BC-05: section fit: Scope and Limitations states the project's license, which the License section states'"
+    priority: P0
+    status: active
+    implementation_path: "two parts of one class, restore-time only so no sealed disposition document or sealed README changes (a first version that changed rendering_fact_ids moved Font Python's sealed unit 063 and turned its seal NEEDS_REPAIR in the lean recertify: reverted). (1) reconciliation/dispositions.license_file_link_ids + the fold's license_links flag, passed True only by repair.restore_units.fit_misfiled_units (the zero-call fold a settled candidate whose BC-05 names section fit goes through): the SUPPORTED link_target that is the web address of the license:file path counts as rendered by the License section, so the sentence that carries it is superseded into License. (2) validation/content_presence.unstated: a link anchor that is the GitHub web address of a repository file is stated when the README links that same file by a relative destination (the License section links LICENSE), so the supersession's own substance check (BC-05, validation/supersession) agrees. A link to another file, prose that merely says 'license', a sealed S4 fold are unchanged."
+    acceptance: "(1) tests/readme/reconciliation/test_license_file_link_bl622.py from the TeX facts: restore-time fold supersedes the sentence and records the move; a sealed disposition document is unchanged (Font Python shape); negative controls: the fonts-license link, no license:file, another file name, prose 'license' stay; the substance check states the web link by the relative license link only; (2) parity check on the exact shape: the superseded unit's blob/LICENSE link is accounted by BC-17's own Accounting; (3) recertify --all (lean, 0 calls): all 64 RECERTIFIED, gate OK; (4) hosted (R41, not proven)"
+    evidence:
+      - "facts extracted zero-call from the pinned source 07db3203 (readme.evidence.facts.extract + inherited units: 86 units, license:file LICENSE, license:spdx MIT, link_target:002 = .../blob/main/LICENSE): before the change _supersession_gap('inherited_unit:081.paragraph','license',{'link_target:002'}) = ('unrendered_facts', 'it rests on facts license does not render: link_target:002'); after (restore-time fold): None"
+      - "lean recertify of the first version: Font Python Lane R NEEDS_REPAIR 'BC-05: inherited_unit:063.paragraph is SUPERSEDE_REDUNDANT, but the README does not state 1 piece(s) of it (link .../blob/main/license.txt)': the regression the restore-time restriction removes"
+    next_action: "supervisor integrates; hosted refresh of TeX Python Lane R (R41)"
+    updated: "2026-11-21"
+
+  - id: BL-623
+    title: "BC-02 refused at EXTRACTING any registry install fact the registry lists as not published (PACKAGE_ABSENT) unless the maintainers' README said so and the repository documented a build, so a repository with no README (GIS .NET) failed before any review whatever the README said, although the renderer already states 'X is not yet published on NuGet.' with no command"
+    type: defect
+    source: "owner rulings R9, R14, R36(a), R41, R42, R44, R46; hosted Lane R refresh GIS .NET run 44924694275 (2026-11-21): 'blocking BC-02: install_command:dotnet is CONTRADICTED: package registry: distribution not found on nuget; PACKAGE_ABSENT ...', 'no LLM review ... blocking checks still fail: BC-02'; failure record refs/repository-presenter-state/failures/aspose-gis-foss__Aspose.GIS.FOSS-for-.Net"
+    priority: P1
+    status: active
+    implementation_path: "readme/validation/install: a CONTRADICTED not_published registry install (not a source kind) claims nothing until the README prints its command (the unconfirmed-ownership and registry-less pattern): _claims_nothing_when_unpublished routes to _printed_unconfirmed_command_failures(unpublished=True), a line-level COMPOSING/RECONCILING defect the repair stages reach; an unreadable registry, a SUPPORTED documented source fact and any printed registry command are unchanged. This removes the EXTRACTING dead end only; GIS .NET stays an owner decision (BL-624)."
+    acceptance: "(1) tests/readme/validation/test_install_package_absent_bl623.py (plain statement passes; printed 'dotnet add package Aspose.GIS.FOSS' fails at COMPOSING; unreadable registry still EXTRACTING); the install suites test_install_unconfirmed_ownership, test_install_no_registry, test_registry_checks green; (2) recertify --all: 64 RECERTIFIED, gate OK; (3) hosted (R41, not proven)"
+    evidence:
+      - "pinned source 1d387580 (unchanged since the 2026-11-10 R24 decision): no README.md, Aspose.GIS.FOSS.csproj + .slnx, no dotnet SDK locally to re-measure the build"
+    next_action: "supervisor decides GIS .NET (BL-624); hosted refresh only if kept active"
+    updated: "2026-11-21"
+
+  - id: BL-624
+    title: "Lane R cells still open after BL-620..623, each with its measured root cause: Slides .NET (BC-06 ceiling + BC-07 'table below' orphan + BC-17 sibling-edition list, three restore interactions), PDF TS (section_authoring truncated after the BL-370 narrowing), 3D TS (degrade withholds every authored API row then the second review sample cites lines it was not shown), GIS .NET (no README, unpublished, build did not exit 0)"
+    type: defect
+    source: "owner rulings R36, R41, R42, R44, R46; hosted runs 44924853748 (Slides .NET), 44924813052 (PDF TS), 44924648803 (3D TS), 44924694275 (GIS .NET); docs/DECISION_LOG.md 2026-11-21 BL-620..BL-624"
+    priority: P0
+    status: open
+    implementation_path: "Slides .NET: three levers on one 'Choosing an edition' section (inherited 080 paragraph 'The table below was measured ...', the 081/082 edition table, 083 list of the three sibling-edition repositories + the h2): (a) a kept paragraph that points at 'the table below' follows the table it points at (restore keeps both or withholds the sentence on the record, BL-562 pattern), (b) the sibling-edition list is a documentation_resources link list the plan cannot assign (restore_units._link_list_home), (c) BC-06 auto ceiling 2 against 4 kept aspose.com links. PDF TS: the third narrowed ask of authoring_retry._complete_truncated still ends cut off with nothing completed (merged empty): the next lever is a bound per unit, not a retry. 3D TS: cascade._degrade_settled flagged every authored api row from one review draw (60 api_row_fallback withholds), and the S10 audit-packet sample then cited lines 9,15,16,26,28,29,30,33,34 'not shown'; the reply contract (review.reply.resolve_cited_lines) fails the whole review after one re-ask. GIS .NET: see acceptance."
+    acceptance: "per cell: a zero-call reproduction from the failing shape and a hosted refresh (R41) sealing it, or an owner decision recorded: GIS .NET Lane R is the exclusion candidate (R24 BLOCKED_EXTERNAL recorded 2026-11-10 for the product that does not build, upstream revision 1d387580 unchanged, no README, package absent on NuGet, no aspose.org publication to inherit: data/readme_published_state.json lists no GIS), data/terminal_cells.json lists only its Lane L"
+    evidence:
+      - "run logs read from `gh run view <id> --log`: Slides .NET restore round 1 and 2 'restore: 3 unit(s) restored but blocking still fails: BC-06 4 aspose.com links exceed ... ceiling of 2; BC-07 inherited_unit:080.paragraph ... 'table below' but no table follows it; BC-17 inherited_unit:083.list holds h2 Choosing an edition' then 'degrade: nothing kept (0 flag(s) tried)'; PDF TS 'S9 settle round 1 compose start' after 48 provider calls (2.58M tokens) then 'section_authoring: output truncated at the manifest's max_output_tokens (8000)'; 3D TS 'degrade pass 2/3 ... api_row_fallback type:public_symbol:transform; a3dobject; ...' and 'independent_review: output rejected twice; ... lines 9 were not shown to you'"
+    next_action: "supervisor: owner decision on GIS .NET Lane R terminal; next worker takes Slides .NET (largest, three levers), then PDF TS and 3D TS"
+    updated: "2026-11-21"

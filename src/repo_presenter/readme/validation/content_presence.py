@@ -61,6 +61,28 @@ def _destination(target: str) -> str:
     return target.strip().rstrip("/").lower()
 
 
+_REPOSITORY_FILE = re.compile(
+    r"^https://(?:github\.com/[^/]+/[^/]+/(?:blob|raw)/[^/]+/|raw\.githubusercontent\.com/[^/]+/[^/]+/[^/]+/)(?P<path>[^?#]+)"
+)
+
+
+def _repository_file(anchor: str) -> str | None:
+    """The repository path a GitHub web address of a file names (``.../blob/main/LICENSE`` -> ``license``),
+    or ``None`` for any other link."""
+    match = _REPOSITORY_FILE.match(anchor)
+    return match.group("path").lower().rstrip("/") if match else None
+
+
+def _links_file(readme: str, path: str) -> bool:
+    """Whether the README links the repository file ``path`` by a relative destination (``LICENSE``,
+    ``./LICENSE``): the same target as its web address, so a unit's web link to that file is stated by
+    it (BL-622: the License section links the license file, the maintainers' sentence by its blob URL)."""
+    for destination in _LINK_DESTINATION.findall(readme):
+        if destination.lower().removeprefix("./").rstrip("/") == path and "://" not in destination:
+            return True
+    return False
+
+
 def _anchors(text: str) -> list[tuple[str, str]]:
     """The tokens of ``text`` a rewrite cannot drop and still state it: ``(kind, comparable)``."""
     found: list[tuple[str, str]] = []
@@ -124,7 +146,11 @@ def unstated(
         # A call spelling (``Worksheet.Cells()``) names the same identifier as ``Worksheet.Cells``:
         # the README stating the identifier states it (Cells Go, 2026-11-10); arguments still count.
         bare = anchor[:-2].rstrip() if anchor_kind == "span" and anchor.endswith("()") else anchor
-        if bare not in document:
+        if bare not in document and not (
+            anchor_kind == "link"
+            and (file := _repository_file(anchor)) is not None
+            and _links_file(readme, file)
+        ):
             missing.append(f"{anchor_kind} {anchor!r}")
     block_stems: list[set[str]] | None = None
     for sentence in _sentences(unit_text, kind):

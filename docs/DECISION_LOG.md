@@ -8234,3 +8234,50 @@ Unfixed: nothing is hosted-proven (R41); the real refresh is a model run, and a 
 (a class, every cell), robust (a faulted unit degrades on the record, never halts the candidate), repeatable (the same producer rule on every run).
 
 Backlog: BL-600, BL-601, BL-602, BL-603
+
+## 2026-11-21: Two model-output classes that fail a Lane R run closed get a bounded remedy: a cut-off coherence reply is asked as smaller batches, an invented fact id is deleted (BL-610, BL-611, BL-612)
+
+Problem. Two hosted runs failed closed after only the model's own answer, not after any check of ours: PDF TypeScript 44924813052 (run head 11aa6b1a) with "JobError: section_authoring:
+output truncated at the manifest's max_output_tokens (8000)" after 48 calls and 2.58M tokens, and PDF Python 44924772455 with "source_reconciliation: output rejected twice; last
+rejection: $.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one of [...]" after 3 calls (the brief named the cells Words Python and PDF Go; the run
+ids belong to those two PDF cells. Words Python's latest failure is BC-04/BC-17, not a model-output class; PDF Go's own fact-id failures of 2026-11-18 are the BL-611 class; PSD Java's
+44931342990 is a third class, BL-612, recorded and left open.)
+BL-610 (a, bounded ask): the job name "section_authoring" is shared by authoring, coherence and repairs. Authoring already heals a cut-off reply (BL-370 narrowing); the coherence call
+has no narrowing, and its reply echoes every unit of the batch, so the 20000-character batch cap that bounds the packet does not bound the reply. The failing call sits in the tail of the
+composition (call 48 of the ~54 a passing run makes); no artifact survives to name the unit, so the remedy is the class, not a unit. `_run_coherence` asks a cut-off batch again as two smaller
+batches (recursively, down to one section); a section whose own reply is still cut off keeps its authored units, which already passed authoring's checks, recorded as
+`coherence_section_left_unrevised` (R14). Alternative rejected: raising max_output_tokens (changes the section_authoring manifest, so every candidate's version set and every stored request
+hash, R10) or tightening the batch cap (regroups batches that already complete, replay validity). Requests that completed before are byte-identical. `run_job` marks the refusal
+(`jobs.is_truncation`) without changing its type or text, so `failures.py` classifies it as before.
+BL-611 (a, deterministic): the S4 job had no `recover=`, and a rejection that names no unit (a schema enum line) cannot be narrowed, so the model's repeated invention of one id ended the run.
+`recover_uncitable_fact_ids` (the planning job's BL-220 rule applied to S4) deletes every cited id outside the batch's citable set (repeats folded), resolving a read-path symbol first as the
+binding does, records each deletion with its unit, and fails closed for a VERIFIED_*/CORRECT_WITH_EVIDENCE/PRESERVE_ATTRIBUTED disposition left with no id; the job's own checks still judge the
+result. A nearest-id substitution was rejected: an id the facts do not carry proves nothing and a guessed neighbour would add a claim (the existing same-final-name symbol rewrite stays).
+Negative controls (tests/test_cascade_bl610.py): a preserve with only invented ids still fails with "is not one of"; a near id is deleted, never swapped for package:registry_lag.
+Proof. Zero-call replays of both shapes through the real cascade/run_job with scripted replies; the full suite passes except tests/extractors/platforms/test_python_examples.py
+(ImportError detail, environment: the package would not build here, independent of this change). No request, prompt, manifest or sealed byte changed (R10), no README text touched (R9).
+Properties improved (R46): robust and reliable. Hosted-unproven (R41): PDF TypeScript and PDF Python Lane R are the proof cells.
+
+Backlog: BL-610, BL-611, BL-612
+
+## 2026-11-21: Lane R deterministic blockers of six cells, classified; four classes fixed at the root, the rest recorded with their measured cause (BL-620, BL-621, BL-622, BL-623, BL-624)
+
+Context. R44 needs 34 of 40 Lane R cells sealed and accepted; 30 are sealed. The six unsealed cells named by the supervisor were read from the hosted logs of the 16:26-17:40Z
+runs on main 11aa6b1 / 3a97735 (run ids in BL-620..BL-624) and their failure records. Each ended on a deterministic check, not on the model.
+Classes fixed (each a pipeline class, not a cell; every positive test is the real failing shape, every class has negative controls):
+- BL-620 (BC-17, TeX Python): a maintainers' static status badge no fact verifies is withheld by the renderer, a badge row is shell-rendered, so no lever could clear the loss. Decision (R14, recorded in the accounting
+  reason): it is accounted for when the candidate states the badge's value in words ('Pre-Alpha' in the kept Scope sentence); a value never stated stays a loss. aspose.org's published README keeps the badge (R42); we cannot
+  print it without a verifying fact (BC-07), so the content is carried and the picture is not.
+- BL-621 (BC-14 stub format, 3D Java; R42): the rows 'FbxLoadOptions | Load options for FBX format.' are the maintainers' docstrings, kept as written by aspose.org's published README; a verb that opens a configuration
+  noun is no claim that the format is loaded. Real claims of the stub format still block.
+- BL-622 (BC-05 section fit, TeX Python): the license sentence's link to the license file is rendered by the License section, so the existing zero-call restore-time fold supersedes the sentence out of Scope
+  and Limitations, and the supersession substance check states a repository file's web link by the relative link to the same file. Restricted to restore time after the lean recertify of a first version
+  (which changed the S4 fold) turned Font Python's sealed unit 063 into a NEEDS_REPAIR; the final lean recertify is 64 of 64 RECERTIFIED, gate OK, 0 provider calls, readme_changed only on the pre-existing Email Python row.
+- BL-623 (BC-02 PACKAGE_ABSENT, GIS .NET): an EXTRACTING dead end for an unpublished package with no maintainers' README; now a claim only where the README prints the registry command. GIS .NET itself stays an owner
+  decision: no README, package absent, build did not exit 0 at the unchanged upstream revision 1d387580, no aspose.org publication; R24 BLOCKED_EXTERNAL was recorded 2026-11-10 for Lane R but data/terminal_cells.json
+  lists only its Lane L. Recommendation: record Lane R terminal (R24) and report the denominator as 39 with the exclusion, unless the owner wants the README without any example or install steps.
+Not fixed here (BL-624, measured cause recorded): Slides .NET (three restore interactions on one section), PDF TS (section_authoring cut off after the BL-370 narrowing), 3D TS (degrade over-withhold and a review
+reply citing unshown lines). R9: no README text touched; R10: no seal or sealed byte moves (recertify evidence in the backlog items); properties improved (R46): robust (a deterministic defect degrades to a recorded
+accounting instead of halting the candidate) and universal. Hosted-unproven (R41).
+
+Backlog: BL-620, BL-621, BL-622, BL-623, BL-624
