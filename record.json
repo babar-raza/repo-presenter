@@ -134,427 +134,66 @@
    "run_id": "44743901703",
    "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T16:38:29+00:00",
+   "classes": [
+    "job_error|job_error|unknown:no_valid_independent_review"
+   ],
+   "code": "6a9036f4d9933209774e5055c68b931d382967575092d7e5236fd5df6223e8cc",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44924648803",
+   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T13:28:33+00:00",
+  "at": "2026-11-21T16:38:29+00:00",
   "classes": {
-   "llm:factuality|authored_unit|api_reference": {
-    "example": "The @aspose/3d package version 24.12.0 provides 3D scene graph and format I/O capabilities for TypeScript. The `Scene` class serves as the primary entry point, offering static methods to load files or buffers and instance methods to save output, while exposing the node hierarchy through its rootNode",
-    "findings": 5,
-    "origin_kind": "authored_unit",
+   "job_error|job_error|unknown:no_valid_independent_review": {
+    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u3 (api_reference): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 9 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F02: lines 26 were not shown to you (renderer-printed text or another",
+    "findings": 1,
+    "origin_kind": "job_error",
     "origins": [
-     "api_reference.intro",
-     "opening.opening"
+     "unknown"
     ],
-    "rule": "llm:factuality",
-    "scope": "53321348dec785a777c6a912209fc19ae39421f9de3fd5180876197d8c2ed39f",
-    "scope_paths": [
-     "prompts",
-     "prompts/section_authoring.yaml",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/composition/authoring.py",
-     "src/repo_presenter/readme/composition/authoring_retry.py",
-     "src/repo_presenter/readme/composition/coherence.py",
-     "src/repo_presenter/readme/composition/text_hygiene.py",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|inherited_unit|api_reference": {
-    "example": "| `BoundingBox2D` | Class that declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum. |",
-    "findings": 3,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:043.table",
-     "inherited_unit:067.table"
-    ],
-    "rule": "llm:factuality",
-    "scope": "60895f6dd20d06d53be3cad1083dc684807c413d0b9b61427eae10114d32248b",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   "llm:factuality|unresolved|api_reference": {
-    "example": "| `A3DObject` | Class that inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties. |",
-    "findings": 14,
-    "origin_kind": "unresolved",
-    "origins": [
-     "api_table_row:A3DObject",
-     "api_table_row:ApertureMode",
-     "api_table_row:AssetInfo",
-     "api_table_row:BindPoint",
-     "api_table_row:BooleanOperation"
-    ],
-    "rule": "llm:factuality",
-    "scope": "a3d3c5735774f8f2b267b8d8ab2d999732b138caa37a54a9f4350f026b38a6ab",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
+    "rule": "job_error",
+    "scope": "",
+    "scope_paths": null,
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   },
-  "code": "79b45bc78301977ff3fe9275934aa86df3835879fdada0e0efac1154dd1df253",
+  "code": "6a9036f4d9933209774e5055c68b931d382967575092d7e5236fd5df6223e8cc",
   "durable_state": "FAILED_INTERNAL",
   "exit_code": 1,
   "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 22 blocking finding(s) of 22; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised",
-   "kind": "PresentFailure",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u3 (api_reference): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 9 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F02: lines 26 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F03: lines 28 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F04: lines 29 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F05: lines 33 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F06: lines 34 were not shown to you (renderer-printed text or another review unit",
+   "kind": "unknown",
+   "transient": true
   },
   "findings": [
    {
-    "label": "F01",
-    "message": "The `@aspose/3d` package version 24.12.0 provides 3D scene graph and format I/O capabilities for TypeScript. The `Scene` class serves as the primary entry point, offering static methods to load files or buffers and instance methods to save output, while exposing the node hierarchy through its rootNode property.",
+    "label": "unknown",
+    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u3 (api_reference): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 9 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F02: lines 26 were not shown to you (renderer-printed text or another",
     "origin": {
-     "id": "api_reference.intro",
-     "kind": "authored_unit"
+     "id": "unknown",
+     "kind": "job_error"
     },
-    "quote": "The @aspose/3d package version 24.12.0 provides 3D scene graph and format I/O capabilities for TypeScript. The `Scene` class serves as the primary entry point, offering static methods to load files or buffers and instance methods to save output, while exposing the node hierarchy through its rootNode",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "| `A3DObject` | Class that inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties. |",
-    "origin": {
-     "id": "api_table_row:A3DObject",
-     "kind": "unresolved"
-    },
-    "quote": "| `A3DObject` | Class that inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "| `AnimationChannel` | Class that inherits from KeyframeSequence and declares the members componentType, defaultValue and keyframeSequence. |",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "| `AnimationChannel` | Class that inherits from KeyframeSequence and declares the members componentType, defaultValue and keyframeSequence. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "| `AnimationClip` | Class that inherits from SceneObject and declares the method createAnimationNode and the members animations, description, name, properties, start and stop. |",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "| `AnimationClip` | Class that inherits from SceneObject and declares the method createAnimationNode and the members animations, description, name, properties, start and stop. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F05",
-    "message": "| `AnimationNode` | Class that inherits from A3DObject and declares the methods createBindPoint, findBindPoint, getBindPoint and getKeyframeSequence and the members bindPoints, name, properties and subAnimations. |",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "| `AnimationNode` | Class that inherits from A3DObject and declares the methods createBindPoint, findBindPoint, getBindPoint and getKeyframeSequence and the members bindPoints, name, properties and subAnimations. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F06",
-    "message": "| `ApertureMode` | Class that declares the members HORIZONTAL, HORZ_AND_VERT and VERTICAL. |",
-    "origin": {
-     "id": "api_table_row:ApertureMode",
-     "kind": "unresolved"
-    },
-    "quote": "| `ApertureMode` | Class that declares the members HORIZONTAL, HORZ_AND_VERT and VERTICAL. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F07",
-    "message": "| `AssetInfo` | Class that inherits from A3DObject and declares a public no-argument constructor. |",
-    "origin": {
-     "id": "api_table_row:AssetInfo",
-     "kind": "unresolved"
-    },
-    "quote": "| `AssetInfo` | Class that inherits from A3DObject and declares a public no-argument constructor. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F08",
-    "message": "| `BindPoint` | Class that inherits from A3DObject and declares the methods addChannel, bindKeyframeSequence, createKeyframeSequence, getChannel, getKeyframeSequence and resetChannels and the members channelsCount, name, properties, property and scene. |",
-    "origin": {
-     "id": "api_table_row:BindPoint",
-     "kind": "unresolved"
-    },
-    "quote": "| `BindPoint` | Class that inherits from A3DObject and declares the methods addChannel, bindKeyframeSequence, createKeyframeSequence, getChannel, getKeyframeSequence and resetChannels and the members channelsCount, name, properties, property and scene. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F09",
-    "message": "| `BooleanOperation` | Class that declares the members ADD, INTERSECT and SUB. |",
-    "origin": {
-     "id": "api_table_row:BooleanOperation",
-     "kind": "unresolved"
-    },
-    "quote": "| `BooleanOperation` | Class that declares the members ADD, INTERSECT and SUB. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F10",
-    "message": "| `BoundingBox` | Class that declares methods including contains, infinite, merge, null, overlapsWith and scale and the members center, extent, maximum, minimum and size. |",
-    "origin": {
-     "id": "api_table_row:BoundingBox",
-     "kind": "unresolved"
-    },
-    "quote": "| `BoundingBox` | Class that declares methods including contains, infinite, merge, null, overlapsWith and scale and the members center, extent, maximum, minimum and size. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F11",
-    "message": "| `BoundingBox2D` | Class that declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum. |",
-    "origin": {
-     "id": "inherited_unit:043.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `BoundingBox2D` | Class that declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F12",
-    "message": "| `BoundingBoxExtent` | Class that declares the methods finite, infinite and null and the members extentX, extentY and extentZ. |",
-    "origin": {
-     "id": "inherited_unit:043.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `BoundingBoxExtent` | Class that declares the methods finite, infinite and null and the members extentX, extentY and extentZ. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F13",
-    "message": "| `Camera` | Class that inherits from Entity and declares methods including findProperty, getBoundingBox, getEntityRendererKey, getProperty, moveForward and removeProperty and members including apertureMode, aspect, aspectRatio, direction, excluded and farPlane. |",
-    "origin": {
-     "id": "api_table_row:Camera",
-     "kind": "unresolved"
-    },
-    "quote": "| `Camera` | Class that inherits from Entity and declares methods including findProperty, getBoundingBox, getEntityRendererKey, getProperty, moveForward and removeProperty and members including apertureMode, aspect, aspectRatio, direction, excluded and farPlane. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F14",
-    "message": "| `ComposeOrder` | Class that declares the method toString and the members APPEND, name and PREPEND. |",
-    "origin": {
-     "id": "api_table_row:ComposeOrder",
-     "kind": "unresolved"
-    },
-    "quote": "| `ComposeOrder` | Class that declares the method toString and the members APPEND, name and PREPEND. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F15",
-    "message": "| `CustomObject` | Class that inherits from A3DObject and declares a public constructor. |",
-    "origin": {
-     "id": "inherited_unit:067.table",
-     "kind": "inherited_unit"
-    },
-    "quote": "| `CustomObject` | Class that inherits from A3DObject and declares a public constructor. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|inherited_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F16",
-    "message": "| `Entity` | Class that inherits from SceneObject and declares the methods getBoundingBox and getEntityRendererKey and the members excluded, parentNode and parentNodes. |",
-    "origin": {
-     "id": "api_table_row:Entity",
-     "kind": "unresolved"
-    },
-    "quote": "| `Entity` | Class that inherits from SceneObject and declares the methods getBoundingBox and getEntityRendererKey and the members excluded, parentNode and parentNodes. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F17",
-    "message": "Line 0209: `Light` | Class that inherits from Camera and declares the member lightType.",
-    "origin": {
-     "id": "api_table_row:Light",
-     "kind": "unresolved"
-    },
-    "quote": "| `Light` | Class that inherits from Camera and declares the member lightType. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F18",
-    "message": "Line 0215: `Mesh` | Class that inherits from Geometry and declares methods including createPolygon, difference, doBoolean, getBoundingBox, getEntityRendererKey and getPolygonSize and the members deformers, edges, polygonCount and polygons.",
-    "origin": {
-     "id": "api_table_row:Mesh",
-     "kind": "unresolved"
-    },
-    "quote": "| `Mesh` | Class that inherits from Geometry and declares methods including createPolygon, difference, doBoolean, getBoundingBox, getEntityRendererKey and getPolygonSize and the members deformers, edges, polygonCount and polygons. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F19",
-    "message": "Line 0216: `Node` | Class that inherits from SceneObject and declares methods including addChildNode, addEntity, clearEntities, createChildNode, evaluateGlobalTransform and getBoundingBox and members including assetInfo, childNodes, entities, entity, excluded and globalTransform.",
-    "origin": {
-     "id": "api_table_row:Node",
-     "kind": "unresolved"
-    },
-    "quote": "| `Node` | Class that inherits from SceneObject and declares methods including addChildNode, addEntity, clearEntities, createChildNode, evaluateGlobalTransform and getBoundingBox and members including assetInfo, childNodes, entities, entity, excluded and globalTransform. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F20",
-    "message": "Line 0220: `PolygonModifier` | Class that declares the method triangulate.",
-    "origin": {
-     "id": "opening.opening",
-     "kind": "authored_unit"
-    },
-    "quote": "| `PolygonModifier` | Class that declares the method triangulate. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F21",
-    "message": "Line 0230: `Scene` | Class that inherits from SceneObject and declares methods including clear, createAnimationClip, fromFile, getAnimationClip, open and openFromBuffer and members including animationClips, assetInfo, currentAnimationClip, library, poses and rootNode.",
-    "origin": {
-     "id": "api_table_row:Scene",
-     "kind": "unresolved"
-    },
-    "quote": "| `Scene` | Class that inherits from SceneObject and declares methods including clear, createAnimationClip, fromFile, getAnimationClip, open and openFromBuffer and members including animationClips, assetInfo, currentAnimationClip, library, poses and rootNode. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F22",
-    "message": "Line 0235: `Transform` | Class that inherits from A3DObject and declares methods including setEulerAngles, setGeometricRotation, setGeometricScaling, setGeometricTranslation, setPostRotation and setPreRotation and members including eulerAngles, geometricRotation, geometricScaling, geometricTranslation, postRotation and preRotation.",
-    "origin": {
-     "id": "api_table_row:Transform",
-     "kind": "unresolved"
-    },
-    "quote": "| `Transform` | Class that inherits from A3DObject and declares methods including setEulerAngles, setGeometricRotation, setGeometricScaling, setGeometricTranslation, setPostRotation and setPreRotation and members including eulerAngles, geometricRotation, geometricScaling, geometricTranslation, postR",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|unresolved|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|unknown:no_valid_independent_review",
+    "source": "job",
+    "sub_rule": "unknown:no_valid_independent_review",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "30b9e9a15739725c2d577702e92d1a6d93958f9f",
+  "main_sha": "11aa6b1a71fc6caf19622686c0d9cb0494ac2c81",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
@@ -568,8 +207,8 @@
    }
   ],
   "repository": "aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript",
-  "run_id": "44743901703",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44743901703",
+  "run_id": "44924648803",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44924648803",
   "schema_version": 1,
   "source_revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
