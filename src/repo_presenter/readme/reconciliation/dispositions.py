@@ -1258,6 +1258,52 @@ def _fit_resource_and_license_units(
         entry["rationale"] = (LICENSE_FIT_RATIONALE + reason)[:_RATIONALE_LIMIT].strip()
 
 
+_ENTERPRISE_NAMED = re.compile(r"(?i)\benterprise\b|\bcommercial (?:product|edition|version|offering)s?\b")
+
+
+def _names_enterprise(text: str) -> bool:
+    """Whether ``text`` talks about the Enterprise Edition or a commercial product (a license statement's
+    own "commercial use" does not)."""
+    return _ENTERPRISE_NAMED.search(text) is not None
+
+
+def _license_paragraph_misfiled_as_enterprise(
+    unit_id: str,
+    unit: Fact | None,
+    cited: set[str],
+    facts: FactsDocument,
+    ctx: _Coverage,
+) -> list[str] | None:
+    """BL-600 (generation only: S4's ``normalize``; ``fit_sealed_sections`` never calls it, so a sealed
+    document is not re-filed by re-certification): the fact ids of a license paragraph the model filed
+    under the Enterprise Edition section, when the License section carries it; ``None`` otherwise.
+
+    The Enterprise section's one authored clause is written from the maintainers' paragraph filed there. For
+    a paragraph that only states the project's license ("This project is licensed under the MIT License. The
+    MIT License permits use, copying, ... and commercial use ...") the clause came out as that license text,
+    printed after the shell's "See [... Enterprise Edition](...)." and faulted as promotional text by 4 of 4
+    fresh independent audit samples (``quality``; sealed OCR .NET, line 261; BL-480's lever never ran: it
+    answers ``unsupported_claim``). ``normalize`` adds the Enterprise target fact to every unit filed there,
+    and that is a fact the License section does not render, so the license fit (BL-004) refused the
+    paragraph. The citation is the shell's own, not a statement of the paragraph, so it is set aside for the
+    license test of a paragraph that names no Enterprise Edition and no commercial product; every other
+    unit, and a paragraph that also speaks of the commercial product, stays where it was filed."""
+    if (
+        unit is None
+        or unit_id.rsplit(".", 1)[-1] != "paragraph"
+        or not is_license_statement(unit.value)
+        or _names_enterprise(unit.value)
+    ):
+        return None
+    license_ids = rendering_fact_ids("license", facts)
+    if not license_ids:
+        return None
+    shown = {fact_id for fact_id in cited if fact_id != ENTERPRISE_FACT_ID}
+    if _supersession_gap(unit_id, "license", shown, ctx) is not None:
+        return None
+    return sorted(shown | set(license_ids))
+
+
 def fit_sealed_sections(output: dict[str, Any], facts: FactsDocument) -> None:
     """The section-fit folds of :func:`normalize` a sealed disposition document is held to by
     zero-call re-certification (P4, 2026-11-14), in place: the resource-links list and license
@@ -1763,6 +1809,24 @@ def normalize(
                 entry["disposition"] = "SUPERSEDE_REDUNDANT"
                 entry["destination_section"] = "banner"
                 entry["fact_ids"] = sorted(cited | {BANNER_FACT_ID, HOMEPAGE_FACT_ID})
+            continue
+        if (
+            (disposition in PLACING or disposition == "SUPERSEDE_REDUNDANT")
+            and destination == "enterprise_relationship"
+            and (
+                license_fit := _license_paragraph_misfiled_as_enterprise(
+                    unit, units_by_id.get(unit), cited, facts, coverage
+                )
+            )
+            is not None
+        ):
+            # BL-600: the License section's paragraph, not the commercial product's (see the helper).
+            entry["disposition"] = "SUPERSEDE_REDUNDANT"
+            entry["destination_section"] = "license"
+            entry["fact_ids"] = license_fit
+            entry["rationale"] = (LICENSE_FIT_RATIONALE + str(entry.get("rationale") or ""))[
+                :_RATIONALE_LIMIT
+            ].strip()
             continue
         if disposition in PLACING and destination == "enterprise_relationship":
             if enterprise_target(facts.facts) is None or unit.rsplit(".", 1)[-1] not in {
