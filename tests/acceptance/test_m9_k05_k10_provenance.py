@@ -160,3 +160,18 @@ def test_the_audit_packet_carries_each_counts_provenance() -> None:
     counts = computed_counts(_words_python())
     assert (counts["public_types"], counts["public_classes"], counts["public_enums"]) == (189, 166, 23)
     assert counts["counted_by_source_root"] == {"aspose/words_foss": 189}
+
+
+def test_the_renderers_plain_count_sentence_clears_only_for_the_computed_count() -> None:
+    """BL-592 (zero-call check of hosted round 44904444359): "The public API has N types." printed by the Lane R
+    renderer is cleared (BarCode Python 51, Cells Python 160, Cells Rust 115, Email C++ 26 were all
+    ``cleared_by: derivation`` with the K05 provenance in the frozen findings); an N that is not the facts'
+    computation is never cleared, and neither is a count of a kind the facts do not count."""
+    renderer = {"source": "renderer"}
+    facts = _types(85, 15)  # 85 classes + 15 enums = 100 types
+    assert auditor.keep_reason("R", "The public API has 100 types.", renderer, facts, ["The public API has 100 types."], 1) is None
+    for wrong in (99, 101, 160):
+        row = f"The public API has {wrong} types."
+        assert auditor.keep_reason("R", row, renderer, facts, [row], 1) == "no fact value in the line"
+    row = "The public API has 85 types."  # the class count printed as the type count
+    assert auditor.keep_reason("R", row, renderer, facts, [row], 1) == "no fact value in the line"
