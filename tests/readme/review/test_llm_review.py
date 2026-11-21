@@ -6,6 +6,8 @@ no network call is made and the real ``prompts/`` manifests are loaded, so a rep
 accepted here is accepted by the contract the hosted run holds.
 """
 
+# Re-verified under BL-551 (a blocked omission's failure text names the ids and phrases it demands) -- TC-024.
+
 from __future__ import annotations
 
 import copy
@@ -858,3 +860,21 @@ def test_a_lane_l_review_marks_no_maintainer_lines(
     verdict = _review_attributed(tmp_path, _attributed(), rendered=False)
     assert "verified):\n[]" in client.payloads[0]["messages"][-1]["content"]
     assert verdict.verdict == "REJECT" and verdict.model_verdict == "REJECT_FACTUAL"
+
+
+def test_a_blocked_omission_names_the_ids_and_phrases_it_demands() -> None:
+    """BL-551: the failure text of a blocked omission shows what it demands (the datum the Cells C++ record lacked)."""
+    from types import SimpleNamespace
+
+    from repo_presenter.readme.review.llm_review import blocked_predicate
+    from tests.readme.review.review_support import llm
+
+    omission = llm(
+        "omission", finding_id="S2-F03", section_id="api_reference",
+        omission=("api_reference", ("public_symbol:ns.widget.save",), ("Saves it.",)),
+    )
+    plain = llm("omission", finding_id="S2-F04", section_id="api_reference", omission=None)
+    verdict = SimpleNamespace(verdict="REJECT", blocking_findings=[omission, plain], fold=SimpleNamespace(reason=""))
+    text = blocked_predicate(verdict)  # type: ignore[arg-type]
+    assert "S2-F03 [omission] in api_reference (names public_symbol:ns.widget.save, 'Saves it.') blocks until" in text
+    assert "S2-F04 [omission] in api_reference blocks until" in text  # negative control: no claim, nothing named

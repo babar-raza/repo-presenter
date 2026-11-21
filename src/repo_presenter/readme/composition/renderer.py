@@ -1189,6 +1189,23 @@ def _symbol_description(context: RenderContext, fact: Fact) -> str:
     return _described(context, fact, "")
 
 
+def _hub_description(context: RenderContext, symbol: Fact, authored: str) -> str:
+    """The Detailed Member Reference paragraph of one hub: the authored sentence as written, unless BC-07 would
+    refuse it (BL-550), and then the same fact-true description the type's Core API row prints.
+
+    Hosted Slides Java refresh run 44787829770: the hub unit "The getFontName method is a public symbol
+    exposed by certain text-related classes to ..." printed unfiltered (only Core API rows went through
+    ``_symbol_description``, BL-087), BC-07 failed on it, the failure names no LLM-owned section so no repair
+    could be asked (0 defects), the degrade had no flag, and no review was made. The renderer is the
+    one place that knows the paragraph is a hub's, so it applies the row rule here: replace, never drop,
+    the paragraph. A clean sentence is returned untouched, so no sealed byte moves."""
+    from repo_presenter.readme.validation.public_text import analysis_markers
+
+    if authored and not analysis_markers(authored):
+        return authored
+    return _symbol_description(context, symbol)
+
+
 def _label_only(description: str) -> bool:
     """Whether a Core API row description is only a count, a label or file-header bookkeeping
     (``type_description.cell_shape``: "Class with 1 method.", "Interface in the 3D JAVA API.",
@@ -1485,8 +1502,7 @@ def _api_reference(context: RenderContext) -> list[str]:
             # A hub unit the API-row fallback left out (R43(4), BL-104) prints the type's
             # fact-true description, exactly as its Core API row does.
             lines.append(
-                context.unit(sid, f"hub:{hub['symbol_fact_id']}")
-                or _symbol_description(context, symbol)
+                _hub_description(context, symbol, context.unit(sid, f"hub:{hub['symbol_fact_id']}"))
             )
             owned = sorted(hub_methods.get(symbol.value, []), key=lambda f: f.value)
             bullets = [
