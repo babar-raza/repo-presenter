@@ -8234,3 +8234,28 @@ Unfixed: nothing is hosted-proven (R41); the real refresh is a model run, and a 
 (a class, every cell), robust (a faulted unit degrades on the record, never halts the candidate), repeatable (the same producer rule on every run).
 
 Backlog: BL-600, BL-601, BL-602, BL-603
+
+## 2026-11-21: Two model-output classes that fail a Lane R run closed get a bounded remedy: a cut-off coherence reply is asked as smaller batches, an invented fact id is deleted (BL-610, BL-611, BL-612)
+
+Problem. Two hosted runs failed closed after only the model's own answer, not after any check of ours: PDF TypeScript 44924813052 (run head 11aa6b1a) with "JobError: section_authoring:
+output truncated at the manifest's max_output_tokens (8000)" after 48 calls and 2.58M tokens, and PDF Python 44924772455 with "source_reconciliation: output rejected twice; last
+rejection: $.dispositions[13].fact_ids[2]: 'public_symbol:aspose_pdf.document.registry_lag' is not one of [...]" after 3 calls (the brief named the cells Words Python and PDF Go; the run
+ids belong to those two PDF cells. Words Python's latest failure is BC-04/BC-17, not a model-output class; PDF Go's own fact-id failures of 2026-11-18 are the BL-611 class; PSD Java's
+44931342990 is a third class, BL-612, recorded and left open.)
+BL-610 (a, bounded ask): the job name "section_authoring" is shared by authoring, coherence and repairs. Authoring already heals a cut-off reply (BL-370 narrowing); the coherence call
+has no narrowing, and its reply echoes every unit of the batch, so the 20000-character batch cap that bounds the packet does not bound the reply. The failing call sits in the tail of the
+composition (call 48 of the ~54 a passing run makes); no artifact survives to name the unit, so the remedy is the class, not a unit. `_run_coherence` asks a cut-off batch again as two smaller
+batches (recursively, down to one section); a section whose own reply is still cut off keeps its authored units, which already passed authoring's checks, recorded as
+`coherence_section_left_unrevised` (R14). Alternative rejected: raising max_output_tokens (changes the section_authoring manifest, so every candidate's version set and every stored request
+hash, R10) or tightening the batch cap (regroups batches that already complete, replay validity). Requests that completed before are byte-identical. `run_job` marks the refusal
+(`jobs.is_truncation`) without changing its type or text, so `failures.py` classifies it as before.
+BL-611 (a, deterministic): the S4 job had no `recover=`, and a rejection that names no unit (a schema enum line) cannot be narrowed, so the model's repeated invention of one id ended the run.
+`recover_uncitable_fact_ids` (the planning job's BL-220 rule applied to S4) deletes every cited id outside the batch's citable set (repeats folded), resolving a read-path symbol first as the
+binding does, records each deletion with its unit, and fails closed for a VERIFIED_*/CORRECT_WITH_EVIDENCE/PRESERVE_ATTRIBUTED disposition left with no id; the job's own checks still judge the
+result. A nearest-id substitution was rejected: an id the facts do not carry proves nothing and a guessed neighbour would add a claim (the existing same-final-name symbol rewrite stays).
+Negative controls (tests/test_cascade_bl610.py): a preserve with only invented ids still fails with "is not one of"; a near id is deleted, never swapped for package:registry_lag.
+Proof. Zero-call replays of both shapes through the real cascade/run_job with scripted replies; the full suite passes except tests/extractors/platforms/test_python_examples.py
+(ImportError detail, environment: the package would not build here, independent of this change). No request, prompt, manifest or sealed byte changed (R10), no README text touched (R9).
+Properties improved (R46): robust and reliable. Hosted-unproven (R41): PDF TypeScript and PDF Python Lane R are the proof cells.
+
+Backlog: BL-610, BL-611, BL-612

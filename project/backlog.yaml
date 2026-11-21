@@ -2859,3 +2859,44 @@ items:
       - "pre_audit_sweep.json: the only quality flag on a Lane R authored line is OCR .NET 261 (x4); 8 other quality/omission rows are on renderer lines (Page 109/113 Required Package Dependencies headings)"
     next_action: "re-evaluate after the OCR .NET refresh"
     updated: "2026-11-21"
+
+  - id: BL-610
+    title: "Lane R: a coherence batch whose revised reply is cut off at max_output_tokens failed the whole run (hosted PDF TypeScript 44924813052: 'JobError: section_authoring: output truncated at the manifest's max_output_tokens (8000)' after 48 calls, 2.58M tokens)"
+    type: defect
+    source: "owner rulings R44, R46, R41; hosted run 44924813052 (PDF TypeScript, run head 11aa6b1a); the coherence batch cap (BL-450 era, 20000 characters) bounded the packet, not the echoed reply"
+    priority: P0
+    status: active
+    implementation_path: "cascade._run_coherence asks a cut-off batch again as two smaller batches (down to one section); a section whose own reply is still cut off keeps its authored units, recorded (R14); run_job marks the truncation refusal (jobs.is_truncation) without changing its type or text"
+    acceptance: "a truncated coherence reply is answered by smaller batches and the run goes on (tests/test_cascade_bl610.py); a non-truncation error and the failures.py class string are unchanged; recertify --all 64 RECERTIFIED and the R10 gate OK; hosted: PDF TypeScript Lane R gets past composition"
+    evidence:
+      - "hosted log 44924813052: S9 compose started 16:33, failed 17:13 at provider call 48 (a passing TS run, 44745502021, makes 54 calls); the failure record holds no unit name; the truncated reply is not logged, so the job could not be attributed from artifacts"
+      - "authoring already heals a cut-off reply through its narrowing (BL-370); coherence passes no narrowing, so it is the one call with no smaller ask"
+    next_action: "hosted PDF TypeScript Lane R; if the same error recurs from authoring, log the cut-off reply (truncation path prints nothing today)"
+    updated: "2026-11-21"
+
+  - id: BL-611
+    title: "Lane R: S4 source_reconciliation failed closed on a fact id outside the offered enum after both asks (hosted PDF Python 44924772455: $.dispositions[13].fact_ids[2..4] 'public_symbol:aspose_pdf.document.registry_lag' is not one of [...], the same invented id three times beside valid ones, 3 calls)"
+    type: defect
+    source: "owner rulings R44, R46, R41; hosted run 44924772455 (PDF Python); the planning job's BL-220 class on the S4 job, which had no recover="
+    priority: P0
+    status: active
+    implementation_path: "dispositions.recover_uncitable_fact_ids wired as _run_reconciliation's recover=: ids outside the batch's citable set are deleted (repeats folded), recorded (R14); a VERIFIED_*/CORRECT_WITH_EVIDENCE/PRESERVE_ATTRIBUTED disposition left with no id fails closed; never a nearest-id substitution"
+    acceptance: "the exact rejection replays to an accepted reply (tests/test_cascade_bl610.py); a preserve left with no cited fact still raises 'is not one of'; recertify --all 64 RECERTIFIED and the R10 gate OK; hosted: PDF Python Lane R passes S4"
+    evidence:
+      - "run 44924772455: rejected reply 10197 chars, only the three ids named, no unit named, so the narrowed ask could not run (narrowing.pending empties on a line naming no unit)"
+      - "the supervisor brief called the cells Words Python and PDF Go; the run ids belong to PDF TypeScript and PDF Python; Words Python's latest failure is BC-04/BC-17 (not a model-output class) and PDF Go's earlier fact-id class (runs 44313168971, 44366309808) is the same one"
+    next_action: "hosted PDF Python and PDF Go Lane R"
+    updated: "2026-11-21"
+
+  - id: BL-612
+    title: "Lane R: PSD Java S4 fails closed after 4 calls on 'inherited_unit:013.code_block: uncited_redundant_defer' (hosted 44931342990): the model answers DEFER_UNRESOLVED on a code block that is not a tracked example in all three asks"
+    type: defect
+    source: "owner rulings R44, R46; found while attributing the BL-611 run ids"
+    priority: P1
+    status: open
+    implementation_path: "investigate: a deterministic settle of a repeated DEFER_UNRESOLVED code_block (the narrowed ask already steers; see _settle_unresolved)"
+    acceptance: "the stored rejection replays to an accepted disposition; negative control: a tracked example's deferral is untouched"
+    evidence:
+      - "run 44931342990 log: output rejected three times (the third a narrowed ask); last rejection names inherited_unit:013.code_block"
+    next_action: "investigate"
+    updated: "2026-11-21"
