@@ -117,71 +117,35 @@
    "run_id": "44787829770",
    "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T11:59:53+00:00",
+   "classes": [],
+   "code": "b77f839c4a7634ec0ccdfa5734e284ecf0c5de392c1e6e7d0863fbb7576137ce",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "44900558459",
+   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T18:13:51+00:00",
-  "classes": {
-   "BC-07|unresolved|internal_wording": {
-    "example": "the public README prints internal evidence or analysis wording: 'The getFontName method is a public symbol exposed by certain text-related classes to retrieve the name of a font used in a presentation.'",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "BC-07",
-    "scope": "65e18a01ca6186e3d75504d0ab3a73b25fec819c54a76183dc2d1cc3d6104455",
-    "scope_paths": [
-     "data/readme_findings.json",
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
-    ],
-    "sub_rule": "internal_wording",
-    "upstream": ""
-   }
-  },
-  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
-  "durable_state": "INVALIDATED",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-07; nothing sealed",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "BC-07",
-    "message": "the public README prints internal evidence or analysis wording: 'The getFontName method is a public symbol exposed by certain text-related classes to retrieve the name of a font used in a presentation.'",
-    "origin": {
-     "id": "-",
-     "kind": "unresolved"
-    },
-    "quote": "",
-    "rule": "BC-07",
-    "section_id": "",
-    "signature": "BC-07|unresolved|internal_wording",
-    "source": "validation",
-    "sub_rule": "internal_wording",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-21T11:59:53+00:00",
+  "classes": {},
+  "code": "b77f839c4a7634ec0ccdfa5734e284ecf0c5de392c1e6e7d0863fbb7576137ce",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "R",
-  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
+  "main_sha": "991899b0a232ffcaaec48ff537ef2d1b7c356657",
   "origin": "hosted",
-  "outcome": "failure",
+  "outcome": "success",
   "repairs": [],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Java",
-  "run_id": "44787829770",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44787829770",
+  "run_id": "44900558459",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44900558459",
   "schema_version": 1,
   "source_revision": "620a2614418854b4a18966a361e6907ddc88c7cb",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
