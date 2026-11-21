@@ -193,68 +193,123 @@
    "run_id": "44898209273",
    "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-21T13:08:35+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference"
+   ],
+   "code": "b77f839c4a7634ec0ccdfa5734e284ecf0c5de392c1e6e7d0863fbb7576137ce",
+   "findings": 2,
+   "outcome": "failure",
+   "run_id": "44904441874",
+   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T11:28:23+00:00",
+  "at": "2026-11-21T13:08:35+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's i",
-    "findings": 1,
-    "origin_kind": "job_error",
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "| `PsdImageLoader` | PsdImageLoader class provides a load method that raises PsdLoadException (conditionally). |",
+    "findings": 2,
+    "origin_kind": "authored_unit",
     "origins": [
-     "OutputRejectedError"
+     "api_reference.type:public_symbol:aspose_psd_foss.loaders.psdimageloader.psdimageloader",
+     "api_reference.type:public_symbol:aspose_psd_foss.resources.indexedcolorpalette.indexedcolorpalette"
     ],
-    "rule": "job_error",
-    "scope": "6fb47fd5d70dba35df00d026cd623f216527a2e9041ffc1ce0c8d0a44c350bc3",
+    "rule": "llm:factuality",
+    "scope": "5516ae4630dd482d320f4229faff13d3388b00bb1f1ec8a01f6d6563cff1fd88",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
-  "code": "8a2ea0d5da95d5af7153e8fe96c9de34380bab5630562c84747fde941f71f93e",
+  "code": "b77f839c4a7634ec0ccdfa5734e284ecf0c5de392c1e6e7d0863fbb7576137ce",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's identity, license, or dependency-freedom again; unit opening: spells '.psd/'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; S2-F09 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F10 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: restates the inherited paragraph the renderer already preserves verbatim right beside \"opening\"'s own unit; state only what that paragraph does not already say (name the specific classes, methods, or actions the facts carry), never the product's i",
+    "label": "S2-F09",
+    "message": "| `PsdImageLoader` | PsdImageLoader class provides a load method that raises PsdLoadException (conditionally). |",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "api_reference.type:public_symbol:aspose_psd_foss.loaders.psdimageloader.psdimageloader",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_restates_the_inherited_paragraph",
+    "quote": "| `PsdImageLoader` | PsdImageLoader class provides a load method that raises PsdLoadException (conditionally). |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "S2-F10",
+    "message": "| `IndexedColorPalette` | IndexedColorPalette class provides read-only property entries and methods parse and to_public_info. |",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose_psd_foss.resources.indexedcolorpalette.indexedcolorpalette",
+     "kind": "authored_unit"
+    },
+    "quote": "| `IndexedColorPalette` | IndexedColorPalette class provides read-only property entries and methods parse and to_public_info. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "51f1d767694da5f8d2c9e2908ae701281ab0b137",
+  "main_sha": "991899b0a232ffcaaec48ff537ef2d1b7c356657",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "S2-F01+S2-F02+S2-F03+S2-F04",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
   "repository": "aspose-psd-foss/Aspose.PSD-FOSS-for-Python",
-  "run_id": "44898209273",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44898209273",
+  "run_id": "44904441874",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44904441874",
   "schema_version": 1,
   "source_revision": "2271c228d991bcd79048bb61773bcbcb415399c6",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
