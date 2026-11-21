@@ -4,7 +4,13 @@
 
 [![Aspose.Cells FOSS for Cpp](https://products.aspose.org/media/cells/cpp/banner-readme.png)](https://products.aspose.org/cells/cpp/)
 
-Aspose.Cells FOSS for Cpp reads and writes Excel files in the `.xlsx` format. It provides classes such as `Workbook`, `Worksheet`, and `Cell` to create, modify, and save spreadsheets programmatically. It is implemented in C++ using C++17 and requires CMake 3.16 or later.
+Aspose.Cells FOSS for Cpp reads and writes Excel `.xlsx` workbooks. It provides classes such as `Workbook`, `Worksheet`, and `Cell` to create, modify, and save spreadsheets programmatically. It supports styling with `Style`, `Font`, `Color`, `FillPattern`, and `Borders`.
+
+Aspose.Cells FOSS for Cpp is a free, open-source, MIT-licensed C++ library for creating, loading,
+editing, and saving Excel `.xlsx` workbooks without requiring Microsoft Excel. It exposes an
+Aspose.Cells-compatible API surface for common XLSX scenarios — the same `Workbook`, `Worksheet`,
+and `Cell` object shape used by Aspose's commercial spreadsheet products — built as a
+dependency-free, header-and-source C++17 library with no external runtime dependencies.
 
 ## Navigation
 
@@ -29,17 +35,18 @@ flowchart TB
     direction TB
     c1["Create and save .xlsx<br/>workbooks"]
     c2["Read and write cell<br/>values and formulas"]
-    c3["Apply cell and range<br/>styling"]
-    c4["Manage worksheet<br/>structure and view"]
+    c3["Apply cell styles and<br/>formatting"]
+    c4["Manage worksheet<br/>structure and<br/>protection"]
     c5["Apply conditional<br/>formatting and data<br/>validation"]
     c6["Configure page setup<br/>and print options"]
     c7["Manage hyperlinks and<br/>defined names"]
+    c8["Access document<br/>properties"]
     c1 ~~~ c4
     c2 ~~~ c5
     c3 ~~~ c6
     c4 ~~~ c7
-    c5 ~~~ c7
-    c6 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
   end
   subgraph Outputs["Outputs"]
     direction TB
@@ -52,19 +59,21 @@ flowchart TB
 
 ## Key Capabilities
 
-- **Create and save .xlsx workbooks.** It creates blank workbooks and loads existing `.xlsx` files from paths or in-memory streams, then saves them back to `.xlsx` format, raising `WorkbookSaveException` on save failures.
-- **Apply cell and range styling.** It applies styling to cells through `Style`, which bundles `Font` (bold, color), `FillPattern`, foreground and background `Color`, `Borders`, and alignment into a single cloneable object retrieved and set via `Cell.GetStyle` and `Cell.SetStyle`.
-- **Manage worksheet structure and view.** It controls worksheet visibility via `VisibilityType`, manages gridlines and headers, and applies protection settings through `WorksheetProtection`, all exposed directly on `Worksheet`.
-- **Apply conditional formatting and data validation.** It applies rule-driven formatting to cell ranges using `ConditionalFormattingCollection` and `FormatCondition`, and enforces input constraints via `ValidationCollection` and `Validation` scoped to one or more `CellArea` ranges.
-- **Configure page setup and print options.** It configures print settings through `PageSetup`, supporting `PaperSizeType`, `PageOrientationType`, margins, scaling, print area, print titles, headers, footers, and page breaks.
-- **Manage hyperlinks and defined names.** It attaches hyperlinks to cell ranges via `HyperlinkCollection` and `Hyperlink`, supporting external, internal, and mailto links, and manages workbook- or sheet-scoped named ranges through `DefinedNameCollection` and `DefinedName` with optional comment strings.
+- **Create and save .xlsx workbooks.** It constructs blank workbooks or loads existing `.xlsx` files from paths or in-memory streams, then saves them back to `.xlsx` using `Workbook.Save`, and `WorkbookSaveException` is raised when saving fails.
+- **Read and write cell values and formulas.** It writes values of strings, integers, doubles, booleans, and `DateTime` to cells via `Cell.PutValue`, retrieves values as variant-typed `CellValue` with typed accessors, and stores or reads formulas via `Cell.SetFormula` and `Cell.GetFormula`.
+- **Apply cell styles and formatting.** It applies cell styles by retrieving and setting `Style` objects that bundle `Font`, `FillPattern`, `Color`, `Borders`, alignment, and text wrap, and `Style` provides clone and getter methods for each formatting component.
+- **Manage worksheet structure and protection.** It controls worksheet visibility with `VisibilityType`, manages gridlines and headers, and protects worksheets using `WorksheetProtection`, all exposed directly on `Worksheet`.
+- **Apply conditional formatting and data validation.** It applies conditional formatting through `ConditionalFormattingCollection` and `FormatCondition`, and manages data validation via `ValidationCollection` and `Validation`, both scoped to `CellArea` ranges.
+- **Configure page setup and print options.** It configures page setup with `PageSetup` for paper size, orientation, margins, scaling, print area, headers, footers, and page breaks, using `PageOrientationType` and `PaperSizeType` enumerations.
+- **Manage hyperlinks and defined names.** It attaches hyperlinks to cell ranges via `HyperlinkCollection` and `Hyperlink`, supporting external, internal, and mailto links, and manages workbook- or sheet-scoped named ranges through `DefinedNameCollection` and `DefinedName`.
+- **Access document properties.** It exposes core and extended document metadata through `WorkbookProperties`, `DocumentProperties`, and `ExtendedDocumentProperties`, accessible via `Workbook.GetProperties` and `Workbook.GetDocumentProperties`.
 
-- **Create or load `.xlsx` workbooks**: construct a blank `Workbook`, or load an existing file
-  from a path or an in-memory `std::vector<std::uint8_t>` stream via one of `Workbook`'s
-  constructors, then save back out to either form with `Workbook.Save()`.
 - **Read and write cell values and formulas**: `Cell.PutValue()` accepts strings, integers,
   doubles, bools, and `DateTime`; `Cell.GetValue()` returns a variant-typed `CellValue`, and
   `Cell.SetFormula()`/`Cell.GetFormula()` handle Excel formula text with or without a leading `=`.
+- **Apply cell styles**: `Cell.GetStyle()`/`Cell.SetStyle()` return and apply a `Style`, which
+  bundles `Font` (bold, color), fill (`FillPattern`, foreground/background `Color`), `Borders`,
+  alignment, and text wrap into one cloneable value.
 - **Merge cell ranges and apply number formats**: `Cells.Merge()` creates merged regions tracked
   as `MergeRegion`s, and `Style.SetNumberFormat()`/`NumberFormat` apply and parse Excel
   display-format patterns, rendered through `DisplayTextFormatter` with locale-directive support.
@@ -78,9 +87,6 @@ flowchart TB
   its own descriptive comment string.
 - **Configure page setup and print settings**: `Worksheet.GetPageSetup()` returns a `PageSetup` for
   paper size, orientation, margins, scaling, print area/titles, headers/footers, and page breaks.
-- **Read and write document properties**: `Workbook.GetProperties()` and
-  `Workbook.GetDocumentProperties()` expose core and extended metadata through
-  `WorkbookProperties`/`DocumentProperties`.
 
 ## Installation
 
@@ -99,7 +105,7 @@ No required third-party package dependencies; in `Aspose.Cells.Foss.Cpp/CMakeLis
 
 ## Quick Start
 
-This example creates a new workbook, populates a worksheet named Products with product names and prices, adds a SUM formula for the total, applies a styled header, and saves the file as `products.xlsx`.
+This example creates a new workbook, adds a worksheet named Products, populates it with product names and prices, computes a SUM formula, applies a styled header, and saves the result as `products.xlsx`.
 
 ```cpp
 #include "aspose/cells_foss/Workbook.h"
@@ -139,8 +145,6 @@ int main() {
     return 0;
 }
 ```
-
-More real, grounded snippets are collected below.
 
 ## Additional Examples
 
@@ -203,7 +207,7 @@ priceRange.SetComment("Cell range used by the SUM formula in B4.");
 
 ## API Reference
 
-Aspose.Cells FOSS for Cpp provides the `Workbook` class as the primary entry point for reading and writing Excel files, with `Worksheet`, `Cells`, and `Cell` forming the core object graph beneath it.
+Aspose.Cells FOSS for Cpp provides the `Workbook` class as the root entry point for creating, loading, modifying, and saving XLSX workbooks, with `Worksheet`, `Cells`, and `Cell` forming the primary object graph beneath it. The library exposes additional collections and objects for formatting, validation, hyperlinks, defined names, page setup, and workbook properties.
 
 The public API has 195 types.
 
@@ -232,7 +236,7 @@ The public API has 195 types.
 | `Cell` | Represents a single worksheet cell and exposes value, formula, and style operations. |
 | `CellArea` | Represents cell area. |
 | `CellFormatValue` | Represents cell format value. |
-| `CellValue` | Aspose.Cells_FOSS.CellValue represents a cell value that can store data of various types and provides methods to access its content as a boolean, date and time, double-precision floating-point number, integer, or string. |
+| `CellValue` | CellValue class provides methods to access cell values as different types, including AsBool, AsDateTime, AsDouble, AsInteger, AsString, IsBool, and IsDateTime. |
 | `Cells` | Provides access to worksheet cells, rows, columns, and merged ranges. |
 | `CellsException` | Represents an error that occurs during cells. |
 | `Color` | Represents color. |
@@ -287,7 +291,7 @@ The public API has 195 types.
 | `WorksheetProtectionModel` | Represents worksheet protection model. |
 | `WorksheetViewModel` | Represents worksheet view model. |
 | `CoreDocumentProperties` | Represents core document properties. |
-| `DateTime` | Aspose.Cells_FOSS.DateTime represents a date and time value and provides methods to retrieve its components such as year, month, day, hour, minute, second, and ticks. |
+| `DateTime` | DateTime class provides methods to construct and compare date-time values, including DateTime, Equals, GetDay, GetHour, GetMinute, GetMonth, GetSecond, and GetTicks. |
 | `DefinedName` | Represents defined name. |
 | `DefinedNameCollection` | Represents a collection of defined name objects. |
 | `DefinedNameUtility` | Provides normalization and validation helpers for defined names. |
@@ -317,8 +321,8 @@ The public API has 195 types.
 | `LoadIssue` | Represents load issue. |
 | `LoadOptions` | Specifies how a workbook should be loaded. |
 | `NumberFormat` | Provides number format operations. |
-| `CaseInsensitiveEqual` | Aspose.Cells_FOSS.Packaging.CaseInsensitiveEqual is a function object that performs case-insensitive equality comparison of two strings. |
-| `CaseInsensitiveHash` | Aspose.Cells_FOSS.Packaging.CaseInsensitiveHash is a function object that computes a hash value for a string in a case-insensitive manner. |
+| `CaseInsensitiveEqual` | CaseInsensitiveEqual class provides case-insensitive equality comparison for string keys. |
+| `CaseInsensitiveHash` | CaseInsensitiveHash class provides case-insensitive hash computation for string keys. |
 | `IPackageReader` | Defines a reader for package models. |
 | `IPackageWriter` | Defines a writer for package models. |
 | `MissingPartException` | Represents an error that occurs during missing part. |
@@ -419,7 +423,7 @@ The public API has 195 types.
 
 ### Workbook
 
-The `Workbook` class supports loading from file paths or in-memory streams using `LoadOptions`, saving to various formats via `SaveOptions`, and exposes workbook-level settings, properties, and document metadata through its properties.
+The `Aspose.Cells_FOSS.Workbook` class serves as the root spreadsheet object used to create, load, modify, and save an XLSX workbook, supporting operations such as saving to a file or stream with a specified `Aspose.Cells_FOSS.SaveFormat` and throwing `Aspose.Cells_FOSS.WorkbookSaveException` on save failures or `Aspose.Cells_FOSS.WorkbookLoadException` on load failures.
 
 - `Dispose`: Releases resources associated with the workbook instance.
 - `EnsureUniqueDefinedName`: Ensures no other defined name in the workbook shares the given name and scope.
@@ -437,7 +441,7 @@ The `Workbook` class supports loading from file paths or in-memory streams using
 
 ### Worksheet
 
-The `Worksheet` class provides access to cell data through its `Cells` collection, supports visibility control via `VisibilityType`, and includes protection, hyperlink, validation, conditional formatting, page setup, and auto filter capabilities.
+The `Aspose.Cells_FOSS.Worksheet` class encapsulates a single worksheet and its supported v0.1 worksheet features, providing access to cells, hyperlinks, validations, conditional formattings, page setup, and protection, with visibility, gridlines, zoom, and right-to-left settings controlled via methods such as `SetName`, `SetVisibilityType`, and `SetZoom`.
 
 - `GetAutoFilter`: Gets auto-filter settings for the worksheet.
 - `GetCells`: Gets the cell grid facade for the worksheet.
@@ -459,18 +463,108 @@ The `Worksheet` class provides access to cell data through its `Cells` collectio
 - `Protect`: Marks the worksheet as protected using the current protection settings.
 - `Unprotect`: Clears worksheet protection and resets supported protection flags.
 
-### Cells
+### Cell
 
-The `Cells` class provides indexed access to individual `Cell` objects, supports merging via `CellArea`, and exposes collections of rows and columns for structured manipulation.
+The `Aspose.Cells_FOSS.Cell` class represents a single worksheet cell and exposes value, formula, and style operations, allowing values of multiple types—including `Aspose.Cells_FOSS.DateTime`—to be written via `PutValue` and retrieved as a variant-typed `Aspose.Cells_FOSS.CellValue`, with style applied and read via `GetStyle` and `SetStyle`.
 
-- `GetColumns`: Gets column-level settings for the worksheet.
-- `GetMergedCells`: Gets the current merged-cell regions in worksheet order.
-- `GetRows`: Gets row-level settings for the worksheet.
-- `Merge`: Merges a rectangular cell region using zero-based coordinates.
+- `GetColumn`: Gets the column index of the cell.
+- `GetDisplayStringValue`: Gets the display text generated from the cell value, style, and workbook culture.
+- `GetFormula`: Gets or sets the cell formula.
+- `GetRow`: Gets the row index of the cell.
+- `GetStringValue`: Gets a stable string representation of the cell value without applying style-based display formatting.
+- `GetStyle`: Gets a detached copy of the cell style.
+- `GetType`: Gets the current logical cell value type.
+- `GetValue`: Gets or sets the logical cell value.
+- `PutValue`: Sets the cell value to a string.
+- `SetStyle`: Replaces the cell style with the supplied style object.
+
+### ConditionalFormattingCollection
+
+The `Aspose.Cells_FOSS.ConditionalFormattingCollection` class represents a collection of conditional formatting objects, supporting the addition of format conditions with a specified `Aspose.Cells_FOSS.FormatConditionType` and `OperatorType`, and allowing each `Aspose.Cells_FOSS.FormatCondition` to define its priority, stop-if-true behavior, and `Aspose.Cells_FOSS.Style`.
+
+- `Add`: Adds the specified item.
+- `GetCount`: Gets the number of items.
+- `GetNextPriority`: Gets the next priority for the specified collections.
+- `RemoveArea`: Removes the specified item.
+- `RemoveAt`: Removes the specified item.
+
+### ValidationCollection
+
+The `Aspose.Cells_FOSS.ValidationCollection` class represents a collection of validation objects, supporting the addition of validation rules to cell areas with a specified `Aspose.Cells_FOSS.ValidationType` and `OperatorType`, and allowing error message and title to be configured via properties such as ShowError, ErrorTitle, and ErrorMessage.
+
+- `Add`: Adds the specified item.
+- `AddAreaToValidation`: Adds the specified area to the validation.
+- `AreasOverlap`: Determines whether the specified areas overlap.
+- `CompareAreas`: Compares two areas for sorting.
+- `GetCount`: Gets the number of items.
+- `GetValidationInCell`: Gets the validation in cell.
+- `RemoveACell`: Removes the specified item.
+- `RemoveArea`: Removes the specified item.
+- `RemoveAreaFromValidation`: Removes the specified area from the validation.
+- `SortAreas`: Sorts the specified areas.
+
+### HyperlinkCollection
+
+The `Aspose.Cells_FOSS.HyperlinkCollection` class encapsulates the hyperlinks defined for a worksheet, supporting the addition of hyperlinks to a cell area with an address, and allowing text to display and screen tip to be set via properties on the `Aspose.Cells_FOSS.Hyperlink` object.
+
+- `Add`: Adds a hyperlink anchored at a cell or rectangular range specified by zero-based coordinates.
+- `GetCount`: Gets the number of hyperlinks in the worksheet.
+- `RemoveAt`: Removes the hyperlink at the specified zero-based index.
+
+### DefinedNameCollection
+
+The `Aspose.Cells_FOSS.DefinedNameCollection` class represents a collection of defined name objects, supporting the addition of defined names with a formula and optional local sheet index, and allowing a comment to be stored on each `Aspose.Cells_FOSS.DefinedName`.
+
+- `Add`: Adds the specified item.
+- `GetCount`: Gets the number of items.
+- `GetEnumerator`: Returns a snapshot of all defined names in the collection.
+- `RemoveAt`: Removes the specified item.
+
+### PageSetup
+
+The `Aspose.Cells_FOSS.PageSetup` class represents worksheet print and page-layout settings, supporting orientation and paper size via `Aspose.Cells_FOSS.PageOrientationType` and `Aspose.Cells_FOSS.PaperSizeType`, fit-to-page options, print area, title rows or columns, header and footer text, and horizontal or vertical page breaks.
+
+- `AddHorizontalPageBreak`: Adds a horizontal page break at the specified zero-based row index.
+- `AddVerticalPageBreak`: Adds a vertical page break at the specified zero-based column index.
+- `ClearHorizontalPageBreaks`: Removes all horizontal page breaks.
+- `ClearVerticalPageBreaks`: Removes all vertical page breaks.
+- `GetBottomMargin`: Gets or sets the bottom margin in centimeters.
+- `GetBottomMarginInch`: Gets or sets the bottom margin in inches.
+- `GetCenterFooter`: Gets or sets the center footer text.
+- `GetCenterHeader`: Gets or sets the center header text.
+- `GetCenterHorizontally`: Gets or sets whether content is centered horizontally on the page.
+- `GetCenterVertically`: Gets or sets whether content is centered vertically on the page.
+- `GetFirstPageNumber`: Gets or sets the first printed page number.
+- `GetFitToPagesTall`: Gets or sets the number of pages tall to fit when printing.
+- `GetFitToPagesWide`: Gets or sets the number of pages wide to fit when printing.
+- `GetFooterMargin`: Gets or sets the footer margin in centimeters.
+- `GetFooterMarginInch`: Gets or sets the footer margin in inches.
+- `GetHeaderMargin`: Gets or sets the header margin in centimeters.
+- `GetHeaderMarginInch`: Gets or sets the header margin in inches.
+- `GetHorizontalPageBreaks`: Gets the horizontal page breaks as sorted zero-based row indexes.
+- `GetLeftFooter`: Gets or sets the left footer text.
+- `GetLeftHeader`: Gets or sets the left header text.
+- `GetLeftMargin`: Gets or sets the left margin in centimeters.
+- `GetLeftMarginInch`: Gets or sets the left margin in inches.
+- `GetOrientation`: Gets or sets the page orientation.
+- `GetPaperSize`: Gets or sets the paper size.
+- `GetPrintArea`: Gets or sets the print area reference.
+- `GetPrintGridlines`: Gets or sets whether gridlines are printed.
+- `GetPrintHeadings`: Gets or sets whether row and column headings are printed.
+- `GetPrintTitleColumns`: Gets or sets the repeating title columns reference.
+- `GetPrintTitleRows`: Gets or sets the repeating title rows reference.
+- `GetRightFooter`: Gets or sets the right footer text.
+- `GetRightHeader`: Gets or sets the right header text.
+- `GetRightMargin`: Gets or sets the right margin in centimeters.
+- `GetRightMarginInch`: Gets or sets the right margin in inches.
+- `GetScale`: Gets or sets the print scaling percentage.
+- `GetTopMargin`: Gets or sets the top margin in centimeters.
+- `GetTopMarginInch`: Gets or sets the top margin in inches.
+- `GetVerticalPageBreaks`: Gets the vertical page breaks as sorted zero-based column indexes.
 
 ### Style
 
-The `Style` class allows control over font, borders, fill pattern, foreground and background colors, number format, and horizontal alignment for cell appearance.
+The `Aspose.Cells_FOSS.Style` class represents a mutable cell style facade that can be applied to one or more cells, allowing font, borders, fill pattern, foreground and background colors, number format, horizontal alignment, and wrap text to be configured via dedicated getters and setters.
 
 - `Borders`: Gets the border settings.
 - `Clone`: Creates a copy of the current style.
@@ -518,93 +612,9 @@ The `Style` class allows control over font, borders, fill pattern, foreground an
 - `ToCore`: Converts this style to a Core StyleValue.
 - `VerticalAlignmentType`: Gets the vertical alignment.
 
-### ConditionalFormattingCollection
-
-The `ConditionalFormattingCollection` class manages format conditions applied to cell ranges, supporting addition, removal, and access to individual `FormatCondition` objects with type and operator settings.
-
-- `Add`: Adds the specified item.
-- `GetCount`: Gets the number of items.
-- `GetNextPriority`: Gets the next priority for the specified collections.
-- `RemoveArea`: Removes the specified item.
-- `RemoveAt`: Removes the specified item.
-
-### ValidationCollection
-
-The `ValidationCollection` class provides methods to add and remove data validation rules for cell areas, with individual `Validation` objects supporting type, operator, formula constraints, and error message configuration.
-
-- `Add`: Adds the specified item.
-- `AddAreaToValidation`: Adds the specified area to the validation.
-- `AreasOverlap`: Determines whether the specified areas overlap.
-- `CompareAreas`: Compares two areas for sorting.
-- `GetCount`: Gets the number of items.
-- `GetValidationInCell`: Gets the validation in cell.
-- `RemoveACell`: Removes the specified item.
-- `RemoveArea`: Removes the specified item.
-- `RemoveAreaFromValidation`: Removes the specified area from the validation.
-- `SortAreas`: Sorts the specified areas.
-
-### PageSetup
-
-The `PageSetup` class controls print layout options including paper size via `PaperSizeType`, orientation via `PageOrientationType`, fit-to-page settings, print area, and header/footer content.
-
-- `AddHorizontalPageBreak`: Adds a horizontal page break at the specified zero-based row index.
-- `AddVerticalPageBreak`: Adds a vertical page break at the specified zero-based column index.
-- `ClearHorizontalPageBreaks`: Removes all horizontal page breaks.
-- `ClearVerticalPageBreaks`: Removes all vertical page breaks.
-- `GetBottomMargin`: Gets or sets the bottom margin in centimeters.
-- `GetBottomMarginInch`: Gets or sets the bottom margin in inches.
-- `GetCenterFooter`: Gets or sets the center footer text.
-- `GetCenterHeader`: Gets or sets the center header text.
-- `GetCenterHorizontally`: Gets or sets whether content is centered horizontally on the page.
-- `GetCenterVertically`: Gets or sets whether content is centered vertically on the page.
-- `GetFirstPageNumber`: Gets or sets the first printed page number.
-- `GetFitToPagesTall`: Gets or sets the number of pages tall to fit when printing.
-- `GetFitToPagesWide`: Gets or sets the number of pages wide to fit when printing.
-- `GetFooterMargin`: Gets or sets the footer margin in centimeters.
-- `GetFooterMarginInch`: Gets or sets the footer margin in inches.
-- `GetHeaderMargin`: Gets or sets the header margin in centimeters.
-- `GetHeaderMarginInch`: Gets or sets the header margin in inches.
-- `GetHorizontalPageBreaks`: Gets the horizontal page breaks as sorted zero-based row indexes.
-- `GetLeftFooter`: Gets or sets the left footer text.
-- `GetLeftHeader`: Gets or sets the left header text.
-- `GetLeftMargin`: Gets or sets the left margin in centimeters.
-- `GetLeftMarginInch`: Gets or sets the left margin in inches.
-- `GetOrientation`: Gets or sets the page orientation.
-- `GetPaperSize`: Gets or sets the paper size.
-- `GetPrintArea`: Gets or sets the print area reference.
-- `GetPrintGridlines`: Gets or sets whether gridlines are printed.
-- `GetPrintHeadings`: Gets or sets whether row and column headings are printed.
-- `GetPrintTitleColumns`: Gets or sets the repeating title columns reference.
-- `GetPrintTitleRows`: Gets or sets the repeating title rows reference.
-- `GetRightFooter`: Gets or sets the right footer text.
-- `GetRightHeader`: Gets or sets the right header text.
-- `GetRightMargin`: Gets or sets the right margin in centimeters.
-- `GetRightMarginInch`: Gets or sets the right margin in inches.
-- `GetScale`: Gets or sets the print scaling percentage.
-- `GetTopMargin`: Gets or sets the top margin in centimeters.
-- `GetTopMarginInch`: Gets or sets the top margin in inches.
-- `GetVerticalPageBreaks`: Gets the vertical page breaks as sorted zero-based column indexes.
-
-### HyperlinkCollection
-
-The `HyperlinkCollection` class manages hyperlinks associated with cell ranges, allowing addition with address and display text, and removal by index.
-
-- `Add`: Adds a hyperlink anchored at a cell or rectangular range specified by zero-based coordinates.
-- `GetCount`: Gets the number of hyperlinks in the worksheet.
-- `RemoveAt`: Removes the hyperlink at the specified zero-based index.
-
-### DefinedNameCollection
-
-The `DefinedNameCollection` class provides methods to add and remove named ranges with optional sheet scope, and each `DefinedName` includes a comment property for documentation.
-
-- `Add`: Adds the specified item.
-- `GetCount`: Gets the number of items.
-- `GetEnumerator`: Returns a snapshot of all defined names in the collection.
-- `RemoveAt`: Removes the specified item.
-
 ### WorkbookProperties
 
-The `WorkbookProperties` class exposes and controls workbook-level metadata such as code name, backup file path, calculation settings, view options, and protection state.
+The `Aspose.Cells_FOSS.WorkbookProperties` class represents workbook properties, with `Aspose.Cells_FOSS.DocumentProperties` and `Aspose.Cells_FOSS.ExtendedDocumentProperties` providing access to core and extended metadata, respectively, and `Aspose.Cells_FOSS.WorkbookSettings` controlling workbook-level settings that affect date handling and display formatting.
 
 - `GetBackupFile`: Gets or sets a value indicating whether backup file.
 - `GetCalculation`: Gets the calculation.
@@ -619,26 +629,6 @@ The `WorkbookProperties` class exposes and controls workbook-level metadata such
 - `GetShowObjects`: Gets or sets the show objects.
 - `GetUpdateLinks`: Gets or sets the update links.
 - `GetView`: Gets the view.
-
-### AutoFilter
-
-The `AutoFilter` class supports filtering operations including color, custom, dynamic, and top 10 filters, with `AutoFilterSupport` indicating whether filtering is enabled.
-
-- `Clear`: Clears the current state.
-- `GetFilterColumns`: Gets the filter columns.
-- `GetRange`: Gets or sets the range.
-- `GetSortState`: Gets the sort state.
-
-### XlsxWorkbookSerializer
-
-The `XlsxWorkbookSerializer` class provides functionality to serialize workbook content to XLSX format, with supporting classes for styles, XML handling, and archive operations.
-
-- `Load`: Loads the current state.
-- `Save`: Saves the current state.
-
-`Workbook` also has a constructor that loads from an in-memory
-`std::vector<std::uint8_t>` stream instead of a file path, for scenarios that read the source
-bytes from somewhere other than the filesystem.
 
 The library's public types live in the `Aspose::Cells_FOSS` namespace, with `Workbook` as the
 root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph beneath it.
@@ -708,10 +698,11 @@ root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph
 ## Documentation & Resources
 
 - **[Getting started guide](https://docs.aspose.org/cells/cpp/)** — installation, walkthroughs, and feature guides for this library.
-- **[Contributor guide](AGENTS.md)** — architecture, technology assumptions, and conventions for contributors.
 - **[How-to guides & FAQ](https://kb.aspose.org/cells/cpp/)** — task-focused answers for common spreadsheet questions.
-- **[Full API reference](https://reference.aspose.org/cells/cpp/)** — the complete, browsable reference for all public types (the [API reference](#api-reference) section above covers the essentials).
 - Found a bug or have a feature request? [Open an issue](https://github.com/aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp/issues).
+
+- **[Full API reference](https://reference.aspose.org/cells/cpp/)** — the complete, browsable reference for all public types (the [API reference](#api-reference) section above covers the essentials).
+- **[Contributor guide](AGENTS.md)** — architecture, technology assumptions, and conventions for contributors.
 
 ## Scope and Limitations
 
@@ -721,11 +712,21 @@ root entry point and `Worksheet`/`Cells`/`Cell` forming the primary object graph
 - **Some advanced conditional-formatting rule types are recognized on load but not preserved.** An unsupported rule type is dropped with a `WarningInfo` diagnostic rather than failing the load outright.
 - **AutoFilter date-group filters using certain patterns are rejected as unsupported during load** rather than approximated.
 
-See [Aspose.Cells for Cpp — Enterprise Edition](https://products.aspose.com/cells/cpp/). It adds broader spreadsheet format coverage — legacy XLS/XLSB, CSV, ODS, PDF rendering, and full-fidelity conditional-formatting and `AutoFilter` round-tripping.
+<details>
+<summary>View Other Unimplemented Members</summary>
+
+- `RelationshipResolutionException` is declared but unused by the library's own code.
+- `StyleException` is declared but unused by the library's own code.
+
+</details>
+
+See [Aspose.Cells for Cpp — Enterprise Edition](https://products.aspose.com/cells/cpp/).
 
 ## Development and Testing
 
 The suite covers 8 test files under `Aspose.Cells.Foss.Cpp.Tests/`.
+
+Aspose.Cells FOSS for Cpp is published on NuGet as `Aspose.Cells.Cpp.FOSS`, but the package ships prebuilt static libraries for **Windows only** (`lib/win_x86`, `lib/win_x86_64`) built with the MSVC `v14x` toolset — its own bundled `aspose.cells.cpp.foss.targets` file errors the build for any other toolset or platform. There are no Linux/macOS binaries in the package.
 
 ```bash
 nuget install Aspose.Cells.Cpp.FOSS
