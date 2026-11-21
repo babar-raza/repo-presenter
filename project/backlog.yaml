@@ -2710,3 +2710,43 @@ items:
       - "root cause of the batch loss: audit_cases raised on the first case with no review; the work directory (call store included) lives in RUNNER_TEMP, so each of the 3 attempts re-asked all 64 cases"
     next_action: "supervisor merges; dispatch the last audit-seed attempt; hosted round 4 completes or names every failing case"
     updated: "2026-11-21"
+
+  - id: BL-580
+    title: "A refreshed README ends with the opening restating the maintainers' paragraph printed beside it: the format-facts floor (BL-220/BL-540) needs a format fact and is itself a restatement on PSD, so authoring dies (PSD Python, OCR .NET) or the degrade keeps nothing (HTML Python)"
+    type: defect
+    source: "owner rulings R44, R46, R36, R41, R14; hosted refresh runs 44916810423 (HTML Python: 'degrade: nothing kept (1 flag(s) tried)', duplicate_opening_paragraph) and 44898209273 (PSD Python: 'section_authoring: output rejected twice ... unit opening: restates the inherited paragraph ... spells .psd/'), OCR .NET (BL-540's origin)"
+    priority: P0
+    status: active
+    implementation_path: "authoring.opening_adds_nothing/opening_releasable + OPENING_RESTATED_OMISSION_REASON; authoring_retry.recover_restated_opening releases the opening slot (an R14 omission citing a fact, each cited inherited unit listed omitted) when the fact-true sentence is missing or is itself stated by the preserved paragraph and nothing the opening says is lost (the same uncovered() primitive that trims it); unit_checks skips the restatement error for a released slot, merge_units drops the placeholder unit; must_correct._opening_fact_true does the same in the degrade for a duplicate_opening_paragraph flag (record action opening_released, rule BL-580). The paragraph the maintainers wrote is the opening (R14); nothing is invented."
+    acceptance: "(1) tests: test_terminal_safe_bl220.py (4 new/changed incl. the job's own schema+binding parse of the released reply), test_degrade_restated_opening_bl540.py (2 new/changed); negative controls: an opening with new content, an opening citing an inherited unit that is not kept verbatim, an opening that cites it, are never released; (2) the real PSD Python shape (opening text from the hosted log, facts and dispositions of the stored seal) recovers to a reply that passes unit_checks, where the BL-220 floor alone failed on 'restates'; (3) recertify --all gate OK (R10, R41); (4) hosted (R41, not proven): HTML Python, PSD Python, OCR .NET Lane R refresh"
+    evidence:
+      - "zero-call reproduction on the stored PSD Python bundle: recover_opening_output returned 'Aspose.PSD FOSS for Python reads PSD files.' which unit_checks rejects as restating 'reading ... Adobe Photoshop files'; HTML Python facts hold no format fact at all (kinds: public_symbol, inherited_unit, link_target, import_path, example, identity, package, ...), so _fact_true_opening_unit is None and BL-540 kept nothing"
+    next_action: "supervisor merges; hosted Lane R refresh of HTML Python, PSD Python, OCR .NET"
+    updated: "2026-11-21"
+
+  - id: BL-581
+    title: "The API Reference's authored intro has no renderer fallback: a whole-text model finding on it is refused by the degrade and the candidate ends REJECT (llm:factuality|authored_unit|api_reference on PSD Java, HTML Python, 3D TypeScript)"
+    type: defect
+    source: "owner rulings R44, R46, R36, R41, R14; hosted PSD Java refresh run 44920305486 (F01 'The `PsdImage` class serves as the main entry point ...'; 'degrade: nothing kept (2 flag(s) tried)'); failure records of 3 cells share the class"
+    priority: P0
+    status: active
+    implementation_path: "must_correct._withhold_flagged: a flagged api_reference/intro unit that cites no inherited unit is withheld on the record (INTRO_CLAIM_OMISSION_REASON omission, record intro_withheld); authoring.api_row_fallback_slots owes the slot no unit (BC-04); renderer._api_reference prints the verified type count and the Core API table without an intro line"
+    acceptance: "(1) tests/readme/validation/test_degrade_intro_and_link_bl581.py (5): the intro goes, the count line and Core API stay, no new blocking check; negative controls: an unflagged intro, an intro citing an inherited unit; (2) zero-call degrade of the PSD Java stored bundle with the F01 sentence as the intro: 'withheld flagged text (BL-240): intro_withheld intro', result kept, no finding left, where it was 'nothing kept'; (3) recertify --all gate OK; (4) hosted (R41, not proven): PSD Java, HTML Python, 3D TypeScript Lane R refresh"
+    evidence:
+      - "failure ledger (refs/repository-presenter-state/failures): class llm:factuality|authored_unit|api_reference on aspose-psd-foss/Aspose.PSD-FOSS-for-Java, aspose-html-foss/Aspose.HTML-FOSS-for-Python, aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript"
+      - "the lever's other branches (capability, hub, type) already fall back; the intro fell to the 'refused' tail of _withhold_flagged"
+    next_action: "supervisor merges; hosted Lane R refresh of the three cells"
+    updated: "2026-11-21"
+
+  - id: BL-582
+    title: "A Documentation & Resources item whose description is the renderer's own fact-true link description ('On github.com.') is shown to the model reviewer as an author's claim, and the degrade can only delete the link (BC-17 0 -> 3)"
+    type: defect
+    source: "owner rulings R43(2), R44, R46, R36, R41, R14; hosted PSD Java refresh run 44920305486: F03 '- **[GitHub Repository](...)** — On github.com.'; every degrade candidate 'adds failing check(s) BC-17, blocking load 0 -> 3'"
+    priority: P0
+    status: active
+    implementation_path: "review.scope._RENDERER_SENTENCES: the whole item is a renderer sentence when its description is one of renderer.link_target_description's fact-true forms (product site, repository path, release page, 'On <host>.'); shown_text blanks it so the production review and its deterministic rules never see it, as the 'Open an issue' bullet. A maintainers' or authored description is still shown"
+    acceptance: "(1) test_degrade_intro_and_link_bl581.py: the four fallback forms are not shown, 'Source code, issue tracker and contribution guide.' and 'On github.com. It ships a CLI.' still are; (2) the renderer text is unchanged, so no sealed byte moves; (3) recertify --all gate OK; (4) hosted (R41, not proven): PSD Java Lane R refresh. Residual: the independent audit uses the same line scope and no longer shows these renderer-owned items (as it already does not for the 'Open an issue' bullet); its thresholds and judging are untouched"
+    evidence:
+      - "renderer.link_target_description returns f'On {host}.' for any other host; the line is printed when no kept resource-links list describes the link, or when BL-350 replaced a register-refuted maintainers' description with it"
+    next_action: "supervisor merges; hosted Lane R refresh of PSD Java"
+    updated: "2026-11-21"

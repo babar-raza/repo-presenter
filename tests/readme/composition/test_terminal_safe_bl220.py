@@ -22,7 +22,13 @@ from dataclasses import replace
 from typing import Any
 
 from repo_presenter.core.facts import Evidence, Fact, FactsDocument
-from repo_presenter.readme.composition.authoring import SectionTask, authoring_tasks, unit_checks
+from repo_presenter.readme.composition.authoring import (
+    SectionTask,
+    authoring_tasks,
+    merge_units,
+    opening_released,
+    unit_checks,
+)
 from repo_presenter.readme.composition.authoring_retry import (
     RECOVERY_NOTES_KEY,
     recover_authoring_output,
@@ -108,9 +114,17 @@ def test_a_restating_opening_with_no_format_fact_still_fails_closed() -> None:
     task = _opening_task(facts, dispositions)
     output = {"units": [{"section": "opening", "slot": "opening", "text": PARAGRAPH,
                          "fact_ids": ["package:name"]}], "omitted": []}
-    assert recover_opening_output(
+    # BL-580: no fact-true sentence exists, so the opening is released for the maintainers' paragraph (it
+    # adds nothing that paragraph lacks) instead of failing the run; nothing is invented.
+    recovered = recover_opening_output(
         output, task=task, facts=facts, dispositions=dispositions, name=NAME
-    ) is None
+    )
+    assert recovered is not None and recovered.pop(RECOVERY_NOTES_KEY)[0]["rule"] == "BL-580"
+    assert opening_released(recovered["omitted"])
+    assert unit_checks(copy.deepcopy(recovered), task, facts, NAME, dispositions=dispositions) == []
+    merged = merge_units({"opening": recovered})
+    assert merged["units"] == [] and opening_released(merged["omitted"])
+    assert merged["omitted"][0]["section"] == "opening" and merged["omitted"][0]["fact_id"] == "package:name"
 
 
 def test_a_passing_opening_is_never_touched() -> None:
@@ -255,3 +269,86 @@ def test_a_plan_inside_the_enum_is_never_touched_and_no_enum_means_no_op() -> No
     assert recover_planning_output(copy.deepcopy(plan), make_facts()) is None
     assert citable_from_schema(None) == []
     assert citable_from_schema({"$defs": {"citable_fact_id": {"enum": ["a", "b"]}}}) == ["a", "b"]
+
+
+def test_a_format_sentence_the_paragraph_states_too_releases_the_opening() -> None:
+    """BL-580 (hosted PSD Python 44898209273): "<name> reads PNG files and writes SVG files." is stated by
+    the maintainers' paragraph, so the format floor would itself be rejected as a restatement."""
+    facts = _facts_with_formats()
+    paragraph = f"{NAME} is a pure-Python library that reads PNG files and writes SVG files."
+    facts = replace(
+        facts,
+        facts=tuple(
+            replace(f, value=paragraph) if f.id == "inherited_unit:090.paragraph" else f
+            for f in facts.facts
+        ),
+    )
+    dispositions = _opening_dispositions()
+    task = _opening_task(facts, dispositions)
+    output = {"units": [{"section": "opening", "slot": "opening", "text": paragraph,
+                         "fact_ids": ["package:name"]}], "omitted": []}
+    recovered = recover_opening_output(
+        output, task=task, facts=facts, dispositions=dispositions, name=NAME
+    )
+    assert recovered is not None
+    assert recovered.pop(RECOVERY_NOTES_KEY)[0]["fallback"] == "opening_released_for_preserved_paragraph"
+    assert unit_checks(copy.deepcopy(recovered), task, facts, NAME, dispositions=dispositions) == []
+    assert merge_units({"opening": recovered})["units"] == []
+
+
+def test_an_opening_with_new_content_is_never_released() -> None:
+    """Negative control: an opening that adds content the paragraph lacks is not restating and is kept."""
+    facts = _facts_with_formats()
+    dispositions = _opening_dispositions()
+    task = _opening_task(facts, dispositions)
+    output = {"units": [{"section": "opening", "slot": "opening",
+                         "text": "It also validates every widget against a strict schema before drawing.",
+                         "fact_ids": ["package:name"]}], "omitted": []}
+    assert unit_checks(copy.deepcopy(output), task, facts, NAME, dispositions=dispositions) == []
+    assert recover_opening_output(
+        copy.deepcopy(output), task=task, facts=facts, dispositions=dispositions, name=NAME
+    ) is None
+    merged = merge_units({"opening": output})
+    assert len(merged["units"]) == 1 and not opening_released(merged["omitted"])
+
+
+def test_an_opening_whose_cited_inherited_unit_is_not_kept_verbatim_is_not_released() -> None:
+    """Negative control: citing an inherited unit that is not printed as written would lose it."""
+    facts = _facts_with_formats()
+    dispositions = _opening_dispositions()
+    task = _opening_task(facts, dispositions)
+    facts = replace(facts, facts=tuple(f for f in facts.facts if f.kind != "format"))
+    output = {"units": [{"section": "opening", "slot": "opening", "text": PARAGRAPH,
+                         "fact_ids": ["inherited_unit:055.paragraph"]}], "omitted": []}
+    assert recover_opening_output(
+        output, task=task, facts=facts, dispositions=dispositions, name=NAME
+    ) is None
+
+
+def test_the_released_opening_reply_passes_the_jobs_own_schema_and_binding() -> None:
+    """BL-580: the recovered reply is judged by ``run_job``'s real parse (schema, fact binding, checks)."""
+    import json
+    from pathlib import Path
+
+    from repo_presenter.core.llm.jobs import _parse
+    from repo_presenter.core.llm.prompts import load_manifests
+
+    facts = replace(
+        _facts_with_formats(),
+        facts=tuple(f for f in _facts_with_formats().facts if f.kind != "format"),
+    )
+    dispositions = _opening_dispositions()
+    task = _opening_task(facts, dispositions)
+    output = {"units": [{"section": "opening", "slot": "opening", "text": PARAGRAPH,
+                         "fact_ids": ["package:name"]}], "omitted": []}
+    recovered = recover_opening_output(
+        output, task=task, facts=facts, dispositions=dispositions, name=NAME
+    )
+    assert recovered is not None
+    recovered.pop(RECOVERY_NOTES_KEY)
+    loaded = load_manifests(Path(__file__).resolve().parents[3] / "prompts")["section_authoring"]
+    parsed, errors = _parse(
+        loaded, json.dumps(recovered), facts,
+        lambda out: unit_checks(out, task, facts, NAME, dispositions=dispositions),
+    )
+    assert errors == [] and parsed is not None

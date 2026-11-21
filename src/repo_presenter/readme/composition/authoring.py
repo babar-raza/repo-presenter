@@ -2417,6 +2417,69 @@ DUPLICATE_UNIT_OMISSION_REASON = (
     "Duplicate paragraph withheld (BL-561, R14): the same paragraph prints elsewhere, so this authored "
     "copy is left out and its slot is owed no unit"
 )
+#: The reason of the omitted record that releases the opening's slot (BL-580, R14): the authored opening
+#: says nothing the maintainers' paragraph the renderer prints verbatim beside it does not already say, so
+#: that paragraph is the opening and the slot is owed no unit (the reviewer's ``duplicate_opening_paragraph``
+#: rule then has nothing to compare). A recorded decision, never a silent drop: the omission cites a fact.
+OPENING_RESTATED_OMISSION_REASON = (
+    "Opening withheld (BL-580, R14): it only restates the maintainers' paragraph the renderer prints "
+    "verbatim beside it, so that paragraph is the opening and the slot is owed no unit"
+)
+
+
+def opening_released(omitted: Iterable[Any], section: str = "opening") -> bool:
+    """Whether ``omitted`` carries the record that releases the opening's slot (BL-580)."""
+    return any(
+        isinstance(item, Mapping)
+        and str(item.get("reason") or "").startswith(OPENING_RESTATED_OMISSION_REASON)
+        and item.get("section", section) == section
+        for item in omitted
+    )
+
+
+def opening_adds_nothing(
+    text: str, *, dispositions: Mapping[str, Any], facts: FactsDocument
+) -> bool:
+    """Whether the maintainers' paragraph(s) kept verbatim in the opening already say all of ``text``:
+    what is left of ``text`` after what they state is empty (the same primitive that trims a restating
+    opening, ``recover_preserved_duplicates``). Nothing is lost by printing them alone (BL-580)."""
+    preserved = preserved_section_text(dispositions, facts, "opening")
+    if not preserved or not text.strip():
+        return False
+    if not (states_all(preserved, text) or states_all(text, preserved)):
+        return False
+    shown = Destinations.of({"opening": preserved})
+    return not uncovered("opening:revised.paragraph", text, shown, "opening").strip()
+
+
+def opening_releasable(
+    unit: Mapping[str, Any], *, dispositions: Mapping[str, Any], facts: FactsDocument
+) -> bool:
+    """Whether the authored opening ``unit`` can be released for the maintainers' paragraph (BL-580): it
+    adds nothing that paragraph lacks, and every inherited unit it cites is itself kept verbatim
+    (so the substance it carried still prints)."""
+    if not opening_adds_nothing(str(unit.get("text") or ""), dispositions=dispositions, facts=facts):
+        return False
+    kept = {
+        str(row.get("unit_id"))
+        for row in dispositions.get("dispositions", [])
+        if row.get("disposition") in _VERBATIM_PRESERVED_DISPOSITIONS
+    }
+    return all(
+        str(fact_id) in kept
+        for fact_id in unit.get("fact_ids") or []
+        if str(fact_id).startswith("inherited_unit:")
+    )
+
+
+#: The reason of the omitted record that releases the API Reference's one authored ``intro`` slot (BL-581): the
+#: last-resort degrade withheld the sentences the independent review found no fact to support (hosted PSD Java
+#: 44920305486, HTML Python 44916810423, 3D TypeScript: ``llm:factuality|authored_unit|api_reference``), and the
+#: renderer prints the verified type count and the Core API table alone, so the section is owed no intro unit.
+INTRO_CLAIM_OMISSION_REASON = (
+    "API Reference intro withheld (BL-581, R14): the independent review found no fact that supports it, so the "
+    "renderer prints the verified public type count and the Core API table alone"
+)
 _ENTERPRISE_SECTION = "enterprise_relationship"
 
 
@@ -2438,12 +2501,16 @@ def api_row_fallback_slots(output: Mapping[str, Any], task: SectionTask) -> froz
         if isinstance(item, Mapping)
         and str(item.get("reason") or "").startswith(API_ROW_FALLBACK_REASON)
     }
+    if task.section_id == "opening" and "opening" in task.slots and opening_released(output.get("omitted", [])):
+        return frozenset({"opening"})
     duplicated = {
         str(item.get("slot"))
         for item in output.get("omitted", [])
         if isinstance(item, Mapping)
         and item.get("section") == task.section_id
-        and str(item.get("reason") or "").startswith(DUPLICATE_UNIT_OMISSION_REASON)
+        and str(item.get("reason") or "").startswith(
+            (DUPLICATE_UNIT_OMISSION_REASON, INTRO_CLAIM_OMISSION_REASON)
+        )
     }
     return frozenset(
         slot
@@ -2480,7 +2547,7 @@ def unit_checks(
     errors: list[str] = []
     if task.section_id == "opening" and dispositions is not None:
         preserved = preserved_section_text(dispositions, facts, task.section_id)
-        if preserved:
+        if preserved and not opening_released(output.get("omitted", [])):
             for unit in output.get("units", []):
                 text = str(unit.get("text", ""))
                 if text and (states_all(preserved, text) or states_all(text, preserved)):
@@ -2997,7 +3064,11 @@ def merge_units(
     units: list[dict[str, Any]] = []
     omitted: list[dict[str, Any]] = []
     for section, output in sorted(pairs, key=lambda pair: order.get(pair[0], len(order))):
-        units.extend(output.get("units", []))
+        released = section.split("#", 1)[0] == "opening" and opening_released(output.get("omitted", []))
+        # The opening BL-580 released prints only the maintainers' paragraph: its placeholder unit is dropped.
+        units.extend(
+            unit for unit in output.get("units", []) if not (released and unit.get("slot") == "opening")
+        )
         # A batch task's label ("api_reference#types-1") names its section before the "#": every
         # reader matches an omission to its task by ``section_id`` (the API-row fallback, BL-104).
         omitted.extend(

@@ -102,5 +102,21 @@ def test_an_opening_that_cites_an_inherited_unit_is_not_replaced(tmp_path: Path)
 
 
 def test_nothing_is_invented_when_the_facts_state_no_format(tmp_path: Path) -> None:
+    """BL-580 supersedes "left for the checks": with no fact-true sentence the opening that adds nothing the
+    maintainers' paragraph lacks is released for it on the record (hosted HTML Python 44916810423); no text is
+    invented and the paragraph is intact."""
     world = _world(tmp_path, PARAPHRASE, drop_formats=True)
+    degraded = _degrade(world, tmp_path)
+    assert degraded is not None
+    assert not [f for f in degraded.verdict.blocking_findings if f.rule == "duplicate_opening_paragraph"]
+    readme = degraded.composed.readme
+    assert PARAPHRASE not in readme and PRESERVED in readme
+    assert not [u for u in degraded.composed.coherent_units["units"] if u["slot"] == "opening"]
+    assert degraded.composed.coherent_units["omitted"][-1]["section"] == "opening"
+    [record] = degraded.composed.coherent_units[DEGRADE_RECORDS_KEY]
+    assert record["action"] == "opening_released" and record["rule"] == "BL-580"
+
+
+def test_an_opening_with_new_content_is_never_released_without_a_format(tmp_path: Path) -> None:
+    world = _world(tmp_path, NEW_CONTENT, drop_formats=True)
     assert _degrade(world, tmp_path) is None
