@@ -5,7 +5,7 @@
   "provider_repository_id": 1417497797,
   "registry_revision": null,
   "active_transaction_id": "4f4d095f15b047d699803d56bf910450",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u2 (api_reference, documentation_resources): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F04: a contradiction finding must cite at least one product fact (not only inherited text)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-21T19:22:03.880364+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-21T19:46:50.210976+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 9
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 66,
+  "state_version": 67,
   "recent_trigger_dedup_keys": {
     "run:43423583472:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "bc7d3ab280ba423e9e47c20b498683ab",
     "run:44559904278:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "06a8768688a24d8e98fc0303de43bf96",
@@ -49,5 +49,5 @@
     "run:44702574834:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "291cb5c7146448159cc83d8b866cf402",
     "run:44746337326:aspose-psd-foss/Aspose.PSD-FOSS-for-Java": "4f4d095f15b047d699803d56bf910450"
   },
-  "recovery_count": 8
+  "recovery_count": 9
 }
