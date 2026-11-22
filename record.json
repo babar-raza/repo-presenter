@@ -157,25 +157,112 @@
    "run_id": "44910796965",
    "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T12:59:01+00:00",
+   "classes": [
+    "llm:factuality|inherited_unit|opening"
+   ],
+   "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45023005110",
+   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-21T14:14:18+00:00",
-  "classes": {},
-  "code": "1b113f3c2c88d28dc3b460190315c20f00d32db344f5bfbf6136dd2dd8fbd409",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-22T12:59:01+00:00",
+  "classes": {
+   "llm:factuality|inherited_unit|opening": {
+    "example": "Aspose.Cells FOSS for Cpp is a free, open-source, MIT-licensed C++ library for creating, loading,\nediting, and saving Excel `.xlsx` workbooks without requiring Microsoft Excel. It exposes an",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:004.paragraph"
+    ],
+    "rule": "llm:factuality",
+    "scope": "5832e934ad9f6da89b23fc15256470ad5591366a0d1e9f1b09074bd70f0e3086",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "opening",
+    "upstream": ""
+   }
+  },
+  "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; S2-F02 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
+  },
+  "findings": [
+   {
+    "label": "S2-F02",
+    "message": "Aspose.Cells FOSS for Cpp is a free, open-source, MIT-licensed C++ library for creating, loading, editing, and saving Excel `.xlsx` workbooks without requiring Microsoft Excel. It exposes an Aspose.Cells-compatible API surface for common XLSX scenarios \u2014 the same `Workbook`, `Worksheet`, and `Cell` object shape used by Aspose's commercial spreadsheet products \u2014 built as a dependency-free, header-and-source C++17 library with no external runtime dependencies.",
+    "origin": {
+     "id": "inherited_unit:004.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "Aspose.Cells FOSS for Cpp is a free, open-source, MIT-licensed C++ library for creating, loading,\nediting, and saving Excel `.xlsx` workbooks without requiring Microsoft Excel. It exposes an",
+    "rule": "llm:factuality",
+    "section_id": "opening",
+    "signature": "llm:factuality|inherited_unit|opening",
+    "source": "review",
+    "sub_rule": "opening",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "8bfb37873ac23306670ec3d5bf02943999271d0c",
+  "main_sha": "2a8024ce6822d21209f0922b8b2bb3fa9ad53b7c",
   "origin": "hosted",
-  "outcome": "success",
-  "repairs": [],
+  "outcome": "failure",
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-02",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-02 still fails on this revision, which is the defect: install_command:cmake: the README prints 'cmake --build build', the source build of a project whose build no run proved (no build exited 0: failed); remove the command or state only what the repository documents",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "unrepairable",
+    "reason": "section scope_limitations is deterministic; its blocks change only when facts change",
+    "section_id": "scope_limitations",
+    "stage": null
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-14",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "claim_contradiction:0+claim_contradiction:1+claim_contradiction:2+claim_contradiction:3+claim_contradiction:4+claim_contradiction:5+claim_contradiction:6+claim_contradiction:7+claim_contradiction:8+claim_contradiction:9+claim_contradiction:10+claim_contradiction:11+claim_contradiction:12+claim_contradiction:13+claim_contradiction:14+claim_contradiction:15+claim_contradiction:16",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S6"
+   }
+  ],
   "repository": "aspose-cells-foss/Aspose.Cells-FOSS-for-Cpp",
-  "run_id": "44910796965",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44910796965",
+  "run_id": "45023005110",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45023005110",
   "schema_version": 1,
   "source_revision": "9f852d0ff1cfdad2d661556d6b87a8eff8c063a2",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
