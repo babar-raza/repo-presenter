@@ -37,6 +37,7 @@ from repo_presenter.readme.composition.authoring import (
     shorten_facts,
     _EXCEPTION_SUFFIXES,
     SectionTask,
+    VALUE_FREE_SECTIONS,
     allowed_identifiers,
     citable,
     cited_inherited_identifiers,
@@ -53,9 +54,12 @@ from repo_presenter.readme.composition.authoring import (
     surface_members,
     uncarried_units,
     unit_checks,
+    value_tokens,
     verified_members,
 )
 from repo_presenter.readme.composition.authoring_retry import (
+    RECOVERY_NOTES_KEY,
+    _without_values,
     withdraw_out_of_slot_citations,
 )
 from repo_presenter.readme.composition.components.identity import product_name
@@ -848,6 +852,80 @@ def recover_coherence_out_of_slot_citations(
     return output if changed else None
 
 
+#: The rule id a coherence value recovery (BL-860, R14) records in the repair notes beside the call store.
+COHERENCE_VALUE_RULE = "BL-860"
+
+
+def recover_coherence_value_units(
+    output: dict[str, Any],
+    *,
+    existing_units: list[dict[str, Any]],
+    tasks: list[SectionTask],
+    facts: FactsDocument,
+    name: str,
+) -> dict[str, Any] | None:
+    """Last-resort correction for S8 coherence's own ``run_job`` call (BL-860, R14): an opening or
+    key-capability unit whose coherence revision spells a number, version, count, file or key name
+    (R43(2)'s no-values rule, ``unit_checks``) loses exactly the sentence or parenthesis that spells
+    it (:func:`_without_values`, deletion only, the rest of the revision kept as written); when
+    nothing honest is left, the unit reverts to its own pre-coherence text and citations, which
+    already passed the same rule when authoring accepted it. Hosted BarCode Python Lane R runs
+    45002500775 and 45004811070: the pre-coherence opening was value-free, the coherence pass read
+    the Installation section's ``Python >=3.12`` / ``Pillow>=10.1.0`` out of the rendered document
+    into a closing sentence, repeated it after the re-ask, and the whole refresh failed on
+    ``unit opening: spells '3.12', '10.1.0'`` -- there was no ``recover`` for this rule at S8.
+    A unit that spells no value is never touched. ``run_job`` re-validates the result."""
+    units = output.get("units")
+    if not name or not isinstance(units, list):
+        return None
+    existing_by_key = {
+        (str(unit.get("section")), str(unit.get("slot"))): unit for unit in existing_units
+    }
+    owned = {
+        task.section_id: task
+        for task in tasks
+        if not task.is_batch and task.section_id in VALUE_FREE_SECTIONS
+    }
+    notes: list[dict[str, Any]] = []
+    for unit in units:
+        if not isinstance(unit, dict) or not isinstance(unit.get("text"), str):
+            continue
+        task = owned.get(str(unit.get("section")))
+        if task is None or unit.get("slot") not in task.slots:
+            continue
+        spelled = value_tokens(unit["text"], name, facts)
+        if not spelled:
+            continue
+        rejected = unit["text"]
+        kept = _without_values(rejected, name, facts)
+        fallback = "coherence_value_sentence_removed"
+        if kept is None:
+            existing = existing_by_key.get((str(unit.get("section")), str(unit.get("slot"))))
+            before = existing.get("text") if isinstance(existing, dict) else None
+            if not isinstance(before, str) or not before.strip() or value_tokens(before, name, facts):
+                continue
+            kept = before
+            fallback = "coherence_value_unit_reverted"
+            if isinstance(existing.get("fact_ids"), list) and existing["fact_ids"]:
+                unit["fact_ids"] = list(existing["fact_ids"])
+        unit["text"] = kept
+        notes.append(
+            {
+                "fallback": fallback,
+                "rule": COHERENCE_VALUE_RULE,
+                "section": str(unit.get("section")),
+                "slot": str(unit.get("slot")),
+                "rejected_text": rejected,
+                "rejection": f"spells {', '.join(repr(v) for v in spelled)} (R43(2) no-values rule)",
+                "text": kept,
+            }
+        )
+    if not notes:
+        return None
+    output[RECOVERY_NOTES_KEY] = [*output.get(RECOVERY_NOTES_KEY, []), *notes]
+    return output
+
+
 def recover_every_section_duplicates_preserved(
     output: dict[str, Any],
     *,
@@ -949,6 +1027,12 @@ def recover_coherence_regressions(
     )
     if stray_fixed is not None:
         output = stray_fixed
+        changed = True
+    value_fixed = recover_coherence_value_units(
+        output, existing_units=existing_units, tasks=tasks, facts=facts, name=name
+    )
+    if value_fixed is not None:
+        output = value_fixed
         changed = True
     return output if changed else None
 

@@ -8622,3 +8622,15 @@ Hosted run requests (normal `present` requests, push via the supervisor's push_r
 {"job":"present","repository":"aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp","ecosystem":"cpp","lane":"L"}
 
 Backlog: BL-790, BL-791, BL-792, BL-793
+
+## 2026-11-22: Lane R refresh failure class: S8 coherence re-introduces a version into a value-free opening, and S8 had no value recovery (BL-860)
+
+Context. The BarCode Python Lane R refresh (the one that would replace a seal the audit flags 14 times) failed twice on hosted runs 45002500775 and 45004811070, 16 provider calls each, with `OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'`.
+
+Root cause (read from the run log, reproduced from the stored BarCode Python facts, dispositions and plan). The failing call is not S6 authoring (its eight calls had finished, "compose S6 authoring end") but the S8 coherence batch: that pass receives the whole rendered README and every unit, and the model's closing sentence for the opening ("The package is named aspose_barcode_foss, requires Python >=3.12, and depends on Pillow>=10.1.0") copies the Installation section's requirements into the opening, citing every fact id. `coherence_checks` applies `unit_checks`, whose R43(2) rule rejects any number or version in an opening or key-capability unit; the universal re-ask returned the same text; and `recover_coherence_regressions`, the S8 `recover=`, had no value pass (BL-170's `recover_value_sentences` is wired only to the S6 call). The stored seal's pre-coherence opening states no value, so authoring was never the problem; the version is allowed elsewhere (the renderer prints it from the facts), only not in this unit.
+
+Decision (R14, recorded with rule BL-860): `coherence.recover_coherence_value_units`, the last pass of `recover_coherence_regressions`. A coherence-revised opening or key-capability unit that spells a value loses exactly the sentence or parenthesis that spells it (the BL-170 deletion, no word rewritten) and keeps the rest of the revision; if nothing is left it reverts to its own pre-coherence text and citations; if that spells a value too, nothing is changed and the job fails closed as before. Each correction is written to the repair notes beside the stored call (fallback, rule, rejected text, kept text). Alternatives considered: the fact-true format-sentence opening (BL-220/BL-400) would discard the whole revised paragraph where deleting one sentence suffices; changing the coherence packet to state the no-values rule would change request bytes of every replayed coherence call, which is forbidden here.
+
+R10: generation only; no sealed byte, check or seal moves, so no seal can start failing. R46 properties improved: robust (a stray number in one unit degrades that unit, never the candidate), universal (every Lane R cell's coherence pass, both value-free sections). Measured by tests/readme/composition/test_coherence_values_bl860.py (before: the exact hosted rejection; after: the job completes with a BL-860 note) and by the hosted rerun, not yet proven.
+
+Backlog: BL-860
