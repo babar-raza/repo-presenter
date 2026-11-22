@@ -386,7 +386,9 @@ def _author_sections(
         )
 
         def checks(output: dict, task=task) -> list[str]:
-            return unit_checks(output, task, document, name, dispositions=dispositions)
+            return unit_checks(
+                output, task, document, name, dispositions=dispositions, withhold_unsupported=True
+            )
 
         def recover(output: dict, task=task, checks=checks) -> dict | None:
             if task.section_id == "opening":

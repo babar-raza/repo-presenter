@@ -2520,6 +2520,62 @@ def api_row_fallback_slots(output: Mapping[str, Any], task: SectionTask) -> froz
     )
 
 
+#: What the recorded withholding of an Enterprise clause that cites no fact stating its claim adds to
+#: :data:`ENTERPRISE_CLAIM_OMISSION_REASON` (BL-701). It starts with that reason, so the slot is released the same way.
+ENTERPRISE_NAMING_ONLY_REASON = (
+    f"{ENTERPRISE_CLAIM_OMISSION_REASON} (BL-701, R14: the clause cited only facts that name the product, "
+    "so no fact states what the commercial product adds)"
+)
+
+
+def enterprise_clause_unsupported(unit: Mapping[str, Any], facts: FactsDocument) -> bool:
+    """Whether an Enterprise ``context`` unit rests on no fact that states what it claims (BL-701).
+
+    The clause is "what the commercial product adds beyond this package, only from the accepted facts ... empty
+    when no fact says" (the section's own objective). A unit that cites nothing, or only facts that name or
+    locate the product (``identity`` and ``package`` facts, the Enterprise link target), has no fact that says
+    it; whatever it adds is the model's own claim, and the independent review faults it in some samples and
+    not in others (hosted-sealed Slides .NET: "adds features not implemented in this package, such as advanced
+    animation editing, slide master customization ...", citing ten identity/package facts, flagged unsupported
+    by the round-6 audit; the same shape on PSD Java, OCR .NET and Font Python). A clause that cites an
+    inherited unit (the maintainers' paragraph) or any other kind of fact is not touched."""
+    if unit.get("slot") != "context" or not str(unit.get("text", "")).strip():
+        return False
+    kinds = {fact.id: fact.kind for fact in facts.facts}
+    return all(
+        kinds.get(str(fact_id)) in {"identity", "package"} or str(fact_id) == "link_target:product.enterprise"
+        for fact_id in unit.get("fact_ids") or []
+    )
+
+
+def withhold_unsupported_enterprise_clause(
+    output: dict[str, Any], task: SectionTask, facts: FactsDocument
+) -> bool:
+    """Generation only (BL-701; ``unit_checks(withhold_unsupported=True)``): the Enterprise ``context`` unit
+    that :func:`enterprise_clause_unsupported` names is dropped from ``output`` and recorded as omitted, so the
+    renderer prints its own fact-true Enterprise sentence alone (as the BL-480 degrade does after a review fault,
+    but without waiting for a model sample to fault it). Re-certification never calls this, so no sealed README
+    byte moves (R10). Returns whether a unit was withheld."""
+    if task.section_id != _ENTERPRISE_SECTION:
+        return False
+    units = output.get("units")
+    if not isinstance(units, list):
+        return False
+    kept = [u for u in units if not (isinstance(u, Mapping) and enterprise_clause_unsupported(u, facts))]
+    if len(kept) == len(units):
+        return False
+    output["units"] = kept
+    omitted = output.setdefault("omitted", [])
+    omitted.append(
+        {
+            "fact_id": "link_target:product.enterprise",
+            "reason": ENTERPRISE_NAMING_ONLY_REASON,
+            "section": _ENTERPRISE_SECTION,
+        }
+    )
+    return True
+
+
 def unit_checks(
     output: dict[str, Any],
     task: SectionTask,
@@ -2530,6 +2586,7 @@ def unit_checks(
     *,
     register: bool = True,
     values: bool = True,
+    withhold_unsupported: bool = False,
 ) -> list[str]:
     """Why the section's units may not be used, beyond schema and binding; empty when they hold.
 
@@ -2543,8 +2600,14 @@ def unit_checks(
     (``value_tokens``) at authoring, coherence and repair. BC-04's re-judgement of a finished
     candidate passes ``False``: the rule binds the producer, it is not a new blocking check on
     sealed candidates (checklist item 13; the report-only run over every sealed opening and
-    capability unit is in BL-102's evidence)."""
+    capability unit is in BL-102's evidence).
+
+    ``withhold_unsupported`` (default off: only the authoring job sets it) drops an Enterprise clause that
+    cites no fact stating what it claims (``withhold_unsupported_enterprise_clause``, BL-701); re-judgement of a
+    sealed candidate never does, so no sealed README changes."""
     errors: list[str] = []
+    if withhold_unsupported:
+        withhold_unsupported_enterprise_clause(output, task, facts)
     if task.section_id == "opening" and dispositions is not None:
         preserved = preserved_section_text(dispositions, facts, task.section_id)
         if preserved and not opening_released(output.get("omitted", [])):

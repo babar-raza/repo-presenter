@@ -220,13 +220,51 @@ def not_thrown_provenance(rows: Sequence[str], number: int, facts: Any) -> str |
     return None
 
 
+#: ``| `Type` | Not implemented. |``: the Core API row the renderer prints for a whole-stub type
+#: (``renderer._stub_marked``, ``type_description.STUB_DESCRIPTION``), and nothing else.
+_STUB_ROW = re.compile(r"^\s*\|\s*`(?P<name>[^`|]+)`\s*\|\s*Not implemented\.\s*\|\s*$")
+_STUB_INDEX: dict[int, tuple[Any, Any]] = {}
+
+
+def stub_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None:
+    """The verified basis of a ``| `Type` | Not implemented. |`` row (BL-700): the renderer prints that exact
+    description only for a type the maintainers' own limitation statements say only throws
+    (``surface_claims.StubIndex``, read from SUPPORTED ``inherited_unit`` facts), so the K02 "behaviour claim"
+    is that fact, stated back. ``None`` for any other line, a type the index does not name as a whole stub
+    (a stubbed member alone is not the type), a type whose every read method body returns a value
+    (``type_returns_values``: the limitation statement is then the false one, as in the Lane L correction),
+    or a description that is not exactly the stub marker. A fabricated 'Not implemented.' row therefore keeps
+    its flag."""
+    from repo_presenter.readme.validation.code_path_claims import type_returns_values
+    from repo_presenter.readme.validation.surface_claims import StubIndex
+
+    match = _STUB_ROW.match(rows[number - 1])
+    if match is None:
+        return None
+    name = match.group("name").strip()
+    owner = name.split(".", 1)[0]
+    cached = _STUB_INDEX.get(id(facts))
+    if cached is None or cached[0] is not facts:
+        cached = (facts, StubIndex(facts))
+        _STUB_INDEX.clear()
+        _STUB_INDEX[id(facts)] = cached
+    fact_id = cached[1].types.get(owner)
+    if fact_id is None or type_returns_values(owner, facts):
+        return None
+    source = next((f for f in getattr(facts, "facts", ()) if f.id == fact_id), None)
+    if source is None or source.polarity != "SUPPORTED":
+        return None
+    return (f"K02 verified: {fact_id} (SUPPORTED, the maintainers' limitation statement) names `{owner}` "
+            "as a type that only throws; the row is the renderer's fact-true 'Not implemented.'")
+
+
 def class_provenance(label: str, rows: Sequence[str], number: int, facts: Any) -> str | None:
     if label.startswith("K05"):
         return count_provenance(rows, number, facts)
     if label.startswith("K10"):
         return enterprise_provenance(rows, number, facts)
     if label.startswith("K02"):
-        return not_thrown_provenance(rows, number, facts)
+        return not_thrown_provenance(rows, number, facts) or stub_provenance(rows, number, facts)
     return None
 
 

@@ -57,6 +57,11 @@ _RENDERER_SENTENCES = tuple(
     for pattern in (
         r"The suite covers \d+ test files under `[^`]*`\.",
         r"The \[[^\]]*\]\([^)]*\) runs .*?\.(?=\s|$)",
+        # BL-700: the build/test asset locators of Development and Testing (``renderer._asset_locators``, R43(2)),
+        # each printed only for a SUPPORTED ``build_test_asset`` fact. The sentence after the suite/CI/release
+        # sentences was the one the patterns missed, so the line stayed "authored" and the audit flagged it
+        # (Slides .NET 726: "... Project documentation lives under `docs/`.", round 6, not derivable).
+        r"(?:Tests live under|Example programs live under|Project documentation lives under) `[^`]*`\.",
         r"Releases run through the \[[^\]]*\]\([^)]*\)\.",
         r"The (?:verified public surface|public API) has \d+ types?\.",
         (
@@ -242,6 +247,7 @@ def authored_type_rows(
     names = api_reference_names(facts)
     authored_types: dict[str, Fact] = {}
     fallbacks: dict[str, frozenset[str]] = {}
+    doc_comments: dict[str, str] = {}
     for fact in facts.by_kind("public_symbol"):
         attributes = fact.attributes or {}
         kind = attributes.get("symbol_kind")
@@ -252,6 +258,9 @@ def authored_type_rows(
         name = names.get(fact.value, fact.value.rsplit(".", 1)[-1])
         authored_types.setdefault(name, fact)
         fallbacks[name] = renderer_row_descriptions(fact)
+        full = attributes.get("docstring_full")
+        if full:
+            doc_comments.setdefault(name, _row_form(str(full)))
     if not authored_types:
         return {}
     owners = section_lines(readme)
@@ -265,6 +274,13 @@ def authored_type_rows(
             continue
         description = match.group(2).strip()
         if description and description not in fallbacks[match.group(1)]:
+            # BL-700: a row that prints the type's own doc comment word for word (the SUPPORTED fact's
+            # ``docstring_full``, which the source extractors record when no first-sentence ``docstring`` is
+            # kept: every TypeScript type) is the source's text, not a sentence an author wrote. PDF TypeScript's
+            # preserved API table rows for ``MdLink`` and ``MdTable`` were judged as author claims in the audit and
+            # not derivable. A row an author or a seed changed no longer equals the doc comment and stays authored.
+            if _row_form(description.replace("\\|", "|")) == doc_comments.get(match.group(1)):
+                continue
             if reviewable:
                 fact = authored_types[match.group(1)]
                 if fact.id not in true_forms:
