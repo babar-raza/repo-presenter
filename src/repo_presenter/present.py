@@ -341,6 +341,17 @@ def _cascade_and_seal(
     )
 
 
+def _lane_l_gate_skipped(skipped: LaneLNoProviderCall, workdir: Path) -> None:
+    """Record an R5(a) gate decision that spends no provider call (WP-4, BL-188). Returns for a
+    justified no-action; a held attempt (a finding with no relevant upstream change) is a visible
+    failure, never a silent success."""
+    gate = skipped.decision
+    write_record(gate, workdir)
+    print(f"Lane L gate: {gate.outcome}: {gate.reason}; provider calls: 0")
+    if gate.outcome != "NO_ACTION_JUSTIFIED":
+        raise PresentFailure(f"Lane L: {gate.outcome}: {gate.reason}") from skipped
+
+
 def _lane_l_and_seal(
     *,
     repository: str,
@@ -397,12 +408,8 @@ def _lane_l_and_seal(
             trigger=trigger,
         )
     except LaneLNoProviderCall as skipped:
-        gate = skipped.decision
-        write_record(gate, workdir)
-        print(f"Lane L gate: {gate.outcome}: {gate.reason}; provider calls: 0")
-        if gate.outcome == "NO_ACTION_JUSTIFIED":
-            return  # the sealed candidate stays exactly as sealed
-        raise PresentFailure(f"Lane L: {gate.outcome}: {gate.reason}") from skipped
+        _lane_l_gate_skipped(skipped, workdir)
+        return  # NO_ACTION_JUSTIFIED: the sealed candidate stays exactly as sealed
     if trigger is not None:
         write_record(
             decide(trigger, has_findings=True, probes_clean=None, head_revision=head), workdir
