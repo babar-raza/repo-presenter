@@ -122,25 +122,80 @@
    "run_id": "44774826380",
    "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T08:35:07+00:00",
+   "classes": [
+    "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no"
+   ],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45002500775",
+   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-20T17:30:28+00:00",
-  "classes": {},
-  "code": "5d88adc4b805eed8cf241fb67b2b74d0e3f8b4d563d2f2824ec60d9f02b4baa4",
-  "durable_state": "ACCEPTED",
-  "exit_code": 0,
-  "failure": null,
-  "findings": [],
+  "at": "2026-11-22T08:35:07+00:00",
+  "classes": {
+   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no": {
+    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "findings": 1,
+    "origin_kind": "job_error",
+    "origins": [
+     "OutputRejectedError"
+    ],
+    "rule": "job_error",
+    "scope": "6a118faaa1d5aff00d45c2a58a248cad00d67095f33a29cb1e23697ccde07e16",
+    "scope_paths": [
+     "prompts",
+     "pyproject.toml",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
+    ],
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "upstream": ""
+   }
+  },
+  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "durable_state": "INVALIDATED",
+  "exit_code": 1,
+  "failure": {
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "kind": "OutputRejectedError",
+   "transient": true
+  },
+  "findings": [
+   {
+    "label": "OutputRejectedError",
+    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "origin": {
+     "id": "OutputRejectedError",
+     "kind": "job_error"
+    },
+    "quote": "",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_write_no",
+    "source": "job",
+    "sub_rule": "OutputRejectedError:section_authoring_spells_q_write_no",
+    "upstream": ""
+   }
+  ],
   "lane": "R",
-  "main_sha": "72cba04189d7e4af7f48849e7051e0f3c5a969cb",
+  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
   "origin": "hosted",
-  "outcome": "success",
+  "outcome": "failure",
   "repairs": [],
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-  "run_id": "44774826380",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44774826380",
+  "run_id": "45002500775",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45002500775",
   "schema_version": 1,
   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
