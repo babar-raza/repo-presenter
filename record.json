@@ -766,9 +766,109 @@
     }
    ],
    "run": "45002389425-1"
+  },
+  {
+   "at": "2026-11-22T14:52:19Z",
+   "checks": "ok",
+   "live_blockers": [
+    "pilot mode is 'dry_run' in data/issue_pilot.json (live writes need 'live')",
+    "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1",
+    "issue writes are authorised for the sandbox only: REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY must name aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript exactly (it is 'not set'; the wildcard never applies, and no upstream repository is cleared)"
+   ],
+   "mode": "dry_run",
+   "notes": [],
+   "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4",
+   "rows": [
+    {
+     "decision": "COMMENT_STILL_REPRODUCES",
+     "error": null,
+     "issue": 4,
+     "note": "dry run: would COMMENT_STILL_REPRODUCES #4 (still reproduces; 33 days since the last statement)",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:8cde21488b87cb852d4e9d4396b2aa05399d28cd2f6af36bb965b4f27a07139a",
+     "performed": false,
+     "planned": {
+      "comment": "Re-checked on 2026-11-22 at revision `66cb26df3b031f0bf6976d4e88dc89721983afa4`: this defect still reproduces.\n\nThe reproduction in this issue was run again (`npm install`, `npm run build`, Node.js v22.23.4) and printed:\n\n```\nSTL_Node control points: 0 polygons: 0\n```\n\nOutput digest: `sha256:8cde21488b87cb852d4e9d4396b2aa05399d28cd2f6af36bb965b4f27a07139a`.\n\n<!-- repo-presenter:recheck:sha256:3c9023d5959c35c813a9198b17707c1d6e601f14ff27249d22ab1d2f60aae0b2:66cb26df3b031f0bf6976d4e88dc89721983afa4:2026-11-22 -->\n",
+      "state_change": null
+     },
+     "reason": "still reproduces; 33 days since the last statement",
+     "simulated": false,
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "COMMENT_STILL_REPRODUCES",
+     "error": null,
+     "issue": 5,
+     "note": "dry run: would COMMENT_STILL_REPRODUCES #5 (still reproduces; 33 days since the last statement)",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:15b9a02be5786cb1011b8ba5c85d50e71df7a843e40df27c47c9ecf3cef564dc",
+     "performed": false,
+     "planned": {
+      "comment": "Re-checked on 2026-11-22 at revision `66cb26df3b031f0bf6976d4e88dc89721983afa4`: this defect still reproduces.\n\nThe reproduction in this issue was run again (`npm install`, `npm run build`, Node.js v22.23.4) and printed:\n\n```\nTypeError: rotation[0].eulerAngles is not a function\nTypeError: rotation[0].eulerAngles is not a function\n```\n\nOutput digest: `sha256:15b9a02be5786cb1011b8ba5c85d50e71df7a843e40df27c47c9ecf3cef564dc`.\n\n<!-- repo-presenter:recheck:sha256:427379f5f600296c11f24ab09dacdf9e304ea9c0f1197afb22d336d4fe19bb0e:66cb26df3b031f0bf6976d4e88dc89721983afa4:2026-11-22 -->\n",
+      "state_change": null
+     },
+     "reason": "still reproduces; 33 days since the last statement",
+     "simulated": false,
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "COMMENT_STILL_REPRODUCES",
+     "error": null,
+     "issue": 6,
+     "note": "dry run: would COMMENT_STILL_REPRODUCES #6 (still reproduces; 33 days since the last statement)",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:bd9dd6d3158795dec52e2686e4d00e146fd41016464d133df597055e0cb06341",
+     "performed": false,
+     "planned": {
+      "comment": "Re-checked on 2026-11-22 at revision `66cb26df3b031f0bf6976d4e88dc89721983afa4`: this defect still reproduces.\n\nThe reproduction in this issue was run again (`npm install`, `npm run build`, Node.js v22.23.4) and printed:\n\n```\n[ '', 'o Node_0', 'v 10.000000 20.000000 30.000000' ]\nUnsupported format: FbxFormat\nMesh control points: 0\n```\n\nOutput digest: `sha256:bd9dd6d3158795dec52e2686e4d00e146fd41016464d133df597055e0cb06341`.\n\n<!-- repo-presenter:recheck:sha256:4e04e9b66dcad4d525025932fafb260830c532fa6fff7522fcac6b22e7a6bd3d:66cb26df3b031f0bf6976d4e88dc89721983afa4:2026-11-22 -->\n",
+      "state_change": null
+     },
+     "reason": "still reproduces; 33 days since the last statement",
+     "simulated": false,
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "COMMENT_STILL_REPRODUCES",
+     "error": null,
+     "issue": 7,
+     "note": "dry run: would COMMENT_STILL_REPRODUCES #7 (still reproduces; 32 days since the last statement)",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:79cab766df466c6e95ac039447eed456ba1203d7a1e808c2d60ba4f2a0f804d4",
+     "performed": false,
+     "planned": {
+      "comment": "Re-checked on 2026-11-22 at revision `66cb26df3b031f0bf6976d4e88dc89721983afa4`: this defect still reproduces.\n\nThe reproduction in this issue was run again (`npm install`, `npm run build`, Node.js v22.23.4) and printed:\n\n```\nError: Cannot find module 'adm-zip'\n```\n\nOutput digest: `sha256:79cab766df466c6e95ac039447eed456ba1203d7a1e808c2d60ba4f2a0f804d4`.\n\n<!-- repo-presenter:recheck:sha256:81822f594b066a095069a208a0033c869ff8bde011db6a6aae3135f1e698bfd4:66cb26df3b031f0bf6976d4e88dc89721983afa4:2026-11-22 -->\n",
+      "state_change": null
+     },
+     "reason": "still reproduces; 32 days since the last statement",
+     "simulated": false,
+     "state": "open",
+     "verifiable": true
+    },
+    {
+     "decision": "COMMENT_STILL_REPRODUCES",
+     "error": null,
+     "issue": 8,
+     "note": "dry run: would COMMENT_STILL_REPRODUCES #8 (still reproduces; 32 days since the last statement)",
+     "outcome": "STILL_REPRODUCES",
+     "output_digest": "sha256:00bb2d39f1aed91283391771eab3a33ea444b6996ef2584a7f9046178a5d05b2",
+     "performed": false,
+     "planned": {
+      "comment": "Re-checked on 2026-11-22 at revision `66cb26df3b031f0bf6976d4e88dc89721983afa4`: this defect still reproduces.\n\nThe reproduction in this issue was run again (`npm install`, `npm run build`, Node.js v22.23.4) and printed:\n\n```\nsolid Scene\n  facet normal 0 0 0\n    outer loop\n      vertex 0 1 2\n    endloop\n  endfacet\nendsolid Scene\n\nbinary STL size: 50 bytes\n```\n\nOutput digest: `sha256:00bb2d39f1aed91283391771eab3a33ea444b6996ef2584a7f9046178a5d05b2`.\n\n<!-- repo-presenter:recheck:sha256:8f4d25e9df312ed7a2855bdce4e4f1117c1b6e4d98599eadc53ebf879cd9b3f9:66cb26df3b031f0bf6976d4e88dc89721983afa4:2026-11-22 -->\n",
+      "state_change": null
+     },
+     "reason": "still reproduces; 32 days since the last statement",
+     "simulated": false,
+     "state": "open",
+     "verifiable": true
+    }
+   ],
+   "run": "45035070753-1"
   }
  ],
- "dry_run_cycles": 10,
+ "dry_run_cycles": 11,
  "ledger": [
   {
    "count": 1,
@@ -859,7 +959,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/4",
    "last_check": {
-    "at": "2026-11-22T08:22:24Z",
+    "at": "2026-11-22T14:52:19Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:8cde21488b87cb852d4e9d4396b2aa05399d28cd2f6af36bb965b4f27a07139a",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -914,7 +1014,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/5",
    "last_check": {
-    "at": "2026-11-22T08:22:24Z",
+    "at": "2026-11-22T14:52:19Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:15b9a02be5786cb1011b8ba5c85d50e71df7a843e40df27c47c9ecf3cef564dc",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -973,7 +1073,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/6",
    "last_check": {
-    "at": "2026-11-22T08:22:24Z",
+    "at": "2026-11-22T14:52:19Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:bd9dd6d3158795dec52e2686e4d00e146fd41016464d133df597055e0cb06341",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -1024,7 +1124,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/7",
    "last_check": {
-    "at": "2026-11-22T08:22:24Z",
+    "at": "2026-11-22T14:52:19Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:79cab766df466c6e95ac039447eed456ba1203d7a1e808c2d60ba4f2a0f804d4",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
@@ -1083,7 +1183,7 @@
    "issue_state": "open",
    "issue_url": "https://github.com/aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript/issues/8",
    "last_check": {
-    "at": "2026-11-22T08:22:24Z",
+    "at": "2026-11-22T14:52:19Z",
     "outcome": "STILL_REPRODUCES",
     "output_digest": "sha256:00bb2d39f1aed91283391771eab3a33ea444b6996ef2584a7f9046178a5d05b2",
     "revision": "66cb26df3b031f0bf6976d4e88dc89721983afa4"
