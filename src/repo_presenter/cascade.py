@@ -1377,6 +1377,8 @@ def _restore_lost_content(
 #: ``DEGRADE_GRACE_SECONDS`` keeps a later pass inside the job's timeout (a measurement, never a spend cap, R45).
 MAX_DEGRADE_PASSES = 8
 
+PROGRESS_FILENAME = "progress.json"
+
 #: BL-563: a degrade pass after the first does not start more than this long after the cascade's time-box
 #: (``CASCADE_TIMEBOX_SECONDS``): a pass is one zero-call lever and one model re-review, 60 to 170 s measured
 #: on hosted runs, and the ``present`` job is cancelled at 90 minutes with nothing recorded.
@@ -1694,6 +1696,18 @@ def run_cascade(
             f"cascade progress: {event} | elapsed {clock() - started:.0f}s | provider calls {calls}",
             file=sys.stderr, flush=True,
         )
+        # BL-660: the last stage reached, on disk, so a job the runner cancels (the 90-minute cap)
+        # is recorded by ``failures publish`` with the stage it was in rather than as a bare "ended".
+        try:
+            out_dir.mkdir(parents=True, exist_ok=True)
+            (out_dir / PROGRESS_FILENAME).write_text(
+                json.dumps({"stage": event, "elapsed_seconds": round(clock() - started), "provider_calls": calls},
+                           sort_keys=True) + "\n",
+                encoding="utf-8",
+                newline="\n",
+            )
+        except Exception:  # noqa: BLE001 -- a progress marker never fails the run
+            pass
 
     def expired() -> bool:
         return clock() - started >= timebox_seconds

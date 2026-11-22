@@ -3,11 +3,11 @@
   "card": "TC-024",
   "gate": "GATE5_DELIVERY_PROGRAM",
   "generated_by": "gatecli",
-  "generated_at": "2026-11-21T09:34:19Z",
-  "base_rev": "978067eb6be0a554e3f6c2d88495d5526a5400c0",
-  "head_rev": "4d1d39c2e6204623c6fe1dba5ec94f39b1ee3b57",
+  "generated_at": "2026-11-22T00:07:05Z",
+  "base_rev": "f2f130c4e4fb8403ceef48b799edc015823676dd",
+  "head_rev": "bd751415de3ebe93ec33a110fdeb3393dfe32e54",
   "card_sha256": "50de597d0a321cfdbc958519e738fd9edac7109193dd92297a724001e9761879",
-  "checker_fileset_sha256": "7ce1c7b5f3d8429181dab6ffa878f97e123f2359159fe19ff61fa0612da4cc18",
+  "checker_fileset_sha256": "fa77df2afe94d748fd035a628da926ff54b823319f1fe7300f70fe932691f6e0",
   "checker_fileset_scheme": "v3",
   "fingerprint": {
     "python": "3.13.18",
@@ -15,9 +15,7 @@
   },
   "scope": {
     "ok": true,
-    "changed_paths": [
-      "tests/readme/review/test_llm_review.py"
-    ],
+    "changed_paths": [],
     "violations": [],
     "evaluated": true
   },
@@ -28,20 +26,20 @@
         {
           "command": "python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q",
           "exit_code": 0,
-          "duration_s": 13.18,
-          "stdout_sha256": "7dd0353b3831043076c8f844f8f3b1b1e435791be73670e865890d6516806289"
+          "duration_s": 13.769,
+          "stdout_sha256": "f333b79571704bd2446453208879b77bfe2797c42f2f561b883a0bd888680a92"
         },
         {
           "command": "python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q",
           "exit_code": 0,
-          "duration_s": 1.96,
-          "stdout_sha256": "6cce73b87880e32e1639cc60e981e4468418a527b3a543f93b3a482b2f37598c"
+          "duration_s": 1.32,
+          "stdout_sha256": "b3e7eba178c09c282e1dc25ffbf8b9b9fb8a36f891c9c8e1c72e0003878e3a9d"
         },
         {
           "command": "python -m pytest tests/test_owner_rulings_enforced.py -q",
           "exit_code": 0,
-          "duration_s": 2.868,
-          "stdout_sha256": "4ed0fa40d4c3d28f678d2f234f1d7e0f95ae2ecb3765e5b7b0cbd941f083b1ab"
+          "duration_s": 2.324,
+          "stdout_sha256": "9395bc77f95a7d7edb52e441943f1d0c79587ef27e4c3a23356f1590122ffd52"
         }
       ],
       "all_passed": true
@@ -52,20 +50,20 @@
         {
           "command": "python -m pytest tests/test_recertify.py tests/readme/bundle/test_seal.py tests/readme/review/test_llm_review.py -q",
           "exit_code": 0,
-          "duration_s": 13.655,
-          "stdout_sha256": "062cef43707df6b4c148ecf21d8e99bff71bb61f56fee2fe2947983c447f48c3"
+          "duration_s": 15.998,
+          "stdout_sha256": "23d91900c6bc52c787f7b5aa2735c31da04ed93b760a7ede407cd88f2aaeefaf"
         },
         {
           "command": "python -m pytest tests/acceptance/test_import_graph.py tests/acceptance/test_canaries.py -q",
           "exit_code": 0,
-          "duration_s": 1.584,
-          "stdout_sha256": "827ddcc4b6d1a1a93d16ee5d4110069b645d4b08851dcb41ce3c086eeb70b9be"
+          "duration_s": 1.687,
+          "stdout_sha256": "738234f32e11b30d00b5ee7fa9ac9ce49f8893f4038cad3123a23969da0cbc38"
         },
         {
           "command": "python -m pytest tests/test_owner_rulings_enforced.py -q",
           "exit_code": 0,
-          "duration_s": 2.429,
-          "stdout_sha256": "1ecdd1643bc82d14abb7343ca3eb8dd27f3a31e97c6229702f65020cc3f9aa2d"
+          "duration_s": 2.72,
+          "stdout_sha256": "bcfa2cbe4f8573daa5dc15b4e75bfb9f6220e5d380e9ebf270f94c94d8b82924"
         }
       ],
       "all_passed": true

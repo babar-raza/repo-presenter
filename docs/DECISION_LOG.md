@@ -8340,3 +8340,26 @@ Context. R44 needs 34 of 40 Lane R cells sealed and accepted; 32 are sealed. The
 R9: no README text added; R10: the cascade-only levers have no recertify path, the restore change only applies where a unit was previously skipped, and lean recertify of all 64 latest seals: 64 RECERTIFIED, gate OK, 0 provider calls, every row identical to the BL-630 run (readme_changed only on the pre-existing Email Python row); properties improved (R46): robust (a defect degrades one sentence or one false positive instead of halting the candidate) and universal. Hosted-unproven (R41).
 
 Backlog: BL-640, BL-641, BL-642
+
+## 2026-11-21: Words Java Lane R never finishes (90-minute cancel) and PSD Java Lane R loses its review: two classes fixed at the root (BL-660, BL-661)
+
+Context. R44 needs 34 of 40 Lane R cells sealed and accepted. Words Java (runs 44943578461, 44952689353) ended 'cancelled' with 0 and 2 provider calls; PSD Java (run 44952716923) ended 'no valid independent review could be obtained'.
+- BL-660 (Words Java): the cascade log shows the model was never the cost. 'S9 settle round 1: compose start' at 89 s and 'judged' at 2,450 s (2,799 s second run) with 0 provider calls (every model call replayed from the cache); the restore then took
+  1,120 s and each degrade pass about 19 minutes, so the 90-minute cap cancelled the job before any verdict. Facts extraction is NOT the problem: the facts job finished in about 3 minutes (re-measured locally from the pinned revision ea7a2e9:
+  1 m 47 s, 45,838 facts, 33,911 public symbols, a 28 MB facts.json). Profiling the deterministic judges on those real facts found the cause: `FactsDocument.__post_init__` checked duplicate ids with `ids.count(i)` for every fact
+  (O(n^2), 22 s per construction; `canonical()` is called by every render and placement, so a round built it dozens of times (2,400 s of replay divided by 22 s is an estimate of about a hundred)). The same class is the open residual of BL-652 (PDF Python, 'S4 took 1881s for 320 units').
+  Fix: one pass; `by_kind` indexed per document; `inherited_values` normalised once per document. Outputs are identical (same checks, same facts), so no seal and no verdict can move (R10): read_facts 25.5 s to 0.3 s, BC-04 24.7 s to 0.8 s, all
+  judges plus the deterministic review about 38 s to under 10 s on the live README, about 20 s on a synthetic 266 KB README. The BL-270 time-box and the BL-563 grace are unchanged (a deterministic stage cannot be interrupted mid-call, so the
+  right fix for a stage that is too slow is to make it fast, not to cut it). Second part: a cancelled lane step was recorded as `LaneStepFailure:the_lane_step_ended` for every cause. The cascade now writes the last stage it reached
+  to `<out_dir>/progress.json` and `failures publish` records `LaneStepCancelledError:<STAGE>` (e.g. `S_SETTLE_ROUND_COMPOSE_START`), so the next cancelled run is classified by where it stopped (BL-084 style). Residual (R45, measured):
+  BC-17's parity regex search is still quadratic in README size (12 s on 266 KB); re-measure on the next hosted Words Java run before touching a time-box.
+- BL-661 (PSD Java): the reviewer filed an `unsupported_claim` on a line the packet marks as attributed maintainer text; the contract (`MAINTAINER_TEXT_ERROR`, docs/MAINTAINER_CONTENT_PRESERVATION.md) refuses that kind on those lines, the one re-ask
+  repeated it, and the unit's whole review was lost ('retryable' but deterministic in effect). Alternatives: (a) downgrade the finding to another kind (invents a defect the model did not state, and a kind that survives would block the candidate
+  on text the contract calls unverified-not-false); (b) re-ask more (repeats); (c) drop the one void finding with a recorded note. Chosen (c): the finding asserts nothing the contract allows, so nothing real is hidden; a finding of any other kind on
+  the same lines, a span that also cites an authored line, a hidden-line or malformed citation and INSUFFICIENT_EVIDENCE all behave as before; a maintainer line a fact contradicts is not in `maintainer_lines` (prompt v20) and is still judged.
+  When the drop leaves a reject verdict with no finding the unit is ACCEPT with the verdict change in the note; the second review sample and draw and every deterministic check still judge the candidate, and a no-review case is still never clean
+  (a reply that cannot be repaired still raises ReviewUnavailable). Request bytes are unchanged, replays identical. R9: no README text touched.
+Properties improved (R46): robust (a slow stage or one void finding no longer halts the candidate; a cancel is classified), repeatable (identical outputs, no timing-dependent outcome), universal (the quadratic cost hit every large repository: Words Java, PDF Python, TypeScript).
+Hosted-unproven (R41): Words Java and PSD Java Lane R refreshes.
+
+Backlog: BL-660, BL-661

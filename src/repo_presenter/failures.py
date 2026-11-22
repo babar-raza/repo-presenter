@@ -798,7 +798,29 @@ def job_record(*, repository: str, lane: str, kind: str, detail: str, outcome: s
 
 
 #: The job-error kinds of a lane that left no record; never held (their cause is not classified).
-JOB_KINDS = {"facts": "FactsJobFailure", "unknown": "LaneStepFailure"}
+JOB_KINDS = {
+    "facts": "FactsJobFailure",
+    "unknown": "LaneStepFailure",
+    # BL-660: the runner cancelled the lane step (the 90-minute job cap); the stage it was in comes from the
+    # cascade's ``progress.json``, so the class names where the time went instead of "the step ended".
+    "cancelled": "LaneStepCancelledError",
+}
+#: The cascade's last-stage marker (``cascade.PROGRESS_FILENAME``), beside the lane's outputs.
+PROGRESS_FILENAME = "progress.json"
+
+
+def cancelled_detail(workdir: Path, lane: str) -> str:
+    """Where a cancelled lane step was: the last stage its cascade reported, as a bracketed code (the
+    class's sub-rule, ``S_SETTLE_ROUND_COMPOSE_START``) and the plain numbers, or the plain fact."""
+    marker = _read_json(workdir / LANE_OUT_DIRS.get(lane, "cascade") / PROGRESS_FILENAME)
+    if not isinstance(marker, dict) or not marker.get("stage"):
+        return "the lane step was cancelled before its cascade reported any stage"
+    stage = " ".join(str(marker["stage"]).split())[:160]
+    words = [w.upper() for w in re.findall(r"[A-Za-z]+", stage) if w.lower() != "of"][:6]
+    return (
+        f"[{'_'.join(words) or 'UNKNOWN_STAGE'}] cancelled in stage {stage} after "
+        f"{marker.get('elapsed_seconds', '?')}s with {marker.get('provider_calls', '?')} provider calls"
+    )
 
 
 # --------------------------------------------------------------------------------------- state refs
@@ -1305,10 +1327,12 @@ def _publish(args: argparse.Namespace) -> int:
             if outcome in ("", "skipped") and args.facts_result in ("", "success", "skipped"):
                 continue  # this lane did not run in this job (a single-lane run)
             facts_failed = args.facts_result not in ("", "success")
+            cancelled = not facts_failed and outcome == "cancelled"
             record = job_record(
                 repository=args.repository, lane=lane,
-                kind="facts" if facts_failed else "unknown",
+                kind="facts" if facts_failed else "cancelled" if cancelled else "unknown",
                 detail=(f"the facts job ended {args.facts_result}; no lane ran" if facts_failed
+                        else cancelled_detail(args.workdir, lane) if cancelled
                         else f"the lane step ended {outcome or 'without a record'} and left no failure record"),
             )
         records.append(finalize(record, run_id=args.run_id, run_url=args.run_url, main_sha=args.main_sha,

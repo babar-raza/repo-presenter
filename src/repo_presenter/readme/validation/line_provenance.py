@@ -57,11 +57,18 @@ def inherited_values(facts: FactsDocument) -> tuple[tuple[str, str], ...]:
     the pinned source README's own text, already chunked into units. A ``CONTRADICTED`` or
     ``UNRESOLVED`` ``inherited_unit`` is not a thing the live README actually printed this way (or
     is not confirmed as such), so it is never a source of "inherited" provenance."""
-    return tuple(
-        (fact.id, _plain(fact.value))
-        for fact in facts.by_kind("inherited_unit")
-        if fact.polarity == "SUPPORTED"
-    )
+    # BL-660: computed once per document (a frozen dataclass; the cache is not a field). ``unit_for``
+    # runs once per printed line, and normalising every inherited unit again each time was 900,000
+    # ``_plain`` calls (4.5 s) for one judge of a 3,000-line candidate.
+    cached = getattr(facts, "_inherited_values", None)
+    if cached is None:
+        cached = tuple(
+            (fact.id, _plain(fact.value))
+            for fact in facts.by_kind("inherited_unit")
+            if fact.polarity == "SUPPORTED"
+        )
+        object.__setattr__(facts, "_inherited_values", cached)
+    return cached
 
 
 def unit_for(text: str, facts: FactsDocument) -> str | None:
