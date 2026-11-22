@@ -8666,3 +8666,9 @@ Backlog: BL-290
 The R46 frozen-code pass sent plain present requests for sealed Lane R cells. For cells whose seal is ACCEPTED the pipeline runs (preflight: not READY_FOR_PROPOSAL), and on changed code it makes real calls. 3D Java and 3D TypeScript produced new seals, so their content-bound acceptance no longer covers the stored README (official count 45026892783: Lane R accepted 36 to 34). The pass was stopped; the R46 repeat-agreement measurement is reported as not measured. AGENTS.md records the rule. Audit round 10 re-accepts those cells.
 
 Backlog: BL-290
+
+## 2026-11-22 - BL-880: provider-call guard raised from 300 to 1200
+
+The PDF TypeScript refresh (run 45028865276) stopped at the 300-call guard. R45: spend is measured and never blocks; the guard stays a runaway bound. Hosted-unproven (R41).
+
+Backlog: BL-880

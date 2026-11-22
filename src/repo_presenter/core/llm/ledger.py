@@ -36,8 +36,8 @@ LEDGER_FILENAME = "calls.jsonl"
 # not a spend limit (R45: spend is measured, never blocks). It was 100, ported from the old
 # repository's calibration; measured hosted Lane R invocations now run 70 to 100+ calls (the
 # second audit draw, degrade and settle rounds), and HTML Python was stopped at 100 (BL-570),
-# so the guard sits well above the measured range.
-PROVIDER_CALL_BUDGET = 300
+# so the guard sits well above the measured range. PDF TypeScript (a very large repository) was stopped at 300 (BL-880): raised to 1200.
+PROVIDER_CALL_BUDGET = 1200
 
 
 @dataclass(frozen=True)
