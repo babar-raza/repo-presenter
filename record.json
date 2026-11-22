@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "8fac8aeb8c2a421288c5a4e6b7b5db3b",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-22T09:03:14.445539+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-22T10:01:09.524317+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 9
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 89,
+  "state_version": 90,
   "recent_trigger_dedup_keys": {
     "run:41130099384:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "d6359e88b22f4a22b5dccadc051b4f39",
     "run:41295852203:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "81a03b4a7a3e42c682358a2960d2fa81",
@@ -56,5 +56,5 @@
     "run:44366290226:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "3c65bf202b5d46a19e71fd9903491de3",
     "run:44556523392:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "8fac8aeb8c2a421288c5a4e6b7b5db3b"
   },
-  "recovery_count": 8
+  "recovery_count": 9
 }
