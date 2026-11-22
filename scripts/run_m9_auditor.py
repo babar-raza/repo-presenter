@@ -56,7 +56,7 @@ exactly one commit, made by github-actions[bot], on top of a commit of main, add
 ``evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-<seed_run_id>.json``.
 
     python scripts/run_m9_auditor.py audit --case-index DIR/case_index.json --candidates DIR/candidates \\
-        --out findings.json [--max-calls 600]
+        --out findings.json [--max-calls 2400]
     python scripts/run_m9_auditor.py resolve --seed-run-id ID --findings-path PATH [--findings-ref REF] --out FILE
 """
 
@@ -83,7 +83,9 @@ run_request = importlib.util.module_from_spec(_rr_spec)
 _rr_spec.loader.exec_module(run_request)
 
 FALSE_KINDS = frozenset({"contradiction", "name_denial"})
-DEFAULT_MAX_CALLS = 600
+# A runaway-loop guard, not a spend limit (R45: spend is measured, never blocks). Round 6 judged 69 cases
+# (52 seeded, 17 controls) and stopped at 600 calls after 55 minutes (BL-680).
+DEFAULT_MAX_CALLS = 2400
 #: The most case lines one finding is written at: a wrapped sentence (see the module docstring).
 MAX_ANCHOR_LINES = 3
 

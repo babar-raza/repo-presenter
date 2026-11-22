@@ -3127,3 +3127,17 @@ items:
       - "hosted log 44952716923: the rejection text quotes MAINTAINER_TEXT_ERROR verbatim; reply.py resolve_cited_lines raises it only when kind == unsupported_claim and every written cited line is in scope.maintainer_lines"
     next_action: "supervisor integrates; hosted refresh of PSD Java Lane R (R41)"
     updated: "2026-11-21"
+
+  - id: BL-680
+    title: "Audit round 6 died at its own provider-call guard (DEFAULT_MAX_CALLS = 600, 'provider-call budget of 600 reached in this invocation') after 55 minutes with 69 cases (52 seeded, 17 controls)"
+    type: defect
+    source: "owner rulings R44, R45 (budgets measure, never block), R46; hosted audit run 44964716880"
+    priority: P0
+    status: active
+    implementation_path: "scripts/run_m9_auditor.DEFAULT_MAX_CALLS 600 -> 2400 as a runaway-loop guard; the audit cache (BL-571) keeps completed cases so the retry resumes"
+    acceptance: "(1) constant and comment; (2) hosted: the resumed audit completes (R41, not yet proven)"
+    evidence:
+      - "run 44964716880: ProviderCallBudgetError budget of 600 reached; round 5 (64 cases) used 337 calls"
+    next_action: "supervisor integrates; resume audit-seed"
+    updated: "2026-11-22"
+

@@ -8363,3 +8363,9 @@ Properties improved (R46): robust (a slow stage or one void finding no longer ha
 Hosted-unproven (R41): Words Java and PSD Java Lane R refreshes.
 
 Backlog: BL-660, BL-661
+
+## 2026-11-22 - BL-680: audit call guard raised from 600 to 2400
+
+Audit round 6 (69 cases, 52 seeded) stopped at the audit's own provider-call guard of 600 after 55 minutes. R45: spend is measured, never blocks; the guard is raised to 2400 as a runaway bound. The audit cache keeps completed cases so a retry resumes. Hosted-unproven (R41).
+
+Backlog: BL-680
