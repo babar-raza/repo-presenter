@@ -3355,6 +3355,7 @@ items:
     acceptance: "(1) tests/test_review_page_workflow.py: workflow shape (build read-only and without secrets, publish has no checkout, pages is opt-in), run-request job validates and takes no field; (2) local dry run builds the page from the stored state refs (evidence in the decision log); (3) hosted (R41, not proven until a run exists): run-request {\"job\": \"review-page\"} completes, artifact `review-page` and branch `review-page` hold index.html; (4) owner action only for in-browser rendering: enable Pages with source GitHub Actions and set variable REVIEW_PAGE_PAGES=true"
     evidence:
       - "built and tested locally 2026-11-22 on branch wp6-review-page: tests/test_review_page_workflow.py + tests/test_run_request.py; hosted proof pending (R41)"
+      - "local dry run from the stored state refs (build.py unchanged, per-record attestation verification skipped because `gh attestation verify` is minutes-slow here): 72 candidates (lane R 38, lane L 34, 5 Lane L no-ops), 11,509,767 bytes, no placeholder left, feedback repository wired; file /tmp/claude-0/-home-user/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/wp6-dry/index-noattest.html. On the runner the build job holds attestations: read, as the count job"
     next_action: "supervisor pushes run-requests/<id> with {\"job\": \"review-page\"} after merge and records the run id; tells the owner the branch/artifact URLs and the optional Pages opt-in"
     updated: "2026-11-22"
 
