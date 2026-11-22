@@ -1,0 +1,48 @@
+--- a/README.md
++++ b/README.md
+@@ -28,29 +28,34 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+-    direction LR
+-    i1["An existing CFB container (file or bytes)"]
+-    i2["An existing .msg file (file or bytes)"]
+-    i3["An existing EML file (via Python's email package)"]
++    direction TB
++    i1["An existing CFB<br/>container (file or<br/>bytes)"]
++    i2["An existing .msg file<br/>(file or bytes)"]
++    i3["An existing EML file<br/>(via Python's email<br/>package)"]
+   end
+   PRODUCT["Aspose.Email FOSS for Python"]
+   subgraph Capabilities["Core Capabilities"]
+     direction TB
+-    c1["Low-level CFB container read/write (CFBReader / CFBWriter)"]
+-    c2["Low-level MSG document read/write (MsgReader / MsgWriter / MsgDocument)"]
+-    c3["High-level MapiMessage API (create, edit, save, reload)"]
+-    c4["Export a MapiMessage to a Python EmailMessage (to_email_message)"]
+-    c5["Import a Python EmailMessage into a MapiMessage (from_email_message)"]
++    c1["Low-level CFB<br/>container read/write<br/>(CFBReader /<br/>CFBWriter)"]
++    c2["Low-level MSG document<br/>read/write (MsgReader<br/>/ MsgWriter /<br/>MsgDocument)"]
++    c3["High-level MapiMessage<br/>API (create, edit,<br/>save, reload)"]
++    c4["Export a MapiMessage<br/>to a Python<br/>EmailMessage<br/>(to_email_message)"]
++    c5["Import a Python<br/>EmailMessage into a<br/>MapiMessage<br/>(from_email_message)"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c5
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+     o1["CFB containers"]
+     o2[".msg files"]
+-    o3["EML files (via Python's email package)"]
++    o3["EML files (via<br/>Python's email<br/>package)"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities

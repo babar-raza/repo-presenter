@@ -1,0 +1,45 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "2f89a9bd518e14efbdfae9a11a867508f7d57c731802d825fa8754393d0760e7",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2860,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:30"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 31,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction LR\n    i1[\"An existing CFB container (file or bytes)\"]\n    i2[\"An existing .msg file (file or bytes)\"]\n    i3[\"An existing EML file (via Python's email package)\"]\n  end\n  PRODUCT[\"Aspose.Email FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Low-level CFB container read/write (CFBReader / CFBWriter)\"]\n    c2[\"Low-level MSG document read/write (MsgReader / MsgWriter / MsgDocument)\"]\n    c3[\"High-level MapiMessage API (create, edit, save, reload)\"]\n    c4[\"Export a MapiMessage to a Python EmailMessage (to_email_message)\"]\n    c5[\"Import a Python EmailMessage into a MapiMessage (from_email_message)\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"CFB containers\"]\n    o2[\".msg files\"]\n    o3[\"EML files (via Python's email package)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 2794 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 714 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing CFB<br/>container (file or<br/>bytes)\"]\n    i2[\"An existing .msg file<br/>(file or bytes)\"]\n    i3[\"An existing EML file<br/>(via Python's email<br/>package)\"]\n  end\n  PRODUCT[\"Aspose.Email FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Low-level CFB<br/>container read/write<br/>(CFBReader /<br/>CFBWriter)\"]\n    c2[\"Low-level MSG document<br/>read/write (MsgReader<br/>/ MsgWriter /<br/>MsgDocument)\"]\n    c3[\"High-level MapiMessage<br/>API (create, edit,<br/>save, reload)\"]\n    c4[\"Export a MapiMessage<br/>to a Python<br/>EmailMessage<br/>(to_email_message)\"]\n    c5[\"Import a Python<br/>EmailMessage into a<br/>MapiMessage<br/>(from_email_message)\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c5\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"CFB containers\"]\n    o2[\".msg files\"]\n    o3[\"EML files (via<br/>Python's email<br/>package)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1932
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "5c81ffa6954ec89f6b6872dd6d6429e13dbe45aafe1b8717eda332629ad7dfad",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-email-foss/Aspose.Email-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "10a906b48c0c11005c4d93b524e4431901c9717c",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
+  "unapplied": []
+}
