@@ -12,6 +12,8 @@ uses, with its real replies minus the reconciliation call (zero units means zero
 
 from __future__ import annotations
 
+import json
+
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -126,3 +128,6 @@ def test_run_cascade_authors_a_readme_from_facts_when_the_repository_has_none(
     assert not [
         f for f in result.review_verdict.findings if getattr(f, "rule", "") == "live_readme_loss"
     ]
+    # BL-660: the last stage reached is on disk, so a cancelled job is recorded with where it was.
+    marker = json.loads((out_dir / "progress.json").read_text(encoding="utf-8"))
+    assert marker["stage"].startswith("cascade end") and marker["provider_calls"] == 7

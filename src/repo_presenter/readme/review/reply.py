@@ -39,6 +39,7 @@ from repo_presenter.readme.review.matching import (
     spaced,
 )
 from repo_presenter.readme.review.verdict import (
+    MODEL_ACCEPT,
     MODEL_VERDICTS,
     REJECT_VERDICTS,
     ReviewUnavailable,
@@ -253,6 +254,80 @@ def resolve_cited_lines(
         if kind not in ("omission", "absence"):
             finding["section_id"] = where
     return problems
+
+
+#: Top-level key of a reply that records what ``drop_maintainer_unsupported_findings`` removed. Never read
+#: by the verdict fold; ``llm_review._unit_record`` copies it into the unit's record so the drop is visible.
+CONTRACT_NOTES_KEY = "contract_notes"
+
+
+def drop_maintainer_unsupported_findings(
+    reply: Any, candidate_readme: str, scope: ReviewScope | None = None
+) -> list[dict[str, Any]]:
+    """Remove each finding the contract itself calls void: an ``unsupported_claim`` whose every cited
+    written line is attributed maintainer text (BL-660). ``resolve_cited_lines`` refuses such a
+    finding (``MAINTAINER_TEXT_ERROR``), and the whole unit's review used to be lost after the one
+    re-ask when the model filed it again (hosted PSD Java run 44952716923, unit u2: finding F01 on
+    line 245, rejected twice, so no review at all and the candidate could not be judged).
+
+    Dropping is safe because the finding asserts nothing the contract allows to be asserted: it says
+    "no fact supports this maintainer sentence", and kept maintainer text needs no such support
+    (docs/MAINTAINER_CONTENT_PRESERVATION.md). What stays untouched, and so still blocks: a finding
+    of any other kind on those lines (contradiction, quality, omission, absence), a span that also
+    cites an authored line, a line the unit did not show, and every deterministic check. The model's
+    own verdict is kept as it is while another finding remains; when the drop leaves a REJECT verdict
+    with no finding at all (its only ground was the void one) the unit's verdict is ACCEPT, since
+    ``validate_review_reply`` refuses a reject without a finding and a retry would repeat the reply.
+    Nothing is hidden: each drop (and a verdict change) is appended to ``reply[CONTRACT_NOTES_KEY]``,
+    which the unit's record carries. A reply with no such finding is not touched, so a stored valid
+    reply replays identically; idempotent. Returns the notes added by this call."""
+    findings = reply.get("findings") if isinstance(reply, dict) else None
+    if not isinstance(findings, list) or scope is None or not scope.maintainer_lines:
+        return []
+    rows = candidate_readme.splitlines()
+    kept: list[Any] = []
+    notes: list[dict[str, Any]] = []
+    for finding in findings:
+        cited = finding.get("lines") if isinstance(finding, dict) else None
+        if (
+            isinstance(finding, dict)
+            and finding.get("claim_kind") == "unsupported_claim"
+            and isinstance(cited, list)
+            and len(cited) in (1, 2)
+            and all(_whole(n) for n in cited)
+            and 1 <= cited[0] <= cited[-1] <= len(rows)
+            and cited[-1] - cited[0] + 1 <= MAX_CITED_LINES
+            and not _hidden(cited[0], cited[-1], rows, scope)
+        ):
+            written = [n for n in range(cited[0], cited[-1] + 1) if rows[n - 1].strip()]
+            if written and all(n in scope.maintainer_lines for n in written):
+                notes.append(
+                    {
+                        "rule": "BL-660",
+                        "dropped_finding": str(finding.get("id", "?")),
+                        "claim_kind": "unsupported_claim",
+                        "lines": written,
+                        "reason": MAINTAINER_TEXT_ERROR,
+                    }
+                )
+                continue
+        kept.append(finding)
+    if not notes:
+        return []
+    verdict = reply.get("verdict")
+    if not kept and verdict in REJECT_VERDICTS:
+        notes.append(
+            {
+                "rule": "BL-660",
+                "verdict_changed": [verdict, MODEL_ACCEPT],
+                "reason": "the reply's only finding was void by the contract; a reject verdict "
+                "needs a finding",
+            }
+        )
+        reply["verdict"] = MODEL_ACCEPT
+    findings[:] = kept
+    reply.setdefault(CONTRACT_NOTES_KEY, []).extend(notes)
+    return notes
 
 
 #: Shortest ``text`` (and shortest line) the citation repair will match by content: shorter strings

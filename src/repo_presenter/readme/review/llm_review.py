@@ -70,6 +70,8 @@ from repo_presenter.readme.review.reply import (
     MAX_FINDINGS,
     ReviewScope,
     merge_repeated_findings,
+    CONTRACT_NOTES_KEY,
+    drop_maintainer_unsupported_findings,
     repair_miscited_lines,
     resolve_cited_lines,
     review_from_reply,
@@ -299,6 +301,7 @@ def review_checks(
     in the one re-ask. ``changed`` (Lane L edit scope only, see :func:`edit_scope`) adds the rule
     that a finding must cite at least one changed line."""
     repair_miscited_lines(output, candidate_readme, scope)
+    drop_maintainer_unsupported_findings(output, candidate_readme, scope)
     cited = resolve_cited_lines(output, candidate_readme, scope)
     if cited:
         return cited
@@ -377,7 +380,7 @@ def _unit_record(
     reason: str = "",
     m8: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
+    record = {
         "unit": unit.label,
         "sections": list(unit.sections),
         "lines": [unit.lines[0], unit.lines[-1], len(unit.lines)],
@@ -389,6 +392,9 @@ def _unit_record(
         "reason": reason,
         "m8": dict(m8) if m8 is not None else _m8_record(),
     }
+    if reply is not None and reply.get(CONTRACT_NOTES_KEY):
+        record[CONTRACT_NOTES_KEY] = list(reply[CONTRACT_NOTES_KEY])  # BL-660: what the contract repair dropped
+    return record
 
 
 def m8_blocking_units(unit_reviews: Sequence[Mapping[str, Any]]) -> tuple[str, ...]:

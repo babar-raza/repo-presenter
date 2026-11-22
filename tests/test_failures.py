@@ -491,3 +491,35 @@ def test_the_cohort_summary_lists_upstream_classes_apart() -> None:
     summary = render_summary(plan)
     own, _, upstream = summary.partition("**Upstream-caused (R42)**")
     assert "member_kind" in own and "unproven_build" in upstream and "unproven_build" not in own
+
+
+def test_a_cancelled_lane_step_is_recorded_with_the_stage_it_was_in_bl660(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Hosted Words Java Lane R, runs 44943578461 and 44952689353: the 90-minute cap cancelled the step and
+    # the record said only "the lane step ended cancelled" (one class for every cause).
+    remote = str(init_git_repository(tmp_path / "state"))
+    workdir = _workdir(tmp_path)
+    cascade = workdir / "cascade"
+    cascade.mkdir(parents=True, exist_ok=True)
+    (cascade / "progress.json").write_text(
+        '{"elapsed_seconds": 4013, "provider_calls": 4, "stage": "degrade pass 1 start"}\n', encoding="utf-8"
+    )
+    monkeypatch.chdir(ROOT)
+    with redirect_stdout(io.StringIO()):
+        status = failures.main([
+            "publish", "--remote", remote, "--repository", "o/n", "--lanes", "R,L",
+            "--outcome", "R=cancelled", "--outcome", "L=skipped", "--facts-result", "success",
+            "--run-id", "1000", "--main-sha", "f" * 40, "--source-revision", "a" * 40,
+            "--workdir", str(workdir), "--summary", str(tmp_path / "s.md"),
+        ])
+    assert status == 0
+    (cell,) = [d for d in failures.read_cells(remote=remote, token=None) if d["lane"] == "R"]
+    (cls,) = cell["latest"]["classes"]
+    assert cls == "job_error|job_error|LaneStepCancelledError:DEGRADE_PASS_START"
+    assert "degrade pass 1 start" in cell["latest"]["failure"]["detail"]
+    # no marker at all: still a classed, named record, never a silent one
+    assert "before its cascade reported any stage" in failures.cancelled_detail(tmp_path / "none", "R")
+    assert failures.job_error_kind(f"LaneStepCancelledError: {failures.cancelled_detail(workdir, 'R')}") == (
+        "LaneStepCancelledError", "DEGRADE_PASS_START"
+    )

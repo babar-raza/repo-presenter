@@ -172,13 +172,29 @@ class FactsDocument:
     schema_version: int = field(default=1)
 
     def __post_init__(self) -> None:
-        ids = [fact.id for fact in self.facts]
-        duplicates = sorted({i for i in ids if ids.count(i) > 1})
+        # BL-660: one pass. ``ids.count(i)`` per fact was O(n^2): 22 s for each construction on Words
+        # Java's 45,838 facts, and a document is rebuilt many times per cascade round (``canonical``,
+        # the inherited-unit merge, every restore and degrade pass), so a settle round took 40 minutes.
+        seen: set[str] = set()
+        repeated: set[str] = set()
+        for fact in self.facts:
+            (repeated if fact.id in seen else seen).add(fact.id)
+        duplicates = sorted(repeated)
         if duplicates:
             raise ValueError(f"duplicate fact IDs: {duplicates}")
 
     def by_kind(self, kind: FactKind) -> tuple[Fact, ...]:
-        return tuple(fact for fact in self.facts if fact.kind == kind)
+        # BL-660: indexed once per document (a frozen dataclass: the index is not a field, so equality,
+        # hashing and serialisation are unchanged); it was a full scan of every fact per call, 1,851
+        # calls in one judge of a 45,838-fact document.
+        index = self.__dict__.get("_kind_index")
+        if index is None:
+            grouped: dict[str, list[Fact]] = {}
+            for fact in self.facts:
+                grouped.setdefault(fact.kind, []).append(fact)
+            index = {k: tuple(v) for k, v in grouped.items()}
+            object.__setattr__(self, "_kind_index", index)
+        return index.get(kind, ())
 
     def canonical(self) -> FactsDocument:
         """The same document with its facts in ID order: the one order a bundle stores

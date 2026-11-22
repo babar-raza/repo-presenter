@@ -815,26 +815,26 @@ def _unsupported_on_the_maintainer_line() -> dict[str, Any]:
     return finding("unsupported_claim", criterion="factuality", fact_ids=[])
 
 
-def test_an_unsupported_claim_on_attributed_maintainer_text_is_re_asked(
+def test_an_unsupported_claim_on_attributed_maintainer_text_is_dropped_with_a_note(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    from repo_presenter.readme.review.reply import MAINTAINER_TEXT_ERROR
-
+    # BL-660: the contract refuses it, and a model that files it again used to lose the whole unit's
+    # review after the one re-ask (hosted PSD Java 44952716923); it is now void, dropped, and recorded.
     client = install(
         monkeypatch,
-        [
-            completion(reply("REJECT_FACTUAL", _unsupported_on_the_maintainer_line())),
-            completion(reply()),
-        ],
+        [completion(reply("REJECT_FACTUAL", _unsupported_on_the_maintainer_line()))],
     )
     verdict = _review_attributed(tmp_path, _attributed())
-    first, second = client.payloads
+    (first,) = client.payloads  # no re-ask: one call settles it
     shown = line_of(QUOTE)
     # The packet marks the shown line as attributed maintainer text ...
     assert f"verified):\n[\n {shown}\n]" in first["messages"][-1]["content"]
-    # ... and the contract refuses the unsupported_claim on it, re-asking with the reason.
-    assert MAINTAINER_TEXT_ERROR in second["messages"][-1]["content"]
-    assert verdict.verdict == "ACCEPT"
+    # ... the finding is dropped, the unit is reviewed (not unavailable), and the drop is on its record.
+    assert verdict.verdict == "ACCEPT" and not verdict.findings
+    (record,) = verdict.unit_reviews
+    assert record["status"] == "reviewed"
+    assert record["contract_notes"][0]["rule"] == "BL-660"
+    assert record["contract_notes"][0]["dropped_finding"] == "F01"
 
 
 def test_a_verified_kept_line_is_not_maintainer_text_and_its_claim_stands(
