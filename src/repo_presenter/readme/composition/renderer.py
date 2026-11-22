@@ -630,6 +630,8 @@ def _extra_badge_asserts_only_verified(
         return True
     if badge_slot(f"![]({image})") != "runtime" or "License-" in image:
         return False
+    if _status_stated_by_maintainers(context, image):
+        return True
     floor_fact_id = context.spec.floor_fact_id
     label_match = _BADGE_LABEL.match(image)
     if label_match is not None:
@@ -641,6 +643,29 @@ def _extra_badge_asserts_only_verified(
         return False
     tokens = set(_VERSION_TOKEN.findall(_badge_value_segment(image)))
     return bool(tokens) and tokens <= set(_VERSION_TOKEN.findall(floor.value))
+
+
+def _status_stated_by_maintainers(context: RenderContext, image: str) -> bool:
+    """Whether ``image`` is a maintainers' static status badge (``badge/status-pre--alpha-orange``) whose value
+    a paragraph or list of the same live README states in words ("This is a Pre-Alpha release").
+
+    BL-670 (R14, R42): no extractor fact verifies a self-declared project status, so the badge was never
+    carried (BC-07), and BC-17 accounted for it only when the candidate happened to print the maintainers'
+    sentence: TeX Python's hosted runs (44943500229, 44959650874) ended 'no LLM review ... BC-17' on the badge
+    row whenever the model re-authored the Scope list that holds the sentence, because a shell-rendered badge
+    row has no restore lever. The maintainers state the same status twice, in the badge and in their own text
+    (the standard BL-620 already accepts for the sentence), so the badge is carried as written, after the slot
+    badges: the published README's badge is kept, as aspose.org keeps it, independent of which units the
+    model kept. A value no maintainers' paragraph or list states stays uncarried (still BC-17's to name)."""
+    from repo_presenter.readme.parity_gate import states_badge_value, status_badge_value
+
+    value = status_badge_value(image)
+    if value is None:
+        return False
+    return any(
+        fact.id.rsplit(".", 1)[-1] in {"paragraph", "list"} and states_badge_value(value, fact.value)
+        for fact in context.facts.by_kind("inherited_unit")
+    )
 
 
 def _badge_value_segment(image: str) -> str:
