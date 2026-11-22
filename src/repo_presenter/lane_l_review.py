@@ -350,6 +350,19 @@ def review_correction(
     if findings:
         return ReviewVerdict.folded(findings)
     applied = applied_edit_rows(result.edits, facts)
+    # Every edit's text change, so a finding on a line a wording-only edit renamed a product in is not
+    # asked of the edit (BL-870); like ``applied_edits`` it never enters the recorded holdouts.
+    edit_rows = [
+        {"detector": str(e.detector), "original": str(e.original), "replacement": str(e.replacement)}
+        for e in result.edits
+    ]
+    validation: Mapping[str, Any] = holdouts
+    if applied or edit_rows:
+        validation = {
+            **holdouts,
+            **({"applied_edits": applied} if applied else {}),
+            **({"edit_rows": edit_rows} if edit_rows else {}),
+        }
     return review_with_model(
         prompts=prompts,
         config=config,
@@ -364,7 +377,7 @@ def review_correction(
         # The derivation of each value a detector computed from SUPPORTED facts rides with the
         # holdouts the reviewer reads, never into the recorded holdouts document: it is the
         # evidence for the edited line, not part of the sealed record.
-        validation={**holdouts, "applied_edits": applied} if applied else holdouts,
+        validation=validation,
         deterministic_findings=(),
         # Lane L's README is the maintainers' own text plus minimal evidenced edits, not rendered
         # from facts: installation, license, fenced code and tables are exactly what the model

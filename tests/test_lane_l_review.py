@@ -239,7 +239,10 @@ def test_the_model_is_handed_the_final_readme_the_live_one_the_edits_and_the_hol
     assert call["original_readme"] == README
     assert "docs/upstream-issues.md" in call["candidate_readme"]
     assert call["plan"] == {"sections": []}
-    assert call["validation"] is holdouts
+    # BL-870: the holdouts, plus every edit's text change for the review's own checks (never recorded)
+    assert {k: v for k, v in call["validation"].items() if k != "edit_rows"} == holdouts
+    assert [row["detector"] for row in call["validation"]["edit_rows"]] == [e.detector for e in result.edits]
+    assert "edit_rows" not in holdouts
     assert call["deterministic_findings"] == ()
     # The README is the maintainers' own text plus minimal edits, not rendered from facts:
     # installation, license, fences and tables must be reviewable, unlike Lane R's output.

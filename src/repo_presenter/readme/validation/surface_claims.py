@@ -1188,6 +1188,12 @@ def _kind_lists(text: str) -> list[tuple[int, int, str, list[tuple[str, bool]], 
                 opener = _NEXT_KIND_WORD.search(match.group(0))
                 if opener is not None:
                     end, items = start + opener.start(), items[:-1]
+            if items and len(items[0][0]) <= 2 and text[:start].rstrip("`").endswith("/"):
+                # BL-870: "`fieldOfViewX`/`Y`" is one name and its sibling's last letter, not a list that
+                # starts with a member called Y (3D TypeScript Camera row, hosted run 45006966944: BC-14
+                # "names `Y` as a property of `Camera`" refused to keep a true maintainers' row, and the
+                # rewrite that replaced it lost moveForward, orthoHeight and fieldOfViewX: BC-05, BC-17).
+                items = items[1:]
             if pattern is _KIND_AFTER and len(items) < 2:
                 continue
             if pattern is _KIND_AFTER and not _kind_word_qualifies_list(text, match):

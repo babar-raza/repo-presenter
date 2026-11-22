@@ -299,6 +299,42 @@ def authored_type_rows(
     return found
 
 
+def changed_type_rows(
+    readme: str, facts: FactsDocument, changed: Collection[int]
+) -> dict[int, Fact]:
+    """The type fact each CHANGED API reference table row describes (BL-870, Lane L review scope).
+
+    A Lane L correction writes a row's description itself (``type_description``: the shared
+    describer's "Class that inherits from X and declares the methods A and B.", derived from the type's
+    SUPPORTED member facts). ``authored_type_rows`` only knows the rows an author wrote for a type with
+    no docstring in a RENDERED candidate, so the review of a corrected live README showed the reviewer
+    the rewritten rows with none of the member facts they restate, and the reviewer faulted eleven true
+    rows as unsupported (hosted Lane L PDF Cpp run 45007577791: "no fact supports Icon"; the facts hold
+    ``SoundAnnotation.Icon``). A changed row is resolved by its type name, exactly as the renderer's own
+    api_reference names resolve (``api_reference_names``); a name that is not one SUPPORTED class or enum
+    is not a row of this table and is left out."""
+    from repo_presenter.readme.composition.renderer import api_reference_names
+
+    wanted = set(changed)
+    if not wanted:
+        return {}
+    names = api_reference_names(facts)
+    types: dict[str, Fact] = {}
+    for fact in facts.by_kind("public_symbol"):
+        if fact.polarity != "SUPPORTED" or (fact.attributes or {}).get("symbol_kind") not in {"class", "enum"}:
+            continue
+        types.setdefault(names.get(fact.value, fact.value.rsplit(".", 1)[-1]), fact)
+    owners = section_lines(readme)
+    found: dict[int, Fact] = {}
+    for number, row in enumerate(readme.splitlines(), 1):
+        if number not in wanted or owners[number - 1] != "api_reference":
+            continue
+        match = _TYPE_ROW.match(row.strip())
+        if match is not None and match.group(1) in types:
+            found[number] = types[match.group(1)]
+    return found
+
+
 def line_sections(
     readme: str, rendered: bool = True, authored: Collection[int] = (), *, headings: bool = False
 ) -> list[str | None]:

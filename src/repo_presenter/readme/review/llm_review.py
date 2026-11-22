@@ -65,6 +65,7 @@ from repo_presenter.core.llm.prompts import PromptRegistry
 from repo_presenter.core.retry import RetryableOperationError
 from repo_presenter.readme.review.applied_edits import (
     applied_edits_for_lines,
+    drop_carried_claim_findings,
     evidenced_edit_errors,
 )
 from repo_presenter.readme.review.calibration_status import load_calibration
@@ -300,6 +301,7 @@ def review_checks(
     changed: frozenset[int] | None = None,
     applied: Sequence[Mapping[str, Any]] = (),
     original_readme: str = "",
+    edit_rows: Sequence[Mapping[str, Any]] = (),
 ) -> list[str]:
     """The job's ``checks``: the cited lines resolved to the candidate's own text, identical findings
     merged, then the Phase 1 contract (scoped to the unit); the errors are quoted back to the model
@@ -310,6 +312,11 @@ def review_checks(
     cited = resolve_cited_lines(output, candidate_readme, scope)
     if cited:
         return cited
+    if changed is not None and edit_rows:
+        drop_carried_claim_findings(
+            output, all_edits=edit_rows, candidate_readme=candidate_readme,
+            original_readme=original_readme, changed=changed,
+        )
     if changed is not None and scope is not None:
         unchanged = unchanged_text_errors(output, changed=changed, unit_lines=scope.lines)
         if unchanged:
@@ -557,6 +564,7 @@ def planned_requests(
             plan=plan,
             maintainer_lines=attributed,
             audit=audit,
+            changed=changed,
         )
         if draw > 1:
             packet["review_scope"] = {**packet["review_scope"], "draw": draw}
@@ -672,6 +680,9 @@ def review_with_model(
                     if changed is not None
                     else [],
                     original_readme=original_readme,
+                    edit_rows=list((validation or {}).get("edit_rows") or [])
+                    if changed is not None
+                    else [],
                 ),
                 recover=partial(
                     review_recover,

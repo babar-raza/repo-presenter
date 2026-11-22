@@ -32,7 +32,12 @@ from repo_presenter.readme.review.packet import (
     review_schema,
     without_narrative,
 )
-from repo_presenter.readme.review.scope import authored_type_rows, line_sections, shown_text
+from repo_presenter.readme.review.scope import (
+    authored_type_rows,
+    changed_type_rows,
+    line_sections,
+    shown_text,
+)
 
 #: Most characters of author-written text one unit shows (about 1,100 tokens); the facts and the
 #: original excerpt are bounded separately (``evidence``).
@@ -165,6 +170,7 @@ def unit_packet(
     plan: Mapping[str, Any],
     maintainer_lines: Collection[int] = (),
     audit: bool = False,
+    changed: Collection[int] | None = None,
 ) -> dict[str, Any]:
     """The packet ``prompts/independent_review.yaml`` declares, for one unit. Evidence only: the
     author's rationale for a plan entry is dropped, and the dispositions and the deterministic
@@ -175,7 +181,9 @@ def unit_packet(
     whole-document review (``rendered=False``), exactly as the production Lane R review gives them,
     and adds the facts' computed type counts to the review scope (``computed_counts``)."""
     text = unit_text(unit, candidate_readme)
-    given, members = type_row_facts(unit, candidate_readme, facts, force=audit)
+    given, members = type_row_facts(
+        unit, candidate_readme, facts, force=audit, changed=changed
+    )
     records = unit_facts(
         facts,
         text,
@@ -251,17 +259,28 @@ def computed_counts(facts: FactsDocument) -> dict[str, Any]:
 
 
 def type_row_facts(
-    unit: ReviewUnit, readme: str, facts: FactsDocument, *, force: bool = False
+    unit: ReviewUnit,
+    readme: str,
+    facts: FactsDocument,
+    *,
+    force: bool = False,
+    changed: Collection[int] | None = None,
 ) -> tuple[list[str], dict[str, list[str]]]:
     """For the authored API reference rows the unit shows (``scope.authored_type_rows``), the fact
     ids each row's ``type:<fact id>`` unit was given and the member names listed with each type,
     read through the same function the type batch is built from (``authoring.type_unit_facts``):
     what the reviewer is shown for a row is exactly what its author was told it may state."""
-    if not (unit.rendered or force) or "api_reference" not in unit.sections:
+    if "api_reference" not in unit.sections:
         return [], {}
     from repo_presenter.readme.composition.authoring import type_unit_facts
 
-    rows = authored_type_rows(readme, facts)
+    if changed is not None and not unit.rendered:
+        # BL-870 (Lane L edit scope): the rows a correction rewrote carry the facts they restate.
+        rows = changed_type_rows(readme, facts, changed)
+    elif unit.rendered or force:
+        rows = authored_type_rows(readme, facts)
+    else:
+        return [], {}
     given: list[str] = []
     members: dict[str, list[str]] = {}
     for number in unit.lines:
