@@ -19,9 +19,9 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
+    "detail": "attempt under version set 75b35954c877: the cascade reached its hard time limit before reaching a verdict, so nothing was sealed (retryable: a re-run resumes from the saved call store): CascadeTimeBoxError: the cascade's hard time limit of 4800s was reached after 5054s in stage 'S9 settle round 2 of 5: judged, 2 blocking check(s) failing, 1 blocking finding(s)'; no further provider call or stage starts, every completed call is in the call store, so a re-run resumes from it",
     "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-22T03:25:00.840426+00:00",
+    "occurred_at": "2026-11-22T10:46:14.803334+00:00",
     "resume_predicate": null,
     "recovery_count": 0
   },
@@ -46,7 +46,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 31,
+  "state_version": 32,
   "recent_trigger_dedup_keys": {
     "run:43672441969:aspose-words-foss/Aspose.Words-FOSS-for-Java": "79e5099a5eb545e087df3159f62bbd7b",
     "run:44397305197:aspose-words-foss/Aspose.Words-FOSS-for-Java": "3048a983948f41a3abf2e9271b19963a",
