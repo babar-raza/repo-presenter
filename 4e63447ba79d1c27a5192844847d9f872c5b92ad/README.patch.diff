@@ -1,0 +1,69 @@
+--- a/README.md
++++ b/README.md
+@@ -26,39 +26,44 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+     direction TB
+-    i1["An existing .pptx presentation"]
++    i1["An existing .pptx<br/>presentation"]
+   end
+   PRODUCT["Aspose.Slides FOSS for Python"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Presentation, slide, layout, and master management"]
+-      c2["Shape creation, including group shapes"]
+-      c3["Text formatting (TextFrame, Paragraph, Portion)"]
+-      c4["Charts with 74 chart types"]
+-      c5["Animations and slide transitions"]
+-      c6["Presentation theming (color, font, and format schemes)"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c7["Fill, line, and 3D shape styling"]
+-      c8["Visual effects (shadow, glow, blur, reflection)"]
+-      c9["Document properties"]
+-      c10["Speaker notes and threaded comments"]
+-      c11["Image embedding"]
+-      c12["Markdown export (24 flavor dialects)"]
+-    end
++    direction TB
++    c1["Presentation, slide,<br/>layout, and master<br/>management"]
++    c2["Shape creation,<br/>including group shapes"]
++    c3["Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)"]
++    c4["Charts with 74 chart<br/>types"]
++    c5["Animations and slide<br/>transitions"]
++    c6["Presentation theming<br/>(color, font, and<br/>format schemes)"]
++    c7["Fill, line, and 3D<br/>shape styling"]
++    c8["Visual effects<br/>(shadow, glow, blur,<br/>reflection)"]
++    c9["Document properties"]
++    c10["Speaker notes and<br/>threaded comments"]
++    c11["Image embedding"]
++    c12["Markdown export (24<br/>flavor dialects)"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c8
++    c6 ~~~ c9
++    c7 ~~~ c10
++    c8 ~~~ c11
++    c9 ~~~ c12
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+-    o1["A .pptx presentation (file path or binary stream)"]
++    o1["A .pptx presentation<br/>(file path or binary<br/>stream)"]
+     o2["Markdown text"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities

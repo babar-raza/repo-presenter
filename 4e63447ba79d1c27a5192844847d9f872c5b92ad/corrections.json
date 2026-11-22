@@ -1,0 +1,63 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "1dae74e390a6910663b5e846cdb3955ede8930d7a533e6cd96b06cd5cdfccdd1",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2682,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:28"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 29,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .pptx presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Presentation, slide, layout, and master management\"]\n      c2[\"Shape creation, including group shapes\"]\n      c3[\"Text formatting (TextFrame, Paragraph, Portion)\"]\n      c4[\"Charts with 74 chart types\"]\n      c5[\"Animations and slide transitions\"]\n      c6[\"Presentation theming (color, font, and format schemes)\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c7[\"Fill, line, and 3D shape styling\"]\n      c8[\"Visual effects (shadow, glow, blur, reflection)\"]\n      c9[\"Document properties\"]\n      c10[\"Speaker notes and threaded comments\"]\n      c11[\"Image embedding\"]\n      c12[\"Markdown export (24 flavor dialects)\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A .pptx presentation (file path or binary stream)\"]\n    o2[\"Markdown text\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 2383 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 714 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing .pptx<br/>presentation\"]\n  end\n  PRODUCT[\"Aspose.Slides FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Presentation, slide,<br/>layout, and master<br/>management\"]\n    c2[\"Shape creation,<br/>including group shapes\"]\n    c3[\"Text formatting<br/>(TextFrame, Paragraph,<br/>Portion)\"]\n    c4[\"Charts with 74 chart<br/>types\"]\n    c5[\"Animations and slide<br/>transitions\"]\n    c6[\"Presentation theming<br/>(color, font, and<br/>format schemes)\"]\n    c7[\"Fill, line, and 3D<br/>shape styling\"]\n    c8[\"Visual effects<br/>(shadow, glow, blur,<br/>reflection)\"]\n    c9[\"Document properties\"]\n    c10[\"Speaker notes and<br/>threaded comments\"]\n    c11[\"Image embedding\"]\n    c12[\"Markdown export (24<br/>flavor dialects)\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n    c7 ~~~ c10\n    c8 ~~~ c11\n    c9 ~~~ c12\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A .pptx presentation<br/>(file path or binary<br/>stream)\"]\n    o2[\"Markdown text\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1564
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "c9c66c3b8a9324bcf27c0f44c95d9a7117bb23d42805f3aa698a12501b6c982f",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "public_symbol:slides_foss.animation.ibehavior",
+        "public_symbol:slides_foss.animation.ibehaviorcollection",
+        "public_symbol:slides_foss.animation.ibehaviorfactory",
+        "public_symbol:slides_foss.animation.ibehaviorproperty",
+        "public_symbol:slides_foss.animation.ibehaviorpropertycollection",
+        "public_symbol:slides_foss.animation.icoloreffect",
+        "public_symbol:slides_foss.animation.icoloroffset",
+        "public_symbol:slides_foss.animation.icommandeffect"
+      ],
+      "line": 0,
+      "reason": "245 of 516 verified public types are named nowhere in the README; would fill API Reference: public_symbol:slides_foss.animation.ibehavior, public_symbol:slides_foss.animation.ibehaviorcollection, public_symbol:slides_foss.animation.ibehaviorfactory, public_symbol:slides_foss.animation.ibehaviorproperty, public_symbol:slides_foss.animation.ibehaviorpropertycollection, public_symbol:slides_foss.animation.icoloreffect, public_symbol:slides_foss.animation.icoloroffset, public_symbol:slides_foss.animation.icommandeffect (+237 more)",
+      "text": ""
+    }
+  ]
+}
