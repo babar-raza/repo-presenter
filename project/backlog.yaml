@@ -3838,3 +3838,17 @@ items:
       - "log: S4 end 1437 s (46 calls), S6 end 2315 s, S10 review 99 calls, each degrade pass 93 to 97 review calls and 280 to 330 s; cumulative withheld units 7, 9, 10, 12; 'degrade stopped before pass 5: the job time allowance is nearly used'"
     next_action: "supervisor decides after the BL-890 hosted result"
     updated: "2026-11-22"
+
+  - id: BL-892
+    title: "PDF TypeScript Lane R refresh ends 'no LLM review of this candidate was made' on one BC-07 reference sentence (run 45052413270, 55 provider calls): a kept maintainers' paragraph prints 'Run the command above to produce it' in a section with no code, and the BL-640 trim only reached a restored unit whose failure was new, so the already-failing unit was never trimmed and a deterministic-only verdict is never sealed"
+    type: defect
+    source: "owner rulings R10, R14, R36(a), R44, R46 (robust: a failure degrades the affected sentence, never the candidate); hosted run 45052413270; BL-640 precedent"
+    priority: P0
+    status: active
+    implementation_path: "cascade._restore_lost_content: any kept inherited unit that BC-07 names for a pointing sentence (reference_sentences over every kept unit, not only restored ones) has that one sentence withheld and recorded on its disposition (R14, withhold_reference_sentences), zero provider calls, before the restore rounds and again after every re-judge; the restore also now runs when BC-07 is the only failing check. Validators, thresholds and judging are unchanged"
+    acceptance: "(1) tests/test_cascade_restore_pointing_bl892.py (real paragraph, already-failing unit trimmed beside a restore and alone, three negative controls); (2) offline replay on the stored PDF TypeScript seal 5fa17750 with the paragraph and its table kept: BC-07 fails, after the withholding no blocking check fails; (3) hosted: PDF TypeScript refresh reaches the model review and seals (R41, not yet proven)"
+    evidence:
+      - "run 45052413270 log: S4 reconciliation 1683 s for 40 calls, time-box reached after settle round 1, 'restore: 15 unit(s) restored but blocking still fails: BC-07 inherited_unit:592.paragraph is kept as written but says command above', 'degrade: nothing kept (0 flag(s) tried)', ACCEPT with model_reviewed false"
+      - "592 at 851c1a6a is 589 at the sealed 5fa17750 (README shifted by three units); the sealed seal OMITs it with its table; offline, restoring it into key_capabilities reproduces the exact BC-07 detail"
+    next_action: "supervisor integrates; hosted PDF TypeScript Lane R refresh. If S4 reconciliation stays near 1700 s the time-box leaves no model repair round (BL-891), so this fix is what lets the run reach review"
+    updated: "2026-11-22"
