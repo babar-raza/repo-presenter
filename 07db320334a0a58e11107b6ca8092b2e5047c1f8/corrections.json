@@ -1,0 +1,45 @@
+{
+  "confinement": {
+    "edits": 1,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "dbb8928609b3fc6afe444d4c25e66b2595cd323db2e97e00ea6c12ebfa494bd1",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2830,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:28"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 29,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"A plain-text document (TeX/LaTeX source, from a path, string, or bytes)\"]\n  end\n  PRODUCT[\"Aspose.TeX FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Tokenize and interpret TeX/LaTeX input\"]\n    c2[\"Resolve fonts and glyph metrics\"]\n    c3[\"Build lines and pages from typeset boxes\"]\n    c4[\"Write PDF, DVI, or SVG output\"]\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF document (file path or in-memory bytes)\"]\n    o2[\"DVI document (file path or in-memory bytes)\"]\n    o3[\"SVG document (file path or in-memory bytes, multi-page)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1359 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 638 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"A plain-text document<br/>(TeX/LaTeX source,<br/>from a path, string,<br/>or bytes)\"]\n  end\n  PRODUCT[\"Aspose.TeX FOSS for Python\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Tokenize and interpret<br/>TeX/LaTeX input\"]\n    c2[\"Resolve fonts and<br/>glyph metrics\"]\n    c3[\"Build lines and pages<br/>from typeset boxes\"]\n    c4[\"Write PDF, DVI, or SVG<br/>output\"]\n    c1 ~~~ c3\n    c2 ~~~ c4\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"PDF document (file<br/>path or in-memory<br/>bytes)\"]\n    o2[\"DVI document (file<br/>path or in-memory<br/>bytes)\"]\n    o3[\"SVG document (file<br/>path or in-memory<br/>bytes, multi-page)\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 2092
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "10c36c93f57cac63ee3aa7d0bf738637cf27adfd874588f75a974306d4f43567",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+  "schema_version": 1,
+  "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1
+  },
+  "unapplied": []
+}
