@@ -83,12 +83,9 @@ from repo_presenter.issues.dedup import body_with_marker
 from repo_presenter.issues.labels import labels_for
 from repo_presenter.issues.model import Handoff, IssueRef
 
-#: The canonical kill switch name: the same family as the proposal and candidates-publish switches
-#: (``REPOSITORY_PRESENTER_<EFFECT>_WRITE_AUTHORIZED``) and the old project's issues switch.
-AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED"
-#: The name this repository's issues code and ``issues.yml`` used until 2026-11-22 (R50 naming
-#: reconciliation). Still honoured so a variable set under either name works; never the only way.
-LEGACY_AUTHORIZATION_VARIABLE = "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
+#: The kill switch name: the same family as the proposal and candidates-publish switches
+#: (``REPO_PRESENTER_<EFFECT>_WRITE_AUTHORIZED``; one name per effect, R50 naming reconciliation).
+AUTHORIZATION_VARIABLE = "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
 _AUTHORIZED_VALUES = frozenset({"1", "true", "yes"})
 
 _NOT_AUTHORIZED_REASON = (
@@ -114,17 +111,10 @@ class RecheckResult(Protocol):
 
 
 def write_authorized(environment: Mapping[str, str]) -> bool:
-    """``True`` only while the owner's kill switch is set to a truthy value, under
-    ``AUTHORIZATION_VARIABLE`` or its legacy alias ``LEGACY_AUTHORIZATION_VARIABLE``. Absence of
-    both, an empty string, or any other value disables writes -- fail closed; and when BOTH names
-    are set they must both be truthy (a conflicting pair disables). A ``True`` here is necessary
-    and never sufficient: filing also needs the handoff's own approval record."""
-    values = [
-        environment.get(name, "").strip().lower()
-        for name in (AUTHORIZATION_VARIABLE, LEGACY_AUTHORIZATION_VARIABLE)
-    ]
-    values = [v for v in values if v]
-    return bool(values) and all(v in _AUTHORIZED_VALUES for v in values)
+    """``True`` only while the owner's kill switch ``AUTHORIZATION_VARIABLE`` is set to a truthy value.
+    Absence, an empty string or any other value disables writes -- fail closed. A ``True`` here is
+    necessary and never sufficient: filing also needs the handoff's own approval record."""
+    return environment.get(AUTHORIZATION_VARIABLE, "").strip().lower() in _AUTHORIZED_VALUES
 
 
 def _split(repository: str) -> tuple[str, str]:

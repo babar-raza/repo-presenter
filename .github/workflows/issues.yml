@@ -25,8 +25,7 @@ name: issues
 #              predicates, records/imports the App's issues (dedup by fingerprint marker), decides
 #              close / dated re-check / reopen, acts through the guarded client (dry run unless the
 #              pilot is mode: live, a dry-run cycle is already recorded, the kill switch
-#              REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED (legacy alias
-#              REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED) is 1 and the token verifies), and records the
+#              REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is 1 and the token verifies), and records the
 #              cycle on refs/repository-presenter-state/issues/<owner>__<name>.
 #
 # tests/issues/test_issues_workflow.py fails if the reproduce job gains a secret, a variable, a
@@ -174,7 +173,6 @@ jobs:
           GH_APP_INSTALLATION_TOKEN: ${{ steps.app-token.outputs.token }}
           GITHUB_TOKEN: ${{ github.token }}
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
-          REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
           REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
         run: |
           git config --global user.name "github-actions[bot]"

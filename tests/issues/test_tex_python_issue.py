@@ -27,7 +27,6 @@ from repo_presenter.issues.approval import evidence_digest, handoff_id
 from repo_presenter.issues.dedup import fingerprint_marker
 from repo_presenter.issues.file import (
     AUTHORIZATION_VARIABLE,
-    LEGACY_AUTHORIZATION_VARIABLE,
     write_authorized,
 )
 from repo_presenter.issues.filing_report import build_report
@@ -333,20 +332,16 @@ def test_an_existing_upstream_issue_is_a_dedup_not_a_filing() -> None:
     [
         ({}, False),
         ({AUTHORIZATION_VARIABLE: "1"}, True),
-        ({LEGACY_AUTHORIZATION_VARIABLE: "1"}, True),
-        ({AUTHORIZATION_VARIABLE: "1", LEGACY_AUTHORIZATION_VARIABLE: "1"}, True),
-        ({AUTHORIZATION_VARIABLE: "1", LEGACY_AUTHORIZATION_VARIABLE: "0"}, False),  # a conflicting pair disables
-        ({AUTHORIZATION_VARIABLE: "", LEGACY_AUTHORIZATION_VARIABLE: ""}, False),
+        ({AUTHORIZATION_VARIABLE: ""}, False),
         ({AUTHORIZATION_VARIABLE: "maybe"}, False),
     ],
 )
-def test_the_kill_switch_accepts_either_name_and_fails_closed(env: dict[str, str], expected: bool) -> None:
+def test_the_kill_switch_fails_closed(env: dict[str, str], expected: bool) -> None:
     assert write_authorized(env) is expected
 
 
-def test_the_kill_switch_names_are_the_family_name_and_the_legacy_alias() -> None:
-    assert AUTHORIZATION_VARIABLE == "REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED"
-    assert LEGACY_AUTHORIZATION_VARIABLE == "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
+def test_the_kill_switch_name_is_the_family_name() -> None:
+    assert AUTHORIZATION_VARIABLE == "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
 
 
 # --------------------------------------------------------------------------- hosted wiring
@@ -367,9 +362,8 @@ def test_the_issues_workflow_matrix_equals_the_pilot_and_mints_only_for_live_rep
             # a dry-run repository never holds a write-capable token; TypeScript keeps minting as before
             assert m["mint"] is (slug.startswith("aspose-3d-foss/")), slug
             assert m["runtime"] == ("python" if "Python" in m["name"] else "node")
-    # the kill switch is wired under both names and only in the maintain job
+    # the kill switch is wired under its one name and only in the maintain job
     maintain = json.dumps(wf["jobs"]["maintain"])
-    assert "vars.REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED" in maintain
     assert "vars.REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED" in maintain
     assert "vars." not in json.dumps(wf["jobs"]["reproduce"])
     # the node toolchain is only set up for the node legs

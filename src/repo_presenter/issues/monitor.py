@@ -596,8 +596,7 @@ def live_blockers(
         blockers.append("no dry-run cycle is recorded yet: the first hosted cycle is always a dry run")
     if not write_authorized(environment):
         blockers.append(
-            "kill switch REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED (or its legacy alias "
-            "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED) is not set to 1"
+            "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1"
         )
     if token is None:
         blockers.append("no App installation token was minted for this run")
