@@ -418,6 +418,13 @@ _TABLE_TYPE_SHARE = 0.6
 def _surface_names(
     facts: FactsDocument,
 ) -> tuple[set[str], set[str], dict[str, str]]:
+    """Built once per document (BL-711); the three results are read-only to every caller."""
+    return facts.memo("surface_names", lambda: _build_surface_names(facts))
+
+
+def _build_surface_names(
+    facts: FactsDocument,
+) -> tuple[set[str], set[str], dict[str, str]]:
     """(every name the public surface uses, the type names, {type name: its fact's full dotted
     value}): ``public_symbol``, ``enum_member`` and ``import_path`` value segments, plus the
     identifiers public signatures and docstrings use (a return type, a base class). Never an

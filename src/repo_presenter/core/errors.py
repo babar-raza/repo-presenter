@@ -50,6 +50,14 @@ class ProviderCallBudgetError(GatewayError):
     spend and fails closed."""
 
 
+class CascadeTimeBoxError(PresenterError):
+    """The cascade's hard wall-clock stop (BL-711): the run reached ``CASCADE_HARD_STOP_SECONDS`` and
+    refuses to begin another provider call or stage, so the job ends with a recorded, retryable failure
+    that names the stage instead of being cancelled by the runner's 90-minute cap with nothing recorded.
+    Every call already made is in the call store, which the workflow saves, so a re-run resumes from
+    there. Not a ``JobError``: no retry, re-ask or degrade path may swallow it."""
+
+
 class NotAllowlistedError(PresenterError):
     """A repository outside the registry allow-list; refused before any network or git operation.
 

@@ -3,7 +3,7 @@
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 ....................................................                     [100%]
-52 passed in 5.96s
+52 passed in 8.50s
 
 --- stderr ---
 
@@ -12,7 +12,7 @@ $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/tes
 $ python -m pytest tests/test_cascade_restore.py tests/test_cascade.py tests/test_cascade_s9.py tests/test_cascade_s10.py tests/test_cascade_repair_context.py -q
 --- stdout ---
 ....................................................                     [100%]
-52 passed in 6.54s
+52 passed in 12.41s
 
 --- stderr ---
 
@@ -25,8 +25,8 @@ F....FFF..FF.................F.F.F..................                     [100%]
 =================================== FAILURES ===================================
 _ test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_candidate_that_loses_on0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426dbc9d0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_candidate_that_loses_on0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b504c30>
 
     def test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -40,7 +40,7 @@ tests/test_cascade_restore.py:83: in _run_to_review
     run.cascade(max_rounds=1)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -51,7 +51,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_candidate_that_loses_on0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_candidate_that_loses_on0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -147,16 +147,28 @@ require_clean_review = False, unrestorable = None
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 1: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
 _ test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_restorable_defects_make_z0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426bf0750>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_restorable_defects_make_z0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b424850>
 
     def test_restorable_defects_make_zero_model_repair_calls_and_the_candidate_reaches_review(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -170,10 +182,10 @@ tests/test_cascade_restore.py:205: in _settle_run
     run.cascade(max_rounds=3)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
                                     ^^^^^^^^^^^^^^^^^^^^
-src/repo_presenter/cascade.py:848: in _settle_s9
+src/repo_presenter/cascade.py:857: in _settle_s9
     restored = _restore_lost_content(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
 
@@ -183,7 +195,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_restorable_defects_make_z0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_restorable_defects_make_z0/out')
 require_clean_review = True, unrestorable = set()
 
     def _restore_lost_content(
@@ -279,16 +291,28 @@ require_clean_review = True, unrestorable = set()
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 3: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 3: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
 _ test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_restorable_bc17_defect_0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426af49b0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_restorable_bc17_defect_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b2f5220>
 
     def test_a_restorable_bc17_defect_is_never_sent_to_the_model_but_other_defects_still_are(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -305,7 +329,7 @@ tests/test_cascade_restore.py:205: in _settle_run
     run.cascade(max_rounds=3)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_cascade_restore.py:198: in <lambda>
@@ -319,7 +343,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_restorable_bc17_defect_0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_restorable_bc17_defect_0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -415,17 +439,29 @@ require_clean_review = False, unrestorable = None
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 3: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 3: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1: repair start (1 defect(s)) | elapsed 0s | provider calls 8
 ______ test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model _______
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_without_the_filter_the_sa0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426af6300>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_without_the_filter_the_sa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b2f6b70>
 
     def test_without_the_filter_the_same_bc17_defect_is_sent_to_the_model(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -440,7 +476,7 @@ tests/test_cascade_restore.py:205: in _settle_run
     run.cascade(max_rounds=3)
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_cascade_restore.py:198: in <lambda>
@@ -454,7 +490,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitation...y PNG output is currently supported.\n\nRead the [full guide](https://widget.example.org/guide) for everything else.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_without_the_filter_the_sa0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_without_the_filter_the_sa0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -550,16 +586,28 @@ require_clean_review = False, unrestorable = None
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 3: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 3: judged, 1 blocking check(s) failing, 0 blocking finding(s) | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1: repair start (1 defect(s)) | elapsed 0s | provider calls 8
 _ test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair _
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426c63e10>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b4f0a10>
 
     def test_a_defect_naming_a_unit_with_a_dangling_pointer_is_still_sent_to_the_repair(
         monkeypatch: pytest.MonkeyPatch,
@@ -574,7 +622,7 @@ E         Use -v to get more diff
 tests/test_cascade_restore.py:344: AssertionError
 ___ test_negative_control_without_the_pointer_guard_both_defects_are_dropped ___
 
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426a35850>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b2419d0>
 
     def test_negative_control_without_the_pointer_guard_both_defects_are_dropped(
         monkeypatch: pytest.MonkeyPatch,
@@ -591,8 +639,8 @@ E         Use -v to get more diff
 tests/test_cascade_restore.py:353: AssertionError
 _ test_without_the_accounting_stage_the_same_run_is_rejected_for_the_subheading _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_without_the_accounting_st0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426acd470>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_without_the_accounting_st0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b1bd1d0>
 
     def test_without_the_accounting_stage_the_same_run_is_rejected_for_the_subheading(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -619,7 +667,7 @@ tests/test_cascade_s9.py:109: in first_pass
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -630,7 +678,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitations\n\nOnly PNG output is currently supported.\n\n### Main\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_without_the_accounting_st0/other/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_without_the_accounting_st0/other/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -726,24 +774,48 @@ require_clean_review = False, unrestorable = None
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 3 blocking finding(s) | elapsed 0s | provider calls 8
 cascade progress: S9/S10 end after 1 settle round(s): REJECT | elapsed 0s | provider calls 8
 cascade progress: degrade pass 1 start | elapsed 0s | provider calls 8
 degrade: nothing kept (0 flag(s) tried)
 cascade progress: cascade end: REJECT | elapsed 0s | provider calls 8
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 6 blocking finding(s) | elapsed 0s | provider calls 8
 _ test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_runs_again _
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_kept_unit_the_render_ca0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426acd5c0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_kept_unit_the_render_ca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b1bc4b0>
 
     def test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_runs_again(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -759,7 +831,7 @@ tests/test_cascade_s9.py:109: in first_pass
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -770,7 +842,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitations\n\nOnly PNG output is currently supported.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_kept_unit_the_render_ca0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_kept_unit_the_render_ca0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -866,16 +938,28 @@ require_clean_review = False, unrestorable = None
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 4 blocking finding(s) | elapsed 0s | provider calls 8
 ____ test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried _____
 
-tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_defect_is_attempted_onc0')
-monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3426a99fd0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_defect_is_attempted_onc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa16b1bd240>
 
     def test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried(
         tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -891,7 +975,7 @@ tests/test_cascade_s9.py:109: in first_pass
              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 tests/test_cascade_s9.py:96: in cascade
     return run_cascade(
-src/repo_presenter/cascade.py:1789: in run_cascade
+src/repo_presenter/cascade.py:1829: in run_cascade
     settled = _restore_lost_content(_settle_s9(**settle), **restoring)
               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
@@ -902,7 +986,7 @@ document = FactsDocument(repository='org/Aspose.Widget-FOSS-for-Python', source_
 investigation = {'product_summary': {'text': 'A widget library.', 'fact_ids': ['package:name']}, 'audience': {'text': 'Python develope...]}, 'problems_solved': [{'text': 'Rendering widgets is tedious.', 'fact_ids': ['package:name']}], 'workflows': [], ...}
 tree_paths = ['README.md']
 original = '# Aspose Widget\n\nA widget you can render.\n\n## Usage\n\n```python\nimport aspose_widget_foss\n```\n\n## Limitations\n\nOnly PNG output is currently supported.\n'
-out_dir = PosixPath('/tmp/pytest-of-root/pytest-1522/test_a_defect_is_attempted_onc0/out')
+out_dir = PosixPath('/tmp/pytest-of-root/pytest-1574/test_a_defect_is_attempted_onc0/out')
 require_clean_review = False, unrestorable = None
 
     def _restore_lost_content(
@@ -998,11 +1082,23 @@ require_clean_review = False, unrestorable = None
                 )
 E               TypeError: <lambda>() got an unexpected keyword argument 'skipped'
 
-src/repo_presenter/cascade.py:1205: TypeError
+src/repo_presenter/cascade.py:1214: TypeError
 ----------------------------- Captured stderr call -----------------------------
 cascade progress: S3 investigation start (time-box 3000s) | elapsed 0s | provider calls -1
+provider call: repository_investigation success 0.0s prompt 10 completion 5 tokens
 cascade progress: S3 investigation end | elapsed 0s | provider calls 1
 cascade progress: S9 settle round 1 of 1: compose start | elapsed 0s | provider calls 1
+provider call: source_reconciliation success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S4 reconciliation end | elapsed 0s | provider calls 2
+provider call: presentation_planning success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S5 planning end | elapsed 0s | provider calls 3
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S6 authoring end | elapsed 0s | provider calls 7
+provider call: section_authoring success 0.0s prompt 10 completion 5 tokens
+cascade progress: S9 settle round 1: compose S8 coherence end | elapsed 0s | provider calls 8
 cascade progress: S9 settle round 1 of 1: judged, 3 blocking check(s) failing, 4 blocking finding(s) | elapsed 0s | provider calls 8
 =========================== short test summary info ============================
 FAILED tests/test_cascade_restore.py::test_a_candidate_that_loses_only_a_link_the_published_readme_prints_reaches_review_restored
@@ -1014,7 +1110,7 @@ FAILED tests/test_cascade_restore.py::test_negative_control_without_the_pointer_
 FAILED tests/test_cascade_s9.py::test_without_the_accounting_stage_the_same_run_is_rejected_for_the_subheading
 FAILED tests/test_cascade_s9.py::test_a_kept_unit_the_render_cannot_print_is_repaired_once_and_the_cascade_runs_again
 FAILED tests/test_cascade_s9.py::test_a_defect_is_attempted_once_and_a_refused_repair_is_never_retried
-9 failed, 43 passed in 5.35s
+9 failed, 43 passed in 12.90s
 
 --- stderr ---
 

@@ -38,6 +38,7 @@ no real M8 call has been made, by construction.
 
 from __future__ import annotations
 
+import copy
 import difflib
 import hashlib
 import json
@@ -46,11 +47,14 @@ from dataclasses import dataclass, replace
 from functools import partial
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 from repo_presenter.core.config import GatewayConfig
 from repo_presenter.core.errors import OutputRejectedError
 from repo_presenter.core.facts import FactsDocument
 from repo_presenter.core.llm.jobs import (
     CallStore,
+    RECOVERY_NOTES_KEY,
     JobContext,
     effective_model,
     request_hash,
@@ -73,6 +77,7 @@ from repo_presenter.readme.review.reply import (
     CONTRACT_NOTES_KEY,
     drop_maintainer_unsupported_findings,
     repair_miscited_lines,
+    set_aside_void_findings,
     resolve_cited_lines,
     review_from_reply,
     validate_review_reply,
@@ -320,6 +325,49 @@ def review_checks(
     return validate_review_reply(
         output, candidate_readme=candidate_readme, facts=facts, plan=plan, scope=scope
     )
+
+
+def review_recover(
+    raw: dict[str, Any],
+    *,
+    candidate_readme: str,
+    facts: FactsDocument,
+    plan: Mapping[str, Any],
+    scope: ReviewScope | None,
+    sink: list[dict[str, Any]],
+    call_schema: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """The job's last-resort ``recover`` (BL-710): runs only after the one re-ask was rejected too, on
+    the final reply, so the model has always had its chance to fix a finding itself and the request
+    bytes of every call are unchanged. A finding that still breaks the per-finding contract is repaired
+    when deterministic or dropped with a note (``reply.set_aside_void_findings``); ``None`` when the
+    reply needed none of that (the rejection stands). The notes go to ``sink`` and to the repair record;
+    the corrected reply is judged by ``review_checks`` once more, so nothing invalid gets through."""
+    work = copy.deepcopy(raw)
+    repair_miscited_lines(work, candidate_readme, scope)
+    drop_maintainer_unsupported_findings(work, candidate_readme, scope)
+    set_aside_void_findings(work, candidate_readme, facts, plan, scope)
+    notes = work.pop(CONTRACT_NOTES_KEY, None)
+    if not notes:
+        return None
+    if call_schema is not None and not Draft202012Validator(dict(call_schema)).is_valid(work):
+        return None  # the corrected reply must satisfy this call's own schema, not only the manifest's
+    sink.extend(notes)
+    work[RECOVERY_NOTES_KEY] = list(notes)
+    return work
+
+
+def _recorded_notes(store: Any, request_sha256: str) -> list[dict[str, Any]]:
+    """The contract notes a recovered review left in the call store (read back when the same request is
+    replayed from the store and ``recover`` is not called again)."""
+    try:
+        found: list[dict[str, Any]] = []
+        for path in sorted(store.directory.glob(f"{request_sha256[:12]}.repaired-*.json")):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            found.extend(n for n in payload.get("notes") or [] if isinstance(n, dict))
+        return found
+    except (OSError, ValueError, AttributeError):
+        return []
 
 
 def _merged_verdict(verdicts: Sequence[str]) -> str:
@@ -597,6 +645,7 @@ def review_with_model(
         request_hashes.append(request_sha256)
         request_of[unit.label] = request_sha256
         _refuse_reroll(store, request_sha256)
+        contract_notes: list[dict[str, Any]] = []
         scope = ReviewScope(
             frozenset(unit.sections),
             frozenset(unit.lines),
@@ -624,7 +673,25 @@ def review_with_model(
                     else [],
                     original_readme=original_readme,
                 ),
+                recover=partial(
+                    review_recover,
+                    candidate_readme=candidate_readme,
+                    facts=facts,
+                    plan=plan,
+                    scope=scope,
+                    sink=contract_notes,
+                    call_schema=schema,
+                )
+                if changed is None  # BL-710: Lane R only; a Lane L edit review keeps its stricter contract
+                else None,
             )
+            if contract_notes or _recorded_notes(store, result.request_sha256):
+                kept_notes = contract_notes or _recorded_notes(store, result.request_sha256)
+                result = replace(
+                    result,
+                    output={**result.output, CONTRACT_NOTES_KEY: [
+                        *result.output.get(CONTRACT_NOTES_KEY, []), *kept_notes]},
+                )
             served = result.model_served or store.record(result.request_sha256).get(
                 "model_served"
             )
