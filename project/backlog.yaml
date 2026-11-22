@@ -3797,3 +3797,17 @@ items:
       - "surface_findings over the live README before the fix: exactly one finding, 'names `Y` as a property of `Camera`'; after: none"
     next_action: "supervisor integrates; hosted 3D TypeScript Lane R refresh (run-request JSON in the BL-871 decision-log entry)"
     updated: "2026-11-22"
+
+  - id: BL-880
+    title: "The per-invocation provider-call guard (300) stops the PDF TypeScript Lane R refresh: 'provider-call budget of 300 reached in this invocation' after 300 calls, no seal (run 45028865276); an earlier sealing run needed 205 calls"
+    type: defect
+    source: "owner rulings R44, R45 (budgets measure, never block), R46; hosted run 45028865276"
+    priority: P0
+    status: active
+    implementation_path: "core/llm/ledger.PROVIDER_CALL_BUDGET 300 -> 1200, a runaway-loop guard only (spend stays measured per seal, R45)"
+    acceptance: "(1) the constant and its comment; (2) tests/core pass; (3) hosted: PDF TypeScript refresh is not stopped by the guard (R41, not yet proven)"
+    evidence:
+      - "run 45028865276: ProviderCallBudgetError budget of 300, 8.17M tokens"
+    next_action: "supervisor re-sends the PDF TypeScript refresh after merge"
+    updated: "2026-11-22"
+
