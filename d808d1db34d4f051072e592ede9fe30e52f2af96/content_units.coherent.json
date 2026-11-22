@@ -1,0 +1,374 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": [
+      "key_capabilities/capability:1",
+      "key_capabilities/capability:4",
+      "key_capabilities/capability:6"
+    ]
+  },
+  "degrade_records": [
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:org"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.loaders.psdimageloader"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.resources.indexedcolorpalette"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.sections.imageresourcessection"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.sections.seekorigin"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.writedescriptors.psdimagewriter"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.channelinformation"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layerblendmodemapper"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layermaskflags"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layerrecordreader"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.rawlayermasksection"
+    },
+    {
+      "action": "enterprise_context_withheld",
+      "findings": [
+        "llm:factuality"
+      ],
+      "inherited_units": [
+        "inherited_unit:052.paragraph"
+      ],
+      "rule": "BL-480",
+      "section": "enterprise_relationship",
+      "slot": "context"
+    },
+    {
+      "action": "inherited_unit_omitted",
+      "detail": "the clause printed from this paragraph is withheld with the Enterprise clause",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-480",
+      "section": "enterprise_relationship",
+      "slot": "inherited_unit:052.paragraph"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "The library does not render images, export to PNG or JPEG, convert formats, or decode pixels.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "scope_limitations",
+      "slot": "inherited_unit:051.list"
+    },
+    {
+      "action": "printed_text_withheld",
+      "detail": "Line 0279 states 'BigEndianWriter: seek throws UnsupportedOperationException', but the facts show that BigEndianWriter.seek is a supported method with no evidence of throwing UnsupportedOperationException.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "",
+      "slot": "printed_text"
+    }
+  ],
+  "degraded_quotes": [
+    "- `BigEndianWriter`: `seek` throws UnsupportedOperationException."
+  ],
+  "omitted": [
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "Ecosystem identity is not used in any capability description; it is implied by the Java platform and package details.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Family identity is not used in any capability description; it is implied by the PSD focus and package details.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "Platform identity is not used in any capability description; it is implied by the Java package and runtime version.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Knowledge refresh provenance is not used in any capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is not used in any capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Revision identity is not used in any capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:java_release",
+      "reason": "Java release version is not used in any capability description; it is implied by the package and public symbol details.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Published version is not used in any capability description; it is implied by the package version.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "This inherited list is used to derive capability descriptions but is not itself described as a standalone capability.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:029.paragraph",
+      "reason": "This inherited unit describes implementation details of opacity handling and layer array checks, which are not part of the high-level API reference introduction.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:030.heading",
+      "reason": "This inherited unit is a heading label, not a descriptive fact to be included in prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:033.heading",
+      "reason": "This inherited unit is a heading label, not a descriptive fact to be included in prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:038.table",
+      "reason": "This inherited unit is a table of classes and descriptions, which the renderer handles separately; it is not suitable for inclusion in a prose summary sentence.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.loaders.psdimageloader",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.resources.indexedcolorpalette",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.sections.imageresourcessection",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.sections.seekorigin",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.writedescriptors.psdimagewriter",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.layers.channelinformation",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.layers.layerblendmodemapper",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.layers.layermaskflags",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.layers.layerrecordreader",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:org.aspose.psd.layers.rawlayermasksection",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "link_target:product.enterprise",
+      "reason": "Enterprise clause withheld (BL-480, R14): the independent review found no fact that supports it, so the renderer prints the verified Enterprise Edition sentence alone",
+      "section": "enterprise_relationship"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:004.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It loads PSD and PSB files, reads header and layer metadata, modifies layer properties such as name, visibility, and opacity, and saves the modified files back to disk."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It loads RGB PSD and PSB documents from a file path with PsdImage.load(String) or from a stream with PsdImage.load(InputStream), reads header properties such as width, height, bits per channel, color mode, compression, and channel count, and supports RGB, CMYK and indexed-color PSD files without requiring Photoshop."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It inspects layer metadata by exposing each layer through PsdImage.getLayers, reporting the layer name, visibility, opacity, clipping, blend mode key, and position coordinates."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It edits layer metadata by allowing name, visibility, and opacity changes via setName, setVisible, and setOpacity, and writes position, clipping, and blend-mode properties while preserving the layer's pixel data."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:tests"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It preserves raw file content by saving documents with a raw-preserving strategy such that documents saved without changes are identical to the file that was loaded, and unedited sections are copied through unchanged."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It lists image resources through getImageResources, exposing each resource's id, name, and size, while preserving their payloads on save without exposing their internal data."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It handles multiple color modes by supporting RGB, CMYK and indexed-color PSD files during load and save operations."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:031.paragraph",
+        "package:java_release",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The PsdImage class serves as the library's entry point for loading and saving PSD files, and it returns Layer instances through its getLayers method. Layer provides access to editable per-layer metadata such as name, visibility, and opacity."
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "omitted": [
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "Ecosystem identity is not used in any capability description; it is implied by the Java platform and package details.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Family identity is not used in any capability description; it is implied by the PSD focus and package details.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "Platform identity is not used in any capability description; it is implied by the Java package and runtime version.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Knowledge refresh provenance is not used in any capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Repository identity is not used in any capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Revision identity is not used in any capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:java_release",
+      "reason": "Java release version is not used in any capability description; it is implied by the package and public symbol details.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Published version is not used in any capability description; it is implied by the package version.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "This inherited list is used to derive capability descriptions but is not itself described as a standalone capability.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:029.paragraph",
+      "reason": "This inherited unit describes implementation details of opacity handling and layer array checks, which are not part of the high-level API reference introduction.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:030.heading",
+      "reason": "This inherited unit is a heading label, not a descriptive fact to be included in prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:033.heading",
+      "reason": "This inherited unit is a heading label, not a descriptive fact to be included in prose.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:038.table",
+      "reason": "This inherited unit is a table of classes and descriptions, which the renderer handles separately; it is not suitable for inclusion in a prose summary sentence.",
+      "section": "api_reference"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "inherited_unit:004.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "It loads PSD and PSB files, reads header and layer metadata, modifies layer properties such as name, visibility, and opacity, and saves the modified files back to disk."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It loads RGB PSD and PSB documents from a file path or stream using PsdImage.load, reads header properties such as width, height, bits per channel, color mode, compression, and channel count, and supports RGB, CMYK, and indexed-color PSD files without requiring Photoshop."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It inspects layer metadata by exposing each layer through PsdImage.getLayers, reporting the layer name, visibility, opacity, clipping, blend mode key, and position coordinates."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It edits layer metadata by allowing name, visibility, and opacity changes via setName, setVisible, and setOpacity, and writes position, clipping, and blend-mode properties while preserving the layer's pixel data."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:ci",
+        "build_test_asset:tests"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It preserves raw file content by saving documents with a raw-preserving strategy such that documents saved without changes are identical to the loaded file, and unedited sections are copied through unchanged."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It lists image resources through getImageResources, exposing each resource's id, name, and size, while preserving their payloads on save without exposing their internal data."
+    },
+    {
+      "fact_ids": [
+        "package:name",
+        "package:version",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It handles multiple color modes by supporting RGB, CMYK, and indexed-color PSD files during load and save operations."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "inherited_unit:031.paragraph",
+        "package:java_release",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The PsdImage class serves as the library's entry point for loading and saving PSD files, and it returns Layer instances through its getLayers method. Layer provides access to editable per-layer metadata such as name, visibility, and opacity."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org",
+        "public_symbol:org.aspose",
+        "public_symbol:org.aspose.psd"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:org",
+      "text": "The org.aspose package hosts the core classes PsdImage and Layer, while org.aspose.psd contains supporting types such as BlendMode and LayerMaskFlags."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:052.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds rendering, editing, and format conversion capabilities."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.layers.channelinformation"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.channelinformation",
+      "text": "ChannelInformation class holds the channel identifier, compression method, and length of a channel."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.layers.layerblendmodemapper"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layerblendmodemapper",
+      "text": "LayerBlendModeMapper class provides the NORMAL_BLEND_MODE_KEY constant and methods to get and parse blend mode keys."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.layers.layermaskflags"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layermaskflags",
+      "text": "LayerMaskFlags enum lists the Disabled, InvertedWhenBlending, None, RelativeToLayer, UserMaskFromRenderingOtherData, and UserOrVectorMasksHaveParameters flag values."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.layers.layerrecordreader.load.body.psdloadexception",
+        "public_symbol:org.aspose.psd.layers.layerrecordreader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.layerrecordreader",
+      "text": "LayerRecordReader class provides a load method that throws PsdLoadException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.layers.rawlayermasksection.load.body.psdloadexception",
+        "implementation:throws.org.aspose.psd.layers.rawlayermasksection.load.body.runtimeexception",
+        "public_symbol:org.aspose.psd.layers.rawlayermasksection",
+        "public_symbol:org.aspose.psd.layers.rawlayermasksection.getrawbytes",
+        "public_symbol:org.aspose.psd.layers.rawlayermasksection.rawbytes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.layers.rawlayermasksection",
+      "text": "RawLayerMaskSection class provides the EMPTY field, rawBytes property, and load, getRawBytes methods; its load method throws PsdLoadException and RuntimeException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.loaders.psdimageloader.load.body.psdloadexception",
+        "public_symbol:org.aspose.psd.loaders.psdimageloader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.loaders.psdimageloader",
+      "text": "PsdImageLoader class provides a load method that throws PsdLoadException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.resources.indexedcolorpalette.parse.body.illegalargumentexception",
+        "public_symbol:org.aspose.psd.resources.indexedcolorpalette"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.resources.indexedcolorpalette",
+      "text": "IndexedColorPalette class provides the EXPECTED_RAW_LENGTH field, getEntries method, and parse and toPublicInfo methods; its parse method throws IllegalArgumentException (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.sections.imageresourcessection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.sections.imageresourcessection",
+      "text": "ImageResourcesSection class provides the EMPTY field, rawData and resources properties, and load, getRawData, getResources, hasResources, and save methods."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd.sections.seekorigin"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.sections.seekorigin",
+      "text": "SeekOrigin enum lists the BEGIN, CURRENT, and END seek origin values."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.org.aspose.psd.writedescriptors.psdimagewriter.save.body.ioexception",
+        "implementation:throws.org.aspose.psd.writedescriptors.psdimagewriter.save.body.runtimeexception",
+        "public_symbol:org.aspose.psd.writedescriptors.psdimagewriter"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:org.aspose.psd.writedescriptors.psdimagewriter",
+      "text": "PsdImageWriter class provides a save method that throws IOException and RuntimeException (conditionally)."
+    }
+  ]
+}

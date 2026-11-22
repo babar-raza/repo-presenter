@@ -1,0 +1,192 @@
+{
+  "audience": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:platform",
+      "package:name",
+      "package:version",
+      "public_symbol:org",
+      "public_symbol:org.aspose",
+      "public_symbol:org.aspose.psd"
+    ],
+    "text": "Java developers needing a lightweight, dependency-free library to inspect and modify PSD/PSB header and layer metadata without requiring Photoshop or rendering capabilities."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Load PSD and PSB files from file paths or streams and read header properties including dimensions, color mode, compression, and channel count.",
+      "title": "Load PSD/PSB files"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Access layer properties such as name, visibility, opacity, blend mode, position, and clipping through `PsdImage.getLayers()`.",
+      "title": "Inspect layer metadata"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Modify layer metadata using `setName`, `setVisible`, and `setOpacity`, and write changes back without touching pixel data.",
+      "title": "Edit layer metadata"
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:ci"
+      ],
+      "text": "Save files with raw-preserving strategy: unmodified sections are copied byte-for-byte, ensuring round-trip integrity.",
+      "title": "Preserve raw file content"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Retrieve image resource metadata via `getImageResources()`; payloads are preserved but not exposed.",
+      "title": "List image resources"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Parse RGB, CMYK, and indexed-color PSD files without requiring external color conversion tools.",
+      "title": "Handle multiple color modes"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "text": "No rendering or pixel decoding: the library does not export to PNG/JPEG or rasterize content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Seven setters always throw `UnsupportedOperationException`, including `setChannelInformation`, `setLayerMaskData`, and `setLayerBlendingRangesData`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Layer names are saved as ASCII up to 255 characters; non-ASCII characters become `?` and longer names cause `RuntimeException`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Image resources are read-only: `save(OutputStream)` on `PreservedResourceBlock` always throws `UnsupportedOperationException`."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Adding, removing, or reordering layers via `setLayers` is unsupported and may produce inconsistent files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:org.aspose.psd",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Load enforces strict header limits: channel count 1–56, bit depth 1/8/16/32, max dimensions 30000 (PSD) or 300000 (PSB)."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "identity:repository",
+        "package:name",
+        "package:version"
+      ],
+      "text": "Enables non-destructive structural editing of PSD/PSB files by exposing layer metadata and supporting raw-preserving save operations."
+    },
+    {
+      "fact_ids": [
+        "dependency:none",
+        "package:java_release",
+        "public_symbol:org.aspose.psd"
+      ],
+      "text": "Provides a pure-Java solution for PSD/PSB parsing without external dependencies or native tool requirements."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:tests",
+        "build_test_asset:ci"
+      ],
+      "text": "Supports byte-exact round-trip preservation of unmodified file sections to maintain file integrity."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:repository",
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:name",
+      "package:version"
+    ],
+    "text": "Aspose.PSD FOSS for Java is an open-source Java library for reading and editing structural metadata of PSD and PSB files without rendering pixels."
+  },
+  "uncertainties": [
+    "Whether `getActiveLayer()` returns the first layer or the actual active layer stored in the file is unclear.",
+    "The exact behavior of `setColorMode` when used with non-RGB payloads is not specified beyond header rewriting.",
+    "The scope of `PsdLoadException` vs `RuntimeException` wrapping for `load(InputStream)` vs `load(String)` is not fully detailed.",
+    "Whether `getVersion()` reflects actual file version or is hardcoded to 6 is ambiguous.",
+    "The behavior of `setLayers` with identical arrays is documented but edge cases are not explored.",
+    "The handling of PSB-specific header fields beyond size limits is not explicitly described.",
+    "The exact set of compression types supported beyond RAW, RLE, and ZIP is not enumerated.",
+    "Whether `java.desktop` module is optional or required for non-indexed-color workflows is not clarified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "name": "Build and test",
+      "text": "Run `mvn package` to build and `mvn test` to execute the JUnit 5 test suite under `test/`."
+    },
+    {
+      "fact_ids": [
+        "install_command:maven",
+        "package:published_version"
+      ],
+      "name": "Install from Maven Central",
+      "text": "Install using `mvn dependency:get -Dartifact=org.aspose:aspose-psd-foss:26.11.0`."
+    },
+    {
+      "fact_ids": [
+        "build_test_asset:release-workflow",
+        "package:version"
+      ],
+      "name": "Release workflow",
+      "text": "Releases are built and published via `.github/workflows/maven-central-release.yml`."
+    }
+  ]
+}
