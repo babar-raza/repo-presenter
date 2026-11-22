@@ -35,294 +35,38 @@
    "run_id": "44993692981",
    "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
    "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  },
+  {
+   "at": "2026-11-22T09:29:13+00:00",
+   "classes": [],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "45007455864",
+   "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
+   "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
   }
  ],
  "lane": "L",
  "latest": {
-  "at": "2026-11-22T06:35:37+00:00",
-  "classes": {
-   "llm:factuality|lane_l_correction|api_reference": {
-    "example": "| `MdBlockQuote` | Interface that inherits from } and declares the members children and type. |\n| `MdCode` | Interface that inherits from } and declares the members type and value. |",
-    "findings": 16,
-    "origin_kind": "lane_l_correction",
-    "origins": [
-     "type_description"
-    ],
-    "rule": "llm:factuality",
-    "scope": "bbe9a3076e5d945b3ddf4c4c4b46d4e0f140db96b413f4db2c6a1eef0b50d951",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/lane_l.py",
-     "src/repo_presenter/lane_l_run.py",
-     "src/repo_presenter/readme/correction",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "api_reference",
-    "upstream": ""
-   }
-  },
-  "code": "a297189be023ee7fa1ef2cbf91f340b6b35695ba2d2396a7b444f19edd9c3f66",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 810f7969970a: PresentFailure: Lane L: independent review returned REJECT with 16 blocking finding(s) of 16; nothing sealed; F01 [contradiction] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revised",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "F01",
-    "message": "Lines 4183, 4184, 4187, 4190, 4193, 4194, 4195, 4198, 4199, 4201, 4204, 4205, 4206, 4207, 4210, 4211, 4213, 4214 describe several Markdown node types as interfaces that inherit from } and declare specific members.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdBlockQuote` | Interface that inherits from } and declares the members children and type. |\n| `MdCode` | Interface that inherits from } and declares the members type and value. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F02",
-    "message": "Line 4183 describes `MdBlockQuote` as an interface that inherits from } and declares the members children and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdBlockQuote` | Interface that inherits from } and declares the members children and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F03",
-    "message": "Line 4184 describes `MdCode` as an interface that inherits from } and declares the members type and value.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdCode` | Interface that inherits from } and declares the members type and value. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F04",
-    "message": "Line 4187 describes `MdEmph` as an interface that inherits from } and declares the members children and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdEmph` | Interface that inherits from } and declares the members children and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F05",
-    "message": "Line 4190 describes `MdHardBreak` as an interface that inherits from } and declares the member type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdHardBreak` | Interface that inherits from } and declares the member type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F06",
-    "message": "Line 4193 describes `MdHtmlInline` as an interface that inherits from } and declares the members literal and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdHtmlInline` | Interface that inherits from } and declares the members literal and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F07",
-    "message": "Line 4194 describes `MdImage` as an interface that inherits from } and declares the members children, destination, title and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdImage` | Interface that inherits from } and declares the members children, destination, title and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F08",
-    "message": "Line 4195 describes `MdItem` as an interface that declares the members checked, children and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdItem` | Interface that declares the members checked, children and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F09",
-    "message": "Line 4198 describes `MdParagraph` as an interface that inherits from } and declares the members children and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdParagraph` | Interface that inherits from } and declares the members children and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F10",
-    "message": "Line 4199 describes `MdSoftBreak` as an interface that inherits from } and declares the member type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdSoftBreak` | Interface that inherits from } and declares the member type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F11",
-    "message": "Line 4201 describes `MdStrong` as an interface that inherits from } and declares the members children and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdStrong` | Interface that inherits from } and declares the members children and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F12",
-    "message": "Line 4204 describes `MdTableRow` as an interface that inherits from } and declares the members children, header and type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdTableRow` | Interface that inherits from } and declares the members children, header and type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F13",
-    "message": "Line 4205 describes `MdText` as an interface that inherits from } and declares the members type and value.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdText` | Interface that inherits from } and declares the members type and value. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F14",
-    "message": "Line 4206 describes `MdThematicBreak` as an interface that inherits from } and declares the member type.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MdThematicBreak` | Interface that inherits from } and declares the member type. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F15",
-    "message": "Line 4207 describes `Metadata` as an interface that declares members including author, creationDate, creator, custom, keywords and modDate.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `Metadata` | Interface that declares members including author, creationDate, creator, custom, keywords and modDate. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "F16",
-    "message": "Line 4210 describes `MetadataUpdate` as an interface that declares members including author, creationDate, creator, custom, keywords and modDate.",
-    "origin": {
-     "id": "type_description",
-     "kind": "lane_l_correction"
-    },
-    "quote": "| `MetadataUpdate` | Interface that declares members including author, creationDate, creator, custom, keywords and modDate. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|lane_l_correction|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-22T09:29:13+00:00",
+  "classes": {},
+  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "L",
-  "main_sha": "c9de0c9462a994ae9acfe2d76cb62f612333d0b3",
+  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
   "origin": "hosted",
-  "outcome": "failure",
+  "outcome": "success",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "44993692981",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44993692981",
+  "run_id": "45007455864",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45007455864",
   "schema_version": 1,
   "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
-  "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
  "schema_version": 1
