@@ -1,0 +1,352 @@
+{
+  "audience": {
+    "fact_ids": [
+      "example:001",
+      "example:002",
+      "example:003",
+      "example:006",
+      "example:007",
+      "example:008",
+      "example:010",
+      "example:011",
+      "example:012",
+      "example:013",
+      "example:016",
+      "example:017",
+      "example:020",
+      "example:021"
+    ],
+    "text": "Python developers building applications that process PDF documents, including those needing document creation, conversion, text extraction, form handling, and compliance checks."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012",
+        "example:013",
+        "example:016"
+      ],
+      "text": "Create new PDFs or load existing ones from files, bytes, or streams; add, remove, and reorder pages; and modify page properties.",
+      "title": "Create and Edit PDF Documents"
+    },
+    {
+      "fact_ids": [
+        "example:026",
+        "example:027",
+        "example:028",
+        "example:032",
+        "example:033",
+        "example:034",
+        "example:037",
+        "example:038",
+        "example:039",
+        "example:040",
+        "example:041"
+      ],
+      "text": "Extract text with region and artifact filtering, search and replace text, redact content, and auto-link URLs and email addresses.",
+      "title": "Text Extraction and Editing"
+    },
+    {
+      "fact_ids": [
+        "example:026",
+        "example:027",
+        "example:028",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.extract_tables",
+        "public_symbol:aspose_pdf.table"
+      ],
+      "text": "Extract tables from PDFs as structured data, export them to CSV, and create new tables with headers, styling, and column spans.",
+      "title": "Table Extraction and Authoring"
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "example:011",
+        "example:012",
+        "example:013",
+        "example:016",
+        "example:017",
+        "example:029",
+        "example:030"
+      ],
+      "text": "Render pages to images (PNG, TIFF, JPEG, WebP), export to SVG with selectable text, and generate contact sheets.",
+      "title": "Rendering and Export"
+    },
+    {
+      "fact_ids": [
+        "example:024",
+        "example:025",
+        "example:026",
+        "example:027",
+        "example:028",
+        "example:032",
+        "example:033",
+        "example:034",
+        "example:037",
+        "example:038",
+        "example:039"
+      ],
+      "text": "Add, edit, and remove annotations; handle form fields, validation, and flattening; and exchange annotations in JSON or XFDF.",
+      "title": "Annotations and Forms"
+    },
+    {
+      "fact_ids": [
+        "example:032",
+        "example:033",
+        "example:034",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.encrypt",
+        "public_symbol:aspose_pdf.document.decrypt",
+        "public_symbol:aspose_pdf.document.validate_pdfa"
+      ],
+      "text": "Encrypt and decrypt PDFs, sign documents with PAdES support, validate PDF/A, PDF/UA, and PDF/X compliance, and sanitize documents.",
+      "title": "Security and Compliance"
+    },
+    {
+      "fact_ids": [
+        "example:033",
+        "example:034",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.fonts",
+        "public_symbol:aspose_pdf.document.embed_fonts"
+      ],
+      "text": "Inspect document fonts, embed missing fonts from system or custom sources, and substitute fonts for rendering.",
+      "title": "Font Management"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_pdf.lowcode",
+        "public_symbol:aspose_pdf.lowcode.converter",
+        "public_symbol:aspose_pdf.lowcode.convertoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptoptions",
+        "public_symbol:aspose_pdf.lowcode.decryptor"
+      ],
+      "text": "Use the low-code plugin layer for common batch operations like merging, splitting, optimizing, and converting documents.",
+      "title": "Batch and Low-Code Workflows"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "package:python_requires"
+      ],
+      "text": "Page rendering is a best-effort rasterizer, not a certification-grade visual engine; overprint support is a composite RGB preview."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "package:python_requires"
+      ],
+      "text": "PDF/A and PDF/UA validation are heuristic checks; formal certification requires a dedicated validator like veraPDF."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "package:python_requires"
+      ],
+      "text": "OCR and layout reflow are not implemented; text replacement and redaction rewrite matched runs in place without reflow."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "package:python_requires"
+      ],
+      "text": "SVG export writes polylines rather than curves and text as glyph outlines, which renders exactly but is not selectable."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "package:python_requires"
+      ],
+      "text": "WOFF2 decoding and complex-text shaping each need an optional extra; without them these paths fall back to file-name metadata or fail explicitly."
+    },
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "license:spdx",
+        "package:name",
+        "package:published_version",
+        "package:version",
+        "package:python_requires"
+      ],
+      "text": "The bundled JPEG 2000 decoder is pure Python and slow; install the images extra for anything larger than a thumbnail."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:010",
+        "example:011",
+        "example:012",
+        "example:013",
+        "example:016",
+        "example:017",
+        "example:020",
+        "example:021"
+      ],
+      "text": "Enables programmatic PDF creation, editing, and conversion without requiring a GUI or external tools."
+    },
+    {
+      "fact_ids": [
+        "example:026",
+        "example:027",
+        "example:028",
+        "example:032",
+        "example:033",
+        "example:034",
+        "example:037",
+        "example:038",
+        "example:039",
+        "example:040",
+        "example:041",
+        "example:043"
+      ],
+      "text": "Supports text extraction, replacement, redaction, and search with context and region filtering."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "example:011",
+        "example:012",
+        "example:013",
+        "example:016",
+        "example:017",
+        "example:029",
+        "example:030"
+      ],
+      "text": "Provides rendering to images (PNG, TIFF, JPEG, WebP), SVG export, and contact sheet generation."
+    },
+    {
+      "fact_ids": [
+        "example:033",
+        "example:034",
+        "example:037",
+        "example:038",
+        "example:039",
+        "example:040",
+        "example:041",
+        "example:043"
+      ],
+      "text": "Enables PDF/A, PDF/UA, and PDF/X compliance checks and conversion, along with font embedding and substitution."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "license:spdx",
+      "package:name",
+      "package:published_version",
+      "package:version"
+    ],
+    "text": "Aspose.PDF FOSS for Python is an open-source, MIT-licensed Python library for creating, reading, editing, rendering, and validating PDF documents, targeting Python 3.11+."
+  },
+  "uncertainties": [
+    "The exact scope of the low-code plugin layer's capabilities beyond the listed classes is not fully detailed.",
+    "The behavior of the library when handling malformed or malicious PDFs under resource limits is not fully specified.",
+    "The extent of PDF 2.0 feature support beyond the listed capabilities is unclear.",
+    "The compatibility of the library with non-standard or proprietary PDF extensions is not detailed.",
+    "The performance characteristics of large document processing are not quantified.",
+    "The exact behavior of the library when handling multi-threaded access to a single Document instance is not specified.",
+    "The support for digital signatures beyond the listed PAdES levels is not fully detailed.",
+    "The behavior of the library when handling PDFs with complex or non-standard color spaces is not fully specified."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose_pdf",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.add_page",
+        "public_symbol:aspose_pdf.document.save"
+      ],
+      "name": "Create and Save PDF",
+      "text": "Create a new PDF document, add a page with text, and save it to a file using the Document class."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.page_count",
+        "public_symbol:aspose_pdf.document.version",
+        "public_symbol:aspose_pdf.document.info"
+      ],
+      "name": "Load and Inspect PDF",
+      "text": "Load an existing PDF from a file path, inspect its page count, version, and metadata, then close it."
+    },
+    {
+      "fact_ids": [
+        "example:026",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.extract_tables",
+        "public_symbol:aspose_pdf.extractedtable.to_list",
+        "public_symbol:aspose_pdf.extractedtable.save_csv"
+      ],
+      "name": "Extract Tables to CSV",
+      "text": "Extract tables from specific pages, convert them to lists or CSV, and save them to files."
+    },
+    {
+      "fact_ids": [
+        "example:025",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.save_as_html",
+        "public_symbol:aspose_pdf.document.save_as_markdown"
+      ],
+      "name": "Export to HTML or Markdown",
+      "text": "Convert a PDF document to HTML or Markdown format, optionally splitting into pages and managing resources."
+    },
+    {
+      "fact_ids": [
+        "example:020",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.add_table_of_contents"
+      ],
+      "name": "Add Table of Contents",
+      "text": "Generate a table of contents from bookmarks or headings and insert it at a specified page position."
+    },
+    {
+      "fact_ids": [
+        "example:032",
+        "public_symbol:aspose_pdf.document",
+        "public_symbol:aspose_pdf.document.sanitize"
+      ],
+      "name": "Sanitize PDF",
+      "text": "Remove metadata, scripts, attachments, comments, and hidden layers from a PDF in one pass."
+    }
+  ]
+}

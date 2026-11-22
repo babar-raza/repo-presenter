@@ -1,0 +1,3470 @@
+# Aspose.PDF FOSS for Python
+
+[![PyPI](https://img.shields.io/pypi/v/aspose-pdf-foss-for-python.svg)](https://pypi.org/project/aspose-pdf-foss-for-python/) ![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg) [![CI](https://github.com/aspose-pdf-foss/Aspose-PDF-FOSS-for-Python/actions/workflows/ci.yml/badge.svg)](https://github.com/aspose-pdf-foss/Aspose-PDF-FOSS-for-Python/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+[![Aspose.PDF FOSS for Python](https://products.aspose.org/media/pdf/python/banner-readme.png)](https://products.aspose.org/pdf/python/)
+
+Aspose.PDF FOSS for Python reads and writes PDF documents, converts them to other formats such as `.csv`, `.htm`, `.html`, `.jpeg`, `.jpg`, `.json`, `.md`, `.png`, `.svg`, `.tif`, `.tiff`, `.xfdf`, and `.zip`, and extracts tables, text, and other content. It supports encryption and decryption, font embedding, PDF/A validation, and low-code operations via the `Converter` class. The library operates on `.pdf` input and produces output in the listed formats, enabling round-trip processing through bytes or streams.
+
+Aspose.PDF FOSS for Python is an open-source, MIT-licensed Python library for creating, reading,
+editing, rendering, and validating PDF documents. It targets Python 3.11 and later, ships type
+information (`py.typed`), and depends only on `cryptography` and `asn1crypto` at its core. The
+project is currently in alpha, so its public APIs and feature coverage continue to evolve ahead
+of a first stable release.
+
+## Navigation
+
+- [At a Glance](#at-a-glance)
+- [Key Capabilities](#key-capabilities)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Quick Start](#quick-start)
+- [Additional Examples](#additional-examples)
+- [API Reference](#api-reference)
+- [Documentation & Resources](#documentation--resources)
+- [Scope and Limitations](#scope-and-limitations)
+- [Development and Testing](#development-and-testing)
+- [License](#license)
+
+## At a Glance
+
+```mermaid
+flowchart TB
+  subgraph StartingPoints["Starting Points"]
+    direction TB
+    i1["An existing PDF, CSV,<br/>or JSON file"]
+  end
+  PRODUCT["Aspose.PDF FOSS for Python"]
+  subgraph Capabilities["Core Capabilities"]
+    direction TB
+    c1["Create and Edit PDF<br/>Documents"]
+    c2["Text Extraction and<br/>Editing"]
+    c3["Table Extraction and<br/>Authoring"]
+    c4["Rendering and Export"]
+    c5["Annotations and Forms"]
+    c6["Security and<br/>Compliance"]
+    c7["Font Management"]
+    c8["Batch and Low-Code<br/>Workflows"]
+    c1 ~~~ c4
+    c2 ~~~ c5
+    c3 ~~~ c6
+    c4 ~~~ c7
+    c5 ~~~ c8
+    c6 ~~~ c8
+  end
+  subgraph Outputs["Outputs"]
+    direction TB
+    o1["PDF, CSV, HTML, MD,<br/>PNG, SVG, or ZIP file"]
+  end
+  StartingPoints --> PRODUCT --> Capabilities --> Outputs
+  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
+  class PRODUCT product
+```
+
+## Key Capabilities
+
+- **Create and Edit PDF Documents.** Create new PDFs from scratch or load existing ones from files, bytes, or streams, then add pages of any size, draw paths and shapes, place text with full Unicode and font control, and save the result as a complete PDF document.
+- **Text Extraction and Editing.** Extract text from entire documents or specific regions, skip artifacts like headers and footers, and use clipping or exclusion zones to focus on the content of interest.
+- **Table Extraction and Authoring.** Detect and extract tables from pages, convert them to CSV or list structures, and author new tables with headers, rows, column spans, and per-cell styling, placing them directly onto pages.
+- **Rendering and Export.** Rasterize pages to PNG, TIFF, or JPEG with configurable DPI and color mode, export them as SVG with selectable text, create contact sheets of thumbnails, and split spreads into individual pages.
+- **Annotations and Forms.** Add, edit, and export annotations and form fields, import and export review comments in JSON or XFDF, generate bookmarks from headings or text patterns, and flatten forms into static content.
+- **Security and Compliance.** Apply and remove password-based encryption using AES-256 or other standard algorithms, validate PDF/A and PDF/UA compliance, and sanitize documents to remove metadata, scripts, actions, and attachments.
+- **Font Management.** List fonts used in a document, check which ones are embedded, and embed missing fonts from system sources to ensure consistent rendering and PDF/A conformance.
+- **Batch and Low-Code Workflows.** Process multiple files in batch using low-code wrappers for common operations such as converting to various formats, encrypting or decrypting, and merging or splitting documents.
+
+- The `Document` class is the central entry point: `Document(source, password=..., limits=...)`
+  creates a new PDF or loads an existing one from a file path, raw bytes, or a binary stream —
+  equivalent to `Document().load_from(source, ...)` — and merges instances together — a missing
+  file, non-PDF data, or a missing password always raises rather than silently handing back an
+  empty document.
+- `Document.language` reads or sets the PDF's default language, for example
+  `document.language = "en-US"`, without converting the document. Assign `None`
+  to remove the declaration, or `""` to declare the language unknown.
+- `document.title`, `author`, `subject`, `keywords`, `creator` and `producer`
+  read and write the standard text entries of the information dictionary —
+  `document.title = "Quarterly report"` — and assigning `None` removes the
+  entry. `sync_metadata()` mirrors the entries into the XMP packet; anything
+  else the dictionary carries stays reachable through `document.info`.
+- `document.pages.add(PageSize.A4)` creates a page of any size — the ISO A and B sizes, the US
+  sizes, `landscape()`, `from_mm()` or a plain `(width, height)` pair in points — and
+  `Page.media_box`, `Page.size`, `Page.crop_box`, `Page.bleed_box`, `Page.trim_box` and
+  `Page.art_box` read and set all five boxes a page is described by, each reporting the box in
+  effect: a production box falls back to the crop box it defaults to and is reduced to the sheet
+  it is on, the way ISO 32000-1 14.11.2 asks.
+- `Page.draw_path()` draws real geometry — lines, cubic and quadratic curves, rectangles,
+  ellipses, circles, polygons — with the full stroke state (width, caps, joins, miter limit, dash
+  pattern), either fill rule, per-drawing opacity and blend mode, and a transform. `with
+  page.graphics(transform=..., clip=..., opacity=...)` holds a state over several drawings, text
+  and images included, so anything on the page can be turned, scaled, clipped or faded.
+- Colour is grey, RGB or CMYK wherever one is taken — `page.draw_rectangle(..., fill_color=(0, 0.2, 1,
+  0.05))` sets an ink, `fill_color="#336699"` a web colour, `fill_color=0.25` a grey — with
+  `Color.gray/rgb/cmyk/from_hex` for a value object to pass around. Grey and RGB channels may be
+  0..1 or 0..255; CMYK is 0..1, because a percentage and an 8-bit value cannot be told apart from a
+  fraction.
+- The facade layer carries the classes ported Aspose.PDF code expects — `PdfFileInfo`,
+  `PdfFileSecurity`, `PdfBookmarkEditor`, `PdfAnnotationEditor`, `PdfFileStamp`, `PdfPageEditor`,
+  `PdfXmpMetadata`, `PdfConverter` beside `PdfExtractor` and `PdfFileEditor`. Each binds a
+  document (a path, bytes, a stream, or one you already have open), works on it, and saves;
+  page numbers there are 1-based, as in the original API.
+
+- `Document.export_annotations_json()` exports comments, geometry, metadata and reply/popup
+  links for review reports and external processing, with page and subtype filters. A page's
+  `annotations.to_list()` provides editable snapshots and `annotations.export_json()` writes JSON.
+  `Document.import_annotations_json()` and `Page.annotations.import_json()` append supported
+  review annotations from that JSON, restoring properties and reply/popup links.
+- `Document.export_annotations_xfdf()` and `Page.annotations.export_xfdf()` export
+  review comments, markup geometry and reply threads for XFDF exchange workflows.
+- `Document.remove_annotations()` filters review cleanup by author, date, subtype
+  and page, with a dry run count before removing old or superseded comments.
+- `Document.validate_links()` reports broken local links, bookmark targets and named
+  destinations before sharing a PDF. `Page.validate_links()` checks one page's links;
+  neither method changes the document or opens external addresses.
+- `Document.extract_links()` inventories link URLs, local/remote targets and
+  coordinates for audits and content migrations without opening the links.
+- `Document.export_bookmarks_json()` / `import_bookmarks_json()` exchange an editable
+  bookmark tree, including styles and destination views. Import appends or replaces
+  the tree and can remap local pages when transferring it to another PDF.
+  `export_bookmarks_csv()` / `import_bookmarks_csv()` exchange simple page bookmarks
+  as `level,title,page` rows for editing the table of contents in a spreadsheet.
+- `Page.to_svg()` and `Document.to_svg()` / `save_as_svg()` export a page as real vectors — paths
+  with their curves, fill rule, dashed strokes, clip paths, glyph outlines, embedded images and
+  gradients. A Bézier is written back out as the Bézier it was, so the export stays exact at any
+  zoom. The exporter is the renderer with its paint sinks replaced, so the SVG and the rasterized
+  page agree on geometry by construction. `to_svg()` returns each page as a separate SVG document
+  in a list of bytes, while `save_as_svg()` writes them to files.
+
+- `Page.render()` and `Page.save_as_image()` rasterize a page to PNG, TIFF, or JPEG through a
+  bundled renderer — no third-party rasterization library required for the core path — that fills
+  real glyph outlines, honors soft masks and blend modes, and paints axial, radial, and mesh
+  shadings. Output can be RGB, greyscale, or 1-bit bilevel; TIFF is Deflate-compressed by default,
+  and `Document.to_tiff()` / `save_as_tiff()` put every page into one multi-page TIFF, as bytes or
+  as a file.
+  With the optional `images` extra, pages also export to WebP with lossy or lossless compression
+  for website previews and thumbnails.
+  Pass `clip=(x0, y0, x1, y1)` to render or save just a detail in PDF coordinates, allocating
+  a canvas for that region instead of the whole page.
+- `Document.render_contact_sheet()` / `save_contact_sheet()` create a numbered grid of
+  page thumbnails for a quick document overview or review preview. Select pages, set the
+  grid and thumbnail dimensions, and save as PNG, TIFF, JPEG or optional WebP.
+- `Document.rasterized_copy()` creates a fresh image-only PDF of selected page
+  views for static handoffs, with configurable DPI, RGB/gray/bilevel modes,
+  optional black-and-white dithering and annotation rendering.
+- `Document.split_spreads()` turns selected scanned spreads into individual
+  page views, with reading order, split position and gutter controls.
+- `Document.export_pages_zip()` packages rendered page images in one download,
+  with PNG/JPEG or optional WebP, page selection and a provenance manifest.
+- `Page.get_content_bounds()` / `Document.get_content_bounds()` measure visible
+  content for crop previews, white-margin checks and layout preparation without
+  changing page boxes or content.
+- `Page.compare_visual(other, other_page=None, dpi=72, tolerance=0, max_diff_ratio=0,
+  include_annotations=True, include_diff_images=False, ignore_regions=None)`
+  compares this page visually with a page from another document, returning a result
+  with changed pixel counts, difference ratios, bounding boxes, and optional images
+  highlighting changes in red. Color and area tolerances help review revised documents
+  and scanned pages. Use `ignore_regions` to exclude changing dates, headers or page numbers.
+- `Document.compare_text()` reviews extracted text changes page by page, with
+  unified diffs and optional case, whitespace and tagged-artifact filtering.
+  Use `exclude_regions` to omit changing headers, footers or dates.
+
+- `Page.rotate(90)` turns one page and `Document.rotate_pages(90, pages=[...])` turns several,
+  adding to what each page already says or setting it outright with `relative=False`. Only
+  `/Rotate` changes, so text, boxes, annotations and form fields stay put.
+- `Page.translate_content(dx, dy)` shifts existing text, images and annotations
+  together to correct scan alignment or make room for binding, keeping the sheet size.
+- `Document.generate_outlines()` builds the bookmark tree from the document's own headings — the
+  structure tree when it is tagged, the inferred size tiers when it is not — nesting them by level
+  and pointing each one at the heading itself rather than at the top of its page.
+- `Document.generate_outlines_from_text()` creates page bookmarks from literal
+  or regex matches, including capture groups for titles, without requiring
+  heading tags or different font sizes.
+- `Document.add_table_of_contents()` writes the same headings onto paper: a contents page indented
+  by level, with dot leaders, the page each heading is on, and links landing on the heading itself.
+  The numbers account for the contents pushing everything back, and are the pages' own labels where
+  the document has them.
+- `Permissions` gives the `/P` word names: `Permissions.denying("copy")` instead of `-20`, with
+  `document.permissions.can_print` and `.allowed` to read one back. It is an `int` subclass, so it
+  goes anywhere the raw number did, and it keeps the reserved bits that ORing the bit values by
+  hand clears. Checked against qpdf flag for flag, in both directions.
+- Stamps, page numbers and redaction bars are marked as `/Artifact`, so a tagged document stays
+  PDF/UA-conformant once it is stamped — and `validate_pdfua()` reports any mark that is neither
+  tagged nor an artifact. `artifact=` on `Page.add_text`, `add_image` and the path helpers says the
+  same thing about decoration drawn by hand.
+- `Document.replace_text` and `redact_text` take `regex=True`, or a compiled `re.Pattern`, so a
+  *shape* can be matched rather than a phrase — `\d{3}-\d{2}-\d{4}` for a social security number,
+  `\b\d{4}( \d{4}){3}\b` for a card — with `\1` and `\g<name>` in the replacement expanding to
+  what each match captured. The redaction bars come from the same spans the removal used.
+
+- `Page.add_list(text_list, x, y)` sets a `TextList` of `ListItem`s: bulleted or numbered, nested
+  with each sub-list restarting its own count, markers right-aligned in a gutter so `9.` and `10.`
+  line up, continuing onto the next page, and tagged as the nested `/L` → `/LI` → `/Lbl` + `/LBody`
+  with the `/ListNumbering` that says what the markers mean.
+- `Page.add_text_block(block, x, y)` flows a `TextBlock` of `Paragraph`s into a measure: wrapped
+  with the font's own advances, aligned left, centre, right or **justified**, with first-line and
+  hanging indents, per-paragraph style, a continuation onto the next page, and each paragraph
+  tagged as its own structure element — one element even where it spans pages. It needs no
+  optional dependency, the Standard-14 fonts being measured by their own metrics, while
+  `Page.add_text(layout=...)` stays the shaping path for right-to-left and complex scripts.
+  Paragraphs can set `widow_lines` and `orphan_lines` to control line counts around page breaks,
+  and `keep_with_next` keeps headings with the text that follows them.
+- `Page.add_table(table, x, y)` draws a real table — `Table`, `Row`, `Cell`, column spans, per-cell
+  style, separate border widths and colors for each side, text wrapped to each column with the
+  font's own advances, headers repeated when the table runs onto the next page — and tags it
+  as a nested `/Table` of `/TR` of `/TH`/`/TD`, so the result
+  passes PDF/UA.
+- `PageStamp` puts a page of another PDF onto a page — a letterhead, a background form, a
+  designed watermark — importing everything it draws with, and `Document.n_up(2, 2)` /
+  `Document.booklet()` impose a document as a grid or as a folded booklet.
+  Set `crop_marks=True` to add vector trim guides, with configurable length,
+  offset and thickness; the layout checks that they fit outside placed pages.
+- `Page.add_stamp` and `Document.add_stamp` put a text, image or page-number stamp over or
+  under a page — aligned in the box a reader shows, upright whatever the page's rotation, with
+  opacity and rotation, and written once however many pages it goes on.
+- Fields carry their own look and their own behaviour: `border_color`, `background_color`,
+  `border_width`, `border_style`, `rotation`, `text_color` and `font_size=0` for auto-size, plus
+  `field.actions["validate"] = JavaScriptAction(...)` for the keystroke, format, validate and
+  calculate scripts that make a form compute. `page.actions`, `document.actions` and
+  `document.javascript` are the page, catalog and document-level script equivalents.
+  Set `document.form.calculation_order = ["subtotal", "tax", "total"]` to control
+  the sequence in which a PDF viewer recalculates dependent fields.
+- `Form`, `Field`, and `Document.flatten()` create, fill, and permanently bake AcroForm fields —
+  text fields, checkboxes, radio groups, list boxes, combo boxes, and push buttons — into static
+  page content. Flatten all objects or select field names and pages; `annotations=False`
+  keeps comments interactive, while `fields=False` preserves the form for later editing.
+  Existing fields can also change their defaults, text limits and modes, choice options,
+  multiple selection and combo-box editing through `Field` properties.
+- One annotation class per subtype — `page.annotations.add_square(...)`, `add_highlight(...)`,
+  `add_line(...)`, `add_ink(...)` and the rest — with the entries each subtype is defined by named
+  (`interior_color`, `quad_points`, `vertices`, `ink_list`, `opacity`, `border_width`), and
+  `annotation.reply("...")` / `annotation.add_popup()` for comment threads and popup windows.
+
+- `Document.encrypt(..., algorithm=...)` and `Document.decrypt()` apply and remove standard-handler
+  password protection — AES-256 (`/V 5 /R 6`) by default, AES-128 or 128-bit RC4 on request — and
+  every standard-handler flavour, including 40-bit RC4 and owner-password-only documents, can be
+  opened. Encryption is applied as the document is serialised, per object, so an encrypted save
+  keeps the form fields, attachments, layers and tags of the document it was given, signatures
+  included; `Document.sign()`, `add_ltv()` and `add_document_timestamp()` sign a document up to
+  PAdES-LTA without breaking the signatures it already has, and `PdfSignature.validate()`
+  cryptographically verifies a signer's identity, trust chain, revocation status, and PAdES
+  conformance level.
+- `SignatureAppearance` makes a signature **visible**: who signed, when, why and where, plus a
+  scanned signature or seal, drawn into the field instead of the empty box a signature field is
+  otherwise. It is written before the document is serialised, so the signature covers it — edit
+  the drawn name and the signature fails. pyHanko reports a file signed this way as intact with
+  whole-file coverage.
+- `Document.validate_pdfa()`, `Document.convert_to_pdfa()`, `Document.validate_pdfua()`, and
+  `Document.auto_tag()` run heuristic PDF/A and PDF/UA compliance checks and generate a structure
+  tree for existing content.
+- `Document.validate_pdfx()` and `Document.convert_to_pdfx()` do the same for the print-exchange
+  standards — PDF/X-1a:2001/2003, PDF/X-3:2002/2003 and PDF/X-4 — checking and writing the
+  identification keys, the `GTS_PDFX` output intent and its ICC profile, font embedding, the
+  trim/bleed geometry and the trapping status. The conversion will not invent a printing
+  condition: pass `icc_profile=` or the requirement is reported rather than guessed at.
+- `Document.optimize()` (aliased `optimize_resources()`) removes unreachable objects,
+  deduplicates images, subsets embedded TrueType and CFF fonts, and recompresses streams, all
+  controlled through `OptimizationOptions`.
+- The `aspose_pdf.lowcode` plugin layer wraps common batch workflows behind a uniform
+  `DataSource`/`ResultContainer` interface: `Merger`, `Splitter` (per page, per range,
+  or by bookmark level),
+  `Optimizer`, `TextExtractor`, `ImageExtractor`, `ImagesToPdf`, `Converter` (HTML, Markdown, SVG,
+  TIFF, PNG, JPEG, WebP), `PdfAConverter`, `Rotator`, `PageRemover`, `Stamper`, `FormFiller`, `FormFlattener`,
+  `Encryptor` and `Decryptor` — each one a composition of the operations above, so a batch job is
+  a few lines and the same code works on files, bytes or streams.
+  `ImagesToPdf` also converts multipage TIFF scans, preserving 8-bit RGBA/LA transparency,
+  and expands GIF/WebP animations into ordered PDF pages with the optional `images` extra.
+- `PdfLoadLimits` bounds input size, object counts, decoded-stream bytes, and image pixels when a
+  `Document` loads untrusted PDF input, raising `PdfResourceLimitException` instead of hanging or
+  silently truncating a hostile file.
+
+## Installation
+
+Install the published package from PyPI (`aspose-pdf-foss-for-python`, version 0.1.0):
+
+```bash
+pip install aspose-pdf-foss-for-python
+```
+
+To work from a source checkout instead, install the clone with pip:
+
+```bash
+git clone https://github.com/aspose-pdf-foss/Aspose-PDF-FOSS-for-Python.git
+cd Aspose-PDF-FOSS-for-Python
+pip install .
+```
+
+Verify the install:
+
+```bash
+python -c "import aspose_pdf"
+```
+
+Requires Python 3.11 or later.
+
+## Dependencies
+
+### Required Package Dependencies
+
+- `asn1crypto>=1.5`
+- `cryptography>=50`
+
+### Optional Dependencies
+
+- `atheris>=2.3` (extra `fuzz`)
+- `Pillow>=12.3` (extra `images`)
+- `fonttools>=4.60.2` (extra `text-layout`)
+- `python-bidi>=0.6` (extra `text-layout`)
+- `uharfbuzz>=0.37` (extra `text-layout`)
+- `Brotli>=1.2` (extra `woff2`)
+
+### Native and System Requirements
+
+- Requires Python 3.11 or later.
+
+### Development Dependencies
+
+- `Brotli>=1.2` (extra `dev`)
+- `build>=1.2` (extra `dev`)
+- `fonttools>=4.60.2` (extra `dev`)
+- `jsonschema>=4.18` (extra `dev`)
+- `Pillow>=12.3` (extra `dev`)
+- `pytest>=8` (extra `dev`)
+- `python-bidi>=0.6` (extra `dev`)
+- `reportlab>=4.2` (extra `dev`)
+- `ruff>=0.6` (extra `dev`)
+- `setuptools>=83` (extra `dev`)
+- `twine>=5` (extra `dev`)
+- `uharfbuzz>=0.37` (extra `dev`)
+- `wheel` (extra `dev`)
+
+## Quick Start
+
+Create a new PDF document with an A4 page and add centered text to it, then save the file as `hello.pdf`.
+
+```python
+from aspose_pdf import Document, PageSize
+
+with Document() as document:
+    page = document.pages.add(PageSize.A4)
+    page.add_text(
+        "Hello from Aspose.PDF FOSS!",
+        x=72,
+        y=720,
+        font_size=18,
+    )
+    document.save("hello.pdf")
+```
+
+Open an existing PDF, resize its first page to A4 landscape, and apply a 28-point trim margin before saving the result as `resized.pdf`.
+
+```python
+from aspose_pdf import Document, PageSize
+
+with Document("input.pdf") as document:
+    page = document.pages[1]
+    page.size = PageSize.A4.landscape()   # resizes the sheet, keeping its origin
+    page.trim_box = (28, 28, page.rect[2] - 28, page.rect[3] - 28)
+    document.save("resized.pdf")
+```
+
+## Additional Examples
+
+The following workflows demonstrate common tasks with Aspose.PDF FOSS for Python.
+
+### Extract Tables as Lists or CSV
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    for number, table in enumerate(document.extract_tables(pages=[1, 2]), 1):
+        print(table.page_index, table.to_list())  # Zero-based source page; all rows retained.
+        table.save_csv(f"tables/table-{number}.csv", overwrite=False)
+        # table.to_csv(delimiter=";") returns a string without writing a file.
+```
+
+<details>
+<summary>View Additional Examples</summary>
+
+### Inspect Document Metadata and Page Count
+
+```python
+from aspose_pdf import Document
+
+with Document("input.pdf") as document:
+    print(f"Pages: {document.page_count}")
+    print(f"PDF version: {document.version}")
+    print(document.info)
+```
+
+### Serialize and Reload a Document via Bytes or Streams
+
+```python
+from aspose_pdf import Document
+# Get PDF content as bytes
+with Document("report.pdf") as doc:
+    pdf_bytes = doc.to_bytes()
+
+# Round-trip through bytes
+doc = Document.from_bytes(pdf_bytes)
+doc.pages.add()
+modified_bytes = doc.to_bytes()
+
+# Round-trip through a stream
+from io import BytesIO
+buffer = BytesIO()
+doc.to_stream(buffer)
+pdf_bytes = buffer.getvalue()
+
+# Method chaining with to_stream
+buffer = BytesIO()
+with Document("input.pdf") as doc:
+    doc.pages.add()
+    doc.to_stream(buffer)
+```
+
+### Manage Document Lifecycle with Dispose and Context
+
+```python
+from aspose_pdf import Document
+
+doc = Document("input.pdf")
+if not doc.closed:
+    print(doc.page_count)  # Safe to use
+
+doc.dispose()
+print(doc.closed)  # True
+
+with Document("input.pdf") as doc:
+    print(doc.closed)  # False inside context
+print(doc.closed)  # True after context exits
+```
+
+### Count Pages Using the Len Operator
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as doc:
+    print(f"Total pages: {len(doc)}")  # Same as: print(f"Total pages: {doc.page_count}")
+```
+
+### Create a Static Rasterized Copy of a PDF
+
+```python
+from aspose_pdf import Document
+
+with Document("input.pdf") as source:
+    with source.rasterized_copy(dpi=150) as copy:
+        copy.save("static-copy.pdf")
+```
+
+### Convert a Scan to Black-And-White Bilevel
+
+```python
+from aspose_pdf import Document
+with Document("scan.pdf") as source:
+    with source.rasterized_copy(mode="bilevel", dpi=150, threshold=128) as copy:
+        copy.save("black-and-white.pdf")
+```
+
+### Split Spreads Into Individual Pages
+
+```python
+from aspose_pdf import Document
+
+with Document("spreads.pdf") as source:
+    with source.split_spreads(layout="horizontal") as pages:
+        pages.save("single-pages.pdf")
+```
+
+### Export Rendered Pages as ZIP
+
+```python
+from aspose_pdf import Document
+
+with Document("input.pdf") as document:
+    document.export_pages_zip(
+        "previews.zip",
+        pages=[1, 3, 4],
+        image_format="png",
+        dpi=144,
+        include_manifest=True,
+    )
+```
+
+### Render a Page to an Image
+
+```python
+from aspose_pdf import Document
+
+with Document() as document:
+    document.load_from("input.pdf")
+    document.pages[1].save_as_image("page-1.png", dpi=144)
+```
+
+### Generate Page Thumbnails for Preview
+
+```python
+from aspose_pdf import Document
+with Document("input.pdf") as document:
+    document.pages[1].render_thumbnail(size=(160, 220)).save("preview.png")
+    preview = document.render_thumbnail(2, size=(320, 240))
+```
+
+### Put a Contents Page in Front of a Report
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    pages = document.add_table_of_contents(source="bookmarks", at=2)
+    if pages:
+        print(f"contents on page {pages[0]}")
+    document.save("report-with-contents.pdf")
+```
+
+### Create Bookmarks from Section Numbers or Invoice Labels
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    count = document.generate_outlines_from_text(
+        r"(?m)^Chapter \d+: (?P<title>[^\n]+)$",
+        regex=True,
+        title_group="title",
+        replace=False,
+    )
+    document.save("report-with-bookmarks.pdf")
+```
+
+### Put a Watermark on a Layer, Then Resolve It
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    draft = document.layers.add("Draft", visible=False)
+    with document.pages[1].layer(draft):
+        document.pages[1].add_text("DRAFT", 150, 400, font_size=64)
+    document.save("with-layers.pdf")
+
+    # ...and when the file has to leave: hidden means gone, not merely hidden.
+    document.layers["Draft"].visible = False
+    document.flatten_layers()
+    document.save("final.pdf")
+```
+
+### Convert a Document to HTML or Markdown
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    document.save_as_markdown("report.md")
+    # Images as files in report_files/ rather than data: URIs; one HTML file per page.
+    document.save_as_html("report.html", resources_directory="report_files", split_into_pages=True)
+    print(document.to_markdown(pages=[1], markdown_format="CommonMark"))
+```
+
+### Build a Table
+
+```python
+from aspose_pdf import Document, PageSize, Table
+
+table = Table(column_widths=[220, 70, 90], padding=5,
+              header_background_color="#003366", header_text_color=(1, 1, 1))
+table.add_header_row(["Item", "Qty", "Price"])
+table.add_row(["Widget, the larger kind", "2", "9.99"])
+table.add_row(["Grommet", "14", "0.40"])
+total = table.add_row()
+total.add_cell("Total", column_span=2, alignment="right")
+total.add_cell("14.38", alignment="right")
+
+with Document() as document:
+    page = document.pages.add(PageSize.A4)
+    placement = page.add_table(table, 60, 760)   # continues onto new pages if needed
+    page.add_text("Thank you", 60, placement["bottom"] - 24)
+    document.save("invoice.pdf")
+```
+
+### Create a Table from a CSV File
+
+```python
+from aspose_pdf import Document, Table
+
+table = Table.from_csv("items.csv", width=420, auto_column_widths=True)
+with Document() as document:
+    document.pages.add().add_table(table, 60, 760)
+    document.save("items.pdf")
+```
+
+### Draw Paths and Hold a Graphics State
+
+```python
+from aspose_pdf import Document, GraphicsPath
+
+with Document() as document:
+    page = document.pages.add()
+
+    dial = GraphicsPath().circle(300, 500, 80)
+    page.draw_path(dial, fill_color="#eef3f8", stroke_color=(0.2, 0.3, 0.4), line_width=2)
+
+    needle = GraphicsPath().move_to(300, 500).curve_to(320, 540, 340, 555, 360, 560)
+    page.draw_path(needle, stroke_color="#cc3300", line_width=4, line_cap="round")
+
+    page.draw_rectangle(220, 400, 160, 40, stroke_color=(0.4, 0.4, 0.4), dash=[4, 2])
+
+    # The state applies to everything in the block — text included.
+    with page.graphics(transform=(0, 1, -1, 0, 120, 300), opacity=0.6):
+        page.add_text("rotated and faded", 0, 0, font_size=16)
+
+    document.save("drawing.pdf")
+```
+
+### Export a Page as SVG
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    document.pages[1].save_as_svg("page-1.svg")
+    document.save_as_svg("report.svg")  # one file per page: report-1.svg, ...
+
+    # text="both" keeps the glyph outlines and puts selectable <text> over them,
+    # so the page looks identical and its words can be searched and copied.
+    # text="text" writes the words instead of the curves: far smaller, and the
+    # glyph shapes become whatever font the viewer resolves the name to.
+    document.pages[1].save_as_svg("page-1-selectable.svg", text="both")
+```
+
+### Strip a Document Before Sending It
+
+```python
+from aspose_pdf import Document
+
+with Document("contract.pdf") as document:
+    report = document.sanitize()          # add links=True, forms=True to go further
+    print(report)
+    # removed 7 metadata entries, 1 scripts, 3 actions, 1 attachments, 2 comments
+    document.save("contract-clean.pdf")   # a full rewrite: the old revision does not survive
+```
+
+### See What Fonts a Document Uses
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    for font in document.fonts:
+        print(font)
+    # Arial (TrueType, embedded TrueType) on pages 1, 2
+    # Helvetica (Type1, not embedded) on pages 2, 3
+
+    missing = [f.name for f in document.fonts if not f.embedded]
+    weight = sum(f.stored_bytes or 0 for f in document.fonts)
+```
+
+### Put a Missing Font Into the Document
+
+```python
+from aspose_pdf import Document, FontSubstitutionOptions
+
+with Document("names-arial.pdf") as document:
+    unsupplied = document.embed_fonts(sources=FontSubstitutionOptions.system())
+    for message in unsupplied:          # empty when every font now has a program
+        print(message)
+    document.convert_to_pdfa("2b")
+    document.save("archival.pdf")
+```
+
+### Extract Text From a PDF
+
+```python
+from aspose_pdf import PdfExtractor
+
+with PdfExtractor() as extractor:
+    extractor.bind_pdf("input.pdf")
+    extractor.extract_text()
+    print(extractor.get_text())
+```
+
+### Extract Text from a Clipped Region
+
+```python
+from aspose_pdf import Document
+
+with Document("input.pdf") as document:
+    print(document.pages[1].extract_text(clip=(72, 650, 300, 750)))
+```
+
+### Extract Text Skipping Artifacts
+
+```python
+from aspose_pdf import Document
+with Document("input.pdf") as document:
+    print(document.extract_text(pages=[1, 2], skip_artifacts=True))
+```
+
+### Extract Text Excluding Specific Regions
+
+```python
+from aspose_pdf import Document
+with Document("report.pdf") as document:
+    text = document.extract_text(
+        exclude_regions=[(0, 760, 612, 842), (0, 0, 612, 65)],
+        skip_artifacts=True,
+    )
+```
+
+### Make Existing URLs and Email Addresses Clickable
+
+```python
+from aspose_pdf import Document
+
+with Document("input.pdf") as document:
+    result = document.auto_link(pages=[1, 2])
+    print(result.linked_count, result.skipped_count, result.existing_count)
+    document.save("linked.pdf")
+```
+
+### Exchange Bookmarks as JSON
+
+```python
+from aspose_pdf import Document
+
+with Document("manual.pdf") as document:
+    document.export_bookmarks_json("bookmarks.json")
+
+with Document("updated-manual.pdf") as document:
+    added = document.import_bookmarks_json("bookmarks.json", replace=True)
+    print(f"Imported {added} bookmarks")
+    document.save("with-bookmarks.pdf")
+```
+
+### Edit Simple Bookmarks as CSV
+
+```python
+from aspose_pdf import Document
+with Document("manual.pdf") as document:
+    document.export_bookmarks_csv("bookmarks.csv", encoding="utf-8-sig")
+
+with Document("updated-manual.pdf") as document:
+    added = document.import_bookmarks_csv("bookmarks.csv", replace=True)
+    document.save("with-bookmarks.pdf")
+```
+
+### Inventory PDF Links
+
+```python
+from aspose_pdf import Document
+
+with Document("manual.pdf") as document:
+    for link in document.extract_links(pages=[1, 3]):
+        print(link.page_index, link.rect, link.action_type,
+              link.resolved_uri, link.target_page_index, link.file, link.issues)
+    document.export_links_csv("links.csv", encoding="utf-8-sig")
+    document.export_links_json("links.json")
+
+# Or inspect a single page:
+with Document("manual.pdf") as document:
+    page = document.pages[1]
+    for link in page.extract_links():
+        print(link.page_index, link.rect, link.action_type,
+              link.resolved_uri, link.target_page_index, link.file, link.issues)
+    page.export_links_csv("page1_links.csv", encoding="utf-8-sig")
+    page.export_links_json("page1_links.json")
+```
+
+### Update URLs Across a PDF
+
+```python
+from aspose_pdf import Document
+
+with Document("manual.pdf") as document:
+    affected = document.replace_link_urls(
+        "https://old.example/", "https://new.example/", dry_run=True,
+    )
+    document.replace_link_urls("https://old.example/", "https://new.example/")
+    document.save("manual-with-updated-links.pdf")
+```
+
+### Batch Replace Multiple URL Patterns
+
+```python
+from aspose_pdf import Document
+
+with Document("manual.pdf") as document:
+    count = document.replace_link_urls_batch({
+        "old.example.com": "new.example.com",
+        "legacy.domain.net": "current.domain.net",
+    })
+    document.save("manual-updated.pdf")
+```
+
+### Check Internal Links
+
+```python
+from aspose_pdf import Document
+
+with Document("manual.pdf") as document:
+    for issue in document.validate_links():
+        print(issue.source, issue.page_index, issue.annotation_index,
+              issue.outline_path, issue.code, issue.message)
+```
+
+### Clean Up Review Annotations by Author or Date
+
+```python
+from aspose_pdf import Document
+
+with Document("reviewed.pdf") as document:
+    filters = {"authors": ["Alice"], "before": "2026-01-01"}
+    print(document.remove_annotations(**filters, dry_run=True))
+    removed = document.remove_annotations(**filters)
+    document.save("cleaned.pdf")
+```
+
+### Exchange Annotations for Review
+
+```python
+from aspose_pdf import AnnotationType, Document
+
+with Document("reviewed.pdf") as document:
+    document.export_annotations_json(
+        "review/comments.json", pages=[1],
+        subtypes=[AnnotationType.TEXT, AnnotationType.HIGHLIGHT], overwrite=False,
+    )
+    for comment in document.pages[1].annotations.to_list(subtypes="Text"):
+        print(comment["author"], comment["contents"], comment["rect"])
+```
+
+### Export Review Comments as XFDF
+
+```python
+from aspose_pdf import AnnotationType, Document
+
+with Document("reviewed.pdf") as document:
+    document.export_annotations_xfdf(
+        "review/comments.xfdf",
+        pages=[1, 3],
+        subtypes=[AnnotationType.TEXT, AnnotationType.HIGHLIGHT],
+    )
+    page_xfdf = document.pages[1].annotations.export_xfdf()
+```
+
+### Choose the First Visible List Option
+
+```python
+from aspose_pdf import Document
+
+with Document() as document:
+    page = document.pages.add()
+    cities = document.form.add_list_box(
+        "cities", page, (40, 600, 260, 700),
+        [f"City {number}" for number in range(20)],
+        value="City 12", top_index=10,
+    )
+    document.save("city-form.pdf")
+```
+
+### Run a Batch Workflow With the Plugin Layer
+
+```python
+from aspose_pdf.lowcode import (
+    ByteArrayDataSource, Converter, ConvertOptions, FileDataSource, Rotator, RotateOptions,
+)
+
+# Straighten a scan, keeping each page's existing rotation in account.
+rotated = Rotator().process(
+    RotateOptions(90).add_input(FileDataSource("scan.pdf")).add_output(FileDataSource("upright.pdf"))
+)
+
+# Then turn the result into one PNG per page.
+pages = Converter().process(
+    ConvertOptions("png", dpi=150).add_input(ByteArrayDataSource(rotated[0].to_array()))
+)
+for index, page in enumerate(pages):
+    page.save(f"page-{index + 1}.png")
+```
+
+### Merge PDF Files
+
+```python
+from aspose_pdf import PdfFileEditor
+
+with PdfFileEditor() as editor:
+    if not editor.concatenate(["part-1.pdf", "part-2.pdf"], "merged.pdf"):
+        raise RuntimeError(editor.last_exception)
+```
+
+### Interleave Front and Back Pages for Duplex
+
+```python
+from aspose_pdf import Document
+
+with Document("fronts.pdf") as fronts, Document("backs.pdf") as backs:
+    with fronts.interleave(backs, reverse_other=True) as assembled:
+        assembled.save("duplex.pdf")
+```
+
+### Extract Words with Bounding Boxes
+
+```python
+from aspose_pdf import Document
+
+with Document("input.pdf") as document:
+    for word in document.pages[1].extract_words():
+        print(word.text, word.bbox, word.page_index)
+
+    selected = document.extract_words(
+        pages=[1, 3], clip=(72, 650, 300, 750), skip_artifacts=True
+    )
+```
+
+### Export Words as JSON or CSV
+
+```python
+from aspose_pdf import Document
+with Document("input.pdf") as document:
+    document.export_words_json("words.json", pages=[1, 3], skip_artifacts=True)
+    document.export_words_csv("words.csv", pages=[1, 3], encoding="utf-8-sig")
+    payload = document.pages[1].export_words_json()
+```
+
+### Search Text and Export Matches
+
+```python
+from aspose_pdf import Document
+with Document("input.pdf") as document:
+    matches = document.search_text("Invoice", context_chars=50, pages=[1, 3])
+    document.export_search_json("Invoice", "invoice-matches.json")
+    document.export_search_csv(r"INV-\d+", "invoice-matches.csv", regex=True)
+```
+
+### Download Split PDF Parts as One ZIP
+
+```python
+from aspose_pdf import Document
+
+with Document.open_streaming("batch.pdf") as document:
+    document.export_split_zip(
+        "parts.zip", pages_per_part=10, include_manifest=True,
+    )
+```
+
+### Split a Scan Batch at Blank Pages
+
+```python
+from aspose_pdf import Document
+
+with Document("batch.pdf") as document:
+    parts = document.split_by_blank_pages()
+    try:
+        for number, part in enumerate(parts, 1):
+            part.save(f"part-{number:03d}.pdf")
+    finally:
+        for part in parts:
+            part.dispose()
+```
+
+### Find Visually Blank Pages
+
+```python
+from aspose_pdf import Document
+
+with Document("scans.pdf") as document:
+    blank_pages = document.find_blank_pages()
+    print(blank_pages)  # Zero-based page indices; the document is unchanged.
+    print(document.pages[1].is_blank())
+
+    # Explicitly tolerate a small amount of scan noise.
+    tolerant_matches = document.find_blank_pages(
+        white_threshold=245, max_ink_ratio=0.0005, dpi=96
+    )
+```
+
+### Find Visually Duplicate Pages
+
+```python
+from aspose_pdf import Document
+
+with Document("batch.pdf") as document:
+    groups = document.find_duplicate_pages(dpi=96)
+    print(groups)  # For example: [[1, 4], [2, 5, 8]]; one-based indices.
+```
+
+### Remove Duplicate Pages
+
+```python
+from aspose_pdf import Document
+with Document("batch.pdf") as document:
+    removed = document.remove_duplicate_pages(keep="first")
+    document.save("deduplicated.pdf")
+```
+
+### Find Images with Low Effective DPI
+
+```python
+from aspose_pdf import Document
+
+with Document("catalog.pdf") as document:
+    for issue in document.find_low_resolution_images(min_dpi=150):
+        print(issue.page_index, issue.image_name,
+              issue.dpi_x, issue.dpi_y, issue.bbox)
+```
+
+### Export PDF Images as ZIP
+
+```python
+from aspose_pdf import Document
+
+with Document("catalog.pdf") as document:
+    document.export_images_zip("images.zip", include_manifest=True)
+    selected = document.export_images_zip(pages=[3, 1])
+```
+
+### Compare PDF Text Revisions
+
+```python
+from aspose_pdf import Document
+
+with Document("before.pdf") as before, Document("after.pdf") as after:
+    for result in before.compare_text(
+        after, ignore_whitespace=True,
+        exclude_regions=[(0, 740, 600, 800), (0, 0, 600, 50)],
+    ):
+        if not result.matches:
+            print(result.unified_diff)
+```
+
+### Compare PDF Page Views
+
+```python
+from aspose_pdf import Document
+
+with Document("before.pdf") as before, Document("after.pdf") as after:
+    results = before.compare_visual(after, dpi=96, include_diff_images=True)
+    for pair, result in enumerate(results):
+        if not result.matches:
+            print(result.page_index, result.other_page_index,
+                  result.difference_ratio, result.bbox)
+            result.diff_image.save(f"diff-{pair + 1}.png")
+```
+
+### Compare Visual Views Ignoring Regions
+
+```python
+from aspose_pdf import Document
+with Document("before.pdf") as before, Document("after.pdf") as after:
+    results = before.compare_visual(
+        after, ignore_regions=[(0, 0, 612, 36)], include_diff_images=True,
+    )
+```
+
+### Measure Visible Content Without Cropping
+
+```python
+from aspose_pdf import Document
+
+with Document("scans.pdf") as document:
+    for page_index, bounds in document.get_content_bounds(dpi=96).items():
+        if bounds is not None:
+            x0, y0, x1, y1 = bounds
+            print(page_index, x1 - x0, y1 - y0)
+    first_page_bounds = document.pages[1].get_content_bounds()
+```
+
+### Trim White Page Margins
+
+```python
+from aspose_pdf import Document
+
+with Document("scans.pdf") as document:
+    changed = document.auto_crop(margin=6, dpi=96)
+    document.save("trimmed.pdf")
+```
+
+### Apply Resource Limits for Untrusted PDF Input
+
+```python
+from aspose_pdf import Document, PdfLoadLimits, PdfResourceLimitException
+
+limits = PdfLoadLimits(
+    max_input_bytes=64 * 1024 * 1024,
+    max_decoded_stream_bytes=16 * 1024 * 1024,
+    max_image_pixels=25_000_000,
+)
+
+try:
+    with Document(limits=limits) as document:
+        document.load_from("input.pdf")
+except PdfResourceLimitException as error:
+    print(f"PDF rejected: {error}")
+```
+
+You can also parse and validate page range expressions without loading a document first:
+
+```python
+from aspose_pdf import PageRanges
+
+# Parse a range without a document (requires page_count for specific ranges)
+indices = PageRanges.parse("1-3,7,10", page_count=15)
+# (1, 2, 3, 7, 10)
+
+# Use with Document.get_page_indices() after loading
+with Document("report.pdf") as doc:
+    PageRanges.validate("1-3,7,10", doc.page_count)
+    # Or use doc.get_page_indices("1-3,7,10") directly
+    indices = doc.get_page_indices("1-3,7,10")
+```
+
+`Document(source, password=..., limits=...)` is equivalent to `Document().load_from(source, ...)`
+— a missing file, non-PDF data, or a missing password raises rather than handing back a silently
+empty document.
+
+Alternative constructors provide a more concise way to create documents from specific sources:
+
+```python
+# From bytes in memory
+pdf_bytes = download_pdf_from_api()
+doc = Document.from_bytes(pdf_bytes)
+
+# From a file path
+doc = Document.from_file("report.pdf")
+
+# From a binary stream
+from io import BytesIO
+doc = Document.from_stream(BytesIO(pdf_bytes))
+
+# To bytes
+pdf_bytes = doc.to_bytes()
+```
+
+Each selected view becomes `page-0001.png`, `page-0002.png`, and so on, in
+selection order, including repeated pages. The optional `manifest.json` maps
+files to one-based source page indices and pixel dimensions. Use
+`image_format="jpeg"` with `quality=85` for JPEG or `image_format="webp"` with
+the optional `images` extra. `mode="gray"` or `mode="bilevel"` reduces color;
+JPEG supports RGB and gray. The method returns ZIP bytes and can also write a
+file or binary stream. See [page archive details](supported-features.md#pages)
+for rendering options, limits and output behavior.
+
+### Add Pages from Image Files, Bytes, or Streams
+
+```python
+from aspose_pdf import Document
+from io import BytesIO
+
+with Document() as document:
+    # Add pages from image files
+    page_numbers = document.add_pages_from_images(["scan1.png", "scan2.jpg"])
+    print(f"Added pages: {page_numbers}")
+
+    # Add pages from image bytes (e.g., downloaded from network)
+    with open("image.png", "rb") as f:
+        document.add_pages_from_images([f.read()])
+
+    # Add pages from file-like objects (e.g., BytesIO)
+    image_data = download_image_from_network()
+    page_numbers = document.add_pages_from_images([BytesIO(image_data)])
+
+    # Add pages with explicit A4 size
+    page_numbers = document.add_pages_from_images(
+        ["img1.jpg", "img2.jpg"],
+        size="A4"
+    )
+
+    # Use fit mode to control how images fill the page
+    page_numbers = document.add_pages_from_images(
+        ["photo.jpg", "screenshot.png"],
+        fit="contain"  # Shows entire image without cropping
+    )
+
+    document.save("from_images.pdf")
+```
+
+### Add Pages from PDF Files, Bytes, or Streams
+
+```python
+from aspose_pdf import Document
+from io import BytesIO
+
+with Document() as document:
+    # Add pages from PDF files (page 1 from each)
+    page_numbers = document.add_pages_from_pdf(
+        ["document1.pdf", "document2.pdf", "document3.pdf"]
+    )
+    print(f"Added pages: {page_numbers}")
+
+    # Add the same page from all sources (e.g., page 2 from each)
+    page_numbers = document.add_pages_from_pdf(
+        ["doc1.pdf", "doc2.pdf", "doc3.pdf"],
+        page_numbers=2
+    )
+
+    # Add specific pages from each source
+    page_numbers = document.add_pages_from_pdf(
+        ["doc1.pdf", "doc2.pdf", "doc3.pdf"],
+        page_numbers=[2, 1, 3]
+    )
+
+    # Add pages from bytes
+    with open("source.pdf", "rb") as f:
+        page_numbers = document.add_pages_from_pdf([f.read()])
+
+    # Add pages from file-like objects (e.g., BytesIO)
+    page_numbers = document.add_pages_from_pdf([BytesIO(pdf_bytes)])
+
+    document.save("from_pdf.pdf")
+```
+
+Thumbnails preserve the visible page's proportions, CropBox and rotation.
+The raster fits within the requested bounds without padding. Set
+`include_annotations=False` for page content alone. PNG, TIFF and JPEG need
+no imaging dependency; WebP uses the optional `images` extra.
+
+Create a contact sheet to inspect several pages at once:
+
+```python
+with Document("input.pdf") as document:
+    document.save_contact_sheet(
+        "overview.png",
+        pages=[1, 3, 5],              # one-based indices, in this order
+        columns=3,
+        thumbnail_size=(160, 220),   # pixel bounds; page proportions are preserved
+    )
+```
+
+### Encrypt for Certificate Recipients
+
+```python
+from pathlib import Path
+
+from cryptography import x509
+from aspose_pdf import Document, Recipient
+
+auditor = x509.load_pem_x509_certificate(Path("auditor.pem").read_bytes())
+reviewer = x509.load_pem_x509_certificate(Path("reviewer.pem").read_bytes())
+
+with Document("report.pdf") as document:
+    document.encrypt_for_recipients([
+        Recipient(auditor),                      # every permission
+        Recipient(reviewer, permissions=-3844),  # read and print only
+    ])
+    document.save("report-sealed.pdf")
+
+# Opening needs the certificate and its private key, not a password.
+with Document("report-sealed.pdf", certificate=auditor, private_key=key) as doc:
+    print(doc.page_count, doc.permissions)
+```
+
+Each match creates a flat bookmark to its page. Strings are literal by default;
+compiled text regexes keep their flags. `pages`, `clip`, `exclude_regions` and
+`skip_artifacts` select the source text, and `max_count` caps created entries.
+`replace=True` (the default) replaces the tree, even when no titles match;
+`replace=False` appends. All matches and limits are checked before outline edits.
+
+```python
+from pathlib import Path
+
+from cryptography.hazmat.primitives.serialization import pkcs12
+from aspose_pdf import Document
+
+key, certificate, chain = pkcs12.load_key_and_certificates(
+    Path("signer.p12").read_bytes(), b"p12-password"
+)
+
+with Document("contract.pdf") as document:
+    document.sign(
+        "Approval",                      # an unsigned signature field; omit for an invisible one
+        certificate=certificate,
+        private_key=key,
+        extra_certificates=chain,
+        reason="Approved",
+        pades=True,
+        timestamp_url="http://timestamp.example/rfc3161",  # PAdES-T
+    )
+    document.add_ltv()                   # the chain and revocation data into /DSS: PAdES-LT
+    document.add_document_timestamp(timestamp_url="http://timestamp.example/rfc3161")  # PAdES-LTA
+    document.save("contract-signed.pdf")  # each step is an appended revision
+    print([signature.valid for signature in document.signatures])
+```
+
+```python
+from pathlib import Path
+
+from aspose_pdf import Document, SignatureAppearance
+
+with Document("contract.pdf") as document:
+    document.sign(
+        "Approval",
+        certificate=certificate,
+        private_key=key,
+        reason="I approve this document",
+        location="Prague",
+        appearance=SignatureAppearance(
+            image=Path("signature-scan.png"),   # beside the text; "background" puts it behind
+            border_color="#204060",
+            background="#eef2f7",
+        ),
+    )
+    document.save("contract-signed.pdf")
+```
+
+### Render a Page Whose Fonts Are Not Embedded
+
+```python
+from aspose_pdf import Document, FontSubstitutionOptions
+
+with Document("report-cjk.pdf") as document:
+    # Use the machine's own fonts; FontSubstitutionOptions(["/opt/fonts"]) or
+    # FontSubstitutionOptions(fonts={"SimSun": data}) keep it reproducible.
+    document.font_substitution = FontSubstitutionOptions.system()
+    document.save_page_as_image(0, "page-1.png", dpi=144)
+```
+
+### Author Multi-Script Unicode Text
+
+```python
+with Document() as document:
+    page = document.pages.add()
+    page.add_text(
+        "Latin Č · Кириллица · Ελληνικά · 漢字",
+        x=72,
+        y=720,
+        font="NotoSans-Regular.ttf",
+    )
+    document.save("unicode.pdf")
+```
+
+### Author Complex-Script Text With TextLayoutOptions
+
+```python
+from aspose_pdf import Document, TextLayoutOptions
+
+with Document() as document:
+    page = document.pages.add()
+    page.add_text(
+        "English العربية 123",
+        x=72,
+        y=720,
+        font_size=16,
+        font="NotoSansArabic-Regular.ttf",
+        layout=TextLayoutOptions(
+            fallback_fonts=["NotoSans-Regular.ttf"],
+            max_width=300,
+            alignment="start",
+            language="ar",
+        ),
+    )
+    document.save("complex-text.pdf")
+```
+
+`Page.auto_link()` processes one page. Both methods recognize HTTP(S), `www.`
+and common email addresses, preserve text and skip addresses covered by an
+existing link. `urls=False` or `emails=False` disables either kind; `max_count`
+limits addresses considered. Uncertain coordinates are reported in
+`skipped_fragments`; see [recognition and geometry limits](supported-features.md#text).
+
+### Link a Phrase to a URL or PDF Destination
+
+```python
+from aspose_pdf import Document, FitDestination
+
+with Document("manual.pdf") as document:
+    result = document.link_text(
+        "Contact support", "https://example.com/support", case_sensitive=False,
+    )
+    print(result.linked_count, result.skipped_count, result.existing_count)
+    document.link_text("See chapter 3", target=FitDestination(3))
+    document.destinations["appendix"] = FitDestination(5)
+    document.link_text("See appendix", target="appendix")
+    document.save("linked-manual.pdf")
+```
+
+JSON carries versioned review data; appearance streams, executable actions and attachments
+are omitted. Import reviewed JSON into a clean copy of the same document:
+
+```python
+with Document("clean-copy.pdf") as document:
+    added = document.import_annotations_json("review/comments.json")
+    print(f"Imported {added} annotations")
+    document.save("review-restored.pdf")
+```
+
+The methods return UTF-8 XML bytes and can also write a file or binary stream.
+Export includes supported review types, metadata and geometry, with popup windows
+nested under selected comments. Names stay unique and replies reference selected
+targets. Other annotation types, rich text, appearance streams and embedded assets
+are omitted. XFDF import is not provided. See
+[XFDF coverage](supported-features.md#annotations) for supported properties and limits.
+
+### Fill a Batch of Forms From One Template
+
+```python
+from aspose_pdf import FileDataSource, FormFiller, FormFillerOptions
+
+options = FormFillerOptions(
+    [
+        {"person.name": "Alice", "agree": True},
+        {"person.name": "Bob", "agree": False},
+    ],
+    flatten=True,
+).add_input(FileDataSource("template.pdf"))
+
+for index, result in enumerate(FormFiller().process(options), 1):
+    result.save(f"filled-{index}.pdf")
+```
+
+For an existing list box, assign `document.form["cities"].top_index = 10`.
+Indices start at zero. The setting scrolls the visible options and redraws the
+widgets while preserving current and default selections. It survives saving
+and flattening; see [form details](supported-features.md#forms).
+
+### Validate a Filled Form
+
+Check stored answers before delivering a completed form:
+
+```python
+from aspose_pdf import Document
+
+with Document("application.pdf") as document:
+    document.form.fill({"person.name": "Alice"})
+    issues = document.form.validate()
+    if issues:
+        for issue in issues:
+            print(issue.field_name, issue.code, issue.message)
+    else:
+        document.save("completed.pdf")
+```
+
+Omit the destination to receive ZIP bytes, or pass a binary stream. The default
+is one page per PDF; files are named `part-0001.pdf`, `part-0002.pdf`, etc.
+The optional manifest records original page ranges and file sizes. Each part
+is disposed after packaging. Parts follow `split_every()` and start without
+source encryption; see [splitting details](supported-features.md#documents).
+
+### Split at Text Markers
+
+Separate a batch of invoices or reports by searching for a heading in the
+page header.
+
+```python
+from aspose_pdf import Document
+
+with Document("batch.pdf") as document:
+    parts = document.split_by_text(
+        r"(?m)^Invoice\s+\d+", regex=True, clip=(0, 740, 600, 842),
+    )
+    try:
+        for number, part in enumerate(parts, 1):
+            part.save(f"part-{number:03d}.pdf")
+    finally:
+        for part in parts:
+            part.dispose()
+```
+
+Use `dry_run=True` to preview removal or `keep="last"` to retain the last selected
+copy. Returned indices refer to the original document and are sorted ascending.
+
+### Align Images Within a Frame
+
+```python
+from aspose_pdf import Document
+
+with Document() as document:
+    page = document.pages.add()
+    page.add_image("logo.png", 40, 700, 160, 80, fit="contain", anchor="top_left")
+    page.add_image("photo.jpg", 40, 400, 160, 160, fit="cover", anchor="top")
+    document.save("framed-images.pdf")
+```
+
+Export photos, illustrations and scanned images in one step for reuse, content
+migration or downstream processing. Shared image objects are exported once;
+JPEG/JPEG 2000 keep their encoded payloads and other supported samples become
+PNG. Generated filenames are safe to unpack, and the optional manifest maps
+files to one-based pages and resource paths. Export scans page and nested
+Form resources, including unused or hidden assets; it does not render pages,
+apply placement/clipping or combine transparency masks. Inline images and
+annotation appearances are excluded. The source is unchanged. See
+[image ZIP details](supported-features.md#images).
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    document.export_attachments_zip("attachments.zip", include_manifest=True)
+    selected = document.export_attachments_zip(names=["data.csv", "notes.txt"])
+```
+
+The method returns ZIP bytes and optionally writes a file or binary stream.
+It preserves attachment contents, flattens paths into safe basenames, and renames
+collisions without losing files. The optional `manifest.json` maps archive names
+back to original PDF names and metadata. The PDF is unchanged; only document-level
+embedded files are included. See [ZIP export details](supported-features.md#attachments).
+
+### Import ZIP Files as PDF Attachments
+
+```python
+from aspose_pdf import Document
+
+with Document("report.pdf") as document:
+    imported = document.import_attachments_zip("supporting-files.zip", on_conflict="rename")
+    document.save("delivery-package.pdf")
+```
+
+The
+`Document.closed` property returns `True` after the document has been closed (either by calling
+`dispose()` or exiting a context manager) and `False` otherwise:
+
+Use `pages=[3, 1, 3]` to select and reorder one-based pages, including repeats.
+Each page becomes one losslessly stored image at its original displayed
+physical size, with CropBox and rotation baked in. Visible annotations and
+form appearances are included unless `include_annotations=False`.
+The default `mode="rgb"` preserves color; `mode="gray"` stores 8-bit luminance,
+and `mode="bilevel"` stores packed 1-bit black-and-white pixels. Bilevel output
+supports `threshold=128` (integers 0–255) and `dither=True` for halftone scans.
+These modes reduce sample storage; the final file size depends on its content.
+
+`horizontal` splits the displayed view left then right; `vertical` splits top
+then bottom. Use `reverse=True` to reverse each pair, `split_ratio=0.5` to set
+the cut from the left/top, and `gutter=6` to omit a centered strip. `pages=[2, 3]`
+splits only those one-based pages, retaining covers and other pages in source
+order. Rotation and the visible CropBox are respected.
+
+The result preserves text, vectors and image resources without rasterizing.
+This is cropping: hidden content remains in each half. Selected form fields
+become static appearances by default; other pages' fields stay editable. See
+[spread splitting details](supported-features.md#pages) for annotations,
+navigation, numeric precision and resource limits.
+
+`add_pages_from_images` accepts file paths, raw image bytes, or file-like
+objects (e.g., `io.BytesIO`), adding one page per source. JPEG and PNG work out
+of the box; BMP, GIF, and WebP need the optional `images` extra. The page size
+defaults to the image's natural size at 72 DPI or can be specified with a
+`PageSize` name or `(width, height)` tuple.
+
+The `fit` parameter controls how images are placed on the page:
+
+- `"cover"` (default): scales to cover the entire page, cropping if necessary
+- `"contain"`: scales to fit entirely within the page, preserving aspect ratio
+- `"stretch"`: stretches to fill the page, potentially distorting the image
+
+`add_pages_from_pdf` accepts file paths, raw PDF bytes, or file-like objects,
+adding one page per source. Each imported page retains its original content,
+annotations, form fields, layers, and page boxes. Use `page_numbers` to import
+specific pages; by default, page 1 is imported from each source. You can pass
+a single integer to use the same page from all sources.
+
+The detector shares the HTML/Markdown export's limits: no OCR or multiline-cell reconstruction,
+and ambiguous page columns can be mistaken for tables or divide a grid. See
+[supported-features.md](supported-features.md) for the detailed extraction contract.
+
+Build a table directly from CSV, using its first record as a repeated header.
+
+Pass `header=False` when the CSV starts with data. Bytes, bytearrays and readable
+binary streams also work. Cells keep their original strings, including leading
+zeros and empty values. Set `encoding=` or `delimiter=` for other CSV formats.
+See [table import details](supported-features.md#pages) for limits and validation.
+
+Set `border_widths={"bottom": 1.5}` or `border_colors={"bottom": "#003366"}`
+on a `Table`, `Row` or `Cell` to style individual sides (`top`, `right`,
+`bottom`, `left`). Width `0` or a side color of `None` hides that side.
+
+Set `Table(auto_column_widths=True)` to allocate column widths from text,
+fonts and padding within the table's `width` or the remaining page width.
+Explicit `column_widths` take precedence.
+
+`Cell("Product details", link=URIAction("https://example.com/product"))` makes
+the whole cell clickable. `link` also accepts a page destination or its name;
+links follow column spans, wrapped row heights and repeated headers.
+
+`Document.extract_text(pages=[3, 1, 3])` reads the third, first, then third page.
+Indices in `Document` and `TextExtractorOptions(pages=...)` start at one;
+the facade uses `PdfExtractor.extract_text(page_numbers=[3, 1, 3])` instead.
+`None` selects all pages and `[]` selects none. Lists, ranges and generators
+preserve their order and repetitions. Use `Document.open_streaming(...)` to
+decode only selected page content.
+
+`Document.extract_text(clip=...)`, `PdfExtractor.extract_text(clip=...)`, and
+`TextExtractorOptions(clip=...)` apply the rectangle to each selected page. Selection uses
+overlapping glyph bounds; see [coverage and limitations](supported-features.md).
+
+The default is `False`. Untagged content is retained; filtering relies on PDF
+tags and does not guess which text is decorative. The option combines with page
+selection and `clip` and leaves the PDF unchanged.
+
+`Page.link_text()` processes one page; `pages` selects pages on `Document`.
+Matching is literal and case-sensitive by default. Text and appearance stay
+unchanged; existing links are preserved and uncertain positions are reported.
+`max_count` limits matches considered, including skipped and existing matches.
+Use either `uri` or `target`; destination pages are one-based, and named targets
+must already exist. Named links follow later changes to their destination.
+See [placement limits](supported-features.md#text).
+
+The versioned JSON preserves hierarchy, ordering, titles, styles, open state and
+supported targets. Page numbers start at one. Import appends by default;
+`replace=True` replaces the whole tree, and an empty replacement clears it.
+`page_map={1: 3, 2: 4}` remaps explicit local targets and must cover every source
+page used. Named local targets are exported as explicit page views by default;
+`resolve_named_destinations=False` retains their names without copying definitions.
+See [bookmark exchange coverage](supported-features.md#documents) for the schema,
+supported actions and validation limits.
+
+Edit the hierarchy and page targets in three columns:
+
+```csv
+level,title,page
+1,Introduction,1
+2,Background,3
+1,Appendices,
+```
+
+Levels and page numbers start at one; a blank page cell is a heading without a
+jump. Import appends by default or replaces with `replace=True`, validating the
+whole table before changing bookmarks. CSV supports whole-page destinations;
+export rejects styles, open state, names, precise page views and complex actions.
+Use JSON exchange to retain those supported properties.
+
+Audit outbound URLs, locate internal navigation and prepare link migrations
+without clicking through the PDF. `Page.extract_links()` inspects one page.
+`Page.export_links_json()` and `Page.export_links_csv()` export a report for that page.
+Reports include direct targets and action chains, retain invalid targets with
+diagnostic codes, and remain usable after the document is closed. Source page numbers are one-based;
+annotation indices remain zero-based. Relative URLs use the catalog URI Base
+when present; remote file paths are reported as declared. No links are opened,
+files fetched or page content decoded. This inventories Link annotations,
+including hidden ones; bookmarks and URLs written only as page text are outside
+its scope. CSV and versioned JSON exports make the inventory ready for review
+and downstream processing. CSV uses one-based page numbers, with separate local
+and remote target columns; JSON version 2 uses one-based page numbers and structured views.
+See [link inventory details](supported-features.md#annotations).
+
+Read or set `Document.base_uri` to give relative links a common address, for
+example `document.base_uri = "https://example.com/manuals/"`; assign `None` to
+clear it. New values are absolute ASCII URIs, with international characters
+percent-encoded. The setting is saved in the PDF and used by link reports.
+
+The returned count is changed Link annotations, excluding no-op replacements.
+Use `pages=[1, 3]` or `Page.replace_link_urls()` to select pages. Strings replace
+literal substrings; `regex=True` or a compiled text regex supports capture-based
+replacement templates. Matching uses stored URLs, including relative or custom
+schemes. Only primary URI actions are edited; page text, bookmark URLs and
+action chains remain unchanged. The complete plan is checked before edits,
+with no page rendering, content decoding or network access.
+
+This performs a single scan of the document's link metadata, applying all patterns
+in order. The first pattern that matches a URL is applied, and the annotation is
+not checked against subsequent patterns. Supports literal strings and compiled
+regex patterns in the mapping, with `regex=True` to treat string keys as patterns.
+`case_sensitive=False` adds case-insensitive matching, and `pages=[1, 3]` limits
+processing to specific pages. Use `dry_run=True` to count changes without modifying
+the document.
+
+The batch operation is more efficient than calling `replace_link_urls` repeatedly,
+especially when scanning large documents or applying many patterns.
+
+The report finds missing names/pages, malformed destinations and action chains,
+and cycles. Page indices start at one and annotation indices start at zero. Use `pages=[1, 3]` to select
+link sources; bookmark and destination-definition checks remain enabled unless
+`include_outlines=False` or `include_named_destinations=False` is passed.
+External target reachability and full PDF conformance are outside these checks.
+See [navigation validation coverage](supported-features.md#annotations).
+
+Remove a previous review round or one reviewer's outdated notes before handoff.
+Filters combine with AND; author alternatives combine with OR. Date bounds are
+exclusive and default to modification dates; `date_field="created"` selects
+creation dates. Datetimes, dates, ISO strings and PDF date strings are accepted;
+naive dates/times use UTC. Missing or malformed annotation dates are preserved
+when filtering by date. `case_sensitive=False` enables Unicode author casefolding.
+
+Default cleanup preserves links, widgets, file attachment icons and unknown
+subtypes. Owned popups count as removals; surviving replies are retained and
+detached from deleted parents. `page.annotations.remove_matching()` applies the
+same filters to one page. `dry_run=True` plans and validates without editing.
+Changes are in memory until saved. This removes review markup rather than
+physically erasing PDF objects or applying redactions. See
+[cleanup details](supported-features.md#annotations).
+
+Import appends to existing annotations; importing again adds another copy. Use
+`page_map={0: 2}` to move source page 0's comments onto destination page 2, or
+`page.annotations.import_json(source)` to import one source page onto a specific page.
+Widgets, links, media and unknown subtypes are refused because their required data
+is absent from the export. Links to records outside the JSON are omitted.
+See [annotation exchange coverage](supported-features.md#annotations) for the schema and limits.
+
+Every record starts from the original template; omitted fields keep its values.
+`flatten=True` bakes form fields while retaining other annotations. The default
+keeps fields editable. Records follow `Form.fill()` types and strict field-name
+handling; generators and mutable lists are snapshotted for reuse. Multiple
+templates produce results in input order, then record order. All PDFs are
+prepared before configured outputs are written, and results are retained in
+memory under resource limits. `password=` opens protected templates.
+
+The check reports required answers, text length limits and invalid selections
+without modifying the PDF. It does not execute JavaScript or verify signatures;
+see [form validation coverage](supported-features.md#forms).
+
+Use `reverse_other=True` when the back-side scan runs from last sheet to first;
+the default keeps both inputs' order. Page counts must match by default.
+`strict=False` retains unmatched pages at the end without inserting blanks.
+The inputs stay unchanged; the new document keeps page resources, annotations,
+fields, labels and bookmark targets. See [assembly details](supported-features.md#documents).
+
+Each `TextWord` is an immutable snapshot with `text`, one-based `page_index`,
+`rect` (also `bbox`) and `quad`. Coordinates are unrotated PDF points with a
+lower-left origin. The region selects whole overlapping words. Bounds use
+font metrics; unmeasurable runs and content-stream `/ActualText` replacement
+spans are omitted. No OCR or language-specific word segmentation is performed.
+See [word extraction details](supported-features.md#text).
+
+The versioned UTF-8 JSON contains `text`, one-based `page_index`, `rect` and
+four-point `quad` for each word. Omit the destination to receive bytes, or pass
+a binary stream. Selection and clipping follow `extract_words()`.
+CSV exports use `page_number,text,x0,y0,x1,y1,quad` columns for spreadsheet
+analysis; the four quad points are a JSON array in one cell. Use
+`Page.export_words_csv()` for one page, or omit the destination to receive bytes.
+
+Each immutable `TextSearchMatch` contains the original page number, matched text,
+character offsets, context before/after and available geometry. Matches without
+reliable coordinates remain in the report. Search uses extracted page text and
+does not perform OCR. See [search report details](supported-features.md#text).
+
+Strings are literal substrings by default; compiled text regexes also work.
+Each matching page starts a part, with preceding pages kept separately unless
+`include_preamble=False`. No matches raises `PdfValidationException`.
+Matching uses extracted text, with optional `case_sensitive=False`; image-only
+scans need a text layer. `clip` restricts boundary detection to a rectangle in
+unrotated PDF points with a lower-left origin. Adjust the example's header band
+to your pages, or omit `clip` to search all page text. Each part retains complete
+pages, including content outside the search area. See
+[splitting details](supported-features.md#documents).
+
+Blank separator pages are excluded by default. With `keep_separators=True`, they
+stay at the end of the preceding part, with leading blanks in the first part.
+Consecutive separators do not create extra parts. Blank detection supports the
+same `dpi`, `white_threshold`, `max_ink_ratio` and `include_annotations` options
+as `find_blank_pages()`. An entirely blank batch produces no parts by default,
+or one copy when keeping separators. The source PDF is unchanged. See
+[splitting details](supported-features.md#documents).
+
+The default checks at 72 DPI, treats RGB channels of 250 or more as white,
+and tolerates no darker pixels. Visible annotations count by default;
+`include_annotations=False` checks page content alone. This visual heuristic
+follows the shared renderer and may miss marks at the chosen resolution.
+Hidden text or other data can remain on a blank-looking page. See
+[detection details](supported-features.md#pages).
+
+Each group includes its first occurrence. Pages must have equal raster
+dimensions and identical RGB pixels at the chosen DPI. Visible annotations
+count by default; `include_annotations=False` compares page content alone.
+Use `pages=[1, 4, 8]` to inspect a subset. The document is unchanged.
+This detects exact rendered matches; noisy scans can differ, and hidden data
+can differ on matching pages. See [comparison details](supported-features.md#pages).
+
+`anchor` selects the center, an edge or a corner. With `contain`, it positions
+the whole image inside the frame; with `cover`, it chooses the part that remains
+visible. The default is `"center"`. Source pixels and proportions are preserved;
+see [image fitting details](supported-features.md#images).
+
+Find each placement below the threshold on either image axis, including reused
+images, inline images and nested forms, without decoding image pixels. Reports
+use one-based page indices; `pages=[3, 1]` selects a subset. Rotation, shear and
+page UserUnit affect the calculation correctly. Hidden or clipped-out paints
+can be reported; this checks resolution rather than image sharpness or print
+certification. See [resolution details](supported-features.md#images).
+
+Embed a batch of supporting documents without extracting temporary files.
+Input can also be ZIP bytes or a binary stream; `names=` selects exact archive
+members. The default restores names and metadata from the ZIP export manifest;
+use `use_manifest=False` for an unrelated `manifest.json`. Conflicts can fail,
+skip, replace or rename. Selected payloads are validated before attachments
+change. See [ZIP import limits and formats](supported-features.md#attachments).
+
+Pages are paired in order; use `pages=` and `other_pages=` for independent
+selections. Missing pages are reported explicitly. Reports retain extracted
+strings after exclusion filtering, while matching and diffs use the requested normalization.
+Use `case_sensitive=False` for Unicode case folding or `skip_artifacts=True`
+to omit explicitly tagged artifacts such as page numbers. Extraction needs a
+text layer and follows its reading-order limitations. `exclude_regions` removes
+overlapping glyphs from report text, matching and diffs on both sides. The example
+excludes header and footer bands in unrotated PDF points with a lower-left
+origin. Adjust the rectangles to your pages. It does not compare
+graphics, metadata or form values. Neither PDF is edited. See
+[text comparison details](supported-features.md#text).
+
+Pages are paired in order, with missing pages reported when counts differ.
+Use `pages=` and `other_pages=` to select each side independently.
+Defaults require equal raster dimensions and identical RGB pixels. For scan
+noise, explicitly allow color differences with `tolerance=3` and a changed
+area with `max_diff_ratio=0.001`. Neither PDF is edited. This compares rendered
+appearance at the chosen DPI, so hidden content and unsupported drawing can
+differ even when views match. See [comparison details](supported-features.md#pages).
+
+Rectangles use `(left, top, right, bottom)` in PDF points (1/72 inch), measured
+from the top-left of the displayed page after cropping and rotation. The same
+regions apply to both views and every selected pair, independently of DPI.
+Ignored pixels are excluded from counts, difference ratios and bounds; their
+union is reported as `ignored_pixels` and shown in light blue on diff images.
+Regions do not hide missing pages or unequal raster sizes and do not remove
+data from either PDF.
+
+Use measurements to review white margins and prepare crop or alignment decisions
+before changing the PDF. Bounds are `(x0, y0, x1, y1)` in unrotated page user
+coordinates, within the current CropBox; visually blank pages return `None`.
+The document method returns a dictionary keyed by one-based page indices;
+`pages=[3, 1]` selects a subset. Visible annotations count unless
+`include_annotations=False`. Detection is approximate at the chosen DPI and
+shares the renderer's limits. See [content bounds details](supported-features.md#pages).
+
+`margin` is padding in PDF points. Detection uses the current visible area,
+page rotation and visible annotations; blank-looking pages stay unchanged.
+Only CropBox changes: cropped-out content remains stored in the PDF.
+Detection is approximate at the chosen DPI; dark scan borders and speckles
+count as content. See [cropping details](supported-features.md#pages).
+
+Use `pages=[1, 3]` to crop a subset or `dry_run=True` to preview the returned
+dictionary of changed page indices and crop rectangles. `uniform=True` applies
+one frame enclosing all selected content to every selected page, including blank
+ones, for consistent sizes. This mode requires equal displayed page dimensions;
+individual cropping supports mixed formats. `Page.auto_crop()` remains available
+for a single page.
+
+</details>
+
+## API Reference
+
+The Aspose.PDF FOSS for Python package provides core PDF manipulation through the `Document` class, which manages pages, forms, annotations, and structural editing, alongside specialized extractors and editors for text, images, attachments, and file-level operations.
+
+The public API has 388 types.
+
+<details>
+<summary>View the Complete Public API Surface</summary>
+
+`PdfExtractor` handles text, image, and attachment extraction, and
+`PdfFileEditor` provides a boolean-returning facade for file-based concatenate, extract, insert,
+and delete workflows. 388 public types are organized by module below.
+
+### Core API
+
+| Class | Description |
+| --- | --- |
+| `Action` | Base class for an interactive action. |
+| `Annotation` | Live view over a single annotation on a page. |
+| `AnnotationCollection` | Mutable sequence-like wrapper over page annotations. |
+| `AutoLinkResult` | Created links and matched text that was left unchanged. |
+| `ByteArrayDataSource` | A data source backed by in-memory bytes. |
+| `CaretAnnotation` | CaretAnnotation class represents a caret annotation with a frame and symbol property. |
+| `Cell` | One cell of a table: what it says, and how it says it. |
+| `ChangeType` | Constants for change types returned by DocumentComparison. |
+| `CircleAnnotation` | An ellipse drawn inside the annotation's rectangle (Circle). |
+| `aspose_pdf.Color` | A colour in one of the three PDF device spaces, or a gradient pattern. |
+| `ContentChange` | A single change detected between two documents. |
+| `DataSource` | Base class for plugin inputs and outputs. |
+| `Destination` | Base class for a view destination on a document page. |
+| `Document` | Pythonic wrapper for PDF document lifecycle and core operations. |
+| `DocumentComparison` | Results of comparing two PDF documents. |
+| `DocumentFont` | DocumentFont class holds information about a font used in a document, including whether it is composite and the one-based page numbers where it appears. |
+| `EmbeddedFileCollection` | Sequence-like wrapper over file-attachment annotations on a page. |
+| `ExtractedBlock` | A detached heading, paragraph, list, table or figure in reading order. |
+| `ExtractedLink` | One target or action, with its one-based source page and zero-based annotation index. |
+| `ExtractedTable` | ExtractedTable class represents a table extracted from a PDF document, providing column and row counts, and methods to save or convert its content to CSV or a list. |
+| `Field` | A field of an interactive form. |
+| `FieldWidget` | Where one of a field's widgets sits: the page and the rectangle on it. |
+| `FileAttachmentAnnotation` | A file attached at a point on the page (FileAttachment). |
+| `FileDataSource` | A data source backed by a file on disk. |
+| `FileFontSource` | Discover the font(s) contained in a single file. |
+| `FileSpecification` | An embedded file (/Filespec) with typed metadata. |
+| `FitBDestination` | Fit the page's bounding box in the window. |
+| `FitBHDestination` | Fit the bounding-box width with top at the top of the window. |
+| `FitBVDestination` | Fit the bounding-box height with left at the left of the window. |
+| `FitDestination` | Fit the whole page in the window. |
+| `FitHDestination` | Fit the page width with top at the top of the window. |
+| `FitRDestination` | Fit the rectangle (left, bottom, right, top) in the window. |
+| `FitVDestination` | Fit the page height with left at the left of the window. |
+| `FolderFontSource` | Collect fonts from a directory (optionally recursing into subfolders). |
+| `FontDescriptor` | Represents a discoverable font. |
+| `FontEmbeddingException` | Raised when there is an error embedding fonts in the PDF. |
+| `FontRepository` | Aggregate font sources and resolve fonts by name. |
+| `FontSource` | Base class for external font providers. |
+| `FontSubstitutionOptions` | FontSubstitutionOptions class provides options for font substitution, including font directories, font programs, system font usage, and platform font indexing. |
+| `Form` | Represents an interactive form (AcroForm) within a PDF document. |
+| `FormFiller` | Generate an independent filled PDF for every template/record pair. |
+| `FormFillerOptions` | Fill every input PDF template once per immutable field-value record. |
+| `aspose_pdf.FormValidationIssue` | FormValidationIssue class represents an issue found during form validation. |
+| `FreeTextAnnotation` | Text drawn straight onto the page (FreeText). |
+| `GoToAction` | Jump to a destination within this document. |
+| `GoToRAction` | Jump to a destination in another (remote) PDF file. |
+| `GraphicsPath` | GraphicsPath class provides methods to build a path by adding circles, curves, lines, and other shapes, with properties to track the current point and path state. |
+| `HideAction` | Hide or show named form fields when a PDF viewer executes the action. |
+| `HighlightAnnotation` | Text marked with a highlighter (Highlight). |
+| `Image` | Represents an extracted image from a PDF document. |
+| `ImageResolutionIssue` | One image paint below the requested effective DPI on either image axis. |
+| `ImageStamp` | An image, scaled to the box it is given. |
+| `InkAnnotation` | Freehand strokes (Ink). |
+| `JavaScriptAction` | Run a JavaScript script (serialized verbatim, not validated). |
+| `LaunchAction` | Launch an application or open a file (serialized verbatim). |
+| `LineAnnotation` | A single line between two points (Line). |
+| `LinkAnnotation` | A clickable area that goes somewhere (Link). |
+| `LinkValidationIssue` | One local navigation problem, with a one-based page number and zero-based annotation indices. |
+| `ListItem` | One item: what it says, what hangs under it, and how it differs. |
+| `MarkupAnnotation` | An annotation a person made, with the entries every one of them shares. |
+| `MemoryFontSource` | Expose a font program supplied as in-memory bytes. |
+| `MergeOptions` | Concatenate inputs, optionally grouping bookmarks by source document. |
+| `Merger` | Concatenate every input PDF into a single document. |
+| `NamedAction` | A predefined named action, e.g. NextPage, FirstPage, Print. |
+| `NamedDestinationCollection` | The document's named destinations, as a mapping of name to destination. |
+| `NamespaceProvider` | Resolve XMP namespace prefixes and URIs. |
+| `OperationResult` | A single result produced by a plugin. |
+| `OptimizationOptions` | OptimizationOptions class provides options for PDF optimization and a method to convert its settings to a dictionary. |
+| `OptimizeOptions` | Options for Optimizer. |
+| `Optimizer` | Optimize each input PDF (compression + unused-object cleanup). |
+| `OutlineCollection` | Top-level collection of OutlineItem bookmarks. |
+| `OutlineItem` | A single bookmark entry in a PDF outline tree. |
+| `Page` | A page of a PDF document. |
+| `PageCollection` | A collection to manage PDF pages within a Document. |
+| `PageLabel` | The labelling of one range of pages. |
+| `PageLabelCollection` | A document's label ranges, keyed by the index of the page each starts at. |
+| `PageNumberStamp` | A text stamp whose text is the page's number. |
+| `PageRanges` | A convenience class for parsing and validating page range expressions. |
+| `PageSize` | A page's width and height in PDF points. |
+| `PageStamp` | A page of a document, drawn onto a page -- a letterhead, a background form. |
+| `PageTextComparison` | An immutable comparison of two selected pages, using one-based page numbers. |
+| `PageVisualComparison` | One pair of rendered pages, using one-based source page indices. |
+| `Paragraph` | One paragraph: what it says, and how it differs from the block. |
+| `PdfAValidateOptions` | Container for PDF/A validation settings. |
+| `PdfAValidationResult` | Detailed result of a PDF/A validation run. |
+| `PdfAValidator` | Plugin that runs PDF/A validation on one or more inputs. |
+| `PdfAnnotationEditor` | Reading, deleting and flattening annotations across pages. |
+| `PdfBookmarkEditor` | The document's outline, as the ported API edits it. |
+| `PdfConverter` | Rendering the bound document's pages, one image at a time. |
+| `PdfExtractor` | Simple PDF text and image extractor. |
+| `PdfFileEditor` | Facade for PDF file editing operations. |
+| `PdfFileInfo` | The document information dictionary, and the geometry of its pages. |
+| `PdfFileSecurity` | Passwords and permissions on the bound document. |
+| `PdfFileStamp` | Stamps, running heads and page numbers on the bound document. |
+| `PdfLoadLimits` | Immutable safety limits for untrusted PDF input and authored assets. |
+| `PdfPageEditor` | Turning, resizing, moving and removing pages. Page numbers are 1-based. |
+| `PdfPlugin` | Base class for low-code plugins. |
+| `PdfResourceLimitException` | Raised when processing a PDF would exceed a configured resource limit. |
+| `PdfSignature` | Represent a PDF digital signature. |
+| `PdfUaValidateOptions` | Container for batch PDF/UA validation settings. |
+| `PdfUaValidationResult` | Detailed result of a PDF/UA structure check (heuristic). |
+| `PdfUaValidator` | Plugin that runs heuristic PDF/UA validation on one or more inputs. |
+| `PdfValidationException` | Raised when a PDF document fails validation or compliance checks. |
+| `PdfXValidateOptions` | Container for batch PDF/X validation settings. |
+| `PdfXValidationResult` | Detailed result of a PDF/X validation run (heuristic). |
+| `PdfXValidator` | Plugin that runs heuristic PDF/X validation on one or more inputs. |
+| `PdfXmpMetadata` | The document's XMP packet, read and written by prefix and name. |
+| `Permissions` | What a reader may do with an encrypted document: /P, with names. |
+| `PluginOptions` | Hold input/output data sources and their PDF resource-limit policy. |
+| `PolyLineAnnotation` | An open shape through a list of points (PolyLine). |
+| `PolygonAnnotation` | A closed shape through a list of points (Polygon). |
+| `PopupAnnotation` | The window that shows another annotation's contents (Popup). |
+| `RasterizedPage` | A rendered PDF page in packed RGB format. |
+| `Recipient` | One certificate that may open the document, and what it may then do. |
+| `RedactAnnotation` | An area marked for removal (Redact). |
+| `ResetFormAction` | Reset the form's fields to their default values. |
+| `ResultContainer` | Holds the ordered results of a plugin operation. |
+| `Row` | One row of a table: its cells, and what they have in common. |
+| `SanitizationReport` | How much of each kind of thing sanitize removed. |
+| `SignatureAppearance` | How a visible signature is drawn: its text, its image, and its frame. |
+| `SplitOptions` | Options for Splitter. |
+| `Splitter` | Split every input per page, per fixed-size group, per selection or by bookmarks. |
+| `SquareAnnotation` | A rectangle drawn inside the annotation's rectangle (Square). |
+| `SquigglyAnnotation` | Text with a wavy line under it (Squiggly). |
+| `Stamp` | What every stamp says about where it goes and how it is drawn. |
+| `StampAnnotation` | A rubber stamp (Stamp). |
+| `StreamDataSource` | A data source backed by a binary stream (e.g. io.BytesIO). |
+| `StrikeOutAnnotation` | Text with a line through it (StrikeOut). |
+| `StructureElement` | A mutable logical-structure element in a tagged PDF. |
+| `SubmitFormAction` | Send the form's field values to *URL*. |
+| `SystemFontSource` | Collect fonts from common system font directories. |
+| `Table` | A table of rows, ready to be placed on a page. |
+| `TaggedContent` | Editable view of a document's logical structure tree. |
+| `TextAnnotation` | A sticky note: an icon that opens a window (Text). |
+| `TextBlock` | Paragraphs ready to be placed on a page, with the styles they share. |
+| `TextExtractor` | Extract plain text from each input PDF. |
+| `TextExtractorOptions` | Extract text from all or selected pages, optionally within a clip. |
+| `TextHighlightResult` | Highlights created and matches skipped because their geometry was uncertain. |
+| `TextLayoutOptions` | Configure complex-text shaping and line layout for Page.add_text. |
+| `TextList` | Items ready to be placed on a page, with the styles they share. |
+| `TextMarkupResult` | Text annotations created and matches skipped due to uncertain geometry. |
+| `TextSearchMatch` | A detached search hit with page-local character offsets and context. |
+| `TextStamp` | A line of text, set in one of the 14 standard fonts. |
+| `TextWord` | A detached positioned word in unrotated PDF coordinates, in points. |
+| `URIAction` | Resolve a uniform resource identifier (typically a web link). |
+| `UnderlineAnnotation` | Text with a line under it (Underline). |
+| `UnsignedContent` | Represents a collection of unsigned content elements in a PDF document. |
+| `UnsignedContentAbsorber` | Extract the pages, form fields and annotations no signature covers. |
+| `UnsupportedFeatureException` | Raised when a compatibility surface names a feature this package lacks. |
+| `ValidationOptions` | Configuration for signature validation. |
+| `ValidationResult` | Structured result returned by signature validation. |
+| `ViewerPreferences` | The document's /ViewerPreferences, read and written in place. |
+| `XYZDestination` | Position (left, top) at the upper-left with an optional zoom. |
+| `XmpArray` | An ordered XMP array value. |
+| `XmpField` | A single XMP property. |
+| `XmpPacket` | An in-memory XMP packet: an ordered collection of properties. |
+| `XmpProperty` | A property carrying arbitrary qualifiers. |
+| `XmpStruct` | A structured XMP value (an rdf:parseType="Resource" block). |
+| `ActionCollection` | A mapping of trigger name to Action. |
+| `JavaScriptCollection` | The document's own scripts, as a mapping of name to source. |
+| `Name` | A str subclass that marks a value to be serialized as a PDF name. |
+| `PDF3DAnnotation` | Minimal annotation wrapper for prerelease imports. |
+| `PDF3DArtwork` | Container for 3D content and named views. |
+| `PDF3DContent` | Reference to 3D content stored on disk. |
+| `PDF3DView` | Lightweight description of a saved 3D view. |
+| `CgmLoadOptions` | Options for loading CGM files. |
+| `Cluster` | Represents a cluster of data points. |
+| `ClusterCollection` | A collection of clusters. |
+| `DataPoint` | Represents a data point in clustering operations. |
+| `GradientAxialShading` | Represents axial (linear) gradient shading. |
+| `Point` | Represents a point in 2D space. |
+| `drawing.Rectangle` | Represents a rectangle with position and size. |
+| `GeneratedAppearance` | A synthesised appearance: content bytes plus any required ExtGState entries. |
+| `LayoutElement` | A positioned piece of page content (a text object or an image paint). |
+| `TextObject` | A BT ... ET text object located in a content stream. |
+| `ccitt.Decoder` | Decoder class provides a method to decode CCITT-encoded data. |
+| `ChainResult` | Result of building and validating a certificate path. |
+| `CffOutlines` | Decode glyph outlines from a CFF (Type 2 charstring) font program. |
+| `SignedDataInfo` | Everything we need from a parsed CMS SignedData. |
+| `SignerVerification` | Outcome of verifying a single signer. |
+| `PdfXStandardRules` | What one PDF/X conformance level requires, as data. |
+| `AuthoredImage` | Prepared image data and PDF image XObject metadata. |
+| `Isolation` | What to put around a page's content before appending to it. |
+| `ContentStreamParser` | Parse a PDF content stream and extract plain text. |
+| `PdfArray` | PdfArray class represents a PDF array object and provides a method to append elements. |
+| `PdfBoolean` | PdfBoolean class represents a PDF boolean object. |
+| `PdfDictionary` | PdfDictionary class represents a PDF dictionary object and provides methods to get and pop entries. |
+| `PdfDocument` | Container for a PDF's COS object graph. |
+| `PdfIndirectReference` | PdfIndirectReference class represents a PDF indirect reference object. |
+| `cos.PdfName` | PdfName class represents a PDF name object and raises TypeError on initialization under certain conditions. |
+| `cos.PdfNull` | Represent PDF null object. |
+| `cos.PdfNumber` | PdfNumber class represents a PDF number object and raises TypeError on initialization under certain conditions. |
+| `PdfObject` | Base class for all PDF COS objects. |
+| `PdfStream` | A stream object: a dictionary plus a byte payload. |
+| `PdfString` | PdfString class represents a PDF string object and raises TypeError on initialization under certain conditions. |
+| `CsvWriter` | Prepare CSV bytes with one encoder state and bounded records/output. |
+| `data.Color` | Represents a color in PDF documents. |
+| `Encoding` | Encoding class provides encoding methods and lists the LATIN1, UTF16, UTF8, and WIN_ANSI encoding values. |
+| `data.PdfNull` | PdfNull class represents a PDF null object. |
+| `PdfObjectID` | PdfObjectID class represents a PDF object identifier. |
+| `PdfObjectRegistry` | PdfObjectRegistry class manages PDF object registration and provides methods to get and register objects. |
+| `PdfTrailerable` | PdfTrailerable class provides a method to get the trailer dictionary of a PDF document. |
+| `number.PdfNumber` | Represents a PDF number primitive (integer or real). |
+| `types.PdfName` | Represents a PDF name object. |
+| `XmpNamespaceProvider` | Bidirectional XMP namespace prefix <-> URI resolver. |
+| `DecodedJpeg` | A decoded JPEG image. |
+| `DssMaterial` | Validation material destined for (or harvested from) a /DSS. |
+| `EncryptionUtils` | Utility class for PDF-compliant AES-CBC, RC4 encryption, and key derivation. |
+| `StreamDecoder` | Decode PDF stream data using supported filters. |
+| `StreamEncoder` | Encode raw bytes into PDF stream data, the inverse of StreamDecoder. |
+| `AuthoredFont` | A normalized embedded font and the mutable CID mapping for authored text. |
+| `FontResolver` | Index external font sources and resolve PDF font names against them. |
+| `ResolvedFace` | A font program picked for a non-embedded PDF font. |
+| `OutputBuffer` | Bound retained output bytes before allocating a second serialization buffer. |
+| `FieldData` | One field's entry in an FDF or XFDF file. |
+| `form_validation.FormValidationIssue` | An immutable field-value problem; messages never contain stored values. |
+| `TrueTypeOutlines` | Decode glyph outlines from an embedded TrueType (glyf) program. |
+| `AbsorbedElement` | One painted path or placed image, in page (user) space. |
+| `GlyphVariations` | The gvar table of one font, read on demand per glyph. |
+| `Heading` | Heading class represents a heading in a PDF document. |
+| `TiffPage` | One image in a TIFF file. |
+| `IncrementalUpdate` | Generate an incremental update section for an existing PDF. |
+| `IncrementalWriter` | Utility that appends incremental updates to an existing PDF. |
+| `InlineImage` | A BI ... ID ... EI image: its dictionary, expanded, and its samples. |
+| `BitStream` | Minimal bit-oriented buffer used by compatibility code. |
+| `jbig2.Decoder` | JBIG2 decoder that parses segment structure and extracts bitmap data. |
+| `DecodedImage` | A decoded JPEG 2000 image as interleaved 8-bit samples. |
+| `jpx.Decoder` | JPEG 2000 (JPX) Stream Decoder. |
+| `OptionalContent` | The document's optional content groups and their default visibility. |
+| `OptionalContentConfiguration` | One optional content configuration: /D, or an entry of /Configs. |
+| `OptionalContentGroup` | One optional content group (/OCG) of the document. |
+| `LabelRange` | How the pages from one range start onward are labelled. |
+| `ParseWarnings` | Collects warnings during parsing. |
+| `PdfCorruptedError` | Unrecoverable PDF corruption. |
+| `PdfEncodingError` | Font or content stream encoding error. |
+| `PdfMalformedError` | Recoverable malformed PDF structure. |
+| `PdfParseError` | Base exception for PDF parsing errors. |
+| `PdfParseWarning` | Non-fatal parsing issue that was recovered from. |
+| `PdfSecurityError` | Encryption or permission related error. |
+| `PdfValidationError` | PDF/A or general structural validation error. |
+| `LazyPdfObjectStore` | Object-number → COS object map that parses from a PdfCosParser on demand. |
+| `PdfCosParser` | Parse a PDF file (bytes) into a PdfDocument. |
+| `PdfCosWriter` | Serialize a PdfDocument to a PDF byte sequence. |
+| `WriterEncryption` | The security handler, applied as PdfCosWriter serialises. |
+| `CharacterCollection` | A CIDSystemInfo registry, ordering, and supplement triple. |
+| `PredefinedCMap` | A resolved predefined CMap and its semantic Unicode mapping. |
+| `PredefinedCMapEncoding` | Compact code-to-CID view of a predefined CMap. |
+| `Matrix` | Matrix class provides methods to multiply and translate matrices. |
+| `RecipientPayload` | What one opened envelope carries. |
+| `RedactionContext` | Metadata associated with the operands changed in one content stream. |
+| `RevocationResult` | RevocationResult class represents the result of a revocation check. |
+| `RichRun` | RichRun class represents a run of rich text in a PDF document. |
+| `RichStyle` | The resolved style of a text run. |
+| `SfntFace` | Metadata recovered from a single SFNT face. |
+| `Shading` | Base class for bounded RGB sampling in a shading's target space. |
+| `Placement` | A laid-out appearance: the size chosen, and where each line goes. |
+| `Revision` | Revision class represents a signature revision in a PDF document. |
+| `SignedChanges` | The objects that are new or different since the newest signed revision. |
+| `SigningUtils` | Utility class for generating certificates and PKCS#7 signatures. |
+| `CosExtractor` | Extract pages, streams, images and metadata from a PdfDocument. |
+| `simple_pdf.ImagePlacement` | Represents an image placement on a page. |
+| `simple_pdf.ImagePlacementAbsorber` | Absorber that finds image placements in a PDF. |
+| `LazyImageDict` | Dictionary that decodes image streams on demand to save memory. |
+| `SimplePdf` | Native Python PDF document representation. |
+| `simple_pdf.TextFragmentAbsorber` | Absorber that extracts text fragments from a SimplePdf instance. |
+| `TextFragmentCollection` | Collection of TextFragment objects. |
+| `StandardFonts` | Utility class for the PDF Standard 14 fonts. |
+| `StrokeRun` | StrokeRun class represents a run of stroke in a PDF document. |
+| `Subpath` | Keep an explicit closepath distinct from a line back to the start. |
+| `CidTextCodec` | Code codec for a composite (Type0) font's show strings. |
+| `Reshaper` | Policy for shaping complex-script replacements during a text edit. |
+| `Block` | One piece of exported structure. |
+| `GlyphPlacement` | One shaped glyph at an em-relative position within a laid-out line. |
+| `LayoutLine` | One visual line with logical replacement text and shaped glyphs. |
+| `LayoutResult` | Complete line layout; glyph coordinates and widths are in em units. |
+| `CompositeFontMetric` | Advance metrics for a composite (Type0) font. |
+| `LocatedText` | Where a match sits on the page, and what it is set in. |
+| `SimpleFontMetric` | Advance metrics for a single-byte simple font, in 1000-unit glyph space. |
+| `TimestampInfo` | Result of verifying an RFC 3161 timestamp token. |
+| `Entry` | One line of the contents: what it says, and where it points. |
+| `Type1Outlines` | Decode glyph outlines from a Type 1 (/FontFile) font program. |
+| `AsposePdfException` | Base class for all aspose_pdf exceptions. |
+| `DeprecatedFeatureException` | Declared; not thrown by library code. |
+| `IncorrectCMapUsageException` | Declared; not thrown by library code. |
+| `InvalidPasswordException` | Declared; not thrown by library code. |
+| `InvalidPdfFileFormatException` | Declared; not thrown by library code. |
+| `InvalidValueFormatException` | Declared; not thrown by library code. |
+| `PdfException` | Base class for PDF-related exceptions. |
+| `PdfIOException` | Raised when there is an I/O error during PDF processing. |
+| `PdfParseException` | Raised when there is an error parsing a PDF document. |
+| `PdfSecurityException` | Raised when there is an encryption, signature, or permissions error. |
+| `FontRegistry` | Singleton registry for resolving well-known font names. |
+| `InvalidFormTypeOperationException` | Declared; not thrown by library code. |
+| `Matrix3D` | Represents a 3D transformation matrix. |
+| `Point3D` | Represents a 3D point. |
+| `GraphicElement` | A painted path or a placed image, read from a page's content stream. |
+| `GraphicElementCollection` | An in-memory list of GraphicElement objects. |
+| `GraphicsAbsorber` | Absorbs graphic elements from PDF pages. |
+| `InvalidOperationException` | Raised when a graphics element is attached to the wrong parent. |
+| `HtmlLoadOptions` | Options for loading HTML documents. |
+| `HtmlSaveOptions` | Options for saving PDF documents as HTML. |
+| `images.ImagePlacement` | Represent an image placed on a PDF page. |
+| `images.ImagePlacementAbsorber` | Absorber to collect image placements from PDF pages. |
+| `images.Rectangle` | Rectangle representing image placement bounds on a PDF page. |
+| `LatexFragment` | Small value object that stores LaTeX source text. |
+| `Layer` | One optional content group, and whether it is currently shown. |
+| `LayerCollection` | The document's layers, indexable by position or by name. |
+| `LayerConfiguration` | LayerConfiguration class represents a layer configuration with properties for creator, index, default status, locks, name, and shows. |
+| `License` | License management class for Aspose.PDF. |
+| `StatisticsEntry` | Entry for tracking statistics and timing information. |
+| `CdrLoadOptions` | Options for loading CDR files. |
+| `load_options.SvgLoadOptions` | Options for loading SVG files. |
+| `WarichuWPElement` | Minimal tagged-element type for API compatibility. |
+| `ConvertOptions` | Options for Converter: render or re-express each input. |
+| `Converter` | Re-express each input in another format -- HTML, Markdown, SVG or a raster. |
+| `DecryptOptions` | Options for Decryptor: the password that opens each input. |
+| `Decryptor` | Remove the standard security handler from each input. |
+| `EncryptOptions` | Options for Encryptor, as encrypt. |
+| `Encryptor` | Encrypt each input with the standard security handler. |
+| `FlattenOptions` | Select fields, non-widget annotations and one-based pages to flatten. |
+| `FormFlattener` | Bake the fields and annotations selected by FlattenOptions. |
+| `ImageExtractor` | Pull every embedded image out of each input, as a real image file. |
+| `ImageExtractorOptions` | Options for ImageExtractor: pull the images out of each input. |
+| `ImagesToPdf` | Make PDFs from JPEG/PNG/TIFF/WebP/BMP/GIF images and animation frames. |
+| `ImagesToPdfOptions` | Options for ImagesToPdf. |
+| `PageRemoveOptions` | Options for PageRemover: pages are the one-based pages to drop. |
+| `PageRemover` | Drop the named pages from each input. |
+| `PdfAConvertOptions` | PdfAConvertOptions class provides options for converting a document to PDF/A format. |
+| `PdfAConverter` | PdfAConverter class provides a method to process PDF/A conversion. |
+| `RotateOptions` | Options for Rotator. |
+| `Rotator` | Turn pages of each input by a multiple of 90 degrees. |
+| `StampOptions` | Options for Stamper: the stamp to put on pages. |
+| `Stamper` | Put one stamp on the pages of each input. |
+| `MarkdownSaveOptions` | Options for saving PDF documents as Markdown. |
+| `OfdLoadOptions` | Options for loading OFD files. |
+| `PdfConsts` | PdfConsts class provides methods to convert between decimal and octal representations, raising ValueError under certain conditions. |
+| `PdfAConversionResult` | Result of a PDF/A conversion operation. |
+| `FillMode` | Fill mode enumeration for path operations. |
+| `IMatrix` | Interface for matrix operations. |
+| `IPath` | A path built segment by segment, in the shape ported code expects. |
+| `ColorPrimitive` | Very small color primitive with transparency support. |
+| `PrinterSettings` | PrinterSettings class provides settings for printing a PDF document. |
+| `CompromiseCheckResult` | CompromiseCheckResult class provides a property to indicate whether a document has been compromised. |
+| `SignaturesCompromiseDetector` | Detect possible compromise indicators around signed PDFs. |
+| `Margin` | Margin class represents the margin for SVG rendering. |
+| `PageInfo` | PageInfo class holds the bounding box and page index for an SVG page. |
+| `svg.SvgLoadOptions` | SvgLoadOptions class configures SVG loading with a conversion engine setting and a read-only page info property. |
+| `TaggedContext` | TaggedContext class provides the context for creating and managing tagged PDF content. |
+| `RegexResult` | Wraps a single regular-expression match found on a PDF page. |
+| `TextAbsorber` | Absorbs text from PDF pages (legacy class, alias for TextFragmentAbsorber). |
+| `TextExtractionOptions` | Options for text extraction from PDF pages. |
+| `TextFormattingMode` | Text formatting mode for text extraction. |
+| `TextFragment` | A text fragment found inside a PDF page. |
+| `text.TextFragmentAbsorber` | Absorbs text fragments from a PDF page or document. |
+| `TextSearchOptions` | Options controlling how text search is performed. |
+| `PerformanceLogger` | Collects named phase timings, and free-form lines. |
+| `VirtualizationPerformance` | A process-global stopwatch. Nothing in this package writes to it. |
+
+#### Enumerations
+
+| Enumeration | Description |
+| --- | --- |
+| `AnnotationFlags` | Flags that define annotation behaviour. |
+| `AnnotationType` | Known annotation subtype names (PDF 32000-1:2008, Table 169). |
+| `CertificationLevel` | DocMDP certification level of a signature. |
+| `DuplexMode` | How the print dialogue starts out handling both sides (/Duplex). |
+| `FieldType` | Type of form field. |
+| `FormType` | Type of PDF form. |
+| `HorizontalAlignment` | Which way a stamp is placed across the page. |
+| `NumberingStyle` | How the number part of a label is written (/S). |
+| `PageBoundary` | A page box, for the entries that say which one to view or print. |
+| `PageLayout` | How the pages are arranged (/PageLayout). |
+| `PageMode` | What a viewer shows beside the page when the document opens (/PageMode). |
+| `PdfXStandard` | The PDF/X conformance levels this library validates and writes. |
+| `Plugin` | Identifiers for the available low-code plugins. |
+| `PrintScaling` | What the print dialogue starts on (/PrintScaling). |
+| `ReadingDirection` | The reading order of a two-column or two-page layout (/Direction). |
+| `RevocationStatus` | Certificate revocation outcome (OCSP/CRL). |
+| `TrustStatus` | Outcome of building/validating the signer's certificate chain. |
+| `ValidationMethod` | Selects the signature format / validation algorithm. |
+| `ValidationMode` | Controls whether certificate revocation is checked via network. |
+| `ValidationStatus` | Outcome of a ValidationResult. |
+| `VerticalAlignment` | Which way a stamp is placed up the page. |
+| `PDF3DLightingScheme` | PDF3DLightingScheme enum lists the lighting schemes for 3D annotations, including CUSTOM, DARK, GRAY, HEADLAMP, and WHITE. |
+| `PDF3DRenderMode` | PDF3DRenderMode enum lists the render modes for 3D annotations, including SOLID, TRANSPARENT, and WIREFRAME. |
+| `EncodingType` | EncodingType enum lists the encoding types MAC_EXPERT, MAC_ROMAN, PDF_DOC, UNICODE, and WIN_ANSI. |
+| `FilterType` | FilterType enum lists the filter types CCITT_FAX_DECODE, DCT_DECODE, FLATE_DECODE, JBIG2_DECODE, JPX_DECODE, LZW_DECODE, and NONE. |
+| `StructureTypeStandard` | StructureTypeStandard enum lists the standard structure types DIV, DOCUMENT, P, PART, RB, RP, RT, SECT, SPAN, TABLE, TD, and TH. |
+| `Duplex` | Duplex enum lists the duplex printing options DUPLEX, NONE, SIMPLEX, and TUMBLE. |
+| `PrintRange` | PrintRange enum lists the print range options ALL_PAGES, PAGE_RANGE, SELECTION, and SOME_PAGES. |
+| `SaveFormat` | Format for saving PDF documents. |
+| `DocFormat` | Target format for a save operation. |
+| `PadesLevel` | PAdES baseline conformance level reached by a signature. |
+
+#### Detailed Member Reference
+
+### Document
+
+The `Document` class serves as the central entry point, supporting document creation, loading from files or bytes, page management with `add_page`, and saving to files or bytes, while exposing properties such as `page_count`, version, info, and pages for structural access.
+
+- `actions`: What the document does around saving, printing and closing (/AA).
+- `add_attachment`: Embed *content* as a document-level file attachment named *name*.
+- `add_document_timestamp`: Add a document timestamp when the document is next saved.
+- `add_footer`: Put *text* along the bottom of *pages*, or every page when none are named.
+- `add_header`: Put *text* along the top of *pages*, or every page when none are named.
+- `add_ltv`: Add long-term validation material (a /DSS) when the document is next saved.
+- `add_page`: Add a page from another document to the end of this document.
+- `add_pages_from_images`: Add one or more pages from image files, bytes, or streams.
+- `add_pages_from_pdf`: Add one or more pages from PDF files, bytes, or streams.
+- `add_stamp`: Put *stamp* on *pages*, or on every page when none are named.
+- `add_table_of_contents`: Put a contents page in front of the document, and return its pages.
+- `append`: Append all pages from another document to this one.
+- `append_page_from`: Extract a single page from another document and append it to this one.
+- `append_pages`: Extract selected pages from another document and append them to this one.
+- `attachments`: Get the collection of attachments in the document.
+- `author`: The document's author, the /Info /Author entry, or None.
+- `auto_crop`: Trim selected pages individually or apply one shared visible frame.
+- `auto_link`: Make recognized web and email addresses in existing text clickable.
+- `auto_tag`: Heuristically tag existing page content into the structure tree.
+- `base_uri`: The catalog's /URI /Base for resolving relative URI actions.
+- `booklet`: Return a new document imposed as a saddle-stitched booklet.
+- `center_window`: Put the window in the middle of the screen.
+- `change_passwords`: Change the document's passwords and keep everything else.
+- `check`: Check PDF integrity.
+- `close`: Alias of dispose (matches .NET Close).
+- `closed`: True if the document has been closed or disposed.
+- `compare_text`: Compare extracted page text and return detached per-pair reports.
+- `compare_visual`: Compare rendered page pairs and optionally retain red difference images.
+- `compress_streams`: Compress uncompressed document streams.
+- `concatenate`: Concatenate an iterable of documents into a new document.
+- `concatenate_pages`: Create a new document from selected pages across multiple documents.
+- `convert_to_pdfa`: Convert the document to PDF/A format in-place.
+- `convert_to_pdfua`: Add the catalog-level PDF/UA prerequisites to the document in place.
+- `convert_to_pdfx`: Convert the document toward a PDF/X standard in place.
+- `creator`: The program that authored the document, the /Info /Creator.
+- `decrypt`: Remove the document's password protection.
+- `destinations`: The document's named destinations, as a mapping of name to destination.
+- `dispose`: Release the document and underlying engine resources (primary lifecycle API).
+- `embed_fonts`: Embed a real font program for every font the document only names.
+- `embedded_files`: The document's embedded files as typed FileSpecification.
+- `encrypt`: Encrypt the PDF document with the standard security handler.
+- `encrypt_for_recipients`: Encrypt for certificate *recipients* with the public-key handler.
+- `export_annotations_csv`: Return a CSV review report with one row per selected annotation.
+- `export_annotations_json`: Return UTF-8 JSON annotation metadata, optionally writing it.
+- `export_annotations_xfdf`: Return UTF-8 XFDF review annotations, optionally writing the same bytes.
+- `export_annotations_zip`: Return annotation metadata as separate CSV files in a ZIP archive.
+- `export_attachments_zip`: Return embedded-file payloads as ZIP bytes, optionally writing them.
+- `export_blocks_json`: Return versioned UTF-8 block JSON, optionally writing a file or stream.
+- `export_bookmarks_csv`: Export simple bookmarks as level,title,page CSV for spreadsheet editing.
+- `export_bookmarks_json`: Return version 1 UTF-8 JSON for the current bookmark tree.
+- `export_comparison_html`: Return an offline UTF-8 HTML comparison report, optionally writing it.
+- `export_images_zip`: Return selected page image resources as ZIP bytes, optionally saving them.
+- `export_links_csv`: Return CSV with one row per inventoried link target or action.
+- `export_links_json`: Return a versioned UTF-8 JSON link report, optionally writing it.
+- `export_pages_as_zip`: Return individual page PDFs in a ZIP archive, optionally writing them.
+- `export_pages_zip`: Return rendered page images in a ZIP, optionally saving the archive.
+- `export_search_csv`: Export matches as CSV with context and separate x0,y0,x1,y1 columns.
+- `export_search_json`: Export search_text results as versioned UTF-8 JSON bytes.
+- `export_split_zip`: Split into fixed-size PDF parts and return them in one ZIP archive.
+- `export_tables_zip`: Return inferred text tables as separate CSV members in a ZIP archive.
+- `export_words_csv`: Return positioned words as CSV bytes, optionally writing a report.
+- `export_words_json`: Return positioned words as versioned UTF-8 JSON, optionally writing it.
+- `export_words_zip`: Return positioned words as separate CSV members in a ZIP archive.
+- `extract_blocks`: Return immutable layout blocks with original page indices and anchors.
+- `extract_images`: Extract all images from selected pages.
+- `extract_links`: Inventory Link annotation targets without executing or fetching them.
+- `extract_page`: Return an independent document containing just the specified page.
+- `extract_pages`: Return an independent document containing selected pages in order.
+- `extract_tables`: Extract regular text grids as detached ExtractedTable values.
+- `extract_text`: The text of all or selected pages, separated by one line break.
+- `extract_words`: Return detached positioned words from selected pages in content order.
+- `find_blank_pages`: Find visually blank pages without changing this document.
+- `find_duplicate_pages`: Find groups of pages with identical rendered views without editing them.
+- `find_low_resolution_images`: Find image placements whose effective DPI is below min_dpi.
+- `find_low_resolution_images_batch`: Find image placements below multiple DPI thresholds in a single scan.
+- `find_text`: Return matched text strings without context or geometry.
+- `find_texts`: Return matched text strings for multiple patterns without context or geometry.
+- `flatten`: Bake selected form fields and annotations into static page content.
+- `flatten_layers`: Resolve optional content once and for all; return pages changed.
+- `fonts`: Every font this document draws with, one entry each.
+- `form`: Get the interactive form of the document.
+- `free_memory`: Free memory by clearing caches.
+- `from_bytes`: Create a document from PDF bytes.
+- `from_file`: Create a document from a PDF file path.
+- `from_stream`: Create a document from a binary stream.
+- `generate_appearances`: Synthesise missing annotation appearance streams across all pages.
+- `generate_field_appearances`: Regenerate AcroForm field appearance streams from their values.
+- `generate_outlines`: Build a bookmark tree from the document's headings.
+- `generate_outlines_from_text`: Create a flat bookmark list from matches in extracted page text.
+- `get_content_bounds`: Measure visible content on selected pages without modifying the PDF.
+- `get_embedded_file`: Return the embedded file named *name* as a FileSpecification,
+- `get_page_indices`: Return one-based page numbers from a page range string.
+- `hide_tool_bar`: Hide the viewer's toolbar while the document is open.
+- `highlight_text`: Add one highlight annotation per reliably placed text match.
+- `highlight_texts`: Highlight multiple text patterns in a single call.
+- `id`: Return the two-element file-identifier array from the PDF trailer.
+- `import_annotations_json`: Append version 1 or 2 JSON review annotations and return the number added.
+- `import_annotations_xfdf`: Append supported XFDF review annotations and return the number added.
+- `import_attachments_zip`: Import selected ZIP members as document-level embedded files.
+- `import_bookmarks_csv`: Import a complete level,title,page table and return its node count.
+- `import_bookmarks_json`: Import a complete JSON bookmark tree and return the added node count.
+- `import_links_csv`: Import links from a CSV report and return the number added.
+- `import_links_json`: Import links from a JSON report and return the number added.
+- `info`: Get or set the document metadata (info dictionary).
+- `insert_page`: Insert a page from another document at *index* in this document.
+- `insert_page_from`: Extract a single page from another document and insert it at the given position.
+- `insert_pages`: Extract selected pages from another document and insert them at *index*.
+- `interleave`: Return a new document alternating this document's pages with *other*.
+- `is_encrypted`: Return True if document is encrypted.
+- `is_pdf_ua_compliant`: Alias for is_pdfua_compliant.
+- `is_pdfa_compliant`: Check if the document complies with the specified PDF/A level.
+- `is_pdfua_compliant`: Heuristic PDF/UA-1 catalog structure check (tagged PDF shell).
+- `is_pdfx_compliant`: Whether the document conforms to a PDF/X level (heuristic).
+- `iter_page_content_streams`: Yield decoded content stream bytes for each page, one at a time.
+- `iter_pages`: Iterate over the pages of the document one at a time.
+- `iter_split_every`: Yield independent fixed-size page batches as they are requested.
+- `iter_split_pages`: Yield independent documents, one for each page.
+- `iter_split_spreads`: Yield independent documents, one for each spread half.
+- `iter_text_pages`: Yield one detached text string per selected page, without joining them.
+- `javascript`: The document-level scripts, as a mapping of name to source.
+- `keywords`: The document's search keywords, the /Info /Keywords entry.
+- `language`: The document's default natural language, stored in catalog /Lang.
+- `layers`: The document's optional content groups (layers).
+- `link_text`: Link a literal phrase to a URI or a destination within this PDF.
+- `link_texts`: Link multiple text patterns to a URI or destination in a single call.
+- `load_from`: Load a PDF from a file path, raw bytes, or a binary stream.
+- `load_from_stream`: Load a PDF from a binary stream.
+- `load_limits`: Return limits used for loading, lazy processing, and authored assets.
+- `markup_text`: Highlight, underline, strike out or wave-underline matching text.
+- `markup_texts`: Mark multiple text patterns in a single call.
+- `merge`: Merge supplied documents, optionally creating a section for each input.
+- `move_page`: Move a page to *new_position*, keeping the page itself.
+- `n_up`: Return a new document with rows * columns pages on each sheet.
+- `open_action`: Where the document opens, or what it does when opened.
+- `open_streaming`: Open a PDF in streaming/lazy mode for memory-efficient page processing.
+- `optimize`: Process the document and remove unused resources.
+- `optimize_resources`: Alias for optimize.
+- `outlines`: Bookmark tree for this document.
+- `page_count`: Return the current number of pages.
+- `page_labels`: The page label ranges, keyed by the index of the page each starts at.
+- `page_layout`: How the pages are arranged (/PageLayout, table 28).
+- `page_mode`: What a viewer shows beside the page when the document opens.
+- `pages`: Get the collection of pages.
+- `permissions`: What a reader may do with this document: the /P word, with names.
+- `producer`: The program that last wrote the file, the /Info /Producer.
+- `rasterized_copy`: Return an independent image-only PDF of the selected visible pages.
+- `redact_text`: Remove existing text from simple page-content text-showing operands.
+- `redact_texts`: Remove multiple text patterns in a single call.
+- `remove_annotations`: Remove matching review annotations and return removed occurrence count.
+- `remove_annotations_by_contents`: Remove annotations whose contents match patterns in a single pass.
+- `remove_attachment`: Remove the embedded file named *name*.
+- `remove_blank_pages`: Remove visually blank pages and return their original one-based page numbers.
+- `remove_duplicate_pages`: Remove visually duplicate pages and return their original indices.
+- `remove_page`: Remove a page from the document and return it.
+- `remove_pages`: Remove selected pages from the document and return them.
+- `remove_pages_by_pattern`: Remove pages whose text contains a match for *pattern*.
+- `render_contact_sheet`: Render a page overview as one RGB image without changing the PDF.
+- `render_page`: Render a page to an RGB raster image.
+- `render_thumbnail`: Render a one-based page inside pixel bounds, preserving its proportions.
+- `repair`: Attempt to repair the PDF document.
+- `replace_annotation_contents`: Replace annotation contents patterns in a single call.
+- `replace_link_urls`: Replace stored URLs in primary URI actions of Link annotations.
+- `replace_link_urls_batch`: Replace multiple URL patterns in Link annotations in a single call.
+- `replace_text`: Replace existing text in simple page-content text-showing operands.
+- `replace_texts`: Replace multiple text patterns in a single call.
+- `resize_pages`: Give *pages* a new sheet size and scale their drawing onto it.
+- `rotate_pages`: Turn *pages* clockwise, or set their rotation outright.
+- `sanitize`: Take out everything the document carries that is not what it shows.
+- `save`: Save the document to a file path or a binary stream.
+- `save_as_html`: Write the document as HTML and return the HTML files written.
+- `save_as_markdown`: Write the document as one Markdown file and return its path.
+- `save_as_svg`: Write pages as SVG and return the files written.
+- `save_as_text`: Stream extracted text to a path or binary stream and return its byte count.
+- `save_as_tiff`: Render pages into a single multi-page TIFF file.
+- `save_contact_sheet`: Save a contact sheet as PNG, TIFF, JPEG or optional WebP.
+- `save_page_as_image`: Render one page and save it as PNG, TIFF, JPEG or WebP.
+- `save_to_stream`: Save the document to a binary stream.
+- `search_text`: Return detached matches with page-local offsets, context and geometry.
+- `search_texts`: Return search results for multiple patterns with context and geometry.
+- `sign`: Sign the document when it is next saved.
+- `signatures`: The digital signatures in the document, in the order the file holds them.
+- `split_by_blank_pages`: Split a scan batch into independent parts using visibly blank pages.
+- `split_by_bookmarks`: Return independent chapter documents using bookmarks at level.
+- `split_by_field_value`: Return independent parts starting at pages whose form field value matches.
+- `split_by_text`: Return independent parts starting at pages whose extracted text matches.
+- `split_every`: Return independent documents containing at most pages_per_part pages.
+- `split_grid`: Return a new PDF with selected pages replaced by a uniform tile grid.
+- `split_pages`: Return independent documents, one for each page.
+- `split_spreads`: Return a new PDF with each selected spread replaced by two page views.
+- `subject`: The document's subject, the /Info /Subject entry, or None.
+- `sync_metadata`: Synchronise the /Info dictionary and the XMP metadata packet.
+- `tagged_content`: Get an editable view of the document's tagged structure tree.
+- `title`: The document's title, the /Info /Title entry, or None.
+- `to_bytes`: Return the document as PDF bytes.
+- `to_html`: Return the document's inferred structure as one HTML document.
+- `to_markdown`: Return the document's inferred structure as Markdown.
+- `to_stream`: Write the document to a binary stream.
+- `to_svg`: Return pages as SVG documents.
+- `to_tiff`: Render pages into the bytes of one multi-page TIFF.
+- `update_attachment`: Change one embedded file, keeping everything not named here.
+- `validate`: Validate the PDF document.
+- `validate_links`: Report broken local navigation without changing the document.
+- `validate_pdfa`: Validate the document against PDF/A standards (heuristic checks).
+- `validate_pdfua`: Validate catalog-level PDF/UA prerequisites (heuristic).
+- `validate_pdfx`: Validate the document against a PDF/X standard (heuristic checks).
+- `version`: PDF version string as it appears in the file header (e.g. '1.7').
+- `viewer_preferences`: The window, the reading direction and the print dialogue.
+- `xmp_metadata`: Get or set the document's XMP metadata packet (catalog /Metadata).
+
+### Page
+
+The `Page` class represents individual PDF pages, offering methods to add text and images, draw paths, rectangles, and lines, render the page or save it as an image, and access its size, `media_box`, `crop_box`, and annotations.
+
+- `accept`: Dispatch this page to an object implementing visit(page).
+- `actions`: What the page does when it is opened or closed (/AA).
+- `add_footer`: Put *text* along the bottom of this page.
+- `add_header`: Put *text* along the top of this page.
+- `add_image`: Place an image on this page and return its resource name.
+- `add_link`: Add a clickable link over *rect* triggering *target*.
+- `add_list`: Draw *text_list* with the top-left of its measure at (x, y).
+- `add_stamp`: Put *stamp* on this page, over or under what it already draws.
+- `add_table`: Draw *table* with its top-left corner at (x, y) on this page.
+- `add_text`: Append positioned text to this page.
+- `add_text_block`: Draw *block* with the top-left of its measure at (x, y).
+- `annotations`: Get the collection of annotations on the page.
+- `art_box`: The page's /ArtBox -- the extent of its meaningful content.
+- `auto_crop`: Trim visible white margins by shrinking only this page's CropBox.
+- `auto_link`: Link recognized addresses on this page and report skips/duplicates.
+- `bleed_box`: The page's /BleedBox -- what a production run clips the page to.
+- `compare_visual`: Compare this page visually with a page from another document.
+- `content`: Get the page content stream.
+- `crop_box`: The page CropBox (x0, y0, x1, y1); falls back to the MediaBox when unset.
+- `draw_line`: Append a stroked line segment to this page.
+- `draw_path`: Append a GraphicsPath to this page.
+- `draw_rectangle`: Append a stroked and/or filled rectangle to this page.
+- `duration`: The page's display duration in seconds for automated slide shows (/Dur, ISO 32000-1 14.12.4).
+- `export_annotations_zip`: Return this page's annotations as CSV in a ZIP archive.
+- `export_blocks_json`: Export this page with its original index; see Document.export_blocks_json.
+- `export_links_csv`: Return CSV with one row per inventoried link target or action.
+- `export_links_json`: Return a versioned UTF-8 JSON link report, optionally writing it.
+- `export_search_csv`: Export this page's matches; see Document.export_search_csv.
+- `export_search_json`: Export this page's matches; see Document.export_search_json.
+- `export_tables_zip`: Package this page's tables; see Document.export_tables_zip.
+- `export_words_csv`: Export this page's words; see Document.export_words_csv.
+- `export_words_json`: Export this page's words with their original one-based page number.
+- `export_words_zip`: Return this page's words as CSV in a ZIP archive.
+- `extract_blocks`: Return this page's detached structure; see Document.extract_blocks.
+- `extract_images`: Extract all images from this page.
+- `extract_links`: Inventory this page's Link targets, retaining document page indices.
+- `extract_tables`: Extract this page's text grids as detached table snapshots.
+- `extract_text`: The text this page says, with the line breaks it was written in.
+- `extract_words`: Return this page's words and PDF-coordinate bounds as frozen snapshots.
+- `file_attachments`: Get the collection of file-attachment annotations on this page.
+- `find_low_resolution_images`: Find image placements on this page below min_dpi.
+- `find_low_resolution_images_batch`: Find image placements on this page below multiple DPI thresholds.
+- `find_text`: Return matched text strings for this page; see Document.find_text.
+- `find_texts`: Return matched text strings for multiple patterns on this page.
+- `from_image`: Create a new page from an image file, bytes, or stream.
+- `from_pdf`: Create a new page from a specific page in a PDF file.
+- `get_box`: The page box *boundary* names, with its default applied.
+- `get_content_bounds`: Measure visible ink without modifying this page or its boxes.
+- `get_page_rect`: The page rectangle (CropBox or MediaBox fallback), optionally adjusted for rotation.
+- `graphics`: A context manager holding a graphics state over what is drawn inside it.
+- `highlight_text`: Highlight phrase or regex matches on this page and report skips.
+- `highlight_texts`: Highlight multiple text patterns on this page in a single call.
+- `index`: The one-based page number; an alias of number.
+- `is_blank`: Whether this page renders blank on white paper at the chosen DPI.
+- `label`: The page's label -- "iii", "12", "A-1" -- as a viewer shows it.
+- `layer`: Author content onto *layer*, as a context manager.
+- `link_text`: Link this page's literal phrases to a URI or a local destination.
+- `link_texts`: Link multiple text patterns on this page in a single call.
+- `markup_text`: Mark phrase or regex matches on this page and report skipped matches.
+- `markup_texts`: Mark multiple text patterns on this page in a single call.
+- `media_box`: The page's /MediaBox (x0, y0, x1, y1) -- the sheet it is on.
+- `number`: The one-based number of this page, matching the .NET API.
+- `rect`: Get the page rectangle (MediaBox).
+- `redact_text`: Remove existing text from simple text-showing operands on this page.
+- `redact_texts`: Remove multiple text patterns on this page in a single call.
+- `remove_annotations_by_contents`: Remove annotations whose contents match patterns on this page.
+- `render`: Render this page to an RGB raster image.
+- `render_thumbnail`: Render this page inside pixel bounds without padding or stretching.
+- `replace_annotation_contents`: Replace annotation contents patterns on this page.
+- `replace_link_urls`: Replace primary Link URI URLs on this page; see Document.replace_link_urls.
+- `replace_link_urls_batch`: Replace multiple URL patterns on this page; see Document.replace_link_urls_batch.
+- `replace_text`: Replace existing text in simple text-showing operands on this page.
+- `replace_texts`: Replace multiple text patterns on this page in a single call.
+- `resize`: Give this page a new sheet size and scale its drawing onto it.
+- `rotate`: Rotate the page by a specified amount relative to its current rotation.
+- `rotation`: The page rotation in degrees, clockwise (one of 0, 90, 180, 270).
+- `save_as_image`: Render this page and save it as PNG, TIFF, JPEG or WebP.
+- `save_as_svg`: Write this page to *path* as SVG and return the path.
+- `search_text`: Search this page with context; see Document.search_text.
+- `search_texts`: Return search results for multiple patterns on this page with context.
+- `set_box`: Set the page box *boundary* names; rect=None removes the entry.
+- `set_page_size`: Set the page size to the given width and height, scaling content to fit.
+- `size`: The page's size in points, from its media box.
+- `stamp_count`: Get the number of stamp annotations on this page.
+- `tab_order`: The page's explicit annotation tab order: row, column or structure.
+- `to_html`: Return this page's inferred structure as an HTML fragment document.
+- `to_markdown`: Return this page's inferred structure as Markdown (GFM).
+- `to_svg`: Return this page as an SVG document.
+- `transition`: The page's transition effect for slide shows (/Trans, ISO 32000-1 14.12.3).
+- `translate_content`: Move existing content and annotations without changing the sheet.
+- `trim_box`: The page's /TrimBox -- the finished page's size after trimming.
+- `validate_links`: Check this page's link annotations, resolving names as needed.
+
+### Annotation
+
+The `Annotation` class provides access to individual annotations via rect, contents, title, author, subtype, and properties, while `AnnotationCollection` supports adding annotations, converting to a list, and exporting to JSON.
+
+- `add_popup`: Add this annotation's popup window, linked both ways, and return it.
+- `delete_reply`: Remove the given reply annotation from this annotation's /Replies list.
+- `generate_appearance`: Synthesise a normal appearance stream (/AP /N) for this annotation.
+- `get_property`: Return a single type-specific property value (or *default*).
+- `in_reply_to`: The annotation this one replies to (/IRT), or None.
+- `parent_annotation`: The annotation a popup belongs to (/Parent), or None.
+- `popup`: The popup window this annotation owns (/Popup), or None.
+- `properties`: Type-specific annotation entries beyond the common fields.
+- `replies`: Every annotation on this page that replies to this one (/IRT).
+- `reply`: Add an annotation replying to this one, and return it.
+- `set_property`: Set a single type-specific property (value=None removes it).
+- `update_properties`: Set several type-specific properties at once.
+
+### Form
+
+The `Form` class manages interactive form fields, exposing fields for inspection, filling, validating, flattening, and exporting or importing JSON, as well as exporting and importing schemas for template reuse.
+
+- `add_checkbox`: Add a check box with generated Off/on appearances.
+- `add_combo_box`: Add a combo box, optionally allowing values outside its option list.
+- `add_list_box`: Add a list box with choices and a zero-based first visible option.
+- `add_push_button`: Add a push button with generated caption/rollover/down appearances.
+- `add_radio_group`: Add a radio field whose option names map to widget rectangles.
+- `add_signature_field`: Add an empty (unsigned) signature field and return it.
+- `add_text_field`: Add an editable text field and return it.
+- `calculation_order`: The viewer's calculation sequence as fully qualified field names.
+- `document`: The document that this form belongs to.
+- `export_csv`: Return CSV bytes with field-name headers and one row of current answers.
+- `export_fdf`: The form's data as FDF (ISO 32000-1 12.7.8), written to *destination* if given.
+- `export_json`: Return UTF-8 JSON form data, optionally writing a path or binary stream.
+- `export_json_schema`: Return UTF-8 JSON Schema, optionally writing a path or binary stream.
+- `export_schema`: Return UTF-8 schema JSON, optionally writing a path or binary stream.
+- `export_xfdf`: The form's data as XFDF (ISO 19444-1), written to *destination* if given.
+- `field_names`: A list of all field names in the form.
+- `fields`: A list of all fields in the form.
+- `fill`: Fill fields from a flat mapping and return the names updated, in order.
+- `flatten`: Bake selected fields, with the filters of Document.flatten.
+- `generate_appearances`: Regenerate field appearance streams from the current field values.
+- `import_fdf`: Fill the form from FDF data and return the names of the fields it named.
+- `import_json`: Fill from UTF-8 JSON in a path, bytes, or readable binary stream.
+- `import_xfdf`: Fill the form from XFDF data; see import_fdf.
+- `remove_field`: Remove a field by fully qualified name and return the removed field.
+- `reset`: Restore all fields, or selected fully qualified names, to their defaults.
+- `to_dict`: Return a snapshot of field values keyed by fully qualified names.
+- `to_json_schema`: Describe normalized flat form answers with JSON Schema Draft 2020-12.
+- `to_schema`: Return a detached, versioned description of this AcroForm template.
+- `validate`: Check stored field values without modifying the PDF.
+
+### PdfExtractor
+
+The `PdfExtractor` class extracts text, images, and file attachments from PDFs, supporting binding to a PDF, iterating through pages and images, and retrieving attachment names and content.
+
+- `bind_pdf`: Bind to a PDF source for extraction.
+- `close`: Close the extractor and release resources.
+- `dispose`: Mark the extractor as disposed.
+- `extract_attachment`: Extract attachments from bound PDF.
+- `extract_image`: Collect the bound document's images, each as a real image file.
+- `extract_text`: Extract text from all or selected pages of the bound document.
+- `get_attach_names`: Return list of attachment names.
+- `get_attachment`: Return attached file by name.
+- `get_next_image`: The next image as an image file, advancing the cursor.
+- `get_next_image_name`: The name of the image get_next_image will hand back next.
+- `get_next_page_text`: Return text for the next page, advancing cursor.
+- `get_text`: Return all extracted text concatenated.
+- `has_next_image`: Return True if there is another image available.
+- `has_next_page_text`: Return True if there is another page's text available.
+- `password`: Optional owner/user password used when binding encrypted PDFs (maps .NET Password).
+
+### PdfFileEditor
+
+The `PdfFileEditor` class provides file-level editing operations such as concatenating, extracting, inserting, deleting, and appending PDF files, with boolean-returning methods and a `last_exception` property for error reporting.
+
+- `add_page_break`: Add a blank page to the PDF.
+- `append`: Append pages from one PDF to another.
+- `close`: Close the editor and release resources.
+- `concatenate`: Concatenate multiple PDF files into one.
+- `delete`: Delete specified pages from a PDF.
+- `dispose`: Mark the editor as disposed.
+- `extract`: Extract pages from source to destination.
+- `insert`: Insert pages from one PDF into another.
+- `last_exception`: Exception from the last failed operation, or None if none.
+- `make_booklet`: Impose *source* as a saddle-stitched booklet into *destination*.
+- `make_n_up`: Impose *source* as rows x columns pages per sheet into *destination*.
+- `try_concatenate`: Attempt to concatenate two PDF files into one.
+- `try_make_booklet`: Attempt to create a booklet from *input_file* to *output_file*.
+- `try_make_n_up`: Attempt to impose *input_file* as rows x columns pages per sheet into *output_file*.
+
+### Converter
+
+The `lowcode.Converter` module offers high-level operations for converting images to PDF, converting to PDF/A, rotating pages, stamping content, and flattening forms, each paired with dedicated options classes.
+
+### PdfAConverter
+
+The `PdfAConverter` class converts documents to PDF/A conformance levels using `PdfAConvertOptions` to control the conversion process and output.
+
+### Rotator
+
+The `Rotator` class rotates PDF pages using `RotateOptions` to specify rotation angle and target pages.
+
+### Stamper
+
+The `Stamper` class adds text, image, or page-number stamps to PDF pages using `StampOptions` to control appearance and placement.
+
+### FormFlattener
+
+The `FormFlattener` class flattens interactive form fields into static content, removing interactivity and embedding field values directly into the page content.
+
+- `PdfExtractor` pulls all page text with `get_text()` or walks it page by page (reading each page
+  through the engine, so lazily loaded and damaged pages are read too), extracts embedded images as
+  real image files (`extract_image()`/`get_next_image(destination=None)`) and file attachments
+  (`extract_attachment()`/`get_attach_names()`), while `TextFragmentAbsorber` runs exact-phrase or
+  regex searches and reports match offsets, page indices and where the text sits.
+- `Document.search_text()` adds surrounding context to search results, and
+  `export_search_json()` / `export_search_csv()` turn matches into review reports
+  with page numbers and coordinates. The same methods are available on `Page`.
+- `Document.replace_text()` and `Document.redact_text()` rewrite or remove matched text directly
+  inside existing content streams; `redact_text(..., overlay=True)` also draws a filled bar over
+  each removed run's location. `Document.replace_texts()` and `Document.redact_texts()` apply
+  multiple patterns efficiently in one scan. `Document.replace_annotation_contents()` and
+  `Page.replace_annotation_contents()` replace text in annotation contents using the same
+  pattern-based approach.
+- `Document.to_html()` and `to_markdown()` convert a document to a *flowing* one — headings,
+  paragraphs, lists, tables and figures inferred by the same layout analysis `auto_tag()` uses,
+  with the text decoded the way `extract_text()` decodes it. For a facsimile, export SVG instead.
+- `Document.extract_tables()` / `Page.extract_tables()` return inferred text grids directly as
+  `ExtractedTable` snapshots, with editable lists and CSV export for processing report data
+  without parsing HTML or Markdown. Recognition is heuristic and requires regular text grids.
+- `Document.extract_blocks()` / `Page.extract_blocks()` return immutable headings, paragraphs,
+  lists and tables with page indices and position anchors. `export_blocks_json()` delivers the
+  same structure as versioned UTF-8 JSON for indexing and data pipelines. Figure PNGs are opt-in;
+  recognition follows the HTML/Markdown heuristics and does not perform OCR.
+- `Form.to_schema()` and `Form.export_schema()` describe reusable form templates, including
+  field types, labels, required/read-only flags, text constraints, choice options and defaults.
+  Applications can build filling interfaces and inspect templates without exporting current answers.
+- `Form.to_json_schema()` and `Form.export_json_schema()` describe flat form answers using
+  JSON Schema Draft 2020-12 for standard validators and form-generation integrations.
+
+- `Document.export_attachments_zip()` packages embedded files for download or handoff,
+  with safe unique archive names, optional selection and a metadata manifest.
+- `Document.export_images_zip()` collects reusable images from selected pages
+  into one ZIP, with an optional manifest linking assets back to their pages.
+- `Document.find_low_resolution_images()` flags image placements below a DPI
+  threshold so teams can replace weak assets before printing or publishing.
+- `Document.split_by_blank_pages()` separates scan batches at visibly blank pages,
+  optionally keeping the separators. It works on image-only scans without OCR and
+  returns independent PDFs with the original page content and resources.
+- `Document.encrypt_for_recipients()` seals a document for certificate holders instead of a
+  shared password (the `/Adobe.PubSec` handler), and `Document(path, certificate=..., private_key=...)`
+  opens one. Each recipient gets its own permissions — one may print, another only read the same
+  file — which a password cannot express.
+- `page.to_svg(text="both")` exports a page as SVG whose words can be selected, searched and
+  copied — `<text>` elements over the glyph outlines, each glyph carrying its own position so the
+  layout holds whatever font the viewer picks. The page still renders pixel for pixel as it did.
+  Invisible OCR text comes across too, which is what makes an exported scan searchable.
+- `Document.sanitize()` strips what a PDF carries beyond what it shows — author and producer
+  metadata, the editor's private store, scripts and the actions that run them, embedded files,
+  hidden layers, reviewer comments — in one pass, and reports what it took. The save after it is a
+  full rewrite, because dropping a reference leaves the object in the file and an appended
+  revision keeps the old one: either way the data would still be there to read.
+- `Document.fonts` says what the document actually draws with — each font's name, kind, encoding,
+  whether its glyphs are in the file, what the program is and what it costs, and which pages use
+  it. One entry per font, not per font dictionary, found by the same walk the PDF/A and PDF/UA
+  checks use.
+
+- `Document.font_substitution` lets the renderer draw fonts the PDF references but does not
+  embed — the East Asian case, where the producer assumes the reader has the face — using font
+  directories you name, programs you supply, or the machine's own fonts. A composite font's CIDs
+  are mapped to Unicode and on to a real face, so a PDF naming `SimSun` renders even where only
+  `PingFang SC` is installed, instead of a row of glyph boxes. Advances still come from the PDF's
+  own `/Widths` / `/W`, so the substitute changes which glyphs are drawn, not where they sit. A
+  variable face — one file with a weight axis, which is how modern system fonts ship — is drawn at
+  the instance the style asks for, whether its outlines are CFF2 or `glyf`. Off by default, so
+  rendering stays identical across machines unless you ask for it.
+- `Document.embed_fonts()` writes those faces **into** the file, so a PDF that merely names `Arial`
+  ends up carrying it — which is what PDF/A, PDF/UA and PDF/X require and what no amount of
+  rewriting can otherwise fix. With no arguments it supplies the Standard 14 from bundled
+  metric-compatible faces; name a directory or hand over the programs for the rest. A composite
+  font's `/CIDToGIDMap` is rebuilt so its CIDs still land on the right glyphs, and whatever it
+  could not supply comes back as a list saying why.
+- `pages.insert(i, other.pages[j])` takes a page out of another document and puts it where you
+  want it, with everything that belongs to it — resources, annotations, the fields its widgets
+  belong to, its tagging, its label, the bookmarks that pointed at it. Previously that meant
+  `extract_pages` into a scratch document, `merge`, then `move_page`.
+- `Document.remove_page(page_number)` removes a page from the document and returns it as a
+  :class:`~aspose_pdf.pages.Page` object that can be inserted into another document using
+  :meth:`~aspose_pdf.pages.PageCollection.insert` or
+  :meth:`~aspose_pdf.pages.PageCollection.add`. This provides a convenient way to move or delete
+  pages without the overhead of extracting all other pages with
+  :meth:`~aspose_pdf.Document.extract_pages`. The page count decreases by one, and all page
+  numbers after the removed page are shifted down by one. Page properties like content,
+  annotations, form fields, layers, and page labels are preserved in the returned page.
+- `Document.pages.remove(page)` removes a specific :class:`~aspose_pdf.pages.Page` from the
+  collection and returns it, similar to Python's built-in list.remove(). The removed page can be
+  inserted into another document. This provides a convenient way to remove a page by reference
+  rather than by page number. All page properties are preserved in the returned page.
+- `Document.add_page(page)` adds a page from another document to the end of this document.
+  It imports a :class:`~aspose_pdf.pages.Page` object, bringing along all its content,
+  resources, annotations, form fields, layers, and page labels. This is a convenient method
+  equivalent to ``document.pages.add(page)``. The page's source document must not be disposed.
+- `Document.insert_page(index, page)` inserts a page from another document at *index* in this
+  document. It imports a :class:`~aspose_pdf.pages.Page` object at the specified position,
+  bringing along all its content, resources, annotations, form fields, layers, and page labels.
+  This is a convenient method equivalent to ``document.pages.insert(index, page)``. The page's
+  source document must not be disposed.
+- `Document.remove_pages(selection)` removes multiple pages from the document and returns them as
+  a list of :class:`~aspose_pdf.pages.Page` objects. *selection* can be a one-based iterable of
+  page numbers (e.g., ``[1, 3, 5]``), a page range string such as ``"1-3,7,10-"``, ``odd``,
+  ``even``, or ``last``. This provides a convenient way to remove several pages at once without
+  creating a temporary document. All page properties are preserved in the returned pages.
+  When *selection* contains repeated page numbers, the extraction preserves duplicates
+  (each occurrence becomes a separate page object), but deletion removes each unique
+  page only once.
+
+- `Document.insert_pages(index, other, selection)` extracts selected pages from another document
+  and inserts them at a specific position. *index* is the 1-based position where pages should be
+  inserted; pages at and after this position are shifted right. *selection* can be a one-based
+  iterable of page numbers (e.g., ``[1, 3, 5]``), a page range string such as ``"1-3,7,10-"``,
+  ``odd``, ``even``, or ``last``. This provides a convenient way to transfer specific pages from
+  one document to another without creating a temporary document. All page resources, annotations,
+  form fields, and bookmarks that belong to the selected pages are preserved. The source document
+  remains unchanged.
+- `Document.concatenate(documents)` concatenates an iterable of documents into a new document.
+  This static method provides a convenient way to combine multiple documents from an iterable
+  (list, tuple, generator, etc.) into a single document. All pages, resources, annotations,
+  form fields, and bookmarks are imported. The source documents remain unchanged. Use
+  :meth:`merge` if you need to create section bookmarks for each source document.
+- `Document.concatenate_pages(pages_by_document)` creates a new document from selected pages
+  across multiple documents. *pages_by_document* is a mapping (e.g., dict) where keys are
+  Document instances and values are page selections for that document. Each selection can be
+  a one-based iterable of page numbers (e.g., ``[1, 3, 5]``), a page range string such as
+  ``"1-3,7,10-"``, ``odd``, ``even``, or ``last``. All pages, resources, annotations, form
+  fields, and bookmarks from the selected pages are imported. The source documents remain
+  unchanged. Page order follows the mapping's iteration order (dict order in Python 3.7+).
+- `Document.destinations` names places in the document — `destinations["chapter-2"] =
+  XYZDestination(page=7, top=760)` — so a link, a bookmark or another file points at the name
+  (`page.add_link(rect, "chapter-2")`) and repointing it moves every reference at once. Bookmarks
+  also carry a title colour and an open/closed state.
+- `GoToRAction("manual.pdf", destination="chapter-2", new_window=True)` links directly
+  to a named section in another PDF and asks the viewer to open it in a new window.
+  Use it for page links, bookmarks or form buttons; `new_window=False` requests the
+  current window, and the default `None` leaves the choice to the viewer.
+- `Document.layers` lists, creates, switches and removes optional content groups; rendering, text
+  extraction, and graphics absorption all skip a hidden layer, the way a viewer does.
+  `make_exclusive([...])` makes layers mutually exclusive (`/RBGroups`), so switching one on
+  switches the others off — a viewer's radio buttons.
+  `Page.layer(layer)` is a context manager that puts everything authored inside it on that layer,
+  `Layer.add(content)` puts an annotation or image that is *already* in the document on one, and
+  `Document.flatten_layers()` resolves the layers for good — deleting what is hidden from the
+  file rather than leaving it there for the next reader to switch back on.
+- `ImagePlacementAbsorber` collects the images a page draws, and `ImagePlacement.replace` /
+  `hide` change them in the document — the new picture keeps the old one's place and size.
+- `Page.resize(size)` and `Document.resize_pages(size)` scale a page's drawing onto a new sheet —
+  `fit`, `fill` or `stretch`, centred, with annotations and the production boxes travelling along —
+  while `Page.scale_content(0.95)` shrinks the drawing inside the sheet it is on. Setting
+  `Page.size` still changes the sheet alone.
+
+| Class | Description |
+|---|---|
+| `Action` | Base class for an interactive action. |
+| `AsposePdfException` | Base class for all aspose_pdf exceptions. |
+| `ByteArrayDataSource` | A data source backed by in-memory bytes. |
+| `CdrLoadOptions` | Options for loading CDR files. |
+| `CertificationLevel` | DocMDP certification level of a signature. |
+| `CgmLoadOptions` | Options for loading CGM files. |
+| `ColorPrimitive` | Very small color primitive with transparency support. |
+| `DataSource` | Base class for plugin inputs and outputs. |
+| `Destination` | Base class for a view destination on a document page. |
+| `DocFormat` | Target format for a save operation. |
+| `Document-document` | Pythonic wrapper for PDF document lifecycle and core operations. |
+| `Duplex` | Enumerates DUPLEX, NONE, SIMPLEX and TUMBLE. |
+| `ExtractedBlock` | Immutable heading, paragraph, list, table or figure snapshot with source page, position anchor and JSON-ready data. |
+| `ExtractedTable` | Immutable text-table snapshot with source page, rows, inferred column spans, list conversion and CSV export. |
+| `Field` | A field of an interactive form. |
+| `FieldType` | Type of form field. |
+| `FileDataSource` | A data source backed by a file on disk. |
+| `FileFontSource` | Discover the font(s) contained in a single file. |
+| `FileSpecification` | An embedded file with typed metadata, for document or page attachments. |
+| `FillMode` | Fill mode enumeration for path operations. |
+| `FitBDestination` | Fit the page's bounding box in the window. |
+| `FitBHDestination` | Fit the bounding-box width with `top` at the top of the window. |
+| `FitBVDestination` | Fit the bounding-box height with `left` at the left of the window. |
+| `FitDestination` | Fit the whole page in the window. |
+| `FitHDestination` | Fit the page width with `top` at the top of the window. |
+| `FitRDestination` | Fit the rectangle `(left, bottom, right, top)` in the window. |
+| `FitVDestination` | Fit the page height with `left` at the left of the window. |
+| `FolderFontSource` | Collect fonts from a directory (optionally recursing into subfolders). |
+| `FontDescriptor` | Represents a discoverable font. |
+| `FontEmbeddingException` | Raised when there is an error embedding fonts in the PDF. |
+| `FontRegistry` | Singleton registry for resolving well-known font names. |
+| `FontRepository` | Aggregate font sources and resolve fonts by name. |
+| `FontSource` | Base class for external font providers. |
+| `FontSubstitutionOptions` | Font sources the renderer may substitute from. |
+| `Form` | Represents an interactive form (AcroForm) within a PDF document. |
+| `FormFiller` | Creates independently filled PDFs from templates and a batch of records. |
+| `FormFillerOptions` | Reusable records, field filling options and data sources for a form batch. |
+| `FormType` | Type of PDF form. |
+| `GoToAction` | Jump to a destination within this document. |
+| `GoToRAction` | Jump to a page view or named destination in another PDF, with an optional window preference. |
+| `GradientAxialShading` | Represents axial (linear) gradient shading. |
+| `GraphicElement` | A painted path or a placed image, read from a page's content stream. |
+| `GraphicElementCollection` | Collection of graphic elements that can be added to or removed from a page. |
+| `GraphicsAbsorber` | Absorbs graphic elements from PDF pages. |
+| `HideAction` | Hide or show named form fields when a viewer executes an event. |
+| `HtmlLoadOptions` | Options for loading HTML documents. |
+| `HtmlSaveOptions` | Options for saving PDF documents as HTML. |
+| `ImagePlacement-images` | Represent an image placed on a PDF page. |
+| `ImagePlacementAbsorber-images` | Absorber to collect image placements from PDF pages. |
+| `ImageResolutionIssue` | Immutable location, pixel dimensions and effective DPI for a low-resolution image paint. |
+| `InvalidOperationException` | Raised when a graphics element is attached to the wrong parent. |
+| `Layer` | One optional content group: its name, intent, whether it is shown, and `add`/`remove`/`contains` for tagging existing content with it. |
+| `TextStamp` / `ImageStamp` / `PageNumberStamp` | A mark put over or under a page: text, a picture, or the page's number, with opacity, rotation and alignment. |
+| `ViewerPreferences` | The document's `/ViewerPreferences`: the window, the reading direction and the print dialogue, read and written in place. |
+| `LayerCollection` | The document's layers: indexable by position or by name, with `add(name, visible)`, `remove(layer)` and `make_exclusive(layers)`. |
+| `JavaScriptAction` | Run a JavaScript script (serialized verbatim, not validated). |
+| `LatexFragment` | Small value object that stores LaTeX source text. |
+| `LaunchAction` | Launch an application or open a file (serialized verbatim). |
+| `Layer` | One optional content group, and whether it is currently shown. |
+| `LayerCollection` | The document's layers, indexable by position or by name. |
+| `License` | License management class for Aspose.PDF. |
+| `ListItem` | One item of a list: what it says, and what hangs under it. |
+| `Margin` | The Margin class provides top, left, bottom, and right properties for defining page margins. |
+| `MarkdownSaveOptions` | Options for saving PDF documents as Markdown. |
+| `Matrix3D` | Represents a 3D transformation matrix. |
+| `MemoryFontSource` | Expose a font program supplied as in-memory bytes. |
+| `MergeOptions` | Options for :class:`Merger`: concatenate all inputs in order. |
+| `Merger` | Concatenate every input PDF into a single document. |
+| `NamedAction` | A predefined named action. |
+| `NamespaceProvider` | Resolve XMP namespace prefixes and URIs. |
+| `OfdLoadOptions` | Options for loading OFD files. |
+| `OperationResult` | A single result produced by a plugin. |
+| `OptimizationOptions` | OptimizationOptions lets developers control stream compression, removal of unused objects, image down‑sampling, and other cleanup actions when optimizing PDFs. |
+| `OptimizeOptions` | Options for :class:`Optimizer`. |
+| `Optimizer` | Optimize each input PDF (compression + unused-object cleanup). |
+| `OutlineCollection` | Top-level collection of :class:`OutlineItem` bookmarks. |
+| `OutlineItem` | A single bookmark entry in a PDF outline tree. |
+| `PadesLevel` | PAdES baseline conformance level reached by a signature. |
+| `Page` | A page of a PDF document. |
+| `PageCollection` | A collection to manage PDF pages within a Document. |
+| `PageInfo` | Class that declares the field margin. |
+| `PageTextComparison` | Immutable page-pair text report with original strings, match status and a normalized unified diff. |
+| `PageVisualComparison` | Immutable page-pair comparison with changed/ignored pixel counts, ratio, bounds, match status and optional difference image. |
+| `Paragraph` | One paragraph of a text block: what it says, and how it differs from the block. |
+| `PdfAConversionResult` | Result of a PDF/A conversion operation. |
+| `PdfAValidateOptions-pdfa` | Container for PDF/A validation settings. |
+| `PdfAValidationResult-pdfa` | Detailed result of a PDF/A validation run. |
+| `PdfAValidator` | Plugin that runs PDF/A validation on one or more inputs. |
+| `PdfConsts` | Class that declares the methods decimal_to_octal and octal_to_decimal. |
+| `PdfException` | Base class for PDF-related exceptions. |
+| `PdfExtractor` | Simple PDF text and image extractor. |
+| `PdfFileEditor` | Facade for PDF file editing operations. |
+| `PdfIOException` | Raised when there is an I/O error during PDF processing. |
+| `PdfLoadLimits` | Immutable safety limits for untrusted PDF input and authored assets. |
+| `PdfParseException` | Raised when there is an error parsing a PDF document. |
+| `PdfPlugin` | Base class for low-code plugins. |
+| `PdfResourceLimitException` | Raised when processing a PDF would exceed a configured resource limit. |
+| `PdfSecurityException` | Raised when there is an encryption, signature, or permissions error. |
+| `PdfSignature` | Represent a PDF digital signature. |
+| `PdfUaValidateOptions` | Container for batch PDF/UA validation settings. |
+| `PdfUaValidationResult` | Detailed result of a PDF/UA structure check (heuristic). |
+| `PdfUaValidator` | Plugin that runs heuristic PDF/UA validation on one or more inputs. |
+| `PdfValidationException` | Raised when a PDF document fails validation or compliance checks. |
+| `PdfXStandard` | The PDF/X conformance levels this library validates and writes. |
+| `PdfXValidateOptions` | Container for batch PDF/X validation settings. |
+| `PdfXValidationResult` | Detailed result of a PDF/X validation run (heuristic). |
+| `PdfXValidator` | Plugin that runs heuristic PDF/X validation on one or more inputs. |
+| `Permissions` | What a reader may do with an encrypted document: `/P`, with names. |
+| `PerformanceLogger` | Collects named phase timings, and free-form lines. |
+| `Plugin` | Identifiers for the available low-code plugins. |
+| `PluginOptions` | Hold input/output data sources and their PDF resource-limit policy. |
+| `Point` | Represents a point in 2D space. |
+| `Point3D` | Represents a 3D point. |
+| `PrinterSettings` | Class that declares fields including collate, copies, duplex, from_page, maximum_page and minimum_page. |
+| `PrintRange` | Enumerates ALL_PAGES, PAGE_RANGE, SELECTION and SOME_PAGES. |
+| `Recipient` | One certificate that may open the document, and what it may then do. |
+| `Rectangle` | Rectangle representing image placement bounds on a PDF page. |
+| `RegexResult` | Wraps a single regular-expression match found on a PDF page. |
+| `ResetFormAction` | Reset the form's fields to their default values. |
+| `ResultContainer` | Holds the ordered results of a plugin operation. |
+| `RevocationStatus` | Certificate revocation outcome (OCSP/CRL). |
+| `SaveFormat` | Format for saving PDF documents. |
+| `SplitOptions` | Select per-page, page-group, or bookmark-level splitting. |
+| `Splitter` | Split every input PDF into independent output documents. |
+| `StatisticsEntry` | Entry for tracking statistics and timing information. |
+| `StreamDataSource` | A data source backed by a binary stream (e.g. ``io.BytesIO``). |
+| `StructureElement` | A mutable logical-structure element in a tagged PDF. |
+| `StructureTypeStandard` | Enumerates values including DIV, DOCUMENT, P, PART, RB, RP, RT and SECT. |
+| `SubmitFormAction` | Send the form's field values to a URL. |
+| `SvgLoadOptions-load_options` | Options for loading SVG files. |
+| `SvgLoadOptions-svg` | Class with 1 method and 2 properties. |
+| `SystemFontSource` | Collect fonts from common system font directories. |
+| `TaggedContent` | Editable view of a document's logical structure tree. |
+| `TaggedContext` | Class that declares the fields document, structure_tree_root, mark_info and language. |
+| `TextAbsorber` | Absorbs text from PDF pages (legacy class, alias for TextFragmentAbsorber). |
+| `TextBlock` | Paragraphs wrapped to a measure, ready to be placed on a page. |
+| `TextExtractionOptions` | Options for text extraction from PDF pages. |
+| `TextExtractor` | Extract plain text from each input PDF. |
+| `TextExtractorOptions` | Options for :class:`TextExtractor`: extract text from each input. |
+| `TextFormattingMode` | Text formatting mode for text extraction. |
+| `TextFragment` | A text fragment found inside a PDF page. |
+| `TextWord` | An immutable positioned word with a page index, bounding box and quadrilateral. |
+| `TextFragmentAbsorber-text` | Absorbs text fragments from a PDF page or document. |
+| `TextFragmentCollection` | A mutable ordered collection of :class:`TextFragment` objects. |
+| `TextLayoutOptions` | Configure complex-text shaping and line layout for ``Page.add_text``. |
+| `TextList` | Items ready to be placed on a page, bulleted or numbered. |
+| `TextSearchOptions` | Options controlling how text search is performed. |
+| `TextSearchMatch` | Immutable search hit with page, offsets, surrounding context and available geometry. |
+| `TrustStatus` | Outcome of building/validating the signer's certificate chain. |
+| `UnsignedContent-forms` | Represents a collection of unsigned content elements in a PDF document. |
+| `UnsignedContentAbsorber-forms` | Extract unsigned form fields and annotations from a PDF document. |
+| `UnsupportedFeatureException` | Raised when a compatibility surface names a feature this package lacks. |
+| `URIAction` | Resolve a uniform resource identifier (typically a web link). |
+| `ValidationMethod` | Selects the signature format / validation algorithm. |
+| `ValidationMode` | Controls whether certificate revocation is checked via network. |
+| `ValidationOptions` | Configuration for signature validation. |
+| `ValidationResult` | Structured result returned by signature validation. |
+| `ValidationStatus` | Outcome of a :class:`ValidationResult`. |
+| `VirtualizationPerformance` | A process-global stopwatch. Nothing in this package writes to it. |
+| `WarichuWPElement` | Minimal tagged-element type for API compatibility. |
+| `XYZDestination` | Position `(left, top)` at the upper-left with an optional zoom. |
+
+| Class | Description |
+|---|---|
+| `LinkAnnotation` | Concrete annotation type kept for compatibility with tests/API. |
+| `LinkValidationIssue` | Immutable local-navigation diagnostic with source location and issue code. |
+| `ExtractedLink` | Detached link target/action with source coordinates, URL or destination and diagnostic codes. |
+| `MarkupAnnotation` | Base class for markup annotations. |
+
+| Enumeration | Description |
+|---|---|
+| `PDF3DLightingScheme` | Enumerates CUSTOM, DARK, GRAY, HEADLAMP and WHITE. |
+| `PDF3DRenderMode` | PDF3DRenderMode and PDF3DLightingScheme enums let developers choose rendering style (SOLID, WIREFRAME, TRANSPARENT) and lighting (HEADLAMP, WHITE, etc.) for 3D annotations. |
+
+| Class | Description |
+|---|---|
+| `AbsorbedElement` | One painted path or placed image, in page (user) space. |
+| `AnnotationName` | A ``str`` subclass that marks a value to be serialized as a PDF name. |
+| `AuthoredFont` | A normalized embedded font and the mutable CID mapping for authored text. |
+| `AuthoredImage` | Prepared image data and PDF image XObject metadata. |
+| `BitStream` | Minimal bit-oriented buffer used by compatibility code. |
+| `Block` | One piece of exported structure. |
+| `CffOutlines` | Decode glyph outlines from a CFF (Type 2 charstring) font program. |
+| `ChainResult` | Result of building and validating a certificate path. |
+| `CharacterCollection` | A CIDSystemInfo registry, ordering, and supplement triple. |
+| `CidTextCodec` | Code codec for a composite (Type0) font's show strings. |
+| `Color` | Represents a color in PDF documents. |
+| `CompositeFontMetric` | Advance metrics for a composite (Type0) font. |
+| `ContentStreamParser` | Parse a PDF content stream and extract plain text. |
+| `CosExtractor` | Extract pages, streams, images and metadata from a PdfDocument. |
+| `DecodedImage` | A decoded JPEG 2000 image as interleaved 8-bit samples. |
+| `DecodedJpeg` | A decoded JPEG image. |
+| `Decoder-ccitt` | Decoder.decode(data, params, limits) returns the raw bytes of a decoded stream for supported codecs like JBIG2 and JPEG 2000. |
+| `Decoder-jbig2` | JBIG2 decoder that parses segment structure and extracts bitmap data. |
+| `Decoder-jpx` | JPEG 2000 (JPX) Stream Decoder. |
+| `DssMaterial` | Validation material destined for (or harvested from) a ``/DSS``. |
+| `Encoding` | Class that declares the method encode. |
+| `EncodingType` | Enumerates MAC_EXPERT, MAC_ROMAN, PDF_DOC, UNICODE and WIN_ANSI. |
+| `EncryptionUtils` | Utility class for PDF-compliant AES-CBC, RC4 encryption, and key derivation. |
+| `FilterType` | The FilterType enum lists the supported stream filter names such as FLATE_DECODE, LZW_DECODE, and DCT_DECODE. |
+| `FontResolver` | Index external font sources and resolve PDF font names against them. |
+| `GeneratedAppearance` | A synthesised appearance: content bytes plus any required ExtGState entries. |
+| `GlyphPlacement` | One shaped glyph at an em-relative position within a laid-out line. |
+| `ImagePlacement-simple_pdf` | Represents an image placement on a page. |
+| `ImagePlacementAbsorber-simple_pdf` | Absorber that finds image placements in a PDF. |
+| `IncrementalUpdate` | Generate an incremental update section for an existing PDF. |
+| `IncrementalWriter` | Utility that appends incremental updates to an existing PDF. |
+| `LayoutElement` | A positioned piece of page content (a text object or an image paint). |
+| `LayoutLine` | One visual line with logical replacement text and shaped glyphs. |
+| `LayoutResult` | Complete line layout; glyph coordinates and widths are in em units. |
+| `LazyImageDict` | Dictionary that decodes image streams on demand to save memory. |
+| `LazyPdfObjectStore` | Object-number → COS object map that parses from a :class:`PdfCosParser` on demand. |
+| `Matrix` | Matrix supports 2‑D transformations with translate(x, y) and multiply(other) methods, exposing the a‑f components of the affine matrix. |
+| `OptionalContent` | The document's optional content groups and their default visibility. |
+| `OptionalContentGroup` | One optional content group (`/OCG`) of the document. |
+| `ParseWarnings` | Collects warnings during parsing. |
+| `PdfArray` | PdfArray provides an items collection and an append method to build PDF array objects. |
+| `PdfBoolean` | PdfBoolean represents a PDF boolean value via its 'value' property. |
+| `PdfCorruptedError` | Unrecoverable PDF corruption. |
+| `PdfCosParser` | Parse a PDF file (bytes) into a :class:`PdfDocument`. |
+| `PdfCosWriter` | Serialize a :class:`PdfDocument` to a PDF byte sequence. |
+| `PdfDictionary` | PdfDictionary behaves like a mapping with get and pop methods to access entries. |
+| `PdfDocument` | Container for a PDF's COS object graph. |
+| `PdfEncodingError` | Font or content stream encoding error. |
+| `PdfIndirectReference` | PdfIndirectReference exposes the object number and generation number of an indirect PDF object. |
+| `PdfMalformedError` | Recoverable malformed PDF structure. |
+| `PdfName` | Represents a PDF name object. |
+| `PdfNull` | Represent PDF null object. |
+| `PdfNumber` | Represents a PDF number primitive (integer or real). |
+| `PdfObject` | Base class for all PDF COS objects. |
+| `PdfObjectID` | Class that declares the fields object_number and generation_number. |
+| `PdfObjectRegistry` | PdfObjectRegistry.register(obj) returns a PdfObjectID that uniquely identifies the stored PDF object within the registry. |
+| `PdfParseError` | Base exception for PDF parsing errors. |
+| `PdfParseWarning` | Non-fatal parsing issue that was recovered from. |
+| `PdfSecurityError` | Encryption or permission related error. |
+| `PdfStream` | A stream object: a dictionary plus a byte payload. |
+| `PdfString` | Class that inherits from PdfObject and declares the field value. |
+| `PdfTrailerable` | Class that declares the method get_dictionary. |
+| `PdfValidationError` | PDF/A or general structural validation error. |
+| `PredefinedCMap` | A resolved predefined CMap and its semantic Unicode mapping. |
+| `PredefinedCMapEncoding` | Compact code-to-CID view of a predefined CMap. |
+| `RasterizedPage` | A rendered PDF page in packed RGB format. |
+| `RecipientPayload` | What one opened envelope carries. |
+| `Reshaper` | Policy for shaping complex-script replacements during a text edit. |
+| `ResolvedFace` | A font program picked for a non-embedded PDF font. |
+| `RevocationResult` | Class that declares the fields status, source and detail. |
+| `RichRun` | Class that declares the fields text and style. |
+| `RichStyle` | The resolved style of a text run. |
+| `SfntFace` | Metadata recovered from a single SFNT face. |
+| `Shading` | Base class for bounded RGB sampling in a shading's target space. |
+| `SignedDataInfo` | Everything we need from a parsed CMS ``SignedData``. |
+| `SignerVerification` | Outcome of verifying a single signer. |
+| `SigningUtils` | Utility class for generating certificates and PKCS#7 signatures. |
+| `SimpleFontMetric` | Advance metrics for a single-byte simple font, in 1000-unit glyph space. |
+| `SimplePdf` | Native Python PDF document representation. |
+| `StandardFonts` | Utility class for the PDF Standard 14 fonts. |
+| `StreamDecoder` | Decode PDF stream data using supported filters. |
+| `StreamEncoder` | Encode raw bytes into PDF stream data, the inverse of :class:`StreamDecoder`. |
+| `TextFragmentAbsorber-simple_pdf` | Absorber that extracts text fragments from a SimplePdf instance. |
+| `TextObject` | A ``BT`` ... ``ET`` text object located in a content stream. |
+| `TiffPage` | One image in a TIFF file. |
+| `TimestampInfo` | Result of verifying an RFC 3161 timestamp token. |
+| `TrueTypeOutlines` | Decode glyph outlines from an embedded TrueType (``glyf``) program. |
+| `Type1Outlines` | Decode glyph outlines from a Type 1 (``/FontFile``) font program. |
+| `XmpArray` | An ordered XMP array value. |
+| `XmpField` | A single XMP property. |
+| `XmpNamespaceProvider` | Bidirectional XMP namespace prefix URI resolver. |
+| `XmpPacket` | An in-memory XMP packet: an ordered collection of properties. |
+| `XmpProperty` | A property carrying arbitrary qualifiers. |
+| `XmpStruct` | A structured XMP value (an ``rdf:parseType="Resource"`` block). |
+
+| Class | Description |
+|---|---|
+| `Document-generated_document` | Re-export of `aspose_pdf.Document`. |
+| `PdfAValidateOptions-generated_pdfa` | Re-export of `aspose_pdf.pdfa.PdfAValidateOptions`. |
+| `PdfAValidationResult-generated_pdfa` | Re-export of `aspose_pdf.pdfa.PdfAValidationResult`. |
+| `UnsignedContent-generated_forms` | Re-export of `aspose_pdf.forms.UnsignedContent`. |
+| `UnsignedContentAbsorber-generated_forms` | Re-export of `aspose_pdf.forms.UnsignedContentAbsorber`. |
+
+| Class | Description |
+|---|---|
+| `CompromiseCheckResult` | Class that declares the property compromised. |
+
+- `Document`
+  - `load_from(source, password, limits) -> Document` / `open_streaming(path, password, limits) -> Document`
+  - `save(destination, save_format, overwrite) -> Document` / `merge() -> Document`
+  - `optimize(options, compress_streams) -> Document` (alias `optimize_resources(options) -> Document`)
+  - `encrypt(user_password, owner_password, permissions) -> Document` / `decrypt(password) -> Document` /
+    `change_passwords(old_password, new_user_password, new_owner_password) -> Document`
+  - `validate() -> bool` / `check() -> bool` / `repair() -> Document`
+  - `validate_pdfa(level) -> PdfAValidationResult` / `convert_to_pdfa(level, font_lookup_directory) -> list[str]`
+  - `add_table_of_contents(title, max_level, prefer_structure, source="headings", at, size, margin, font_name, title_size, entry_size, indent, leader, links, page_numbers, tag) -> list[int]`
+  - `sanitize(metadata, javascript, attachments, hidden_layers, comments, links, forms) -> SanitizationReport`
+  - `save_as_svg(destination, pages, background, draw_annotations, font_substitution, precision, text, overwrite) -> list[Path]`
+  - `fonts -> list[DocumentFont]` (name, subtype, encoding, embedded, program size, pages)
+  - `embed_fonts(sources, directory) -> list[str]`
+  - `validate_pdfua() -> PdfUaValidationResult` / `convert_to_pdfua(language, title, auto_tag) -> list[str]` /
+    `auto_tag(image_alt) -> int`
+  - `replace_text(search, replacement, page_index, case_sensitive, max_count) -> int` /
+    `redact_text(search, page_index, case_sensitive, max_count, overlay, overlay_color) -> int`
+  - `highlight_text(search, page_index, case_sensitive, max_count, regex, color, opacity, contents, title) -> TextHighlightResult`
+  - `render_page(page_index, dpi, scale, background, antialias, shape_substitute_text, draw_annotations, font_substitution) -> RasterizedPage` /
+    `save_page_as_image(page_index, destination, dpi, scale, background, antialias, mode, compression, quality, threshold) -> Path` /
+    `save_as_tiff(destination, pages, dpi, scale, background, antialias, mode, compression, threshold) -> Path` /
+    `save_as_svg(destination, pages, background, draw_annotations, font_substitution, precision, overwrite) -> list[Path]`
+  - `render_contact_sheet(pages, columns, thumbnail_size, margin, spacing, labels, background, page_background, label_color, antialias, include_annotations) -> RasterizedPage` /
+    `save_contact_sheet(destination, ..., mode, compression, quality, threshold, lossless, method, dither) -> Path`
+  - `render_thumbnail(page_index, size=(160, 220), background=(255, 255, 255), antialias=True, include_annotations=True) -> RasterizedPage` —
+    render a one-based page directly within pixel bounds while preserving proportions
+  - `rasterized_copy(pages=None, dpi=150, background=(255, 255, 255), antialias=True, include_annotations=True, mode="rgb", threshold=128, dither=False) -> Document` —
+    create an independent image-only PDF from selected visible page views
+  - `split_spreads(pages=None, layout="horizontal", reverse=False, split_ratio=0.5, gutter=0, flatten_fields=True) -> Document` —
+    replace selected spreads with two cropped pages in an independent document
+  - `export_pages_zip(destination=None, pages=None, image_format="png", dpi=72, ..., include_manifest=False, overwrite=True) -> bytes` —
+    package selected rendered page views as image files with optional source-page metadata
+  - `compare_visual(other, pages, other_pages, dpi, tolerance, max_diff_ratio, include_annotations, include_diff_images, ignore_regions=None) -> list[PageVisualComparison]`
+  - `compare_text(other, pages=None, other_pages=None, case_sensitive=True, ignore_whitespace=False, skip_artifacts=False, exclude_regions=None) -> list[PageTextComparison]` —
+    review extracted page text revisions with normalized unified diffs
+  - `to_html(pages, title, embed_images, paragraph_gap, clip_to_page) -> str` /
+    `to_markdown(pages, title, embed_images, markdown_format, paragraph_gap, clip_to_page) -> str` /
+    `save_as_html(destination, pages, title, embed_images, split_into_pages, resources_directory, paragraph_gap, clip_to_page, overwrite) -> list[Path]` /
+    `save_as_markdown(destination, pages, title, embed_images, image_directory, markdown_format, paragraph_gap, clip_to_page, overwrite) -> Path`
+  - `flatten(fields=True, annotations=True, pages=None, strict=True) -> Document` /
+    `generate_appearances(force) -> int` / `generate_field_appearances() -> int`
+  - `split_by_bookmarks(level=1, include_preamble=True) -> list[Document]` —
+    split chapters at local bookmarks and retain leading pages in a separate document
+  - `export_split_zip(destination=None, pages_per_part=1, compression="deflate", compresslevel=6, include_manifest=False, overwrite=True) -> bytes` —
+    package consecutive PDF parts into one archive, optionally recording source page ranges
+  - `export_bookmarks_json(destination=None, resolve_named_destinations=True, overwrite=True) -> bytes` /
+    `import_bookmarks_json(source, replace=False, page_map=None) -> int` — exchange a
+    versioned bookmark tree, preserving supported targets and styles
+  - `export_bookmarks_csv(destination=None, delimiter=",", encoding="utf-8", overwrite=True) -> bytes` /
+    `import_bookmarks_csv(source, replace=False, page_map=None, delimiter=",", encoding="utf-8-sig") -> int` —
+    edit simple bookmark hierarchies and page targets as `level,title,page` rows
+  - `split_by_text(pattern, regex=False, case_sensitive=True, include_preamble=True, clip=None) -> list[Document]` —
+    split a batch at pages containing a literal or regular expression match
+  - `generate_outlines_from_text(pattern, pages=None, regex=False, case_sensitive=True, title_group=0, replace=True, max_count=0, clip=None, exclude_regions=None, skip_artifacts=False) -> int` —
+    create flat page bookmarks from extracted text matches and optional capture titles
+  - `split_by_blank_pages(keep_separators=False, dpi=72, white_threshold=250, max_ink_ratio=0, include_annotations=True) -> list[Document]` —
+    separate scan batches using visibly blank separator pages
+  - `interleave(other, reverse_other=False, strict=True) -> Document` — alternate
+    front/back scans into a new document, optionally reversing the back-side order
+  - `find_blank_pages(pages=None, dpi=72, white_threshold=250, max_ink_ratio=0, include_annotations=True) -> list[int]` —
+    find visually blank pages without modifying the document
+  - `get_content_bounds(pages=None, dpi=72, white_threshold=250, include_annotations=True) -> dict[int, tuple[float, float, float, float] | None]` —
+    measure visible content per selected page without cropping
+  - `auto_crop(margin=0, pages=None, uniform=False, dpi=72, white_threshold=250, include_annotations=True, dry_run=False) -> dict[int, tuple[float, float, float, float]]` —
+    trim selected pages individually or with one shared frame, with optional preview
+  - `find_duplicate_pages(pages=None, dpi=72, include_annotations=True) -> list[list[int]]` —
+    group pages with identical rendered views without deleting them
+  - `remove_duplicate_pages(pages=None, keep="first", dpi=72, include_annotations=True, dry_run=False) -> list[int]` —
+    remove repeated page views and return their original indices
+  - `iter_pages() -> Iterator[Page]` / `iter_page_content_streams() -> Generator[bytes, None, None]`
+  - `sync_metadata(direction) -> Document` /
+    `add_attachment(name, content, mime, description, creation_date, mod_date, compress) -> Document`
+  - `export_attachments_zip(destination=None, names=None, compression="deflate", compresslevel=6, include_manifest=False, overwrite=True) -> bytes`
+  - `import_attachments_zip(source, names=None, on_conflict="error", use_manifest=True, compress=True) -> int`
+  - `export_images_zip(destination=None, pages=None, compression="deflate", compresslevel=6, include_manifest=False, overwrite=True) -> bytes` —
+    package reusable image assets with optional page provenance
+  - `find_low_resolution_images(min_dpi=150, pages=None) -> list[ImageResolutionIssue]` —
+    locate image placements below the requested effective DPI before delivery
+  - properties: `pages`, `page_labels`, `form`, `outlines`, `layers`, `tagged_content`, `load_limits`,
+    `xmp_metadata`, `embedded_files`, `page_count`, `info`, `is_encrypted`, `permissions`,
+    `is_pdfua_compliant`, `font_substitution`, `page_mode`, `page_layout`, `open_action`,
+    `viewer_preferences`, `base_uri`, `language`
+  - `add_stamp(stamp, pages) -> Document` — stamp the pages named, or every page
+
+- `Page`
+  - `translate_content(dx, dy) -> Page` — move existing content and annotation geometry in PDF points
+  - `add_text(text, x, y, font_size, font_name, font, color, tag, actual_text, layout) -> Page`
+  - `add_image(image, x, y, width, height, fit="stretch", anchor="center", pixel_width, pixel_height, color_space, bits_per_component, name, tag, alt, actual_text) -> str` —
+    use `fit="contain"` or `fit="cover"` with `anchor` to align an image in a frame while preserving its proportions
+  - `draw_rectangle(x, y, width, height, stroke_color, fill_color, line_width, tag, alt, actual_text) -> Page` /
+    `draw_line(x1, y1, x2, y2, stroke_color, line_width, tag, alt, actual_text) -> Page`
+  - `render(dpi, scale, background, antialias) -> RasterizedPage` /
+    `save_as_image(path, dpi, scale, background, antialias) -> Path`
+  - `is_blank(dpi=72, white_threshold=250, max_ink_ratio=0, include_annotations=True) -> bool` —
+    test the page's rendered appearance on white paper
+  - `auto_crop(margin=0, dpi=72, white_threshold=250, include_annotations=True) -> Page` —
+    trim white margins around rendered content by shrinking CropBox
+  - `get_content_bounds(dpi=72, white_threshold=250, include_annotations=True) -> tuple[float, float, float, float] | None` —
+    measure visible content without changing page boxes
+  - `add_stamp(stamp) -> Page` — a text, image or page-number stamp over or under the page
+  - `render_thumbnail(size=(160, 220), background=(255, 255, 255), antialias=True, include_annotations=True) -> RasterizedPage` —
+    create a fitted preview that can be saved in the usual image formats
+  - `replace_text(...) -> int` / `redact_text(...) -> int`
+  - `highlight_text(...) -> TextHighlightResult` — annotations and a report of unplaceable matches
+  - properties: `index`, `label`, `rect`, `media_box`, `crop_box`, `rotation`, `tab_order`, `annotations`, `content`
+    Set `tab_order` to `"row"`, `"column"` or `"structure"` for keyboard navigation
+    through fields and annotations; `None` clears the page's explicit preference.
+
+- `PageCollection` — `item(index) -> Page`, `add(page) -> Page`, `insert(index, page) -> Page`,
+  `extend(iterable) -> None` (adds all pages from an iterable),
+  `append(page) -> Page`, `prepend(page) -> Page`, `insert_first(page) -> Page`, `insert_last(page) -> Page`
+  (the page may belong to another document, and is then imported with all it names),
+  `delete(index) -> None`, `clear() -> None`, `contains(page) -> bool`, `index_of(page) -> int`,
+  `pop(index=None) -> Page` (removes and returns a page, defaulting to the last page)
+
+- `PageLabelCollection` (`Document.page_labels`) — a mutable mapping from the page a label range
+  starts at to its `PageLabel(style, prefix, start)`; `NumberingStyle` names the five styles and
+  `NONE`; `label(page_index) -> str | None`, `clear()`
+
+- `PageRanges` — a convenience class for parsing and validating page range expressions without
+  requiring a loaded document. `PageRanges.parse(expression, page_count=None, one_based=True,
+  limits=None) -> tuple[int, ...]` returns one-based page numbers from a page range string.
+  Use `page_count` to validate against an actual document size, or omit it to use the default
+  of 10,000 pages for expressions containing `last`. `PageRanges.validate(expression,
+  page_count, one_based=True, limits=None)` validates an expression without returning the
+  parsed indices.
+
+- `FormFillerOptions(records, strict=True, flatten=False, password=None, limits=None)` /
+  `FormFiller.process(options) -> ResultContainer` generate independent filled PDFs
+  for each template/record pair. Add template data sources and optional paired outputs.
+
+- `Form`
+  - `add_text_field(name, page=None, rect=None, *, widgets=None, value="", font_size=12, multiline=False, alignment="left", read_only=False, required=False) -> Field`
+    accepts either one `page` / `rect` pair or `widgets=[(page, rect), ...]` to repeat
+    a text field across pages or several places on one page. All occurrences share
+    one value, so filling a customer name once updates every occurrence.
+  - `add_checkbox(name, page, rect, checked, on_value, read_only, required) -> Field` /
+    `add_radio_group(name, page, options, value, read_only, required) -> Field`
+  - `add_list_box(..., top_index=0) -> Field` / `add_combo_box(...) -> Field` /
+    `add_push_button(name, page, rect, caption, read_only, required) -> Field`
+  - `remove_field(name) -> Field` / `generate_appearances() -> int` /
+    `flatten(fields=True, annotations=True, pages=None, strict=True) -> None`
+  - `fill(values, strict=True) -> list[str]` / `to_dict() -> dict` /
+    `export_json(destination=None) -> bytes` / `import_json(source, strict=True) -> list[str]`
+  - `to_schema() -> dict` / `export_schema(destination=None, overwrite=True) -> bytes` —
+    versioned template descriptions with field types, effective constraints, choices and defaults.
+  - `to_json_schema() -> dict` / `export_json_schema(destination=None, overwrite=True) -> bytes` —
+    JSON Schema Draft 2020-12 for normalized flat form answers and standard validation.
+  - `reset(fields=None, strict=True) -> list[str]` — restore all or selected fields to template defaults
+  - `validate(fields=None, strict=True) -> list[FormValidationIssue]` — inspect stored answers without changing them
+  - `calculation_order` — read or replace the viewer's calculation sequence using
+    fully qualified field names; assign `[]` or `None` to clear it.
+  - `export_fdf(destination) -> bytes` / `export_xfdf(destination) -> bytes` /
+    `import_fdf(source) -> list[str]` / `import_xfdf(source) -> list[str]` (form data interchange)
+- `Field` — `remove() -> Field`; properties `name`, `value`, `field_type`, `partial_name`,
+  `alternate_name`, `mapping_name`, `flags`, `read_only`, `required`, `no_export`, `default_value`,
+  `max_length`, `multiline`, `password`, `comb`, `options`, `top_index`, `multi_select`, `editable`,
+  `export_values`, `widgets` (`FieldWidget(page_index, rect)`), `page_index`, `rect`
+  Configuration setters include `default_value`, `max_length`, `multiline`, `password`,
+  `comb`, `options`, `top_index`, `multi_select` and `editable`.
+  Assign `rect` to move or resize the first widget on its page, or call
+  `set_widget_rect(rect, widget_index=0) -> Field` to select a widget by index.
+  Existing appearances scale to fit; text is not reflowed.
+  Set `rich_text` on a text field to XHTML with a `<body>` root to update its
+  formatting, plain answer and appearance together; set `None` to keep the answer
+  with plain formatting. Assigning `value` also replaces rich text with plain text.
+- `FormValidationIssue` — an immutable record with `field_name`, `field_type`,
+  `code` and `message`; an empty validation report means no covered value issues.
+- `HideAction(fields, hide=True)` — attach a show/hide action to a button or event
+  using fully qualified field names; `hide=False` shows the fields in a compatible viewer.
+- `page.annotations.add_file_attachment(rect, file, contents=None, title=None, icon="PushPin", compress=True)` —
+  place a clickable embedded `FileSpecification` on the page; read or save its
+  bytes through `FileAttachmentAnnotation.file_specification`.
+- `Annotation` — `generate_appearance(force) -> bool`, `get_property(name, default) -> Any`,
+  `set_property(name, value) -> None`; properties `subtype`, `rect`, `contents`, `appearance_normal`
+- `AnnotationCollection` — `add(subtype, rect, contents, title, appearance_normal, properties) -> Annotation`,
+  `insert(...)`, `delete(index) -> None`, `generate_appearances(force) -> int`,
+  `to_list(subtypes=None) -> list[dict]`, `export_json(destination=None, subtypes=None, overwrite=True) -> bytes`,
+  `export_xfdf(destination=None, subtypes=None, overwrite=True) -> bytes`,
+  `import_json(source) -> int`
+
+- `Document.export_annotations_json(destination=None, pages=None, subtypes=None, overwrite=True) -> bytes`
+  exports all or selected annotations to a path, binary stream or UTF-8 bytes.
+- `Document.export_annotations_xfdf(destination=None, pages=None, subtypes=None, overwrite=True) -> bytes` /
+  `Page.annotations.export_xfdf(destination=None, subtypes=None, overwrite=True) -> bytes`
+  exports supported review comments and markup as UTF-8 XFDF, optionally writing a path or stream.
+- `Document.remove_annotations(pages=None, authors=None, before=None, after=None, date_field="modified", subtypes=None, case_sensitive=True, dry_run=False) -> int` /
+  `AnnotationCollection.remove_matching(...) -> int` remove selected review annotations
+  by metadata or return the planned count without edits.
+- `Document.import_annotations_json(source, page_map=None) -> int` appends supported review
+  annotations from a path, UTF-8 bytes or readable binary stream; returns the number added.
+- `Document.extract_links(pages=None)` / `Page.extract_links()` return
+  `list[ExtractedLink]` for link auditing, navigation review and content migrations.
+- `Document.export_links_json(destination=None, pages=None, overwrite=True)` /
+  `Page.export_links_json(destination=None, overwrite=True)` /
+  `Document.export_links_csv(destination=None, pages=None, delimiter=",", encoding="utf-8", overwrite=True)` /
+  `Page.export_links_csv(destination=None, delimiter=",", encoding="utf-8", overwrite=True)`
+  return report bytes and optionally save them to a file or binary stream.
+- `Document.validate_links(pages=None, include_outlines=True, include_named_destinations=True)` /
+  `Page.validate_links()` return `list[LinkValidationIssue]` without editing the PDF.
+  Issues expose `source`, `code`, `message`, `page_index`, `annotation_index`,
+  `outline_path`, `destination_name` and `target_path`.
+
+- `Document.encrypt(user_password, owner_password, permissions)` / `Document.decrypt(password)` /
+  `Document.change_passwords(...)`
+- `Document.sign(field=None, *, certificate, private_key, extra_certificates, reason, location,
+  contact, signer_name, pades, timestamp_url, timestamp_authority, timestamp_timeout, certify,
+  appearance)`,
+  `Document.add_ltv(certificates, crls, ocsp_responses)`,
+  `Document.add_document_timestamp(timestamp_url | timestamp_authority)` — carried out by `save()`
+  as appended revisions (PAdES-B/T/LT/LTA), after which `Document.signatures` lists them
+- `PdfSignature.validate(options) -> ValidationResult`; properties `valid`, `name`, `date`, `docmdp_level`
+- `ValidationResult` — properties `is_valid`, `status`, `trust_status`, `revocation_status`,
+  `certification_level`, `pades_level`
+- `PdfLoadLimits` — immutable resource policy; `PdfLoadLimits.unlimited()` disables every field;
+  covers `max_input_bytes`, `max_objects`, `max_decoded_stream_bytes`, `max_image_pixels`, and 12
+  more bounded resources.
+
+- `Merger`, `Splitter`, `Optimizer`, `TextExtractor` — each a `PdfPlugin` subclass exposing
+  `process(options) -> ResultContainer`.
+
+- `FileDataSource`, `ByteArrayDataSource`, `StreamDataSource` — `DataSource` implementations for
+  path, in-memory bytes, and stream inputs/outputs.
+
+- `PluginOptions` — holds the input/output `DataSource` lists plus the resource-limit policy
+  shared by a plugin run.
+
+- `FontRepository` — `add_source(source) -> None`, `get_available_fonts() -> list[FontDescriptor]`,
+  `find_font(font_name) -> FontDescriptor | None`, `open_font(font_name) -> bytes | None`
+
+- `FontSource` hierarchy — `FolderFontSource`, `FileFontSource`, `MemoryFontSource`, `SystemFontSource`
+
+</details>
+
+## Documentation & Resources
+
+- **[Getting started guide](https://docs.aspose.org/pdf/python/)** — installation, walkthroughs, and feature guides for this library.
+- **[How-to guides & FAQ](https://kb.aspose.org/pdf/python/)** — task-focused answers for common PDF-processing questions.
+- **[Full API reference](https://reference.aspose.org/pdf/python/)** — the complete, browsable reference for the public API surface (the [API reference](#api-reference) section above covers the essentials). It covers all 388 public types; the [API Reference](#api-reference) section above covers the essentials.
+- **[supported-features.md](supported-features.md)** — the detailed, per-format capability matrix and known limitations behind the summary above; review it before relying on this library for compliance-sensitive or security-sensitive workflows.
+- **[Contributor guide](AGENTS.md)** — repository layout, validation commands, and change-discipline notes for contributors.
+- **[Security policy](SECURITY.md)** — use GitHub private vulnerability reporting instead of a public issue when you discover a security problem.
+- **[Changelog](CHANGELOG.md)** — release history.
+- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-pdf-foss/Aspose-PDF-FOSS-for-Python/issues).
+
+## Scope and Limitations
+
+Page numbers in public APIs start at **1**, matching Aspose.PDF for .NET: `document.pages[1]` is the first page. Numeric page selections and returned `page_index` fields use the same numbering. Page-label collection keys retain .NET's zero-based convention. This is a breaking change from earlier FOSS versions; negative page indices and page-selection slices are no longer accepted. See [the split examples](examples/split_documents.py) for ten compatible workflows.
+
+- `Document.highlight_text()` / `Page.highlight_text()` find a phrase or regex and add highlight annotations. `TextHighlightResult` reports `highlighted_count`, `skipped_count`, `matched_count`, editable `annotations`, and `skipped_fragments` with text/page/offsets.
+
+- `Document.auto_link(pages=None, urls=True, emails=True, max_count=0)` / `Page.auto_link(urls=True, emails=True, max_count=0)` create clickable addresses. `AutoLinkResult` reports `linked_count`, `skipped_count`, `existing_count`, `matched_count`, live `annotations`, `skipped_fragments` and `existing_fragments`.
+
+- `Document.replace_link_urls(search, replacement, pages=None, regex=False, case_sensitive=True, dry_run=False)` / `Page.replace_link_urls(search, replacement, regex=False, case_sensitive=True, dry_run=False)` return the number of changed Link annotations, replacing primary URI URLs.
+
+- `Document.link_text(search, uri=None, *, target=None, pages=None, case_sensitive=True, max_count=0)` / `Page.link_text(search, uri=None, *, target=None, case_sensitive=True, max_count=0)` link literal phrases to a URI, typed PDF destination or existing destination name, and return `AutoLinkResult`.
+
+- `Document.extract_text(pages=None, clip=None, skip_artifacts=False, exclude_regions=None)` / `Page.extract_text(clip=None, skip_artifacts=False, exclude_regions=None)` return text, with one-based page selection on `Document`, optionally selecting glyphs overlapping `(x0, y0, x1, y1)` in unrotated PDF space and excluding rectangular regions or explicitly marked Artifact content.
+
+- `Document.extract_words(pages=None, clip=None, skip_artifacts=False)` / `Page.extract_words(clip=None, skip_artifacts=False)` return immutable `TextWord` snapshots with text, page index, `rect`/`bbox` and `quad`. A region selects whole overlapping words in unrotated PDF coordinates.
+
+- `Document.export_words_json(destination=None, pages=None, clip=None, skip_artifacts=False, overwrite=True)` / `Page.export_words_json(destination=None, clip=None, skip_artifacts=False, overwrite=True)` return versioned UTF-8 word and geometry JSON, optionally writing a file or binary stream.
+
+- `Document.export_words_csv(destination=None, pages=None, clip=None, skip_artifacts=False, delimiter=",", encoding="utf-8", overwrite=True)` / `Page.export_words_csv(...)` export the same words and geometry as CSV, with one-based page numbers, separate bounding coordinates and a quad cell.
+
+- `Document.extract_tables(pages=None, clip_to_page=True)` / `Page.extract_tables(clip_to_page=True)` return `list[ExtractedTable]`; `pages` contains one-based indices. Each result exposes `page_index`, immutable `rows` / `column_spans`, `row_count`, `column_count`, `to_list()`, `to_csv(delimiter=",")` and `save_csv(path, delimiter=",", encoding="utf-8", overwrite=True)`.
+
+- `Document.export_tables_zip(destination=None, pages=None, clip_to_page=True, delimiter=",", encoding="utf-8", compression="deflate", compresslevel=6, include_manifest=False, overwrite=True)` / `Page.export_tables_zip(...)` package detected tables as separate CSV files. Return ZIP bytes or save a path/binary stream; an optional manifest retains source-page references.
+
+- `Document.extract_blocks(pages=None, include_images=False, paragraph_gap=None, clip_to_page=True)` / `Page.extract_blocks(...)` return `list[ExtractedBlock]` with immutable structure data, original page indices and unrotated PDF position anchors. `Document.export_blocks_json(destination=None, ..., overwrite=True)` / `Page.export_blocks_json(...)` return versioned UTF-8 JSON bytes and optionally write a path or binary stream.
+
+- `PdfExtractor`
+  - `bind_pdf(source, password, limits) -> None`
+  - `extract_text(page_numbers=None, clip=None, skip_artifacts=False, exclude_regions=None) -> None` (one-based selection) / `get_text() -> str` / `has_next_page_text() -> bool` / `get_next_page_text() -> str`
+  - `extract_image() -> None` / `has_next_image() -> bool` / `get_next_image() -> Any`
+  - `extract_attachment() -> None` / `get_attachment(name) -> Any` / `get_attach_names() -> list[str]`
+- `TextFragmentAbsorber` / `TextAbsorber` — search exact phrases and regex patterns, collecting `TextFragment` results with page index, match offsets and, for a page of a document, where the text sits: `rect`, `quads`, `font_name`, `font_size`, `color`.
+- `PdfFileEditor`
+  - `concatenate(inputs, output) -> bool`
+  - `extract(source, destination, page_from, page_to) -> bool` / `insert(source, insert_file, destination, position) -> bool` / `delete(source, destination, pages_to_delete, page_to, page_from) -> bool` / `append(source, append_source, destination) -> bool` / `add_page_break(input_path, output_path) -> bool`
+  - property: `last_exception: BaseException | None` — the boolean-return / `last_exception` error contract this legacy facade keeps.
+
+- Page rendering is a best-effort rasterizer, not a certification-grade visual engine: its overprint support is a composite RGB preview rather than a plate-accurate separation model, and complete PDF 2.0 imaging semantics are not implemented.
+- `Document.validate_pdfa()` and `Document.validate_pdfua()` are heuristic checks against document structure, not certification-grade validation — use a dedicated validator such as veraPDF for formal compliance.
+- OCR and layout reflow are not implemented; `Document.replace_text()` and `Document.redact_text()` rewrite matched runs in place but never reflow the surrounding layout.
+- Several compatibility surfaces exist only to keep ported code importable and carry no implementation: `CdrLoadOptions`, `CgmLoadOptions`, `HtmlLoadOptions`, `OfdLoadOptions`, and `SvgLoadOptions` are rejected as a load source, and `SaveFormat.PPTX` is rejected by `Document.save()` — both raise `UnsupportedFeatureException` rather than silently doing nothing. (`DocFormat.SVG`/`HTML`/`MARKDOWN`, `HtmlSaveOptions`, and `MarkdownSaveOptions` are no longer among them — those exports are implemented; see Key Capabilities.)
+- Public-key encryption covers RSA recipients only; key-agreement, password, and KEK recipient types, and RC2-encrypted envelopes, are rejected explicitly. No PDF 2.0 message authentication code (`/AuthCode`) is produced or checked for either security handler.
+- Substituting a face for a non-embedded font is opt-in (`Document.font_substitution`) and affects **rendering only** — text extraction, editing, and PDF/A font embedding are unchanged, and no substituted program is written into the document. Without it the renderer uses only the bundled substitute faces (the Standard 14 plus Symbol/ZapfDingbats), so a non-embedded CJK or symbol font draws glyph boxes.
+- HTML and Markdown export carry structure, not appearance: positioning, colour, and fonts are dropped, and the structure is `auto_tag`'s, so headings come from font size alone, list nesting is flat, and a table needs a regular grid.
+- SVG export writes polylines rather than curves (the renderer flattens Béziers as it builds a path) and text as glyph outlines, which renders exactly but is not selectable. Blend modes and transparency groups are not expressed; mesh and function shadings are sampled into an embedded image.
+- WOFF2 decoding and complex-text shaping each need an optional extra (`woff2` and `text-layout`); without them these paths fall back to file-name metadata or fail explicitly.
+- The bundled JPEG 2000 decoder is pure Python and slow — roughly a second per 100k pixels, so a 300 dpi page takes minutes. Install the `images` extra for anything larger than a thumbnail. It raises rather than guesses on the parts of ISO 15444-1 it does not implement (packed packet headers, progression order changes, regions of interest) and normalises output to 8 bits per component.
+- The same `limits=` argument accepted by `Document()` is also accepted by `Document.load_from()` and `Document.open_streaming()`, and `PdfLoadLimits.unlimited()` disables every safeguard — reserve it for trusted input backed by external process, memory, and time controls. `PdfLoadLimits` reduces known parser and allocation risks but is not an exhaustive DoS sandbox — isolate highly hostile PDF input at the process level as well.
+- Signature validation follows the ETSI PAdES baseline levels (B/T/LT/LTA), but this is not a formally certified eIDAS-grade implementation.
+
+<details>
+<summary>View Other Unimplemented Members</summary>
+
+- `DeprecatedFeatureException` is declared but unused by the library's own code.
+- `IncorrectCMapUsageException` is declared but unused by the library's own code.
+- `InvalidFormTypeOperationException` is declared but unused by the library's own code.
+- `InvalidPasswordException` is declared but unused by the library's own code.
+
+</details>
+
+See [Aspose.PDF for Python — Enterprise Edition](https://products.aspose.com/pdf/python-net/). It adds full format conversion to and from Word, Excel, HTML, and image formats, certification-grade PDF/A and PDF/UA validation, and commercial support.
+
+## Development and Testing
+
+The suite covers 477 test files under `tests/`. The [ci workflow](.github/workflows/ci.yml) runs with Python 3.11, 3.12 and 3.13. Releases run through the [publish-pypi workflow](.github/workflows/publish-pypi.yml). Example programs live under `examples/`.
+
+```bash
+git clone https://github.com/aspose-pdf-foss/Aspose-PDF-FOSS-for-Python.git
+cd Aspose-PDF-FOSS-for-Python
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+```
+
+```bash
+python -m pip install -e '.[images,woff2,text-layout]'
+```
+
+- `images` — Pillow-based image support (JPX/JPEG 2000 decoding, arithmetic-coded JPEG, multipage TIFF import, WebP export).
+- `woff2` — Brotli-based WOFF2 web-font decoding.
+- `text-layout` — HarfBuzz/`python-bidi`/`fonttools`-based complex-text shaping for `TextLayoutOptions`.
+
+- `Pillow` >=12.3 — enables the `images` extra (JPX/JPEG 2000 decoding, arithmetic-coded JPEG, multipage TIFF import, WebP export).
+- `Brotli` >=1.2 — enables the `woff2` extra (WOFF2 web-font decoding).
+- `uharfbuzz` >=0.37 — enables the `text-layout` extra (HarfBuzz-driven complex-text shaping).
+- `fonttools` >=4.60.2 — enables the `text-layout` extra (font introspection for shaping).
+- `atheris` >=2.3 — enables the `fuzz` extra (fuzz-testing harness).
+
+- Python 3.11 or later (`requires-python = ">=3.11"` in `pyproject.toml`).
+
+- `build` >=1.2
+- `pytest` >=8
+- `ruff` >=0.6
+- `setuptools` >=83
+- `twine` >=5
+- `wheel`
+- `Brotli` >=1.2 — needed to test the `woff2` extra.
+- `fonttools` >=4.60.2 — needed to test the `text-layout` extra.
+- `Pillow` >=12.3 — needed to test the `images` extra.
+- `uharfbuzz` >=0.37 — needed to test the `text-layout` extra.
+- `python-bidi` >=0.6 — needed to test the `text-layout` extra.
+- `reportlab` >=4.2 — imported by `scripts/build_agl_data.py`.
+
+Activate the virtual environment and install the development extra, then run the same lint checks and tests CI runs:
+
+```bash
+source .venv/bin/activate
+python -m pip install -e '.[dev]'
+python -m ruff check src/
+python -m pytest -q
+python -m compileall -q src/aspose_pdf
+python -m build
+python -m twine check dist/*
+```
+
+The wrapper scripts run the same standard checks: `scripts/check.sh` (lint, tests, a compile check, build, and validating the distributions via `twine check`) and `scripts/build.sh` (install, build, and validate the distributions only).
+
+[`ci.yml`](.github/workflows/ci.yml) runs a minimal-install job plus the same core checks on Python 3.11, 3.12, and 3.13; [`security-audit.yml`](.github/workflows/security-audit.yml) runs a weekly `pip-audit` dependency scan; and packaging is exercised by [`publish-pypi.yml`](.github/workflows/publish-pypi.yml) and [`publish-testpypi.yml`](.github/workflows/publish-testpypi.yml), both manually triggered (`workflow_dispatch`), not run automatically on every push.
+
+Copyright © 2026 Aspose Pty Ltd.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). The MIT License permits use, copying, modification, distribution, sublicensing, and commercial use, provided its copyright and permission notice are retained. The software is provided without warranty.
