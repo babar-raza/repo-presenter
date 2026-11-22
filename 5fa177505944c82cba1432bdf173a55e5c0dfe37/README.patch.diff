@@ -1,0 +1,493 @@
+--- a/README.md
++++ b/README.md
+@@ -29,39 +29,41 @@
+ ## At a Glance
+ 
+ ```mermaid
+-flowchart TD
++flowchart TB
+   subgraph StartingPoints["Starting Points"]
+-    direction LR
++    direction TB
+     i1["An existing PDF file"]
+     i2["An HTML document"]
+-    i3["Markdown text (CommonMark/GFM)"]
++    i3["Markdown text<br/>(CommonMark/GFM)"]
+   end
+   PRODUCT["Aspose.PDF FOSS for TypeScript"]
+   subgraph Capabilities["Core Capabilities"]
+-    direction LR
+-    subgraph capl[" "]
+-      direction TB
+-      c1["Parse and repair PDF documents"]
+-      c2["Edit pages, metadata and content streams"]
+-      c3["Author text, vector graphics and images"]
+-      c4["Build tables, flow layouts and multi-page documents"]
+-      c5["Create, fill and flatten AcroForm fields"]
+-    end
+-    subgraph capr[" "]
+-      direction TB
+-      c6["Manage annotations, outlines, layers and attachments"]
+-      c7["Encrypt, sign and validate PDF/A, PDF/X and PDF/UA"]
+-      c8["Extract and search text, tables and vector paths"]
+-      c9["Render and export to images, HTML, Markdown, DOCX and EPUB"]
+-    end
++    direction TB
++    c1["Parse and repair PDF<br/>documents"]
++    c2["Edit pages, metadata<br/>and content streams"]
++    c3["Author text, vector<br/>graphics and images"]
++    c4["Build tables, flow<br/>layouts and multi-page<br/>documents"]
++    c5["Create, fill and<br/>flatten AcroForm<br/>fields"]
++    c6["Manage annotations,<br/>outlines, layers and<br/>attachments"]
++    c7["Encrypt, sign and<br/>validate PDF/A, PDF/X<br/>and PDF/UA"]
++    c8["Extract and search<br/>text, tables and<br/>vector paths"]
++    c9["Render and export to<br/>images, HTML,<br/>Markdown, DOCX and<br/>EPUB"]
++    c1 ~~~ c4
++    c2 ~~~ c5
++    c3 ~~~ c6
++    c4 ~~~ c7
++    c5 ~~~ c8
++    c6 ~~~ c9
+   end
+   subgraph Outputs["Outputs"]
+     direction TB
+     o1["A PDF file"]
+-    o2["SVG, PNG, JPEG, TIFF, BMP or GIF images"]
+-    o3["HTML, Markdown, DOCX or EPUB documents"]
++    o2["SVG, PNG, JPEG, TIFF,<br/>BMP or GIF images"]
++    o3["HTML, Markdown, DOCX<br/>or EPUB documents"]
+   end
+   StartingPoints --> PRODUCT --> Capabilities --> Outputs
++  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff
++  class PRODUCT product
+ ```
+ 
+ ## Key Capabilities
+@@ -3889,7 +3891,7 @@
+ 
+ The public entry points are organized around `Document` and `Page` (the core object model),
+ `Font`/`EmbeddedFont` (text authoring), `Annotation` and `Field` (interactive content), and
+-per-capability builders such as `PageGraphics`, `Flow` and `Table` — 516 public types plus 171
++per-capability builders such as `PageGraphics`, `Flow` and `Table` — 535 public types plus 171
+ functions, classes and constants, grouped below by capability. Every name `index.ts` exports appears in one
+ of these tables.
+ 
+@@ -3960,7 +3962,6 @@
+ | `CollectionFieldType` | A schema column: built-in fields derive from the filespec; custom fields (string/date/number) read their value from each file's /CI. |
+ | `CollectionView` | How a viewer presents the portfolio. |
+ | `ColumnWidth` | A column-width spec: an absolute width in points (`fixed`), or a share of the leftover space after fixed columns are allotted (`fraction`). |
+-| `CommitmentType` | Standard CAdES commitment-type identifiers, or a custom dotted OID string. |
+ | `CompareTextOptions` | Options for `Document.CompareText`: `mode` (`document` or `pages`), `granularity` (`word` or `character`), `whitespace`, `ignoreCase`, `region`, `exclude`, `includeHidden`, `order`, `cleanup` (`semantic` or `none`), `maxCost`. |
+ | `ComparisonHtmlOptions` | Options for `comparisonToHtml`: `context`, `fragment`, `title`. |
+ | `ComparisonJsonOptions` | Options for `comparisonToJson`: `spans` (include page spans, default true), `indent`. |
+@@ -3984,7 +3985,7 @@
+ | `Gradient` | Class in the PDF TypeScript API. |
+ | `ImageInfo` | A single embedded image XObject: a live, read-only handle over its stream. |
+ | `InlineImageInfo` | A single `BI … EI` image drawn on a page, addressed by its position in the content stream that draws it. |
+-| `InvalidPasswordError` | Class with 1 method. |
++| `InvalidPasswordError` | Class that inherits from Error and declares a public constructor. |
+ | `JavaScriptAction` | A JavaScript action. |
+ | `Layer` | A single optional-content group (layer): a live handle over its /OCG dict. |
+ | `LayerConfig` | A viewing configuration (/D or a /Configs entry). |
+@@ -4001,13 +4002,13 @@
+ | `PageGraphics` | A buffered builder for drawing vector content onto a page. |
+ | `PageRenderingComparison` | One page pair of a `CompareRendering`: `oldPage`/`newPage`, the compared `width`/`height` in pixels, `changedPixels`, `totalPixels`, `ratio`, `regions` in page space, and the PNG `image` when asked for. |
+ | `PageTextComparison` | One page pair of a `pages`-mode comparison: `oldPage`/`newPage` (undefined where only one document has the page), `changes`, `stats`, `minimal`. |
+-| `PathSegment` | Class with 8 properties. |
++| `PathSegment` | Class that declares the members c1, c2, op and pt. |
+ | `PdfALevel` | Conformance target: part (1/2/3) + level (b/u/a). |
+ | `PdfAction` | Any action this library models, for an annotation's /A. |
+-| `PdfParseError` | Class with 1 method. |
++| `PdfParseError` | Class that inherits from Error and declares a public constructor. |
+ | `PdfUaPart` | Which part of ISO 14289 to validate or convert against: `1` or `2`. |
+ | `PdfXLevel` | PDF/X conformance target. |
+-| `PubSecRecipient` | Class with 4 properties. |
++| `PubSecRecipient` | Class that declares the members certificate, passphrase, pkcs12 and privateKey. |
+ | `QrEcc` | Class in the PDF TypeScript API. |
+ | `RenderingCompareOptions` | Options for `Document.CompareRendering`: `dpi` (default 72), `tolerance` (per channel, 0..255, default 0), `mergeDistance` (points, default 6), `image`, `annotations`. |
+ | `RenderingComparison` | The result of `Document.CompareRendering`: `pages`, totals `changedPixels`/`totalPixels`/`ratio`, and `identical`. |
+@@ -4019,7 +4020,6 @@
+ | `RevocationStatus` | A revocation verdict for one certificate. |
+ | `RowBuilder` | One row: an ordered list of cells plus an optional row-level style. |
+ | `SaveOptions` | Options for Save/WriteTo. |
+-| `Severity` | Class in the PDF TypeScript API. |
+ | `SideBySideOptions` | Options for `Document.CompareSideBySide`: `compare` (the `CompareTextOptions`), `gap`, `marks` (`annotations` or `content`), `deleteColor`, `insertColor`, `tagged` (carry both documents' structure and tag the marks). |
+ | `SideBySideResult` | The result of `Document.CompareSideBySide`: the new side-by-side `document` and the `comparison` its marks came from. |
+ | `Signer` | Any accepted signer: a credential source, or a pre-resolved CmsSigner (certificate DER + `KeyObject`) for callers that already hold a key. |
+@@ -4037,26 +4037,25 @@
+ | `TextChange` | One run of a text comparison: `op` (`equal`, `delete`, `insert`), `oldText`/`newText`, and `old`/`new` `TextSpan`s placing it on each document's pages. |
+ | `TextComparison` | The result of `Document.CompareText`: its `granularity`, every run in reading order, `stats`, `minimal`, and `pages` in page-by-page mode. |
+ | `TextComparisonStats` | Token totals of a comparison: `equal`, `deleted`, `inserted`, `changes` (change regions), `oldTokens`, `newTokens`, `similarity` (0..1). |
+-| `TextFont` | Class with 6 methods and 10 properties. |
++| `TextFont` | Class that declares methods including decode, decodeGlyphs, decodeRun, dictWidth, drawCode and encode and members including bold, canEncode, codeWidth, dict, italic and name. |
+ | `TextSpan` | Where a compared run lies on one page: 1-based `page`, its `text`, and one page-space quad per line, as `Search` reports the same text. |
+ | `TilingPattern` | A handle returned by `Document.NewTilingPattern`. |
+ | `TimestampProvider` | A timestamp provider: given a DER `TimeStampReq`, return either the bare `TimeStampToken` (a CMS ContentInfo) or a full `TimeStampResp`. |
+-| `UnsupportedFeatureError` | Class with 1 method. |
++| `UnsupportedFeatureError` | Class that inherits from Error and declares a public constructor. |
+ | `UriAction` | A URI action: open an external URL. |
+ | `ValidationReport` | The result of a validation pass (PDF/UA or PDF/A). |
+ | `VectorGraphics` | A buffered builder for vector content: every path constructor, paint operator, graphics-state setting and marked-content bracket, accumulated in memory as operator text. |
+ | `XmpUpdate` | A partial XMP update: each known field may be set, or `null` to delete. |
+-| `AddBarcodeOptions` | Interface with 8 properties. |
++| `AddBarcodeOptions` | Interface that declares members including alt, artifact, color, layer, quietZone and render. |
+ | `makeCode128(data)` | A Code 128 model with automatic A/B/C code-set selection and the modulo-103 check |
+ | `makeEan13(digits)` | An EAN-13 model: 12 digits (check computed) or 13 (check validated) |
+ | `makeEan8(digits)` | An EAN-8 model: 7 digits (check computed) or 8 (check validated) |
+ | `makeUpcA(digits)` | A UPC-A model: 11 digits (check computed) or 12 (check validated) |
+-| `makeQr(data, opts?)` | A QR model: `ecc` defaults to `'M'`, and the smallest fitting version is chosen unless `version` forces one |
+ | `makePdf417(data, opts?)` | A PDF417 model: text, byte and numeric compaction, `ecLevel` 0..8 (default per ISO/IEC 15438 Annex E) and `columns` 1..30 (default about 3:1 wide); rows are three modules tall |
+ | `makeDataMatrix(data, opts?)` | A Data Matrix ECC 200 model: ASCII or Base256 encodation in the smallest `shape` (`'square'`, `'rectangle'` or `'any'`) that holds the data |
+-| `AddImageOptions` | Interface with 5 properties. |
+-| `AddImagePagesOptions` | Interface with 3 properties. |
+-| `AddImagePagesResult` | Interface with 2 properties. |
++| `AddImageOptions` | Interface that declares the members format, layer, opacity, page and tag. |
++| `AddImagePagesOptions` | Interface that inherits from OperationControlOptions and declares the members dpi, format and frames. |
++| `AddImagePagesResult` | Interface that declares the members pages and skipped. |
+ | `AddLayerOptions` | Options for AddLayer. |
+ | `AddSVGOptions` | Options for AddSVGObject. |
+ | `AddSVGResult` | The outcome of AddSVGObject. |
+@@ -4070,22 +4069,21 @@
+ | `BarcodeSkipReason` | Why a barcode was left as it was: `'xml-encoding'`, `'unrecognised-script'`, `'locked'`, `'unprobed-value'` or `'too-large'`. |
+ | `BatesOptions` | Options for AddBatesNumbering. |
+ | `BookletOptions` | Options for Booklet. |
+-| `BorderEdges` | The four edge flags, resolved from a BorderSides. |
+ | `BorderInfo` | A cell/table border: stroke width (pt), RGB colour (0..1), optional dash, and which edges to paint. |
+ | `BoxGradient` | A box-relative gradient for a FloatingBox background: `linear` with a CSS `angle` (180, top to bottom, by default), or `radial` with `shape`, a CSS size keyword and `at`, over `GradientStop`s. |
+ | `CadesAttributes` | Optional CAdES signed attributes for a PAdES signature. |
+ | `CellOptions` | `addCell` options: the per-cell text style plus an optional horizontal span. A cell's runs may cite a `footnote` or `endnote` only when the table goes into a Flow (`flow.AddTable`); `page.AddTable` refuses such a cell. |
+ | `CellTextOptions` | Per-cell/row text + visual style; each field falls back through the cascade (cell ??. |
+ | `CertInfo` | Summary of the signer's X.509 certificate. |
+-| `ChainOptions` | Interface with 2 properties. |
+-| `ChainResult` | Interface with 3 properties. |
++| `ChainOptions` | Interface that declares the members at and trustAnchors. |
++| `ChainResult` | Interface that declares the members path, reason and status. |
+ | `Change` | One object that changed in a revision added after a signature. |
+ | `CheckboxInit` | Options for Form.AddCheckbox / Page.AddCheckbox. |
+ | `ChoiceInit` | Options common to both choice field types. |
+ | `CmykTransform` | A caller-supplied RGB->CMYK function, e.g. from `iccCmykTransform`. |
+ | `iccCmykTransform(profile, opts?)` | A `CmykTransform` from an ICC v2 CMYK destination profile; declines what it cannot honour before any colour converts |
+-| `CollectionFieldDef` | Interface with 6 properties. |
+-| `CollectionSettings` | Interface with 5 properties. |
++| `CollectionFieldDef` | Interface that declares the members displayName, editable, name, order, type and visible. |
++| `CollectionSettings` | Interface that declares the members fields, initialFile, sortAscending, sortBy and view. |
+ | `ColorConvertOptions` | Options shared by the colour-conversion entry points. |
+ | `ColorConvertReport` | What a conversion converted and skipped, and why. |
+ | `ColoredTilingPattern` | A tiling pattern that carries its own colours. |
+@@ -4093,12 +4091,12 @@
+ | `ColorSkipped` | One thing that could not be converted, and the reason. |
+ | `ComboBoxInit` | Options for Form.AddComboBox / Page.AddComboBox. |
+ | `ContentAddr` | Address of an operator within a page's content. |
+-| `ContentOp` | Interface with 5 properties. |
+-| `ContentVisitor` | Interface with 3 methods. |
++| `ContentOp` | Interface that declares the members inlineImage, operands and operator. |
++| `ContentVisitor` | Interface that declares the methods artifact, glyph, image, marked and path. |
+ | `ConvertColorsOptions` | Options for `doc.ConvertColors`, including `to` and `transform`. |
+ | `ConvertOptions` | PDF/A conversion options, including ICC intent, preserved categories and opt-in `flattenTransparency`. |
+-| `Crl` | Interface with 7 properties. |
+-| `CrlEntry` | Interface with 2 properties. |
++| `Crl` | Interface that declares members including issuer, nextUpdate, revoked, signature, signatureAlgorithm and tbsCertList. |
++| `CrlEntry` | Interface that declares the members revocationDate and serialNumber. |
+ | `DataMatrixOptions` | What `makeDataMatrix` takes: `{ shape }`, `'square'` by default. |
+ | `DecorationOptions` | The decoration options shared by every text-authoring options type. |
+ | `DecorationStyle` | A rule drawn beneath (underline) or through (strikethrough) the text. |
+@@ -4113,11 +4111,11 @@
+ | `EmbedFontsOptions` | What `doc.EmbedFonts` takes: `{ subset, bundledStandard14 }`. |
+ | `EmbedFontsReport` | What `doc.EmbedFonts` did: `embedded` and `skipped`. |
+ | `EmbeddedFontRecord` | A font `doc.EmbedFonts` embedded: `name`, `object` (or `pages` for a direct font dict), `source` (`'registered'` or `'bundled'`), the face's `postScriptName`, and a registered face's `path` and `faceIndex`. |
+-| `ExportFormDataOptions` | Interface with 3 properties. |
++| `ExportFormDataOptions` | Interface that declares the members annotations, file and includeEmpty. |
+ | `ExportJsonOptions` | What `ExportJson` takes: `{ includeEmpty, file, indent }`. |
+ | `ExportXmlOptions` | What `ExportXml` takes: `{ includeEmpty }`. |
+ | `ExternalSigner` | Sign via an external callback (HSM/KMS/smartcard) — the key never leaves the device. |
+-| `ExtractPagesOptions` | Interface with 1 property. |
++| `ExtractPagesOptions` | Interface that declares the member preserveStructure. |
+ | `FieldActions` | A field's additional-actions (/AA), PDF 32000-1 table 197. |
+ | `FieldAppearanceOptions` | Options for regenerating field appearances: `{ format: true }` draws each field's `FormattedValue`, the value as its recognised AForm format script displays it. `/V` is never changed. |
+ | `FieldInit` | Options common to every field-creation entry point. |
+@@ -4136,7 +4134,6 @@
+ | `FlowImageOptions` | Options for AddImage. |
+ | `FlowListItem` | One nested-list item. |
+ | `FlowListOptions` | Options for AddList. |
+-| `FlowNote` | A footnote or endnote: `content` (text, runs, or flow elements) and an optional explicit `mark`. |
+ | `FlowNoteOptions` | Footnote look (`FlowOptions.footnotes`): `format`, `start`, `markScale`, `fontSize`, `separator`, `spacing`, `restart` (`'page'` restarts footnotes on every page), `links` (mark ↔ note GoTo links, default true). |
+ | `FlowOptions` | Options for NewFlow, including `footnotes` and `endnotes`. |
+ | `FlowParagraphOptions` | Typographic options for AddParagraph (a subset of the text-block options; flow content is always laid top-down, so `valign` is not offered). |
+@@ -4149,14 +4146,14 @@
+ | `FlattenLayersReport` | What `FlattenLayers` deleted, unwrapped and left alone. |
+ | `FontFamily` | The four faces emphasis selects between, loaded from disk. |
+ | `FontMatch` | What a name resolves to -- reported without loading or embedding anything. |
+-| `FontOptimization` | Interface with 4 properties. |
++| `FontOptimization` | Interface that declares the members baseFont, bytesSaved, gidsDropped and gidsKept. |
+ | `FontProgramKind` | The kind of program a font embeds: `Type1`, `TrueType`, `Type1C`, `CIDFontType0C`, `OpenType`, or `Type3` for a Type 3 font. |
+ | `FontSubstitutionHandler` | What `doc.SetFontSubstitutionHandler` takes: `(request) => string \| Uint8Array \| undefined` — a face name, font bytes, or nothing. |
+ | `FontSubstitutionRequest` | What a substitution handler is asked: `name` (the font's `/BaseFont`, subset tag removed), `bold`, `italic`, and `characters`, a sample of up to 256 code points it needs. |
+ | `FontSubstitutionRule` | One rule of `doc.AddFontSubstitution`: `{ original, substitute }`. |
+-| `FormData` | Interface with 5 properties. |
++| `FormData` | Interface that declares the members annots, annotSkips, fields, file, id and radioExports. |
+ | `FormDataField` | One field's data, format-neutral. |
+-| `G4EncodeOptions` | Interface with 1 property. |
++| `G4EncodeOptions` | Interface that declares the member eofb. |
+ | `GradientStop` | One gradient stop. |
+ | `HeaderFooterBand` | One band of a header/footer: up to three independently-positioned cells. |
+ | `HeaderFooterOptions` | Options for AddHeaderFooter. |
+@@ -4167,54 +4164,54 @@
+ | `ImageEvent` | A placed image with provenance. |
+ | `ImageOptimization` | Interface with 7 properties. |
+ | `ImportOptions` | Options for the four import methods. |
+-| `ImportReport` | Interface with 8 properties. |
+-| `InsertPagesOptions` | Interface with 1 property. |
++| `ImportReport` | Interface that declares the members imported, importedAnnots, skipped, skippedAnnots, sourceFile and sourceId. |
++| `InsertPagesOptions` | Interface that declares the member preserveStructure. |
+ | `KeyUsageName` | An RFC 5280 key usage, in the bit order a `/KeyUsage` seed-value string follows. |
+ | `LayerState` | One layer's resolved state, as LayerConfig.ResolveForEvent reports it. |
+ | `LayerUsage` | A group's /Usage dictionary, as a typed view: what it says about viewing, printing, exporting, zoom, language and who the content is for. |
+-| `LayoutAttributes` | Interface with 32 properties. |
++| `LayoutAttributes` | Interface that declares members including backgroundColor, baselineShift, bbox, blockAlign, borderColor and borderStyle. |
+ | `LimitField` | One `LoadLimits` field name. |
+ | `LinearBarcode` | 1D barcode geometry: alternating bar/space run widths in unit modules. |
+ | `LinearGradient` | An axial (linear) gradient: a colour ramp along the axis from (x1, y1) to (x2, y2), in the **default** user space of the content stream it paints into — see the /Matrix note on PageGraphics.setFillGradient. |
+-| `LinearizationCheck` | Interface with 2 properties. |
+-| `ListAttributes` | Interface with 1 property. |
++| `LinearizationCheck` | Interface that declares the members errors and linearized. |
++| `ListAttributes` | Interface that declares the member listNumbering. |
+ | `ListBoxInit` | Options for Form.AddListBox / Page.AddListBox. |
+ | `LoadFontOptions` | A style request alongside the ordinary font options. |
+ | `LoadLimitPatch` | A partial policy for `LoadLimits.with`: `undefined` leaves a field, `null` disables it. |
+ | `LoadLimitValues` | The nineteen `LoadLimits` fields, each a positive integer or `null`. |
+ | `MatrixBarcode` | 2D barcode geometry: a matrix of dark/light modules, row-major, with optional `width`, `height`, `rowHeight` and `quiet` for non-square symbols. |
+-| `MdBlockQuote` | Interface with 2 properties. |
+-| `MdCode` | Interface with 2 properties. |
++| `MdBlockQuote` | Interface that declares the members children and type. |
++| `MdCode` | Interface that declares the members type and value. |
+ | `MdCodeBlock` | `info` is the raw info string of a fenced block, entity-decoded and backslash-unescaped but not split on whitespace; '' for an indented block. |
+ | `MdDocument` | The CommonMark abstract syntax tree, per CommonMark 0.31.2. |
+-| `MdEmph` | Interface with 2 properties. |
++| `MdEmph` | Interface that declares the members children and type. |
+ | `MdFootnoteDefinition` | A GFM footnote definition: `label`, `index` (its number), `references` (how many citations) and its block `children`. Found on `MdDocument.footnotes`, never among the tree's blocks. |
+ | `MdFootnoteReference` | A GFM footnote citation, `[^label]`: the definition's `label`, its `index`, and `occurrence` (1 for the first citation of that definition, 2, 3…). |
+-| `MdHardBreak` | Interface with 1 property. |
++| `MdHardBreak` | Interface that declares the member type. |
+ | `MdHeading` | Level 1..6, identical for the ATX (`# x`) and setext (`x\n=`) spellings. |
+ | `MdHtmlBlock` | Raw HTML, verbatim. |
+-| `MdHtmlInline` | Interface with 2 properties. |
+-| `MdImage` | Interface with 4 properties. |
+-| `MdItem` | Interface with 3 properties. |
++| `MdHtmlInline` | Interface that declares the members literal and type. |
++| `MdImage` | Interface that declares the members children, destination, title and type. |
++| `MdItem` | Interface that declares the members checked, children and type. |
+ | `MdLink` | Inline and reference links are indistinguishable here: both carry a resolved destination and title, which is what gl6o.3 wants. |
+ | `MdList` | `tight` decides whether an item's paragraphs render as paragraphs (loose) or as bare content (tight). |
+-| `MdParagraph` | Interface with 2 properties. |
+-| `MdSoftBreak` | Interface with 1 property. |
++| `MdParagraph` | Interface that declares the members children and type. |
++| `MdSoftBreak` | Interface that declares the member type. |
+ | `MdStrikethrough` | GFM strikethrough. |
+-| `MdStrong` | Interface with 2 properties. |
++| `MdStrong` | Interface that declares the members children and type. |
+ | `MdTable` | `align` carries one entry per column, null where the delimiter row gave none — which is not the same as 'left', since a renderer may have its own default. |
+ | `MdTableCell` | Holds inlines, like a paragraph does. |
+-| `MdTableRow` | Interface with 3 properties. |
+-| `MdText` | Interface with 2 properties. |
+-| `MdThematicBreak` | Interface with 1 property. |
+-| `Metadata` | Interface with 9 properties. |
++| `MdTableRow` | Interface that declares the members children, header and type. |
++| `MdText` | Interface that declares the members type and value. |
++| `MdThematicBreak` | Interface that declares the member type. |
++| `Metadata` | Interface that declares members including author, creationDate, creator, custom, keywords and modDate. |
+ | `MetadataField` | One of the eight fields `/Info` and XMP share: `'title' \| 'author' \| 'subject' \| 'keywords' \| 'creator' \| 'producer' \| 'creationDate' \| 'modDate'`. |
+ | `MetadataSyncReport` | What `SyncMetadata` did: `changed` (fields written or deleted on the target) and `skipped` (source dates that did not read), both in field order. |
+-| `MetadataUpdate` | Interface with 9 properties. |
+-| `NUpOptions` | Interface with 5 properties. |
++| `MetadataUpdate` | Interface that declares members including author, creationDate, creator, custom, keywords and modDate. |
++| `NUpOptions` | Interface that declares the members drawBorder, gutter, margin, order and pageSize. |
+ | `ObjStmDamage` | What one /ObjStm container yielded, and what it cost. |
+-| `OcspResponse` | Interface with 7 properties. |
+-| `OcspSingleResponse` | Interface with 8 properties. |
++| `OcspResponse` | Interface that declares members including producedAt, responderCerts, responses, responseStatus, signature and signatureAlgorithm. |
++| `OcspSingleResponse` | Interface that declares members including hashAlg, issuerKeyHash, issuerNameHash, nextUpdate, revocationTime and serialNumber. |
+ | `OoxmlPart` | One part of an OPC package. |
+ | `OoxmlRelationship` | One entry of a `.rels` file. |
+ | `OpenOptions` | `password`, `recipient` and `limits` (a `LoadLimits`). |
+@@ -4223,29 +4220,27 @@
+ | `OperationProgress` | Phase-local completed counts, optional total, and one-based page number. |
+ | `OptimizeOptions` | Which concerns to run. |
+ | `OptimizeReport` | Per-concern savings and skips, including lossless `jbig2` results and the JPEG pass's `lossy` flag. |
+-| `OverlayOptions` | Interface with 5 properties. |
++| `OverlayOptions` | Interface that declares the members opacity, pages, rect, rotate and underlay. |
+ | `PageLabel` | A logical page-label range in the /Root /PageLabels number tree. |
+ | `PagePath` | Snapshot of a drawn or clipping path with geometry, paint state, and its `Addr` operator span. |
+ | `EditablePagePath` | A `PagePath` returned by `GetPaths()` that can edit its source draw with `Remove()`, `Recolor(options)`, and `Transform(matrix)`. |
+ | `PagePathAddr` | Inclusive path construction-to-paint span and enclosing Form draw addresses. |
+ | `PathRecolorOptions` | Fill and/or stroke as DeviceRGB components from 0 to 1. |
+ | `PathEvent` | A painted vector path, its subpaths flattened to page-space segments. |
+-| `PathPaint` | Interface with 2 properties. |
+-| `PathSubpath` | Interface with 2 properties. |
++| `PathPaint` | Interface that declares the members rgb and space. |
++| `PathSubpath` | Interface that declares the members closed and segments. |
+ | `Pdf417Options` | What `makePdf417` takes: `{ ecLevel, columns }`. |
+-| `PdfUaConvertOptions` | Interface with 3 properties. |
+-| `PdfXConvertOptions` | Interface with 9 properties. |
++| `PdfUaConvertOptions` | Interface that inherits from OperationControlOptions and declares the members lang, part, roleMap and title. |
++| `PdfXConvertOptions` | Interface that inherits from OperationControlOptions and declares the members convertColor, iccProfile, outputCondition, outputProfileRef, preserve and trapped. |
+ | `PemSigner` | Sign from a PEM private key plus its PEM/DER certificate chain (leaf first). |
+ | `Pkcs12Signer` | Sign from a PKCS#12 (`.pfx`/`.p12`) blob; the key and chain are extracted. |
+-| `PlaceContext` | Where an element is being placed. |
+ | `PlaceElementsOptions` | Options for placeElements. |
+ | `PlaceElementsResult` | Result of placeElements. |
+ | `PlaceOptions` | Options for PlaceOn. |
+-| `PlaceResult` | Outcome of place. |
+-| `PrunePolicy` | Interface with 1 method and 1 property. |
++| `PrunePolicy` | Interface that declares the method sanitizeAnnots and the member dropPageKeys. |
+ | `defaultPrunePolicy()` | The `PrunePolicy` `ExtractPages` and `Split` apply when given none |
+ | `PushButtonInit` | Options for Form.AddPushButton / Page.AddPushButton. |
+-| `QrOptions` | Interface with 2 properties. |
++| `QrOptions` | Interface that declares the members ecc and version. |
+ | `Quantized` | The result of quantizing an image. |
+ | `RadialGradient` | A radial gradient: the ramp runs from the focal point out to the circle (cx, cy, r). |
+ | `RadioGroupInit` | Options for Form.AddRadioGroup. |
+@@ -4256,7 +4251,7 @@
+ | `RegionHits` | Glyph and image events intersecting a set of regions. |
+ | `RemoveImageOptions` | Options for removeImage / `ImageInfo.Remove`. |
+ | `ReplaceImageOptions` | Options for replaceImage / `ImageInfo.Replace`. |
+-| `ResizeOptions` | Interface with 1 property. |
++| `ResizeOptions` | Interface that declares the member scaleContent. |
+ | `ResolvedFamily` | A family with all four faces filled. |
+ | `ResolvedPadding` | Padding with every side settled to a number. |
+ | `RevocationMaterial` | Raw revocation material for one certificate (DER bytes, as fetched). |
+@@ -4267,7 +4262,7 @@
+ | `ReplaceFontUndrawable` | A code `doc.ReplaceFont` kept in the old font: `page`, `code`, its `text`, and how many glyphs drew it. |
+ | `ReplaceTextOptions` | `ReplaceText` options: `region`, `ignoreCase`, `wholeWord`, `fallbackFonts`, `matchRegisteredFonts`, `onUndrawable`, the replacement's `font`, `fontSize` and `color`, `adjust`, `onUnreflowable`, and `hyphenate` (with `adjust: 'reflow'`). |
+ | `RestyleTextOptions` | `RestyleText` options: `region`, `ignoreCase`, `wholeWord`, `fallbackFonts`, `matchRegisteredFonts`, `onUndrawable`, `adjust`, `onUnreflowable` and `hyphenate` (with `adjust: 'reflow'`). |
+-| `RevocationResult` | Interface with 2 properties. |
++| `RevocationResult` | Interface that declares the members source and status. |
+ | `RowOptions` | `addRow` options: the row-level text style plus row-only geometry. |
+ | `PagesToImagesOptions` | How `Sanitize({ pagesToImages })` renders: `dpi` (default 150), `format` (`'flate'` or `'jpeg'`), `quality`. |
+ | `SanitizeOptions` | Which categories `Sanitize` removes; each defaults to `true` except the lossy `pagesToImages`. |
+@@ -4284,24 +4279,22 @@
+ | `SigAlg` | Signature algorithm passed to an external signer callback: the public-key scheme plus the message-digest algorithm to hash the data with. |
+ | `SignerLocation` | CAdES `signer-location` signed attribute (all fields optional). |
+ | `SignerOptions` | Options common to the credential-source signer variants. |
+-| `SkippedFont` | Interface with 2 properties. |
+-| `SkippedFrame` | Interface with 2 properties. |
++| `SkippedFont` | Interface that declares the members baseFont and reason. |
++| `SkippedFrame` | Interface that declares the members frame and reason. |
+ | `SkippedImage` | Interface with 3 properties. |
+-| `SplitOptions` | Interface with 2 properties. |
+-| `SvgOptions` | Interface with 2 properties. |
++| `SplitOptions` | Interface that declares the members preserveStructure and prunePolicy. |
++| `SvgOptions` | Interface that inherits from OperationControlOptions and declares the members annotations and box. |
+ | `SyncDirection` | `'infoToXmp' \| 'xmpToInfo'` — which side `SyncMetadata` treats as the source. |
+-| `TableAttributes` | Interface with 5 properties. |
+-| `TableCell` | Interface with 13 properties. |
++| `TableAttributes` | Interface that declares the members colSpan, headers, rowSpan, scope and summary. |
+ | `TableDefaults` | Table-level defaults; the cascade root, plus table-only fields. |
+ | `TableExtractOptions` | Interface with 2 properties. |
+ | `TableMetrics` | Measurement result for a table at given resolved column widths. |
+-| `TableRow` | Interface with 3 properties. |
+-| `TableStitchOptions` | Interface with 1 property. |
++| `TableStitchOptions` | Interface that declares the member stitch. |
+ | `TargetSpace` | The device space a conversion targets: `gray`, `rgb` or `cmyk`. |
+ | `TextBlock` | A paragraph-like cluster of consecutive lines, ordered top-to-bottom. |
+ | `TextFieldInit` | Options for Form.AddTextField / Page.AddTextField. |
+ | `TextFragment` | A positioned text run sharing one font, size, and baseline — the public unit of structured extraction (`Page.GetTextFragments`). |
+-| `TextLine` | Interface with 4 properties. |
++| `TextLine` | Interface that declares the members fragments, quad, styles and text. |
+ | `TextMatch` | A positioned text match. |
+ | `TextRestyle` | What `RestyleText` changes: `font`, `fontSize`, `color`, `underline`, `strikethrough` and `background`. |
+ | `TextRun` | One styled span of a rich text block; optional shaping and OpenType `features` override the block by tag. `rise` shifts its baseline (a superscript) without changing the line height. |
+@@ -4309,7 +4302,7 @@
+ | `TilingPatternOptions` | Placement and repetition for a tiling pattern. |
+ | `TimestampInfo` | Verdict on a signature timestamp: the asserted time plus whether the token binds to the signature (imprint) and whether the TSA's signature is valid. |
+ | `TrailerChoice` | What trailer synthesis chose. |
+-| `TstInfo` | Interface with 6 properties. |
++| `TstInfo` | Interface that declares the members genTime, hashAlg, imprint, nonce, policy and serialNumber. |
+ | `UncoloredTilingPattern` | A tiling pattern whose colour is supplied at use time. |
+ | `UndrawableText` | A match `ReplaceText` could not fully draw: `page` (1-based), `match`, and the `missing` characters. |
+ | `UnembeddedFont` | A Standard-14 font whose embedded program `Optimize({ unembedStandard14 })` removed, with the bytes that freed. |
+@@ -4371,7 +4364,6 @@
+ | `encodeG4` | Encode packed 1-bpp rows as CCITT Group 4. @param bits `ceil(columns/8) * rows` bytes, MSB-first, 1 = black @param columns pixels per row @param rows row count |
+ | `encodeFilter` | Encode bytes into one of the PDF byte filters. |
+ | `quantize` | Reduce an RGBA image to a 256-colour palette, exactly when it already has 256 or fewer. |
+-| `STANDARD_STRUCTURE_TYPES` | The PDF 1.7 standard structure types (grouping, block-level, inline-level, and illustration). |
+ | `LIMIT_FIELDS` | The nineteen `LoadLimits` field names, in boundary order. |
+ | `XfaConvertOptions` | Options for `doc.ConvertXfaToAcroForm`: `removeXfa` (default true). |
+ | `XfaConvertReport` | What an XFA conversion produced and what it refused. |
+@@ -4414,7 +4406,7 @@
+ | `StampPosition` | Where a stamp anchors in the page's visual frame. |
+ | `TextAnnotation` | A /Text (sticky-note) annotation: an icon-and-popup markup with no appearance stream. |
+ | `TrimMarkAnnotation(page, corner)` | Attach one trim mark aligned to the requested finished-page corner. |
+-| `AnnotData` | Interface with 4 properties. |
++| `AnnotData` | Interface that declares the members anonymousPopup, dict, inReplyTo, page and popupName. |
+ | `AnnotationMatch` | A match in the text one annotation's appearance stream draws. |
+ | `AnnotationTextMatch` | A match in the text an annotation CARRIES, rather than the text it draws. |
+ | `CaretOptions` | Options for Page.AddCaret. |
+@@ -4426,16 +4418,16 @@
+ | `SkippedAnnot` | An annotation that was present in the data file but not applied. |
+ | `StampAnnotationOptions` | Options for Page.AddStamp. |
+ | `StampOptions` | Options for stamping text onto a page. |
+-| `StampWithOptions` | Interface with 4 properties. |
++| `StampWithOptions` | Interface that declares the members mode, opacity, rect and rotate. |
+ | `TextBlockOptions` | Options for flowing wrapped text into a rectangle. |
+ | `HyphenationOptions` | Opt-in hyphenation: `lang`, `mode` (`'auto'` or `'manual'`), `minLeft`, `minRight`, `minWord`. |
+ | `TabStop` | One tab stop: `position` (points from the left text edge, before any indent), `align`, `leader`, `decimalChar`. Taken by `tabStops` on `TextBlockOptions`, `FlowParagraphOptions`, `FlowListOptions`, `FlowListItem` and `FlowOptions`, beside `defaultTabInterval`. |
+ | `TabAlign` | A tab stop's alignment: `'left'`, `'right'`, `'center'` or `'decimal'`. |
+ | `TabLeader` | What fills a tab's gap: `'none'`, `'dot'`, `'middleDot'`, `'hyphen'`, `'underscore'` or `'line'`. |
+ | `TextNoteOptions` | Options for Page.AddTextNote. |
+-| `TimeStampRequestInfo` | Interface with 3 properties. |
+-| `TimeStampRequestOptions` | Interface with 3 properties. |
+-| `TimeStampTokenOptions` | Interface with 3 properties. |
++| `TimeStampRequestInfo` | Interface that declares the members hashAlg, imprint and nonce. |
++| `TimeStampRequestOptions` | Interface that declares the members certReq, nonce and reqPolicy. |
++| `TimeStampTokenOptions` | Interface that declares the members genTime, policy and serialNumber. |
+ 
+ ### Attachments
+ 
+@@ -4459,7 +4451,7 @@
+ | `DocxOptions` | Options for ToDocx and ToDocx. |
+ | `EpubOptions` | Options for ToEpub. |
+ | `ImageMode` | What `ImageOptions.mode` accepts. |
+-| `ImageOptions` | Interface with 11 properties. |
++| `ImageOptions` | Interface that inherits from OperationControlOptions and declares members including annotations, background, box, compression, format and height. |
+ | `MarkdownAsset` | One image file an external-image export expects to be written. |
+ | `MarkdownElements` | What markdownElements produced. |
+ | `MarkdownExportOptions` | Options for ToMarkdown and ToMarkdown. |
+@@ -4469,7 +4461,7 @@
+ | `MarkdownOptions` | Options for `parseMarkdown`. |
+ | `MarkdownResult` | What a Markdown entry point reports. |
+ | `MarkdownStyle` | How Markdown renders. |
+-| `TiffEncodeOptions` | Interface with 1 property. |
++| `TiffEncodeOptions` | Interface that declares the member compression. |
+ | `TiffExportOptions` | Options for renderDocumentToTiff. |
+ | `ThumbnailOptions` | Required positive safe-integer `maxSize` in pixels, plus `ImageOptions` except `scale`, `width` and `height`. |
+ | `TiffFrame` | One page of a TIFF. |
+@@ -4503,15 +4495,15 @@
+ | `SignatureScheme` | Class in the PDF TypeScript API. |
+ | `CertifyOptions` | Options for Certify: a SignOptions plus the DocMDP permitted-changes level (default `no-changes`). |
+ | `DocumentTimestampOptions` | Options for AddDocumentTimestamp. |
+-| `EncryptOptions` | Interface with 5 properties. |
+-| `Permissions` | Interface with 8 properties. |
+-| `PubSecEncryptOptions` | Interface with 6 properties. |
+-| `PubSecRecipientCert` | Interface with 2 properties. |
+-| `SignOptions` | Interface with 12 properties. |
++| `EncryptOptions` | Interface that declares the members algorithm, encryptMetadata, ownerPassword, permissions and userPassword. |
++| `Permissions` | Interface that declares members including accessibility, annotating, assembling, copying, fillingForms and highQualityPrinting. |
++| `PubSecEncryptOptions` | Interface that declares the members algorithm, encryptMetadata, keyWrap, oaepHash, permissions and recipients. |
++| `PubSecRecipientCert` | Interface that declares the members certificate and permissions. |
++| `SignOptions` | Interface that declares members including appearance, cades, contactInfo, fieldName, location and name. |
+ | `SignatureAppearance` | A visible signature appearance request. |
+ | `SignatureField` | Read-side view of a signature field (always available, like `doc.Form`). |
+ | `SignatureFieldInit` | Options for Form.AddSignatureField / Page.AddSignatureField, including an optional `seedValue`. |
+-| `SignatureReport` | Interface with 13 properties. |
++| `SignatureReport` | Interface that declares members including chain, commitmentType, coversWholeFile, docMDP, fieldMDP and integrity. |
+ | `checkRevocation` | Determine the revocation status of `cert` (issued by `issuer`) from the given material, preferring a signature-verified OCSP response, then a verified CRL. |
+ | `crlStatus` | Whether `cert`'s serial appears in the CRL's revoked list. |
+ | `ocspStatus` | The OCSP status for `cert` (issued by `issuer`): match a SingleResponse by CertID (issuer name/key hash + serial), or `unknown` when none matches. |
+@@ -4926,7 +4918,6 @@
+ | `htmlElements` | Lower an HTML document to flow elements — the one implementation the three `AddHtml` entry points share. |
+ | `HtmlNamespace` | The three namespaces tree construction can produce. |
+ | `NotRendered` | One thing a document asked for that did not render as specified. |
+-| `describeNotRendered(r)` | One `NotRendered` as the flat string a logger wants — `construct` or `construct:detail` |
+ | `Construct` | Every construct this stack can report. |
+ | `ElementPolicy` | What happens to an element's children, and how the element is reported. |
+ | `CONSTRUCTS` | Every construct name a `NotRendered` record can carry. |

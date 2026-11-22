@@ -1,0 +1,4244 @@
+{
+  "confinement": {
+    "edits": 89,
+    "statement": "the corrected text with every edit's span removed equals the original with the same spans removed",
+    "verified": true
+  },
+  "corrected_sha256": "2361becca68e5a3e706dcabb1d5dadb85757ca3d4296af8ccbd1282894e71043",
+  "edits": [
+    {
+      "detector": "glance_layout",
+      "end": 2722,
+      "evidence": [
+        {
+          "fact_id": null,
+          "kind": "readme_structure",
+          "status": "README_TEXT",
+          "value": "README.md:31"
+        }
+      ],
+      "index": 0,
+      "kind": "DIAGRAM_FIX",
+      "line": 32,
+      "original": "flowchart TD\n  subgraph StartingPoints[\"Starting Points\"]\n    direction LR\n    i1[\"An existing PDF file\"]\n    i2[\"An HTML document\"]\n    i3[\"Markdown text (CommonMark/GFM)\"]\n  end\n  PRODUCT[\"Aspose.PDF FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction LR\n    subgraph capl[\" \"]\n      direction TB\n      c1[\"Parse and repair PDF documents\"]\n      c2[\"Edit pages, metadata and content streams\"]\n      c3[\"Author text, vector graphics and images\"]\n      c4[\"Build tables, flow layouts and multi-page documents\"]\n      c5[\"Create, fill and flatten AcroForm fields\"]\n    end\n    subgraph capr[\" \"]\n      direction TB\n      c6[\"Manage annotations, outlines, layers and attachments\"]\n      c7[\"Encrypt, sign and validate PDF/A, PDF/X and PDF/UA\"]\n      c8[\"Extract and search text, tables and vector paths\"]\n      c9[\"Render and export to images, HTML, Markdown, DOCX and EPUB\"]\n    end\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A PDF file\"]\n    o2[\"SVG, PNG, JPEG, TIFF, BMP or GIF images\"]\n    o3[\"HTML, Markdown, DOCX or EPUB documents\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n",
+      "rationale": "the At a Glance diagram draws about 1944 px wide (budget 800 px): its groups laid out top to bottom, at most three nodes to a row, labels wrapped -- about 676 px; every label, group title and the chain unchanged",
+      "replacement": "flowchart TB\n  subgraph StartingPoints[\"Starting Points\"]\n    direction TB\n    i1[\"An existing PDF file\"]\n    i2[\"An HTML document\"]\n    i3[\"Markdown text<br/>(CommonMark/GFM)\"]\n  end\n  PRODUCT[\"Aspose.PDF FOSS for TypeScript\"]\n  subgraph Capabilities[\"Core Capabilities\"]\n    direction TB\n    c1[\"Parse and repair PDF<br/>documents\"]\n    c2[\"Edit pages, metadata<br/>and content streams\"]\n    c3[\"Author text, vector<br/>graphics and images\"]\n    c4[\"Build tables, flow<br/>layouts and multi-page<br/>documents\"]\n    c5[\"Create, fill and<br/>flatten AcroForm<br/>fields\"]\n    c6[\"Manage annotations,<br/>outlines, layers and<br/>attachments\"]\n    c7[\"Encrypt, sign and<br/>validate PDF/A, PDF/X<br/>and PDF/UA\"]\n    c8[\"Extract and search<br/>text, tables and<br/>vector paths\"]\n    c9[\"Render and export to<br/>images, HTML,<br/>Markdown, DOCX and<br/>EPUB\"]\n    c1 ~~~ c4\n    c2 ~~~ c5\n    c3 ~~~ c6\n    c4 ~~~ c7\n    c5 ~~~ c8\n    c6 ~~~ c9\n  end\n  subgraph Outputs[\"Outputs\"]\n    direction TB\n    o1[\"A PDF file\"]\n    o2[\"SVG, PNG, JPEG, TIFF,<br/>BMP or GIF images\"]\n    o3[\"HTML, Markdown, DOCX<br/>or EPUB documents\"]\n  end\n  StartingPoints --> PRODUCT --> Capabilities --> Outputs\n  classDef product fill:#1f6feb,stroke:#1f6feb,color:#ffffff\n  class PRODUCT product\n",
+      "start": 1574
+    },
+    {
+      "detector": "stale_type_count",
+      "end": 339501,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 1,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 3892,
+      "original": "516",
+      "rationale": "line 3892 states '516 public types'; the facts record 535 public types (535 classes), so a count of 516 is refuted and is replaced by the computed 535",
+      "replacement": "535",
+      "start": 339498
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 344019,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 2,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 3963,
+      "original": "| `CommitmentType` | Standard CAdES commitment-type identifiers, or a custom dotted OID string. |\n",
+      "rationale": "line 3963 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 343921
+    },
+    {
+      "detector": "type_description",
+      "end": 346320,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:invalidpassworderror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "InvalidPasswordError"
+        },
+        {
+          "fact_id": "public_symbol:invalidpassworderror.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "InvalidPasswordError.constructor"
+        }
+      ],
+      "index": 3,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 3987,
+      "original": "Class with 1 method.",
+      "rationale": "line 3987: the count only cell 'Class with 1 method.' does not describe InvalidPasswordError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from Error and declares a public constructor.",
+      "start": 346300
+    },
+    {
+      "detector": "type_description",
+      "end": 347836,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pathsegment",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSegment"
+        },
+        {
+          "fact_id": "public_symbol:pathsegment.c1",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSegment.c1"
+        },
+        {
+          "fact_id": "public_symbol:pathsegment.c2",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSegment.c2"
+        },
+        {
+          "fact_id": "public_symbol:pathsegment.op",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSegment.op"
+        },
+        {
+          "fact_id": "public_symbol:pathsegment.pt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSegment.pt"
+        }
+      ],
+      "index": 4,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4004,
+      "original": "Class with 8 properties.",
+      "rationale": "line 4004: the count only cell 'Class with 8 properties.' does not describe PathSegment and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the members c1, c2, op and pt.",
+      "start": 347812
+    },
+    {
+      "detector": "type_description",
+      "end": 348021,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pdfparseerror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfParseError"
+        },
+        {
+          "fact_id": "public_symbol:pdfparseerror.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfParseError.constructor"
+        }
+      ],
+      "index": 5,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4007,
+      "original": "Class with 1 method.",
+      "rationale": "line 4007: the count only cell 'Class with 1 method.' does not describe PdfParseError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from Error and declares a public constructor.",
+      "start": 348001
+    },
+    {
+      "detector": "type_description",
+      "end": 348200,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pubsecrecipient",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipient"
+        },
+        {
+          "fact_id": "public_symbol:pubsecrecipient.certificate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipient.certificate"
+        },
+        {
+          "fact_id": "public_symbol:pubsecrecipient.passphrase",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipient.passphrase"
+        },
+        {
+          "fact_id": "public_symbol:pubsecrecipient.pkcs12",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipient.pkcs12"
+        },
+        {
+          "fact_id": "public_symbol:pubsecrecipient.privatekey",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipient.privateKey"
+        }
+      ],
+      "index": 6,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4010,
+      "original": "Class with 4 properties.",
+      "rationale": "line 4010: the count only cell 'Class with 4 properties.' does not describe PubSecRecipient and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares the members certificate, passphrase, pkcs12 and privateKey.",
+      "start": 348176
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 349436,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 7,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4022,
+      "original": "| `Severity` | Class in the PDF TypeScript API. |\n",
+      "rationale": "line 4022 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 349386
+    },
+    {
+      "detector": "type_description",
+      "end": 351669,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:textfont",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont"
+        },
+        {
+          "fact_id": "public_symbol:textfont.bold",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.bold"
+        },
+        {
+          "fact_id": "public_symbol:textfont.canencode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.canEncode"
+        },
+        {
+          "fact_id": "public_symbol:textfont.codewidth",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.codeWidth"
+        },
+        {
+          "fact_id": "public_symbol:textfont.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.constructor"
+        },
+        {
+          "fact_id": "public_symbol:textfont.decode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.decode"
+        },
+        {
+          "fact_id": "public_symbol:textfont.decodeglyphs",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.decodeGlyphs"
+        },
+        {
+          "fact_id": "public_symbol:textfont.decoderun",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.decodeRun"
+        },
+        {
+          "fact_id": "public_symbol:textfont.dict",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.dict"
+        },
+        {
+          "fact_id": "public_symbol:textfont.dictwidth",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.dictWidth"
+        },
+        {
+          "fact_id": "public_symbol:textfont.drawcode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.drawCode"
+        },
+        {
+          "fact_id": "public_symbol:textfont.encode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.encode"
+        },
+        {
+          "fact_id": "public_symbol:textfont.encodechar",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextFont.encodeChar"
+        }
+      ],
+      "index": 8,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4040,
+      "original": "Class with 6 methods and 10 properties.",
+      "rationale": "line 4040: the count only cell 'Class with 6 methods and 10 properties.' does not describe TextFont and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that declares methods including decode, decodeGlyphs, decodeRun, dictWidth, drawCode and encode and members including bold, canEncode, codeWidth, dict, italic and name.",
+      "start": 351630
+    },
+    {
+      "detector": "type_description",
+      "end": 352110,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:unsupportedfeatureerror",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "UnsupportedFeatureError"
+        },
+        {
+          "fact_id": "public_symbol:unsupportedfeatureerror.constructor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "UnsupportedFeatureError.constructor"
+        }
+      ],
+      "index": 9,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4044,
+      "original": "Class with 1 method.",
+      "rationale": "line 4044: the count only cell 'Class with 1 method.' does not describe UnsupportedFeatureError and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Class that inherits from Error and declares a public constructor.",
+      "start": 352090
+    },
+    {
+      "detector": "type_description",
+      "end": 352578,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.text",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.text"
+        }
+      ],
+      "index": 10,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4049,
+      "original": "Interface with 8 properties.",
+      "rationale": "line 4049: the count only cell 'Interface with 8 properties.' does not describe AddBarcodeOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including alt, artifact, color, layer, quietZone and render.",
+      "start": 352550
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 353100,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 11,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4054,
+      "original": "| `makeQr(data, opts?)` | A QR model: `ecc` defaults to `'M'`, and the smallest fitting version is chosen unless `version` forces one |\n",
+      "rationale": "line 4054 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 352964
+    },
+    {
+      "detector": "type_description",
+      "end": 353534,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addimageoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImageOptions"
+        },
+        {
+          "fact_id": "public_symbol:addimageoptions.format",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImageOptions.format"
+        },
+        {
+          "fact_id": "public_symbol:addimageoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImageOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addimageoptions.opacity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImageOptions.opacity"
+        },
+        {
+          "fact_id": "public_symbol:addimageoptions.page",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImageOptions.page"
+        },
+        {
+          "fact_id": "public_symbol:addimageoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImageOptions.tag"
+        }
+      ],
+      "index": 12,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4057,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4057: the count only cell 'Interface with 5 properties.' does not describe AddImageOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members format, layer, opacity, page and tag.",
+      "start": 353506
+    },
+    {
+      "detector": "type_description",
+      "end": 353592,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addimagepagesoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesOptions"
+        },
+        {
+          "fact_id": "public_symbol:addimagepagesoptions.dpi",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesOptions.dpi"
+        },
+        {
+          "fact_id": "public_symbol:addimagepagesoptions.format",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesOptions.format"
+        },
+        {
+          "fact_id": "public_symbol:addimagepagesoptions.frames",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesOptions.frames"
+        }
+      ],
+      "index": 13,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4058,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4058: the count only cell 'Interface with 3 properties.' does not describe AddImagePagesOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that inherits from OperationControlOptions and declares the members dpi, format and frames.",
+      "start": 353564
+    },
+    {
+      "detector": "type_description",
+      "end": 353649,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addimagepagesresult",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesResult"
+        },
+        {
+          "fact_id": "public_symbol:addimagepagesresult.pages",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesResult.pages"
+        },
+        {
+          "fact_id": "public_symbol:addimagepagesresult.skipped",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddImagePagesResult.skipped"
+        }
+      ],
+      "index": 14,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4059,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4059: the count only cell 'Interface with 2 properties.' does not describe AddImagePagesResult and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members pages and skipped.",
+      "start": 353621
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 354830,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 15,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4073,
+      "original": "| `BorderEdges` | The four edge flags, resolved from a BorderSides. |\n",
+      "rationale": "line 4073 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 354760
+    },
+    {
+      "detector": "type_description",
+      "end": 355698,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:chainoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainOptions"
+        },
+        {
+          "fact_id": "public_symbol:chainoptions.at",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainOptions.at"
+        },
+        {
+          "fact_id": "public_symbol:chainoptions.trustanchors",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainOptions.trustAnchors"
+        }
+      ],
+      "index": 16,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4080,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4080: the count only cell 'Interface with 2 properties.' does not describe ChainOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members at and trustAnchors.",
+      "start": 355670
+    },
+    {
+      "detector": "type_description",
+      "end": 355747,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:chainresult",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainResult"
+        },
+        {
+          "fact_id": "public_symbol:chainresult.path",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainResult.path"
+        },
+        {
+          "fact_id": "public_symbol:chainresult.reason",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainResult.reason"
+        },
+        {
+          "fact_id": "public_symbol:chainresult.status",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ChainResult.status"
+        }
+      ],
+      "index": 17,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4081,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4081: the count only cell 'Interface with 3 properties.' does not describe ChainResult and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members path, reason and status.",
+      "start": 355719
+    },
+    {
+      "detector": "type_description",
+      "end": 356261,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:collectionfielddef",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef"
+        },
+        {
+          "fact_id": "public_symbol:collectionfielddef.displayname",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef.displayName"
+        },
+        {
+          "fact_id": "public_symbol:collectionfielddef.editable",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef.editable"
+        },
+        {
+          "fact_id": "public_symbol:collectionfielddef.name",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef.name"
+        },
+        {
+          "fact_id": "public_symbol:collectionfielddef.order",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef.order"
+        },
+        {
+          "fact_id": "public_symbol:collectionfielddef.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef.type"
+        },
+        {
+          "fact_id": "public_symbol:collectionfielddef.visible",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionFieldDef.visible"
+        }
+      ],
+      "index": 18,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4087,
+      "original": "Interface with 6 properties.",
+      "rationale": "line 4087: the count only cell 'Interface with 6 properties.' does not describe CollectionFieldDef and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members displayName, editable, name, order, type and visible.",
+      "start": 356233
+    },
+    {
+      "detector": "type_description",
+      "end": 356317,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:collectionsettings",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionSettings"
+        },
+        {
+          "fact_id": "public_symbol:collectionsettings.fields",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionSettings.fields"
+        },
+        {
+          "fact_id": "public_symbol:collectionsettings.initialfile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionSettings.initialFile"
+        },
+        {
+          "fact_id": "public_symbol:collectionsettings.sortascending",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionSettings.sortAscending"
+        },
+        {
+          "fact_id": "public_symbol:collectionsettings.sortby",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionSettings.sortBy"
+        },
+        {
+          "fact_id": "public_symbol:collectionsettings.view",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CollectionSettings.view"
+        }
+      ],
+      "index": 19,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4088,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4088: the count only cell 'Interface with 5 properties.' does not describe CollectionSettings and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members fields, initialFile, sortAscending, sortBy and view.",
+      "start": 356289
+    },
+    {
+      "detector": "type_description",
+      "end": 356885,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:contentop",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentOp"
+        },
+        {
+          "fact_id": "public_symbol:contentop.inlineimage",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentOp.inlineImage"
+        },
+        {
+          "fact_id": "public_symbol:contentop.operands",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentOp.operands"
+        },
+        {
+          "fact_id": "public_symbol:contentop.operator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentOp.operator"
+        }
+      ],
+      "index": 20,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4096,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4096: the count only cell 'Interface with 5 properties.' does not describe ContentOp and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members inlineImage, operands and operator.",
+      "start": 356857
+    },
+    {
+      "detector": "type_description",
+      "end": 356934,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:contentvisitor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentVisitor"
+        },
+        {
+          "fact_id": "public_symbol:contentvisitor.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentVisitor.artifact"
+        },
+        {
+          "fact_id": "public_symbol:contentvisitor.glyph",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentVisitor.glyph"
+        },
+        {
+          "fact_id": "public_symbol:contentvisitor.image",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentVisitor.image"
+        },
+        {
+          "fact_id": "public_symbol:contentvisitor.marked",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentVisitor.marked"
+        },
+        {
+          "fact_id": "public_symbol:contentvisitor.path",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ContentVisitor.path"
+        }
+      ],
+      "index": 21,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4097,
+      "original": "Interface with 3 methods.",
+      "rationale": "line 4097: the count only cell 'Interface with 3 methods.' does not describe ContentVisitor and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the methods artifact, glyph, image, marked and path.",
+      "start": 356909
+    },
+    {
+      "detector": "type_description",
+      "end": 357195,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:crl",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl"
+        },
+        {
+          "fact_id": "public_symbol:crl.issuer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.issuer"
+        },
+        {
+          "fact_id": "public_symbol:crl.nextupdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.nextUpdate"
+        },
+        {
+          "fact_id": "public_symbol:crl.revoked",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.revoked"
+        },
+        {
+          "fact_id": "public_symbol:crl.signature",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.signature"
+        },
+        {
+          "fact_id": "public_symbol:crl.signaturealgorithm",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.signatureAlgorithm"
+        },
+        {
+          "fact_id": "public_symbol:crl.tbscertlist",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.tbsCertList"
+        },
+        {
+          "fact_id": "public_symbol:crl.thisupdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Crl.thisUpdate"
+        }
+      ],
+      "index": 22,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4100,
+      "original": "Interface with 7 properties.",
+      "rationale": "line 4100: the count only cell 'Interface with 7 properties.' does not describe Crl and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including issuer, nextUpdate, revoked, signature, signatureAlgorithm and tbsCertList.",
+      "start": 357167
+    },
+    {
+      "detector": "type_description",
+      "end": 357241,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:crlentry",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CrlEntry"
+        },
+        {
+          "fact_id": "public_symbol:crlentry.revocationdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CrlEntry.revocationDate"
+        },
+        {
+          "fact_id": "public_symbol:crlentry.serialnumber",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "CrlEntry.serialNumber"
+        }
+      ],
+      "index": 23,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4101,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4101: the count only cell 'Interface with 2 properties.' does not describe CrlEntry and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members revocationDate and serialNumber.",
+      "start": 357213
+    },
+    {
+      "detector": "type_description",
+      "end": 359011,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:exportformdataoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ExportFormDataOptions"
+        },
+        {
+          "fact_id": "public_symbol:exportformdataoptions.annotations",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ExportFormDataOptions.annotations"
+        },
+        {
+          "fact_id": "public_symbol:exportformdataoptions.file",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ExportFormDataOptions.file"
+        },
+        {
+          "fact_id": "public_symbol:exportformdataoptions.includeempty",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ExportFormDataOptions.includeEmpty"
+        }
+      ],
+      "index": 24,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4116,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4116: the count only cell 'Interface with 3 properties.' does not describe ExportFormDataOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members annotations, file and includeEmpty.",
+      "start": 358983
+    },
+    {
+      "detector": "type_description",
+      "end": 359328,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:extractpagesoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ExtractPagesOptions"
+        },
+        {
+          "fact_id": "public_symbol:extractpagesoptions.preservestructure",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ExtractPagesOptions.preserveStructure"
+        }
+      ],
+      "index": 25,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4120,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4120: the count only cell 'Interface with 1 property.' does not describe ExtractPagesOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member preserveStructure.",
+      "start": 359302
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 361207,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 26,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4139,
+      "original": "| `FlowNote` | A footnote or endnote: `content` (text, runs, or flow elements) and an optional explicit `mark`. |\n",
+      "rationale": "line 4139 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 361093
+    },
+    {
+      "detector": "type_description",
+      "end": 362482,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:fontoptimization",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FontOptimization"
+        },
+        {
+          "fact_id": "public_symbol:fontoptimization.basefont",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FontOptimization.baseFont"
+        },
+        {
+          "fact_id": "public_symbol:fontoptimization.bytessaved",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FontOptimization.bytesSaved"
+        },
+        {
+          "fact_id": "public_symbol:fontoptimization.gidsdropped",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FontOptimization.gidsDropped"
+        },
+        {
+          "fact_id": "public_symbol:fontoptimization.gidskept",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FontOptimization.gidsKept"
+        }
+      ],
+      "index": 27,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4152,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 4152: the count only cell 'Interface with 4 properties.' does not describe FontOptimization and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members baseFont, bytesSaved, gidsDropped and gidsKept.",
+      "start": 362454
+    },
+    {
+      "detector": "type_description",
+      "end": 363141,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:formdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData"
+        },
+        {
+          "fact_id": "public_symbol:formdata.annots",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData.annots"
+        },
+        {
+          "fact_id": "public_symbol:formdata.annotskips",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData.annotSkips"
+        },
+        {
+          "fact_id": "public_symbol:formdata.fields",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData.fields"
+        },
+        {
+          "fact_id": "public_symbol:formdata.file",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData.file"
+        },
+        {
+          "fact_id": "public_symbol:formdata.id",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData.id"
+        },
+        {
+          "fact_id": "public_symbol:formdata.radioexports",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "FormData.radioExports"
+        }
+      ],
+      "index": 28,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4157,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4157: the count only cell 'Interface with 5 properties.' does not describe FormData and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members annots, annotSkips, fields, file, id and radioExports.",
+      "start": 363113
+    },
+    {
+      "detector": "type_description",
+      "end": 363248,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:g4encodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "G4EncodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:g4encodeoptions.eofb",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "G4EncodeOptions.eofb"
+        }
+      ],
+      "index": 29,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4159,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4159: the count only cell 'Interface with 1 property.' does not describe G4EncodeOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member eofb.",
+      "start": 363222
+    },
+    {
+      "detector": "type_description",
+      "end": 364117,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:importreport",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport"
+        },
+        {
+          "fact_id": "public_symbol:importreport.imported",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport.imported"
+        },
+        {
+          "fact_id": "public_symbol:importreport.importedannots",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport.importedAnnots"
+        },
+        {
+          "fact_id": "public_symbol:importreport.skipped",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport.skipped"
+        },
+        {
+          "fact_id": "public_symbol:importreport.skippedannots",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport.skippedAnnots"
+        },
+        {
+          "fact_id": "public_symbol:importreport.sourcefile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport.sourceFile"
+        },
+        {
+          "fact_id": "public_symbol:importreport.sourceid",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImportReport.sourceId"
+        }
+      ],
+      "index": 30,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4170,
+      "original": "Interface with 8 properties.",
+      "rationale": "line 4170: the count only cell 'Interface with 8 properties.' does not describe ImportReport and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members imported, importedAnnots, skipped, skippedAnnots, sourceFile and sourceId.",
+      "start": 364089
+    },
+    {
+      "detector": "type_description",
+      "end": 364171,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:insertpagesoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "InsertPagesOptions"
+        },
+        {
+          "fact_id": "public_symbol:insertpagesoptions.preservestructure",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "InsertPagesOptions.preserveStructure"
+        }
+      ],
+      "index": 31,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4171,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4171: the count only cell 'Interface with 1 property.' does not describe InsertPagesOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member preserveStructure.",
+      "start": 364145
+    },
+    {
+      "detector": "type_description",
+      "end": 364575,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:layoutattributes",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.backgroundcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.backgroundColor"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.baselineshift",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.baselineShift"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.bbox",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.bbox"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.blockalign",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.blockAlign"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.bordercolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.borderColor"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.borderstyle",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.borderStyle"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.borderthickness",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.borderThickness"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.color"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.columncount",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.columnCount"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.columngap",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.columnGap"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.columnwidths",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.columnWidths"
+        },
+        {
+          "fact_id": "public_symbol:layoutattributes.endindent",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LayoutAttributes.endIndent"
+        }
+      ],
+      "index": 32,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4175,
+      "original": "Interface with 32 properties.",
+      "rationale": "line 4175: the count only cell 'Interface with 32 properties.' does not describe LayoutAttributes and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including backgroundColor, baselineShift, bbox, blockAlign, borderColor and borderStyle.",
+      "start": 364546
+    },
+    {
+      "detector": "type_description",
+      "end": 365002,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:linearizationcheck",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LinearizationCheck"
+        },
+        {
+          "fact_id": "public_symbol:linearizationcheck.errors",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LinearizationCheck.errors"
+        },
+        {
+          "fact_id": "public_symbol:linearizationcheck.linearized",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "LinearizationCheck.linearized"
+        }
+      ],
+      "index": 33,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4179,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4179: the count only cell 'Interface with 2 properties.' does not describe LinearizationCheck and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members errors and linearized.",
+      "start": 364974
+    },
+    {
+      "detector": "type_description",
+      "end": 365052,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:listattributes",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ListAttributes"
+        },
+        {
+          "fact_id": "public_symbol:listattributes.listnumbering",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ListAttributes.listNumbering"
+        }
+      ],
+      "index": 34,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4180,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4180: the count only cell 'Interface with 1 property.' does not describe ListAttributes and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member listNumbering.",
+      "start": 365026
+    },
+    {
+      "detector": "type_description",
+      "end": 365617,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdblockquote",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdBlockQuote"
+        },
+        {
+          "fact_id": "public_symbol:mdblockquote.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdBlockQuote.children"
+        },
+        {
+          "fact_id": "public_symbol:mdblockquote.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdBlockQuote.type"
+        }
+      ],
+      "index": 35,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4186,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4186: the count only cell 'Interface with 2 properties.' does not describe MdBlockQuote and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members children and type.",
+      "start": 365589
+    },
+    {
+      "detector": "type_description",
+      "end": 365661,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdcode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdCode"
+        },
+        {
+          "fact_id": "public_symbol:mdcode.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdCode.type"
+        },
+        {
+          "fact_id": "public_symbol:mdcode.value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdCode.value"
+        }
+      ],
+      "index": 36,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4187,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4187: the count only cell 'Interface with 2 properties.' does not describe MdCode and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members type and value.",
+      "start": 365633
+    },
+    {
+      "detector": "type_description",
+      "end": 365947,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdemph",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdEmph"
+        },
+        {
+          "fact_id": "public_symbol:mdemph.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdEmph.children"
+        },
+        {
+          "fact_id": "public_symbol:mdemph.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdEmph.type"
+        }
+      ],
+      "index": 37,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4190,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4190: the count only cell 'Interface with 2 properties.' does not describe MdEmph and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members children and type.",
+      "start": 365919
+    },
+    {
+      "detector": "type_description",
+      "end": 366380,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdhardbreak",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdHardBreak"
+        },
+        {
+          "fact_id": "public_symbol:mdhardbreak.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdHardBreak.type"
+        }
+      ],
+      "index": 38,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4193,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4193: the count only cell 'Interface with 1 property.' does not describe MdHardBreak and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member type.",
+      "start": 366354
+    },
+    {
+      "detector": "type_description",
+      "end": 366561,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdhtmlinline",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdHtmlInline"
+        },
+        {
+          "fact_id": "public_symbol:mdhtmlinline.literal",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdHtmlInline.literal"
+        },
+        {
+          "fact_id": "public_symbol:mdhtmlinline.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdHtmlInline.type"
+        }
+      ],
+      "index": 39,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4196,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4196: the count only cell 'Interface with 2 properties.' does not describe MdHtmlInline and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members literal and type.",
+      "start": 366533
+    },
+    {
+      "detector": "type_description",
+      "end": 366606,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdimage",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdImage"
+        },
+        {
+          "fact_id": "public_symbol:mdimage.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdImage.children"
+        },
+        {
+          "fact_id": "public_symbol:mdimage.destination",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdImage.destination"
+        },
+        {
+          "fact_id": "public_symbol:mdimage.title",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdImage.title"
+        },
+        {
+          "fact_id": "public_symbol:mdimage.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdImage.type"
+        }
+      ],
+      "index": 40,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4197,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 4197: the count only cell 'Interface with 4 properties.' does not describe MdImage and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members children, destination, title and type.",
+      "start": 366578
+    },
+    {
+      "detector": "type_description",
+      "end": 366650,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mditem",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdItem"
+        },
+        {
+          "fact_id": "public_symbol:mditem.checked",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdItem.checked"
+        },
+        {
+          "fact_id": "public_symbol:mditem.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdItem.children"
+        },
+        {
+          "fact_id": "public_symbol:mditem.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdItem.type"
+        }
+      ],
+      "index": 41,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4198,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4198: the count only cell 'Interface with 3 properties.' does not describe MdItem and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members checked, children and type.",
+      "start": 366622
+    },
+    {
+      "detector": "type_description",
+      "end": 366959,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdparagraph",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdParagraph"
+        },
+        {
+          "fact_id": "public_symbol:mdparagraph.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdParagraph.children"
+        },
+        {
+          "fact_id": "public_symbol:mdparagraph.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdParagraph.type"
+        }
+      ],
+      "index": 42,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4201,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4201: the count only cell 'Interface with 2 properties.' does not describe MdParagraph and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members children and type.",
+      "start": 366931
+    },
+    {
+      "detector": "type_description",
+      "end": 367006,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdsoftbreak",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdSoftBreak"
+        },
+        {
+          "fact_id": "public_symbol:mdsoftbreak.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdSoftBreak.type"
+        }
+      ],
+      "index": 43,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4202,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4202: the count only cell 'Interface with 1 property.' does not describe MdSoftBreak and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member type.",
+      "start": 366980
+    },
+    {
+      "detector": "type_description",
+      "end": 367095,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdstrong",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdStrong"
+        },
+        {
+          "fact_id": "public_symbol:mdstrong.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdStrong.children"
+        },
+        {
+          "fact_id": "public_symbol:mdstrong.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdStrong.type"
+        }
+      ],
+      "index": 44,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4204,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4204: the count only cell 'Interface with 2 properties.' does not describe MdStrong and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members children and type.",
+      "start": 367067
+    },
+    {
+      "detector": "type_description",
+      "end": 367372,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdtablerow",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdTableRow"
+        },
+        {
+          "fact_id": "public_symbol:mdtablerow.children",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdTableRow.children"
+        },
+        {
+          "fact_id": "public_symbol:mdtablerow.header",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdTableRow.header"
+        },
+        {
+          "fact_id": "public_symbol:mdtablerow.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdTableRow.type"
+        }
+      ],
+      "index": 45,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4207,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4207: the count only cell 'Interface with 3 properties.' does not describe MdTableRow and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members children, header and type.",
+      "start": 367344
+    },
+    {
+      "detector": "type_description",
+      "end": 367416,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdtext",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdText"
+        },
+        {
+          "fact_id": "public_symbol:mdtext.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdText.type"
+        },
+        {
+          "fact_id": "public_symbol:mdtext.value",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdText.value"
+        }
+      ],
+      "index": 46,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4208,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4208: the count only cell 'Interface with 2 properties.' does not describe MdText and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members type and value.",
+      "start": 367388
+    },
+    {
+      "detector": "type_description",
+      "end": 367467,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:mdthematicbreak",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdThematicBreak"
+        },
+        {
+          "fact_id": "public_symbol:mdthematicbreak.type",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MdThematicBreak.type"
+        }
+      ],
+      "index": 47,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4209,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4209: the count only cell 'Interface with 1 property.' does not describe MdThematicBreak and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member type.",
+      "start": 367441
+    },
+    {
+      "detector": "type_description",
+      "end": 367513,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:metadata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata"
+        },
+        {
+          "fact_id": "public_symbol:metadata.author",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.author"
+        },
+        {
+          "fact_id": "public_symbol:metadata.creationdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.creationDate"
+        },
+        {
+          "fact_id": "public_symbol:metadata.creator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.creator"
+        },
+        {
+          "fact_id": "public_symbol:metadata.custom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.custom"
+        },
+        {
+          "fact_id": "public_symbol:metadata.keywords",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.keywords"
+        },
+        {
+          "fact_id": "public_symbol:metadata.moddate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.modDate"
+        },
+        {
+          "fact_id": "public_symbol:metadata.producer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.producer"
+        },
+        {
+          "fact_id": "public_symbol:metadata.subject",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.subject"
+        },
+        {
+          "fact_id": "public_symbol:metadata.title",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Metadata.title"
+        }
+      ],
+      "index": 48,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4210,
+      "original": "Interface with 9 properties.",
+      "rationale": "line 4210: the count only cell 'Interface with 9 properties.' does not describe Metadata and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including author, creationDate, creator, custom, keywords and modDate.",
+      "start": 367485
+    },
+    {
+      "detector": "type_description",
+      "end": 367915,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:metadataupdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.author",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.author"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.creationdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.creationDate"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.creator",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.creator"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.custom",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.custom"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.keywords",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.keywords"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.moddate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.modDate"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.producer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.producer"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.subject",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.subject"
+        },
+        {
+          "fact_id": "public_symbol:metadataupdate.title",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "MetadataUpdate.title"
+        }
+      ],
+      "index": 49,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4213,
+      "original": "Interface with 9 properties.",
+      "rationale": "line 4213: the count only cell 'Interface with 9 properties.' does not describe MetadataUpdate and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including author, creationDate, creator, custom, keywords and modDate.",
+      "start": 367887
+    },
+    {
+      "detector": "type_description",
+      "end": 367963,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:nupoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "NUpOptions"
+        },
+        {
+          "fact_id": "public_symbol:nupoptions.drawborder",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "NUpOptions.drawBorder"
+        },
+        {
+          "fact_id": "public_symbol:nupoptions.gutter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "NUpOptions.gutter"
+        },
+        {
+          "fact_id": "public_symbol:nupoptions.margin",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "NUpOptions.margin"
+        },
+        {
+          "fact_id": "public_symbol:nupoptions.order",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "NUpOptions.order"
+        },
+        {
+          "fact_id": "public_symbol:nupoptions.pagesize",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "NUpOptions.pageSize"
+        }
+      ],
+      "index": 50,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4214,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4214: the count only cell 'Interface with 5 properties.' does not describe NUpOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members drawBorder, gutter, margin, order and pageSize.",
+      "start": 367935
+    },
+    {
+      "detector": "type_description",
+      "end": 368088,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:ocspresponse",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.producedat",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.producedAt"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.respondercerts",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.responderCerts"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.responses",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.responses"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.responsestatus",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.responseStatus"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.signature",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.signature"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.signaturealgorithm",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.signatureAlgorithm"
+        },
+        {
+          "fact_id": "public_symbol:ocspresponse.tbsresponsedata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspResponse.tbsResponseData"
+        }
+      ],
+      "index": 51,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4216,
+      "original": "Interface with 7 properties.",
+      "rationale": "line 4216: the count only cell 'Interface with 7 properties.' does not describe OcspResponse and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including producedAt, responderCerts, responses, responseStatus, signature and signatureAlgorithm.",
+      "start": 368060
+    },
+    {
+      "detector": "type_description",
+      "end": 368144,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:ocspsingleresponse",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.hashalg",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.hashAlg"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.issuerkeyhash",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.issuerKeyHash"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.issuernamehash",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.issuerNameHash"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.nextupdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.nextUpdate"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.revocationtime",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.revocationTime"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.serialnumber",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.serialNumber"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.status",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.status"
+        },
+        {
+          "fact_id": "public_symbol:ocspsingleresponse.thisupdate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OcspSingleResponse.thisUpdate"
+        }
+      ],
+      "index": 52,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4217,
+      "original": "Interface with 8 properties.",
+      "rationale": "line 4217: the count only cell 'Interface with 8 properties.' does not describe OcspSingleResponse and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including hashAlg, issuerKeyHash, issuerNameHash, nextUpdate, revocationTime and serialNumber.",
+      "start": 368116
+    },
+    {
+      "detector": "type_description",
+      "end": 368819,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:overlayoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OverlayOptions"
+        },
+        {
+          "fact_id": "public_symbol:overlayoptions.opacity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OverlayOptions.opacity"
+        },
+        {
+          "fact_id": "public_symbol:overlayoptions.pages",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OverlayOptions.pages"
+        },
+        {
+          "fact_id": "public_symbol:overlayoptions.rect",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OverlayOptions.rect"
+        },
+        {
+          "fact_id": "public_symbol:overlayoptions.rotate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OverlayOptions.rotate"
+        },
+        {
+          "fact_id": "public_symbol:overlayoptions.underlay",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "OverlayOptions.underlay"
+        }
+      ],
+      "index": 53,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4226,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4226: the count only cell 'Interface with 5 properties.' does not describe OverlayOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members opacity, pages, rect, rotate and underlay.",
+      "start": 368791
+    },
+    {
+      "detector": "type_description",
+      "end": 369485,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pathpaint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathPaint"
+        },
+        {
+          "fact_id": "public_symbol:pathpaint.rgb",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathPaint.rgb"
+        },
+        {
+          "fact_id": "public_symbol:pathpaint.space",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathPaint.space"
+        }
+      ],
+      "index": 54,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4233,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4233: the count only cell 'Interface with 2 properties.' does not describe PathPaint and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members rgb and space.",
+      "start": 369457
+    },
+    {
+      "detector": "type_description",
+      "end": 369534,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pathsubpath",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSubpath"
+        },
+        {
+          "fact_id": "public_symbol:pathsubpath.closed",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSubpath.closed"
+        },
+        {
+          "fact_id": "public_symbol:pathsubpath.segments",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PathSubpath.segments"
+        }
+      ],
+      "index": 55,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4234,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4234: the count only cell 'Interface with 2 properties.' does not describe PathSubpath and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members closed and segments.",
+      "start": 369506
+    },
+    {
+      "detector": "type_description",
+      "end": 369662,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pdfuaconvertoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfUaConvertOptions"
+        },
+        {
+          "fact_id": "public_symbol:pdfuaconvertoptions.lang",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfUaConvertOptions.lang"
+        },
+        {
+          "fact_id": "public_symbol:pdfuaconvertoptions.part",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfUaConvertOptions.part"
+        },
+        {
+          "fact_id": "public_symbol:pdfuaconvertoptions.rolemap",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfUaConvertOptions.roleMap"
+        },
+        {
+          "fact_id": "public_symbol:pdfuaconvertoptions.title",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfUaConvertOptions.title"
+        }
+      ],
+      "index": 56,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4236,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4236: the count only cell 'Interface with 3 properties.' does not describe PdfUaConvertOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that inherits from OperationControlOptions and declares the members lang, part, roleMap and title.",
+      "start": 369634
+    },
+    {
+      "detector": "type_description",
+      "end": 369718,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions"
+        },
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions.convertcolor",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions.convertColor"
+        },
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions.iccprofile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions.iccProfile"
+        },
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions.outputcondition",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions.outputCondition"
+        },
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions.outputprofileref",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions.outputProfileRef"
+        },
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions.preserve",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions.preserve"
+        },
+        {
+          "fact_id": "public_symbol:pdfxconvertoptions.trapped",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PdfXConvertOptions.trapped"
+        }
+      ],
+      "index": 57,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4237,
+      "original": "Interface with 9 properties.",
+      "rationale": "line 4237: the count only cell 'Interface with 9 properties.' does not describe PdfXConvertOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that inherits from OperationControlOptions and declares the members convertColor, iccProfile, outputCondition, outputProfileRef, preserve and trapped.",
+      "start": 369690
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 369967,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 58,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4240,
+      "original": "| `PlaceContext` | Where an element is being placed. |\n",
+      "rationale": "line 4240 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 369912
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 370156,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 59,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4244,
+      "original": "| `PlaceResult` | Outcome of place. |\n",
+      "rationale": "line 4244 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 370118
+    },
+    {
+      "detector": "type_description",
+      "end": 370213,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:prunepolicy",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PrunePolicy"
+        },
+        {
+          "fact_id": "public_symbol:prunepolicy.droppagekeys",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PrunePolicy.dropPageKeys"
+        },
+        {
+          "fact_id": "public_symbol:prunepolicy.sanitizeannots",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PrunePolicy.sanitizeAnnots"
+        }
+      ],
+      "index": 60,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4245,
+      "original": "Interface with 1 method and 1 property.",
+      "rationale": "line 4245: the count only cell 'Interface with 1 method and 1 property.' does not describe PrunePolicy and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the method sanitizeAnnots and the member dropPageKeys.",
+      "start": 370174
+    },
+    {
+      "detector": "type_description",
+      "end": 370432,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:qroptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "QrOptions"
+        },
+        {
+          "fact_id": "public_symbol:qroptions.ecc",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "QrOptions.ecc"
+        },
+        {
+          "fact_id": "public_symbol:qroptions.version",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "QrOptions.version"
+        }
+      ],
+      "index": 61,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4248,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4248: the count only cell 'Interface with 2 properties.' does not describe QrOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members ecc and version.",
+      "start": 370404
+    },
+    {
+      "detector": "type_description",
+      "end": 371364,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:resizeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ResizeOptions"
+        },
+        {
+          "fact_id": "public_symbol:resizeoptions.scalecontent",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ResizeOptions.scaleContent"
+        }
+      ],
+      "index": 62,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4259,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4259: the count only cell 'Interface with 1 property.' does not describe ResizeOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member scaleContent.",
+      "start": 371338
+    },
+    {
+      "detector": "type_description",
+      "end": 373363,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:revocationresult",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "RevocationResult"
+        },
+        {
+          "fact_id": "public_symbol:revocationresult.source",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "RevocationResult.source"
+        },
+        {
+          "fact_id": "public_symbol:revocationresult.status",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "RevocationResult.status"
+        }
+      ],
+      "index": 63,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4270,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4270: the count only cell 'Interface with 2 properties.' does not describe RevocationResult and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members source and status.",
+      "start": 373335
+    },
+    {
+      "detector": "type_description",
+      "end": 375510,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:skippedfont",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SkippedFont"
+        },
+        {
+          "fact_id": "public_symbol:skippedfont.basefont",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SkippedFont.baseFont"
+        },
+        {
+          "fact_id": "public_symbol:skippedfont.reason",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SkippedFont.reason"
+        }
+      ],
+      "index": 64,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4287,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4287: the count only cell 'Interface with 2 properties.' does not describe SkippedFont and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members baseFont and reason.",
+      "start": 375482
+    },
+    {
+      "detector": "type_description",
+      "end": 375560,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:skippedframe",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SkippedFrame"
+        },
+        {
+          "fact_id": "public_symbol:skippedframe.frame",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SkippedFrame.frame"
+        },
+        {
+          "fact_id": "public_symbol:skippedframe.reason",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SkippedFrame.reason"
+        }
+      ],
+      "index": 65,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4288,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4288: the count only cell 'Interface with 2 properties.' does not describe SkippedFrame and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members frame and reason.",
+      "start": 375532
+    },
+    {
+      "detector": "type_description",
+      "end": 375660,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:splitoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SplitOptions"
+        },
+        {
+          "fact_id": "public_symbol:splitoptions.preservestructure",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SplitOptions.preserveStructure"
+        },
+        {
+          "fact_id": "public_symbol:splitoptions.prunepolicy",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SplitOptions.prunePolicy"
+        }
+      ],
+      "index": 66,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4290,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4290: the count only cell 'Interface with 2 properties.' does not describe SplitOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members preserveStructure and prunePolicy.",
+      "start": 375632
+    },
+    {
+      "detector": "type_description",
+      "end": 375708,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:svgoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SvgOptions"
+        },
+        {
+          "fact_id": "public_symbol:svgoptions.annotations",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SvgOptions.annotations"
+        },
+        {
+          "fact_id": "public_symbol:svgoptions.box",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SvgOptions.box"
+        }
+      ],
+      "index": 67,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4291,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4291: the count only cell 'Interface with 2 properties.' does not describe SvgOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that inherits from OperationControlOptions and declares the members annotations and box.",
+      "start": 375680
+    },
+    {
+      "detector": "type_description",
+      "end": 375862,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:tableattributes",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableAttributes"
+        },
+        {
+          "fact_id": "public_symbol:tableattributes.colspan",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableAttributes.colSpan"
+        },
+        {
+          "fact_id": "public_symbol:tableattributes.headers",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableAttributes.headers"
+        },
+        {
+          "fact_id": "public_symbol:tableattributes.rowspan",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableAttributes.rowSpan"
+        },
+        {
+          "fact_id": "public_symbol:tableattributes.scope",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableAttributes.scope"
+        },
+        {
+          "fact_id": "public_symbol:tableattributes.summary",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableAttributes.summary"
+        }
+      ],
+      "index": 68,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4293,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4293: the count only cell 'Interface with 5 properties.' does not describe TableAttributes and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members colSpan, headers, rowSpan, scope and summary.",
+      "start": 375834
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 375913,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 69,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4294,
+      "original": "| `TableCell` | Interface with 13 properties. |\n",
+      "rationale": "line 4294 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 375865
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 376187,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 70,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4298,
+      "original": "| `TableRow` | Interface with 3 properties. |\n",
+      "rationale": "line 4298 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 376141
+    },
+    {
+      "detector": "type_description",
+      "end": 376238,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:tablestitchoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableStitchOptions"
+        },
+        {
+          "fact_id": "public_symbol:tablestitchoptions.stitch",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TableStitchOptions.stitch"
+        }
+      ],
+      "index": 71,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4299,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4299: the count only cell 'Interface with 1 property.' does not describe TableStitchOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member stitch.",
+      "start": 376212
+    },
+    {
+      "detector": "type_description",
+      "end": 376679,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:textline",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextLine"
+        },
+        {
+          "fact_id": "public_symbol:textline.fragments",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextLine.fragments"
+        },
+        {
+          "fact_id": "public_symbol:textline.quad",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextLine.quad"
+        },
+        {
+          "fact_id": "public_symbol:textline.styles",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextLine.styles"
+        },
+        {
+          "fact_id": "public_symbol:textline.text",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TextLine.text"
+        }
+      ],
+      "index": 72,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4304,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 4304: the count only cell 'Interface with 4 properties.' does not describe TextLine and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members fragments, quad, styles and text.",
+      "start": 376651
+    },
+    {
+      "detector": "type_description",
+      "end": 377539,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:tstinfo",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo"
+        },
+        {
+          "fact_id": "public_symbol:tstinfo.gentime",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo.genTime"
+        },
+        {
+          "fact_id": "public_symbol:tstinfo.hashalg",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo.hashAlg"
+        },
+        {
+          "fact_id": "public_symbol:tstinfo.imprint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo.imprint"
+        },
+        {
+          "fact_id": "public_symbol:tstinfo.nonce",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo.nonce"
+        },
+        {
+          "fact_id": "public_symbol:tstinfo.policy",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo.policy"
+        },
+        {
+          "fact_id": "public_symbol:tstinfo.serialnumber",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TstInfo.serialNumber"
+        }
+      ],
+      "index": 73,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4312,
+      "original": "Interface with 6 properties.",
+      "rationale": "line 4312: the count only cell 'Interface with 6 properties.' does not describe TstInfo and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members genTime, hashAlg, imprint, nonce, policy and serialNumber.",
+      "start": 377511
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 384431,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 74,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4374,
+      "original": "| `STANDARD_STRUCTURE_TYPES` | The PDF 1.7 standard structure types (grouping, block-level, inline-level, and illustration). |\n",
+      "rationale": "line 4374 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 384304
+    },
+    {
+      "detector": "type_description",
+      "end": 388198,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:annotdata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AnnotData"
+        },
+        {
+          "fact_id": "public_symbol:annotdata.anonymouspopup",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AnnotData.anonymousPopup"
+        },
+        {
+          "fact_id": "public_symbol:annotdata.dict",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AnnotData.dict"
+        },
+        {
+          "fact_id": "public_symbol:annotdata.inreplyto",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AnnotData.inReplyTo"
+        },
+        {
+          "fact_id": "public_symbol:annotdata.page",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AnnotData.page"
+        },
+        {
+          "fact_id": "public_symbol:annotdata.popupname",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AnnotData.popupName"
+        }
+      ],
+      "index": 75,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4417,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 4417: the count only cell 'Interface with 4 properties.' does not describe AnnotData and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members anonymousPopup, dict, inReplyTo, page and popupName.",
+      "start": 388170
+    },
+    {
+      "detector": "type_description",
+      "end": 389025,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:stampwithoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "StampWithOptions"
+        },
+        {
+          "fact_id": "public_symbol:stampwithoptions.mode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "StampWithOptions.mode"
+        },
+        {
+          "fact_id": "public_symbol:stampwithoptions.opacity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "StampWithOptions.opacity"
+        },
+        {
+          "fact_id": "public_symbol:stampwithoptions.rect",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "StampWithOptions.rect"
+        },
+        {
+          "fact_id": "public_symbol:stampwithoptions.rotate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "StampWithOptions.rotate"
+        }
+      ],
+      "index": 76,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4429,
+      "original": "Interface with 4 properties.",
+      "rationale": "line 4429: the count only cell 'Interface with 4 properties.' does not describe StampWithOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members mode, opacity, rect and rotate.",
+      "start": 388997
+    },
+    {
+      "detector": "type_description",
+      "end": 389817,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:timestamprequestinfo",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestInfo"
+        },
+        {
+          "fact_id": "public_symbol:timestamprequestinfo.hashalg",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestInfo.hashAlg"
+        },
+        {
+          "fact_id": "public_symbol:timestamprequestinfo.imprint",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestInfo.imprint"
+        },
+        {
+          "fact_id": "public_symbol:timestamprequestinfo.nonce",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestInfo.nonce"
+        }
+      ],
+      "index": 77,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4436,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4436: the count only cell 'Interface with 3 properties.' does not describe TimeStampRequestInfo and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members hashAlg, imprint and nonce.",
+      "start": 389789
+    },
+    {
+      "detector": "type_description",
+      "end": 389878,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:timestamprequestoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestOptions"
+        },
+        {
+          "fact_id": "public_symbol:timestamprequestoptions.certreq",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestOptions.certReq"
+        },
+        {
+          "fact_id": "public_symbol:timestamprequestoptions.nonce",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestOptions.nonce"
+        },
+        {
+          "fact_id": "public_symbol:timestamprequestoptions.reqpolicy",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampRequestOptions.reqPolicy"
+        }
+      ],
+      "index": 78,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4437,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4437: the count only cell 'Interface with 3 properties.' does not describe TimeStampRequestOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members certReq, nonce and reqPolicy.",
+      "start": 389850
+    },
+    {
+      "detector": "type_description",
+      "end": 389937,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:timestamptokenoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampTokenOptions"
+        },
+        {
+          "fact_id": "public_symbol:timestamptokenoptions.gentime",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampTokenOptions.genTime"
+        },
+        {
+          "fact_id": "public_symbol:timestamptokenoptions.policy",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampTokenOptions.policy"
+        },
+        {
+          "fact_id": "public_symbol:timestamptokenoptions.serialnumber",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TimeStampTokenOptions.serialNumber"
+        }
+      ],
+      "index": 79,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4438,
+      "original": "Interface with 3 properties.",
+      "rationale": "line 4438: the count only cell 'Interface with 3 properties.' does not describe TimeStampTokenOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members genTime, policy and serialNumber.",
+      "start": 389909
+    },
+    {
+      "detector": "type_description",
+      "end": 391126,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:imageoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.annotations",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.annotations"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.background",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.background"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.box",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.box"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.compression",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.compression"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.format",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.format"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.height",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.height"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.mode",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.mode"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.quality",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.quality"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.scale",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.scale"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.threshold",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.threshold"
+        },
+        {
+          "fact_id": "public_symbol:imageoptions.width",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "ImageOptions.width"
+        }
+      ],
+      "index": 80,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4462,
+      "original": "Interface with 11 properties.",
+      "rationale": "line 4462: the count only cell 'Interface with 11 properties.' does not describe ImageOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that inherits from OperationControlOptions and declares members including annotations, background, box, compression, format and height.",
+      "start": 391097
+    },
+    {
+      "detector": "type_description",
+      "end": 391756,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:tiffencodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TiffEncodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:tiffencodeoptions.compression",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "TiffEncodeOptions.compression"
+        }
+      ],
+      "index": 81,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4472,
+      "original": "Interface with 1 property.",
+      "rationale": "line 4472: the count only cell 'Interface with 1 property.' does not describe TiffEncodeOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the member compression.",
+      "start": 391730
+    },
+    {
+      "detector": "type_description",
+      "end": 393546,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:encryptoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "EncryptOptions"
+        },
+        {
+          "fact_id": "public_symbol:encryptoptions.algorithm",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "EncryptOptions.algorithm"
+        },
+        {
+          "fact_id": "public_symbol:encryptoptions.encryptmetadata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "EncryptOptions.encryptMetadata"
+        },
+        {
+          "fact_id": "public_symbol:encryptoptions.ownerpassword",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "EncryptOptions.ownerPassword"
+        },
+        {
+          "fact_id": "public_symbol:encryptoptions.permissions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "EncryptOptions.permissions"
+        },
+        {
+          "fact_id": "public_symbol:encryptoptions.userpassword",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "EncryptOptions.userPassword"
+        }
+      ],
+      "index": 82,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4506,
+      "original": "Interface with 5 properties.",
+      "rationale": "line 4506: the count only cell 'Interface with 5 properties.' does not describe EncryptOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members algorithm, encryptMetadata, ownerPassword, permissions and userPassword.",
+      "start": 393518
+    },
+    {
+      "detector": "type_description",
+      "end": 393595,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:permissions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions"
+        },
+        {
+          "fact_id": "public_symbol:permissions.accessibility",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.accessibility"
+        },
+        {
+          "fact_id": "public_symbol:permissions.annotating",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.annotating"
+        },
+        {
+          "fact_id": "public_symbol:permissions.assembling",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.assembling"
+        },
+        {
+          "fact_id": "public_symbol:permissions.copying",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.copying"
+        },
+        {
+          "fact_id": "public_symbol:permissions.fillingforms",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.fillingForms"
+        },
+        {
+          "fact_id": "public_symbol:permissions.highqualityprinting",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.highQualityPrinting"
+        },
+        {
+          "fact_id": "public_symbol:permissions.modifying",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.modifying"
+        },
+        {
+          "fact_id": "public_symbol:permissions.printing",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "Permissions.printing"
+        }
+      ],
+      "index": 83,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4507,
+      "original": "Interface with 8 properties.",
+      "rationale": "line 4507: the count only cell 'Interface with 8 properties.' does not describe Permissions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including accessibility, annotating, assembling, copying, fillingForms and highQualityPrinting.",
+      "start": 393567
+    },
+    {
+      "detector": "type_description",
+      "end": 393653,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions"
+        },
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions.algorithm",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions.algorithm"
+        },
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions.encryptmetadata",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions.encryptMetadata"
+        },
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions.keywrap",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions.keyWrap"
+        },
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions.oaephash",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions.oaepHash"
+        },
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions.permissions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions.permissions"
+        },
+        {
+          "fact_id": "public_symbol:pubsecencryptoptions.recipients",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecEncryptOptions.recipients"
+        }
+      ],
+      "index": 84,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4508,
+      "original": "Interface with 6 properties.",
+      "rationale": "line 4508: the count only cell 'Interface with 6 properties.' does not describe PubSecEncryptOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members algorithm, encryptMetadata, keyWrap, oaepHash, permissions and recipients.",
+      "start": 393625
+    },
+    {
+      "detector": "type_description",
+      "end": 393710,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:pubsecrecipientcert",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipientCert"
+        },
+        {
+          "fact_id": "public_symbol:pubsecrecipientcert.certificate",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipientCert.certificate"
+        },
+        {
+          "fact_id": "public_symbol:pubsecrecipientcert.permissions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "PubSecRecipientCert.permissions"
+        }
+      ],
+      "index": 85,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4509,
+      "original": "Interface with 2 properties.",
+      "rationale": "line 4509: the count only cell 'Interface with 2 properties.' does not describe PubSecRecipientCert and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares the members certificate and permissions.",
+      "start": 393682
+    },
+    {
+      "detector": "type_description",
+      "end": 393760,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:signoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.appearance",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.appearance"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.cades",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.cades"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.contactinfo",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.contactInfo"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.fieldname",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.fieldName"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.location",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.location"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.name",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.name"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.placeholderbytes",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.placeholderBytes"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.reason",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.reason"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.signingtime",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.signingTime"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.subfilter",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.subFilter"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.timestamp",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.timestamp"
+        },
+        {
+          "fact_id": "public_symbol:signoptions.timestampdigest",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignOptions.timestampDigest"
+        }
+      ],
+      "index": 86,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4510,
+      "original": "Interface with 12 properties.",
+      "rationale": "line 4510: the count only cell 'Interface with 12 properties.' does not describe SignOptions and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including appearance, cades, contactInfo, fieldName, location and name.",
+      "start": 393731
+    },
+    {
+      "detector": "type_description",
+      "end": 394101,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:signaturereport",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.chain",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.chain"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.commitmenttype",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.commitmentType"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.coverswholefile",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.coversWholeFile"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.docmdp",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.docMDP"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.fieldmdp",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.fieldMDP"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.integrity",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.integrity"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.lockedfieldschanged",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.lockedFieldsChanged"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.modifications",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.modifications"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.name",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.name"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.padeslevel",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.padesLevel"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.revocation",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.revocation"
+        },
+        {
+          "fact_id": "public_symbol:signaturereport.signature",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "SignatureReport.signature"
+        }
+      ],
+      "index": 87,
+      "kind": "FALSE_CLAIM_FIX",
+      "line": 4514,
+      "original": "Interface with 13 properties.",
+      "rationale": "line 4514: the count only cell 'Interface with 13 properties.' does not describe SignatureReport and the source has no doc comment that does; the verified facts' own kind, bases, members or values replace it",
+      "replacement": "Interface that declares members including chain, commitmentType, coversWholeFile, docMDP, fieldMDP and integrity.",
+      "start": 394072
+    },
+    {
+      "detector": "absent_type_row",
+      "end": 454094,
+      "evidence": [
+        {
+          "fact_id": "public_symbol:addbarcodeoptions",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.alt",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.alt"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.artifact",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.artifact"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.color",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.color"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.layer",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.layer"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.quietzone",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.quietZone"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.render",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.render"
+        },
+        {
+          "fact_id": "public_symbol:addbarcodeoptions.tag",
+          "kind": "public_symbol",
+          "status": "SUPPORTED",
+          "value": "AddBarcodeOptions.tag"
+        }
+      ],
+      "index": 88,
+      "kind": "TABLE_ROW_REMOVAL",
+      "line": 4929,
+      "original": "| `describeNotRendered(r)` | One `NotRendered` as the flat string a logger wants — `construct` or `construct:detail` |\n",
+      "rationale": "line 4929 names a type no public_symbol, enum_member or import_path fact records; the row is removed whole, not blanked",
+      "replacement": "",
+      "start": 453975
+    }
+  ],
+  "lane": "L",
+  "original_sha256": "a7968e64deedef4045c95e63b6b12cda0377975d639fff1ba14116de0bd862f5",
+  "outcome": "CORRECTED",
+  "readme_path": "README.md",
+  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
+  "schema_version": 1,
+  "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
+  "stability": {
+    "deterministic": true,
+    "idempotent": true,
+    "provider_calls": 0
+  },
+  "summary": {
+    "DIAGRAM_FIX": 1,
+    "FALSE_CLAIM_FIX": 77,
+    "TABLE_ROW_REMOVAL": 11
+  },
+  "unapplied": [
+    {
+      "defect": false,
+      "detector": "report_gaps",
+      "fact_ids": [
+        "third_party_notices:file"
+      ],
+      "line": 0,
+      "reason": "the tree holds THIRD-PARTY-NOTICES.md and the README never mentions it (third_party_notices:file); not one of the ten sections, so never added",
+      "text": ""
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 35,
+      "reason": "the README marks 'PDF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i1[\"An existing PDF file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 37,
+      "reason": "the README marks 'GFM' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "i3[\"Markdown text (CommonMark/GFM)\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 60,
+      "reason": "the README marks 'PDF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o1[\"A PDF file\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 61,
+      "reason": "the README marks 'BMP' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"SVG, PNG, JPEG, TIFF, BMP or GIF images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 61,
+      "reason": "the README marks 'GIF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"SVG, PNG, JPEG, TIFF, BMP or GIF images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 61,
+      "reason": "the README marks 'JPEG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"SVG, PNG, JPEG, TIFF, BMP or GIF images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 61,
+      "reason": "the README marks 'PNG' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"SVG, PNG, JPEG, TIFF, BMP or GIF images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "format_overclaim",
+      "fact_ids": [],
+      "line": 61,
+      "reason": "the README marks 'TIFF' supported; the extracted facts hold no format or capability at all, so it is neither confirmed nor refuted",
+      "report_only_reason": "NO_EVIDENCE_OF_ABSENCE",
+      "text": "o2[\"SVG, PNG, JPEG, TIFF, BMP or GIF images\"]"
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:barcodemodel"
+      ],
+      "line": 3952,
+      "reason": "the boilerplate label cell does not describe BarcodeModel, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:borderstyle"
+      ],
+      "line": 3955,
+      "reason": "the boilerplate label cell does not describe BorderStyle, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:convertcategory"
+      ],
+      "line": 3969,
+      "reason": "the boilerplate label cell does not describe ConvertCategory, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:digestalgorithm"
+      ],
+      "line": 3971,
+      "reason": "the boilerplate label cell does not describe DigestAlgorithm, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "line": 3984,
+      "reason": "the boilerplate label cell does not describe Gradient, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:mdblock"
+      ],
+      "line": 3993,
+      "reason": "the boilerplate label cell does not describe MdBlock, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:mdinline"
+      ],
+      "line": 3994,
+      "reason": "the boilerplate label cell does not describe MdInline, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:mdnode"
+      ],
+      "line": 3995,
+      "reason": "the boilerplate label cell does not describe MdNode, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:qrecc"
+      ],
+      "line": 4011,
+      "reason": "the boilerplate label cell does not describe QrEcc, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:stdfont"
+      ],
+      "line": 4026,
+      "reason": "the boilerplate label cell does not describe StdFont, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:fieldtype"
+      ],
+      "line": 4486,
+      "reason": "the boilerplate label cell does not describe FieldType, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    },
+    {
+      "defect": false,
+      "detector": "type_description",
+      "fact_ids": [
+        "public_symbol:signaturescheme"
+      ],
+      "line": 4503,
+      "reason": "the boilerplate label cell does not describe SignatureScheme, and the source has no doc comment that does; only authored prose can (Lane R)",
+      "report_only_reason": "NO_DOC_COMMENT",
+      "text": "Class in the PDF TypeScript API."
+    }
+  ]
+}
