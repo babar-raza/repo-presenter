@@ -172,22 +172,32 @@
    "run_id": "45013871854",
    "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T12:47:00+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference"
+   ],
+   "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+   "findings": 5,
+   "outcome": "failure",
+   "run_id": "45022924071",
+   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T11:13:03+00:00",
+  "at": "2026-11-22T12:47:00+00:00",
   "classes": {
    "llm:factuality|authored_unit|api_reference": {
-    "example": "| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders a barcode into SVG output. |",
-    "findings": 6,
+    "example": "| `aspose_barcode_foss.PdfRenderer` | PdfRenderer class renders a barcode into PDF or another vector-friendly artifact; its render method raises NotImplementedError. |",
+    "findings": 5,
     "origin_kind": "authored_unit",
     "origins": [
-     "api_reference.hub:public_symbol:aspose_barcode_foss.svgrenderer",
-     "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.barcodeerror",
-     "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.unsupportedfeatureerror",
-     "api_reference.type:public_symbol:aspose_barcode_foss.options.code128options",
-     "api_reference.type:public_symbol:aspose_barcode_foss.options.code39options"
+     "api_reference.type:public_symbol:aspose_barcode_foss.pdfrenderer",
+     "api_reference.type:public_symbol:aspose_barcode_foss.pngrenderer",
+     "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.unsupportedfeatureerror"
     ],
     "rule": "llm:factuality",
     "scope": "c8ac754466ac600aad1fb5d7ad5a92736c5534a6254f6a9030ba0ee3f5ee5518",
@@ -211,19 +221,19 @@
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; S2-F06 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F07 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F13 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F14 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F15 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F16 [unsupported_claim] in api_reference blocks",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 5 blocking finding(s) of 5; nothing sealed; F01 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "S2-F06",
-    "message": "| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders a barcode into SVG output. |",
+    "label": "F01",
+    "message": "PdfRenderer class renders a barcode into PDF or another vector-friendly artifact; its render method raises NotImplementedError.",
     "origin": {
-     "id": "api_reference.hub:public_symbol:aspose_barcode_foss.svgrenderer",
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.pdfrenderer",
      "kind": "authored_unit"
     },
-    "quote": "| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders a barcode into SVG output. |",
+    "quote": "| `aspose_barcode_foss.PdfRenderer` | PdfRenderer class renders a barcode into PDF or another vector-friendly artifact; its render method raises NotImplementedError. |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -232,13 +242,13 @@
     "upstream": ""
    },
    {
-    "label": "S2-F07",
-    "message": "| `exceptions.BarcodeError` | aspose_barcode_foss.exceptions.BarcodeError class is the base exception for the barcode library. |",
+    "label": "F02",
+    "message": "PngRenderer class renders a barcode into PNG output; its render method raises RenderingError (conditionally).",
     "origin": {
-     "id": "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.barcodeerror",
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.pngrenderer",
      "kind": "authored_unit"
     },
-    "quote": "| `exceptions.BarcodeError` | aspose_barcode_foss.exceptions.BarcodeError class is the base exception for the barcode library. |",
+    "quote": "| `aspose_barcode_foss.PngRenderer` | PngRenderer class renders a barcode into PNG output; its render method raises RenderingError (conditionally). |",
     "rule": "llm:factuality",
     "section_id": "api_reference",
     "signature": "llm:factuality|authored_unit|api_reference",
@@ -247,8 +257,38 @@
     "upstream": ""
    },
    {
-    "label": "S2-F13",
-    "message": "| `exceptions.UnsupportedFeatureError` | aspose_barcode_foss.exceptions.UnsupportedFeatureError class is raised when a requested feature is not supported by the library. |",
+    "label": "F03",
+    "message": "PdfRenderer class renders a barcode into PDF or another vector-friendly artifact; its render method raises NotImplementedError.",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.pdfrenderer",
+     "kind": "authored_unit"
+    },
+    "quote": "| `renderers.PdfRenderer` | PdfRenderer class renders a barcode into PDF or another vector-friendly artifact; its render method raises NotImplementedError. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F04",
+    "message": "PngRenderer class renders a barcode into PNG output; its render method raises RenderingError (conditionally).",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.pngrenderer",
+     "kind": "authored_unit"
+    },
+    "quote": "| `renderers.PngRenderer` | PngRenderer class renders a barcode into PNG output; its render method raises RenderingError (conditionally). |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F05",
+    "message": "aspose_barcode_foss.UnsupportedFeatureError class is raised when a requested feature is not supported by the library.",
     "origin": {
      "id": "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.unsupportedfeatureerror",
      "kind": "authored_unit"
@@ -260,70 +300,25 @@
     "source": "review",
     "sub_rule": "api_reference",
     "upstream": ""
-   },
-   {
-    "label": "S2-F14",
-    "message": "| `options.Code128Options` | aspose_barcode_foss.options.Code128Options class provides encoding options for Code 128. |",
-    "origin": {
-     "id": "api_reference.type:public_symbol:aspose_barcode_foss.options.code128options",
-     "kind": "authored_unit"
-    },
-    "quote": "| `options.Code128Options` | aspose_barcode_foss.options.Code128Options class provides encoding options for Code 128. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "S2-F15",
-    "message": "| `options.Code39Options` | aspose_barcode_foss.options.Code39Options class provides encoding options for Code 39. |",
-    "origin": {
-     "id": "api_reference.type:public_symbol:aspose_barcode_foss.options.code39options",
-     "kind": "authored_unit"
-    },
-    "quote": "| `options.Code39Options` | aspose_barcode_foss.options.Code39Options class provides encoding options for Code 39. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
-   },
-   {
-    "label": "S2-F16",
-    "message": "| `options.Ean13Options` | aspose_barcode_foss.options.Ean13Options class provides encoding options for EAN-13. |",
-    "origin": {
-     "id": "api_reference.type:public_symbol:aspose_barcode_foss.options.ean13options",
-     "kind": "authored_unit"
-    },
-    "quote": "| `options.Ean13Options` | aspose_barcode_foss.options.Ean13Options class provides encoding options for EAN-13. |",
-    "rule": "llm:factuality",
-    "section_id": "api_reference",
-    "signature": "llm:factuality|authored_unit|api_reference",
-    "source": "review",
-    "sub_rule": "api_reference",
-    "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "e32adb6b07265f13112a78437ff030ad24238abf",
+  "main_sha": "2a8024ce6822d21209f0922b8b2bb3fa9ad53b7c",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15+F16+F17+F18+F19+F20+F21+F22+F23+F24+F25+F26+F27",
+    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15+F16",
     "outcome": "repaired",
-    "reason": "api_reference: repaired; api_reference#types-1: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: change R06 claims 'units.15.text' changed ('Renderer class is the abstract renderer interface; its render method is not implemented.' to 'Renderer class is an abstract base class whose render method raises NotImplementedError.'), but the causal stage's own input and this revision hold the identical value there; revised_output: change R08 claims 'units.19.text' cha",
+    "reason": "api_reference#types-1: repaired; api_reference#types-2: repaired",
     "section_id": "api_reference",
     "stage": "S6"
    }
   ],
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-  "run_id": "45013871854",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45013871854",
+  "run_id": "45022924071",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45022924071",
   "schema_version": 1,
   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
