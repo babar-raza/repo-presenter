@@ -1,0 +1,24 @@
+{
+  "seeded_recall": {
+    "matched": 51,
+    "total": 52,
+    "rate": 0.9807692307692307
+  },
+  "false_flag_rate": {
+    "matched": 6,
+    "total": 20,
+    "rate": 0.3
+  },
+  "defective_accepted_rate": null,
+  "defective_accepted_rate_note": "not computed: this seed batch has no separate unseeded-accepted population outside the seeded/clean-control split -- see this script's own module docstring",
+  "false_flag_split": {
+    "recertified_controls": {
+      "matched": 6,
+      "total": 20,
+      "rate": 0.3
+    },
+    "not_recertified_controls": null,
+    "controls_not_recertified": [],
+    "note": "raw false_flag_rate is the gate figure (thresholds unchanged); the acceptance writer leaves controls_not_recertified out of its rate"
+  }
+}
