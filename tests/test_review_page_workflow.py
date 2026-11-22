@@ -194,7 +194,7 @@ def test_review_page_workflow_shape():
     text = (WORKFLOWS / "review-page.yml").read_text(encoding="utf-8")
     assert "secrets." not in text and "GPT_OSS" not in text
     build, publish, pages = wf["jobs"]["build"], wf["jobs"]["publish"], wf["jobs"]["pages"]
-    assert build["permissions"] == {"contents": "read"}
+    assert build["permissions"] == {"contents": "read", "attestations": "read"}  # read-only scopes only
     assert "github.event.workflow_run.conclusion == 'success'" in build["if"]
     assert "scripts/review_page/build.py" in "\n".join(s.get("run", "") for s in build["steps"])
     checkout = [s for s in build["steps"] if str(s.get("uses", "")).startswith("actions/checkout")][0]

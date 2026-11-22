@@ -7,7 +7,7 @@ name: review-page
 # script a session runs, R38: reproducible) and hosts the static HTML where the owner can open it WITHOUT any owner
 # action and without a Claude session:
 #
-#   build    read-only token. Fetches refs/repository-presenter-state/*, recertifies zero-call (no secret), writes
+#   build    read-only token (attestations: read, as the run-request `count` job). Fetches refs/repository-presenter-state/*, recertifies zero-call (no secret), writes
 #            site/index.html, site/build.json, site/.nojekyll and uploads them as the `review-page` workflow artifact
 #            (90 days; downloadable from the run page). Nothing here executes upstream code.
 #   publish  contents: write for THIS repository's `review-page` branch only: one orphan commit holding the built
@@ -46,6 +46,10 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
+      attestations: read  # build.py marks audit-accepted candidates by verifying each acceptance record's attestation
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
