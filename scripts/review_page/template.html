@@ -273,7 +273,7 @@ function fixLinks(root, c){
 function renderReview(){
   const f=feedback[current]||{}; verdict=f.verdict||null; $("note").value=f.note||""; dirty=false;
   document.querySelectorAll(".verdicts button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.v===verdict?"true":"false"));
-  $("status").textContent = f.verdict ? "Saved" : (db ? "" : "Saving needs you to be signed in");
+  $("status").textContent = f.verdict ? (db ? "Saved" : "Sent to GitHub") : "";
 }
 function select(id){ current=id; renderList(); renderMeta(); renderView(); renderReview(); window.scrollTo({top:0}); }
 document.querySelectorAll(".filters button").forEach(b=>b.onclick=()=>{filter=b.dataset.f; document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); renderList();});
@@ -282,9 +282,23 @@ $("mobilePick").onchange=(e)=>select(e.target.value);
 document.querySelectorAll(".verdicts button").forEach(b=>b.onclick=()=>{verdict = verdict===b.dataset.v ? null : b.dataset.v; dirty=true;
   document.querySelectorAll(".verdicts button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.v===verdict?"true":"false")); $("status").textContent="Unsaved";});
 $("note").oninput=()=>{dirty=true; $("status").textContent="Unsaved";};
+const FEEDBACK_REPO="__FEEDBACK_REPO__";
+// Hosted copy (no artifact db): the feedback becomes a prefilled GitHub issue labelled review-feedback, which the
+// feedback-intake workflow files as a backlog item on the runner (R47). The JSON block is what it reads.
+function issueUrl(c, body){
+  const json=JSON.stringify({id:c.id, verdict:body.verdict, note:body.note, repository:c.repository, lane:c.lane, revision:c.revision, seal:c.seal, updatedAt:body.updatedAt}).replace(/>/g,"\\u003e").replace(/--/g,"-\\u002d");
+  const text="Review feedback for "+c.repository+" (Lane "+c.lane+", revision "+c.revision+", seal "+c.seal+")\n\nVerdict: "+(body.verdict||"none")+"\n\n"+(body.note||"(no note)")+"\n\n<!-- review-feedback "+json+" -->\n";
+  const u=new URL("https://github.com/"+FEEDBACK_REPO+"/issues/new");
+  u.searchParams.set("labels","review-feedback"); u.searchParams.set("title","Review feedback: "+c.repository+" Lane "+c.lane+" ("+(body.verdict||"note")+")"); u.searchParams.set("body",text);
+  return u.href;
+}
 $("saveBtn").onclick=async()=>{
-  if(!db){ $("status").textContent="Can't save here: open the page signed in to claude.ai."; return; }
   const c=byId[current], body={verdict:verdict||"", note:$("note").value.trim(), repository:c.repository, lane:c.lane, revision:c.revision, seal:c.seal, updatedAt:new Date().toISOString()};
+  if(!db){
+    if(!body.verdict && !body.note){ $("status").textContent="Choose a verdict or write a note first."; return; }
+    window.open(issueUrl(c, body), "_blank", "noopener");
+    feedback[c.id]={verdict:body.verdict,note:body.note}; dirty=false; $("status").textContent="Opened a GitHub issue: press Submit there to file it"; summary(); renderList(); return;
+  }
   $("saveBtn").disabled=true; $("status").textContent="Saving…";
   try{ await db.doc("feedback/"+c.id).set(body); feedback[c.id]={verdict:body.verdict,note:body.note}; dirty=false; $("status").textContent="Saved"; summary(); renderList(); }
   catch(e){ $("status").textContent="Not saved: "+(e?.message||e?.code||"try again"); }

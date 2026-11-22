@@ -1,0 +1,147 @@
+name: review-page
+
+# Owner rulings R47 (2026-11-19: "As soon as a feedback is honored, the readme-candidate-review must automatically
+# refresh") and R49/R50 (every component on the runner); backlog BL-760, work package WP-6.
+#
+# Rebuilds the README Candidate Review page from the durable state refs with scripts/review_page/build.py (the same
+# script a session runs, R38: reproducible) and hosts the static HTML where the owner can open it WITHOUT any owner
+# action and without a Claude session:
+#
+#   build    read-only token (attestations: read, as the run-request `count` job). Fetches refs/repository-presenter-state/*, recertifies zero-call (no secret), writes
+#            site/index.html, site/build.json, site/.nojekyll and uploads them as the `review-page` workflow artifact
+#            (90 days; downloadable from the run page). Nothing here executes upstream code.
+#   publish  contents: write for THIS repository's `review-page` branch only: one orphan commit holding the built
+#            site, force-pushed (the branch is a deploy target, never a source). Its URL is written to the summary.
+#   pages    only when the repository variable REVIEW_PAGE_PAGES is 'true' (an owner opt-in: Settings > Pages >
+#            Source "GitHub Actions"): deploys the same site to GitHub Pages, where it renders in the browser. Skipped
+#            otherwise, so a repository without Pages enabled never fails here.
+#
+# Triggers: after every successful recertify run on main (R47: a honored feedback is a code change, recertify runs on
+# it), daily (images and badges drift), by hand, by run request ({"job": "review-page"}). The Claude artifact copy of
+# the page stays a session-side republish (the Artifact tool is not reachable from Actions); see docs/REVIEW_PAGE.md.
+#
+# tests/test_review_page_workflow.py fails if build gains a secret or a write scope, or publish runs repository code.
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 5 * * *"
+  workflow_run:
+    workflows: ["recertify"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-page
+  cancel-in-progress: true  # only the newest page matters
+
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      attestations: read  # build.py marks audit-accepted candidates by verifying each acceptance record's attestation
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e . pillow
+      - name: Fetch the durable state refs
+        run: git fetch -q origin '+refs/repository-presenter-state/*:refs/repository-presenter-state/*'
+      - name: Build the page from the state refs (zero provider calls)
+        run: |
+          mkdir -p site
+          python scripts/review_page/build.py --out site/index.html --feedback-repo "$GITHUB_REPOSITORY" | tee site/build.json
+          touch site/.nojekyll
+          python - <<'PY'
+          import json, os
+          path = "site/build.json"
+          data = json.loads(open(path).read().strip().splitlines()[-1])
+          data.update(main_sha=os.environ["GITHUB_SHA"], run_id=os.environ["GITHUB_RUN_ID"],
+                      event=os.environ["GITHUB_EVENT_NAME"])
+          open(path, "w").write(json.dumps(data, indent=2) + "\n")
+          PY
+          bytes=$(stat -c %s site/index.html)
+          # A git push refuses a blob over 100 MB: fail here with the reason rather than in publish.
+          if [ "$bytes" -gt 95000000 ]; then echo "::error::page is $bytes bytes (> 95 MB): shrink images before hosting"; exit 1; fi
+          {
+            echo "## README Candidate Review page"
+            echo
+            echo '```json'
+            cat site/build.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the built site (workflow artifact, 90 days)
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-page
+          path: site/
+          include-hidden-files: true
+          retention-days: 90
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write  # the `review-page` branch of this repository only
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: review-page
+          path: site
+      - name: Force-push the site as one orphan commit on the review-page branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd site
+          git init -q -b review-page
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "review page from main ${GITHUB_SHA} (run ${GITHUB_RUN_ID})"
+          git push -q --force "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/review-page
+          {
+            echo "## Hosted"
+            echo
+            echo "- branch: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/tree/review-page (index.html)"
+            echo "- workflow artifact: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} (artifact review-page)"
+            echo "- GitHub Pages (only if the REVIEW_PAGE_PAGES variable is true): https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  pages:
+    needs: build
+    if: vars.REVIEW_PAGE_PAGES == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: review-page
+          path: site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

@@ -8,8 +8,10 @@ reading width; mermaid 10.9.1 is inlined from the npm package (the page must not
 
     python scripts/review_page/build.py --out <file.html> [--remote origin] [--mermaid <mermaid.min.js>]
 
-Publishing the built file to the review artifact is a supervisor step (the Artifact tool runs in the session, not in
-Actions); see docs/REVIEW_PAGE.md. Owner feedback saved on the page lives in the artifact's `feedback` collection.
+Publishing the built file to the Claude review artifact is a supervisor step (the Artifact tool runs in the session,
+not in Actions); the `review-page` workflow (BL-760) runs this same script on the runner and hosts the static file.
+See docs/REVIEW_PAGE.md. Owner feedback saved on the Claude copy lives in the artifact's `feedback` collection; on the
+hosted copy it becomes a `review-feedback` issue that scripts/review_page/feedback_intake.py files as a backlog item.
 """
 from __future__ import annotations
 
@@ -186,9 +188,17 @@ def _embed_js(text: str) -> str:
     return text.replace(FFFD, "\\uFFFD")
 
 
-def build(out: Path, remote: str, mermaid: str | None) -> dict:
+FEEDBACK_REPO = "babar-raza/repo-presenter"
+_REPO_NAME = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+
+
+def build(out: Path, remote: str, mermaid: str | None, feedback_repo: str = FEEDBACK_REPO) -> dict:
+    if not _REPO_NAME.match(feedback_repo):
+        raise ValueError(f"feedback repository {feedback_repo!r} is not owner/name")
     cands = candidates(remote)
     page = TEMPLATE.read_text(encoding="utf-8")
+    # Where the hosted copy's "Save feedback" opens its prefilled issue (feedback_intake.py reads it on the runner).
+    page = page.replace("__FEEDBACK_REPO__", feedback_repo)
     page = page.replace("__DATA__", _embed_json(json.dumps(cands, ensure_ascii=False)), 1)
     page = page.replace("__IMAGES__", _embed_json(json.dumps(images(cands))), 1)
     page = page.replace("__MERMAID__", _embed_js(mermaid_source(mermaid)), 1)
@@ -208,8 +218,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--remote", default="origin")
     parser.add_argument("--mermaid", help="a local mermaid.min.js (10.9.1) instead of downloading the npm package")
+    parser.add_argument("--feedback-repo", default=FEEDBACK_REPO, help="owner/name that receives feedback issues")
     args = parser.parse_args(argv)
-    print(json.dumps(build(args.out, args.remote, args.mermaid)))
+    print(json.dumps(build(args.out, args.remote, args.mermaid, args.feedback_repo)))
     return 0
 
 

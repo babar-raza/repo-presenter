@@ -38,6 +38,8 @@ name: run-request-execute
 #             path but the exact committed file of that seed run. GITHUB_REF here is the default branch, so
 #             the acceptance-audit environment's main-only rule and each workflow's main-only guard hold,
 #             and the attestation is still signed by acceptance-write.yml@refs/heads/main.
+#   review-page / feedback-intake  (BL-760/761, R47) call review-page.yml (rebuild + host the README Candidate
+#             Review page) and feedback-intake.yml (open review-feedback issues -> backlog items); no input, no secret.
 #   audit-settle  (BL-160) records a past M9 audit round's measured provider spend, from its own
 #             m9-audit-ledger artifact, as one idempotent settle entry on the provider-spend ledger. No secret.
 #   audit-abandon (BL-163) ends a seed batch the gate reports blocked (MAX_AUDIT_ATTEMPTS attempts, no frozen
@@ -209,6 +211,26 @@ jobs:
     permissions:
       contents: read
     uses: ./.github/workflows/metadata-audit.yml
+
+  # BL-760/761 (R47, WP-6): rebuild and host the review page; sweep open review-feedback issues into backlog
+  # items. Both are fixed workflows on main with no input.
+  review-page:
+    needs: validate
+    if: needs.validate.outputs.job == 'review-page'
+    permissions:
+      contents: write  # the review-page branch of this repository only
+      pages: write     # used only when the REVIEW_PAGE_PAGES variable opts in
+      id-token: write
+    uses: ./.github/workflows/review-page.yml
+
+  feedback-intake:
+    needs: validate
+    if: needs.validate.outputs.job == 'feedback-intake'
+    permissions:
+      contents: write       # the feedback-intake/run-<id> branch
+      issues: write         # one comment per filed issue
+      pull-requests: write
+    uses: ./.github/workflows/feedback-intake.yml
 
   mint:
     needs: validate

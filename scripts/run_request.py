@@ -15,6 +15,8 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "L", "dry_run": false}
     {"job": "bridge"}
     {"job": "metadata-audit"}
+    {"job": "review-page"}
+    {"job": "feedback-intake"}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -121,7 +123,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle", "audit-abandon")
-JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", "propose", "bridge", "metadata-audit", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", "propose", "bridge", "metadata-audit", "review-page", "feedback-intake", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -405,6 +407,12 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("an issues request takes no other field (its targets are data/issue_pilot.json)")
         return {"job": "issues", "repository": "", "ecosystem": "", "lane": ""}
+    if job in ("review-page", "feedback-intake"):
+        # BL-760/761 (R47, WP-6): rebuild and host the README Candidate Review page, or sweep the open
+        # review-feedback issues into backlog items. Fixed workflows on main; no target field.
+        if set(request) != {"job"}:
+            raise RequestError(f"a {job} request takes no other field (its inputs are the state refs and the issue list)")
+        return {"job": job, "repository": "", "ecosystem": "", "lane": ""}
     if job == "count":
         # BL-111: the official delivered count (ops/checks/portfolio_delivery_count.py) run hosted, where
         # each acceptance record's attestation can be verified (attestations: read); read-only, no secret.

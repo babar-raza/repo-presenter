@@ -3494,3 +3494,30 @@ items:
     depends_on: [BL-047, BL-048]
     next_action: "PR CI run of this change is the closing evidence for the new step; BL-047's unchanged-sealed-cell zero-call rerun on a fresh runner remains the recertify path (see BL-047)"
     updated: "2026-11-22"
+
+  - id: BL-760
+    title: "Hosted README Candidate Review page: a `review-page` workflow rebuilds the page from the durable state refs on the GitHub runner after every successful recertify, daily, by hand and by run request, and hosts the static HTML where the owner can open it with no owner action (R47 refresh, R49/R50 component C14)"
+    type: requirement
+    source: "owner rulings R47 (2026-11-19: the review page refreshes itself), R49, R50; docs/investigations/2026-11-22-component-inventory.md C14 and WP-6; docs/REVIEW_PAGE.md ('Actions cannot publish a Claude artifact')"
+    priority: P1
+    status: active
+    implementation_path: "scripts/review_page/build.py (--feedback-repo; unchanged otherwise) run by .github/workflows/review-page.yml: build job (read-only token, state refs fetched, zero provider calls) -> workflow artifact `review-page` (90 days) -> publish job force-pushes one orphan commit to the `review-page` branch (needs nothing from the owner) -> optional pages job, only when the repository variable REVIEW_PAGE_PAGES is 'true' (owner opt-in: Settings > Pages > Source GitHub Actions). Run request job `review-page` (scripts/run_request.py, run-request-execute.yml). Alternatives considered: GitHub Pages as the only host (the Pages API is not readable from this session and enabling it needs repository admin, an owner action); a release asset (downloads as a file, not a page); committing the page to main (50 MB blobs in main history); a state ref (not browsable). The Claude artifact republish stays the session-side step."
+    acceptance: "(1) tests/test_review_page_workflow.py: workflow shape (build read-only and without secrets, publish has no checkout, pages is opt-in), run-request job validates and takes no field; (2) local dry run builds the page from the stored state refs (evidence in the decision log); (3) hosted (R41, not proven until a run exists): run-request {\"job\": \"review-page\"} completes, artifact `review-page` and branch `review-page` hold index.html; (4) owner action only for in-browser rendering: enable Pages with source GitHub Actions and set variable REVIEW_PAGE_PAGES=true"
+    evidence:
+      - "built and tested locally 2026-11-22 on branch wp6-review-page: tests/test_review_page_workflow.py + tests/test_run_request.py; hosted proof pending (R41)"
+      - "local dry run from the stored state refs (build.py unchanged, per-record attestation verification skipped because `gh attestation verify` is minutes-slow here): 72 candidates (lane R 38, lane L 34, 5 Lane L no-ops), 11,509,767 bytes, no placeholder left, feedback repository wired; file /tmp/claude-0/-home-user/542f6e2c-a780-567b-84f4-4e5f84153686/scratchpad/wp6-dry/index-noattest.html. On the runner the build job holds attestations: read, as the count job"
+    next_action: "supervisor pushes run-requests/<id> with {\"job\": \"review-page\"} after merge and records the run id; tells the owner the branch/artifact URLs and the optional Pages opt-in"
+    updated: "2026-11-22"
+
+  - id: BL-761
+    title: "Feedback intake on the runner: owner feedback written on the hosted review page becomes a `type: feedback` backlog item without a Claude session (R47: feedback runs investigation > execution > verification at once)"
+    type: requirement
+    source: "owner rulings R47, R49, R50; WP-6 of docs/investigations/2026-11-22-component-inventory.md; docs/REVIEW_PAGE.md (the Claude artifact `db` is unreachable from Actions, so the hosted page needs another feedback store)"
+    priority: P1
+    status: active
+    implementation_path: "the hosted page's Save feedback button opens a prefilled GitHub issue (label `review-feedback`, one machine-readable `<!-- review-feedback {json} -->` block with the same fields as the artifact `feedback` document); .github/workflows/feedback-intake.yml (issues event: immediate; schedule: 6-hourly sweep; dispatch/call/run-request job `feedback-intake`) runs scripts/review_page/feedback_intake.py on main's code: validates the issue as hostile input (label, author owner/member/collaborator, fixed field shapes), keys it by sha1(candidate id, verdict, note) so a re-run never refiles and a changed note files anew, appends the item to project/backlog.yaml, runs ops/checks/backlog_check.py, pushes branch feedback-intake/run-<id>, opens a PR when the repository lets Actions do so, and comments the backlog id on the issue. `--snapshot-dir` imports artifact-db snapshot files of the existing format. Items are ids BL-FB-<candidate>-<hash>; the supervisor renumbers on merge if it wants."
+    acceptance: "(1) tests/test_review_page_workflow.py: an owner issue becomes a valid backlog item (backlog_check passes), idempotent, changed note refiled, bare approval not filed, 13 hostile or malformed inputs rejected, hostile note text cannot break the YAML, CLI for event, sweep and snapshot, workflow never interpolates issue text into a shell; (2) the 8 stored 2026-11-13 feedback snapshots (/home/user/.supervisor/feedback-new49) file 8 valid items on a copy of the backlog; (3) hosted (R41, not proven): a test issue with the label opens branch feedback-intake/run-<id> and a comment; (4) the Claude artifact copy keeps its own `db` feedback path (session watcher) until the owner uses the hosted page"
+    evidence:
+      - "built and tested locally 2026-11-22 on branch wp6-review-page: tests/test_review_page_workflow.py + tests/test_run_request.py; hosted proof pending (R41)"
+    next_action: "supervisor opens one labelled test issue after merge to prove the hosted path (or dispatches the workflow), records the run id; decides whether the intake branch should auto-merge once the cycle is proven"
+    updated: "2026-11-22"
