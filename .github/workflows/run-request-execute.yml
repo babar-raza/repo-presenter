@@ -22,6 +22,10 @@ name: run-request-execute
 #   count     (BL-111, 2026-11-14) runs main's ops/checks/portfolio_delivery_count.py hosted, with
 #             attestations: read so each acceptance record's Sigstore attestation verifies, and writes the
 #             official per-lane delivered count to the job summary. Read-only: no secret, no write scope.
+#   propose   (R50, WP-1) calls propose.yml for one sealed candidate: a DRY RUN by default (payload built and uploaded,
+#             nothing written); `"dry_run": false` only asks for propose.yml's write job, which runs solely behind its
+#             own gates (allowlist, registry full, owner kill-switch variable, R15 portfolio predicate, sandbox target
+#             variable). validate fixes every field; the request carries no token, branch, title or path.
 #   present / mint  call the default-branch copies of the reusable workflows (local `./` paths resolve to this
 #             run's commit, i.e. main) with `secrets: inherit`, only after validate passed.
 #   audit-seed / audit-score / acceptance-write  the M9 round's override path (owner R37, 2026-11-13): the
@@ -70,6 +74,7 @@ jobs:
       ecosystem: ${{ steps.check.outputs.ecosystem }}
       lane: ${{ steps.check.outputs.lane }}
       refresh: ${{ steps.check.outputs.refresh }}
+      dry_run: ${{ steps.check.outputs.dry_run }}
       seed_run_id: ${{ steps.check.outputs.seed_run_id }}
       findings_path: ${{ steps.check.outputs.findings_path }}
       findings_ref: ${{ steps.check.outputs.findings_ref }}
@@ -177,6 +182,19 @@ jobs:
     permissions:
       contents: write  # issues.yml's state ref in this repository only; upstream writes use the App token
     uses: ./.github/workflows/issues.yml
+    secrets: inherit
+
+  propose:
+    needs: validate
+    if: needs.validate.outputs.job == 'propose'
+    permissions:
+      contents: read      # no write scope here: upstream writes use the App token minted inside propose.yml's write job
+      attestations: read  # propose.yml's gate and write jobs verify the acceptance records for the R15 predicate
+    uses: ./.github/workflows/propose.yml
+    with:
+      repository: ${{ needs.validate.outputs.repository }}
+      lane: ${{ needs.validate.outputs.lane }}
+      dry_run: ${{ needs.validate.outputs.dry_run != 'false' }}
     secrets: inherit
 
   audit-seed:

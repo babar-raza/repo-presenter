@@ -11,6 +11,8 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "cohort"}
     {"job": "issues"}
     {"job": "count"}
+    {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
+    {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "L", "dry_run": false}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -19,6 +21,13 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "audit-settle", "seed_run_id": "43620199171", "audit_run_id": "43641838293",
      "batch": "e2-011-audit-and-production"}
     {"job": "audit-abandon", "seed_run_id": "43620199171"}
+
+``propose`` (R50, WP-1) runs ``.github/workflows/propose.yml`` for one sealed candidate: ``lane`` must be written
+out (``R`` or ``L``, never ``both``) and ``dry_run`` is accepted only as the JSON boolean ``false`` (``true`` is the
+same as absent). The default, and the only thing a request can do by itself, is a DRY RUN: it builds and uploads the
+branch/pull-request payload and writes nothing. ``dry_run: false`` only asks for the write job, which still runs only
+behind its own gates (allowlist, registry ``mode: full``, the owner kill switch variable, the R15 portfolio
+predicate, the sandbox target variable); the request cannot supply a token, a branch, a title or a path.
 
 ``audit-settle`` (BL-160) records one past M9 audit round's measured provider spend on the durable
 provider-spend ledger, for a round that ran before the audit reserved from it: the executor downloads that
@@ -110,7 +119,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle", "audit-abandon")
-JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", "propose", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -402,6 +411,8 @@ def validate(
         return {"job": "count", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
+    if job == "propose":
+        return _validate_propose(request, registry)
     allowed_keys = {"job", "repository", "ecosystem", "lane", "refresh"}
     if set(request) - allowed_keys:
         raise RequestError(f"unknown fields {sorted(set(request) - allowed_keys)}")
@@ -423,6 +434,26 @@ def validate(
             raise RequestError('refresh needs "lane": "R" (a fresh seal attempt is Lane R only)')
         outputs["refresh"] = "true"
     return outputs
+
+
+def _validate_propose(request: dict[str, Any], registry: list[dict[str, Any]]) -> dict[str, str]:
+    """R50 WP-1: one sealed candidate to propose (dry run by default). Exact fields; the repository and
+    its ecosystem must match ``data/registry.json``; ``lane`` is ``R`` or ``L`` (never defaulted)."""
+    if set(request) - {"job", "repository", "ecosystem", "lane", "dry_run"}:
+        raise RequestError(f"unknown fields {sorted(set(request) - {'job', 'repository', 'ecosystem', 'lane', 'dry_run'})}")
+    repository, ecosystem, lane = request.get("repository"), request.get("ecosystem"), request.get("lane")
+    entry = next((e for e in registry if e.get("repository") == repository), None)
+    if entry is None:
+        raise RequestError(f"{repository!r} is not listed in data/registry.json")
+    if ecosystem != entry.get("ecosystem"):
+        raise RequestError(f"{repository} is registered as {entry.get('ecosystem')!r}, not {ecosystem!r}")
+    if lane not in ("R", "L"):
+        raise RequestError(f"a propose request needs lane \"R\" or \"L\" written out, not {lane!r}")
+    dry_run = request.get("dry_run", True)
+    if not isinstance(dry_run, bool):
+        raise RequestError(f"dry_run {dry_run!r} is not a JSON boolean")
+    return {"job": "propose", "repository": repository, "ecosystem": ecosystem, "lane": lane,
+            "dry_run": "true" if dry_run else "false"}
 
 
 def check_trigger(event: Any) -> tuple[str, str]:

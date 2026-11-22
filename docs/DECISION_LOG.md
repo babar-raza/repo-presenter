@@ -8460,3 +8460,30 @@ owner can drop the entry. Not proven (R41): the hosted dry-run cycle. What remai
 the defect is fixed, so filing is now refused as stale), the hosted filing job (WP-4) behind the sandbox, upstream tracker listing (WP-9).
 
 Backlog: BL-740, BL-741, BL-742
+
+## 2026-11-22: propose workflow: the README delivery path through the repository-presenter App exists, dry run by default, five gates before any write (BL-730, BL-731, BL-732, BL-733)
+
+Problem. Owner feedback R50: every README candidate delivered upstream goes through the repository-presenter GitHub App ("previous project was doing it well"). `propose.effect.propose_candidate`, the PR text composer, the R15 portfolio gate, `mint-app-token.yml` and the secrets `GH_APP_ID` / `GH_APP_PRIVATE_KEY` existed, but nothing called them; the old project's `propose.yml` / `propose-sandbox.yml` were never reused (`migration/reuse-manifest.yaml`).
+
+Decision (R36: reuse what worked, adapt it, do not rebuild). Ported the old `propose.yml` shape (read-only dry run, then one write job with a one-repository App token) as `.github/workflows/propose.yml`, with the driver the old `repository-presenter propose` command was rebuilt as `src/repo_presenter/propose/run.py` (`gates`, `payload`, `write`). The sealed candidate is read from its bundle ref on the state remote (`export_bundle`), not from an artifact. The workflow is `workflow_call` (from `run-request-execute.yml` job `propose`; request `{"job":"propose","repository","ecosystem","lane":"R"|"L"}`, a dry run unless `"dry_run": false` is written out, every field validated by `scripts/run_request.py`) and `workflow_dispatch` (main only).
+
+| Job | Secrets | Permissions | Writes |
+|---|---|---|---|
+| validate | none | contents read | nothing |
+| gate | none | contents + attestations read | nothing; evaluates the five gates, uploads `gates.json` |
+| dry-run | read-only App mint (contents, pull-requests, metadata: read) | contents read | nothing; uploads `payload.json` (title, body, files, draft, hashes, gates, refusals) |
+| write | App mint, contents + pull-requests write, one repository, one step | contents + attestations read | draft PR through the App, only behind all gates |
+
+The five gates (all must hold; the write job's `if:` names each, and the step re-evaluates all five in Python before any GitHub call): (1) the target is on `data/upstream_write_allowlist.json` for `pull_request`, draft only; (2) `data/registry.json` lists it active, `mode: full`; (3) repository variable `REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED` is true/1; (4) the R15 portfolio predicate (`propose/portfolio_gate.py`, the official count, fail closed) says every active repository has a terminal outcome in both lanes; (5) repository variable `REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY` names the target (unset fails closed; `*` is the owner's lift of the restriction, every other gate unchanged). The effect adds its own gates behind these (review ACCEPT, acceptance contract, committed authorization record, token provenance, source freshness, PR history, App attribution) and the transport guard in `github/client.py` re-checks the allowlist, the R15 predicate and `draft: true` on every request.
+
+Naming drift fixed (BL-733): the effects read `REPOSITORY_PRESENTER_*_WRITE_AUTHORIZED` (old project) while `issues.yml` and the issues code read `REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED`. One family now: `REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`, `REPO_PRESENTER_CANDIDATES_WRITE_AUTHORIZED`, `REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED`; a test pins them and fails on the old prefix.
+
+Evidence. 27 workflow-structure tests (secrets only in the two mint steps; write job unreachable with any single gate closed, the `if:` expression evaluated over each gate; read-only permissions in every job; the dry-run job and the driver's payload path write nothing, with every GitHub write function raising in the test) and 27 driver tests. A local dry run against the real state ref of Cells Rust Lane R (ACCEPTED seal at `1a6004af47b1`) built the draft PR payload with `writes_performed: 0`.
+
+Found, not fixed here (BL-731, needs the supervisor): `propose_candidate` gate 3b classifies with only `sealed=True` and the review verdict, so no candidate can ever reach `PUBLISHABLE_STATES`; a real write would be refused `ACCEPTANCE_NOT_CERTIFIED` even with every gate open (the dry-run payload reports `acceptance_state: sealed`). Its test file stubs `classify`, which is why no test saw it.
+
+What the owner sets (nothing is set today, so the write job cannot run): repository variables `REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY` (owner/name of the sandbox target) and `REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED=true`; for the sandbox, the repository in the registry and allowlist with a sealed candidate and the App installed (BL-732); one committed `ops/proposal-authorizations/<owner>__<name>__<hash12>.json` per candidate (at most 7 days, merged before the run). Conflict recorded for the owner (BL-732): R17 wants the mechanics proven before R15 holds, but the brief makes the R15 gate part of every write, so the sandbox write also waits for R15 unless the owner rules a sandbox exemption.
+
+Hosted-unproven (R41): no propose run has happened; the first is a dry run request.
+
+Backlog: BL-730, BL-731, BL-732, BL-733
