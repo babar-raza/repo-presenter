@@ -1,0 +1,3135 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "degrade_records": [
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Tagged-PDF structure authoring — `doc.CreateStructTree()` builds (idempotently) a `/StructTreeRoot` and marks the document Tagged; `root.Append(type, opts?)` / `element.Append(...)` grow the tree, with live setters for `Alt` / `ActualText` / `Lang` / `Title` / `Expansion` / `ID`, `SetType(type)` / `Type =` for the structure type itself (validated against the standard types and the `/RoleMap`, and rewriting the marked-content tag behind the element), `element.Remove()` detaches an element and its subtree, releasing its `/ParentTree` slots and untagging the content it marked without deleting any",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.008.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "It also reports missing or wrong PDF/UA identification (`pdfuaid:part`) at BOTH parts, as a WARNING rather than an error — the reference profile tags every identification rule `minor`, so a document whose only defect is a missing claim still reports `Passed`.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.008.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "PDF/A validation — `doc.ValidatePdfA(level)` checks a curated, machine-decidable subset of PDF/A (ISO 19005) for parts 1–3 at every conformance level (`'1b'`/`'1a'`/`'2b'`/`'2u'`/`'2a'`/`'3b'`/`'3u'`/`'3a'`): no encryption, file `/ID` present, version ceiling, no external streams or prohibited filters (LZW everywhere; JPX/JBIG2 in part 1), no PostScript/reference XObjects, conformant identification XMP (`pdfaid:part`/`conformance`) and `/Info`↔XMP consistency, a PDF/A `/OutputIntent` whose ICC `/DestOutputProfile` is a profile of the device space the content act (+15 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.009.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "The candidate claims that `doc.ValidatePdfX` checks for 'exactly one `GTS_PDFX` `/OutputIntent` — with an embedded `/DestOutputProfile`, a registered characterization name in its place, or (X-4p only) an external `/DestOutputProfileRef`'. (+2 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.009.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "The candidate claims that `doc.ConvertToPdfX` 'adds an `/OutputIntent` — by default one carrying a registered characterization name (`opts.outputCondition`, default `'CGATS TR 001'`), or an embedded profile via `opts.iccProfile`, or an external reference via `opts.outputProfileRef` at X-4p'. (+1 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.009.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Fields are laid out under `position`, `tb`, `lr-tb`, `table` and `row` containers following the XFA 3.3 specification's rules, from the sizes the template states — each field's and draw's `w`/`h`, a table's `columnWidths`, and the extent a container takes from its children — and, where it leaves a size to the content, from the text measured with the face it names: one embedded in the document, one in a registered font folder, or for Arial, Times New Roman and Courier New only the bundled Liberation face. (+3 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.003.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Table extraction: tagged `/Table` tree first, else geometry — for a tagged PDF, `GetTables` uses the `/Table → TR → TH/TD` structure tree as the authoritative source for rows/cells/spans (`options.structure = 'off'` forces geometry). (+10 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.004.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Stream decoding covers the byte filters; `Save({ streamFilter })` re-filters — decoding supports `FlateDecode`, `LZWDecode`, `ASCII85Decode`, `ASCIIHexDecode`, `RunLengthDecode`, and `BrotliDecode` (with predictors and multi-filter chains), plus `DCTDecode` (baseline/progressive/arithmetic/lossless/hierarchical JPEG), `CCITTFaxDecode` (Group 3 1D/2D and Group 4), `JPXDecode` (JPEG 2000, to 8-bit samples), and `JBIG2Decode` (arithmetic generic/symbol/text + MMR, to 1-bit samples) at the image layer. (+2 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.005.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "With `forms: true`, field values are exported as control values, so a **password field's value is present in the markup** — export it only from documents whose field data may be published. (+2 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.005.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Footnotes and endnotes — Flow only: a note reference in a table cell, a floating box or a CSS float is refused with an error, and so is one reaching a single-rect placement (`page.AddHtml`, `page.AddDocx`, `placeElements`); `page.AddMarkdown` places its notes after the content instead. (+2 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.006.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Hyphenation — nine bundled languages (no Russian: its patterns are LPPL-only); a drawn hyphen is page content, so extracted text reads `hyu00ADnphen` (a soft hyphen, from a Standard-14 face) or `hy-nphen` (an embedded font, which has no second code for the glyph), and it is not marked as an artifact or given `/ActualText`; HTML `hyphens`, headings and code blocks do not hyphenate, and `ReplaceText({ adjust: 'reflow' })` hyphenates only when asked (`hyphenate`); a table column's auto-fit width still assumes whole words; soft hyphens in text that does NOT ask for hyphenation still draw as WinAn시",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.007.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "Tab stops — no bar tabs and no list-number tabs (DOCX import reports both); table cells take no tab stops — a tab in an authored cell draws nothing, and one in a DOCX cell is drawn as a space and reported; a stop is measured from the block's left edge, so a stop past the right edge is never reached and the tab ends its line; tabs cannot be combined with `shape: true`; Markdown and HTML carry no tab stops.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:579.007.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "AutoTag infers a `/StructTreeRoot` for an untagged document from page layout: headings by font-size clustering (the modal size is body text; larger distinct sizes rank `H1`..`H6`), paragraphs, and images as `Figure` (with `/Alt` from `opts.alt`) or `/Artifact` when undescribed. (+2 identical findings merged)",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.008.list"
+    },
+    {
+      "action": "inherited_text_withheld",
+      "detail": "`StructElement.TableAttributes` / `ListAttributes` / `LayoutAttributes` interpret the `/A` + `/C` attribute dictionaries (resolving `/ClassMap` classes, `/A`-over-`/C` precedence) into typed views: table (`rowSpan`/`colSpan`/`headers`/`scope`/`summary`), list (`listNumbering`), and the full Layout owner (placement, writing mode, colors, borders, padding, indents, alignment, BBox, columns, ruby, …).",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-562",
+      "section": "api_reference",
+      "slot": "inherited_unit:014.008.list"
+    }
+  ],
+  "omitted": [
+    {
+      "fact_id": "install_command:npm",
+      "reason": "Installation details belong in a separate 'Installation' section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.open",
+      "reason": "Symbol listed for reference only; opening prose describes the action (Document.Open) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.recovery",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (recovery) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.redact",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (redaction) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.sanitize",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (sanitization) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.sign",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (signing) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.tohtml",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (HTML conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.tomarkdown",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (Markdown conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.todocx",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (DOCX conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.toepub",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (EPUB conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.converttopdfa",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (PDF/A conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.converttopdfua",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (PDF/UA conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.converttopdfx",
+      "reason": "Symbol listed for reference only; opening prose describes the capability (PDF/X conversion) without naming the symbol.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:form",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:annotation",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:outlineitem",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:optionalcontent",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:parsecontentstream",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:serializecontentstream",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:page.replacetext",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:page.redact",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:page.restyletext",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:page.graphics",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:page.images",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:signaturefield",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:field",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.validatepdfua",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:encryptoptions",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.validatepdfa",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.getstructtree",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.autotag",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.summarize",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.ask",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.generatealttext",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aimodel",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.saveasync",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.tohtmlasync",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:document.validatepdfuaasync",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:operationprogress",
+      "reason": "Symbol listed for reference only; opening prose does not name API symbols.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:017.paragraph",
+      "reason": "Runtime dependency details belong in a separate 'Dependencies' section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:020.paragraph",
+      "reason": "Installation details belong in a separate 'Installation' section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:549.paragraph",
+      "reason": "Tree-construction test coverage details belong in a separate 'Development and Testing' section, not the opening.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:001",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:005",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:006",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:007",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:008",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:009",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:010",
+      "reason": "Examples are not cited in prose; they belong in the API Reference section.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:009.code_block",
+      "reason": "This is an inherited unit containing a Mermaid diagram, not a prose capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:011.001.list",
+      "reason": "This is an inherited unit containing a list of features, not a prose capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:011.002.list",
+      "reason": "This is an inherited unit containing a list of features, not a prose capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:011.003.list",
+      "reason": "This is an inherited unit containing a list of features, not a prose capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:491.paragraph",
+      "reason": "This is an inherited unit describing a limitation, not a core capability.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:587.paragraph",
+      "reason": "This is an inherited unit pointing to an example directory, not a core capability.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:588.paragraph",
+      "reason": "This is an inherited unit introducing additional sections, not a core capability.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:589.list",
+      "reason": "This is an inherited unit containing a list of features, not a prose capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:596.paragraph",
+      "reason": "This is an inherited unit pointing to documentation and issue tracking, not a core capability.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "This identity fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "This identity fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "This identity fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "This identity fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "This identity fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "This identity fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "This package fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:node_engine",
+      "reason": "This package fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "This package fact is used by other cited facts but does not describe a capability on its own.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:001",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:002",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:003",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:004",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:005",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:006",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:007",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:008",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:009",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:010",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:011",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:012",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:013",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:014",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:015",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:016",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:017",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:018",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:019",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:020",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:021",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:022",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:023",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:024",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:025",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:026",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:027",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:028",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:029",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "example:030",
+      "reason": "This is an example fact, not a capability description.",
+      "section": "key_capabilities"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "inherited_unit:005.paragraph"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.PDF FOSS for TypeScript reads and writes PDF documents, converts them to HTML, Markdown, DOCX, and EPUB, and supports PDF/A, PDF/UA, and PDF/X conversion and validation. It parses a PDF into an in-memory object model on Document.Open, allows mutations such as page edits, metadata changes, and reordering, and serializes a fresh, renumbered document on save. It also provides recovery, redaction, sanitization, signing, and AI-assisted summarization, question answering, and alt-text generation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.recovery",
+        "public_symbol:parsecontentstream",
+        "public_symbol:serializecontentstream"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It opens PDFs from bytes or files, repairs damaged files using Document.Open and Document.recovery, and parses or serializes content streams with parseContentStream and serializeContentStream."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.graphics",
+        "public_symbol:page.images",
+        "public_symbol:page.redact",
+        "public_symbol:page.replacetext",
+        "public_symbol:page.restyletext"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It edits page content by replacing or restyling text with Page.ReplaceText and Page.RestyleText, redacting regions with Page.Redact, and accessing graphics and images through Page.Graphics and Page.Images."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:field",
+        "public_symbol:form",
+        "public_symbol:signaturefield"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "It handles interactive forms and annotations by creating and editing Form fields, Annotation entries, SignatureField instances, and Field objects."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.validatepdfua"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It converts documents to HTML, Markdown, DOCX, and EPUB formats using Document.ToHtml, Document.ToMarkdown, Document.ToDocx, and Document.ToEpub, and validates or converts to PDF/A with Document.ConvertToPdfA and Document.ValidatePdfUa."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.redact",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.sign",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:encryptoptions"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It secures documents by encrypting with EncryptOptions, signing with Document.Sign, redacting content with Document.Redact, sanitizing metadata and hidden data with Document.Sanitize, and validating against PDF/A with Document.ValidatePdfA."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.autotag",
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:optionalcontent"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:6",
+      "text": "It manages document structure and accessibility by inferring or authoring tagged structure with Document.AutoTag, reading the structure tree with Document.GetStructTree, handling OptionalContent layers, and validating against PDF/UA."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aimodel",
+        "public_symbol:document.ask",
+        "public_symbol:document.generatealttext",
+        "public_symbol:document.summarize"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:7",
+      "text": "It integrates AI capabilities through the AiModel class to summarize documents with Document.Summarize, answer questions with Document.Ask, and generate alt text with Document.GenerateAltText."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.saveasync",
+        "public_symbol:document.tohtmlasync",
+        "public_symbol:document.validatepdfuaasync",
+        "public_symbol:operationprogress"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:8",
+      "text": "It supports asynchronous operations with Document.SaveAsync, Document.ToHtmlAsync, and Document.ValidatePdfUaAsync, and reports progress during long-running tasks using OperationProgress."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document",
+        "public_symbol:flow",
+        "public_symbol:annotation",
+        "public_symbol:field"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The @asposefoss/pdf package exposes the Document class as its primary entry point, which provides methods to open, create, and manipulate PDF documents. The Flow class serves as a layout builder for multi-column, multi-page content, while Annotation, Field, and other classes support interactive and structured content."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document",
+        "public_symbol:document.open",
+        "public_symbol:document.pages",
+        "public_symbol:document.recovery",
+        "public_symbol:document.save"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document",
+      "text": "The Document class provides Document.Open to load a PDF from bytes, Document.Save to serialize it, Document.Pages to access individual pages, and Document.recovery to inspect recovery results when opening a damaged file."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:flow",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist",
+        "public_symbol:flow.addparagraph"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:flow",
+      "text": "The Flow class supports multi-column layout with Flow.AddParagraph for wrapped body text, Flow.AddHeading for section headings, and Flow.AddList for bullet or numbered lists."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:annotation",
+        "public_symbol:annotation.addreply",
+        "public_symbol:annotation.addstatereply",
+        "public_symbol:annotation.color"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:annotation",
+      "text": "The Annotation class supports adding replies and state replies via Annotation.AddReply and Annotation.AddStateReply, and its color is controlled via Annotation.Color."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:field",
+        "public_symbol:field.actions",
+        "public_symbol:field.constructor",
+        "public_symbol:field.flatten"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:field",
+      "text": "The Field class provides Field.Actions for field triggers, Field.constructor for field creation, and Field.Flatten to bake a field's appearance into the page content."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:document.sign",
+        "public_symbol:document.verifysignatures"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.sign",
+      "text": "The Document class supports signing via Document.Sign, adding timestamps with Document.AddDocumentTimestamp, embedding validation data using Document.AddValidationData, and verifying signatures with Document.VerifySignatures."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.validatepdfx"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.validatepdfa",
+      "text": "The Document class validates PDF/A compliance with Document.ValidatePdfA, converts to PDF/A using Document.ConvertToPdfA, validates PDF/UA with Document.ValidatePdfUa, and validates PDF/X with Document.ValidatePdfX."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.autotag",
+        "public_symbol:document.createstructtree",
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.istagged"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.getstructtree",
+      "text": "The Document class exposes the logical structure tree via Document.GetStructTree, enables tagging with Document.AutoTag and Document.CreateStructTree, and reports tagging status via Document.IsTagged."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.tohtml",
+      "text": "The Document class exports to HTML with Document.ToHtml, to Markdown with Document.ToMarkdown, to DOCX with Document.ToDocx, and to EPUB with Document.ToEpub."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.applyredactions",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.redact",
+        "public_symbol:page.redact"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.redact",
+      "text": "The Document class redacts content with Document.Redact, marks redactions via Document.MarkRedactText, and applies marked redactions using Document.ApplyRedactions; Page.Redact performs redaction on a single page."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.clearmetadata",
+        "public_symbol:document.flattenannotations",
+        "public_symbol:document.flattenform",
+        "public_symbol:document.sanitize"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.sanitize",
+      "text": "The Document class sanitizes documents with Document.Sanitize, clears metadata via Document.ClearMetadata, flattens annotations using Document.FlattenAnnotations, and flattens forms with Document.FlattenForm."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:aimodel",
+        "public_symbol:document.ask",
+        "public_symbol:document.generatealttext",
+        "public_symbol:document.summarize"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.summarize",
+      "text": "The Document class summarizes content with Document.Summarize, answers questions via Document.Ask, and generates alternate text using Document.GenerateAltText, with AiModel supporting custom language models."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:name",
+        "package:node_engine",
+        "package:version",
+        "public_symbol:document.saveasync",
+        "public_symbol:document.tohtmlasync",
+        "public_symbol:document.validatepdfuaasync",
+        "public_symbol:operationprogress"
+      ],
+      "section": "api_reference",
+      "slot": "hub:public_symbol:document.saveasync",
+      "text": "The Document class provides asynchronous operations including Document.SaveAsync, Document.ToHtmlAsync, and Document.ValidatePdfUaAsync, with OperationProgress reporting progress for long-running tasks."
+    },
+    {
+      "fact_ids": [
+        "inherited_unit:581.paragraph"
+      ],
+      "section": "enterprise_relationship",
+      "slot": "context",
+      "text": "It adds broader proprietary-format support, rendering, and advanced document-processing capabilities this FOSS build leaves unimplemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:addbarcodeoptions",
+        "public_symbol:addbarcodeoptions.alt",
+        "public_symbol:addbarcodeoptions.artifact",
+        "public_symbol:addbarcodeoptions.color",
+        "public_symbol:addbarcodeoptions.layer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:addbarcodeoptions",
+      "text": "AddBarcodeOptions class holds options for adding a barcode: alt text, artifact marking, dark-module color, and optional-content layer."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:adddocxresult"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:adddocxresult",
+      "text": "AddDocxResult class holds the remainder text and used height when adding DOCX content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:addimageoptions",
+        "public_symbol:addimageoptions.format",
+        "public_symbol:addimageoptions.layer",
+        "public_symbol:addimageoptions.opacity",
+        "public_symbol:addimageoptions.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:addimageoptions",
+      "text": "AddImageOptions class holds options for adding an image: format override, optional-content layer, opacity, and page index."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:addimagepagesoptions",
+        "public_symbol:addimagepagesoptions.dpi",
+        "public_symbol:addimagepagesoptions.format",
+        "public_symbol:addimagepagesoptions.frames"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:addimagepagesoptions",
+      "text": "AddImagePagesOptions class holds options for adding image pages: DPI, format override, and frame indices."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:addimagepagesresult",
+        "public_symbol:addimagepagesresult.pages",
+        "public_symbol:addimagepagesresult.skipped"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:addimagepagesresult",
+      "text": "AddImagePagesResult class holds the appended pages and the skipped frames that could not be decoded."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aiserviceerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aiserviceerror",
+      "text": "AiServiceError class represents an AI model service failure, such as a non-2xx status, a refusal, a reply cut off at the token limit, a body that is not a chat completion, a response past the size cap, or no answer in time."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alttextfigure",
+        "public_symbol:alttextfigure.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:alttextfigure",
+      "text": "AltTextFigure class holds the alt text, page index, reason, and status for a figure."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alttextoptions",
+        "public_symbol:alttextoptions.autotag",
+        "public_symbol:alttextoptions.language",
+        "public_symbol:alttextoptions.onfigure",
+        "public_symbol:alttextoptions.overwrite"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:alttextoptions",
+      "text": "AltTextOptions class holds options for generating alt text: auto-tag setting, output language, on-figure callback, and overwrite flag."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:alttextreport"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:alttextreport",
+      "text": "AltTextReport class holds the figures processed, requests made, and usage data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotdata",
+        "public_symbol:annotdata.anonymouspopup",
+        "public_symbol:annotdata.dict",
+        "public_symbol:annotdata.inreplyto",
+        "public_symbol:annotdata.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:annotdata",
+      "text": "AnnotData class holds annotation data: anonymous popup, self-contained dict, in-reply-to reference, and page index."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotationreplyoptions",
+        "public_symbol:annotationreplyoptions.rect"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:annotationreplyoptions",
+      "text": "AnnotationReplyOptions class holds options for an annotation reply: author, contents, and rectangle."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotationstate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:annotationstate",
+      "text": "AnnotationState is an enum representing annotation states."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotationstatemodel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:annotationstatemodel",
+      "text": "AnnotationStateModel is an enum representing annotation state models."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:artifactevent",
+        "public_symbol:artifactevent.addr",
+        "public_symbol:artifactevent.parent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:artifactevent",
+      "text": "ArtifactEvent class holds the address of the BMC/BDC op and the enclosing artifact scope."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:askexcerpt"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:askexcerpt",
+      "text": "AskExcerpt class holds the page index and text of an excerpt."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:askoptions",
+        "public_symbol:askoptions.maxchunks",
+        "public_symbol:askoptions.maxinputchars",
+        "public_symbol:askoptions.pages"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:askoptions",
+      "text": "AskOptions class holds options for asking questions: maximum chunks, maximum input characters, pages to search, and signal."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:askresult",
+        "public_symbol:askresult.excerpts",
+        "public_symbol:askresult.found",
+        "public_symbol:askresult.pages"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:askresult",
+      "text": "AskResult class holds the answer, excerpts, found flag, cited pages, and usage data."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:authoringfont"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:authoringfont",
+      "text": "AuthoringFont is a font for the text-authoring API: one of the 12 Latin Standard-14 faces (by name) or an embedded font handle from Document.AddFont."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:barcodemodel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:barcodemodel",
+      "text": "BarcodeModel is an enum representing barcode models."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:borderinfo",
+        "public_symbol:borderinfo.sides"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:borderinfo",
+      "text": "BorderInfo class holds a cell/table border: stroke width, RGB colour, optional dash, and which edges to paint."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:borderstyle"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:borderstyle",
+      "text": "BorderStyle is an enum representing border styles."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:buttoniconposition"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:buttoniconposition",
+      "text": "ButtonIconPosition is an enum representing where a push button's icon sits relative to its caption, following PDF 32000-1 table 189."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.caretannotation.addreply.body.typeerror",
+        "implementation:throws.caretannotation.addstatereply.body.typeerror",
+        "public_symbol:caretannotation",
+        "public_symbol:caretannotation.addreply",
+        "public_symbol:caretannotation.addstatereply"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:caretannotation",
+      "text": "CaretAnnotation class represents a /Caret annotation: a text-insertion mark, drawn as a wedge at the point where text should be added, optionally with a paragraph sign; its AddReply and AddStateReply members are not implemented."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.cellbuilder.setimage.body.typeerror",
+        "public_symbol:cellbuilder",
+        "public_symbol:cellbuilder.setimage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cellbuilder",
+      "text": "CellBuilder class represents one cell in a table row: a text string, optional per-cell style, and how many columns it spans; its setImage member throws TypeError (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:cellheader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:cellheader",
+      "text": "CellHeader is an enum indicating how a cell is marked in a tagged table: a /TH carrying the given /Scope, or a /TD."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:celltextoptions",
+        "public_symbol:celltextoptions.hyphenate",
+        "public_symbol:celltextoptions.padding",
+        "public_symbol:celltextoptions.strikethrough",
+        "public_symbol:celltextoptions.textbackground"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:celltextoptions",
+      "text": "CellTextOptions class holds per-cell/row text and visual style: alignment, background, border, color, font, font size, hyphenation, and leading."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:certifyoptions",
+        "public_symbol:certifyoptions.permissions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:certifyoptions",
+      "text": "CertifyOptions class holds options for Document.Certify: a SignOptions plus the DocMDP permitted-changes level."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chainoptions",
+        "public_symbol:chainoptions.at",
+        "public_symbol:chainoptions.trustanchors"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:chainoptions",
+      "text": "ChainOptions class holds options for certificate chain validation: validation time and trusted root/intermediate certificates."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:chainresult",
+        "public_symbol:chainresult.path",
+        "public_symbol:chainresult.reason"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:chainresult",
+      "text": "ChainResult class holds the built path, reason for untrusted status, and status."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:collectionfielddef",
+        "public_symbol:collectionfielddef.displayname",
+        "public_symbol:collectionfielddef.editable",
+        "public_symbol:collectionfielddef.name",
+        "public_symbol:collectionfielddef.order"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:collectionfielddef",
+      "text": "CollectionFieldDef class holds a schema column definition: display name, editable flag, schema key, order, type, and visibility."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:collectionfieldtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:collectionfieldtype",
+      "text": "CollectionFieldType is an enum representing a schema column: built-in fields derive from the filespec; custom fields (string/date/number) read their value from each file's /CI."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:collectionsettings",
+        "public_symbol:collectionsettings.initialfile",
+        "public_symbol:collectionsettings.sortascending",
+        "public_symbol:collectionsettings.sortby",
+        "public_symbol:collectionsettings.view"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:collectionsettings",
+      "text": "CollectionSettings class holds settings for a collection: fields, initial file, sort ascending flag, sort field, and view mode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:colorconvertreport",
+        "public_symbol:colorconvertreport.cmyktransform",
+        "public_symbol:colorconvertreport.operators",
+        "public_symbol:colorconvertreport.skipped",
+        "public_symbol:colorconvertreport.streams"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:colorconvertreport",
+      "text": "ColorConvertReport class holds a color conversion report: annotations, bytes delta, CMYK transform, images, lossy flag, operators, shadings, and skipped items."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:colorimageresult",
+        "public_symbol:colorimageresult.bytesdelta",
+        "public_symbol:colorimageresult.from"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:colorimageresult",
+      "text": "ColorImageResult class holds a color image conversion result: bytes delta, source color space, object number, and route."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:colorskipped",
+        "public_symbol:colorskipped.opindex"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:colorskipped",
+      "text": "ColorSkipped class holds details of a skipped color operation: object number, operator index, reason, and what was skipped."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:colorsofcmyk"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:colorsofcmyk",
+      "text": "ColorsOfCMYK is an enum representing CMYK color components."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:columnwidth"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:columnwidth",
+      "text": "ColumnWidth is an enum representing a column-width spec: an absolute width in points (fixed) or a share of the leftover space (fraction)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comparetextoptions",
+        "public_symbol:comparetextoptions.exclude",
+        "public_symbol:comparetextoptions.granularity",
+        "public_symbol:comparetextoptions.ignorecase",
+        "public_symbol:comparetextoptions.includehidden"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:comparetextoptions",
+      "text": "CompareTextOptions class holds options for comparing text: cleanup, excluded rectangles, granularity, case-insensitive flag, and hidden text inclusion."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comparisonhtmloptions",
+        "public_symbol:comparisonhtmloptions.title"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:comparisonhtmloptions",
+      "text": "ComparisonHtmlOptions class holds options for HTML comparison: document title."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comparisonjsonoptions",
+        "public_symbol:comparisonjsonoptions.indent",
+        "public_symbol:comparisonjsonoptions.spans"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:comparisonjsonoptions",
+      "text": "ComparisonJsonOptions class holds options for JSON comparison: indent spaces and inclusion of old/new spans."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:comparisonreportoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:comparisonreportoptions",
+      "text": "ComparisonReportOptions class holds the context for a comparison report."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:contentop",
+        "public_symbol:contentop.inlineimage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:contentop",
+      "text": "ContentOp class represents a content stream operator with its operands and, when operator is inlineImage, an inline image object."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:contentvisitor"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:contentvisitor",
+      "text": "ContentVisitor class provides methods to visit different content elements: artifact, glyph, image, marked content, and path."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:convertcategory"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:convertcategory",
+      "text": "ConvertCategory enum lists the categories used during conversion."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:convertcolorsoptions",
+        "public_symbol:convertcolorsoptions.preservespotcolors",
+        "public_symbol:convertcolorsoptions.to",
+        "public_symbol:convertcolorsoptions.transform"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:convertcolorsoptions",
+      "text": "ConvertColorsOptions class holds options for color conversion, including whether to preserve spot colors, the target device space, and the RGB to CMYK transform."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:convertoptions",
+        "public_symbol:convertoptions.flattentransparency",
+        "public_symbol:convertoptions.iccprofile",
+        "public_symbol:convertoptions.preserve"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:convertoptions",
+      "text": "ConvertOptions class holds options for conversion, including flattening transparency for PDF/A-1, an ICC profile for output intent, and destructive-removal categories to preserve."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:crl"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:crl",
+      "text": "Crl class represents a certificate revocation list with its issuer, validity dates, signature, and revoked entries."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:crlentry"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:crlentry",
+      "text": "CrlEntry class represents an entry in a certificate revocation list with a serial number and revocation date."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:datamatrixoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:datamatrixoptions",
+      "text": "DataMatrixOptions class holds options for Data Matrix barcode generation, including the shape."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:digestalgorithm"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:digestalgorithm",
+      "text": "DigestAlgorithm enum lists the digest algorithms used for signing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:docmdppermission"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:docmdppermission",
+      "text": "DocMdpPermission enum lists the DocMDP permitted-changes levels for a certification signature."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document",
+        "public_symbol:document.adddocxasync",
+        "public_symbol:document.addfontsubstitution",
+        "public_symbol:document.addheaderfooter",
+        "public_symbol:document.addhtmlasync",
+        "implementation:throws.document.addattachment.body.typeerror",
+        "implementation:throws.document.adddocumenttimestamp.body.unsupportedfeatureerror",
+        "implementation:throws.document.addfontsubstitution.body.typeerror",
+        "implementation:throws.document.addvalidationdata.body.unsupportedfeatureerror",
+        "implementation:throws.document.appendpspagesinternal.body.pdfparseerror",
+        "implementation:throws.document.booklet.body.rangeerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:document",
+      "text": "Document class provides methods to open, create, and manipulate PDF documents, including adding attachments, Bates numbering, document timestamps, DOCX and HTML content, fonts, and font substitutions, and throws specific errors for unsupported features or invalid arguments."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:documenttimestampreport",
+        "public_symbol:documenttimestampreport.coverswholefile",
+        "public_symbol:documenttimestampreport.modifications",
+        "public_symbol:documenttimestampreport.name",
+        "public_symbol:documenttimestampreport.signercert"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:documenttimestampreport",
+      "text": "DocumentTimestampReport class holds the verdict for one document timestamp, including whether it covers the whole file, modifications after it, its name, and the TSA certificate summary."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:docxflowoptions",
+        "public_symbol:docxflowoptions.onskipped",
+        "public_symbol:docxflowoptions.resolvefamily"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:docxflowoptions",
+      "text": "DocxFlowOptions class holds options for DOCX flow, including placement-time compromises and font bridge override."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:docxflowresult"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:docxflowresult",
+      "text": "DocxFlowResult class holds the result of a DOCX flow operation, including skipped elements."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:embedfontskip",
+        "public_symbol:embedfontskip.detail",
+        "public_symbol:embedfontskip.name"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:embedfontskip",
+      "text": "EmbedFontSkip class describes a non-embedded font that Document.EmbedFonts left as it was, including its name, detail, reason, and the pages it appears on."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:encryptoptions",
+      "text": "EncryptOptions class holds options for PDF encryption, including algorithm, metadata encryption, passwords, and permissions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:exportformdataoptions",
+        "public_symbol:exportformdataoptions.annotations",
+        "public_symbol:exportformdataoptions.file",
+        "public_symbol:exportformdataoptions.includeempty"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:exportformdataoptions",
+      "text": "ExportFormDataOptions class holds options for exporting form data, including whether to include annotations, the source-file reference, and whether to emit empty fields."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:exportjsonoptions",
+        "public_symbol:exportjsonoptions.file",
+        "public_symbol:exportjsonoptions.includeempty",
+        "public_symbol:exportjsonoptions.indent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:exportjsonoptions",
+      "text": "ExportJsonOptions class holds options for exporting JSON form data, including the source-file reference, whether to emit empty fields, and indentation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:exportxmloptions",
+        "public_symbol:exportxmloptions.includeempty"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:exportxmloptions",
+      "text": "ExportXmlOptions class holds options for exporting XML form data, including whether to emit empty fields."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:externalsigner"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:externalsigner",
+      "text": "ExternalSigner class enables signing via an external callback, holding the signer's certificate chain and a sign callback."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:extractpagesoptions",
+        "public_symbol:extractpagesoptions.preservestructure"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:extractpagesoptions",
+      "text": "ExtractPagesOptions class holds options for extracting pages, including whether to preserve the source's tagged structure tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fieldactionsupdate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fieldactionsupdate",
+      "text": "FieldActionsUpdate class represents a field-actions update, where a value sets an action, null removes it, and absence leaves it unchanged."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fieldlock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fieldlock",
+      "text": "FieldLock class specifies which fields a signature freezes, the fields to lock or exclude, and the permissions for PDF 2.0."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fieldtype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fieldtype",
+      "text": "FieldType enum lists the field types in a PDF form."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:floatingbox",
+        "public_symbol:floatingbox.addimage",
+        "public_symbol:floatingbox.addparagraph",
+        "public_symbol:floatingbox.alt",
+        "public_symbol:floatingbox.background",
+        "implementation:throws.floatingbox.addimage.body.typeerror",
+        "implementation:throws.floatingbox.constructor.body.typeerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:floatingbox",
+      "text": "FloatingBox class represents a padded/bordered/filled box of paragraphs and/or an image, floated into a Flow column, and throws TypeError when constructed or when adding an image."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flowparagraphoptions",
+        "public_symbol:flowparagraphoptions.atomics",
+        "public_symbol:flowparagraphoptions.background",
+        "public_symbol:flowparagraphoptions.clear",
+        "public_symbol:flowparagraphoptions.defaulttabinterval"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:flowparagraphoptions",
+      "text": "FlowParagraphOptions class holds options for a flow paragraph, including alignment, atomic boxes, background, clear, and default tab interval."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fontoptimization"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fontoptimization",
+      "text": "FontOptimization class holds font optimization statistics, including the base font, bytes saved, and glyph IDs kept or dropped."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fontprogramkind"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fontprogramkind",
+      "text": "FontProgramKind enum lists the kinds of font programs a font embeds, including Type 3."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fontsubstitutionhandler"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fontsubstitutionhandler",
+      "text": "FontSubstitutionHandler is a function that decides the face for one non-embedded font."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:fontsubstitutionrule"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:fontsubstitutionrule",
+      "text": "FontSubstitutionRule class represents one rule of Document.AddFontSubstitution, mapping an original font name to a substitute face name."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:formdata",
+        "public_symbol:formdata.annots",
+        "public_symbol:formdata.annotskips",
+        "public_symbol:formdata.id"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:formdata",
+      "text": "FormData class holds form data, including annotations, annotation skips, fields, file reference, and the originating document's trailer ID."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:g4encodeoptions",
+        "public_symbol:g4encodeoptions.eofb"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:g4encodeoptions",
+      "text": "G4EncodeOptions class holds options for G4 encoding, including whether to append the end-of-facsimile-block code."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:gradient"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:gradient",
+      "text": "Gradient enum lists the gradient types."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:htmlcomment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:htmlcomment",
+      "text": "HtmlComment class represents an HTML comment node with its data and parent."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:htmldoctype"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:htmldoctype",
+      "text": "HtmlDoctype class represents an HTML doctype node with its name, public ID, system ID, and parent."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:htmlelement",
+        "public_symbol:htmlelement.content"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:htmlelement",
+      "text": "HtmlElement class represents an HTML element node with its attributes, children, content, kind, name, namespace, and parent."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:htmlnode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:htmlnode",
+      "text": "HtmlNode is the base type for HTML nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:htmltext"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:htmltext",
+      "text": "HtmlText class represents an HTML text node with its data and parent."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:icctransformoptions",
+        "public_symbol:icctransformoptions.intent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:icctransformoptions",
+      "text": "IccTransformOptions class holds options for ICC transformation, including the rendering intent."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:imagemode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:imagemode",
+      "text": "ImageMode enum lists the supported image modes for conversion, validated at runtime."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:imageoptions",
+        "public_symbol:imageoptions.annotations",
+        "public_symbol:imageoptions.background",
+        "public_symbol:imageoptions.box",
+        "public_symbol:imageoptions.compression"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:imageoptions",
+      "text": "ImageOptions class holds settings for image export including annotations, background, box, and compression."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:importreport",
+        "public_symbol:importreport.imported",
+        "public_symbol:importreport.importedannots",
+        "public_symbol:importreport.skipped",
+        "public_symbol:importreport.skippedannots"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:importreport",
+      "text": "ImportReport class records imported fields, imported annotations, skipped fields, and skipped annotations."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.inlineimageinfo.remove.body.rangeerror",
+        "public_symbol:inlineimageinfo",
+        "public_symbol:inlineimageinfo.decode",
+        "public_symbol:inlineimageinfo.remove"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:inlineimageinfo",
+      "text": "InlineImageInfo class represents a single inline image in a content stream with decode samples and a remove method that throws RangeError conditionally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:insertpagesoptions",
+        "public_symbol:insertpagesoptions.preservestructure"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:insertpagesoptions",
+      "text": "InsertPagesOptions class holds the preserveStructure option to retain the source's tagged structure tree."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:invalidpassworderror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:invalidpassworderror",
+      "text": "InvalidPasswordError class is raised when an encrypted PDF cannot be opened with the provided password."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:layoutattributes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:layoutattributes",
+      "text": "LayoutAttributes class holds layout properties such as backgroundColor, baselineShift, bbox, blockAlign, borderColor, borderStyle, borderThickness, and color."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.lineannotation.addreply.body.typeerror",
+        "implementation:throws.lineannotation.addstatereply.body.typeerror",
+        "public_symbol:lineannotation",
+        "public_symbol:lineannotation.addreply",
+        "public_symbol:lineannotation.addstatereply"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:lineannotation",
+      "text": "LineAnnotation class represents a /Line annotation with AddReply and AddStateReply methods that throw TypeError conditionally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:lineargradient",
+        "public_symbol:lineargradient.extend"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:lineargradient",
+      "text": "LinearGradient class represents an axial gradient with extend, kind, stops, x1, x2, y1, and y2 members."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:linearizationcheck",
+        "public_symbol:linearizationcheck.errors",
+        "public_symbol:linearizationcheck.linearized"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:linearizationcheck",
+      "text": "LinearizationCheck class reports whether the input begins with a /Linearized parameter dictionary and lists structural problems found."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:linkaction"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:linkaction",
+      "text": "LinkAction class is deprecated and retained so existing imports keep working."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:listattributes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:listattributes",
+      "text": "ListAttributes class holds listNumbering settings."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:loadlimitpatch"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:loadlimitpatch",
+      "text": "LoadLimitPatch class is a partial policy for LoadLimits.with where undefined leaves a field alone and null disables it."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:makesearchableoptions",
+        "public_symbol:makesearchableoptions.dpi",
+        "public_symbol:makesearchableoptions.force",
+        "public_symbol:makesearchableoptions.onpage",
+        "public_symbol:makesearchableoptions.pages"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:makesearchableoptions",
+      "text": "MakeSearchableOptions class holds dpi, force, onPage, pages, and signal settings for making PDFs searchable."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:makesearchablepage",
+        "public_symbol:makesearchablepage.dropped",
+        "public_symbol:makesearchablepage.page",
+        "public_symbol:makesearchablepage.reason",
+        "public_symbol:makesearchablepage.spans"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:makesearchablepage",
+      "text": "MakeSearchablePage class records dropped spans, page number, reason, and written spans for a single page."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:makesearchablereport"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:makesearchablereport",
+      "text": "MakeSearchableReport class holds an array of MakeSearchablePage records."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:markredacttextoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:markredacttextoptions",
+      "text": "MarkRedactTextOptions class holds options for Page.MarkRedactText including search scope and everything AddRedact takes except geometry."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:markdownfontfamily"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:markdownfontfamily",
+      "text": "MarkdownFontFamily class holds the four faces bold, boldItalic, italic, and regular where bold, italic and boldItalic fall back to regular."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:markdownfontspec"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:markdownfontspec",
+      "text": "MarkdownFontSpec class represents a single face or an explicit family."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.markupannotation.addreply.body.typeerror",
+        "implementation:throws.markupannotation.addstatereply.body.typeerror",
+        "public_symbol:markupannotation",
+        "public_symbol:markupannotation.addreply",
+        "public_symbol:markupannotation.addstatereply"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:markupannotation",
+      "text": "MarkupAnnotation class represents a text-markup annotation with AddReply and AddStateReply methods that throw TypeError conditionally."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdblock",
+      "text": "MdBlock class is a base type for Markdown block nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdblockquote"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdblockquote",
+      "text": "MdBlockQuote class holds children and type for a Markdown blockquote node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdcode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdcode",
+      "text": "MdCode class holds type and value for an inline code span."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdcodeblock"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdcodeblock",
+      "text": "MdCodeBlock class holds fenced, info, literal, and type for a fenced or indented code block."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdemph"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdemph",
+      "text": "MdEmph class holds children and type for an emphasis node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdhardbreak"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdhardbreak",
+      "text": "MdHardBreak class holds type for a hard line break."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdhtmlinline"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdhtmlinline",
+      "text": "MdHtmlInline class holds literal and type for inline HTML."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdimage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdimage",
+      "text": "MdImage class holds children, destination, title, and type for an image node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdinline"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdinline",
+      "text": "MdInline class is a base type for Markdown inline nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mditem"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mditem",
+      "text": "MdItem class holds checked, children, and type for a list item node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdlink"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdlink",
+      "text": "MdLink class holds children, destination, title, and type for an inline or reference link node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdlist",
+        "public_symbol:mdlist.delimiter",
+        "public_symbol:mdlist.start"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdlist",
+      "text": "MdList class holds children, delimiter, ordered, start, tight, and type for a list node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdnode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdnode",
+      "text": "MdNode class is a base type for Markdown nodes."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdparagraph"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdparagraph",
+      "text": "MdParagraph class holds children and type for a paragraph node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdsoftbreak"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdsoftbreak",
+      "text": "MdSoftBreak class holds type for a soft line break."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdstrong"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdstrong",
+      "text": "MdStrong class holds children and type for a strong emphasis node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdtable"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdtable",
+      "text": "MdTable class holds align, children, and type for a table node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdtablerow"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdtablerow",
+      "text": "MdTableRow class holds children, header, and type for a table row node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdtext"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdtext",
+      "text": "MdText class holds type and value for a text node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:mdthematicbreak"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:mdthematicbreak",
+      "text": "MdThematicBreak class holds type for a thematic break node."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:metadata"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:metadata",
+      "text": "Metadata class holds document metadata fields including author, creationDate, creator, custom, keywords, modDate, producer, subject."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:metadatafield"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:metadatafield",
+      "text": "MetadataField is a public symbol representing a metadata field."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:metadatasyncreport"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:metadatasyncreport",
+      "text": "MetadataSyncReport class reports changed and skipped metadata fields during synchronization."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:metadataupdate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:metadataupdate",
+      "text": "MetadataUpdate class holds fields that can be updated in document metadata including author, creationDate, creator, custom, keywords, modDate, producer, subject."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:nupoptions",
+        "public_symbol:nupoptions.drawborder",
+        "public_symbol:nupoptions.gutter",
+        "public_symbol:nupoptions.margin",
+        "public_symbol:nupoptions.order"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:nupoptions",
+      "text": "NUpOptions class provides options for arranging multiple pages per sheet including drawBorder, gutter, margin, order."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:nameddest"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:nameddest",
+      "text": "NamedDest is a destination given by name, resolved by the viewer through the document's named-destination tables rather than at write time."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ocspresponse"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:ocspresponse",
+      "text": "OcspResponse class holds OCSP response data including producedAt, responderCerts, responseStatus, responses, signature, signatureAlgorithm, tbsResponseData."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:ocspsingleresponse"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:ocspsingleresponse",
+      "text": "OcspSingleResponse class holds a single OCSP response including hashAlg, issuerKeyHash, issuerNameHash, nextUpdate, revocationTime, serialNumber, status, thisUpdate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:openoptions",
+        "public_symbol:openoptions.limits",
+        "public_symbol:openoptions.password",
+        "public_symbol:openoptions.recipient"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:openoptions",
+      "text": "OpenOptions class provides options for opening a document including limits, password, recipient."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:optimizereport",
+        "public_symbol:optimizereport.bytessaved",
+        "public_symbol:optimizereport.dr",
+        "public_symbol:optimizereport.images",
+        "public_symbol:optimizereport.jbig2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:optimizereport",
+      "text": "OptimizeReport class reports optimization results including bytesSaved, dr, images, jbig2."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:overlayoptions",
+        "public_symbol:overlayoptions.opacity",
+        "public_symbol:overlayoptions.pages",
+        "public_symbol:overlayoptions.rect",
+        "public_symbol:overlayoptions.rotate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:overlayoptions",
+      "text": "OverlayOptions class provides options for overlaying content including opacity, pages, rect, rotate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:padding"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:padding",
+      "text": "Padding class defines inner cell padding with top, left, right, bottom values."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagelayout"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pagelayout",
+      "text": "PageLayout enum specifies how a viewer arranges pages when the document opens."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagemode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pagemode",
+      "text": "PageMode enum specifies which of a viewer's panels is open when the document opens."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagepath",
+        "public_symbol:pagepath.addr-2"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pagepath",
+      "text": "PagePath class holds path data including Addr, artifact, bbox, clip, ctm, fill, fillRule."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagerenderingcomparison",
+        "public_symbol:pagerenderingcomparison.oldpage",
+        "public_symbol:pagerenderingcomparison.ratio",
+        "public_symbol:pagerenderingcomparison.width"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pagerenderingcomparison",
+      "text": "PageRenderingComparison class holds comparison data between two page renders including oldPage, ratio, width."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagetextcomparison"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pagetextcomparison",
+      "text": "PageTextComparison class holds comparison data between two page texts including changes, minimal, newPage, oldPage, stats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pagetransition",
+        "public_symbol:pagetransition.dimension",
+        "public_symbol:pagetransition.direction",
+        "public_symbol:pagetransition.duration",
+        "public_symbol:pagetransition.motion"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pagetransition",
+      "text": "PageTransition class specifies a page's transition effect including dimension, direction, duration, motion."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pathpaint"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pathpaint",
+      "text": "PathPaint class holds paint data including rgb, space."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pathrecoloroptions",
+        "public_symbol:pathrecoloroptions.fill",
+        "public_symbol:pathrecoloroptions.stroke"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pathrecoloroptions",
+      "text": "PathRecolorOptions class provides options for path recoloring including fill, stroke."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pathsegment"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pathsegment",
+      "text": "PathSegment class holds path segment data including c1, c2, op, pt."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pathsubpath"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pathsubpath",
+      "text": "PathSubpath class holds subpath data including closed, segments."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pdf417options",
+        "public_symbol:pdf417options.columns",
+        "public_symbol:pdf417options.eclevel"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pdf417options",
+      "text": "Pdf417Options class provides options for PDF417 barcodes including columns, ecLevel."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pdfaction"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pdfaction",
+      "text": "PdfAction is any action this library models, for an annotation's /A."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pdfparseerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pdfparseerror",
+      "text": "PdfParseError is an error thrown when parsing a PDF fails."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pdfuaconvertoptions",
+        "public_symbol:pdfuaconvertoptions.lang",
+        "public_symbol:pdfuaconvertoptions.part",
+        "public_symbol:pdfuaconvertoptions.rolemap",
+        "public_symbol:pdfuaconvertoptions.title"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pdfuaconvertoptions",
+      "text": "PdfUaConvertOptions class provides options for converting to PDF/UA including lang, part, roleMap, title."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pdfxconvertoptions",
+        "public_symbol:pdfxconvertoptions.convertcolor",
+        "public_symbol:pdfxconvertoptions.iccprofile",
+        "public_symbol:pdfxconvertoptions.outputcondition",
+        "public_symbol:pdfxconvertoptions.outputprofileref"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pdfxconvertoptions",
+      "text": "PdfXConvertOptions class provides options for converting to PDF/X including convertColor, iccProfile, outputCondition, outputProfileRef."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:permissions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:permissions",
+      "text": "Permissions class holds document permission flags including accessibility, annotating, assembling, copying, fillingForms, highQualityPrinting, modifying, printing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:polyannotation",
+        "implementation:throws.polyannotation.addreply.body.typeerror",
+        "implementation:throws.polyannotation.addstatereply.body.typeerror",
+        "public_symbol:polyannotation.addreply",
+        "public_symbol:polyannotation.addstatereply"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:polyannotation",
+      "text": "PolyAnnotation is a /Polygon (closed) or /PolyLine (open) annotation: a multi-vertex path in /Vertices, optionally filled (/IC) and, for polylines, capped with /LE endings; AddReply throws TypeError (conditionally)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:postscriptoptions",
+        "public_symbol:postscriptoptions.pagesize"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:postscriptoptions",
+      "text": "PostScriptOptions class provides options for PostScript output including pageSize."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:postscriptresult"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:postscriptresult",
+      "text": "PostScriptResult class holds PostScript output including pages."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:printermarkcornerposition"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:printermarkcornerposition",
+      "text": "PrinterMarkCornerPosition is a public symbol representing a corner position for printer marks."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:printermarkkind"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:printermarkkind",
+      "text": "PrinterMarkKind is a public symbol representing a kind of printer mark."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:printermarksideposition"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:printermarksideposition",
+      "text": "PrinterMarkSidePosition is a public symbol representing a side position for printer marks."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:printermarksoptions",
+        "public_symbol:printermarksoptions.expandcropbox",
+        "public_symbol:printermarksoptions.kinds",
+        "public_symbol:printermarksoptions.mode"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:printermarksoptions",
+      "text": "PrinterMarksOptions class provides options for printer marks including expandCropBox, kinds, mode."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:prunepolicy",
+        "public_symbol:prunepolicy.droppagekeys",
+        "public_symbol:prunepolicy.sanitizeannots"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:prunepolicy",
+      "text": "PrunePolicy class provides options for pruning content including dropPageKeys, sanitizeAnnots."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pubsecencryptoptions",
+        "public_symbol:pubsecencryptoptions.algorithm",
+        "public_symbol:pubsecencryptoptions.encryptmetadata",
+        "public_symbol:pubsecencryptoptions.keywrap",
+        "public_symbol:pubsecencryptoptions.oaephash"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pubsecencryptoptions",
+      "text": "PubSecEncryptOptions class provides options for public-key encryption including algorithm, encryptMetadata, keyWrap, oaepHash."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pubsecrecipient"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pubsecrecipient",
+      "text": "PubSecRecipient class holds recipient credentials for public-key encryption including certificate, passphrase, pkcs12, privateKey."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pubsecrecipientcert",
+        "public_symbol:pubsecrecipientcert.certificate",
+        "public_symbol:pubsecrecipientcert.permissions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:pubsecrecipientcert",
+      "text": "PubSecRecipientCert class holds recipient certificate data including certificate, permissions."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:qrecc"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:qrecc",
+      "text": "QrEcc is a public symbol representing QR code error correction level."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:qroptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:qroptions",
+      "text": "QrOptions class holds the ECC and version options for QR code generation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:rgb"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:rgb",
+      "text": "RGB class represents an RGB color value."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:radialgradient"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:radialgradient",
+      "text": "RadialGradient class defines a radial gradient where the ramp runs from the focal point out to the circle (cx, cy, r), with fx/fy defaulting to the centre."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:redactannotation",
+        "implementation:throws.redactannotation.addreply.body.typeerror",
+        "implementation:throws.redactannotation.addstatereply.body.typeerror",
+        "public_symbol:redactannotation.addreply",
+        "public_symbol:redactannotation.addstatereply"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:redactannotation",
+      "text": "RedactAnnotation class represents a /Redact annotation (PDF 32000-1 §12.5.6.23): a mark over a region, plus the overlay to paint when it is applied; AddReply and AddStateReply are not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:renderingcompareoptions",
+        "public_symbol:renderingcompareoptions.annotations",
+        "public_symbol:renderingcompareoptions.dpi",
+        "public_symbol:renderingcompareoptions.mergedistance",
+        "public_symbol:renderingcompareoptions.tolerance"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:renderingcompareoptions",
+      "text": "RenderingCompareOptions class holds the annotations, dpi, mergeDistance, and tolerance options for rendering comparison."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:renderingcomparison",
+        "public_symbol:renderingcomparison.identical"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:renderingcomparison",
+      "text": "RenderingComparison class holds the changedPixels, identical, pages, ratio, and totalPixels results of a rendering comparison."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:replacefontrefusal"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:replacefontrefusal",
+      "text": "ReplaceFontRefusal class explains why a page, one of its annotation appearances, or a part of either was left as it was."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:resizeoptions",
+        "public_symbol:resizeoptions.scalecontent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:resizeoptions",
+      "text": "ResizeOptions class holds the scaleContent option that scales existing content to fill the new box."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:restyletextoptions",
+        "public_symbol:restyletextoptions.hyphenate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:restyletextoptions",
+      "text": "RestyleTextOptions class holds the hyphenate option for text restyling."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:revocationresult",
+        "public_symbol:revocationresult.source"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:revocationresult",
+      "text": "RevocationResult class holds the source and status of a revocation verdict."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:saveimagesoptions",
+        "public_symbol:saveimagesoptions.format",
+        "public_symbol:saveimagesoptions.quality"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:saveimagesoptions",
+      "text": "SaveImagesOptions class holds the format and quality options for image encoding."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:seedvalueerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:seedvalueerror",
+      "text": "SeedValueError class represents a signature field's seed value demand that the signing call cannot meet."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sidebysideoptions",
+        "public_symbol:sidebysideoptions.deletecolor",
+        "public_symbol:sidebysideoptions.gap",
+        "public_symbol:sidebysideoptions.insertcolor"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:sidebysideoptions",
+      "text": "SideBySideOptions class holds the deleteColor, gap, and insertColor options for side-by-side comparison."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sidebysideresult",
+        "public_symbol:sidebysideresult.document"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:sidebysideresult",
+      "text": "SideBySideResult class holds the comparison and document results of a side-by-side operation."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:sigalg"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:sigalg",
+      "text": "SigAlg class represents a signature algorithm passed to an external signer callback: the public-key scheme plus the message-digest algorithm to hash the data with."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:signoptions",
+        "public_symbol:signoptions.cades",
+        "public_symbol:signoptions.contactinfo",
+        "public_symbol:signoptions.fieldname",
+        "public_symbol:signoptions.location"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:signoptions",
+      "text": "SignOptions class holds the cades, contactInfo, fieldName, and location options for signing."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:signaturereport",
+        "public_symbol:signaturereport.chain",
+        "public_symbol:signaturereport.commitmenttype",
+        "public_symbol:signaturereport.coverswholefile",
+        "public_symbol:signaturereport.integrity"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:signaturereport",
+      "text": "SignatureReport class holds the chain, commitmentType, coversWholeFile, and integrity details of a signature."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:signaturescheme"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:signaturescheme",
+      "text": "SignatureScheme class represents a signature scheme."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:signer"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:signer",
+      "text": "Signer class represents any accepted signer: a credential source, or a pre-resolved CmsSigner for callers that already hold a key."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:skippedfont"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:skippedfont",
+      "text": "SkippedFont class holds the baseFont and reason for a skipped font."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:skippedframe",
+        "public_symbol:skippedframe.frame",
+        "public_symbol:skippedframe.reason"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:skippedframe",
+      "text": "SkippedFrame class holds the frame index and reason for a skipped frame."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:splitoptions",
+        "public_symbol:splitoptions.preservestructure",
+        "public_symbol:splitoptions.prunepolicy"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:splitoptions",
+      "text": "SplitOptions class holds the preserveStructure and prunePolicy options for splitting."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:stampwithoptions",
+        "public_symbol:stampwithoptions.mode",
+        "public_symbol:stampwithoptions.opacity",
+        "public_symbol:stampwithoptions.rect",
+        "public_symbol:stampwithoptions.rotate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:stampwithoptions",
+      "text": "StampWithOptions class holds the mode, opacity, rect, and rotate options for stamping."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:stdfont"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:stdfont",
+      "text": "StdFont class represents a standard font."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:streamfiltername"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:streamfiltername",
+      "text": "StreamFilterName class represents byte-filters this pass can re-encode a stream into."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:summarizeoptions",
+        "public_symbol:summarizeoptions.instructions",
+        "public_symbol:summarizeoptions.maxinputchars",
+        "public_symbol:summarizeoptions.pages"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:summarizeoptions",
+      "text": "SummarizeOptions class holds the instructions, maxInputChars, and pages options for summarization."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:summarizeresult",
+        "public_symbol:summarizeresult.requests",
+        "public_symbol:summarizeresult.usage"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:summarizeresult",
+      "text": "SummarizeResult class holds the requests and usage results of summarization."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:svgoptions",
+        "public_symbol:svgoptions.annotations",
+        "public_symbol:svgoptions.box"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:svgoptions",
+      "text": "SvgOptions class holds the annotations and box options for SVG export."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:syncdirection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:syncdirection",
+      "text": "SyncDirection class represents a synchronization direction."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:tabalign"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:tabalign",
+      "text": "TabAlign class represents tab stop alignment rules."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:tableader"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:tableader",
+      "text": "TabLeader class represents a tab leader."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:tableattributes"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:tableattributes",
+      "text": "TableAttributes class holds the colSpan, headers, rowSpan, scope, and summary attributes of a table cell."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:tablestitchoptions",
+        "public_symbol:tablestitchoptions.stitch"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:tablestitchoptions",
+      "text": "TableStitchOptions class holds the stitch option for table stitching."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:template",
+        "public_symbol:template.constructor",
+        "public_symbol:template.placeon",
+        "implementation:throws.template.page.body.typeerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:template",
+      "text": "Template class represents a reusable piece of drawn content, placed on any number of pages from a single Form XObject; PlaceOn draws this template onto a page inside a rect, and the constructor is internal."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textannotation",
+        "implementation:throws.textannotation.addreply.body.typeerror",
+        "implementation:throws.textannotation.addstatereply.body.typeerror",
+        "public_symbol:textannotation.addreply",
+        "public_symbol:textannotation.addstatereply"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textannotation",
+      "text": "TextAnnotation class represents a /Text (sticky-note) annotation: an icon-and-popup markup with no appearance stream; AddReply and AddStateReply are not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textblockoptions",
+        "public_symbol:textblockoptions.align",
+        "public_symbol:textblockoptions.atomics",
+        "public_symbol:textblockoptions.breakanywhere",
+        "public_symbol:textblockoptions.defaulttabinterval"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textblockoptions",
+      "text": "TextBlockOptions class holds the align, atomics, breakAnywhere, and defaultTabInterval options for text blocks."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textchange",
+        "public_symbol:textchange.new",
+        "public_symbol:textchange.newtext",
+        "public_symbol:textchange.old",
+        "public_symbol:textchange.oldtext"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textchange",
+      "text": "TextChange class holds the new, newText, old, and oldText values of a text change."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textcomparison",
+        "public_symbol:textcomparison.changes",
+        "public_symbol:textcomparison.granularity",
+        "public_symbol:textcomparison.minimal",
+        "public_symbol:textcomparison.pages"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textcomparison",
+      "text": "TextComparison class holds the changes, granularity, minimal, and pages results of a text comparison."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textcomparisonstats",
+        "public_symbol:textcomparisonstats.oldtokens"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textcomparisonstats",
+      "text": "TextComparisonStats class holds the oldTokens count of words or characters compared in each document."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textfont",
+        "implementation:throws.textfont.encode.body.unsupportedfeatureerror",
+        "public_symbol:textfont.bold",
+        "public_symbol:textfont.codewidth",
+        "public_symbol:textfont.decode",
+        "public_symbol:textfont.decodeglyphs"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textfont",
+      "text": "TextFont class provides font decoding capabilities; bold and codeWidth describe the font, decode and decodeGlyphs perform decoding, and encode is not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textfragment",
+        "public_symbol:textfragment.angle",
+        "public_symbol:textfragment.fontname",
+        "public_symbol:textfragment.fontsize",
+        "public_symbol:textfragment.quad"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textfragment",
+      "text": "TextFragment class is a positioned text run sharing one font, size, and baseline — the public unit of structured extraction (Page.GetTextFragments)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textline",
+        "public_symbol:textline.quad"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textline",
+      "text": "TextLine class gives the page-space bounding box [x0,y0,x1,y1] of the line's fragments."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textspan",
+        "public_symbol:textspan.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textspan",
+      "text": "TextSpan class gives where a change lies in one document: the text it covers on one page and a page-space box per line, as Search would report the same text."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textwatermark",
+        "public_symbol:textwatermark.text"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:textwatermark",
+      "text": "TextWatermark class gives the same text at the same place on several pages, digit runs matching any digits. Reported only: text cannot be removed through a candidate."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:tiffencodeoptions",
+        "public_symbol:tiffencodeoptions.compression"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:tiffencodeoptions",
+      "text": "TiffEncodeOptions class gives default 'deflate' compression."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timestamprequestinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:timestamprequestinfo",
+      "text": "TimeStampRequestInfo class gives the hash algorithm, message imprint, and anti-replay nonce echoed in the token."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timestamprequestoptions",
+        "public_symbol:timestamprequestoptions.nonce",
+        "public_symbol:timestamprequestoptions.reqpolicy"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:timestamprequestoptions",
+      "text": "TimeStampRequestOptions class gives the anti-replay nonce echoed in the token and the request a specific TSA policy OID."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timestamptokenoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:timestamptokenoptions",
+      "text": "TimeStampTokenOptions class gives the generation time, policy, and serial number."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timestampinfo",
+        "public_symbol:timestampinfo.imprintmatches",
+        "public_symbol:timestampinfo.policy",
+        "public_symbol:timestampinfo.serialnumber",
+        "public_symbol:timestampinfo.time"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:timestampinfo",
+      "text": "TimestampInfo class gives verdict on a signature timestamp: the asserted time plus whether the token binds to the signature (imprint) and whether the TSA's signature is valid."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:timestampprovider"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:timestampprovider",
+      "text": "TimestampProvider class gives a timestamp provider: given a DER TimeStampReq, return either the bare TimeStampToken (a CMS ContentInfo) or a full TimeStampResp. Typically a thin wrapper over an HTTP call to an RFC 3161 TSA. May be async."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:transitiondirection"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:transitiondirection",
+      "text": "TransitionDirection enum gives /Di — the direction in degrees, for Wipe, Glitter, Fly, Cover, Uncover and Push. Default 0. 315 is Glitter's alone; the name 'None' is Fly's alone and means the effect has no direction at all."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:tstinfo"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:tstinfo",
+      "text": "TstInfo class gives the generation time, hash algorithm, message imprint, nonce, policy, and serial number."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:unreflowabletext",
+        "public_symbol:unreflowabletext.match",
+        "public_symbol:unreflowabletext.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:unreflowabletext",
+      "text": "UnreflowableText class gives a paragraph adjust: 'reflow' declined; its matches were replaced without reflow."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:unsupportedfeatureerror"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:unsupportedfeatureerror",
+      "text": "UnsupportedFeatureError class is an error raised when an unsupported feature is encountered."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:validationdataoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:validationdataoptions",
+      "text": "ValidationDataOptions class gives options for Document.AddValidationData: callbacks that fetch the OCSP response and CRL for each signer, plus any extra certificates to embed."
+    },
+    {
+      "fact_ids": [
+        "implementation:throws.vectorgraphics.arc.body.typeerror",
+        "implementation:throws.vectorgraphics.roundedrect.body.typeerror",
+        "implementation:throws.vectorgraphics.setdash.body.typeerror",
+        "implementation:throws.vectorgraphics.setmiterlimit.body.typeerror",
+        "public_symbol:vectorgraphics",
+        "public_symbol:vectorgraphics.beginmarkedcontent",
+        "public_symbol:vectorgraphics.clippath",
+        "public_symbol:vectorgraphics.endlayer",
+        "public_symbol:vectorgraphics.endmarkedcontent"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:vectorgraphics",
+      "text": "VectorGraphics class is a buffered builder for vector content: every path constructor, paint operator, graphics-state setting and marked-content bracket, accumulated in memory as operator text. It is abstract because where the operators go and where its resourc ..."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:viewerpreferences",
+        "public_symbol:viewerpreferences.centerwindow",
+        "public_symbol:viewerpreferences.direction",
+        "public_symbol:viewerpreferences.displaydoctitle",
+        "public_symbol:viewerpreferences.duplex"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:viewerpreferences",
+      "text": "ViewerPreferences class gives what a document STATES about how it should be opened and printed (32000-1 Table 150). A field the document does not state is undefined, never the spec default. Absent means the producer said nothing, which is a different fact from a s ..."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:viewerpreferencesupdate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:viewerpreferencesupdate",
+      "text": "ViewerPreferencesUpdate class gives a merge over ViewerPreferences: undefined leaves the entry alone, null deletes it, a value sets it — MetadataUpdate's convention, not a second one."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:watermarkcandidate"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:watermarkcandidate",
+      "text": "WatermarkCandidate class gives a candidate for watermark operations."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:xfaconvertoptions"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:xfaconvertoptions",
+      "text": "XfaConvertOptions class gives options for XFA conversion, including whether to remove XFA."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:xfaconvertreport",
+        "public_symbol:xfaconvertreport.chromepages",
+        "public_symbol:xfaconvertreport.packets",
+        "public_symbol:xfaconvertreport.skipped"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:xfaconvertreport",
+      "text": "XfaConvertReport class gives pages chrome (draws, borders, fills, captions) was painted on (164g.4), which XDP packets were found, and what did not convert, and why."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:xfafieldresult",
+        "public_symbol:xfafieldresult.name",
+        "public_symbol:xfafieldresult.page"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:xfafieldresult",
+      "text": "XfaFieldResult class gives SOM path and 1-based, positioned fields only."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:xfaskipped",
+        "public_symbol:xfaskipped.name"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:xfaskipped",
+      "text": "XfaSkipped class gives SOM path for a field; absent for a whole-packet or whole-page refusal."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:xmpvalueinput"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:xmpvalueinput",
+      "text": "XmpValueInput class gives a typed XMP value for Document.SetXmpValue: plain JavaScript for scalars, a tagged object for everything plain values cannot say — an ordered Seq and an unordered Bag are both an array, and a URI and a string that looks like one a ..."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:xmpwriteoptions",
+        "public_symbol:xmpwriteoptions.prefix"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:xmpwriteoptions",
+      "text": "XmpWriteOptions class gives the prefix to write the namespace under."
+    }
+  ]
+}

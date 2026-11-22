@@ -1,0 +1,358 @@
+{
+  "additional_example_ids": [],
+  "api_hubs": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.save",
+        "public_symbol:document.pages",
+        "public_symbol:document.recovery"
+      ],
+      "symbol_fact_id": "public_symbol:document"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow",
+        "public_symbol:flow.addparagraph",
+        "public_symbol:flow.addheading",
+        "public_symbol:flow.addlist"
+      ],
+      "symbol_fact_id": "public_symbol:flow"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:annotation",
+        "public_symbol:annotation.addreply",
+        "public_symbol:annotation.addstatereply",
+        "public_symbol:annotation.color"
+      ],
+      "symbol_fact_id": "public_symbol:annotation"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:field",
+        "public_symbol:field.actions",
+        "public_symbol:field.constructor",
+        "public_symbol:field.flatten"
+      ],
+      "symbol_fact_id": "public_symbol:field"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sign",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:document.verifysignatures"
+      ],
+      "symbol_fact_id": "public_symbol:document.sign"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.validatepdfx"
+      ],
+      "symbol_fact_id": "public_symbol:document.validatepdfa"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.createstructtree",
+        "public_symbol:document.istagged"
+      ],
+      "symbol_fact_id": "public_symbol:document.getstructtree"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub"
+      ],
+      "symbol_fact_id": "public_symbol:document.tohtml"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.redact",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.applyredactions",
+        "public_symbol:page.redact"
+      ],
+      "symbol_fact_id": "public_symbol:document.redact"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sanitize",
+        "public_symbol:document.clearmetadata",
+        "public_symbol:document.flattenannotations",
+        "public_symbol:document.flattenform"
+      ],
+      "symbol_fact_id": "public_symbol:document.sanitize"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.summarize",
+        "public_symbol:document.ask",
+        "public_symbol:document.generatealttext",
+        "public_symbol:aimodel"
+      ],
+      "symbol_fact_id": "public_symbol:document.summarize"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.saveasync",
+        "public_symbol:document.tohtmlasync",
+        "public_symbol:document.validatepdfuaasync",
+        "public_symbol:operationprogress"
+      ],
+      "symbol_fact_id": "public_symbol:document.saveasync"
+    }
+  ],
+  "at_a_glance": {
+    "capability_titles": [
+      "PDF Parsing and Recovery",
+      "Content Editing",
+      "Form and Annotation Handling",
+      "Conversion and Export",
+      "Security and Compliance",
+      "Document Structure and Accessibility",
+      "AI Integration",
+      "Async Operations and Progress"
+    ],
+    "input_format_ids": [],
+    "output_format_ids": []
+  },
+  "core_capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.recovery",
+        "public_symbol:parsecontentstream",
+        "public_symbol:serializecontentstream"
+      ],
+      "title": "PDF Parsing and Recovery"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.replacetext",
+        "public_symbol:page.redact",
+        "public_symbol:page.restyletext",
+        "public_symbol:page.graphics",
+        "public_symbol:page.images"
+      ],
+      "title": "Content Editing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:annotation",
+        "public_symbol:signaturefield",
+        "public_symbol:field"
+      ],
+      "title": "Form and Annotation Handling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.validatepdfua"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:document.validatepdfua"
+      ],
+      "title": "Conversion and Export"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptoptions",
+        "public_symbol:document.sign",
+        "public_symbol:document.redact",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.validatepdfa"
+      ],
+      "title": "Security and Compliance"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:optionalcontent"
+      ],
+      "shared_fact_ids": [
+        "public_symbol:document.validatepdfua"
+      ],
+      "title": "Document Structure and Accessibility"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.summarize",
+        "public_symbol:document.ask",
+        "public_symbol:document.generatealttext",
+        "public_symbol:aimodel"
+      ],
+      "title": "AI Integration"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.saveasync",
+        "public_symbol:document.tohtmlasync",
+        "public_symbol:document.validatepdfuaasync",
+        "public_symbol:operationprogress"
+      ],
+      "title": "Async Operations and Progress"
+    }
+  ],
+  "deviations": [],
+  "flagship_example_id": null,
+  "links": [
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "identity"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:026",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:027",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:028",
+      "section_id": "development_testing"
+    },
+    {
+      "link_fact_id": "link_target:029",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:030",
+      "section_id": "scope_limitations"
+    },
+    {
+      "link_fact_id": "link_target:034",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:035",
+      "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:036",
+      "section_id": "third_party_notices"
+    },
+    {
+      "link_fact_id": "link_target:025",
+      "section_id": "documentation_resources"
+    }
+  ],
+  "material_limitations": [],
+  "quick_start_example_id": null,
+  "second_quick_start_example_id": null,
+  "sections": [
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "identity"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "badges"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "banner"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "opening"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "navigation"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "at_a_glance"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "key_capabilities"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "installation"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "dependencies"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "quick_start"
+    },
+    {
+      "include": false,
+      "reason": "its condition does not hold",
+      "section_id": "additional_examples"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "api_reference"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "documentation_resources"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "scope_limitations"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "development_testing"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "enterprise_relationship"
+    },
+    {
+      "include": true,
+      "reason": "its condition holds",
+      "section_id": "third_party_notices"
+    },
+    {
+      "include": true,
+      "reason": "the shell requires it",
+      "section_id": "license"
+    }
+  ]
+}

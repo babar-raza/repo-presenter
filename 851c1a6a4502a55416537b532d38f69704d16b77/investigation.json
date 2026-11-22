@@ -1,0 +1,267 @@
+{
+  "audience": {
+    "fact_ids": [
+      "install_command:npm",
+      "identity:ecosystem",
+      "identity:platform"
+    ],
+    "text": "Developers building Node.js applications that require PDF document processing, including those needing PDF parsing, editing, conversion, redaction, and form handling."
+  },
+  "capabilities": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.recovery",
+        "public_symbol:parsecontentstream",
+        "public_symbol:serializecontentstream"
+      ],
+      "text": "Parses PDF documents including cross-reference tables and streams, supports multiple stream decoders, and recovers damaged files with detailed reporting.",
+      "title": "PDF Parsing and Recovery"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.replacetext",
+        "public_symbol:page.redact",
+        "public_symbol:page.restyletext",
+        "public_symbol:page.graphics",
+        "public_symbol:page.images"
+      ],
+      "text": "Edits pages, text, images, and vector graphics; supports text search, replace, redaction, and restyle operations with layout preservation or reflow.",
+      "title": "Content Editing"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:annotation",
+        "public_symbol:signaturefield",
+        "public_symbol:field"
+      ],
+      "text": "Creates, fills, styles, and manages AcroForm fields, annotations, and interactive elements including signatures, with appearance regeneration.",
+      "title": "Form and Annotation Handling"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.validatepdfua"
+      ],
+      "text": "Converts PDF to HTML, Markdown, DOCX, EPUB, and image formats; supports PDF/A, PDF/X, and PDF/UA conversion and validation with detailed reports.",
+      "title": "Conversion and Export"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:encryptoptions",
+        "public_symbol:document.sign",
+        "public_symbol:document.redact",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.validatepdfa"
+      ],
+      "text": "Supports encryption, digital signatures with timestamps and validation data, redaction, sanitization, and compliance validation for PDF/A, PDF/X, and PDF/UA.",
+      "title": "Security and Compliance"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.getstructtree",
+        "public_symbol:document.autotag",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:optionalcontent"
+      ],
+      "text": "Reads and writes tagged-PDF structure, supports auto-tagging, PDF/UA validation, and optional-content layers with visibility management.",
+      "title": "Document Structure and Accessibility"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.summarize",
+        "public_symbol:document.ask",
+        "public_symbol:document.generatealttext",
+        "public_symbol:aimodel"
+      ],
+      "text": "Integrates with AI models for summarization, question-answering, and alt-text generation, with configurable budgets and cancellation support.",
+      "title": "AI Integration"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.saveasync",
+        "public_symbol:document.tohtmlasync",
+        "public_symbol:document.validatepdfuaasync",
+        "public_symbol:operationprogress"
+      ],
+      "text": "Supports async operations with cancellation signals and progress reporting for exports, conversions, validations, and optimizations.",
+      "title": "Async Operations and Progress"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "public_symbol:loadlimits",
+        "public_symbol:resourcelimiterror"
+      ],
+      "text": "Resource limits are enforced during document operations; exceeding them raises ResourceLimitError with specific limit details."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:saveoptions.incremental"
+      ],
+      "text": "Incremental save is not compatible with compressed, encrypted, linearized, or stream-filtered output, and refuses signed or recovery-opened documents."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:textfont",
+        "public_symbol:embeddedfont"
+      ],
+      "text": "Some features like complex text shaping require embedded fonts with explicit shape support; Standard-14 fonts do not shape."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:convertoptions.flattentransparency"
+      ],
+      "text": "PDF/A-1 transparency flattening is lossy and not reversible; it is not applied to signed or tagged pages by default."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:page.addsvgobject",
+        "public_symbol:htmlflowoptions.resolveimage"
+      ],
+      "text": "SVG embedding has limitations: non-embedded fonts are substituted silently, external hrefs require a resolver, and some CSS features are unsupported."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.convertxfatoacroform",
+        "public_symbol:xfaconvertreport"
+      ],
+      "text": "XFA form conversion is one-way and discards the XFA packet; hybrid documents reconcile by name and may have geometry-less fields."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "install_command:npm",
+        "public_symbol:document.open",
+        "public_symbol:document.recovery"
+      ],
+      "text": "Enables parsing and manipulation of PDF documents with support for cross-reference tables, object streams, and various stream decoders, including recovery from damaged files."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.redact",
+        "public_symbol:document.sanitize",
+        "public_symbol:document.sign"
+      ],
+      "text": "Provides tools for redacting content, sanitizing hidden data, and securing documents with encryption and digital signatures."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx",
+        "public_symbol:document.toepub",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfua",
+        "public_symbol:document.converttopdfx"
+      ],
+      "text": "Supports conversion between PDF and other formats (HTML, Markdown, DOCX, EPUB, images) and between PDF standards (PDF/A, PDF/X, PDF/UA)."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:form",
+        "public_symbol:annotation",
+        "public_symbol:outlineitem",
+        "public_symbol:optionalcontent"
+      ],
+      "text": "Facilitates creation and editing of interactive PDF elements such as forms, annotations, bookmarks, and optional-content layers."
+    }
+  ],
+  "product_summary": {
+    "fact_ids": [
+      "install_command:npm",
+      "identity:ecosystem",
+      "identity:family",
+      "identity:platform",
+      "package:name",
+      "package:node_engine",
+      "package:version"
+    ],
+    "text": "Aspose.PDF-FOSS-for-TypeScript is a free, open-source, zero-dependency TypeScript library for reading, manipulating, and writing PDF files in Node.js."
+  },
+  "uncertainties": [
+    "The exact behavior of some advanced features like complex-text shaping with specific font configurations is not fully detailed.",
+    "The scope of support for certain PDF/X and PDF/A subtypes and conformance levels may require further verification.",
+    "The handling of some edge cases in SVG embedding, particularly with nested filters and external resources, may have undocumented limitations.",
+    "The interaction between incremental save and certain form or annotation features is not fully specified.",
+    "The behavior of some AI integration features with specific model providers or large documents may vary.",
+    "The exact impact of certain resource limits on complex operations like large table rendering or deep nesting is not quantified.",
+    "The support for some advanced font features like vertical writing or complex CMap chains may have undocumented constraints.",
+    "The handling of some PDF constructs like non-standard annotations or custom XMP schemas may not be fully covered."
+  ],
+  "workflows": [
+    {
+      "fact_ids": [
+        "public_symbol:document.open",
+        "public_symbol:document.pages",
+        "public_symbol:document.save"
+      ],
+      "name": "Open and Edit PDF",
+      "text": "Open a PDF file using Document.Open, access and modify pages, metadata, and content, then save the result with Document.Save."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.addhtml",
+        "public_symbol:document.addmarkdown",
+        "public_symbol:document.adddocx",
+        "public_symbol:document.addplaintext",
+        "public_symbol:document.tohtml",
+        "public_symbol:document.tomarkdown",
+        "public_symbol:document.todocx"
+      ],
+      "name": "Import and Render Content",
+      "text": "Import content from HTML, Markdown, DOCX, or plain text using Document.AddHtml, Document.AddMarkdown, Document.AddDocx, or Document.AddPlainText, and render to images or other formats."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.redact",
+        "public_symbol:document.markredacttext",
+        "public_symbol:document.applyredactions",
+        "public_symbol:document.sanitize"
+      ],
+      "name": "Redact and Sanitize",
+      "text": "Mark or directly redact content by rectangle or text search, apply redactions, and sanitize hidden data including metadata, annotations, and optional content."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.sign",
+        "public_symbol:document.adddocumenttimestamp",
+        "public_symbol:document.addvalidationdata",
+        "public_symbol:encryptoptions"
+      ],
+      "name": "Sign and Secure",
+      "text": "Sign documents with digital signatures supporting CMS/PAdES, add timestamps, embed validation data, and encrypt output with password or certificate-based encryption."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:document.validatepdfa",
+        "public_symbol:document.validatepdfua",
+        "public_symbol:document.validatepdfx",
+        "public_symbol:document.converttopdfa",
+        "public_symbol:document.converttopdfua",
+        "public_symbol:document.converttopdfx"
+      ],
+      "name": "Validate and Convert Standards",
+      "text": "Validate documents against PDF/A, PDF/X, and PDF/UA standards, and convert documents to these standards with detailed reporting of applied and unresolved issues."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:flow",
+        "public_symbol:table",
+        "public_symbol:textblock",
+        "public_symbol:flowoptions.hyphenate",
+        "public_symbol:flowoptions.tabstops",
+        "public_symbol:textfont"
+      ],
+      "name": "Build and Style Content",
+      "text": "Build multi-column flow documents, tables, and text blocks with styling, hyphenation, tab stops, and complex-text shaping for international scripts."
+    }
+  ]
+}
