@@ -65,63 +65,267 @@
    "run_id": "44993719030",
    "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-22T09:31:58+00:00",
+   "classes": [
+    "llm:factuality|inherited_unit|opening",
+    "llm:factuality|lane_l_correction|api_reference"
+   ],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 12,
+   "outcome": "failure",
+   "run_id": "45007577791",
+   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
+   "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
   }
  ],
  "lane": "L",
  "latest": {
-  "at": "2026-11-22T06:30:12+00:00",
+  "at": "2026-11-22T09:31:58+00:00",
   "classes": {
-   "job_error|job_error|LaneStepFailure:the_lane_step_ended": {
-    "example": "LaneStepFailure: the lane step ended failure and left no failure record",
+   "llm:factuality|inherited_unit|opening": {
+    "example": "strict subset of Aspose.PDF for .NET \u2014 Enterprise Edition library \u2014 class names, method names, and",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "inherited_unit",
     "origins": [
-     "LaneStepFailure"
+     "live_readme"
     ],
-    "rule": "job_error",
-    "scope": "",
-    "scope_paths": null,
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "rule": "llm:factuality",
+    "scope": "7ebf794ce5b57327749cce47123181c520e9577ad50dd1a83e9331b68a5074c1",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "opening",
+    "upstream": ""
+   },
+   "llm:factuality|lane_l_correction|api_reference": {
+    "example": "| `NamedAction` | Class that inherits from PdfAction and declares the methods Name and ToString. |\n| `NamedDestination` | Class that inherits from IAppointment and declares the methods Name and ToString. |",
+    "findings": 11,
+    "origin_kind": "lane_l_correction",
+    "origins": [
+     "type_description"
+    ],
+    "rule": "llm:factuality",
+    "scope": "80640045182c8c79de40e2c8eab1708e7461546c943dd95e011052e6384c2a6a",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/lane_l.py",
+     "src/repo_presenter/lane_l_run.py",
+     "src/repo_presenter/readme/correction",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
-  "code": "a297189be023ee7fa1ef2cbf91f340b6b35695ba2d2396a7b444f19edd9c3f66",
-  "durable_state": "",
-  "exit_code": null,
+  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepFailure: the lane step ended failure and left no failure record",
-   "kind": "LaneStepFailure",
+   "classification": "validation_failed",
+   "detail": "attempt under version set 9907e52c24f5: PresentFailure: Lane L: independent review returned REJECT with 12 blocking finding(s) of 12; nothing sealed; F01 [unsupported_claim] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F05 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F06 [unsupported_claim] in api_reference blocks until a revis",
+   "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "LaneStepFailure",
-    "message": "LaneStepFailure: the lane step ended failure and left no failure record",
+    "label": "F01",
+    "message": "strict subset of Aspose.PDF for .NET \u2014 Enterprise Edition library",
     "origin": {
-     "id": "LaneStepFailure",
-     "kind": "job_error"
+     "id": "live_readme",
+     "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|LaneStepFailure:the_lane_step_ended",
-    "source": "job",
-    "sub_rule": "LaneStepFailure:the_lane_step_ended",
+    "quote": "strict subset of Aspose.PDF for .NET \u2014 Enterprise Edition library \u2014 class names, method names, and",
+    "rule": "llm:factuality",
+    "section_id": "opening",
+    "signature": "llm:factuality|inherited_unit|opening",
+    "source": "review",
+    "sub_rule": "opening",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "Line 0644 claims `NamedAction` inherits from `PdfAction` and declares `Name` and `ToString` methods, and line 0645 claims `NamedDestination` inherits from `IAppointment` and declares `Name` and `ToString` methods.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `NamedAction` | Class that inherits from PdfAction and declares the methods Name and ToString. |\n| `NamedDestination` | Class that inherits from IAppointment and declares the methods Name and ToString. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "Line 0646 claims `PageInformationAnnotation` inherits from `PrinterMarkAnnotation` and declares `Accept`, but no fact supports this inheritance.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PageInformationAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the method Accept. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F04",
+    "message": "Line 0648 claims `PolyAnnotation` declares `EndingStyle`, `Intent`, `InteriorColor`, `StartingStyle`, and `Vertices`, but no fact supports all these methods.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `PolyAnnotation` | Class that inherits from MarkupAnnotation and declares the methods EndingStyle, Intent, InteriorColor, StartingStyle and Vertices. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F05",
+    "message": "Line 0654 claims `RegistrationMarkAnnotation` inherits from `PrinterMarkAnnotation` and declares `Accept` and `Position`, but no fact supports `Position`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `RegistrationMarkAnnotation` | Class that inherits from PrinterMarkAnnotation and declares the methods Accept and Position. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F06",
+    "message": "Line 0656 claims `ScreenAnnotation` inherits from `Annotation` and declares `Accept` and `Title`, but no fact supports `Title`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `ScreenAnnotation` | Class that inherits from Annotation and declares the methods Accept and Title. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F07",
+    "message": "Line 0657 claims `SoundAnnotation` inherits from `MarkupAnnotation` and declares `Accept` and `Icon`, but no fact supports `Icon`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `SoundAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept and Icon. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F08",
+    "message": "Line 0660 claims `StampAnnotation` inherits from `MarkupAnnotation` and declares `Accept`, `Icon`, and `Image`, but no fact supports `Icon` or `Image`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `StampAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Image. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F09",
+    "message": "Line 0662 claims `SubmitFormAction` inherits from `PdfAction` and declares `Flags`, `ToString`, and `Url`, but no fact supports `Flags` or `Url`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `SubmitFormAction` | Class that inherits from PdfAction and declares the methods Flags, ToString and Url. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F10",
+    "message": "Line 0663 claims `TextAnnotation` inherits from `MarkupAnnotation` and declares `Accept`, `Icon`, and `Open`, but no fact supports `Icon` or `Open`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TextAnnotation` | Class that inherits from MarkupAnnotation and declares the methods Accept, Icon and Open. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F11",
+    "message": "Line 0665 claims `TextStyle` declares `Alignment`, `FontName`, `FontSize`, and `HorizontalAlignment`, but no fact supports `Alignment`, `FontName`, or `HorizontalAlignment`.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `TextStyle` | Class that declares the methods Alignment, FontName, FontSize and HorizontalAlignment. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "F12",
+    "message": "Line 0667 claims `UnderlineAnnotation` inherits from `TextMarkupAnnotation` and declares `Accept`, but no fact supports this inheritance.",
+    "origin": {
+     "id": "type_description",
+     "kind": "lane_l_correction"
+    },
+    "quote": "| `UnderlineAnnotation` | Class that inherits from TextMarkupAnnotation and declares the method Accept. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|lane_l_correction|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
   "lane": "L",
-  "main_sha": "c9de0c9462a994ae9acfe2d76cb62f612333d0b3",
+  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
-  "run_id": "44993719030",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44993719030",
+  "run_id": "45007577791",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45007577791",
   "schema_version": 1,
   "source_revision": "4b83c9fec1e37fd205156770161f6843bac00ceb",
-  "version_set": ""
+  "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-Cpp",
  "schema_version": 1
