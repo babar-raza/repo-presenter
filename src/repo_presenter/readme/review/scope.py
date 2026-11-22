@@ -413,6 +413,32 @@ def section_of_line(readme: str, number: int, rendered: bool = True) -> str | No
     return classified[number - 1] if 1 <= number <= len(classified) else None
 
 
+#: BL-890: the disposition section whose kept-verbatim maintainers' sentences are the maintainers' statement of
+#: what the library does not do or how it behaves at its edges.
+LIMITS_SECTION = "scope_limitations"
+#: The only fact kind a ``VERIFIED_*`` disposition may cite for :func:`maintainer_lines` to treat its unit as
+#: unverified maintainer text: a public symbol proves that the NAME exists, never what the sentence says of it.
+NAME_EXISTENCE_KINDS = frozenset({"public_symbol"})
+
+
+def _limits_verified_by_names_only(row: Mapping[str, Any], kinds: Mapping[str, str]) -> bool:
+    """BL-890: a maintainers' scope-limitation unit kept verbatim (``VERIFIED_PRESERVE`` / ``VERIFIED_MOVE``
+    into ``scope_limitations``) whose cited facts prove only that the symbols it names exist. Its sentences
+    about behaviour (``Stream payloads are not decoded on open``, ``Reader neither recomputes nor draws these
+    barcodes``) are no fact's to support, so the model review kept filing ``unsupported_claim`` on them, each
+    draw naming different bullets (hosted PDF TypeScript run 45040357304: four findings on three such units
+    after four degrade passes, nothing sealed). They are the maintainers' unverified statements of limit,
+    "unverified, not false" (docs/MAINTAINER_CONTENT_PRESERVATION.md, R36(a)(2)), so the maintainer-line
+    contract judges them. A unit that cites any other fact kind (an example, a dependency, a command)
+    keeps the full review, as does a unit outside this section; a CONTRADICTED fact removes the exemption
+    in :func:`maintainer_lines` exactly as for ``PRESERVE_ATTRIBUTED``."""
+    return (
+        row.get("disposition") in ("VERIFIED_PRESERVE", "VERIFIED_MOVE")
+        and row.get("destination_section") == LIMITS_SECTION
+        and all(kinds.get(str(fact_id)) in NAME_EXISTENCE_KINDS for fact_id in row.get("fact_ids") or ())
+    )
+
+
 def maintainer_lines(
     readme: str, facts: FactsDocument, dispositions: Mapping[str, Any]
 ) -> frozenset[int]:
@@ -432,12 +458,13 @@ def maintainer_lines(
     A corrected live README (Lane L, ``rendered=False``) is reviewed without S4 dispositions, so it
     has no ``PRESERVE_ATTRIBUTED`` unit and this set is empty there: nothing changes for Lane L."""
     contradicted = {fact.id: fact for fact in facts.facts if fact.polarity == "CONTRADICTED"}
+    kinds = {fact.id: fact.kind for fact in facts.facts}
     kept = {
         str(row.get("unit_id", ""))
         for row in dispositions.get("dispositions", [])
         if isinstance(row, Mapping)
-        and row.get("disposition") == ATTRIBUTED
         and not any(str(fact_id) in contradicted for fact_id in row.get("fact_ids") or ())
+        and (row.get("disposition") == ATTRIBUTED or _limits_verified_by_names_only(row, kinds))
     }
     if not kept:
         return frozenset()

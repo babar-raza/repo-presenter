@@ -407,3 +407,103 @@ def test_an_attributed_inherited_claim_a_fact_contradicts_stands() -> None:
         assert _unsupported_on_first_line(facts, dispositions) == []
     # Only the contradicted line loses the exemption; the uncontradicted kept line keeps it.
     assert _marked(_inherited_facts(refuting=True), attributed) == {FIRST + 1}
+
+
+# --- BL-890: a maintainers' scope-limitation unit verified only by the existence of its names -------
+# Hosted PDF TypeScript run 45040357304: four `unsupported_claim` findings on kept-verbatim limitation
+# bullets (VERIFIED_PRESERVE into scope_limitations, citing one public_symbol each) blocked the seal after
+# four degrade passes. The names exist; what the sentence says of them is no fact's to support, so the
+# maintainer-line contract judges it. Anything else stays judged like generated text.
+
+_SYMBOL = "public_symbol:document.open"
+_EXAMPLE = "example:open"
+
+
+def _limits_facts(*, unit_polarity: str = "SUPPORTED", refuting: bool = False):
+    from repo_presenter.core.facts import Evidence, Fact, FactsDocument
+
+    base = _inherited_facts(unit_polarity=unit_polarity, refuting=refuting)
+    extra = (
+        Fact(_SYMBOL, "public_symbol", "Document.Open", (Evidence("src/d.ts"),), "SUPPORTED"),
+        Fact(_EXAMPLE, "example", "open()", (Evidence("examples/o.ts"),), "SUPPORTED"),
+    )
+    return FactsDocument(base.repository, base.source_revision, (*base.facts, *extra))
+
+
+def _verified(disposition: str, section: str | None, *fact_ids: str) -> dict[str, Any]:
+    row: dict[str, Any] = {
+        "unit_id": _KEPT_UNIT, "disposition": disposition, "fact_ids": list(fact_ids),
+    }
+    if section is not None:
+        row["destination_section"] = section
+    return {"dispositions": [row]}
+
+
+def test_a_limitation_unit_verified_only_by_names_is_judged_by_the_maintainer_contract() -> None:
+    from repo_presenter.readme.review.reply import MAINTAINER_TEXT_ERROR
+
+    facts = _limits_facts()
+    for disposition in ("VERIFIED_PRESERVE", "VERIFIED_MOVE"):
+        for cited_facts in ((), (_SYMBOL,)):
+            rows = _verified(disposition, "scope_limitations", *cited_facts)
+            assert _marked(facts, rows) == {FIRST, FIRST + 1}
+            problems = _unsupported_on_first_line(facts, rows)
+            assert len(problems) == 1 and MAINTAINER_TEXT_ERROR in problems[0]
+
+
+def test_the_exemption_does_not_reach_other_verified_text() -> None:
+    """Negative controls: another section, a fact kind that does verify content, no section recorded,
+    and a different disposition keep the full review, so a real unsupported claim there still blocks."""
+    facts = _limits_facts()
+    for rows in (
+        _verified("VERIFIED_PRESERVE", "key_capabilities", _SYMBOL),
+        _verified("VERIFIED_PRESERVE", "api_reference"),
+        _verified("VERIFIED_PRESERVE", None, _SYMBOL),
+        _verified("VERIFIED_PRESERVE", "scope_limitations", _SYMBOL, _EXAMPLE),
+        _verified("VERIFIED_PRESERVE", "scope_limitations", _EXAMPLE),
+        _verified("VERIFIED_REWRITE", "scope_limitations", _SYMBOL),
+        _verified("SUPERSEDE_REDUNDANT", "scope_limitations", _SYMBOL),
+    ):
+        assert _marked(facts, rows) == frozenset(), rows
+        assert _unsupported_on_first_line(facts, rows) == []
+
+
+def test_a_contradicted_limitation_unit_is_judged_like_generated_text() -> None:
+    rows = _verified("VERIFIED_PRESERVE", "scope_limitations", _SYMBOL)
+    # the unit's own fact, a cited fact, and a line holding a refuted value
+    assert _marked(_limits_facts(unit_polarity="CONTRADICTED"), rows) == frozenset()
+    assert _marked(_limits_facts(refuting=True), _verified("VERIFIED_PRESERVE", "scope_limitations", _REFUTING)) == frozenset()
+    assert _marked(_limits_facts(refuting=True), rows) == {FIRST + 1}
+
+
+def test_a_limitation_unit_the_renderer_changed_is_not_marked() -> None:
+    from repo_presenter.readme.review.scope import maintainer_lines
+
+    rows = _verified("VERIFIED_PRESERVE", "scope_limitations", _SYMBOL)
+    changed = CANDIDATE.replace(ROWS[FIRST - 1], ROWS[FIRST - 1] + " (reworded)")
+    assert FIRST not in maintainer_lines(changed, _limits_facts(), rows)
+
+
+def test_the_drop_removes_an_unsupported_claim_on_a_limitation_unit_and_keeps_every_other_kind() -> None:
+    from repo_presenter.readme.review.reply import drop_maintainer_unsupported_findings
+
+    facts = _limits_facts()
+    unit = maintained(*_marked(facts, _verified("VERIFIED_PRESERVE", "scope_limitations", _SYMBOL)))
+
+    def reply(*findings: dict[str, Any]) -> dict[str, Any]:
+        return {"verdict": "REJECT_FACTUAL", "findings": list(findings)}
+
+    void = cited("unsupported_claim", FIRST, fact_ids=[])
+    other = cited("contradiction", FIRST, criterion="factuality")
+    one = reply(void)
+    drop_maintainer_unsupported_findings(one, CANDIDATE, unit)
+    assert one["findings"] == [] and one["verdict"] == "ACCEPT"
+    kept = reply(void, other)
+    drop_maintainer_unsupported_findings(kept, CANDIDATE, unit)
+    assert [f["claim_kind"] for f in kept["findings"]] == ["contradiction"]
+    # without the exemption the same finding is not dropped
+    plain = reply(void)
+    drop_maintainer_unsupported_findings(
+        plain, CANDIDATE, maintained(*_marked(facts, _verified("VERIFIED_PRESERVE", "api_reference", _SYMBOL)))
+    )
+    assert len(plain["findings"]) == 1
