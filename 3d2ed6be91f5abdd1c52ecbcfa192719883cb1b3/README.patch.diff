@@ -16,7 +16,7 @@
 -also available for Python, .NET, and TypeScript. Aspose.3D — commercial On-Premise edition
 -(aspose.com) — adds the broader functionality described in
 -[Scope and Limitations](#scope-and-limitations).
-+Aspose.3D FOSS for Java reads `.obj` and `.stl` files and writes `.stl` files. It constructs scene graphs using `Scene`, `Node`, and `Entity` classes, supports primitive mesh geometry such as `Box`, `Cylinder`, `Sphere`, and `Dish`, and defines PBR materials. It also provides NURBS curve control-point and knot data, and vector, matrix, and quaternion math operations.
++Aspose.3D FOSS for Java reads `.obj` and `.stl` files and writes `.stl` files. It constructs scene graphs using `Scene`, `Node`, and `Entity` classes, supports primitive mesh geometry such as `Box`, `Cylinder`, `Sphere`, and `Dish`, and defines PBR materials. It also provides NURBS curve control-point and knot data, and vector, matrix, and quaternion math operations. The project is licensed under the MIT `License`.
  
  ## Navigation
  
@@ -69,12 +69,12 @@
  
  ## Key Capabilities
 +
-+- **Build and traverse 3D scene graphs.** It builds and traverses 3D scene graphs using `Scene`, `Node`, and `Entity` classes, attaching geometry through `Node.addEntity` or `Node.createChildNode` and organizing nodes into a parent-child hierarchy.
-+- **Import and export STL geometry.** It imports and exports STL geometry in binary or ASCII format using `StlLoadOptions` and `StlSaveOptions`, dispatched through `Scene.fromFile` and `Scene.save`, with the `.stl` format fully functional end to end.
-+- **Define materials and assign them to nodes.** It defines materials with `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` classes supporting albedo, metallic/roughness, occlusion, and emissive channels plus texture references, and assigns them per node via `Node.setMaterial`.
-+- **Model NURBS curves with control points.** It models NURBS curves using `NurbsCurve`, exposing control points, knot vectors, and degree/order data.
-+- **Perform 3D math operations.** It performs 3D math operations using `Vector2`, `Vector3`, `Vector4`, `Matrix4`, `Quaternion`, and `BoundingBox` classes that underlie every scene operation.
-+- **Detect file format automatically.** It detects file format automatically or resolves an explicit format from a file path or binary stream using `FileFormat.detect` and `FileFormat.getFormatByExtension`.
++- **Build and traverse 3D scene graphs.** Build and traverse 3D scene graphs using `Scene`, `Node`, and `Entity` classes, attaching geometry through `Node.addEntity` or `Node.createChildNode` and organizing nodes into a parent-child hierarchy.
++- **Import and export STL geometry.** Import and export STL geometry in binary or ASCII format using `StlLoadOptions` and `StlSaveOptions`, dispatched through `Scene.fromFile` and `Scene.save`, with the `.stl` format fully functional end to end.
++- **Define materials and assign them to nodes.** Define materials with `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` classes supporting albedo, metallic/roughness, occlusion, and emissive channels plus texture references, and assign them per node via `Node.setMaterial`.
++- **Model NURBS curves with control points.** Model NURBS curves using `NurbsCurve`, exposing control points, knot vectors, and degree/order data.
++- **Perform 3D math operations.** Perform 3D math operations using `Vector2`, `Vector3`, `Vector4`, `Matrix4`, `Quaternion`, and `BoundingBox` classes that underlie every scene operation.
++- **Detect file format automatically.** Detect file format automatically or resolve an explicit format from a file path or binary stream using `FileFormat.detect` and `FileFormat.getFormatByExtension`.
  
  - Build a 3D scene graph with `Scene`, `Node`, and `Entity`, attaching geometry through `Node.addEntity`/`Node.createChildNode` and organizing it into a parent-child hierarchy.
  - Detect a 3D file's format automatically, or resolve an explicit format from a file path or
@@ -161,7 +161,7 @@
 +
 +The following examples demonstrate common workflows using the library's scene-graph and geometry APIs.
 +
-+### Create a NURBS Curve and Define Its Control Points
++### Define a NURBS Curve's Control Points
 +
 +```java
 +import java.io.*;
@@ -375,13 +375,13 @@
 +| `InitializationException` | Initialization exception |
  | `JtLoadOptions` | Options for JPEG2000 loading. |
 -| `KeyFrame` | KeyFrame and KeyframeSequence classes let developers define animated properties over time with support for multiple interpolation types. |
-+| `KeyFrame` | KeyFrame class holds animation keyframe data including time, value, interpolation, tension, continuity, flat, bias, step mode, tangent weight mode, and tangent properties. |
++| `KeyFrame` | KeyFrame class holds animation keyframe data with properties such as time, value, interpolation, tension, continuity, flat, bias, stepMode, tangentWeightMode, and tangents. |
  | `KeyframeSequence` | The sequence of key-frames, it describes the transformation of a sampled value over time. |
  | `LShape` | IFC compatible L-shape profile that defined by parameters. |
  | `LambertMaterial` | Material for lambert shading model. |
  | `License` | License management class (not available in FOSS version). |
 -| `Light` | Light objects can be configured with color, intensity, falloff distances, inner and outer cone angles, and attached to a node hierarchy for scene illumination. |
-+| `Light` | Light class holds light properties including bounding box, color, enabled state, entity renderer key, excluded state, falloff start, and falloff end. |
++| `Light` | Light class represents a light entity with properties such as color, enabled state, falloff start and end, bounding box, excluded flag, and entity renderer key. |
  | `Line` | A polyline is a path defined by a set of points with getControlPoints(), and connected by getSegments(), which means it can also be a set of connected line segments. |
  | `LinearExtrusion` | Linear extrusion takes a 2D shape as input and extends the shape in the 3rd dimension. |
  | `LoadOptions` | The base class to configure options in file loading for different types. |
@@ -392,33 +392,33 @@
  | `MathUtils` | Utility class with mathematical functions. |
 -| `Matrix4` | Matrix4 provides chainable transformations; call translate, rotate, and scale to build a transformation matrix for positioning objects. |
 -| `MemoryFileSystem` | MemoryFileSystem provides an in‑memory file system for reading and writing files without touching the local disk. |
-+| `Matrix4` | Matrix4 class holds a 4x4 matrix and provides methods for decomposition, concatenation, cloning, copying, and determinant calculation. |
++| `Matrix4` | Matrix4 class represents a 4x4 matrix with methods for decomposition, concatenation, cloning, copying, and determinant calculation. |
 +| `MemoryFileSystem` | MemoryFileSystem class provides file system operations including creating dummy, local, memory, and zip file systems, and reading and writing files. |
  | `MemoryStream` | Memory stream for reading and writing data in memory. |
 -| `Mesh` | Mesh.triangulate() returns a new Mesh instance where all polygons have been converted into triangles. |
-+| `Mesh` | Mesh class holds geometry data including control points, bounding box, and provides methods to add control points, elements, and deformers. |
++| `Mesh` | Mesh class represents a mesh geometry with control points, bounding box, deformer support, and rendering properties. |
  | `Metered` | Metered license management class (not available in FOSS version). |
 -| `Microsoft3MFSaveOptions` | Microsoft3MFSaveOptions extends SaveOptions and adds the exportTextures flag to include or exclude textures when saving to the 3MF format. |
-+| `Microsoft3MFSaveOptions` | Microsoft3MFSaveOptions class holds export options including encoding, export textures, file name, file system, and file system factory. |
++| `Microsoft3MFSaveOptions` | Microsoft3MFSaveOptions class holds export options for Microsoft 3MF format including encoding, file name, file system, export textures, and file system factory. |
  | `MirroredProfile` | IFC compatible mirror profile. |
  | `MorphTargetChannel` | A MorphTargetChannel is used by MorphTargetDeformer to organize the target geometries. |
  | `MorphTargetDeformer` | MorphTargetDeformer provides per-vertex animation. |
 -| `Node` | Node represents a scene‑graph element; you can create child nodes, assign an Entity, and control visibility via getVisible/setVisible. |
-+| `Node` | Node class holds scene nodes and provides methods to accept visitors, add child nodes and entities, and manage bounding box and asset info. |
++| `Node` | Node class represents a node in the scene hierarchy with child nodes, entities, bounding box, and asset information. |
 +| `NodeVisitor` | A callback to travel through the whole node hierarchy. |
  | `NotImplementedException` | Exception thrown when a feature is not implemented. |
 -| `NurbsCurve` | NURBS curve is a curve represented by NURBS(Non-uniform rational basis spline), A NURBS curve is defined by its getOrder(), a set of weighted Geometry.getControlPoints() and a getKnotVectors() The w. |
 -| `NurbsDirection` | Class with 12 methods and 7 properties. |
 -| `ObjLoadOptions` | ObjLoadOptions lets developers control OBJ import behavior, including flipping the coordinate system, scaling the model, and enabling or disabling material loading. |
 -| `ObjSaveOptions` | ObjSaveOptions provides options for exporting OBJ files, including unit scaling, point‑cloud export, material handling, and coordinate system flipping. |
-+| `NurbsCurve` | NurbsCurve class holds NURBS curve data including control points, color, curve type, and provides a constructor, but evaluate and evaluateAt methods are not implemented. |
-+| `NurbsDirection` | NurbsDirection class holds NURBS direction data including count, degree, divisions, and provides methods to get knot vectors and multiplicity. |
-+| `ObjLoadOptions` | ObjLoadOptions class holds load options including encoding, file name, file system, file system factory, enable materials, and flip coordinate system. |
-+| `ObjSaveOptions` | ObjSaveOptions class holds save options including encoding, export textures, file name, file system, apply unit scale, axis system, and enable materials. |
++| `NurbsCurve` | NurbsCurve class represents a NURBS curve with control points, color, curve type, degree, and dimension; the evaluate and evaluateAt methods are not implemented. |
++| `NurbsDirection` | NurbsDirection class holds NURBS direction data with properties such as degree, count, divisions, knot vectors, and multiplicities. |
++| `ObjLoadOptions` | ObjLoadOptions class holds import options for OBJ format including encoding, file name, file system, file system factory, enable materials, and coordinate system flipping. |
++| `ObjSaveOptions` | ObjSaveOptions class holds export options for OBJ format including encoding, file name, file system, export textures, axis system, apply unit scale, and enable materials. |
  | `ObjectProperty` | Concrete property implementation for Object values. |
  | `ParameterizedProfile` | The base class of all parameterized profiles. |
 -| `ParseException` | ParseException.ParseException creates an exception with the specified error message. |
-+| `ParseException` | ParseException class is thrown when parsing fails. |
++| `ParseException` | ParseException class represents an exception thrown during parsing operations. |
  | `PbrMaterial` | Material for physically based rendering based on albedo color/metallic/roughness. |
 -| `PbrSpecularMaterial` | Material for physically based rendering based on diffuse color/specular/glossiness /. |
 +| `PbrSpecularMaterial` | Material for physically based rendering based on diffuse color/specular/glossiness |
@@ -428,8 +428,8 @@
  | `Plane` | Parameterized plane. |
 -| `PlyLoadOptions` | PlyLoadOptions and PlySaveOptions give developers the ability to import and export PLY point‑cloud files with configurable encoding and file‑system handling. |
 -| `PlySaveOptions` | Class with 17 methods and 7 properties. |
-+| `PlyLoadOptions` | PlyLoadOptions class holds load options including encoding, file name, file system, and file system factory. |
-+| `PlySaveOptions` | PlySaveOptions class holds save options including encoding, export textures, file name, file system, and file system factory. |
++| `PlyLoadOptions` | PlyLoadOptions class holds import options for PLY format including encoding, file name, file system, and file system factory. |
++| `PlySaveOptions` | PlySaveOptions class holds export options for PLY format including encoding, file name, file system, export textures, and file system factory. |
  | `PointCloud` | A point cloud represents a collection of points in 3D space. |
  | `PolygonModifier` | Polygon modifier utilities. |
  | `Pose` | The pose is used to store transformation matrix when the geometry is skinned. |
@@ -437,11 +437,11 @@
  | `Profile` | 2D Profile in xy plane. |
  | `Property` | Class to hold user-defined properties. |
 -| `PropertyCollection` | PropertyCollection offers methods to add, remove, find, and iterate over Property objects by name or index. |
-+| `PropertyCollection` | PropertyCollection class holds a collection of properties and provides methods to add, find, get, remove, set, and iterate properties. |
++| `PropertyCollection` | PropertyCollection class provides methods to add, find, get, remove, set, and iterate over properties. |
  | `Pyramid` | Parameterized pyramid. |
 -| `Quaternion` | Quaternion provides static factory methods to create quaternions from Euler angles or an angle‑axis pair, as well as instance methods for normalization and multiplication. |
 -| `Rect` | A class to represent the rectangle /. |
-+| `Quaternion` | Quaternion class holds a quaternion and provides methods for conjugation, conversion from angle-axis and Euler angles, identity, multiplication, and normalization. |
++| `Quaternion` | Quaternion class represents a quaternion with methods for conjugation, multiplication, normalization, and conversion from angle-axis or Euler angles. |
 +| `Rect` | A class to represent the rectangle |
  | `RectangleShape` | IFC compatible rectangular shape with rounding corners. |
  | `RectangularTorus` | Parameterized rectangular torus. |
@@ -455,29 +455,29 @@
 -| `Renderer` | Class with 1 method. |
 -| `RendererException` | Class with 1 method. |
 -| `RendererVariableManager` | RendererVariableManager provides a container for variables that influence rendering behavior. |
-+| `RenderFactory` | RenderFactory class provides methods to create render resources including cube render textures, descriptor sets, index buffers, pipelines, render textures, render windows, shader programs, and texture units. |
-+| `RenderParameters` | RenderParameters class holds render parameters. |
-+| `RenderQueueGroupId` | RenderQueueGroupId class holds a render queue group identifier. |
-+| `RenderResource` | RenderResource class is the base class for render resources. |
-+| `RenderStage` | RenderStage class holds a render stage. |
-+| `RenderState` | RenderState class holds a render state. |
-+| `Renderer` | Renderer class is the base class for renderers. |
++| `RenderFactory` | RenderFactory class provides methods to create render resources such as render textures, descriptor sets, index buffers, pipelines, render windows, shader programs, and texture units. |
++| `RenderParameters` | RenderParameters class holds parameters for rendering operations. |
++| `RenderQueueGroupId` | RenderQueueGroupId class identifies groups in the render queue. |
++| `RenderResource` | RenderResource class represents a base class for render resources. |
++| `RenderStage` | RenderStage class represents a rendering stage. |
++| `RenderState` | RenderState class represents a rendering state. |
++| `Renderer` | Renderer class represents a renderer for rendering operations. |
 +| `RendererException` | Declared; not thrown by library code. |
-+| `RendererVariableManager` | RendererVariableManager class manages renderer variables. |
++| `RendererVariableManager` | RendererVariableManager class manages variables for the renderer. |
  | `RevolvedAreaSolid` | This class represents a solid model by revolving a cross section provided by a profile about an axis. |
  | `RvmLoadOptions` | Load options for AVEVA Plant Design Management System's RVM file. |
  | `RvmSaveOptions` | Save options for Aveva PDMS RVM file. |
  | `SaveOptions` | The base class to configure options in file saving for different types. |
 -| `Scene` | Scene.open(filePath) loads a 3D file, automatically detecting its format based on the file extension. |
 -| `SceneObject` | SceneObject extends A3DObject, adding a reference to its parent Scene and exposing scene‑level properties. |
-+| `Scene` | Scene class holds a 3D scene and provides methods to clear, create animation clips, find properties, and manage animation clips and asset info, but render and save methods are not implemented. |
-+| `SceneObject` | SceneObject class holds scene objects and provides methods to find properties, get name and properties, and get the parent scene. |
++| `Scene` | Scene class represents a 3D scene with animation clips, asset information, and methods to clear, create animation clips, and find properties; the render method is not implemented and the save method may throw IOException. |
++| `SceneObject` | SceneObject class represents an object in the scene with a name, properties, and a reference to its parent scene. |
  | `Segment` | Segment of CompositeCurve. |
  | `ShaderMaterial` | A shader material that allows describing the material by external rendering engine or shader language. |
 -| `ShaderProgram` | Class with 1 method. |
 -| `ShaderSource` | Class in the 3D JAVA API. |
-+| `ShaderProgram` | ShaderProgram class holds a shader program, but the close method is not implemented. |
-+| `ShaderSource` | ShaderSource class holds shader source code. |
++| `ShaderProgram` | ShaderProgram class represents a shader program; the close method is not implemented. |
++| `ShaderSource` | ShaderSource class represents the source of a shader. |
  | `ShaderTechnique` | A shader technique represents a concrete rendering implementation. |
  | `Shape` | The shape describes the deformation on a set of control points, which is similar to the cluster deformer in Maya. |
  | `Skeleton` | A skeleton defines a hierarchical structure of bones for skinning. |
@@ -486,8 +486,8 @@
  | `StlLoadOptions` | Load options for STL. |
  | `StlSaveOptions` | Save options for STL. |
 -| `Stream` | Created by lexchou on 12/14/2016. |
-+| `Stream` | Stream class provides a stream abstraction and provides methods to close, flush, copy to another stream, get input stream and length, and supports seeking from start, current, or end. |
-+| `Struct` | Struct class is the base class for value types and provides methods to clone and copy from another struct. |
++| `Stream` | Stream class represents a stream with methods to close, flush, copy to another stream, get input stream, and get length; it supports seeking from start, current, or end positions. |
++| `Struct` | Struct class represents a structure with methods to clone and copy from another instance. |
  | `Structs` | Base class of struct array. |
  | `TShape` | IFC compatible T-shape defined by parameters. |
  | `Texture` | This class defines the texture from an external file. |
