@@ -17,12 +17,25 @@ name: run-request-execute
 #   cohort    the engine's override (owner R37, 2026-11-13): present.yml called with NO target runs only
 #             its cohort job -- the same authorization-gated planner the hourly schedule and
 #             cohort-chain.yml run, under the same one-planner group -- for when the cron is late.
-#   issues    calls issues.yml (owner R39, 2026-11-13): one pilot issue-maintenance cycle, no input.
+#   issues    calls issues.yml (owner R39, 2026-11-13): one maintenance cycle for every pilot repository (a
+#             matrix leg each: 3D TypeScript and, since R50 2026-11-22, TeX Python in dry run), no input.
+
+#   monitor   calls monitor.yml (owner R50, 2026-11-22; WP-3): one read-only drift / discovery / freshness
+#             pass over the portfolio, report to refs/repository-presenter-state/monitor/report. No input.
 #   count     (BL-111, 2026-11-14) runs main's ops/checks/portfolio_delivery_count.py hosted, with
 #             attestations: read so each acceptance record's Sigstore attestation verifies, and writes the
 #             official per-lane delivered count to the job summary. Read-only: no secret, no write scope.
+#   propose   (R50, WP-1) calls propose.yml for one sealed candidate: a DRY RUN by default (payload built and uploaded,
+#             nothing written); `"dry_run": false` only asks for propose.yml's write job, which runs solely behind its
+#             own gates (allowlist, registry full, owner kill-switch variable, R15 portfolio predicate, sandbox target
+#             variable). validate fixes every field; the request carries no token, branch, title or path.
+#             `"sandbox": true` (R17, owner decision 2026-11-22) sends the candidate to the sandbox repository the
+#             variable names instead (draft PR under sandbox/, see propose.yml); it never widens any other gate.
 #   present / mint  call the default-branch copies of the reusable workflows (local `./` paths resolve to this
 #             run's commit, i.e. main) with `secrets: inherit`, only after validate passed.
+#   bridge    (BL-770) one zero-call DRY RUN of scripts/supervisor_bridge.py: what the planner says is due, the
+#             ledger's leases and the exact run-request.json the supervisor-tick bridge would dispatch. Read-only.
+#   metadata-audit  (BL-772) calls metadata-audit.yml: the read-only metadata audit of every active repository.
 #   audit-seed / audit-score / acceptance-write  the M9 round's override path (owner R37, 2026-11-13): the
 #             same reusable workflows the scheduled audit-seed.yml chain calls. validate also refuses a seed
 #             while an earlier batch is open, a seed_run_id that is not a completed, successful seed run of
@@ -30,6 +43,8 @@ name: run-request-execute
 #             path but the exact committed file of that seed run. GITHUB_REF here is the default branch, so
 #             the acceptance-audit environment's main-only rule and each workflow's main-only guard hold,
 #             and the attestation is still signed by acceptance-write.yml@refs/heads/main.
+#   review-page / feedback-intake  (BL-760/761, R47) call review-page.yml (rebuild + host the README Candidate
+#             Review page) and feedback-intake.yml (open review-feedback issues -> backlog items); no input, no secret.
 #   audit-settle  (BL-160) records a past M9 audit round's measured provider spend, from its own
 #             m9-audit-ledger artifact, as one idempotent settle entry on the provider-spend ledger. No secret.
 #   audit-abandon (BL-163) ends a seed batch the gate reports blocked (MAX_AUDIT_ATTEMPTS attempts, no frozen
@@ -69,6 +84,8 @@ jobs:
       ecosystem: ${{ steps.check.outputs.ecosystem }}
       lane: ${{ steps.check.outputs.lane }}
       refresh: ${{ steps.check.outputs.refresh }}
+      dry_run: ${{ steps.check.outputs.dry_run }}
+      sandbox: ${{ steps.check.outputs.sandbox }}
       seed_run_id: ${{ steps.check.outputs.seed_run_id }}
       findings_path: ${{ steps.check.outputs.findings_path }}
       findings_ref: ${{ steps.check.outputs.findings_ref }}
@@ -155,6 +172,73 @@ jobs:
           # Exit 1 means only that the --per-lane 25 gate does not hold yet; the count itself is the result.
           if [ "$rc" -ne 0 ] && [ "$rc" -ne 1 ]; then exit "$rc"; fi
 
+  bridge:
+    needs: validate
+    if: needs.validate.outputs.job == 'bridge'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Dry run of the execution bridge (zero provider calls, nothing dispatched)
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/bridge"
+          python scripts/supervisor_bridge.py --dry-run --remote "https://github.com/${GITHUB_REPOSITORY}.git" \
+            --out "$RUNNER_TEMP/bridge/decision.json" 2> "$RUNNER_TEMP/bridge/decision.txt"
+          {
+            echo "## Execution bridge dry run (run-request bridge)"
+            echo '```'
+            cat "$RUNNER_TEMP/bridge/decision.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat "$RUNNER_TEMP/bridge/decision.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bridge-decision
+          path: ${{ runner.temp }}/bridge/decision.json
+          if-no-files-found: ignore
+
+  metadata-audit:
+    needs: validate
+    if: needs.validate.outputs.job == 'metadata-audit'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/metadata-audit.yml
+
+  # BL-760/761 (R47, WP-6): rebuild and host the review page; sweep open review-feedback issues into backlog
+  # items. Both are fixed workflows on main with no input.
+  review-page:
+    needs: validate
+    if: needs.validate.outputs.job == 'review-page'
+    permissions:
+      contents: write  # the review-page branch of this repository only
+      pages: write     # used only when the REVIEW_PAGE_PAGES variable opts in
+      id-token: write
+      attestations: read  # review-page.yml's build job verifies each acceptance record's attestation (as the count job)
+    uses: ./.github/workflows/review-page.yml
+
+  feedback-intake:
+    needs: validate
+    if: needs.validate.outputs.job == 'feedback-intake'
+    permissions:
+      contents: write       # the feedback-intake/run-<id> branch
+      issues: write         # one comment per filed issue
+      pull-requests: write
+    uses: ./.github/workflows/feedback-intake.yml
+
   mint:
     needs: validate
     if: needs.validate.outputs.job == 'mint'
@@ -177,6 +261,28 @@ jobs:
       contents: write  # issues.yml's state ref in this repository only; upstream writes use the App token
     uses: ./.github/workflows/issues.yml
     secrets: inherit
+
+  propose:
+    needs: validate
+    if: needs.validate.outputs.job == 'propose'
+    permissions:
+      contents: read      # no write scope here: upstream writes use the App token minted inside propose.yml's write job
+      attestations: read  # propose.yml's gate and write jobs verify the acceptance records for the R15 predicate
+    uses: ./.github/workflows/propose.yml
+    with:
+      repository: ${{ needs.validate.outputs.repository }}
+      lane: ${{ needs.validate.outputs.lane }}
+      dry_run: ${{ needs.validate.outputs.dry_run != 'false' }}
+      # R17 sandbox mode only when the request wrote `"sandbox": true`; anything else is the normal path
+      sandbox: ${{ needs.validate.outputs.sandbox == 'true' }}
+    secrets: inherit
+
+  monitor:
+    needs: validate
+    if: needs.validate.outputs.job == 'monitor'
+    permissions:
+      contents: write  # monitor.yml's state ref in this repository only; upstream is read, never written
+    uses: ./.github/workflows/monitor.yml
 
   audit-seed:
     needs: validate

@@ -418,6 +418,13 @@ _TABLE_TYPE_SHARE = 0.6
 def _surface_names(
     facts: FactsDocument,
 ) -> tuple[set[str], set[str], dict[str, str]]:
+    """Built once per document (BL-711); the three results are read-only to every caller."""
+    return facts.memo("surface_names", lambda: _build_surface_names(facts))
+
+
+def _build_surface_names(
+    facts: FactsDocument,
+) -> tuple[set[str], set[str], dict[str, str]]:
     """(every name the public surface uses, the type names, {type name: its fact's full dotted
     value}): ``public_symbol``, ``enum_member`` and ``import_path`` value segments, plus the
     identifiers public signatures and docstrings use (a return type, a base class). Never an
@@ -1015,7 +1022,11 @@ def _base_names(fact: Fact) -> list[str]:
     attributes = fact.attributes or {}
     raw = attributes.get("bases", "")
     if not raw:
-        declaration = attributes.get("declaration", "")
+        # A declaration is the head of the type; a TypeScript one carries its whole body
+        # ("export interface MdCode { type: 'code'; value: string; }"), whose colons are member
+        # types, never a C# or C++ base list (BL-792: the body's last token, "}", was read as the
+        # base of fifteen PDF TypeScript rows and printed as "inherits from }").
+        declaration = str(attributes.get("declaration", "")).split("{", 1)[0]
         if ":" in declaration:
             raw = declaration.split(":", 1)[1]
         elif " extends " in declaration or " implements " in declaration:

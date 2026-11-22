@@ -1,0 +1,57 @@
+{
+ "schema_version": 1,
+ "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+ "handoff_id": "aspose-tex-foss__Aspose.TeX-FOSS-for-Python__c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188",
+ "evidence_digest": "sha256:085fcb7e351f42e50d9d6b04fe002cef46eda71f0451af87172745ba5dda2a27",
+ "source_revision": "181015d2eee3e19f8af3d84e4a932ac84ad47c7c",
+ "mode": "dry run: no network call, nothing written",
+ "action": "REFUSED",
+ "issue": {
+  "title": "Aspose.TeX FOSS for Python: 102 of 119 .py files fail to parse (IndentationError) and 'import aspose_tex' fails",
+  "labels": [
+   "repo-presenter",
+   "defect:source_unparseable"
+  ],
+  "body": "Reproduced independently against the current default-branch head `181015d2eee3e19f8af3d84e4a932ac84ad47c7c` on 2026-10-10.\n\n## Summary\n\nMost of this repository's Python source does not parse. Indentation has been collapsed to one space per nesting level, so the files are not valid Python. The package cannot be imported from this source tree and the test suite cannot be collected.\n\n## Environment\n\n- Revision `181015d2eee3e19f8af3d84e4a932ac84ad47c7c` (default branch `main`)\n- Python 3.13.15, standard library only (`ast.parse`); any Python 3 interpreter reproduces it\n\n## Steps to reproduce\n\n```python\nimport ast, pathlib\nbad = ok = 0\nfor p in pathlib.Path(\".\").rglob(\"*.py\"):\n    try:\n        ast.parse(p.read_text(encoding=\"utf-8\")); ok += 1\n    except SyntaxError:\n        bad += 1\nprint(bad, ok)\n```\n\nand\n\n```sh\npip install -e .\npython -c \"import aspose_tex\"\n```\n\n## Expected\n\nEvery `.py` file parses, `import aspose_tex` succeeds and the test suite can be collected.\n\n## Actual result\n\n- 102 of the 119 `.py` files raise `IndentationError`: `src/aspose_tex/` 35 of 45, `tests/` 66 of 73 (including `tests/_verification/`), and `run_hello.py`.\n- `src/aspose_tex/presentation/__init__.py` (the module the package's own docstring calls the user-facing entry point; it defines `TeXJob`, `TeXOptions` and the `OutputDevice` hierarchy): `IndentationError: expected an indented block after function definition on line 107 (line 108)`. Lines 107 and 108 are indented by a single space.\n- `import aspose_tex` fails immediately: `aspose_tex/__init__.py` imports `aspose_tex._input`, which imports `_input/catcode.py`, line 66: `IndentationError: expected an indented block after 'for' statement on line 65`.\n- The same error shape (`expected an indented block after ...`) recurs in every failing file.\n\n## Suggested fix\n\nRestore the original indentation (re-export from the original formatted source), then add a CI step that runs `python -m compileall src tests` on every push so a collapsed-indentation commit cannot land again.\n\n<!-- repository-presenter-defect: sha256:c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188 -->\n\n<!-- repo-presenter-defect: sha256:c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188 -->\n"
+ },
+ "gates": [
+  {
+   "gate": "registry write gate (issue_filing)",
+   "open": false,
+   "reason": "registry_dry_run: aspose-tex-foss/Aspose.TeX-FOSS-for-Python is issues_mode 'dry_run' (registry mode 'dry_run'), not 'file'; issue_filing refused (a dry_run entry may produce a dry-run result and nothing else)"
+  },
+  {
+   "gate": "upstream write allowlist / R39 pilot request guard",
+   "open": false,
+   "reason": "write refused: POST https://api.github.com/repos/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/issues: the issue-management pilot (R39) maintains existing issues; it never creates one"
+  },
+  {
+   "gate": "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED",
+   "open": false,
+   "reason": "not set to 1 (necessary, never sufficient)"
+  },
+  {
+   "gate": "owner approval (ops/issue_approvals/aspose-tex-foss__Aspose.TeX-FOSS-for-Python__c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188.json)",
+   "open": false,
+   "reason": "approval expired at 2026-11-15T11:28:29+00:00"
+  }
+ ],
+ "dedup": {
+  "existing_records": [],
+  "simulated_tracking": "committed reproduction example:tex-python-ast-parse-all tracks this defect as a SIMULATED record (never filed); monitor state record (issue #0, simulated, state open)",
+  "verdict": "no upstream issue found"
+ },
+ "recheck": "re-run at 07db320334a0: the defect no longer reproduces",
+ "plan_filing": {
+  "action": "REFUSED",
+  "refusal": "approval expired at 2026-11-15T11:28:29+00:00",
+  "already_filed": null
+ },
+ "refusals": [
+  "registry_dry_run: aspose-tex-foss/Aspose.TeX-FOSS-for-Python is issues_mode 'dry_run' (registry mode 'dry_run'), not 'file'; issue_filing refused (a dry_run entry may produce a dry-run result and nothing else)",
+  "write refused: POST https://api.github.com/repos/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/issues: the issue-management pilot (R39) maintains existing issues; it never creates one",
+  "not set to 1 (necessary, never sufficient)",
+  "approval expired at 2026-11-15T11:28:29+00:00",
+  "approval expired at 2026-11-15T11:28:29+00:00"
+ ]
+}

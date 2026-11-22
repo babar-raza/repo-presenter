@@ -10,7 +10,15 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "recertify"}
     {"job": "cohort"}
     {"job": "issues"}
+    {"job": "monitor"}
     {"job": "count"}
+    {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
+    {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "L", "dry_run": false}
+    {"job": "bridge"}
+    {"job": "metadata-audit"}
+    {"job": "review-page"}
+    {"job": "feedback-intake"}
+    {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "R", "sandbox": true}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -19,6 +27,13 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "audit-settle", "seed_run_id": "43620199171", "audit_run_id": "43641838293",
      "batch": "e2-011-audit-and-production"}
     {"job": "audit-abandon", "seed_run_id": "43620199171"}
+
+``propose`` (R50, WP-1) runs ``.github/workflows/propose.yml`` for one sealed candidate: ``lane`` must be written
+out (``R`` or ``L``, never ``both``) and ``dry_run`` is accepted only as the JSON boolean ``false`` (``true`` is the
+same as absent). The default, and the only thing a request can do by itself, is a DRY RUN: it builds and uploads the
+branch/pull-request payload and writes nothing. ``dry_run: false`` only asks for the write job, which still runs only
+behind its own gates (allowlist, registry ``mode: full``, the owner kill switch variable, the R15 portfolio
+predicate, the sandbox target variable); the request cannot supply a token, a branch, a title or a path.
 
 ``audit-settle`` (BL-160) records one past M9 audit round's measured provider spend on the durable
 provider-spend ledger, for a round that ran before the audit reserved from it: the executor downloads that
@@ -110,7 +125,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle", "audit-abandon")
-JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", "propose", "bridge", "metadata-audit", "review-page", "feedback-intake", "monitor", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -394,14 +409,40 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("an issues request takes no other field (its targets are data/issue_pilot.json)")
         return {"job": "issues", "repository": "", "ecosystem": "", "lane": ""}
+    if job in ("review-page", "feedback-intake"):
+        # BL-760/761 (R47, WP-6): rebuild and host the README Candidate Review page, or sweep the open
+        # review-feedback issues into backlog items. Fixed workflows on main; no target field.
+        if set(request) != {"job"}:
+            raise RequestError(f"a {job} request takes no other field (its inputs are the state refs and the issue list)")
+        return {"job": job, "repository": "", "ecosystem": "", "lane": ""}
+
+    if job == "monitor":
+        # Owner ruling R50 (WP-3): one read-only portfolio observation (.github/workflows/monitor.yml).
+        # No target field: it covers every active registry entry.
+        if set(request) != {"job"}:
+            raise RequestError("a monitor request takes no other field (it observes the whole registry)")
+        return {"job": "monitor", "repository": "", "ecosystem": "", "lane": ""}
     if job == "count":
         # BL-111: the official delivered count (ops/checks/portfolio_delivery_count.py) run hosted, where
         # each acceptance record's attestation can be verified (attestations: read); read-only, no secret.
         if set(request) != {"job"}:
             raise RequestError("a count request takes no other field (it counts the whole portfolio)")
         return {"job": "count", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "bridge":
+        # BL-770 (WP-7): one zero-call dry run of the supervisor execution bridge (scripts/supervisor_bridge.py
+        # --dry-run): what is due, the leases, and the exact run-request.json it would dispatch. Read-only.
+        if set(request) != {"job"}:
+            raise RequestError("a bridge request takes no other field (the planner picks the cells)")
+        return {"job": "bridge", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "metadata-audit":
+        # BL-772 (WP-9): the read-only metadata audit of every active repository (metadata-audit.yml).
+        if set(request) != {"job"}:
+            raise RequestError("a metadata-audit request takes no other field (it audits the whole registry)")
+        return {"job": "metadata-audit", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
+    if job == "propose":
+        return _validate_propose(request, registry)
     allowed_keys = {"job", "repository", "ecosystem", "lane", "refresh"}
     if set(request) - allowed_keys:
         raise RequestError(f"unknown fields {sorted(set(request) - allowed_keys)}")
@@ -423,6 +464,30 @@ def validate(
             raise RequestError('refresh needs "lane": "R" (a fresh seal attempt is Lane R only)')
         outputs["refresh"] = "true"
     return outputs
+
+
+def _validate_propose(request: dict[str, Any], registry: list[dict[str, Any]]) -> dict[str, str]:
+    """R50 WP-1: one sealed candidate to propose (dry run by default). Exact fields; the repository and
+    its ecosystem must match ``data/registry.json``; ``lane`` is ``R`` or ``L`` (never defaulted)."""
+    known = {"job", "repository", "ecosystem", "lane", "dry_run", "sandbox"}
+    if set(request) - known:
+        raise RequestError(f"unknown fields {sorted(set(request) - known)}")
+    repository, ecosystem, lane = request.get("repository"), request.get("ecosystem"), request.get("lane")
+    entry = next((e for e in registry if e.get("repository") == repository), None)
+    if entry is None:
+        raise RequestError(f"{repository!r} is not listed in data/registry.json")
+    if ecosystem != entry.get("ecosystem"):
+        raise RequestError(f"{repository} is registered as {entry.get('ecosystem')!r}, not {ecosystem!r}")
+    if lane not in ("R", "L"):
+        raise RequestError(f"a propose request needs lane \"R\" or \"L\" written out, not {lane!r}")
+    dry_run = request.get("dry_run", True)
+    if not isinstance(dry_run, bool):
+        raise RequestError(f"dry_run {dry_run!r} is not a JSON boolean")
+    sandbox = request.get("sandbox", False)
+    if not isinstance(sandbox, bool):
+        raise RequestError(f"sandbox {sandbox!r} is not a JSON boolean")
+    return {"job": "propose", "repository": repository, "ecosystem": ecosystem, "lane": lane,
+            "dry_run": "true" if dry_run else "false", "sandbox": "true" if sandbox else "false"}
 
 
 def check_trigger(event: Any) -> tuple[str, str]:

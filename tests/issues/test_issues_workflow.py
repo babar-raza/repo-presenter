@@ -53,11 +53,12 @@ def test_the_job_holding_the_app_token_runs_no_upstream_code() -> None:
     for forbidden in ("git clone", "npm ", "node ", "npx ", ".issue-upstream", "repo_presenter.issues.reproduce"):
         assert forbidden not in runs, forbidden
     (mint,) = [s for s in job["steps"] if "create-github-app-token" in str(s.get("uses", ""))]
+    assert mint["if"] == "${{ matrix.mint }}"  # only a live-mode pilot repository mints (R50)
     assert mint["with"]["owner"] == "${{ env.PILOT_OWNER }}"
     assert mint["with"]["repositories"] == "${{ env.PILOT_NAME }}"
     assert mint["with"]["permission-issues"] == "write"
     assert set(k for k in mint["with"] if k.startswith("permission-")) == {"permission-issues", "permission-metadata"}
-    assert wf["env"] == {"PILOT_OWNER": "aspose-3d-foss", "PILOT_NAME": "Aspose.3D-FOSS-for-TypeScript"}
+    assert job["env"] == {"PILOT_OWNER": "${{ matrix.owner }}", "PILOT_NAME": "${{ matrix.name }}"}
     for step in job["steps"]:
         if str(step.get("uses", "")).startswith("actions/checkout"):
             assert step["with"]["persist-credentials"] is False

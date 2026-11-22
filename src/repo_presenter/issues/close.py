@@ -54,6 +54,7 @@ from repo_presenter.issues.approval import (
     parse_timestamp,
     verify_approval,
 )
+from repo_presenter import sandbox_scope
 from repo_presenter.issues.file import write_authorized
 from repo_presenter.issues.model import CloseReason, Handoff, write_handoff
 
@@ -199,6 +200,9 @@ def _remote_gates(
         )
     if not write_authorized(remote.environment):
         raise CloseRefusal("remote close refused: kill switch engaged (every write is disabled)")
+    sandbox_refusal = sandbox_scope.issue_write_refusal(handoff.repository, remote.environment)
+    if sandbox_refusal is not None:  # owner decision 2026-11-22: issue writes are authorised for the sandbox only
+        raise CloseRefusal(f"remote close refused: {sandbox_refusal}")
     if not remote.token:
         raise CloseRefusal("remote close refused: no write-scoped token available")
     decision = remote.verify_token(remote.token)

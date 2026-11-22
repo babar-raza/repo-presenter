@@ -1216,6 +1216,40 @@ def type_implementation_facts(
     return sorted(found, key=rank)[:limit]
 
 
+#: The longest doc comment a type record carries: the cut ``review.evidence.DOC_CHARS`` gives the reviewer
+#: (a test holds the two equal), so the author and the reviewer read the same text.
+TYPE_DOC_CHARS = 240
+
+
+def type_doc_comment(type_fact: Fact, facts: FactsDocument | None = None) -> str:
+    """The type's own doc comment as the reviewer is shown it (BL-803): ``docstring_full`` when the type
+    carries no first-sentence ``docstring`` (a type re-exported from a private module, every TypeScript type), cut
+    where ``review.evidence._record`` cuts it. Before BL-803 the review packet carried this text and the author's
+    packet did not, so an undocumented-looking type was described from its name (Aspose.BarCode Python:
+    "EncodingError represents errors that occur during barcode encoding." against the doc comment "Raised when
+    encoding fails.") and the audit judged the sentence against a doc comment the author never saw."""
+    if (type_fact.attributes or {}).get("docstring"):
+        return ""
+    full = str((type_fact.attributes or {}).get("docstring_full") or "")
+    if not full and facts is not None:
+        # a re-exported alias is the class its evidence names (``type_paths``), which holds the doc comment
+        paths = type_paths(type_fact, facts) - {type_fact.value}
+        full = next(
+            (
+                str((other.attributes or {}).get("docstring_full") or "")
+                for other in sorted(facts.by_kind("public_symbol"), key=lambda fact: fact.id)
+                if other.value in paths
+                and other.polarity == "SUPPORTED"
+                and (other.attributes or {}).get("symbol_kind") in {"class", "enum"}
+                and (other.attributes or {}).get("docstring_full")
+            ),
+            "",
+        )
+    if not full:
+        return ""
+    return full if len(full) <= TYPE_DOC_CHARS else full[:TYPE_DOC_CHARS] + " ..."
+
+
 def type_unit_facts(type_fact: Fact, facts: FactsDocument) -> tuple[list[str], list[Fact]]:
     """Everything one ``type:<fact id>`` unit is given to state, besides the type fact itself (its
     kind, value and signature): the verified member names and enum values listed with it
@@ -1273,6 +1307,7 @@ def _type_batches(
                     if (fact.attributes or {}).get("signature")
                     else {}
                 ),
+                **({"docstring": doc} if (doc := type_doc_comment(fact, facts)) else {}),
                 **({"members": members[fact.id]} if members[fact.id] else {}),
                 **({"member_kinds": member_kinds[fact.id]} if member_kinds[fact.id] else {}),
             }
@@ -1678,6 +1713,10 @@ def authoring_tasks(
 
 def verified_members(facts: FactsDocument) -> frozenset[str]:
     """Attribute names a SUPPORTED example calls or reads, from its syntax tree."""
+    return facts.memo("verified_members", lambda: _verified_members(facts))
+
+
+def _verified_members(facts: FactsDocument) -> frozenset[str]:
     members: set[str] = set()
     for fact in facts.by_kind("example"):
         if fact.polarity != "SUPPORTED":
@@ -1691,7 +1730,12 @@ def verified_members(facts: FactsDocument) -> frozenset[str]:
 
 
 def surface_members(facts: FactsDocument) -> dict[str, frozenset[str]]:
-    """Public methods per class, from the surface facts recorded as ``module.Class.method``."""
+    """Public methods per class, from the surface facts recorded as ``module.Class.method``.
+    Built once per document (BL-711); the mapping is read-only to every caller."""
+    return facts.memo("surface_members", lambda: _surface_members(facts))
+
+
+def _surface_members(facts: FactsDocument) -> dict[str, frozenset[str]]:
     members: dict[str, set[str]] = {}
     for fact in facts.by_kind("public_symbol"):
         detail = fact.evidence[0].detail or "" if fact.evidence else ""
@@ -1991,13 +2035,36 @@ def stray_identifiers(tokens: Iterable[str], unaccepted: Callable[[str], bool]) 
     return sorted(dict.fromkeys(found))
 
 
+_MASK_VALUES: dict[int, tuple[Any, tuple[str, ...]]] = {}
+
+
+def _composite_values(allowed: Iterable[str]) -> tuple[str, ...]:
+    """The allowed single-token composite values, longest first. A frozenset (the shared answer of
+    ``allowed_identifiers``) is filtered and sorted once (BL-711: 100,000 values per unit check before)."""
+    def build() -> tuple[str, ...]:
+        return tuple(
+            sorted(
+                {v for v in allowed if len(v) >= 3 and "://" not in v and _COMPOSITE_VALUE.fullmatch(v)},
+                key=len,
+                reverse=True,
+            )
+        )
+
+    if not isinstance(allowed, frozenset):
+        return build()
+    held = _MASK_VALUES.get(id(allowed))
+    if held is not None and held[0] is allowed:
+        return held[1]
+    if len(_MASK_VALUES) >= 8:
+        _MASK_VALUES.clear()
+    values = build()
+    _MASK_VALUES[id(allowed)] = (allowed, values)
+    return values
+
+
 def mask_allowed_values(text: str, allowed: Iterable[str]) -> str:
     """``text`` with each allowed single-token composite value it spells verbatim blanked out."""
-    for value in sorted(
-        {v for v in allowed if len(v) >= 3 and "://" not in v and _COMPOSITE_VALUE.fullmatch(v)},
-        key=len,
-        reverse=True,
-    ):
+    for value in _composite_values(allowed):
         if value in text:
             text = re.sub(rf"(?<![\w/.-]){re.escape(value)}(?![\w/-]|\.\w)", " ", text)
     return text
@@ -2049,6 +2116,10 @@ def proper_noun(token: str) -> bool:
 
 def prose_nouns(facts: FactsDocument, name: str) -> frozenset[str]:
     """Proper nouns this document may spell in plain text, beyond the identifiers it may cite."""
+    return facts.memo(("prose_nouns", name), lambda: _prose_nouns(facts, name))
+
+
+def _prose_nouns(facts: FactsDocument, name: str) -> frozenset[str]:
     candidates = {part for token in name.split(" ") for part in token.split(".") if part}
     for fact in facts.by_kind("inherited_unit"):
         if fact.polarity == "SUPPORTED":
@@ -2178,7 +2249,9 @@ def inherited_unit_named_symbols(facts: FactsDocument, value: str) -> frozenset[
 
 def canonical_abbreviations(facts: FactsDocument) -> dict[str, str]:
     """Lowercase spelling to canonical form, for every abbreviation this document owns."""
-    return canonical_forms(fact.value for fact in facts.by_kind("format"))
+    return facts.memo(
+        "canonical_abbreviations", lambda: canonical_forms(fact.value for fact in facts.by_kind("format"))
+    )  # BL-711: read-only to callers
 
 
 def forbidden_text_pattern(extra: Sequence[str] = ()) -> str:
@@ -2195,7 +2268,12 @@ def forbidden_text_pattern(extra: Sequence[str] = ()) -> str:
 def allowed_identifiers(facts: FactsDocument, name: str) -> frozenset[str]:
     """Identifiers the prose may spell: every SUPPORTED fact value, each dotted suffix of a
     symbol or import path, its call form, the identifiers an executed example or a shell-command
-    fence spells inside itself, and the product name's tokens."""
+    fence spells inside itself, and the product name's tokens. Built once per document and name
+    (BL-711): every unit check of every model call asked for it."""
+    return facts.memo(("allowed_identifiers", name), lambda: _allowed_identifiers(facts, name))
+
+
+def _allowed_identifiers(facts: FactsDocument, name: str) -> frozenset[str]:
     allowed: set[str] = set(product_name_tokens(name))
     allowed.update(REGISTRY_NAMES.values())
     allowed.update(
@@ -2795,8 +2873,8 @@ def unit_checks(
         strays = stray_identifiers(
             identifier_tokens(mask_allowed_values(text, allowed)), unaccepted
         )
-        pool = allowed | members | frozenset(name for found in methods.values() for name in found)
-        if strays:
+        if strays:  # BL-711: the pool is a union over every allowed identifier; built only when a stray needs it
+            pool = allowed | members | frozenset(name for found in methods.values() for name in found)
             restored = restore_word_forms(restore_case_variants(text, strays, pool), strays, facts)
             if restored != text:
                 text = restored
@@ -2805,6 +2883,7 @@ def unit_checks(
                     identifier_tokens(mask_allowed_values(text, allowed)), unaccepted
                 )
         if strays:
+            pool = allowed | members | frozenset(name for found in methods.values() for name in found)
             shown = []
             shortened = False
             for token in strays:

@@ -99,8 +99,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Build the facts-stage image
-        run: docker build -t repo-presenter-facts .
+      # BL-047/BL-048 (2026-11-22): a cold build -- a fresh runner holds no layers, and --no-cache
+      # makes that explicit, so the hosted run (not a warm local cache) is the evidence.
+      - name: Build the facts-stage image cold
+        run: docker build --no-cache -t repo-presenter-facts .
 
       - name: The image has git (the facts stage clones with it) and runs unprivileged
         run: |
@@ -143,3 +145,23 @@ jobs:
             --repository aspose-words-foss/Aspose.Words-FOSS-for-Python --ecosystem python \
             --workdir /tmp/work --facts-dir /tmp/facts
           test -s "$RUNNER_TEMP/facts-proof/facts.json"
+
+      # BL-048: the proof names what it produced -- a facts artifact for a real product, produced inside the
+      # container, whose manifest and digest agree -- instead of only that a file is non-empty.
+      - name: The container's facts artifact is a real, pinned, self-consistent handoff
+        run: |
+          python3 - "$RUNNER_TEMP/facts-proof" <<'PY'
+          import hashlib, json, os, re, sys
+          d = sys.argv[1]
+          m = json.load(open(os.path.join(d, "facts-manifest.json")))
+          digest = hashlib.sha256(open(os.path.join(d, "facts.json"), "rb").read()).hexdigest()
+          assert m["repository"] == "aspose-words-foss/Aspose.Words-FOSS-for-Python", m
+          assert m["ecosystem"] == "python", m
+          assert re.fullmatch(r"[0-9a-f]{40}", m["source_revision"]), m
+          assert m["facts_sha256"] == digest, (m["facts_sha256"], digest)
+          line = (f"cold container facts proof: {m['repository']}@{m['source_revision']} "
+                  f"sha256 {digest} ({os.path.getsize(os.path.join(d, 'facts.json'))} bytes), "
+                  "no provider key present, zero provider calls")
+          print(line)
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write("### Docker cold-runner proof\n" + line + "\n")
+          PY

@@ -989,6 +989,7 @@ def create_pull_request(
     base: str,
     token: str,
     write: WriteFn = default_post,
+    draft: bool = False,
 ) -> PullRequestRef:
     """``POST /repos/{owner}/{repo}/pulls`` -- opens the one presenter PR from ``head`` into
     ``base``. Only ever called after :func:`find_pull_requests` has confirmed none is open and
@@ -1000,12 +1001,13 @@ def create_pull_request(
     read whose partial failure could wrongly open a ready-for-review PR, so every PR on such a
     repository is opened as a draft and the owner marks it ready. The transport guard
     (:func:`authorize_request`) refuses a non-draft creation there. The control repository's
-    payload is unchanged (no ``draft`` key)."""
+    payload is unchanged (no ``draft`` key) unless the caller passes ``draft=True`` (the R17 sandbox write
+    path, ``propose/sandbox.py``, whose target IS the control repository and must still open a draft)."""
     if not token:
         raise RepositoryMetadataError(f"{owner}/{name}: POST refused - no write-scoped token")
     url = f"{API_ROOT}/repos/{owner}/{name}/pulls"
     payload: dict[str, Any] = {"title": title, "body": body, "head": head, "base": base}
-    if pull_request_draft_required(owner, name):
+    if draft or pull_request_draft_required(owner, name):
         payload["draft"] = True
     status_code, response_body = write(url, token, payload)
     if status_code == -1:

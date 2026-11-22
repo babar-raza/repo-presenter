@@ -1,0 +1,325 @@
+name: propose
+
+# R50 / WP-1 (owner feedback 2026-11-22: "All readme candidates have to be pushed through repository presenter
+# GitHub app, previous project was doing it well"). Ported from the old project's `propose.yml` (read-only dry run,
+# then one write job with a one-repository App token), adapted to this repository: the sealed candidate comes from
+# its bundle ref on the state remote (refs/repository-presenter-state/bundles/...), and the driver is
+# `python -m repo_presenter.propose.run` (src/repo_presenter/propose/run.py), which calls the gated effect
+# `repo_presenter.propose.effect.propose_candidate`.
+#
+# Triggers: `workflow_call` from run-request-execute.yml (job name `propose`, the supervisor's path through
+# scripts/push_request.sh: {"job":"propose","repository":...,"ecosystem":...,"lane":"R"|"L"}, dry run unless
+# "dry_run": false is written out) and `workflow_dispatch` (same inputs; refused unless run from main).
+#
+#   validate  no secret. Strict patterns for every input, main only.
+#   gate      no secret, contents + attestations read. Evaluates the FIVE write gates and uploads the report:
+#               1 allowlist       data/upstream_write_allowlist.json lists the target for pull_request, draft only
+#               2 registry_full   data/registry.json: listed, active, mode full
+#               3 kill_switch     repository variable REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED is true/1
+#               4 portfolio_r15   every active repository has a terminal outcome in BOTH lanes (owner ruling R15;
+#                                 the official count, re-certification plus attested M9 records, fail closed)
+#               5 sandbox_target  repository variable REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY names the target
+#                                 ('*' is the owner's lift of the restriction; unset fails closed)
+#   dry-run   ALWAYS runs, never writes. Builds the exact branch/pull-request payload (title, body, files, draft
+#             flag, candidate hash, source revision) and every refusal, and uploads it. Its only secret use is a
+#             READ-ONLY App installation token (contents/pull-requests/metadata: read) used to read the target and to
+#             verify the App installation reaches exactly this repository; no write-scoped input exists in this job.
+#   write     runs only when dry_run is false AND all of: the kill switch variable, every gate of the `gate` job,
+#             and the dry run's own verdict (authorization record, review, source freshness) say yes. It mints ONE
+#             write-scoped App installation token for the one target repository, exposes it to ONE step as
+#             GH_PROPOSAL_WRITE_TOKEN, and that step re-evaluates every gate itself before any GitHub call. The pull
+#             request is always a DRAFT, authored by repository-presenter[bot] (verified by the effect).
+#
+# SANDBOX MODE (owner decision 2026-11-22, R17: the sandbox is babar-raza/repo-presenter itself): `sandbox: true`
+# writes the candidate of `repository` to the sandbox repository the variable REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY
+# names (never '*'), as a DRAFT pull request from a throwaway branch, under sandbox/<owner>__<name>/README.md (see
+# src/repo_presenter/propose/sandbox.py). The R15 portfolio predicate is not required for that target and stays required
+# for every other one. In sandbox mode the validate job's `owner`/`name` outputs are the WRITE TARGET (the sandbox), so
+# both mint steps are scoped to the sandbox repository alone; `repository` stays the candidate's.
+#
+# tests/test_propose_workflow.py parses this file: no write step is reachable without the gates, the App secrets
+# appear only in the two mint steps (the only write-scoped one is in `write`), permissions are least privilege and
+# the dry-run job holds no write scope.
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        description: "Target repository (OWNER/NAME), as registered in data/registry.json"
+        required: true
+        type: string
+      lane:
+        description: "R or L: which lane's sealed candidate to propose"
+        required: true
+        type: string
+      dry_run:
+        description: "true (default) builds and uploads the payload and writes nothing"
+        required: false
+        type: boolean
+        default: true
+      sandbox:
+        description: "true writes the candidate to the R17 sandbox the repository variable names (draft PR, sandbox/ path) instead of the candidate's own repository"
+        required: false
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "Target repository (OWNER/NAME), as registered in data/registry.json"
+        required: true
+        type: string
+      lane:
+        description: "R or L: which lane's sealed candidate to propose"
+        required: true
+        type: choice
+        options: ["R", "L"]
+      dry_run:
+        description: "Leave checked for a dry run (payload only, no write)"
+        required: false
+        type: boolean
+        default: true
+      sandbox:
+        description: "Write to the R17 sandbox the repository variable names (draft PR under sandbox/), not to the candidate's own repository"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: propose-${{ inputs.repository }}-${{ inputs.lane }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      owner: ${{ steps.check.outputs.owner }}
+      name: ${{ steps.check.outputs.name }}
+      repository: ${{ steps.check.outputs.repository }}
+      lane: ${{ steps.check.outputs.lane }}
+      dry_run: ${{ steps.check.outputs.dry_run }}
+      sandbox: ${{ steps.check.outputs.sandbox }}
+      slug: ${{ steps.check.outputs.slug }}
+    steps:
+      - name: Validate every input against a strict allow-pattern (inputs pass through env, never a script)
+        id: check
+        env:
+          INPUT_REPOSITORY: ${{ inputs.repository }}
+          INPUT_LANE: ${{ inputs.lane }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_SANDBOX: ${{ inputs.sandbox }}
+          SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
+          REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          fail() { echo "::error::propose input '$1' rejected: $2"; exit 1; }
+          [ "$REF" = "refs/heads/main" ] || fail ref "propose runs from main only"
+          valid_repository() {
+            [[ "$1" == */* ]] || fail repository "must be OWNER/NAME"
+            local o="${1%%/*}" n="${1#*/}"
+            [[ "$o" =~ ^[A-Za-z0-9](-?[A-Za-z0-9]){0,38}$ ]] || fail repository "owner is not a valid GitHub owner name"
+            [[ "$n" =~ ^[A-Za-z0-9._][A-Za-z0-9._-]{0,99}$ ]] || fail repository "name is not a valid GitHub repository name"
+            [ "$n" != "." ] && [ "$n" != ".." ] || fail repository "name is not a valid GitHub repository name"
+          }
+          valid_repository "$INPUT_REPOSITORY"
+          case "$INPUT_LANE" in R | L) ;; *) fail lane "must be R or L" ;; esac
+          case "$INPUT_DRY_RUN" in true | false) ;; *) fail dry_run "must be true or false" ;; esac
+          case "${INPUT_SANDBOX:-false}" in true | false) ;; *) fail sandbox "must be true or false" ;; esac
+          sandbox="${INPUT_SANDBOX:-false}"
+          # the WRITE TARGET: the candidate's own repository, or (sandbox mode) the sandbox the variable names
+          target="$INPUT_REPOSITORY"
+          slug_suffix="$INPUT_LANE"
+          if [ "$sandbox" = true ]; then
+            [ -n "$SANDBOX_REPOSITORY" ] && [ "$SANDBOX_REPOSITORY" != "*" ] \
+              || fail sandbox "REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY must name the sandbox repository (unset and '*' select none)"
+            valid_repository "$SANDBOX_REPOSITORY"
+            target="$SANDBOX_REPOSITORY"
+            slug_suffix="${INPUT_LANE}-sandbox"
+          fi
+          owner="${target%%/*}"
+          name="${target#*/}"
+          cand_owner="${INPUT_REPOSITORY%%/*}"
+          cand_name="${INPUT_REPOSITORY#*/}"
+          {
+            echo "owner=$owner"
+            echo "name=$name"
+            echo "repository=$INPUT_REPOSITORY"
+            echo "lane=$INPUT_LANE"
+            echo "dry_run=$INPUT_DRY_RUN"
+            echo "sandbox=$sandbox"
+            echo "slug=${cand_owner}__${cand_name}-${slug_suffix}"
+          } >> "$GITHUB_OUTPUT"
+
+  gate:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      contents: read      # main's code and the state refs, read-only
+      attestations: read  # the R15 count verifies each acceptance record's Sigstore attestation
+    outputs:
+      allowlist: ${{ steps.gates.outputs.allowlist }}
+      registry_full: ${{ steps.gates.outputs.registry_full }}
+      kill_switch: ${{ steps.gates.outputs.kill_switch }}
+      portfolio_r15: ${{ steps.gates.outputs.portfolio_r15 }}
+      sandbox_target: ${{ steps.gates.outputs.sandbox_target }}
+      write_eligible: ${{ steps.gates.outputs.write_eligible }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0  # as the count job: the state refs and the attested record branches
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e .
+      - name: Evaluate the five write gates (read-only; the R15 predicate is the official count)
+        id: gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+          REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED }}
+          REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
+          REPOSITORY: ${{ needs.validate.outputs.repository }}
+          SANDBOX: ${{ needs.validate.outputs.sandbox }}
+        run: |
+          flag=(); [ "$SANDBOX" = true ] && flag=(--sandbox)
+          python -m repo_presenter.propose.run gates --repository "$REPOSITORY" ${flag[@]+"${flag[@]}"} \
+            --out "$RUNNER_TEMP/gates.json" --summary "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: propose-gates-${{ github.run_id }}-${{ needs.validate.outputs.slug }}
+          path: ${{ runner.temp }}/gates.json
+          if-no-files-found: error
+
+  dry-run:
+    needs: [validate, gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read      # the checkout and the state refs only; no write scope exists in this job
+      attestations: read  # gate 3b verifies the acceptance record's Sigstore attestation (read-only)
+    outputs:
+      write_eligible: ${{ steps.payload.outputs.write_eligible }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0  # the authorization record's merge provenance is read from history
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install -e .
+      - uses: actions/download-artifact@v4
+        with:
+          name: propose-gates-${{ github.run_id }}-${{ needs.validate.outputs.slug }}
+          path: ${{ runner.temp }}/gates
+      # Verify-only: contents/pull-requests/metadata READ, scoped to the one target. A failed mint (App not
+      # installed on the target) leaves a dry run that says so; the payload is still built from the public API.
+      - name: Mint a READ-ONLY App installation token for the target (verify only)
+        id: read-token
+        continue-on-error: true
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ needs.validate.outputs.owner }}
+          repositories: ${{ needs.validate.outputs.name }}
+          permission-contents: read
+          permission-metadata: read
+          permission-pull-requests: read
+      - name: Build the branch and pull-request payload (dry run, no write)
+        id: payload
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+          READ_TOKEN: ${{ steps.read-token.outputs.token || github.token }}
+          REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
+          REPOSITORY: ${{ needs.validate.outputs.repository }}
+          LANE: ${{ needs.validate.outputs.lane }}
+          SANDBOX: ${{ needs.validate.outputs.sandbox }}
+          TRIGGER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          flag=(); [ "$SANDBOX" = true ] && flag=(--sandbox)
+          python -m repo_presenter.propose.run payload --repository "$REPOSITORY" --lane "$LANE" ${flag[@]+"${flag[@]}"} \
+            --remote "https://github.com/${{ github.repository }}.git" --trigger-sha "$TRIGGER_SHA" \
+            --gates-file "$RUNNER_TEMP/gates/gates.json" --out "$RUNNER_TEMP/payload.json" \
+            --summary "$GITHUB_STEP_SUMMARY" > /dev/null
+          eligible=$(python -c "import json,sys; print(str(json.load(open(sys.argv[1]))['write_eligible']).lower())" "$RUNNER_TEMP/payload.json")
+          echo "write_eligible=$eligible" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: propose-payload-${{ github.run_id }}-${{ needs.validate.outputs.slug }}
+          path: ${{ runner.temp }}/payload.json
+          if-no-files-found: warn
+
+  write:
+    needs: [validate, gate, dry-run]
+    # Every gate, in the workflow expression itself: nothing below this line is reachable otherwise, and the
+    # step re-evaluates all five in Python before any GitHub call.
+    if: >-
+      needs.validate.outputs.dry_run == 'false' &&
+      (vars.REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED == 'true' || vars.REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED == '1') &&
+      needs.gate.outputs.allowlist == 'true' &&
+      needs.gate.outputs.registry_full == 'true' &&
+      needs.gate.outputs.portfolio_r15 == 'true' &&
+      needs.gate.outputs.sandbox_target == 'true' &&
+      needs.gate.outputs.write_eligible == 'true' &&
+      needs.dry-run.result == 'success' &&
+      needs.dry-run.outputs.write_eligible == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read      # the checkout's own grant; the write capability is the App token below, upstream only
+      attestations: read  # the effect's transport guard recomputes the R15 predicate before its first write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # Installed before the write token exists, so no dependency code ever runs with it.
+      - name: Install
+        run: python -m pip install -e .
+      - name: Mint a fresh App installation token, scoped to the target repository alone (write)
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ needs.validate.outputs.owner }}
+          repositories: ${{ needs.validate.outputs.name }}
+          permission-contents: write
+          permission-metadata: read
+          permission-pull-requests: write
+      - name: Open or update the DRAFT pull request through the App identity
+        env:
+          GH_PROPOSAL_WRITE_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+          REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED }}
+          REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: ${{ vars.REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY }}
+          REPOSITORY: ${{ needs.validate.outputs.repository }}
+          LANE: ${{ needs.validate.outputs.lane }}
+          SANDBOX: ${{ needs.validate.outputs.sandbox }}
+          TRIGGER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          flag=(); [ "$SANDBOX" = true ] && flag=(--sandbox)
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m repo_presenter.propose.run write --repository "$REPOSITORY" --lane "$LANE" ${flag[@]+"${flag[@]}"} \
+            --remote "https://github.com/${{ github.repository }}.git" --trigger-sha "$TRIGGER_SHA" \
+            --summary "$GITHUB_STEP_SUMMARY"

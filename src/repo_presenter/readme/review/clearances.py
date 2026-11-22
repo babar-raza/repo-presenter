@@ -37,7 +37,7 @@ from collections.abc import Callable, Collection, Mapping
 from dataclasses import dataclass, replace
 
 from repo_presenter.core.facts import Fact, FactsDocument
-from repo_presenter.readme.review.derivation import Derivation, flag_is_about_count
+from repo_presenter.readme.review.derivation import Derivation, flag_is_about_count, flag_within_sentences
 from repo_presenter.readme.review.findings import (
     CLEARANCES_FOR_KIND,
     PROVENANCE_CLEARANCES_FOR_KIND,
@@ -276,9 +276,18 @@ def derived_from_supported_facts(finding: Finding, context: ClearanceContext) ->
     if not lines:
         return None
     derived = context.derive(lines)
-    if derived is None or not lines <= derived.clearable:
-        return None
     rows = context.candidate_readme.splitlines()
+    if derived is None:
+        return None
+    # BL-801/BL-802: a verified member-list row, or a flag that is only the renderer-appended count sentence
+    verified = {
+        number: derived.statements[number] if number in derived.statements else derived.sentences[number][1]
+        for number in lines
+        if number in derived.statements
+        or (number in derived.sentences and flag_within_sentences(finding.message, derived.sentences[number][0]))
+    }
+    if not lines <= (derived.clearable | frozenset(verified)):
+        return None
     if any(
         number in derived.corrected and not flag_is_about_count(finding.message, rows[number - 1])
         for number in lines
@@ -290,6 +299,8 @@ def derived_from_supported_facts(finding: Finding, context: ClearanceContext) ->
         + (
             f"verified by its provenance ({derived.provenance[number]})"
             if number in derived.provenance
+            else f"verified against SUPPORTED facts ({verified[number]})"
+            if number in verified
             else "in no known-false class"
         )
         + (f"; cites {', '.join(derived.cited[number])}" if number in derived.cited else "")

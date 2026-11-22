@@ -221,6 +221,7 @@ from repo_presenter.readme.review.derivation import (  # noqa: E402,F401
     derivation,
     enterprise_provenance,
     flag_is_about_count,
+    flag_within_sentences,
     facts_in_line,
     keep_reason,
     not_thrown_provenance,
@@ -261,6 +262,18 @@ def apply_derivation(case_id: str, text: str, rows: Sequence[Mapping[str, Any]],
                                + f"; was: {row.get('evidence', '')}")[:900]
             if proof:
                 row["provenance"] = proof
+        elif line in derived.statements or (
+            line in derived.sentences and flag_within_sentences(str(row.get("claim") or ""), derived.sentences[line][0])
+        ):
+            # BL-801/BL-802: a kept maintainers' row that only lists the members of its type, or a flag that is
+            # nothing but the renderer-appended count sentence, each verified against SUPPORTED facts
+            proof = derived.statements.get(line) or derived.sentences[line][1]
+            row["verdict"] = "supported"
+            row["cleared_by"] = "derivation"
+            row["evidence"] = ("cleared: the statement is verified against SUPPORTED facts by a deterministic check "
+                               f"({proof}); no register row or claim detector refutes the line; was: "
+                               f"{row.get('evidence', '')}")[:900]
+            row["provenance"] = proof
         elif line in derived.kept:
             row["kept_because"] = derived.kept[line]
     lines = text.splitlines()

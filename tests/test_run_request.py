@@ -708,3 +708,62 @@ def test_the_audit_abandon_job_holds_no_secret_and_pushes_only_the_abandoned_bra
     assert "secrets." not in text and "environment" not in job and "download-artifact" not in text
     run = "\n".join(s.get("run", "") for s in job["steps"])
     assert 'git push origin "HEAD:refs/heads/audit-abandoned/run-${SEED}"' in run
+
+
+# --- R50 WP-1: the propose job (dry run by default) ---------------------------------------------------------
+
+PROPOSE = {"job": "propose", "repository": RUST["repository"], "ecosystem": "rust", "lane": "R"}
+
+
+def test_a_propose_request_is_a_dry_run_unless_dry_run_false_is_written_out():
+    expected = {"job": "propose", "repository": RUST["repository"], "ecosystem": "rust", "lane": "R"}
+    assert rr.validate(PROPOSE, REGISTRY, OK, True) == {**expected, "dry_run": "true", "sandbox": "false"}
+    assert rr.validate({**PROPOSE, "dry_run": True}, REGISTRY, OK, True)["dry_run"] == "true"
+    assert rr.validate({**PROPOSE, "dry_run": False, "lane": "L"}, REGISTRY, OK, True) == {
+        **expected, "lane": "L", "dry_run": "false", "sandbox": "false"}
+
+
+def test_a_propose_request_selects_the_r17_sandbox_only_with_the_json_boolean_true():
+    assert rr.validate({**PROPOSE, "sandbox": True}, REGISTRY, OK, True)["sandbox"] == "true"
+    assert rr.validate({**PROPOSE, "sandbox": True}, REGISTRY, OK, True)["dry_run"] == "true"  # still a dry run
+    assert rr.validate({**PROPOSE, "sandbox": False}, REGISTRY, OK, True)["sandbox"] == "false"
+    for bad in ("true", 1, None):
+        with pytest.raises(rr.RequestError, match="not a JSON boolean"):
+            rr.validate({**PROPOSE, "sandbox": bad}, REGISTRY, OK, True)
+
+
+@pytest.mark.parametrize(
+    "fields, fragment",
+    [
+        ({"lane": "both"}, "needs lane"),
+        ({"lane": None}, "needs lane"),
+        ({"dry_run": "false"}, "not a JSON boolean"),
+        ({"dry_run": 0}, "not a JSON boolean"),
+        ({"repository": "evil/repo"}, "not listed"),
+        ({"ecosystem": "python"}, "registered as"),
+        ({"token": "x"}, "unknown fields"),
+        ({"branch": "main"}, "unknown fields"),
+        ({"title": "x"}, "unknown fields"),
+        ({"authorization_record": "ops/x.json"}, "unknown fields"),
+    ],
+)
+def test_every_other_propose_request_is_refused(fields, fragment):
+    request = {**PROPOSE, **fields}
+    if fields.get("lane") is None and "lane" in fields:
+        request.pop("lane")
+    with pytest.raises(rr.RequestError, match=fragment):
+        rr.validate(request, REGISTRY, OK, True)
+
+
+def test_a_propose_request_without_a_lane_is_refused_not_defaulted():
+    request = dict(PROPOSE)
+    del request["lane"]
+    with pytest.raises(rr.RequestError, match="needs lane"):
+        rr.validate(request, REGISTRY, OK, True)
+
+def test_a_monitor_request_validates_and_takes_no_other_field():
+    """R50 WP-3: one read-only portfolio observation; it covers every active registry entry."""
+    assert rr.validate({"job": "monitor"}, REGISTRY, OK, True) == {
+        "job": "monitor", "repository": "", "ecosystem": "", "lane": ""}
+    with pytest.raises(rr.RequestError, match="takes no other field"):
+        rr.validate({"job": "monitor", "repository": "x/y"}, REGISTRY, OK, True)

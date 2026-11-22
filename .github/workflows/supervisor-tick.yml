@@ -8,6 +8,15 @@ name: supervisor-tick
 # summary. It never writes the instructions channel, never pushes, never verifies (verification
 # mutates receipts and belongs to the supervisor session), and uses no secrets (only the automatic read-only workflow token). Real dispatch to
 # cloud sessions is done by the supervisor session acting on this signal.
+#
+# The execution bridge (BL-770, 2026-11-22; R8, R37, the Final Directive, plan 8.4; BL-027 closed the gap
+# "the tick only observes"): two more jobs, both below. `bridge-plan` (read-only, zero provider calls) runs
+# scripts/supervisor_bridge.py: the planner's due cells, the ledger's leases (unsettled reservations) and
+# data/scheduled_execution_policy.json. `bridge-dispatch` runs ONLY when that decision is `dispatch` (policy
+# `scheduled_execution_authorized` true, a cell due, no cohort in flight) and calls present.yml's cohort job
+# exactly as cohort-chain.yml does; that job re-runs the full authorization gate, reserves the budget and
+# dispatches, so the bridge adds no spend path. Budgets measure, never block (R45). The decision, with the
+# exact run-request.json for the first planned run, is in the job summary and the `bridge-decision` artifact.
 
 on:
   schedule:
@@ -130,3 +139,57 @@ jobs:
         run: |
           git status --porcelain
           test -z "$(git status --porcelain)"
+
+  # Zero provider calls, no write scope: decides whether the tick may dispatch the next cohort.
+  bridge-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      attestations: read
+    outputs:
+      action: ${{ steps.decide.outputs.action }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0   # the planner hashes failure-class code scopes at older commits
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Decide (policy gate, planner, leases)
+        id: decide
+        env:
+          REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/bridge"
+          python scripts/supervisor_bridge.py --remote "https://github.com/${GITHUB_REPOSITORY}.git" \
+            --out "$RUNNER_TEMP/bridge/decision.json" 2> "$RUNNER_TEMP/bridge/decision.txt" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Execution bridge"
+            echo '```'
+            cat "$RUNNER_TEMP/bridge/decision.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bridge-decision
+          path: ${{ runner.temp }}/bridge/decision.json
+          if-no-files-found: ignore
+
+  # Only when the decision is dispatch. present.yml's cohort job is the engine (R37); it holds no provider
+  # secret and re-runs scripts/scheduled_execution_gate.py before reserving or dispatching anything.
+  bridge-dispatch:
+    needs: bridge-plan
+    if: needs.bridge-plan.outputs.action == 'dispatch'
+    permissions:
+      contents: write  # the provider-spend ledger ref only (present.yml's cohort job)
+      actions: write   # dispatch present.yml runs
+    uses: ./.github/workflows/present.yml

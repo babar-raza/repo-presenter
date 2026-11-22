@@ -16,7 +16,7 @@ Every gate below runs, in this order, before the first write, and each refusal i
    `require_write_permitted`: the registry entry is listed, active and `full`. A `dry_run` entry can
    never reach this function.
 2. `write_authorized(environment)` - the owner-controlled kill switch
-   `REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`. Never inferred from a credential.
+   `REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`. Never inferred from a credential.
 3. `review` (required, `readme/review/independent_reviewer.py::ReviewVerdict`) - the independent
    reviewer's veto (mission section 11: "independent non-authoring criticism that can veto, with
    no quiet demotion"). A verdict other than `"ACCEPT"`, or one no model reviewed
@@ -57,7 +57,7 @@ Ported (ADAPT) from the old repository-presenter project's
 authorized PR" blocker -- a research fork confirmed it is a bounded port once
 ``authorization/proposal.py``+``record_provenance.py``, ``propose/pull_request.py``'s
 composition half, and the ~9 github/client.py REST primitives it uses are each pulled (all done
-the same day). Still never armed here either: ``REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED``
+the same day). Still never armed here either: ``REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED``
 has no production wiring, token_provenance.py's ``EXPECTED_APP_ID``/``EXPECTED_APP_SLUG`` are
 inherited placeholders pending confirmation of this repository's own App identity, and nothing
 calls ``propose_candidate`` from any live Lane R/L path yet. The one change beyond import
@@ -68,7 +68,7 @@ paths: a required ``review`` argument whose non-ACCEPT verdict refuses with ``RE
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
@@ -115,10 +115,15 @@ from repo_presenter.github.token_provenance import (
 from repo_presenter.github.token_provenance import (
     verify_pull_request_app as default_verify_pull_request_app,
 )
+from repo_presenter.propose.acceptance_evidence import (
+    AttestedAcceptance,
+    bytes_sha256,
+    evaluate_acceptance,
+)
 from repo_presenter.propose.pull_request import PullRequestContent
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
-AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
+AUTHORIZATION_VARIABLE = "REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
 _AUTHORIZED_VALUES = frozenset({"1", "true", "yes"})
 
 #: The one stable presenter branch this project proposes README updates from, on every target
@@ -267,6 +272,9 @@ def propose_candidate(
     pr_title: str | None = None,
     pr_body: str | None = None,
     compose_pull_request: ComposePullRequestFn | None = None,
+    lane: str = "unspecified",
+    acceptance_records: Sequence[AttestedAcceptance] = (),
+    readme_bytes_sha256: str | None = None,
 ) -> ProposalEffectResult:
     """Create or update the one stable presenter branch and PR on `repository` - but only past
     every gate in this module's own docstring. Every early return before the first write makes no
@@ -331,25 +339,31 @@ def propose_candidate(
             "the independent review the mission requires, so it is never proposed",
         )
 
-    # Gate 3b (TC-013): the acceptance contract, not the raw reviewer-calibration file. `lane` is
-    # identifying metadata only in `acceptance.record` - `propose_candidate` is not told which
-    # lane produced this candidate, and `classify_record`'s own logic never reads it.
-    acceptance_state = classify(
-        repository,
-        "unspecified",
-        sealed=True,
-        mechanism_verdicts={"independent_review": review.pr_eligible},
+    # Gate 3b (TC-013, BL-731): the acceptance contract, fed the evidence the official count already
+    # verifies (an attested, content-bound M9 record at this revision), not a bare seal and not the
+    # reviewer's retired calibration (R33). The classifier is the real `acceptance.record.classify`;
+    # `publication_ready_signal` is derived inside `evaluate_acceptance` from the record's digest against
+    # the README bytes about to be written, never trusted from the record file.
+    verdict = evaluate_acceptance(
+        acceptance_records,
+        repository=repository,
+        lane=lane,
+        revision=source_revision,
+        readme_bytes_sha256=readme_bytes_sha256 or bytes_sha256(readme_text),
+        classify_fn=classify,
     )
+    acceptance_state = verdict.state
     if acceptance_state not in PUBLISHABLE_STATES:
         return _refuse(
             True,
             Refusal.ACCEPTANCE_NOT_CERTIFIED,
             "the acceptance contract (repo_presenter.acceptance.record) classifies this "
-            f"candidate as {acceptance_state!r}, not one of {sorted(PUBLISHABLE_STATES)}: no "
-            "candidate is eligible for a pull request until the acceptance certificate chain "
+            f"candidate as {acceptance_state!r}, not one of {sorted(PUBLISHABLE_STATES)}"
+            + (f" ({verdict.detail})" if verdict.detail else "")
+            + ": no candidate is eligible for a pull request until the acceptance certificate chain "
             "(data/acceptance_calibration.json against data/acceptance_responsibility.json), "
-            "this candidate's own mechanism verdicts and canaries, and an audited, attested "
-            "record all agree; no caller can override it",
+            "this candidate's own mechanism verdicts and canaries, and an audited, attested, "
+            "content-bound record all agree; no caller can override it",
         )
 
     if not token:

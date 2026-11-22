@@ -524,6 +524,13 @@ class _Attempts:
         latency = int((time.monotonic() - started) * 1000)
         record = self._base(payload, started_at, latency, outcome, status, error_class, reply)
         self.ledger.append(record)
+        # BL-711: one line per physical call (the hosted log showed none, so a 90-minute stage could not be
+        # told apart as slow calls or slow code): which job, how long the provider took, how large.
+        print(
+            f"provider call: {record.job} {outcome} {latency / 1000:.1f}s "
+            f"prompt {record.prompt_tokens} completion {record.completion_tokens} tokens",
+            file=sys.stderr, flush=True,
+        )
 
     def _base(
         self,

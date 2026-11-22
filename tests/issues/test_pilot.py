@@ -34,9 +34,10 @@ ISSUES = f"{API_ROOT}/repos/{PILOT}/issues"
 DATA = Path(__file__).resolve().parents[2] / "data"
 
 
-def test_the_committed_pilot_is_exactly_the_typescript_3d_repository() -> None:
+def test_the_committed_pilot_is_the_typescript_3d_repository_and_tex_python_in_dry_run() -> None:
     pilot = load_pilot()
-    assert [e.repository for e in pilot.values()] == [PILOT]
+    assert [e.repository for e in pilot.values()] == [PILOT, "aspose-tex-foss/Aspose.TeX-FOSS-for-Python"]
+    assert pilot["aspose-tex-foss/aspose.tex-foss-for-python"].mode == "dry_run"  # R50: dry run only
     entry = pilot[PILOT.lower()]
     assert entry.effects == {"issue", "issue_comment"}
     assert entry.bot_login == "repository-presenter[bot]"

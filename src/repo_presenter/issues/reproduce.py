@@ -72,8 +72,13 @@ def _bounded(text: str) -> tuple[str, bool]:
     return text[-MAX_OUTPUT_CHARS:], True
 
 
-def _script_name(reproduction: Reproduction) -> str:
-    return f"repo-presenter-repro-{reproduction.issue_number}.js"
+def _script_name(reproduction: Reproduction, runtime: str = "node") -> str:
+    suffix = "py" if runtime == "python" else "js"
+    return f"repo-presenter-repro-{reproduction.issue_number}.{suffix}"
+
+
+def _python_executable() -> str:
+    return sys.executable or "python3"
 
 
 def run_reproductions(
@@ -101,8 +106,10 @@ def run_reproductions(
             prepared = False
             break
     versions = {}
-    for tool in ("node", "npm"):
-        code, out = runner([tool, "--version"], checkout, 60)
+    tools = ("python",) if spec.runtime == "python" else ("node", "npm")
+    for tool in tools:
+        argv0 = _python_executable() if tool == "python" else tool
+        code, out = runner([argv0, "--version"], checkout, 60)
         versions[tool] = out.strip() if code == 0 else None
     results: list[dict[str, Any]] = []
     for reproduction in spec.reproductions:
@@ -142,9 +149,19 @@ def run_reproductions(
                 row["note"] = "not run: the consumer install failed"
                 results.append(row)
                 continue
-        script = where / _script_name(reproduction)
-        script.write_text(reproduction.script, encoding="utf-8")
-        code, out = runner(["node", script.name], where, SCRIPT_TIMEOUT_SECONDS)
+        if spec.runtime == "python":
+            # The script lives OUTSIDE the checkout (a reproduction that walks the tree must not
+            # find its own file) and runs isolated (``-I``: no cwd, no user site, no PYTHON* env),
+            # so the upstream tree is data to ast.parse, never importable code.
+            scripts = checkout.parent / f"{checkout.name}-repro-scripts"
+            scripts.mkdir(parents=True, exist_ok=True)
+            script = scripts / _script_name(reproduction, "python")
+            script.write_text(reproduction.script, encoding="utf-8")
+            code, out = runner([_python_executable(), "-I", str(script)], where, SCRIPT_TIMEOUT_SECONDS)
+        else:
+            script = where / _script_name(reproduction)
+            script.write_text(reproduction.script, encoding="utf-8")
+            code, out = runner(["node", script.name], where, SCRIPT_TIMEOUT_SECONDS)
         output, truncated = _bounded(out)
         row.update({"ran": True, "exit_code": code, "output": output, "truncated": truncated})
         results.append(row)

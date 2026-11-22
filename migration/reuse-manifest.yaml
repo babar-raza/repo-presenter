@@ -2490,6 +2490,19 @@ entries:
           as unconfirmed for this repository's own App. Port it with the monitor workflow, after the
           App identity is confirmed.
         blocked_on: "monitor workflow design; owner confirmation of the GitHub App identity"
+    wired_2026_11_22: >
+      R50 / WP-3 (owner: the previous project's components work here; get them working). The
+      ported observation half now has its entry point and its consumers: src/repo_presenter/monitor/
+      run.py (CLI `python -m repo_presenter.monitor`; the old CLI's drift and registry-gaps commands
+      combined, bundles read from the bundle refs instead of a committed candidates/ tree),
+      .github/workflows/monitor.yml (the old cron-every-6-hours read-only shell; no install-record
+      step, no App token), run-request job `monitor`, and scripts/select_scheduled_cohort.py
+      (reads the report: a relevantly drifted certified cell outranks "recertified, skip", BL-851).
+      install_state.py and the sealing-contract half of drift.py stay DEFERRED: the report's cells
+      carry bundle_revision, head_revision and the change class, which is all the cohort selector
+      consumes (the blocked_on "how monitor evidence feeds the hosted present pipeline" is decided:
+      through the state-ref report and the planner). Lane L: monitor.relevance's path rule is reused by
+      lane_l_gate.py through lane_l_trigger.is_relevant_path (BL-852). Backlog: BL-850, BL-851, BL-782.
     shared_dependencies_ported:
       - file: core/github/read_client.py (old repo)
         disposition: PORTED
@@ -2527,9 +2540,15 @@ entries:
   - component: "Visual assets / social preview / metadata: components/metadata/{apply.py,
       capture.py,preservation.py,proposal.py} (1,023 total)"
     source: old-repository-presenter
-    evaluated_at_shas: []
+    evaluated_at_shas: [494a8e0]
+    pulled_2026_11_22: >
+      R50 / BL-772 (WP-9): the OBSERVATION half only is pulled, as src/repo_presenter/monitor/metadata_audit.py
+      (capture.py's GET of description, homepage and topics; proposal.py's idea of checking topics, description and
+      homepage, reduced to read-only findings; extended with the community profile, license, community files and
+      image assets). Tests: tests/monitor/test_metadata_audit.py. apply.py and preservation.py (the write half) are
+      NOT pulled and stay DEFERRED: applying metadata upstream is owner-gated (R3, R15, R22).
     behavior: UNKNOWN in detail -- sized and named only, not read line-by-line this pass.
-    disposition: DEFERRED (not PENDING_REVIEW -- see reason)
+    disposition: DEFERRED (not PENDING_REVIEW -- see reason); read-only observation half PORTED 2026-11-22 (BL-772)
     reason: >
       idea.md's own §"Visual Assets and Social Preview" and docs/MISSION_AUTHORITY.md's distilled
       requirement both already say this explicitly: "not required to be fully delivered during
@@ -3565,3 +3584,17 @@ entries:
       repository's own sample files, which is stronger evidence than a generated minimal file.
       Tests: tests/core/test_example_io.py (incl. one reproducing each upstream finding with the
       local fixes switched off).
+
+  - component: "old repository-presenter .github/workflows/liveness.yml (out-of-band liveness dead-man)"
+    source: old-repository-presenter
+    evaluated_at_shas: [494a8e0]
+    disposition: PORTED
+    pulled_2026_11_22: >
+      R50 / BL-771 (WP-7): ported to .github/workflows/liveness.yml with the same read-only scopes, the same notices for
+      stale PRs and stranded branches and the same sprint-inactivity failure, and one addition the old file lacked
+      because its observer was a PR loop: the dead-man proper, red when supervisor-tick has no successful run for 12
+      hours (notice at 3), plus chaining off completed supervisor-tick and present runs. Pinned by
+      tests/test_supervisor_bridge.py::test_liveness_is_read_only_and_has_the_dead_man. Hosted run id pending.
+    target_module: .github/workflows/liveness.yml
+    portfolio_consumers: the whole portfolio (it observes the engine, not one cell).
+    invalidation_impact: none.

@@ -161,3 +161,27 @@ def test_an_unavailable_review_is_a_recorded_transient_failure_and_seals_nothing
     )
     assert "quote is not" in record.failure.detail
     assert not (tmp_path / "work").exists()
+
+
+def test_bl711_a_cascade_time_limit_is_a_recorded_transient_failure_naming_the_stage(
+    remote: Path, tmp_path: Path
+) -> None:
+    from repo_presenter.core.errors import CascadeTimeBoxError
+
+    entry = _entry()
+
+    def pipeline() -> None:
+        raise CascadeTimeBoxError("hard time limit of 4800s reached in stage 'S9 settle round 1 of 5: compose start'")
+
+    with GitStateBackend(remote=str(remote)) as backend:
+        exit_code = run_present(
+            backend=backend, entry=entry, candidates_root=tmp_path / "work",
+            holder_id="present:run-r2", workflow_run_id="run-r2", pipeline=pipeline,
+        )
+        record = backend.load(REPO)
+
+    assert exit_code == 1
+    assert record is not None and record.failure is not None
+    assert record.failure.classification == "transient"
+    assert "CascadeTimeBoxError" in record.failure.detail and "compose start" in record.failure.detail
+    assert "resumes from the saved call store" in record.failure.detail

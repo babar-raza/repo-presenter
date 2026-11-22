@@ -69,7 +69,8 @@ from repo_presenter.github.token_provenance import (
     verify_installation_token,
 )
 from repo_presenter.issues.close import RedetectionOutcome, closing_marker, redetect
-from repo_presenter.issues.dedup import parse_fingerprint
+from repo_presenter.issues.dedup import body_with_marker, parse_fingerprint
+from repo_presenter import sandbox_scope
 from repo_presenter.issues.file import write_authorized
 from repo_presenter.issues.model import (
     EvidenceEntry,
@@ -80,6 +81,7 @@ from repo_presenter.issues.model import (
     handoff_to_dict,
 )
 from repo_presenter.issues.pilot import (
+    SIMULATED_ISSUE_NUMBER,
     PilotEntry,
     Reproduction,
     ReproductionSet,
@@ -137,6 +139,9 @@ class Issue:
     state_reason: str | None
     created_at: str
     closed_by: str | None = None
+    #: A record kept for a defect that was approved but never filed (``pilot.SimulatedIssue``).
+    #: Dry run only: ``execute`` never writes for it.
+    simulated: bool = False
 
 
 def issue_from_api(item: Mapping[str, Any], closed_by: str | None = None) -> Issue | None:
@@ -242,7 +247,13 @@ def record_issues(
         canonical = next((i for i in group if i.number == previous.get("issue_number")), group[0])
         duplicates = tuple(i.number for i in group if i.number != canonical.number)
         spec = specs.get(fingerprint)
-        if spec is not None and spec.issue_number != canonical.number:
+        # issue_number 0 = "never filed" (pilot.SIMULATED_ISSUE_NUMBER): the first real presenter
+        # issue carrying the fingerprint becomes its issue; any other number must match exactly.
+        if (
+            spec is not None
+            and spec.issue_number != SIMULATED_ISSUE_NUMBER
+            and spec.issue_number != canonical.number
+        ):
             reason = (
                 f"the recorded reproduction names issue #{spec.issue_number}, not #{canonical.number}: "
                 "unverifiable, monitored, never auto-closed"
@@ -348,15 +359,22 @@ def reopen_marker(fingerprint: str, revision: str) -> str:
     return f"<!-- repo-presenter:reopen:{fingerprint}:{revision} -->"
 
 
-def _observed(observation: CheckObservation | None, toolchain: Mapping[str, Any]) -> list[str]:
+def _observed(
+    observation: CheckObservation | None, toolchain: Mapping[str, Any], runtime: str = "node"
+) -> list[str]:
     if observation is None:
         return []
     text = observation.output.strip()
     if len(text) > MAX_COMMENT_OUTPUT_CHARS:
         text = "…\n" + text[-MAX_COMMENT_OUTPUT_CHARS:]
-    node = toolchain.get("node") or "unknown"
+    if runtime == "python":
+        python = toolchain.get("python") or "unknown"
+        how = f"(`ast.parse` over every `.py` file of the checkout, {python})"
+    else:
+        node = toolchain.get("node") or "unknown"
+        how = f"(`npm install`, `npm run build`, Node.js {node})"
     return [
-        f"The reproduction in this issue was run again (`npm install`, `npm run build`, Node.js {node}) and printed:",
+        f"The reproduction in this issue was run again {how} and printed:",
         "",
         "```",
         text.replace("```", "'''"),
@@ -368,7 +386,7 @@ def _observed(observation: CheckObservation | None, toolchain: Mapping[str, Any]
 
 def comment_body(
     action: Action, view: RecordView, revision: str, day: str,
-    observation: CheckObservation | None, toolchain: Mapping[str, Any],
+    observation: CheckObservation | None, toolchain: Mapping[str, Any], runtime: str = "node",
 ) -> str:
     if action == "CLOSE":
         head = (
@@ -382,7 +400,7 @@ def comment_body(
     else:
         head = f"Re-checked on {day} at revision `{revision}`: this defect still reproduces."
         marker = recheck_marker(view.fingerprint, revision, day)
-    return "\n".join([head, "", *_observed(observation, toolchain), "", marker]) + "\n"
+    return "\n".join([head, "", *_observed(observation, toolchain, runtime), "", marker]) + "\n"
 
 
 # --------------------------------------------------------------------------- the cycle
@@ -407,6 +425,8 @@ class ActionResult:
     note: str = ""
     error: str | None = None
     marker: str | None = None
+    #: What would be (or was) sent: the comment body and the state change, for the audit row.
+    payload: dict[str, Any] | None = None
 
 
 @dataclass
@@ -492,6 +512,30 @@ def plan_cycle(
     return planned, notes
 
 
+def with_simulated_issues(
+    issues: list[Issue], reproductions: ReproductionSet, *, bot_login: str
+) -> list[Issue]:
+    """``issues`` plus one SIMULATED open record per never-filed tracked defect whose fingerprint
+    no real presenter issue carries (a real issue always wins: filing replaces the simulation)."""
+    real = {parse_fingerprint(i.body) for i in issues if i.author == bot_login}
+    extra = [
+        Issue(
+            number=SIMULATED_ISSUE_NUMBER,
+            url=f"simulated://{reproductions.repository}/{fp}",
+            title=sim.title,
+            body=body_with_marker(sim.body, fp),
+            author=bot_login,
+            state="open",
+            state_reason=None,
+            created_at=sim.created_at,
+            simulated=True,
+        )
+        for fp, sim in reproductions.simulated_by_fingerprint().items()
+        if fp not in real
+    ]
+    return [*issues, *extra]
+
+
 def execute(planned: list[Planned], ctx: Context, *, live: bool) -> list[ActionResult]:
     """Perform (live) or only describe (dry run) each decided action. Every write is preceded by a
     read-back of the issue's comments for its marker, so a replay never posts twice."""
@@ -507,10 +551,19 @@ def execute(planned: list[Planned], ctx: Context, *, live: bool) -> list[ActionR
             result.note = item.decision.reason
             continue
         assert ctx.revision is not None
-        body = comment_body(action, item.view, ctx.revision, day, item.observation, toolchain)
+        body = comment_body(
+            action, item.view, ctx.revision, day, item.observation, toolchain, ctx.reproductions.runtime
+        )
         result.marker = body.rstrip().rsplit("\n", 1)[-1]
+        result.payload = {
+            "comment": body,
+            "state_change": {"CLOSE": "closed (completed)", "REOPEN": "open"}.get(action),
+        }
         if not live:
             result.note = f"dry run: would {action} #{item.view.issue.number} ({item.decision.reason})"
+            continue
+        if item.view.issue.simulated:  # a never-filed record: there is nothing upstream to write to
+            result.error = "refused: simulated record (the defect was never filed upstream); dry run only"
             continue
         if item.view.issue.author != ctx.entry.bot_login:  # never touch a human's issue
             result.error = "refused: the issue is not authored by the pilot's App identity"
@@ -543,7 +596,12 @@ def live_blockers(
     if int(doc.get("dry_run_cycles") or 0) < 1:
         blockers.append("no dry-run cycle is recorded yet: the first hosted cycle is always a dry run")
     if not write_authorized(environment):
-        blockers.append("kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1")
+        blockers.append(
+            "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1"
+        )
+    sandbox_refusal = sandbox_scope.issue_write_refusal(entry.repository, environment)
+    if sandbox_refusal is not None:  # owner decision 2026-11-22: issue writes are authorised for the sandbox only
+        blockers.append(sandbox_refusal)
     if token is None:
         blockers.append("no App installation token was minted for this run")
     elif not token.ok:
@@ -601,6 +659,7 @@ def apply_cycle(
                 "verifiable": view.verifiable,
                 "verification": view.reason,
                 "duplicates": list(view.duplicates),
+                "simulated": view.issue.simulated,
                 "handoff": stored,
             }
         )
@@ -628,6 +687,7 @@ def apply_cycle(
         rows.append(
             {
                 "issue": view.issue.number,
+                "simulated": view.issue.simulated,
                 "state": view.issue.state,
                 "verifiable": view.verifiable,
                 "outcome": item.outcome,
@@ -635,6 +695,7 @@ def apply_cycle(
                 "decision": item.decision.action,
                 "reason": item.decision.reason,
                 "performed": bool(result and result.performed),
+                "planned": result.payload if result and not result.performed else None,
                 "error": result.error if result else None,
                 "note": result.note if result else "",
             }
@@ -678,9 +739,22 @@ def render_summary(
         outcome = item.outcome or ("unverifiable" if not item.view.verifiable else "n/a")
         result = (r.error and f"ERROR {r.error}") or (r.note if r else "")
         lines.append(
-            f"| #{item.view.issue.number} | {item.view.issue.state} | {outcome} | "
+            f"| {'SIMULATED (never filed)' if item.view.issue.simulated else '#' + str(item.view.issue.number)} "
+            f"| {item.view.issue.state} | {outcome} | "
             f"{item.decision.action} | {result.replace('|', '/')} |"
         )
+    for item in planned:
+        r = by_number.get(item.view.issue.number)
+        if r and r.payload and not r.performed:
+            label = "simulated record" if item.view.issue.simulated else f"#{item.view.issue.number}"
+            lines += [
+                "",
+                f"Planned payload for {label} ({r.action}; NOT posted):",
+                "",
+                f"State change: {r.payload['state_change'] or 'none'}",
+                "",
+                *[f"> {ln}" for ln in r.payload["comment"].rstrip().splitlines()],
+            ]
     if notes:
         lines += ["", "Notes:", *[f"- {n}" for n in notes]]
     return "\n".join(lines) + "\n"
@@ -748,8 +822,11 @@ def run_cycle(
     verify_token: Callable[[str, str], TokenDecision] = verify_installation_token,
     pilot_path: Path | None = None,
     reproductions: ReproductionSet | None = None,
+    offline: bool = False,
 ) -> tuple[str, dict[str, Any]]:
-    """One whole cycle. Returns ``(summary markdown, new state document)``."""
+    """One whole cycle. ``offline`` reads no upstream issues (zero network calls): only the
+    committed simulated records are tracked, and the token is never verified.
+    Returns ``(summary markdown, new state document)``."""
     entry = require_pilot(repository, pilot_path)  # the allowlist enforcement point
     repository = entry.repository
     reproductions = reproductions or load_reproductions(repository)
@@ -766,7 +843,7 @@ def run_cycle(
                                  expected_revision=head)
         except ChecksError as exc:
             checks_note = f"{exc}: every re-check is NOT_VERIFIABLE"
-    token_value = environment.get(APP_INSTALLATION_TOKEN_ENV_VAR, "").strip()
+    token_value = "" if offline else environment.get(APP_INSTALLATION_TOKEN_ENV_VAR, "").strip()
     decision = verify_token(repository, token_value) if token_value else None
     read_token = token_value if decision and decision.ok else (environment.get("GITHUB_TOKEN") or None)
     ctx = Context(
@@ -778,7 +855,7 @@ def run_cycle(
     _, current = store.read()
     doc = current if isinstance(current, dict) else {}
     owner, name = repository.split("/", 1)
-    raw = list_issues(owner, name, token=read_token, fetch=fetch)
+    raw = [] if offline else list_issues(owner, name, token=read_token, fetch=fetch)
     issues: list[Issue] = []
     comments: dict[int, list[dict[str, Any]]] = {}
     for item in raw:
@@ -792,6 +869,7 @@ def run_cycle(
         issues.append(issue)
         if issue.state == "open":
             comments[issue.number] = list_issue_comments(owner, name, issue.number, token=read_token, fetch=fetch)
+    issues = with_simulated_issues(issues, reproductions, bot_login=entry.bot_login)
     planned, notes = plan_cycle(doc, ctx, issues, comments)
     blockers = live_blockers(entry, doc, environment, decision)
     mode = "live" if not blockers else "dry_run"
@@ -820,6 +898,10 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--remote", help="state remote URL (refs/repository-presenter-state/issues/*)")
     group.add_argument("--state-file", type=Path, help="local state file instead of the remote")
     parser.add_argument("--summary", type=Path)
+    parser.add_argument("--head", help="40-hex upstream head to trust instead of resolving it with git ls-remote")
+    parser.add_argument("--offline", action="store_true",
+                        help="zero network calls: no upstream issue read, no token; tracked simulated records only")
+    parser.add_argument("--json-out", type=Path, help="write the new state document (cycle rows) here")
     args = parser.parse_args(argv)
     require_pilot(args.repository)
     payload = None
@@ -828,7 +910,7 @@ def main(argv: list[str] | None = None) -> int:
             payload = json.loads(args.checks.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             payload = {"unreadable": True}
-    head = upstream_head(args.repository)
+    head = args.head or (None if args.offline else upstream_head(args.repository))
     if args.state_file:
         store_cm: Any = FileStore(args.state_file)
     else:
@@ -838,8 +920,11 @@ def main(argv: list[str] | None = None) -> int:
                               token=os.environ.get("REPOSITORY_PRESENTER_STATE_TOKEN") or None)
     with store_cm as store:
         summary, doc = run_cycle(args.repository, store=store, checks_payload=payload,
-                                 environment=os.environ, run_key=args.run_id, head=head)
+                                 environment=os.environ, run_key=args.run_id, head=head,
+                                 offline=args.offline)
     print(summary)
+    if args.json_out:
+        args.json_out.write_text(json.dumps(doc, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     if args.summary:
         with args.summary.open("a", encoding="utf-8") as fh:
             fh.write(summary)

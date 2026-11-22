@@ -79,10 +79,13 @@ from repo_presenter.issues.approval import (
     is_valid_repository,
     verify_approval,
 )
+from repo_presenter import sandbox_scope
 from repo_presenter.issues.dedup import body_with_marker
 from repo_presenter.issues.labels import labels_for
 from repo_presenter.issues.model import Handoff, IssueRef
 
+#: The kill switch name: the same family as the proposal and candidates-publish switches
+#: (``REPO_PRESENTER_<EFFECT>_WRITE_AUTHORIZED``; one name per effect, R50 naming reconciliation).
 AUTHORIZATION_VARIABLE = "REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED"
 _AUTHORIZED_VALUES = frozenset({"1", "true", "yes"})
 
@@ -109,10 +112,9 @@ class RecheckResult(Protocol):
 
 
 def write_authorized(environment: Mapping[str, str]) -> bool:
-    """``True`` only while the owner's kill switch ``AUTHORIZATION_VARIABLE`` is set to a truthy
-    value. Absence, an empty string, or any other value disables writes -- fail closed. A
-    ``True`` here is necessary and never sufficient: filing also needs the handoff's own approval
-    record."""
+    """``True`` only while the owner's kill switch ``AUTHORIZATION_VARIABLE`` is set to a truthy value.
+    Absence, an empty string or any other value disables writes -- fail closed. A ``True`` here is
+    necessary and never sufficient: filing also needs the handoff's own approval record."""
     return environment.get(AUTHORIZATION_VARIABLE, "").strip().lower() in _AUTHORIZED_VALUES
 
 
@@ -354,6 +356,11 @@ def file_handoff(
 
     if not write_authorized(environment):
         return _refuse(False, _NOT_AUTHORIZED_REASON)
+
+    # Owner decision 2026-11-22: issue writes are authorised for the sandbox only.
+    sandbox_refusal = sandbox_scope.issue_write_refusal(handoff.repository, environment)
+    if sandbox_refusal is not None:
+        return _refuse(False, sandbox_refusal)
 
     if not token:
         return _refuse(True, _NO_TOKEN_REASON)
