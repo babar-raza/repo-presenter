@@ -191,72 +191,75 @@
    "run_id": "44975025034",
    "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T04:57:06+00:00",
+   "classes": [
+    "job_error|job_error|LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START"
+   ],
+   "code": "6374e4c5333160c4b57b26df5bd8a3dd05a6ae41415aa1124c7d5afb833ff7b5",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "44977866731",
+   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
+   "version_set": ""
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T03:25:07+00:00",
+  "at": "2026-11-22T04:57:06+00:00",
   "classes": {
-   "job_error|job_error|unknown:no_valid_independent_review": {
-    "example": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
+   "job_error|job_error|LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START": {
+    "example": "LaneStepCancelledError: [S_SETTLE_ROUND_COMPOSE_START] cancelled in stage S9 settle round 1 of 5: compose start after 3s with 0 provider calls",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "unknown"
+     "LaneStepCancelledError"
     ],
     "rule": "job_error",
     "scope": "",
     "scope_paths": null,
-    "sub_rule": "unknown:no_valid_independent_review",
+    "sub_rule": "LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START",
     "upstream": ""
    }
   },
-  "code": "8526f30ae0f6580e3502bb19e42612ab6fd5f475997a96d42b85400565480755",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
+  "code": "6374e4c5333160c4b57b26df5bd8a3dd05a6ae41415aa1124c7d5afb833ff7b5",
+  "durable_state": "",
+  "exit_code": null,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
-   "kind": "unknown",
-   "transient": true
+   "classification": "unknown",
+   "detail": "LaneStepCancelledError: [S_SETTLE_ROUND_COMPOSE_START] cancelled in stage S9 settle round 1 of 5: compose start after 3s with 0 provider calls",
+   "kind": "LaneStepCancelledError",
+   "transient": false
   },
   "findings": [
    {
-    "label": "unknown",
-    "message": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): the reviewer's reply broke the contract; at most 99 findings; got 105; finding F100: id must look like F01; finding F101: id must look like F01",
+    "label": "LaneStepCancelledError",
+    "message": "LaneStepCancelledError: [S_SETTLE_ROUND_COMPOSE_START] cancelled in stage S9 settle round 1 of 5: compose start after 3s with 0 provider calls",
     "origin": {
-     "id": "unknown",
+     "id": "LaneStepCancelledError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|unknown:no_valid_independent_review",
+    "signature": "job_error|job_error|LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START",
     "source": "job",
-    "sub_rule": "unknown:no_valid_independent_review",
+    "sub_rule": "LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "a1cb2fe7f1717e6ba69112b374e6e0124eae5a9a",
+  "main_sha": "93eea3611dac95990bac15e8132dc1f5a408031e",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
-    "section_id": "api_reference",
-    "stage": "S6"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
-  "run_id": "44975025034",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44975025034",
+  "run_id": "44977866731",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44977866731",
   "schema_version": 1,
   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
-  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  "version_set": ""
  },
  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
  "schema_version": 1
