@@ -3697,6 +3697,21 @@ items:
     next_action: "supervisor proves hosted with a Lane L present run (run request job present, lane L) on a repository whose Lane L seal is older than its head, reads the 'Lane L trigger' and 'Lane L gate' lines and lane-l-trigger.json; then the counter (BL-188 evidence line 2) and the portfolio gate use the recorded decision"
     updated: "2026-11-22"
 
+  - id: BL-860
+    title: "Lane R refresh failed twice on one class: the S8 coherence pass re-introduces a version or number into an accepted value-free opening or key-capability unit and has no recovery for R43(2)'s no-values rule (BarCode Python 'unit opening: spells 3.12, 10.1.0', 16 provider calls each run)"
+    type: defect
+    source: "owner rulings R10, R14, R36(b), R41, R46, R50; hosted Lane R refresh runs 45002500775 and 45004811070 on BarCode Python (each 16 provider calls, then OutputRejectedError 'unit opening: spells ...', replacing a seal the audit flags 14 times); rejected unit printed in the run log"
+    priority: P0
+    status: active
+    implementation_path: "readme/composition/coherence.py recover_coherence_value_units (wired last into recover_coherence_regressions, the one recover= of cascade._run_coherence): an opening or key_capabilities unit whose coherence revision spells a number, version, count, file or key name loses exactly the sentence or parenthesis that spells it (authoring_retry._without_values, deletion only; the revision's other new content is kept); when nothing is left it reverts to its own pre-coherence text and citations (already accepted value-free by authoring); with neither it returns None and the job fails closed as before. Every correction is recorded in the repair notes beside the call store (rule BL-860, rejected and kept text; R14). Request bytes are unchanged: no prompt, packet or schema change, so replayed calls hit the same hashes. Root cause of the appearance: authoring (S6) is value-free (R43(2)) and passed; S8 coherence receives the whole rendered README, whose Installation section prints 'Python >=3.12' and 'Pillow>=10.1.0', and the model folds it into the opening's last sentence (it cites every fact id); coherence_checks applies unit_checks, so the value rule rejects it, the re-ask repeats it, and run_job's recover for S8 had no value pass (the BL-170 value recovery exists only on the S6 call)"
+    acceptance: "(1) tests/readme/composition/test_coherence_values_bl860.py: the real hosted opening shape (value sentence closing a revised opening) loses only that sentence and keeps new genuine content; negative controls: a value-free revision is untouched, other sections are untouched, an all-value unit reverts to the pre-coherence text, a pre-coherence unit that spells a value too fails closed (None); whole run_job coherence job fails before the fix with the exact hosted rejection and completes after, with a BL-860 repair note. (2) lean recertification of the stored seals under the fixed code: no seal changes (recovery touches generation only). (3) hosted (R41, not proven): BarCode Python Lane R refresh completes and seals"
+    evidence:
+      - "hosted logs of runs 45002500775 and 45004811070 (present / present): last rejection 'unit opening: spells 3.12, 10.1.0', raised after the S6 authoring end and two more provider calls, i.e. in S8 coherence; the pre-coherence opening in the stored seal states no value"
+      - "tests/readme/composition/test_coherence_values_bl860.py 7 passed"
+      - "lean recertify of every latest seal under the fixed code (2026-11-22): 72 RECERTIFIED (38 Lane R, 34 Lane L), R10 gate OK; tests/readme and the rest of the suite pass except the two known base failures (container-only python_examples receipt, dashboard guard)"
+    next_action: "supervisor integrates; re-dispatch the BarCode Python Lane R refresh and read the opening's repair note"
+    updated: "2026-11-22"
+
   - id: BL-790
     title: "Lane L PDF Cpp ended on a budget refusal, not on its README: the hosted reserve step gave up on the first provider-spend ledger error ('provider-spend ledger unavailable: StateBackendError'), the job ran with no reservation, and the review's one provider call was refused"
     type: defect
