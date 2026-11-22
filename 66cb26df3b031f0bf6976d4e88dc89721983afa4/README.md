@@ -4,7 +4,7 @@
 
 [![Aspose.3D FOSS for TypeScript](https://products.aspose.org/media/3d/typescript/banner-readme.png)](https://products.aspose.org/3d/typescript/)
 
-Aspose.3D FOSS for TypeScript reads and writes 3D scenes using the `Scene` class, supporting formats such as OBJ, STL, GLTF, and U3D through its fromFile, openFromBuffer, save, and saveToBuffer methods. It constructs and manipulates scene graphs with `Node`, `Entity`, `Mesh`, `Material`, `Camera`, and `Light` objects, and supports materials like `LambertMaterial`, `PhongMaterial`, and `PbrMaterial` with texture access via getTexture and setTexture. It handles geometry with `VertexElementUV`, `VertexElementNormal`, and `VertexElementVertexColor`, and provides utilities for triangulation, bounding boxes, and coordinate transformations using `PolygonModifier.triangulate`, `BoundingBox`, `FVector3`, `FMatrix4`, and `MathUtils`. It supports animation with `AnimationClip`, `AnimationNode`, `AnimationChannel`, `KeyframeSequence`, and `KeyFrame`, and exposes property management through `A3DObject.findProperty`, getProperty, and setProperty.
+Aspose.3D FOSS for TypeScript reads and writes 3D scenes using formats such as OBJ, STL, GLTF, and FBX. It converts scenes between these formats and supports loading from files or buffers and saving to files or buffers. It provides access to scene entities including meshes, materials, cameras, and lights, along with geometry, animation, and transformation data.
 
 ## Navigation
 
@@ -54,9 +54,16 @@ flowchart TB
 - **Material assignment.** Assign shading materials through `Material` subclasses — `LambertMaterial` (diffuse-only), `PhongMaterial` (adds specular/shininess), and `PbrMaterial` (metallic/roughness, mapping directly to the glTF PBR model).
 - **Camera and light entities.** Place `Camera` (projection type, field of view, clip distances) and `Light` (POINT, DIRECTIONAL, SPOT, AREA, VOLUME) entities as scene nodes.
 - **Animation support.** Animate node properties with keyframes — `AnimationClip` groups `AnimationNode` tracks, each holding `AnimationChannel` of `KeyframeSequence` time/value samples with configurable `Interpolation`/`Extrapolation`.
-- **Format I/O.** Read glTF (JSON and binary GLB) and Wavefront OBJ scenes, and write STL (ASCII and binary), FBX (ASCII), COLLADA (.dae, via xmldom), and glTF JSON scenes through `Scene.open()`/`Scene.openFromBuffer()` and `Scene.save()` — OBJ export and binary GLB export both carry real, current defects; see Scope and Limitations before relying on either.
-- **Math utilities.** Perform 3D math operations using `FVector3`, `FMatrix4`, `Quaternion`, and `MathUtils`, and compute bounding volumes with `BoundingBox`.
-- **Property system.** Inspect and modify object properties through `Property` and `PropertyCollection`, and access them via `A3DObject.findProperty`, `A3DObject.getProperty`, and `A3DObject.setProperty`.
+- **Format I/O.** Read glTF and Wavefront OBJ scenes, and write STL (ASCII and binary), FBX (ASCII), COLLADA (.dae, via xmldom), and glTF scenes through `Scene.open()`/`Scene.openFromBuffer()` and `Scene.save()` — OBJ export and binary GLB export both carry real, current defects; see Scope and Limitations before relying on either.
+- **Math utilities.** Perform 3D transformations and calculations using `FVector2`, `FVector3`, `FVector4`, `Matrix4`, and `Quaternion` types.
+- **Property system.** Attach arbitrary metadata to scene objects through `Property` and `PropertyCollection`, with `INamedObject` providing named access to `SceneObject` instances.
+
+- Triangulate raw polygon data with the standalone `PolygonModifier.triangulate()` utility, or
+  triangulate an existing mesh's own polygons in place with `Mesh.triangulate()`.
+- Read glTF 2.0 (JSON and binary GLB) and Wavefront OBJ scenes, and write STL (ASCII and binary),
+  FBX (ASCII), COLLADA (`.dae`, via `xmldom`), and glTF 2.0 JSON scenes through `scene.open()`/
+  `scene.openFromBuffer()` and `scene.save()` — OBJ export and binary GLB export both carry real,
+  current defects; see Scope and Limitations before relying on either.
 
 ## Installation
 
@@ -164,6 +171,8 @@ const triangles = PolygonModifier.triangulate(controlPoints, [quad]);
 
 ## API Reference
 
+The @aspose/3d package provides a 3D scene graph API for TypeScript. The `Scene` class serves as the primary entry point, offering static and instance methods to load, manipulate, and save 3D content.
+
 The public API has 81 types.
 
 <details>
@@ -173,82 +182,82 @@ The public API has 81 types.
 
 | Class | Description |
 | --- | --- |
-| `A3DObject` | Class that inherits from INamedObject and declares the methods findProperty, getProperty, removeProperty, setProperty and toString and the members name and properties. |
-| `AnimationChannel` | Class that inherits from KeyframeSequence and declares the members componentType, defaultValue and keyframeSequence. |
-| `AnimationClip` | Class that inherits from SceneObject and declares the method createAnimationNode and the members animations, description, name, properties, start and stop. |
-| `AnimationNode` | Class that inherits from A3DObject and declares the methods createBindPoint, findBindPoint, getBindPoint and getKeyframeSequence and the members bindPoints, name, properties and subAnimations. |
-| `ApertureMode` | Class that declares the members HORIZONTAL, HORZ_AND_VERT and VERTICAL. |
-| `AssetInfo` | Class that inherits from A3DObject and declares a public no-argument constructor. |
-| `BindPoint` | Class that inherits from A3DObject and declares the methods addChannel, bindKeyframeSequence, createKeyframeSequence, getChannel, getKeyframeSequence and resetChannels and the members channelsCount, name, properties, property and scene. |
-| `BooleanOperation` | Class that declares the members ADD, INTERSECT and SUB. |
-| `BoundingBox` | Class that declares methods including contains, infinite, merge, null, overlapsWith and scale and the members center, extent, maximum, minimum and size. |
-| `BoundingBox2D` | Class that declares the methods getCenter, getSize, infinite, merge, null and overlapsWith and the members extent, maximum and minimum. |
-| `BoundingBoxExtent` | Class that declares the methods finite, infinite and null and the members extentX, extentY and extentZ. |
+| `A3DObject` | A3DObject class gives the name, properties, and methods to manage properties and convert to a string representation. |
+| `AnimationChannel` | AnimationChannel class gives the bind point, component type, default value, and key frames for an animation channel. |
+| `AnimationClip` | AnimationClip class gives the animations, description, name, and properties for an animation clip. |
+| `AnimationNode` | AnimationNode class gives the bind points and methods to manage them and retrieve key frame sequences. |
+| `ApertureMode` | ApertureMode enum lists the HORIZONTAL, HORZ_AND_VERT and VERTICAL aperture modes. |
+| `AssetInfo` | AssetInfo class gives the name, properties, and methods to manage properties and convert to a string representation. |
+| `BindPoint` | BindPoint class gives the channels count and methods to add, retrieve, and create key frame sequences. |
+| `BooleanOperation` | BooleanOperation enum lists the ADD, INTERSECT and SUB boolean operations. |
+| `BoundingBox` | BoundingBox class gives the center, extent, infinite flag, maximum, minimum, and methods to check containment and merge. |
+| `BoundingBox2D` | BoundingBox2D class gives the extent, infinite flag, maximum, minimum, and methods to get center, size, and merge. |
+| `BoundingBoxExtent` | BoundingBoxExtent class gives the extentX, extentY, extentZ, finite, infinite, and null flags. |
 | `Camera` | Class that inherits from Entity and declares methods including findProperty, getBoundingBox, getEntityRendererKey, getProperty, moveForward and removeProperty and members including apertureMode, aspect, aspectRatio, direction, excluded and farPlane. |
-| `ComposeOrder` | Class that declares the method toString and the members APPEND, name and PREPEND. |
-| `CustomObject` | Class that inherits from A3DObject and declares a public constructor. |
+| `ComposeOrder` | ComposeOrder enum lists the APPEND and PREPEND compose orders. |
+| `CustomObject` | CustomObject class gives the name, properties, and methods to manage properties and convert to a string representation. |
 | `Entity` | Class that inherits from SceneObject and declares the methods getBoundingBox and getEntityRendererKey and the members excluded, parentNode and parentNodes. |
-| `Extrapolation` | Class that declares the members repeatCount and type. |
-| `FMatrix4` | Class that declares the methods concatenate, inverse and transpose and members including identity, m00, m01, m02, m03 and m10. |
-| `FVector2` | Class that declares methods including add, div, dot, equals, length and mul and the members x and y. |
-| `FVector3` | Class that declares methods including equals, getItem, normalize, one, setItem and toString and the members x, y and z. |
-| `FVector4` | Class that declares the methods equals, getItem, setItem and toString and the members w, x, y and z. |
-| `FileFormat` | Class that declares methods including canExport, canImport, contentType, createLoadOptions, createSaveOptions and extension. |
+| `Extrapolation` | Extrapolation class gives the repeatCount and type for animation extrapolation. |
+| `FMatrix4` | FMatrix4 class gives the concatenate, identity, inverse, and matrix element properties m00, m01, m02, m03, and the inverse member throws Error conditionally. |
+| `FVector2` | FVector2 class gives the add, div, dot, equals, length, mul, normalize methods, and the add, div, parse and sub members throw TypeError or Error conditionally. |
+| `FVector3` | FVector3 class gives the equals, getItem, normalize, one, setItem, toString, and unitX properties, and the getItem and setItem members throw Error conditionally. |
+| `FVector4` | FVector4 class gives the equals, getItem, setItem, toString, w, x, and y properties, and the getItem and setItem members throw Error conditionally. |
+| `FileFormat` | FileFormat class gives the canExport, canImport, contentType, extension, extensions, and methods to create load and save options. |
 | `FileSystem` | Not implemented. |
 | `Geometry` | Class that inherits from Entity and declares methods including addControlPoint, addElement, createElement, createElementUV, findProperty and getBoundingBox and the members castShadows, controlPoints, receiveShadows, vertexElements and visible. |
-| `GlobalTransform` | Class that declares the method toString and the members eulerAngles, rotation, scale, transformMatrix and translation. |
-| `IIndexedVertexElement` | Interface that declares the member indices. |
-| `INamedObject` | Interface that declares the member name. |
-| `IOExtension` | Public class. |
-| `ImageRenderOptions` | Class that declares the members height and width. |
-| `KeyFrame` | Class that declares members including bias, continuity, curve, flat, independentTangent and interpolation. |
-| `KeyframeSequence` | Class that inherits from A3DObject and declares the methods add, reset and setBindPoint and the members bindPoint, keyFrames, name, postBehavior, preBehavior and properties. |
+| `GlobalTransform` | GlobalTransform class gives the eulerAngles, rotation, scale, transformMatrix, translation, and methods to convert to a string representation. |
+| `IIndexedVertexElement` | IIndexedVertexElement interface gives the indices for indexed vertex elements. |
+| `INamedObject` | INamedObject interface gives the name for named objects. |
+| `IOExtension` | IOExtension class is a marker for I/O extensions. |
+| `ImageRenderOptions` | ImageRenderOptions class gives the height and width for image rendering options. |
+| `KeyFrame` | KeyFrame class gives the bias, continuity, curve, flat, independentTangent, interpolation, and nextInTangent properties. |
+| `KeyframeSequence` | KeyframeSequence class gives the bind point, key frames, name, postBehavior, and methods to manage properties. |
 | `LambertMaterial` | Class that inherits from Material and declares members including ambientColor, diffuseColor, emissiveColor, MAP_AMBIENT, MAP_DIFFUSE and MAP_EMISSIVE. |
 | `Light` | Class that inherits from Camera and declares the member lightType. |
-| `LightType` | Class that declares the members AREA, DIRECTIONAL, POINT, SPOT and VOLUME. |
-| `MappingMode` | Class that declares the members ALL_SAME, CONTROL_POINT, EDGE, POLYGON and POLYGON_VERTEX. |
+| `LightType` | LightType enum lists the AREA, DIRECTIONAL, POINT, SPOT and VOLUME light types. |
+| `MappingMode` | MappingMode enum lists the ALL_SAME, CONTROL_POINT, EDGE, POLYGON and POLYGON_VERTEX mapping modes. |
 | `Material` | Class that inherits from A3DObject and declares the methods getTexture and setTexture and the members MAP_AMBIENT, MAP_DIFFUSE, MAP_EMISSIVE, MAP_NORMAL and MAP_SPECULAR. |
-| `MathUtils` | Class that declares methods including calcNormal, clamp, findIntersection, pointInsideTriangle, rayIntersect and toDegree. |
-| `Matrix4` | Class that declares methods including concatenate, decompose, equals, getItem, identity and inverse and members including determinant, m00, m01, m02, m03 and m10. |
+| `MathUtils` | MathUtils class gives the calcNormal, clamp, findIntersection, pointInsideTriangle, rayIntersect, toDegree, and toRadian methods. |
+| `Matrix4` | Matrix4 class gives the concatenate, decompose, determinant, equals, getItem, identity, inverse, and methods to set and get items, and the inverse member throws Error conditionally. |
 | `Mesh` | Class that inherits from Geometry and declares methods including createPolygon, difference, doBoolean, getBoundingBox, getEntityRendererKey and getPolygonSize and the members deformers, edges, polygonCount and polygons. |
-| `Node` | Class that inherits from SceneObject and declares methods including addChildNode, addEntity, clearEntities, createChildNode, evaluateGlobalTransform and getBoundingBox and members including assetInfo, childNodes, entities, entity, excluded and globalTransform. |
-| `ParseException` | Class that inherits from Error and declares a public constructor. |
+| `Node` | Node class provides node hierarchy management with methods to add and manage child nodes and entities. |
+| `ParseException` | Declared; not thrown by library code. |
 | `PbrMaterial` | Class that inherits from Material and declares the method fromMaterial and members including albedo, albedoTexture, emissiveColor, emissiveTexture, metallicFactor and metallicRoughness. |
 | `PhongMaterial` | Class that inherits from LambertMaterial and declares the members reflectionColor, reflectionFactor, shininess, specularColor and specularFactor. |
-| `PolygonModifier` | Class that declares the method triangulate. |
-| `ProjectionType` | Class that declares the members ORTHOGRAPHIC and PERSPECTIVE. |
-| `Property` | Class that declares the methods getExtra, setExtra and toString and the members name, value and valueType. |
-| `PropertyCollection` | Class that declares the methods findProperty, get, getItem, removeProperty and toString and the members count and length. |
+| `PolygonModifier` | PolygonModifier class provides polygon triangulation functionality. |
+| `ProjectionType` | ProjectionType enum lists the ORTHOGRAPHIC and PERSPECTIVE projection types. |
+| `Property` | Property class represents a named value with type information and extra data. |
+| `PropertyCollection` | PropertyCollection class provides a collection of properties with indexing and search capabilities. |
 | `Quaternion` | Class that declares methods including concat, conjugate, dot, equals, eulerAngles and fromAngleAxis and the members length, w, x, y and z. |
-| `Rect` | Rect class represents a rectangle with left, top, right, bottom, width, and height properties and a contains method. |
-| `ReferenceMode` | Class that declares the members DIRECT, INDEX and INDEX_TO_DIRECT. |
-| `RelativeRectangle` | RelativeRectangle class represents a rectangle with offset and scale properties for relative positioning. |
+| `Rect` | Rect class represents a rectangle with left, top, right, bottom, width, and height properties. |
+| `ReferenceMode` | ReferenceMode enum lists the DIRECT, INDEX and INDEX_TO_DIRECT reference modes. |
+| `RelativeRectangle` | RelativeRectangle class represents a rectangle defined by relative offsets and scales. |
 | `RotationMode` | RotationMode enum lists the FIXED and ORBIT rotation modes. |
-| `RotationOrder` | RotationOrder enum lists the XYZ, XZY, YXZ, YZX, ZXY, and ZYX rotation orders. |
+| `RotationOrder` | RotationOrder enum lists the XYZ, XZY, YXZ, YZX, ZXY and ZYX rotation orders. |
 | `Scene` | Class that inherits from SceneObject and declares methods including clear, createAnimationClip, fromFile, getAnimationClip, open and openFromBuffer and members including animationClips, assetInfo, currentAnimationClip, library, poses and rootNode. |
-| `SceneObject` | Class that inherits from A3DObject and declares the member scene. |
-| `SemanticAttribute` | Class that declares the members alias and semantic. |
+| `SceneObject` | SceneObject class provides base functionality for objects in a scene including properties and naming. |
+| `SemanticAttribute` | SemanticAttribute class represents a semantic attribute with alias and semantic name. |
 | `SplitMeshPolicy` | SplitMeshPolicy enum lists the ADJUST and CLONE_DATA split mesh policies. |
-| `TextureMapping` | Class that declares members including AMBIENT, BUMP, DIFFUSE, DISPLACEMENT, EMISSIVE and GLOW. |
+| `TextureMapping` | TextureMapping enum lists the AMBIENT, BUMP, DIFFUSE, DISPLACEMENT, EMISSIVE, GLOW, NORMAL and OPACITY texture mappings. |
 | `Transform` | Class that inherits from A3DObject and declares methods including setEulerAngles, setGeometricRotation, setGeometricScaling, setGeometricTranslation, setPostRotation and setPreRotation and members including eulerAngles, geometricRotation, geometricScaling, geometricTranslation, postRotation and preRotation. |
-| `TransformBuilder` | TransformBuilder class provides methods to build transforms using append, compose, prepend, and rearrange operations. |
+| `TransformBuilder` | TransformBuilder class provides methods to build and compose transformation matrices. |
 | `Vector2` | Class that declares the methods equals, getItem, parse, set, setItem and toString and the members length, length2, x and y. |
 | `Vector3` | Class that declares methods including angleBetween, compareTo, cos, cross, dot and equals and members including length, length2, one, unitX, unitY and unitZ. |
 | `Vector4` | Class that declares the methods equals, getItem, set, setItem and toString and the members w, x, y and z. |
-| `Vertex` | Class that declares methods including compare, compareTo, readDouble, readFloat, readFVector2 and readFVector3. |
-| `VertexDeclaration` | Class that declares the methods addField, clear, compareTo, fromGeometry and getField and the members count, sealed and size. |
-| `VertexElement` | Class that inherits from IIndexedVertexElement and declares the methods clear and setIndices and the members indices, mappingMode, name, referenceMode and vertexElementType. |
-| `VertexElementFVector` | Class that inherits from VertexElement and declares the methods clear, copyTo, setData and setIndices and the members data and indices. |
-| `VertexElementIntsTemplate` | Class that inherits from VertexElement and declares the methods clear, copyTo, setData and setIndices and the members data and indices. |
-| `VertexElementNormal` | Class that inherits from VertexElementFVector and declares a public constructor. |
-| `VertexElementSmoothingGroup` | Class that inherits from VertexElementIntsTemplate and declares a public constructor. |
-| `VertexElementTangent` | Class that inherits from VertexElementFVector and declares a public constructor. |
-| `VertexElementType` | Class that declares members including BINORMAL, EDGE_CREASE, HOLE, MATERIAL, NORMAL and POLYGON_GROUP. |
-| `VertexElementUV` | Class that inherits from VertexElementFVector and declares the method addData and the members data, textureMapping and uvData. |
-| `VertexElementVertexColor` | Class that inherits from VertexElementFVector and declares a public constructor. |
-| `VertexField` | Class that declares the method compareTo and the members alias, dataType, index, offset, semantic and size. |
-| `VertexFieldDataType` | Class that declares the method toString and members including BYTE_VECTOR4, DOUBLE, F_VECTOR2, F_VECTOR3, F_VECTOR4 and FLOAT. |
-| `VertexFieldSemantic` | Class that declares the method toString and members including BINORMAL, EDGE_CREASE, MORPH_NORMAL, MORPH_POSITION, name and NORMAL. |
+| `Vertex` | Vertex class provides vertex data reading functionality for double, float, and vector formats. |
+| `VertexDeclaration` | VertexDeclaration class provides vertex declaration management including field addition and clearing. |
+| `VertexElement` | VertexElement class provides vertex element management including indices, mapping mode, and reference mode. |
+| `VertexElementFVector` | VertexElementFVector class provides floating-point vector vertex element management. |
+| `VertexElementIntsTemplate` | VertexElementIntsTemplate class provides integer vertex element management. |
+| `VertexElementNormal` | VertexElementNormal class provides normal vector vertex element management. |
+| `VertexElementSmoothingGroup` | VertexElementSmoothingGroup class provides smoothing group vertex element management. |
+| `VertexElementTangent` | VertexElementTangent class provides tangent vector vertex element management. |
+| `VertexElementType` | VertexElementType enum lists the BINORMAL, EDGE_CREASE, HOLE, MATERIAL, NORMAL, POLYGON_GROUP, SMOOTHING_GROUP and SPECULAR vertex element types. |
+| `VertexElementUV` | VertexElementUV class provides UV coordinate vertex element management. |
+| `VertexElementVertexColor` | VertexElementVertexColor class provides vertex color vertex element management. |
+| `VertexField` | VertexField class provides vertex field definition with semantic, data type, and offset information. |
+| `VertexFieldDataType` | VertexFieldDataType enum lists the BYTE_VECTOR4, DOUBLE, FLOAT, F_VECTOR2, F_VECTOR3, F_VECTOR4, INT16 and INT32 vertex field data types. |
+| `VertexFieldSemantic` | VertexFieldSemantic enum lists the BINORMAL, EDGE_CREASE, MORPH_NORMAL, MORPH_POSITION, NORMAL, POSITION, SPECULAR and TANGENT vertex field semantics. |
 | `Watermark` | Not implemented. |
 
 #### Enumerations
@@ -258,49 +267,57 @@ The public API has 81 types.
 | `ExtrapolationType` | ExtrapolationType enum lists the CONSTANT, CYCLE, CYCLE_RELATIVE, GRADIENT and OSCILLATE extrapolation types. |
 | `Interpolation` | Interpolation enum lists the BEZIER, B_SPLINE, CARDINAL_SPLINE, CONSTANT, LINEAR and TCB_SPLINE interpolation types. |
 | `StepMode` | StepMode enum lists the NEXT_VALUE and PREVIOUS_VALUE step modes. |
-| `WeightedMode` | WeightedMode enum lists the BOTH, NEXT_IN_WEIGHT, NONE, and OUT_WEIGHT weighted mode values. |
+| `WeightedMode` | WeightedMode enum lists the BOTH, NEXT_IN_WEIGHT, NONE, and OUT_WEIGHT reference modes. |
 
 #### Detailed Member Reference
 
+### Scene
+
+`Scene` provides static fromFile and instance open/openFromBuffer methods to load files or buffers with auto-detected format, save and saveToBuffer to write output, and exposes rootNode to access the node hierarchy.
+
 ### Node
 
-The `Node` class represents an element in the scene graph, supporting child nodes via addChildNode and childNodes, attaching entities with addEntity and entities, and computing world-space transforms through globalTransform.
+`Node` represents an element in the scene tree with a name, transform, and child nodes accessible via childNodes, and supports adding and managing entities via addEntity and entities.
 
 ### Mesh
 
-The `Mesh` class defines polygonal geometry using controlPoints and supports polygon creation via createPolygon, with triangulate converting all polygons to triangles for export.
+`Mesh` holds controlPoints as `Vector4` vertices and supports polygon creation via createPolygon, with triangulate converting all polygons to triangles for export.
+
+### AnimationClip
+
+`AnimationClip` holds named animation tracks via animations and provides createAnimationNode to build keyframe-based animations, with scene exposing clips at the scene level.
 
 ### FileFormat
 
-The `FileFormat` class identifies supported formats using getFormatByExtension and determines import or export capability via canImport and canExport.
-
-### Quaternion
-
-The `Quaternion` class represents rotations using slerp for interpolation, fromEulerAngle for construction from Euler angles, and toString for string representation.
-
-### BoundingBox
-
-The `BoundingBox` class defines an axis-aligned volume using minimum and maximum corners, with contains checking whether points lie inside.
-
-### Property
-
-The `Property` class stores typed name/value pairs with name, value, and valueType properties for metadata attached to scene objects.
-
-### VertexElementUV
-
-The `VertexElementUV` class stores 2D texture coordinates with uvData and mappingMode for mapping texture coordinates onto geometry.
-
-### Material
-
-The `Material` class manages surface appearance with getTexture and setTexture for texture assignment.
+`FileFormat` provides canImport and canExport to check format support, and getFormatByExtension to resolve a format descriptor from a file extension.
 
 ### Camera
 
-The `Camera` class defines view parameters with fieldOfView and projectionType for perspective or orthographic projection.
+`Camera` defines a viewpoint with projectionType, fieldOfView, nearPlane, and farPlane properties to configure perspective or orthographic rendering.
 
 ### Light
 
-The `Light` class specifies illumination with lightType and direction for directional, point, or spot lighting.
+`Light` represents a light source with lightType, direction, and fieldOfView properties to define point, directional, or spot lighting behavior.
+
+### PbrMaterial
+
+`PbrMaterial` implements physically-based rendering with albedo, metallicFactor, and roughnessFactor properties that map directly to the glTF 2.0 PBR material model.
+
+### Quaternion
+
+`Quaternion` supports rotation representation via fromEulerAngle, interpolation via slerp, and string conversion via toString.
+
+### Matrix4
+
+`Matrix4` provides identity, translate, and rotate methods to construct and manipulate 4x4 transformation matrices for scene graph operations.
+
+### VertexElementUV
+
+`VertexElementUV` stores 2D texture coordinates via uvData and defines mappingMode to control how UV data maps onto geometry.
+
+### Property
+
+`Property` holds a typed name/value pair with name, value, and valueType properties, attachable to any `A3DObject` for custom metadata.
 
 `Scene` is the primary entry point: `scene.open()`/`scene.openFromBuffer()` load a file or
 buffer (format auto-detected), `scene.save()` writes output, and `scene.rootNode` exposes the
@@ -339,6 +356,13 @@ node hierarchy.
 | `LambertMaterial` | Diffuse-only material with `ambientColor`, `diffuseColor`, `emissiveColor`, `transparentColor`, and `transparency` properties. Suitable for non-specular surfaces. |
 | `PhongMaterial` | Extends `LambertMaterial` with specular color and shininess properties for Phong shading. |
 | `PbrMaterial` | Physically-based rendering material (`constructor(name?, albedo?)`, `static fromMaterial(material)`) with `albedo`, `albedoTexture`, `normalTexture`, `metallicFactor`, `roughnessFactor`, `metallicRoughness`, `occlusionTexture`, `occlusionFactor`, `emissiveTexture`, `emissiveColor`, and `transparency` properties. Maps directly to the glTF 2.0 PBR material model. |
+
+| Class | Description |
+|---|---|
+| `Camera` | A viewpoint node entity with `moveForward` and `getBoundingBox` methods, and `nearPlane`, `farPlane`, `aspect`, `orthoHeight`, `fieldOfView`, `fieldOfViewX`/`Y`, `projectionType`, and `apertureMode` properties. |
+| `Light` | A light-source node entity. Type is controlled by the `LightType` enumeration. |
+| `LightType` | Enumeration of supported light kinds: `POINT`, `DIRECTIONAL`, `SPOT`, `AREA`, `VOLUME`. |
+| `ProjectionType` | Enumeration of camera projection modes: `PERSPECTIVE` and `ORTHOGRAPHIC`. |
 
 | Class | Description |
 |---|---|
@@ -429,14 +453,6 @@ The suite covers 32 test files under `tests/`.
 
 `npm run build` compiles `src/` to `dist/` with `tsc`. The package targets TypeScript 5.0+; `package.json` declares no minimum Node.js version, and development is verified on Node.js 18/20/22.
 
-- `xmldom` `^0.6.0` — parses and serializes XML for `ColladaImporter`/`ColladaExporter` and the internal XML content inside 3MF archives (`ThreeMfImporter`).
-
-- `typescript` `^5.8.3` — compiler.
-- `jest` `^29.7.0`, `ts-jest` `^29.3.4` — test runner.
-- `eslint` `^8.57.1`, `@typescript-eslint/eslint-plugin` `^8.33.0`, `@typescript-eslint/parser` `^8.33.0` — linting.
-- `adm-zip` `^0.5.16`, `@types/adm-zip` `^0.5.7` — 3MF archive handling used in tests (see Scope and Limitations for a real packaging gap affecting a published install's use of this package).
-- `@types/jest` `^29.5.12`, `@types/node` `^22.15.17` — TypeScript type declarations.
-
 Clone the repository and run the test suite:
 
 ```bash
@@ -454,7 +470,8 @@ npm run typecheck
 npm run lint
 ```
 
-See [AGENTS.md](AGENTS.md) in the repository root for implementation status and development guidelines.
+See [AGENTS.md](AGENTS.md) in the repository root for implementation status and development
+guidelines.
 
 ## License
 

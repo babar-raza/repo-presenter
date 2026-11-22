@@ -13,19 +13,40 @@
         "package:name",
         "package:version"
       ],
-      "rationale": "The H1 product name is rendered from facts in the identity section.",
+      "rationale": "The H1 product name is rendered deterministically from identity facts.",
       "unit_id": "inherited_unit:001.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "badges",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "link_target:001",
         "link_target:002",
         "link_target:003",
-        "link_target:004"
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "link_target:007",
+        "link_target:008",
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018",
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022",
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
       ],
-      "rationale": "Redundant with the verified facts it names: link_target:001, link_target:002, link_target:003, link_target:004. The badge row is not printed in the README despi",
+      "rationale": "The badge row is rendered deterministically from verified license and contributor badges.",
       "unit_id": "inherited_unit:002.badge_row"
     },
     {
@@ -35,9 +56,10 @@
         "link_target:005",
         "link_target:006",
         "link_target:product.banner",
+        "link_target:product.enterprise",
         "link_target:product.homepage"
       ],
-      "rationale": "The banner image is rendered from facts in the banner section.",
+      "rationale": "The product illustration and enterprise link are verified and move to the enterprise relationship section.",
       "unit_id": "inherited_unit:003.badge_row"
     },
     {
@@ -49,9 +71,12 @@
         "identity:platform",
         "license:spdx",
         "package:name",
-        "package:version"
+        "public_symbol:scene",
+        "public_symbol:node",
+        "public_symbol:mesh",
+        "public_symbol:material"
       ],
-      "rationale": "The paragraph describes the product, its license, and capabilities; facts support its substance.",
+      "rationale": "The opening paragraph is supported by facts and preserved as written.",
       "unit_id": "inherited_unit:004.paragraph"
     },
     {
@@ -65,7 +90,7 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The Navigation heading is rendered by deterministic code in the navigation section.",
+      "rationale": "The Navigation heading is rendered by deterministic code and the list is superseded.",
       "unit_id": "inherited_unit:005.heading"
     },
     {
@@ -79,7 +104,7 @@
         "identity:repository",
         "identity:revision"
       ],
-      "rationale": "The navigation list is rendered by deterministic code in the navigation section.",
+      "rationale": "The navigation list is rendered deterministically and the inherited list is redundant.",
       "unit_id": "inherited_unit:006.list"
     },
     {
@@ -88,7 +113,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The At a Glance heading is rendered by deterministic code in the at_a_glance section.",
+      "rationale": "The At a Glance heading is rendered deterministically and the Mermaid diagram is superseded.",
       "unit_id": "inherited_unit:007.heading"
     },
     {
@@ -106,7 +131,7 @@
         "link_target:015",
         "link_target:016"
       ],
-      "rationale": "The Mermaid diagram in At a Glance is rendered by deterministic code in the at_a_glance section; the cited link_target facts confirm the section exists and is a",
+      "rationale": "The Mermaid diagram is superseded by the deterministic at_a_glance section; the link targets verify the section's structure.",
       "unit_id": "inherited_unit:008.code_block"
     },
     {
@@ -115,12 +140,12 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The Key Capabilities heading is rendered by deterministic code in the key_capabilities section.",
+      "rationale": "The Key Capabilities heading is rendered deterministically and the list is superseded.",
       "unit_id": "inherited_unit:009.heading"
     },
     {
       "destination_section": "key_capabilities",
-      "disposition": "VERIFIED_REWRITE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "public_symbol:animationchannel",
         "public_symbol:animationclip",
@@ -145,7 +170,7 @@
         "public_symbol:vertexelementuv",
         "public_symbol:vertexelementvertexcolor"
       ],
-      "rationale": "The list items are supported by facts and will be re-authored in key_capabilities.",
+      "rationale": "The list is superseded by the key capabilities section rendered from facts.",
       "unit_id": "inherited_unit:010.list"
     },
     {
@@ -154,7 +179,7 @@
       "fact_ids": [
         "install_command:npm"
       ],
-      "rationale": "The Installation heading is rendered by deterministic code in the installation section.",
+      "rationale": "The Installation heading is rendered deterministically and the content is superseded.",
       "unit_id": "inherited_unit:011.heading"
     },
     {
@@ -163,7 +188,7 @@
       "fact_ids": [
         "install_command:npm"
       ],
-      "rationale": "The installation paragraph is superseded by the install_command fact.",
+      "rationale": "The installation paragraph is superseded by the deterministic installation section.",
       "unit_id": "inherited_unit:012.paragraph"
     },
     {
@@ -172,16 +197,16 @@
       "fact_ids": [
         "install_command:npm"
       ],
-      "rationale": "The install code block matches the install_command fact and is superseded by the installation section.",
+      "rationale": "The install command code block matches the verified install_command fact and is superseded.",
       "unit_id": "inherited_unit:013.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "PRESERVE_ATTRIBUTED",
       "fact_ids": [
         "build_test_asset:build-command"
       ],
-      "rationale": "The paragraph about build output and Node.js versions is moved to development_testing.",
+      "rationale": "The paragraph about build output and Node.js versions is valuable maintainer insight and preserved as written.",
       "unit_id": "inherited_unit:014.paragraph"
     },
     {
@@ -200,7 +225,7 @@
         "dependency:development.typescript-eslint-parser",
         "dependency:xmldom"
       ],
-      "rationale": "The Dependencies heading is rendered by deterministic code in the dependencies section.",
+      "rationale": "The Dependencies heading is rendered deterministically and the content is superseded.",
       "unit_id": "inherited_unit:015.heading"
     },
     {
@@ -219,16 +244,26 @@
         "dependency:development.typescript-eslint-parser",
         "dependency:xmldom"
       ],
-      "rationale": "The Required Package Dependencies heading is rendered by deterministic code in the dependencies section.",
+      "rationale": "The Required Package Dependencies heading is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:016.heading"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
+        "dependency:development.adm-zip",
+        "dependency:development.eslint",
+        "dependency:development.jest",
+        "dependency:development.ts-jest",
+        "dependency:development.types-adm-zip",
+        "dependency:development.types-jest",
+        "dependency:development.types-node",
+        "dependency:development.typescript",
+        "dependency:development.typescript-eslint-eslint-plugin",
+        "dependency:development.typescript-eslint-parser",
         "dependency:xmldom"
       ],
-      "rationale": "Kept in development_testing: documentation_resources holds no install material. The xmldom dependency is supported and preserved; the list is moved to docume...",
+      "rationale": "The required dependencies list is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:017.list"
     },
     {
@@ -247,35 +282,35 @@
         "dependency:development.typescript-eslint-parser",
         "dependency:xmldom"
       ],
-      "rationale": "The Development Dependencies heading is rendered by deterministic code in the dependencies section.",
+      "rationale": "The Development Dependencies heading is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:018.heading"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_PRESERVE",
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "dependency:development.typescript",
+        "dependency:development.adm-zip",
+        "dependency:development.eslint",
         "dependency:development.jest",
         "dependency:development.ts-jest",
-        "dependency:development.eslint",
-        "dependency:development.typescript-eslint-eslint-plugin",
-        "dependency:development.typescript-eslint-parser",
-        "dependency:development.adm-zip",
         "dependency:development.types-adm-zip",
         "dependency:development.types-jest",
-        "dependency:development.types-node"
+        "dependency:development.types-node",
+        "dependency:development.typescript",
+        "dependency:development.typescript-eslint-eslint-plugin",
+        "dependency:development.typescript-eslint-parser",
+        "dependency:xmldom"
       ],
-      "rationale": "The development dependencies list is preserved and moved to development_testing.",
+      "rationale": "The development dependencies list is superseded by the deterministic dependencies section.",
       "unit_id": "inherited_unit:019.list"
     },
     {
-      "destination_section": "quick_start",
-      "disposition": "SUPERSEDE_REDUNDANT",
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [
-        "example:001",
         "identity:ecosystem"
       ],
-      "rationale": "Reprinted verbatim in Quick Start beside the unverified example it introduces.",
+      "rationale": "The Quick Start section is not rendered because no example is verified at this revision.",
       "unit_id": "inherited_unit:020.heading"
     },
     {
@@ -284,7 +319,7 @@
       "fact_ids": [
         "install_command:npm"
       ],
-      "rationale": "The paragraph introduces an example that assumes a local build, but the installation section provides the official install command; the example is superseded.",
+      "rationale": "The paragraph introduces an example that assumes building from source, but the installation section provides the official install command.",
       "unit_id": "inherited_unit:021.paragraph"
     },
     {
@@ -411,16 +446,16 @@
     },
     {
       "destination_section": "api_reference",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The heading '## API Reference' is moved to the API Reference section, which is placeable and required.",
+      "rationale": "The heading 'API Reference' is appropriate for the API Reference section and matches its heading.",
       "unit_id": "inherited_unit:035.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [],
-      "rationale": "The paragraph describes the primary Scene API and is supported by the public_symbol facts for Scene and Node.",
+      "rationale": "The paragraph describes the primary Scene API and its core methods, which are verified and supported.",
       "unit_id": "inherited_unit:036.paragraph"
     },
     {
@@ -429,7 +464,7 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "The HTML block opens a collapsible section for API surface, which fits the API Reference section.",
+      "rationale": "The HTML block is a collapsible summary for the API Reference section and is preserved as written.",
       "unit_id": "inherited_unit:037.html_block"
     },
     {
@@ -439,12 +474,11 @@
         "public_symbol:animationclip",
         "public_symbol:animationclip.animations",
         "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
+        "public_symbol:animationclip.scene",
         "public_symbol:camera",
+        "public_symbol:camera.farplane",
         "public_symbol:camera.fieldofview",
+        "public_symbol:camera.nearplane",
         "public_symbol:camera.projectiontype",
         "public_symbol:fileformat",
         "public_symbol:fileformat.canexport",
@@ -452,10 +486,12 @@
         "public_symbol:fileformat.getformatbyextension",
         "public_symbol:light",
         "public_symbol:light.direction",
+        "public_symbol:light.fieldofview",
         "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
+        "public_symbol:matrix4",
+        "public_symbol:matrix4.identity",
+        "public_symbol:matrix4.rotate",
+        "public_symbol:matrix4.translate",
         "public_symbol:mesh",
         "public_symbol:mesh.addcontrolpoint",
         "public_symbol:mesh.controlpoints",
@@ -467,6 +503,10 @@
         "public_symbol:node.childnodes",
         "public_symbol:node.entities",
         "public_symbol:node.globaltransform",
+        "public_symbol:pbrmaterial",
+        "public_symbol:pbrmaterial.albedo",
+        "public_symbol:pbrmaterial.metallicfactor",
+        "public_symbol:pbrmaterial.roughnessfactor",
         "public_symbol:property",
         "public_symbol:property.name",
         "public_symbol:property.value",
@@ -498,7 +538,7 @@
         "public_symbol:scene",
         "public_symbol:sceneobject"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists core classes supported by public_symbol facts and provides useful documentatio",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. The table lists core classes with verified descriptions and is preserved as written.",
       "unit_id": "inherited_unit:039.table"
     },
     {
@@ -508,12 +548,11 @@
         "public_symbol:animationclip",
         "public_symbol:animationclip.animations",
         "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
+        "public_symbol:animationclip.scene",
         "public_symbol:camera",
+        "public_symbol:camera.farplane",
         "public_symbol:camera.fieldofview",
+        "public_symbol:camera.nearplane",
         "public_symbol:camera.projectiontype",
         "public_symbol:fileformat",
         "public_symbol:fileformat.canexport",
@@ -521,10 +560,12 @@
         "public_symbol:fileformat.getformatbyextension",
         "public_symbol:light",
         "public_symbol:light.direction",
+        "public_symbol:light.fieldofview",
         "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
+        "public_symbol:matrix4",
+        "public_symbol:matrix4.identity",
+        "public_symbol:matrix4.rotate",
+        "public_symbol:matrix4.translate",
         "public_symbol:mesh",
         "public_symbol:mesh.addcontrolpoint",
         "public_symbol:mesh.controlpoints",
@@ -536,6 +577,10 @@
         "public_symbol:node.childnodes",
         "public_symbol:node.entities",
         "public_symbol:node.globaltransform",
+        "public_symbol:pbrmaterial",
+        "public_symbol:pbrmaterial.albedo",
+        "public_symbol:pbrmaterial.metallicfactor",
+        "public_symbol:pbrmaterial.roughnessfactor",
         "public_symbol:property",
         "public_symbol:property.name",
         "public_symbol:property.value",
@@ -572,63 +617,16 @@
         "public_symbol:vertexelementuv",
         "public_symbol:vertexelementvertexcolor"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table lists core API types with accurate descriptions supported by public symbols and their do",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table of core geometry and vertex element types is supported by public symbols and belongs in ",
       "unit_id": "inherited_unit:041.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'Transform and Spatial' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:042.heading"
     },
     {
@@ -641,63 +639,16 @@
         "public_symbol:globaltransform",
         "public_symbol:transform"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table describes transform and spatial types with accurate details supported by public symbols ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Transform and spatial utility classes are supported by public symbols and belong in API refere",
       "unit_id": "inherited_unit:043.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'Materials' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:044.heading"
     },
     {
@@ -709,128 +660,37 @@
         "public_symbol:pbrmaterial",
         "public_symbol:phongmaterial"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table lists material classes with accurate descriptions supported by public symbols and their ",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Material classes are supported by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:045.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'Camera and Lighting' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:046.heading"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:camera"
+        "public_symbol:camera",
+        "public_symbol:light",
+        "public_symbol:lighttype",
+        "public_symbol:projectiontype"
       ],
-      "rationale": "The README incorrectly lists `apertureMode` as a property of `Camera`, but `Camera` has no such member; the entire table entry for `Camera` is unsupported and必须",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Camera and light types are supported by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:047.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'Math Utilities' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:048.heading"
     },
     {
@@ -845,63 +705,16 @@
         "public_symbol:vector3",
         "public_symbol:vector4"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table lists math utility types with accurate descriptions supported by public symbols and thei",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Math utility types are supported by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:049.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'Animation' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:050.heading"
     },
     {
@@ -919,63 +732,16 @@
         "public_symbol:stepmode",
         "public_symbol:weightedmode"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table describes animation types with accurate details supported by public symbols and their do",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Animation types are supported by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:051.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'Format I/O' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:052.heading"
     },
     {
@@ -986,71 +752,24 @@
         "public_symbol:filesystem",
         "public_symbol:ioextension"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Table describes format I/O base types with accurate descriptions supported by public symbols a",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Format I/O base types are supported by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:053.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'OBJ Format' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:054.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "public_symbol:scene.open",
-        "public_symbol:scene.save"
+        "public_symbol:fileformat",
+        "public_symbol:filesystem"
       ],
       "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:055.table"
@@ -1059,141 +778,47 @@
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'GLTF Format' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:056.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:scene.open",
-        "public_symbol:scene.save"
+        "public_symbol:fileformat",
+        "public_symbol:filesystem"
       ],
-      "rationale": "Table describes glTF-specific types with accurate descriptions supported by public symbols and their documented behavior.",
+      "rationale": "GLTF-specific types are covered by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:057.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading 'STL Format' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:058.heading"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:scene.open",
-        "public_symbol:scene.save"
+        "public_symbol:fileformat",
+        "public_symbol:filesystem"
       ],
-      "rationale": "Table describes STL-specific types with accurate descriptions supported by public symbols and their documented behavior.",
+      "rationale": "STL-specific types are covered by public symbols and belong in API reference.",
       "unit_id": "inherited_unit:059.table"
     },
     {
-      "destination_section": null,
-      "disposition": "OMIT_UNSUPPORTED",
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "rationale": "Heading introduces 3MF types but no corresponding public symbols or table follow; no supporting evidence for inclusion.",
+      "rationale": "Section heading '3MF Format' is superseded by API reference's automatically generated heading.",
       "unit_id": "inherited_unit:060.heading"
     },
     {
@@ -1201,70 +826,19 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:scene",
-        "public_symbol:node",
-        "public_symbol:mesh",
-        "public_symbol:property",
-        "public_symbol:propertycollection",
-        "public_symbol:customobject",
-        "dependency:development.adm-zip"
+        "public_symbol:assetinfo",
+        "public_symbol:imagerenderoptions"
       ],
-      "rationale": "Tables listing 3MF classes and their descriptions are supported by public symbols and dependency facts.",
+      "rationale": "Lists 3MF-related classes and their descriptions; facts confirm these classes exist and are part of the public surface.",
       "unit_id": "inherited_unit:061.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading for FBX format is superseded by the API reference section which lists all supported formats.",
       "unit_id": "inherited_unit:062.heading"
     },
     {
@@ -1272,67 +846,19 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:scene",
-        "public_symbol:node",
-        "public_symbol:mesh",
-        "public_symbol:fileformat"
+        "public_symbol:assetinfo",
+        "public_symbol:imagerenderoptions"
       ],
-      "rationale": "FBX importer/exporter classes and options are supported by public symbols and file format capabilities.",
+      "rationale": "Lists FBX-related classes and their descriptions; facts confirm these classes exist and are part of the public surface.",
       "unit_id": "inherited_unit:063.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading for COLLADA format is superseded by the API reference section which lists all supported formats.",
       "unit_id": "inherited_unit:064.heading"
     },
     {
@@ -1340,68 +866,19 @@
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
         "public_symbol:scene",
-        "public_symbol:node",
-        "public_symbol:mesh",
-        "public_symbol:fileformat",
-        "dependency:xmldom"
+        "public_symbol:assetinfo",
+        "public_symbol:imagerenderoptions"
       ],
-      "rationale": "COLLADA importer/exporter classes and options are supported by public symbols and dependency facts.",
+      "rationale": "Lists COLLADA-related classes and their descriptions; facts confirm these classes exist and are part of the public surface.",
       "unit_id": "inherited_unit:065.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading for Properties System is superseded by the API reference section which lists all public symbols.",
       "unit_id": "inherited_unit:066.heading"
     },
     {
@@ -1413,63 +890,16 @@
         "public_symbol:property",
         "public_symbol:propertycollection"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. Property system classes are directly supported by public symbols and capabilities.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists Property system classes and their descriptions; facts confirm these classes exist and ar",
       "unit_id": "inherited_unit:067.table"
     },
     {
       "destination_section": "api_reference",
       "disposition": "SUPERSEDE_REDUNDANT",
       "fact_ids": [
-        "public_symbol:animationclip",
-        "public_symbol:animationclip.animations",
-        "public_symbol:animationclip.createanimationnode",
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.contains",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype",
-        "public_symbol:fileformat",
-        "public_symbol:fileformat.canexport",
-        "public_symbol:fileformat.canimport",
-        "public_symbol:fileformat.getformatbyextension",
-        "public_symbol:light",
-        "public_symbol:light.direction",
-        "public_symbol:light.lighttype",
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture",
-        "public_symbol:mesh",
-        "public_symbol:mesh.addcontrolpoint",
-        "public_symbol:mesh.controlpoints",
-        "public_symbol:mesh.createpolygon",
-        "public_symbol:mesh.triangulate",
-        "public_symbol:node",
-        "public_symbol:node.addchildnode",
-        "public_symbol:node.addentity",
-        "public_symbol:node.childnodes",
-        "public_symbol:node.entities",
-        "public_symbol:node.globaltransform",
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype",
-        "public_symbol:quaternion",
-        "public_symbol:quaternion.fromeulerangle",
-        "public_symbol:quaternion.slerp",
-        "public_symbol:quaternion.tostring",
-        "public_symbol:scene",
-        "public_symbol:scene.fromfile",
-        "public_symbol:scene.open",
-        "public_symbol:scene.openfrombuffer",
-        "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer",
-        "public_symbol:vertexelementuv",
-        "public_symbol:vertexelementuv.mappingmode",
-        "public_symbol:vertexelementuv.uvdata"
+        "identity:ecosystem"
       ],
-      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "rationale": "Section heading for Asset Info is superseded by the API reference section which lists all public symbols.",
       "unit_id": "inherited_unit:068.heading"
     },
     {
@@ -1479,14 +909,14 @@
         "public_symbol:assetinfo",
         "public_symbol:imagerenderoptions"
       ],
-      "rationale": "Kept in the collapsed API Reference: it lists public API members. AssetInfo and ImageRenderOptions classes are directly supported by public symbols.",
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists AssetInfo and ImageRenderOptions classes; facts confirm these classes exist and are part",
       "unit_id": "inherited_unit:069.table"
     },
     {
       "destination_section": null,
       "disposition": "OMIT_UNSUPPORTED",
       "fact_ids": [],
-      "rationale": "HTML closing tag is non-content and serves no purpose in the generated README.",
+      "rationale": "HTML comment closing tag is non-functional and adds no value to the documentation.",
       "unit_id": "inherited_unit:070.html_block"
     },
     {
@@ -1498,26 +928,26 @@
         "link_target:019",
         "link_target:020"
       ],
-      "rationale": "The heading introduces documentation links that are verified and placed in documentation_resources.",
+      "rationale": "Moves the heading to the documentation_resources section where the links are placed.",
       "unit_id": "inherited_unit:071.heading"
     },
     {
       "destination_section": "documentation_resources",
-      "disposition": "VERIFIED_MOVE",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "link_target:017",
         "link_target:018",
         "link_target:019",
         "link_target:020"
       ],
-      "rationale": "Kept in documentation_resources: a list of resource links, not scope_limitations. Kept in scope_limitations: documentation_resources prints nothing from a place",
+      "rationale": "Lists verified documentation and resource links; all links are supported by facts.",
       "unit_id": "inherited_unit:072.list"
     },
     {
       "destination_section": "scope_limitations",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "The heading introduces limitations that are verified and placed in scope_limitations.",
+      "rationale": "Moves the heading to the scope_limitations section where the content is placed.",
       "unit_id": "inherited_unit:073.heading"
     },
     {
@@ -1543,7 +973,7 @@
         "public_symbol:vertexelement.clear",
         "public_symbol:vertexelement.setindices"
       ],
-      "rationale": "All listed limitations are supported by public symbols and confirmed in the accepted investigation.",
+      "rationale": "Lists material limitations confirmed by facts and inherited units.",
       "unit_id": "inherited_unit:074.list"
     },
     {
@@ -1552,21 +982,24 @@
       "fact_ids": [
         "link_target:product.enterprise"
       ],
-      "rationale": "Mention of Enterprise Edition is valuable context and not contradicted by facts.",
+      "rationale": "Moves the paragraph to the enterprise_relationship section where it relates FOSS scope to Enterprise Edition.",
       "unit_id": "inherited_unit:075.paragraph"
     },
     {
       "destination_section": "development_testing",
       "disposition": "VERIFIED_MOVE",
       "fact_ids": [],
-      "rationale": "The heading introduces development steps that are verified and placed in development_testing.",
+      "rationale": "Moves the heading to the development_testing section where the content is placed.",
       "unit_id": "inherited_unit:076.heading"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [],
-      "rationale": "The paragraph introduces the test commands that are verified and placed in development_testing.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "build_test_asset:test-command"
+      ],
+      "rationale": "Paragraph introduces the build and test commands; facts confirm these commands are supported.",
       "unit_id": "inherited_unit:077.paragraph"
     },
     {
@@ -1576,14 +1009,18 @@
         "build_test_asset:build-command",
         "build_test_asset:test-command"
       ],
-      "rationale": "The code block matches the verified build and test commands and is placed in development_testing.",
+      "rationale": "Code block matches the verified build and test commands; development_testing is the appropriate section.",
       "unit_id": "inherited_unit:078.code_block"
     },
     {
       "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
-      "fact_ids": [],
-      "rationale": "The paragraph introduces type-check and lint commands that are verified and placed in development_testing.",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:build-command",
+        "dependency:development.eslint",
+        "dependency:development.typescript"
+      ],
+      "rationale": "Paragraph introduces type-check and lint commands; facts confirm these commands and dependencies are supported.",
       "unit_id": "inherited_unit:079.paragraph"
     },
     {
@@ -1591,18 +1028,20 @@
       "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
         "build_test_asset:build-command",
-        "build_test_asset:test-command"
+        "dependency:development.eslint",
+        "dependency:development.typescript"
       ],
-      "rationale": "The typecheck and lint commands are supported by build_test_asset facts and placed in development_testing.",
+      "rationale": "Code block matches the verified type-check and lint commands; development_testing is the appropriate section.",
       "unit_id": "inherited_unit:080.code_block"
     },
     {
-      "destination_section": "development_testing",
-      "disposition": "VERIFIED_MOVE",
+      "destination_section": "enterprise_relationship",
+      "disposition": "VERIFIED_PRESERVE",
       "fact_ids": [
-        "link_target:022"
+        "link_target:022",
+        "link_target:product.enterprise"
       ],
-      "rationale": "The AGENTS.md link is a verified development resource and fits in the development/testing section.",
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
       "unit_id": "inherited_unit:081.paragraph"
     },
     {
@@ -1611,7 +1050,7 @@
       "fact_ids": [
         "license:spdx"
       ],
-      "rationale": "The '## License' heading is superseded by the deterministic license section.",
+      "rationale": "The '## License' heading is superseded by the deterministic license section which renders from the license fact.",
       "unit_id": "inherited_unit:082.heading"
     },
     {
@@ -1620,7 +1059,7 @@
       "fact_ids": [
         "license:spdx"
       ],
-      "rationale": "Superseded by the License section, which states the license from facts. The license description is factually correct and adds value beyond the SPDX fact alone.",
+      "rationale": "Superseded by the License section, which states the license from facts. The license description matches the MIT license fact and adds useful detail about permis",
       "unit_id": "inherited_unit:083.paragraph"
     }
   ]

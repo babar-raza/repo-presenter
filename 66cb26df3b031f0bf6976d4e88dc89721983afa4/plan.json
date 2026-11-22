@@ -36,19 +36,48 @@
     {
       "fact_ids": [
         "public_symbol:animationclip",
+        "public_symbol:animationclip.animations",
         "public_symbol:animationclip.createanimationnode",
-        "public_symbol:animationclip.animations"
+        "public_symbol:animationclip.scene"
       ],
       "symbol_fact_id": "public_symbol:animationclip"
     },
     {
       "fact_ids": [
         "public_symbol:fileformat",
-        "public_symbol:fileformat.canimport",
         "public_symbol:fileformat.canexport",
+        "public_symbol:fileformat.canimport",
         "public_symbol:fileformat.getformatbyextension"
       ],
       "symbol_fact_id": "public_symbol:fileformat"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:camera",
+        "public_symbol:camera.projectiontype",
+        "public_symbol:camera.fieldofview",
+        "public_symbol:camera.nearplane",
+        "public_symbol:camera.farplane"
+      ],
+      "symbol_fact_id": "public_symbol:camera"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:light",
+        "public_symbol:light.lighttype",
+        "public_symbol:light.direction",
+        "public_symbol:light.fieldofview"
+      ],
+      "symbol_fact_id": "public_symbol:light"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:pbrmaterial",
+        "public_symbol:pbrmaterial.albedo",
+        "public_symbol:pbrmaterial.metallicfactor",
+        "public_symbol:pbrmaterial.roughnessfactor"
+      ],
+      "symbol_fact_id": "public_symbol:pbrmaterial"
     },
     {
       "fact_ids": [
@@ -61,21 +90,12 @@
     },
     {
       "fact_ids": [
-        "public_symbol:boundingbox",
-        "public_symbol:boundingbox.minimum",
-        "public_symbol:boundingbox.maximum",
-        "public_symbol:boundingbox.contains"
+        "public_symbol:matrix4",
+        "public_symbol:matrix4.identity",
+        "public_symbol:matrix4.translate",
+        "public_symbol:matrix4.rotate"
       ],
-      "symbol_fact_id": "public_symbol:boundingbox"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:property",
-        "public_symbol:property.name",
-        "public_symbol:property.value",
-        "public_symbol:property.valuetype"
-      ],
-      "symbol_fact_id": "public_symbol:property"
+      "symbol_fact_id": "public_symbol:matrix4"
     },
     {
       "fact_ids": [
@@ -87,27 +107,12 @@
     },
     {
       "fact_ids": [
-        "public_symbol:material",
-        "public_symbol:material.gettexture",
-        "public_symbol:material.settexture"
+        "public_symbol:property",
+        "public_symbol:property.name",
+        "public_symbol:property.value",
+        "public_symbol:property.valuetype"
       ],
-      "symbol_fact_id": "public_symbol:material"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:camera",
-        "public_symbol:camera.fieldofview",
-        "public_symbol:camera.projectiontype"
-      ],
-      "symbol_fact_id": "public_symbol:camera"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:light",
-        "public_symbol:light.lighttype",
-        "public_symbol:light.direction"
-      ],
-      "symbol_fact_id": "public_symbol:light"
+      "symbol_fact_id": "public_symbol:property"
     }
   ],
   "at_a_glance": {
@@ -172,9 +177,9 @@
     {
       "fact_ids": [
         "public_symbol:animationclip",
-        "public_symbol:animationnode",
         "public_symbol:animationchannel",
         "public_symbol:keyframesequence",
+        "public_symbol:keyframe",
         "public_symbol:interpolation"
       ],
       "shared_fact_ids": [],
@@ -184,20 +189,20 @@
       "fact_ids": [
         "public_symbol:fileformat",
         "public_symbol:scene.fromfile",
-        "public_symbol:scene.openfrombuffer",
+        "public_symbol:scene.open",
         "public_symbol:scene.save",
-        "public_symbol:scene.savetobuffer"
+        "public_symbol:filesystem"
       ],
       "shared_fact_ids": [],
       "title": "Format I/O"
     },
     {
       "fact_ids": [
+        "public_symbol:fvector2",
         "public_symbol:fvector3",
-        "public_symbol:fmatrix4",
-        "public_symbol:quaternion",
-        "public_symbol:mathutils",
-        "public_symbol:boundingbox"
+        "public_symbol:fvector4",
+        "public_symbol:matrix4",
+        "public_symbol:quaternion"
       ],
       "shared_fact_ids": [],
       "title": "Math utilities"
@@ -206,9 +211,8 @@
       "fact_ids": [
         "public_symbol:property",
         "public_symbol:propertycollection",
-        "public_symbol:a3dobject.findproperty",
-        "public_symbol:a3dobject.getproperty",
-        "public_symbol:a3dobject.setproperty"
+        "public_symbol:sceneobject",
+        "public_symbol:inamedobject"
       ],
       "shared_fact_ids": [],
       "title": "Property system"
@@ -219,100 +223,19 @@
       "fact_ids": [
         "identity:ecosystem"
       ],
-      "section_id": "at_a_glance",
-      "text": "No input or output format IDs are included because the formats field contains no verified input or output format facts."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
       "section_id": "quick_start",
-      "text": "No verified examples exist; the examples field lists no selectable IDs."
+      "text": "No verified example is available; Quick Start section is omitted per the plan."
     },
     {
       "fact_ids": [
         "identity:ecosystem"
       ],
       "section_id": "additional_examples",
-      "text": "No further verified examples exist; the examples field lists no selectable IDs."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:camera"
-      ],
-      "section_id": "api_reference",
-      "text": "The table for Camera in the inherited README incorrectly lists apertureMode as a property; this table is omitted entirely per the disposition."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:scene",
-        "public_symbol:node",
-        "public_symbol:mesh",
-        "public_symbol:property",
-        "public_symbol:propertycollection",
-        "public_symbol:customobject",
-        "dependency:development.adm-zip"
-      ],
-      "section_id": "api_reference",
-      "text": "The 3MF format section heading and table are preserved in api_reference per the disposition."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:scene",
-        "public_symbol:node",
-        "public_symbol:mesh",
-        "public_symbol:fileformat",
-        "dependency:xmldom"
-      ],
-      "section_id": "api_reference",
-      "text": "The FBX and COLLADA format tables are preserved in api_reference per the disposition."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:a3dobject",
-        "public_symbol:customobject",
-        "public_symbol:property",
-        "public_symbol:propertycollection",
-        "public_symbol:assetinfo",
-        "public_symbol:imagerenderoptions"
-      ],
-      "section_id": "api_reference",
-      "text": "The Properties System and Asset Info tables are preserved in api_reference per the disposition."
-    },
-    {
-      "fact_ids": [
-        "identity:ecosystem"
-      ],
-      "section_id": "api_reference",
-      "text": "The HTML closing tag is omitted as non-content."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:camera"
-      ],
-      "section_id": "api_reference",
-      "text": "The Camera table entry is omitted entirely per the disposition."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:scene",
-        "public_symbol:node",
-        "public_symbol:mesh",
-        "public_symbol:property",
-        "public_symbol:propertycollection",
-        "public_symbol:customobject",
-        "dependency:development.adm-zip"
-      ],
-      "section_id": "api_reference",
-      "text": "The 3MF heading and table are preserved in api_reference per the disposition."
+      "text": "No further verified examples are available; Additional Examples section is omitted per the plan."
     }
   ],
   "flagship_example_id": null,
   "links": [
-    {
-      "link_fact_id": "link_target:006",
-      "section_id": "identity"
-    },
     {
       "link_fact_id": "link_target:017",
       "section_id": "documentation_resources"
@@ -328,6 +251,22 @@
     {
       "link_fact_id": "link_target:020",
       "section_id": "documentation_resources"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:005",
+      "section_id": "banner"
+    },
+    {
+      "link_fact_id": "link_target:022",
+      "section_id": "enterprise_relationship"
     }
   ],
   "material_limitations": [],
