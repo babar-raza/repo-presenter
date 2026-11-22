@@ -5,7 +5,7 @@
   "provider_repository_id": 1345974189,
   "registry_revision": null,
   "active_transaction_id": "898eb50d67d64580a4eb78f5c76e7752",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-22T17:01:46.760377+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-22T18:00:10.444731+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 5
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 93,
+  "state_version": 94,
   "recent_trigger_dedup_keys": {
     "run:41304473088:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "f2dd0b321c364d5f8a3b3aaa734b701e",
     "run:42685713384:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "3b81377c7b004742bf823317e960e501",
@@ -68,5 +68,5 @@
     "run:44959557965:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "59d677351d37457c943df3488f1c12e0",
     "run:44967388128:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "898eb50d67d64580a4eb78f5c76e7752"
   },
-  "recovery_count": 4
+  "recovery_count": 5
 }
