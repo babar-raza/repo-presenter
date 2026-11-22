@@ -8487,3 +8487,40 @@ What the owner sets (nothing is set today, so the write job cannot run): reposit
 Hosted-unproven (R41): no propose run has happened; the first is a dry run request.
 
 Backlog: BL-730, BL-731, BL-732, BL-733
+
+## 2026-11-22: supervisor execution bridge, liveness dead-man, read-only metadata audit and the Docker cold-runner proof (WP-7, WP-9, WP-10; BL-770 to BL-773)
+
+Context. R50 (whole product) and R49 (deploy by 2026-11-22) call for every idea.md component on the runner. The component inventory
+(docs/investigations/2026-11-22-component-inventory.md) found the supervisor tick observe-only (BL-027), the old project's liveness
+dead-man unported, repository metadata with no audit, and the Docker job's evidence unrecorded. Measured: supervisor-tick scheduled runs
+are 5 to 9 hours apart on this repository (44855457923, 44897932788, 44933071832, 44961494269), so cron punctuality cannot be assumed (R37).
+
+Decision (WP-7, R37 and the Final Directive; R27 recorded as satisfied by R37/R50 for this one mechanism). The smallest bridge is not a new
+engine: `present.yml`'s cohort job already plans (authorization gate, six cells, budget reservation, dispatch). The tick gains two jobs.
+`bridge-plan` runs `scripts/supervisor_bridge.py` (zero provider calls): the planner's due cells, the ledger's leases and the policy flag.
+`bridge-dispatch` runs only when that decision is `dispatch` and calls the cohort job exactly as `cohort-chain.yml` does, which re-runs
+`scripts/scheduled_execution_gate.py`; the bridge therefore adds no spend path and is gated twice by `data/scheduled_execution_policy.json`
+`scheduled_execution_authorized` (today false on main, so the bridge reports and previews, dispatches nothing). Plan 8.4's lease semantic is
+mapped onto the durable ledger: a lease is an unsettled, unexpired reservation; an expired one is recovered (the planner already re-selects
+the cell); due work with no live lease for over 60 minutes is reported as a stall. Budgets measure and never hold it (R45). The run request
+`{"job": "bridge"}` runs the same decision as a zero-call dry run and shows the exact `run-request.json` of the next planned run, which is how
+a supervisor proves it hosted (a branch push by GITHUB_TOKEN would not fire the run-request workflow, so the tick dispatches through the
+reusable workflow, not through a request branch). Alternatives rejected: (a) the tick pushing `run-requests/*` (GITHUB_TOKEN pushes trigger no
+workflow); (b) a scheduled Claude session (needs a session platform, not the runner). Not done: the gatecli card-lease half (dispatch-next,
+worker-tick) still reports only; the plan 8.4 end-to-end proof (lease, work, verify, next lease, kill and expiry recovery) is hosted-unproven.
+
+Decision (BL-771). `.github/workflows/liveness.yml` ported from the old project's liveness.yml (read-only, own cron plus chaining off completed
+tick and present runs, notices for stale PRs and stranded branches), with the dead-man proper added: red when supervisor-tick has no success for
+12 hours (notice at 3).
+
+Decision (WP-9, BL-772). `src/repo_presenter/monitor/metadata_audit.py` ports only the observation half of the old components/metadata
+(capture, proposal's read side): GET repo, community profile and default-branch tree for every active repository; findings per check;
+an unreadable input is `unknown`, never a pass; the write half (apply, preservation) is not ported (R3, R15, R22). The social preview is not
+observable through REST and is not counted. Run through `metadata-audit.yml` (weekly, dispatch, run-request `metadata-audit`); report = job
+summary and artifact. This session cannot read the 40 repositories (HTTP 403), so the report needs one hosted run.
+
+Decision (WP-10, BL-773 for BL-047/BL-048). The ci.yml docker job already built the image and ran the CLI with and without network on a fresh
+runner (run 44985165297, job 137094030010); it now builds with `--no-cache` and asserts the container's facts manifest and digest instead of only
+a non-empty file. BL-047's zero-call rerun of an unchanged sealed cell remains the recertify path.
+
+Backlog: BL-770, BL-771, BL-772, BL-773, BL-027, BL-047, BL-048

@@ -13,6 +13,8 @@ This session's GitHub access cannot dispatch workflows (HTTP 403) but can push. 
     {"job": "count"}
     {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "R"}
     {"job": "propose", "repository": "owner/name", "ecosystem": "rust", "lane": "L", "dry_run": false}
+    {"job": "bridge"}
+    {"job": "metadata-audit"}
     {"job": "audit-seed"}
     {"job": "audit-score", "seed_run_id": "43217648963",
      "findings_path": "evidence/build/GATE5_DELIVERY_PROGRAM/M9_AUDIT/findings-43217648963.json"}
@@ -119,7 +121,7 @@ from typing import Any
 
 REQUEST_FILE = "run-request.json"
 AUDIT_JOBS = ("audit-seed", "audit-score", "acceptance-write", "audit-settle", "audit-abandon")
-JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", "propose", *AUDIT_JOBS}
+JOBS = {"present", "mint", "recertify", "cohort", "issues", "count", "propose", "bridge", "metadata-audit", *AUDIT_JOBS}
 LANES = {"R", "L", "both"}
 TRIGGER_WORKFLOW = ".github/workflows/run-request.yml"
 BRANCH_PREFIX = "run-requests/"
@@ -409,6 +411,17 @@ def validate(
         if set(request) != {"job"}:
             raise RequestError("a count request takes no other field (it counts the whole portfolio)")
         return {"job": "count", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "bridge":
+        # BL-770 (WP-7): one zero-call dry run of the supervisor execution bridge (scripts/supervisor_bridge.py
+        # --dry-run): what is due, the leases, and the exact run-request.json it would dispatch. Read-only.
+        if set(request) != {"job"}:
+            raise RequestError("a bridge request takes no other field (the planner picks the cells)")
+        return {"job": "bridge", "repository": "", "ecosystem": "", "lane": ""}
+    if job == "metadata-audit":
+        # BL-772 (WP-9): the read-only metadata audit of every active repository (metadata-audit.yml).
+        if set(request) != {"job"}:
+            raise RequestError("a metadata-audit request takes no other field (it audits the whole registry)")
+        return {"job": "metadata-audit", "repository": "", "ecosystem": "", "lane": ""}
     if job in AUDIT_JOBS:
         return _validate_audit(job, request, context)
     if job == "propose":

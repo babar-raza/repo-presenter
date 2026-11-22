@@ -421,6 +421,7 @@ items:
       - "verified 2026-11-13: no project/taskcards/TC-032.yaml exists; supervisor-tick scheduled fires observed 2026-11-12T20:51Z, 11-13T01:52Z, 11-13T09:36Z (hourly cron, irregular)"
     depends_on: [BL-011]
     next_action: "decide under R27 the smallest bridge (scheduled agent session reading backlog next-eligible + gatecli leases)"
+    progress: "2026-11-22: smallest bridge built as BL-770 (supervisor-tick bridge-plan and bridge-dispatch jobs, scripts/supervisor_bridge.py) and the dead-man as BL-771; the card-lease side (gatecli dispatch-next, worker-tick) still reports only; hosted proof pending"
 
   - id: BL-028
     title: "R17 sandbox proof of upstream-write mechanics (draft PR, duplicate refusal) before R15 holds"
@@ -659,6 +660,7 @@ items:
     acceptance: "a hosted run's facts for a real product produced inside the container, run id recorded"
     evidence: ["verified 2026-11-13: present.yml runs docker canary proofs with --network none (lines 559-591); TC-021 ACCEPTED"]
     next_action: "ASSUMPTION: canaries prove isolation, not the facts stage; confirm from a hosted run log"
+    progress: "2026-11-22 (BL-773): ci.yml docker job already runs the networked facts stage in the container for a real product; hosted run 44985165297 job 137094030010 printed facts aspose-words-foss/Aspose.Words-FOSS-for-Python@2d2efee2787cb9e56d071d17f8d7b740dce8b784 sha256 27beea87ef42445ffc40b91f28fc4fbf6c3855fb810d9219cb98b8cfb1b5febb"
 
   # ---------------- standing invariants (continuous; never closed) ----------------
   - id: BL-049
@@ -3436,4 +3438,59 @@ items:
     acceptance: "one name per effect across code and workflows, enforced by a test"
     evidence:
       - "tests/test_propose_workflow.py::test_the_kill_switch_names_agree_between_code_and_workflows and ::test_no_workflow_code_or_test_still_uses_the_old_project_variable_prefix pass; tests/propose, tests/candidates_publish and tests/issues unchanged and green"
+    updated: "2026-11-22"
+
+  - id: BL-770
+    title: "WP-7 supervisor execution bridge: the hourly supervisor-tick dispatches the next planned cohort when the planner says work is due and nothing is in flight (closes BL-027's 'tick only observes')"
+    type: gap
+    source: "owner rulings R37, R45, R50 (2026-11-22); R8 and the Final Directive (plan 8.4); docs/investigations/2026-11-22-component-inventory.md WP-7; BL-027"
+    priority: P0
+    status: active
+    implementation_path: "scripts/supervisor_bridge.py (pure decide + lease_view, zero provider calls) run by supervisor-tick.yml's bridge-plan job; its bridge-dispatch job (only when action is dispatch) calls present.yml's cohort job as cohort-chain.yml does, which re-runs scripts/scheduled_execution_gate.py, reserves budget and dispatches; run-request job `bridge` is the zero-call hosted dry run"
+    acceptance: "(1) dispatch only when data/scheduled_execution_policy.json scheduled_execution_authorized is true AND a cell is due AND no cohort lease is live AND not dry run (tests/test_supervisor_bridge.py); (2) plan 8.4 lease semantic: lease = unsettled unexpired ledger reservation, expired lease recovered, due work with no live lease past 60 minutes reported as a stall; (3) budgets never block (R45); (4) hosted evidence: a supervisor-tick run showing the bridge-plan decision and a run-request `bridge` run id"
+    evidence:
+      - "2026-11-22: tests/test_supervisor_bridge.py (12 tests) pass; tests/test_supervisor_tick_bl111.py, tests/test_cohort_chain.py, tests/test_run_request.py still pass"
+      - "2026-11-22: data/scheduled_execution_policy.json on main reads scheduled_execution_authorized false, so the bridge's action is none (preview of the next run-request.json only) until the owner/supervisor authorizes scheduled execution"
+    depends_on: [BL-027]
+    next_action: "supervisor merges and pushes a run-requests/<id> branch holding {\"job\": \"bridge\"} to record the hosted dry-run run id; authorizing scheduled execution is a separate owner/supervisor decision"
+    updated: "2026-11-22"
+
+  - id: BL-771
+    title: "WP-7 liveness dead-man ported from the old project (out-of-band observer of supervisor-tick and the present heartbeat)"
+    type: gap
+    source: "inventory C9 ('old liveness.yml dead-man not ported'); R37, R50; migration/reuse-manifest.yaml"
+    priority: P1
+    status: active
+    implementation_path: ".github/workflows/liveness.yml: own cron plus workflow_run of supervisor-tick and present; red only when blind, when supervisor-tick has no success for 12 hours, or when main is quiet during a declared sprint; stale heartbeat over 3 hours, stale PRs and stranded branches are notices"
+    acceptance: "workflow runs green on the hosted runner with a heartbeat table in its summary; a tick older than the dead limit makes it red (tests/test_supervisor_bridge.py pins the shape and read-only scopes)"
+    evidence:
+      - "2026-11-22: measured on this repository: supervisor-tick scheduled runs 44855457923, 44897932788, 44933071832, 44961494269 are 5 to 9 hours apart (cron silently deprioritized), the failure the dead-man exists to report"
+    next_action: "first hosted run after merge (workflow_dispatch or the 2-hourly cron); record its run id here"
+    updated: "2026-11-22"
+
+  - id: BL-772
+    title: "WP-9 read-only repository metadata audit over all 40 repositories (description, topics, license, community files, visual assets); no write path"
+    type: gap
+    source: "inventory C16/WP-9; R50; plans/idea.md 'Central Agent' and 'Visual Assets'"
+    priority: P2
+    status: active
+    implementation_path: "src/repo_presenter/monitor/metadata_audit.py (GET only: repo, community profile, default-branch tree) run by metadata-audit.yml (weekly, dispatch, run-request `metadata-audit`); report is the job summary and the metadata-audit-report artifact; apply/preservation (the write half of the old components/metadata) deliberately not ported"
+    acceptance: "a hosted run produces JSON and markdown for every active repository with per-check failing and unknown counts; an unreadable input is unknown, never a pass; no PATCH/PUT/POST/DELETE exists in the module (tests/monitor/test_metadata_audit.py)"
+    evidence:
+      - "2026-11-22: tests/monitor/test_metadata_audit.py (5 tests) pass offline; a local run against api.github.com returns HTTP 403 (this session has no read access to the 40 repositories), recorded as 'not observed', so the 40-repository report needs the hosted run"
+    next_action: "supervisor pushes a run-request {\"job\": \"metadata-audit\"} (or dispatches metadata-audit.yml) and records the run id and the report; the social preview image is not observable through the REST API and stays a manual-UI check"
+    updated: "2026-11-22"
+
+  - id: BL-773
+    title: "WP-10 Docker cold-runner proof: the ci.yml docker job builds the image with no cache and runs the CLI with and without network; its facts artifact is checked, not only non-empty"
+    type: gap
+    source: "BL-047, BL-048; P5; mission matrix G6; inventory WP-10; R49"
+    priority: P2
+    status: active
+    implementation_path: ".github/workflows/ci.yml docker job: build --no-cache, --help and git with no network, fail-closed facts stage (rc 3), real-network facts stage for aspose-words-foss/Aspose.Words-FOSS-for-Python, new step asserting the container's facts-manifest.json (repository, ecosystem, 40-hex revision) agrees with the sha256 of facts.json and printing the line to the job summary"
+    acceptance: "a hosted ci.yml run on this change whose docker job passes every step including the new assertion step; run id recorded"
+    evidence:
+      - "ci.yml docker job, unchanged part, hosted: run 44985165297 (push to main, job 137094030010, success, 43 s, no CACHED layer in the log, apt-get ran 7.3 s, network step printed 'facts: aspose-words-foss/Aspose.Words-FOSS-for-Python@2d2efee2787cb9e56d071d17f8d7b740dce8b784 sha256 27beea87ef42445ffc40b91f28fc4fbf6c3855fb810d9219cb98b8cfb1b5febb'); run 44992589405 docker job 137116680792 success"
+    depends_on: [BL-047, BL-048]
+    next_action: "PR CI run of this change is the closing evidence for the new step; BL-047's unchanged-sealed-cell zero-call rerun on a fresh runner remains the recertify path (see BL-047)"
     updated: "2026-11-22"
