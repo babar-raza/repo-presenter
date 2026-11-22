@@ -104740,6 +104740,7 @@
         "docstring": "Constants for change types returned by DocumentComparison.",
         "docstring_full": "Constants for change types returned by DocumentComparison. Each constant represents a category of change detected during comparison: - ``ADDED``: Content present in the second document but not the first - ``DELETED``: Content present in the first document but not the second - ``MODIFIED``: Content present in both documents but with differences - ``ADDED_PAGE``: A page exists only in the second document - ``DELETED_PAGE``: A page exists only in the first document - ``MODIFIED_PAGE``: A page exists in both but differs (text or visual)",
         "member_count": "6",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "members": "ADDED, DELETED, MODIFIED, ADDED_PAGE, DELETED_PAGE, MODIFIED_PAGE",
         "public_paths": "aspose_pdf.comparison.ChangeType",
         "signature": "class ChangeType",
@@ -115145,6 +115146,7 @@
     {
       "attributes": {
         "member_count": "4",
+        "member_counts": "method=1,dunder=0,init=0,property=0,field=0,inherits=0",
         "members": "UTF8, UTF16, LATIN1, WIN_ANSI",
         "signature": "class Encoding",
         "symbol_kind": "class"
@@ -125620,6 +125622,7 @@
         "docstring_full": "Native Python PDF document representation. Fields: pages: List of MediaBox tuples (x0, y0, x1, y1) page_contents: List of bytes (content streams) images: Dict mapping image name -> image bytes metadata: Dict of document metadata encrypted: Whether document is encrypted password: Document password if encrypted",
         "fields": "pages, page_contents, images, metadata, encrypted, password, O, U, P, encryption_key, encryption_algorithm, signature, signing_creds, pades, certify_permissions, extra_certs, timestamp_url, timestamp_tsa, timestamp_timeout, attachments, attachment_meta, attachment_read_meta, fonts, extgstates, signatures, pdf_version, file_id",
         "member_count": "2",
+        "member_counts": "method=138,dunder=2,init=0,property=3,field=27,inherits=0",
         "members": "MIN_MMAP_SIZE, RESIZE_MODES",
         "signature": "class SimplePdf",
         "symbol_kind": "class"
@@ -146593,6 +146596,7 @@
         "docstring": "What a reader may do with an encrypted document: ``/P``, with names.",
         "docstring_full": "What a reader may do with an encrypted document: ``/P``, with names. An ``int`` subclass, so it goes anywhere the raw value went and compares equal to it. Build one with :meth:`all`, :meth:`none`, :meth:`allowing` or :meth:`denying`, adjust it with :meth:`with_` and :meth:`without`, and ask it what it allows with the ``can_*`` properties or :meth:`allows`. The eight class constants are Table 22's bit **values**, so ``Permissions.PRINT == 4``. They are inputs to the constructors above rather than values to OR together by hand -- ORing two of them loses the reserved bits, which is the mistake this class exists to make impossible. Two bits are not independent of each other. ``print_high_resolution`` (bit 12) qualifies ``print`` (bit 3): granted alone it grants no printing, which is how qpdf reads it, so a document meant to be printed properly allows **both**. ``Permissions.denying(\"print\")`` likewise leaves bit 12 set and still forbids printing, which is what the bits mean. Revision matters for what a reader honours: under the old ``/R 2`` only bits 3 to 6 are defined, so denying only ``assemble`` or ``accessibility`` has no effect in a document encrypted that way. This library writes ``/R 4`` or ``/R 6`` unless RC4 is asked for.",
         "member_count": "9",
+        "member_counts": "method=11,dunder=1,init=0,property=13,field=0,inherits=1",
         "members": "PRINT, MODIFY, COPY, ANNOTATE, FILL_FORMS, ACCESSIBILITY, ASSEMBLE, PRINT_HIGH_RESOLUTION, GRANTS",
         "public_paths": "aspose_pdf.permissions.Permissions",
         "signature": "class Permissions(int)",
@@ -147362,6 +147366,7 @@
       "attributes": {
         "docstring": "Fill mode enumeration for path operations.",
         "member_count": "2",
+        "member_counts": "method=0,dunder=0,init=0,property=0,field=0,inherits=0",
         "members": "ALTERNATE, WINDING",
         "signature": "class FillMode",
         "symbol_kind": "class"
