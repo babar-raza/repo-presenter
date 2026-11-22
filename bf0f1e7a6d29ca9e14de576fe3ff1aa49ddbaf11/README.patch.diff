@@ -1,18 +1,19 @@
 --- a/README.md
 +++ b/README.md
-@@ -1,8 +1,10 @@
+@@ -1,10 +1,10 @@
  # Aspose.HTML FOSS for Python
  
 -[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-html-foss/Aspose.HTML-FOSS-for-Python.svg)](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/graphs/contributors)
 +![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Contributors](https://img.shields.io/github/contributors/aspose-html-foss/Aspose.HTML-FOSS-for-Python.svg)](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/graphs/contributors)
  
  [![Aspose.HTML FOSS for Python](https://products.aspose.org/media/html/python/banner-readme.png)](https://products.aspose.org/html/python/)
-+
-+It reads HTML input and constructs a DOM tree using `aspose_html.HTMLDocument.parse`, `aspose_html.HTMLDocument.parse_fragment`, and `aspose_html.HTMLDocument.load`. It applies `CSS` styles via `aspose_html.cssom.CSSStyleSheet` and computes styles using `aspose_html.dom.Element.get_computed_style`. It matches selectors with `aspose_html.css.select` and `aspose_html.css.element_matches`, and serializes the DOM using `aspose_html.serialise` and `aspose_html.serialiser.outer_html`. It parses URLs and manipulates query parameters using `aspose_html.url.URL` and `aspose_html.url.URLSearchParams`, and detects encoding from byte streams using `aspose_html.encoding.detect_encoding`. It evaluates JavaScript against the DOM using `aspose_html.js.JSContext` and `aspose_html.js.ModuleRegistry`.
  
- Aspose.HTML FOSS for Python is a free, open-source, MIT-licensed Python toolkit for parsing HTML into a standards-based DOM tree, applying CSS, and serializing markup back out. It provides WHATWG-style `HTMLDocument`/`Document`/`Element` APIs, CSS selector matching and CSSOM-based computed-style resolution, WHATWG `URL`/`URLSearchParams` handling, and byte-stream encoding detection, with an optional QuickJS-backed JavaScript execution bridge for running scripts against the parsed DOM.
+-Aspose.HTML FOSS for Python is a free, open-source, MIT-licensed Python toolkit for parsing HTML into a standards-based DOM tree, applying CSS, and serializing markup back out. It provides WHATWG-style `HTMLDocument`/`Document`/`Element` APIs, CSS selector matching and CSSOM-based computed-style resolution, WHATWG `URL`/`URLSearchParams` handling, and byte-stream encoding detection, with an optional QuickJS-backed JavaScript execution bridge for running scripts against the parsed DOM.
++Aspose.HTML FOSS for Python reads and writes HTML documents through a DOM API, parses HTML source text into a document tree, and supports `CSS` styling and computed style inspection. It provides `URL` parsing and manipulation, encoding detection, and JavaScript evaluation via an optional QuickJS bridge. The product exposes low-level parsing and tokenization tools alongside high-level document construction and serialization capabilities.
  
-@@ -23,78 +25,83 @@
+ ## Navigation
+ 
+@@ -23,78 +23,77 @@
  ## At a Glance
  
  ```mermaid
@@ -29,9 +30,9 @@
 -    subgraph capl[" "]
 +    direction TB
 +    c1["Parse HTML into DOM"]
-+    c3["CSSOM styling and<br/>resolution"]
++    c3["CSSOM and computed<br/>styles"]
 +    c4["URL and encoding<br/>utilities"]
-+    c6["Serialization"]
++    c6["Tokenizer and tree<br/>construction"]
 +    c1 ~~~ c4
 +    c3 ~~~ c6
 +    subgraph cg1["Dom"]
@@ -40,7 +41,8 @@
 -      c2["DOM tree construction, traversal, and mutation"]
 -      c3["HTML element type surface (forms, tables, media, and more)"]
 -      c4["Serialization of DOM subtrees back to markup"]
-+      c2["DOM manipulation and<br/>querying"]
++      c2["DOM manipulation and<br/>traversal"]
++      c7["HTML element APIs"]
      end
 -    subgraph capr[" "]
 +    subgraph cg2["Js"]
@@ -48,21 +50,16 @@
 -      c5["CSS selector matching and CSSOM style computation"]
 -      c6["URL parsing and character-encoding detection"]
 -      c7["Optional JavaScript execution against the DOM (QuickJS)"]
-+      c5["JavaScript execution"]
++      c5["Optional JavaScript<br/>execution"]
      end
-+    subgraph cg3["Tokenizer"]
++    subgraph cg3["Serialiser"]
 +      direction TB
-+      c7["Tokenizer control"]
-+    end
-+    subgraph cg4["Layout"]
-+      direction TB
-+      c8["Layout infrastructure"]
++      c8["Serialization"]
 +    end
 +    c4 ~~~ cg1
 +    c6 ~~~ cg1
 +    cg1 ~~~ cg2
 +    cg2 ~~~ cg3
-+    cg3 ~~~ cg4
    end
 -  subgraph Outputs["Outputs"]
 -    direction TB
@@ -78,20 +75,19 @@
  
 -- Parse HTML strings, bytes, fragments, and files into a DOM document with `HTMLDocument.parse()`, `HTMLDocument.parse_fragment()`, and `HTMLDocument.load()`; the lower-level `Tokenizer` and `TreeBuilder` classes implement the WHATWG tokenization and tree-construction algorithms directly, for callers who need that level of control.
 -- Build, inspect, and mutate DOM trees — create and update nodes programmatically with `Document.create_element()` and `append_child()`; read and write element attributes, classes, datasets, inline styles, and text content; and query documents by ID, tag name, class name, and selector-oriented helpers such as `get_element_by_id()`, `get_elements_by_tag_name()`, `TreeWalker`, `NodeIterator`, and `Range`.
-+- **Parse HTML into DOM.** It parses HTML strings, bytes, fragments, and files into a DOM document with `aspose_html.HTMLDocument.parse`, `aspose_html.HTMLDocument.parse_fragment`, and `aspose_html.HTMLDocument.load`; the lower-level `aspose_html.tokenizer.Tokenizer` and `aspose_html.tree.TreeBuilder` classes implement the WHATWG tokenization and tree-construction algorithms directly, for callers who need that level of control.
-+- **DOM manipulation and querying.** It builds, inspects, and mutates DOM trees by creating and updating nodes programmatically with `aspose_html.dom.Document.create_element` and `append_child`, reading and writing element attributes, classes, datasets, inline styles, and text content, and querying documents by ID, tag name, class name, and selector-oriented helpers such as `get_element_by_id`, `get_elements_by_tag_name`, `TreeWalker`, `NodeIterator`, and `Range`.
-+- **CSSOM styling and resolution.** It matches `CSS` selectors and stylesheets against elements and resolves the cascade—specificity, inline-vs-author rules, !important, and inheritance—with `aspose_html.dom.Element.get_computed_style`; the CSSOM surface (`aspose_html.cssom.CSSStyleSheet`, `aspose_html.cssom.CSSStyleRule`, `aspose_html.cssom.CSSMediaRule`, and related rule types) models stylesheets structurally.
-+- **URL and encoding utilities.** It validates and manipulates URLs with `aspose_html.url.URL`, reads and edits query strings with `aspose_html.url.URLSearchParams`, and detects byte-stream character encodings (BOM and content sniffing) with `aspose_html.encoding.detect_encoding`.
-+- **JavaScript execution.** It executes JavaScript against a parsed DOM through `aspose_html.js.JSContext`, an optional QuickJS-backed bridge exposing DOM access to script code; requires the js extra.
-+- **Serialization.** It serializes complete documents, fragments, and individual elements back to an HTML string with the `aspose_html.serialise` function or `aspose_html.XMLSerializer`.
-+- **Tokenizer control.** It exposes low-level tokenization control through `aspose_html.tokenizer.StartTagToken`, `aspose_html.tokenizer.CommentToken`, and `aspose_html.tokenizer.DoctypeToken`, enabling callers to inspect or emit specific token types during parsing.
-+- **Layout infrastructure.** It builds and manipulates layout trees with `aspose_html.layout.BoxNode`, `aspose_html.layout.BoxRoot`, and `aspose_html.layout.PageFragment`, and provides the `aspose_html.layout.build_box_tree` and `aspose_html.layout.paginate_fragments` functions to construct and paginate box structures for rendering.
-+
- - Work with a broad set of specialized HTML element classes — `HTMLFormElement`, `HTMLInputElement`, `HTMLSelectElement`, `HTMLTableElement`, `HTMLMediaElement`, and dozens more — each exposing the element-specific properties defined by its HTML interface.
+-- Work with a broad set of specialized HTML element classes — `HTMLFormElement`, `HTMLInputElement`, `HTMLSelectElement`, `HTMLTableElement`, `HTMLMediaElement`, and dozens more — each exposing the element-specific properties defined by its HTML interface.
 -- Serialize complete documents, fragments, and individual elements back to an HTML string with the `serialise()` function or `XMLSerializer`.
 -- Match CSS selectors and stylesheets against elements and resolve the cascade — specificity, inline-vs-author rules, `!important`, and inheritance — with `Element.get_computed_style()`; the CSSOM surface (`CSSStyleSheet`, `CSSStyleRule`, `CSSMediaRule`, and related rule types) models stylesheets structurally.
 -- Validate and manipulate URLs with `URL`, read and edit query strings with `URLSearchParams`, and detect byte-stream character encodings (BOM and content sniffing) with `detect_encoding()`.
 -- Execute JavaScript against a parsed DOM through `JSContext`, an optional QuickJS-backed bridge exposing `document.querySelector`, `window.getComputedStyle`, and similar read-only DOM proxies to script code; requires the `js` extra.
++- **Parse HTML into DOM.** Parse HTML strings, bytes, fragments, and files into a DOM document with `aspose_html.HTMLDocument.parse()`, `aspose_html.HTMLDocument.parse_fragment()`, and `aspose_html.HTMLDocument.load()`.
++- **DOM manipulation and traversal.** Build, inspect, and mutate DOM trees — create and update nodes programmatically with `aspose_html.dom.Document.create_element()` and `append_child()`; read and write element attributes, classes, datasets, inline styles, and text content; and query documents by ID, tag name, class name, and selector-oriented helpers such as `get_element_by_id()`, `get_elements_by_tag_name()`, `aspose_html.dom.TreeWalker`, `aspose_html.dom.NodeList`, and `aspose_html.dom.Range`.
++- **CSSOM and computed styles.** Match `CSS` selectors and stylesheets against elements and resolve the cascade — specificity, inline-vs-author rules, !important, and inheritance — with `Element.get_computed_style()`; the CSSOM surface (`aspose_html.cssom.CSSStyleSheet`, `aspose_html.cssom.CSSStyleRule`, `aspose_html.cssom.CSSMediaRule`, and related rule types) models stylesheets structurally.
++- **URL and encoding utilities.** Validate and manipulate URLs with `aspose_html.url.URL`, read and edit query strings with `aspose_html.url.URLSearchParams`, and detect byte-stream character encodings (BOM and content sniffing) with `aspose_html.encoding.detect_encoding()`.
++- **Optional JavaScript execution.** Execute JavaScript against a parsed DOM through `aspose_html.js.JSContext`, an optional QuickJS-backed bridge exposing DOM APIs to script code; requires the js extra.
++- **Tokenizer and tree construction.** The lower-level `aspose_html.tokenizer.Tokenizer` and `aspose_html.tree.TreeBuilder` classes implement the WHATWG tokenization and tree-construction algorithms directly, for callers who need that level of control.
++- **HTML element APIs.** Work with a broad set of specialized HTML element classes — `aspose_html.dom.HTMLFormElement`, `aspose_html.dom.HTMLInputElement`, `aspose_html.dom.HTMLTableElement`, and dozens more — each exposing the element-specific properties defined by its HTML interface.
++- **Serialization.** Serialize complete documents, fragments, and individual elements back to an HTML string with the `aspose_html.serialise()` function or `aspose_html.XMLSerializer`.
  
  ## Installation
  
@@ -139,7 +135,7 @@
  
  ### Native and System Requirements
  
-@@ -102,11 +109,11 @@
+@@ -102,11 +101,11 @@
  
  ### Development Dependencies
  
@@ -153,25 +149,23 @@
  
  ```python
  from aspose_html import HTMLDocument, serialise
-@@ -121,7 +128,7 @@
+@@ -121,7 +120,7 @@
  print(serialise(content))
  ```
  
 -Attach a stylesheet and resolve the computed style — the ID selector wins over the class rule:
-+The second example constructs a document with a styled element, attaches a `CSS` style sheet, and retrieves the computed style property value for the element.
++The second example constructs a DOM, adds a styled element, creates a `CSS` style sheet, attaches it to the document, and retrieves the computed style property value for the element.
  
  ```python
  from aspose_html.dom import Document
-@@ -143,9 +150,27 @@
+@@ -143,7 +142,25 @@
  
  ## Additional Examples
  
 -Runnable scripts are available in the [`examples`](examples/) directory.
--
--### Work With URLs and Search Parameters
-+The following workflows demonstrate `URL` parameter manipulation, HTML parsing and querying, encoding detection, JavaScript evaluation, and tokenization.
++The following examples demonstrate working with URLs, querying elements, detecting encoding, executing JavaScript, and tokenizing HTML.
 +
-+### Create a DOM Element and Evaluate JavaScript Expressions
++### Execute JavaScript Against The DOM
 +
 +```python
 +from aspose_html.dom import Document
@@ -188,33 +182,20 @@
 +
 +<details>
 +<summary>View Additional Examples</summary>
-+
-+### Modify `URL` Search Parameters and Print the Updated `URL`
  
- ```python
- from aspose_html import URL
-@@ -156,10 +181,7 @@
+ ### Work With URLs and Search Parameters
+ 
+@@ -155,9 +172,6 @@
+ 
  print(str(url))
  ```
- 
+-
 -<details>
 -<summary>View Additional Examples</summary>
--
--### Query Elements By Tag Name
-+### Parse HTML and Extract Text Content from an Element
  
- ```python
- from aspose_html import HTMLDocument
-@@ -170,7 +192,7 @@
- print(heading.text_content)
- ```
+ ### Query Elements By Tag Name
  
--### Detect Character Encoding From Bytes
-+### Detect Encoding and Confidence from Byte Input
- 
- ```python
- from aspose_html.encoding.detection import detect_encoding
-@@ -181,22 +203,7 @@
+@@ -181,22 +195,7 @@
  print(result.text)
  ```
  
@@ -234,11 +215,11 @@
 -```
 -
 -### Drive The Tokenizer Directly
-+### Tokenize an HTML String and Inspect Tag Names
++### Tokenize HTML Source and Inspect Tokens
  
  ```python
  from aspose_html.tokenizer import Tokenizer, TokenizerState
-@@ -206,54 +213,383 @@
+@@ -206,54 +205,373 @@
  print(tokens[0].tag_name)  # "p"
  ```
  
@@ -249,334 +230,332 @@
  ## API Reference
  
 -The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and the specialized `HTMLElement` subclasses. The DOM tree can be queried and mutated directly, styled through the CSS/CSSOM surface, serialized back to markup, and optionally scripted through `JSContext`. The library exposes 243 public types in total, listed below by module, with curated highlights following.
-+The primary entry point is `aspose_html.HTMLDocument`, which parses HTML into a `aspose_html.dom.Document` tree built from `aspose_html.dom.Element` and the specialized `HTMLElement` subclasses. The DOM tree can be queried and mutated directly, styled through the `CSS`/CSSOM surface, serialized back to markup, and optionally scripted through `aspose_html.js.JSContext`.
++Aspose.HTML FOSS for Python provides the `aspose_html.HTMLDocument` class as the primary entry point for parsing and loading HTML content, offering parse, `parse_fragment`, and load methods. It also exposes lower-level DOM, CSSOM, encoding, `URL`, tokenizer, and serialization APIs for fine-grained control over HTML documents.
 +
 +The public API has 303 types.
  
  <details>
 -<summary>View the Supported Public API Surface</summary>
 +<summary>View the Complete Public API Surface</summary>
-+
-+The primary entry point is `HTMLDocument`, which parses HTML into a `Document` tree built from `Node`/`Element` and the specialized `HTMLElement` subclasses. The DOM tree can be queried and mutated directly, styled through the CSS/CSSOM surface, serialized back to markup, and optionally scripted through `JSContext`. The library exposes 303 public types in total, listed below by module, with curated highlights following.
  
  ### Core API
 +
 +| Class | Description |
 +| --- | --- |
-+| `aspose_html.DOMParser` | DOMParser class provides a parse method that parses a string into a DOM document and raises NotSupportedError (conditionally). |
++| `aspose_html.DOMParser` | DOMParser class parses markup strings into DOM documents, currently supporting only text/HTML parsing. |
 +| `HTMLDocument` | Top-level entry point for parsing HTML into a Document tree. |
-+| `aspose_html.URL` | URL class represents a uniform resource locator. |
-+| `aspose_html.URLParseError` | URLParseError class represents an error that occurs when parsing a URL. |
-+| `aspose_html.URLSearchParams` | URLSearchParams class provides methods to work with the query string of a URL. |
-+| `aspose_html.XMLSerializer` | XMLSerializer class provides a method to serialize a DOM tree into an XML string. |
++| `aspose_html.URL` | URL class represents a URL. |
++| `aspose_html.URLParseError` | URLParseError is raised when a string cannot be parsed as a URL. |
++| `aspose_html.URLSearchParams` | URLSearchParams holds ordered query-string pairs with duplicate-key support. |
++| `aspose_html.XMLSerializer` | XMLSerializer serialises DOM nodes to strings. |
 +| `CSS` | Namespace class for CSS static utilities (CSS Conditional Rules §6). |
-+| `CSSCounterStyleRule` | CSSCounterStyleRule class represents a @counter-style rule in a CSS style sheet. |
-+| `CSSFontFaceRule` | CSSFontFaceRule class represents a @font-face rule in a CSS style sheet. |
-+| `CSSImportRule` | CSSImportRule class represents a @import rule in a CSS style sheet. |
-+| `CSSKeyframeRule` | CSSKeyframeRule class represents a single @keyframe rule in a CSS style sheet. |
-+| `CSSKeyframesRule` | CSSKeyframesRule class represents a @keyframes rule in a CSS style sheet. |
-+| `CSSLayerBlockRule` | CSSLayerBlockRule class represents a @layer block rule in a CSS style sheet and raises IndexSizeError and SyntaxError (conditionally) when delete_rule and insert_rule are called. |
-+| `CSSLayerStatementRule` | CSSLayerStatementRule class represents a @layer statement rule in a CSS style sheet. |
-+| `CSSMediaRule` | CSSMediaRule class represents a @media rule in a CSS style sheet and raises IndexSizeError and SyntaxError (conditionally) when delete_rule and insert_rule are called. |
-+| `CSSNamespaceRule` | CSSNamespaceRule class represents a @namespace rule in a CSS style sheet. |
-+| `CSSPageRule` | CSSPageRule class represents a @page rule in a CSS style sheet. |
-+| `CSSPropertyRule` | CSSPropertyRule class represents a @property rule in a CSS style sheet and its type getter always returns 16. |
-+| `CSSRule` | CSSRule class represents a CSS rule and its css_text and type getters raise NotImplementedError (some members not implemented). |
-+| `CSSRuleList` | CSSRuleList class represents an ordered list of CSS rules. |
-+| `CSSStyleRule` | CSSStyleRule class represents a style rule in a CSS style sheet. |
-+| `CSSStyleSheet` | CSSStyleSheet class represents a CSS style sheet and raises IndexSizeError (conditionally) when delete_rule and insert_rule are called. |
-+| `CSSSupportsRule` | CSSSupportsRule class represents a @supports rule in a CSS style sheet and raises IndexSizeError and SyntaxError (conditionally) when delete_rule and insert_rule are called. |
-+| `AbortController` | AbortController class provides a way to abort one or more Web requests. |
-+| `AbortSignal` | AbortSignal class represents a signal object that allows you to communicate with a request. |
-+| `AbstractRange` | AbstractRange class represents a range of nodes within a document. |
-+| `Attr` | Attr class represents an attribute on an HTML element and its specified getter always returns True. |
-+| `BarProp` | BarProp class represents a browser interface element. |
-+| `BroadcastChannel` | BroadcastChannel class provides a way to broadcast messages to other browsing contexts. |
-+| `CDATASection` | CDATASection class represents a CDATA section in an XML document and its node_name getter always returns '#cdata-section'. |
-+| `CSSStyleDeclaration` | CSSStyleDeclaration class represents a collection of CSS properties. |
-+| `CharacterData` | CharacterData class represents a node that contains character data and raises IndexSizeError (conditionally) when delete_data, insert_data, replace_data, and substring_data are called. |
-+| `Comment` | Comment class represents an HTML comment and its node_name getter always returns '#comment'. |
-+| `ComputedStyleDeclaration` | ComputedStyleDeclaration class represents the computed style of an element. |
-+| `Console` | Public class. |
-+| `Crypto` | Public class. |
-+| `CustomElementRegistry` | Public class. |
-+| `CustomEvent` | CustomEvent class represents a custom event. |
-+| `DOMConfiguration` | Public class. |
-+| `DOMException` | Declares the field message. |
-+| `DOMImplementation` | Public class. |
-+| `dom.DOMParser` | DOMParser class provides a parse method that parses a string into a DOM document and raises NotSupportedError (conditionally). |
-+| `DOMRect` | DOMRect class represents a rectangle with x, y, width, and height properties. |
-+| `DOMRectList` | DOMRectList class represents a list of DOMRect objects. |
-+| `DOMStringMap` | DOMStringMap class represents a set of key-value string pairs. |
-+| `DOMTokenList` | Public class. |
-+| `DataCloneError` | DataCloneError class represents an error when data cannot be cloned. |
-+| `Document` | Public class. |
-+| `DocumentFragment` | DocumentFragment class represents a lightweight container for nodes and its node_name getter always returns '#document-fragment'. |
-+| `DocumentPosition` | DocumentPosition enum lists the DOCUMENT_POSITION_CONTAINED_BY, DOCUMENT_POSITION_CONTAINS, DOCUMENT_POSITION_DISCONNECTED, DOCUMENT_POSITION_FOLLOWING, DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC, and DOCUMENT_POSITION_PRECEDING constants. |
-+| `DocumentType` | DocumentType class represents a document type declaration. |
-+| `Element` | Public class. |
-+| `ErrorEvent` | ErrorEvent class represents an error event. |
-+| `Event` | Event enum lists the AT_TARGET, BUBBLING_PHASE, CAPTURING_PHASE, and NONE constants. |
-+| `EventTarget` | Public class. |
-+| `FocusEvent` | FocusEvent class represents a focus event. |
-+| `FormData` | Public class. |
-+| `dom.HTMLAddressElement` | HTMLAddressElement class represents an address element. |
-+| `dom.HTMLAnchorElement` | HTMLAnchorElement class represents an anchor element. |
-+| `dom.HTMLAreaElement` | HTMLAreaElement class represents an area element. |
-+| `dom.HTMLArticleElement` | HTMLArticleElement class represents an article element. |
-+| `dom.HTMLAsideElement` | HTMLAsideElement class represents an aside element. |
-+| `dom.HTMLAudioElement` | HTMLAudioElement class represents an audio element. |
-+| `dom.HTMLBRElement` | HTMLBRElement class represents a line break element. |
-+| `dom.HTMLBaseElement` | HTMLBaseElement class represents a base element. |
-+| `dom.HTMLBodyElement` | HTMLBodyElement class represents a body element. |
-+| `dom.HTMLButtonElement` | HTMLButtonElement class represents a button element and its will_validate getter always returns False. |
-+| `dom.HTMLCanvasElement` | HTMLCanvasElement class represents a canvas element and its to_data_url method always returns 'data:,'; transfer_control_to_offscreen raises NotSupportedError. |
-+| `HTMLCollection` | HTMLCollection class represents a collection of HTML elements. |
-+| `dom.HTMLDListElement` | HTMLDListElement class represents a description list element. |
-+| `dom.HTMLDataElement` | HTMLDataElement class represents a data element. |
-+| `dom.HTMLDataListElement` | HTMLDataListElement class represents a datalist element. |
-+| `dom.HTMLDetailsElement` | HTMLDetailsElement class represents a details element. |
-+| `dom.HTMLDialogElement` | HTMLDialogElement class represents a dialog element. |
-+| `dom.HTMLDivElement` | HTMLDivElement class represents a division element. |
-+| `HTMLElement` | HTMLElement class represents an HTML element and its access_key_label getter always returns '', toggle_popover always returns False; content_editable setter raises _SyntaxError and outer_text setter raises NoModificationAllowedError. |
-+| `dom.HTMLEmbedElement` | HTMLEmbedElement class represents an embed element. |
-+| `dom.HTMLFieldSetElement` | HTMLFieldSetElement class represents a fieldset element and its type getter always returns 'fieldset'. |
-+| `dom.HTMLFigCaptionElement` | HTMLFigCaptionElement class represents a figure caption element. |
-+| `dom.HTMLFigureElement` | HTMLFigureElement class represents a figure element. |
-+| `dom.HTMLFooterElement` | HTMLFooterElement class represents a footer element. |
-+| `dom.HTMLFormElement` | HTMLFormElement class represents a form element; request_submit, reset, and submit raise NotSupportedError. |
-+| `dom.HTMLHRElement` | HTMLHRElement class represents the HTML hr element. |
++| `CSSCounterStyleRule` | CSSCounterStyleRule is a @counter-style rule holding the counter style name and its descriptor declarations. |
++| `CSSFontFaceRule` | CSSFontFaceRule is a @font-face rule holding font descriptor declarations. |
++| `CSSImportRule` | CSSImportRule is an @import statement rule. |
++| `CSSKeyframeRule` | CSSKeyframeRule is a single keyframe descriptor within a @keyframes rule. |
++| `CSSKeyframesRule` | CSSKeyframesRule is a @keyframes rule containing animation keyframe descriptors. |
++| `CSSLayerBlockRule` | CSSLayerBlockRule is a CSS @layer block rule assigning child rules to a named cascade layer. |
++| `CSSLayerStatementRule` | CSSLayerStatementRule is a CSS @layer statement rule declaring cascade layer order. |
++| `CSSMediaRule` | CSSMediaRule is a media rule scaffold for nested style rules. |
++| `CSSNamespaceRule` | CSSNamespaceRule is a @namespace rule recording a namespace URI and optional prefix for use in namespace-qualified selectors. |
++| `CSSPageRule` | CSSPageRule is a CSS @page rule representing a @page at-rule that specifies styles for printed pages. |
++| `CSSPropertyRule` | CSSPropertyRule is a CSS @property rule stub representing a @property at-rule declaring a custom CSS property with a type syntax, inheritance behaviour, and initial value. |
++| `CSSRule` | CSSRule is a base class for CSSOM rules; its css_text and type getters raise NotImplementedError (some members not implemented). |
++| `CSSRuleList` | CSSRuleList is an ordered, live CSS rule collection. |
++| `CSSStyleRule` | CSSStyleRule is a style rule (selector { declarations }). |
++| `CSSStyleSheet` | CSSStyleSheet is a minimal CSSOM stylesheet object. |
++| `CSSSupportsRule` | CSSSupportsRule is a @supports rule with a condition and nested style rules. |
++| `AbortController` | AbortController controls cancellation of operations via an AbortSignal. |
++| `AbortSignal` | AbortSignal represents the signal half of an AbortController pair. |
++| `AbstractRange` | AbstractRange is a read-only boundary-point contract shared by range-family APIs. |
++| `Attr` | Attr is an attribute attached to an Element; its specified getter always returns True. |
++| `BarProp` | BarProp is a bar property. |
++| `BroadcastChannel` | BroadcastChannel is a broadcast channel. |
++| `CDATASection` | CDATASection is a CDATA section node; its node_name getter always returns '#cdata-section'. |
++| `CSSStyleDeclaration` | CSSStyleDeclaration is a live view of an element's inline style attribute. |
++| `CharacterData` | CharacterData is an abstract base for Text, Comment, CDATASection, and ProcessingInstruction providing the data property and character-data manipulation methods. |
++| `Comment` | Comment is an HTML comment node; its node_name getter always returns '#comment'. |
++| `ComputedStyleDeclaration` | ComputedStyleDeclaration is a read-only resolved style declarations for an element. |
++| `Console` | Console is a console. |
++| `Crypto` | Crypto is a crypto. |
++| `CustomElementRegistry` | CustomElementRegistry is a custom element registry; its define method raises NotSupportedError or TypeError (conditionally). |
++| `CustomEvent` | CustomEvent is an Event carrying an arbitrary detail payload. |
++| `DOMConfiguration` | DOMConfiguration is a baseline DOMConfiguration compatibility surface; its get_parameter and set_parameter methods raise NotSupportedError (conditionally). |
++| `DOMException` | DOMException is a base for all DOM exceptions. |
++| `DOMImplementation` | DOMImplementation is a legacy DOMImplementation compatibility surface providing deterministic, side-effect free feature-probe behavior; its create_document method raises WrongDocumentError (conditionally). |
++| `dom.DOMParser` | DOMParser parses markup strings into DOM documents, currently supporting only text/HTML parsing; its parse_from_string method raises NotSupportedError (conditionally). |
++| `DOMRect` | DOMRect class represents an axis-aligned bounding rectangle with mutable attributes x, y, width, and height, and computed properties top, right, bottom, and left that handle negative dimensions. |
++| `DOMRectList` | DOMRectList class is an immutable sequence of DOMRect objects supporting iteration, index access, and item() returning None for out-of-range indices. |
++| `DOMStringMap` | DOMStringMap class provides a live dict-like view of an element's data-* custom attributes, reading from and writing to the owning element's attribute map directly on every operation. |
++| `DOMTokenList` | DOMTokenList class is a live, mutable set of space-separated tokens backed by an element attribute implementing the WHATWG DOMTokenList interface for the class attribute, and its supports method raises TypeError. |
++| `DataCloneError` | DataCloneError class represents an error for objects that cannot be cloned. |
++| `Document` | Document class is the root of a DOM tree, with Document() creating an empty, standards-mode document, and its adopt_node, adopted_style_sheets setter, close, cookie setter, create_attribute, and create_cdata_section methods raise NotSupportedError or TypeError or InvalidCharacterError conditionally. |
++| `DocumentFragment` | DocumentFragment class is a lightweight container for a sub-tree whose children are transferred to a new parent when passed to append_child, and its node_name getter always returns '#document-fragment'. |
++| `DocumentPosition` | Public class. |
++| `DocumentType` | DocumentType class represents a document type declaration node, and its name attribute holds the doctype name. |
++| `Element` | Element class represents an HTML or XML element node created via Document.create_element, and its attach_shadow, insert_adjacent_element, insert_adjacent_html, and insert_adjacent_text methods raise NotSupportedError, NoModificationAllowedError, or _SyntaxError conditionally. |
++| `ErrorEvent` | ErrorEvent class represents a script error event with parameters type, bubbles, cancelable, message, filename, lineno, colno, and error. |
++| `Event` | Event class represents a DOM event object with parameters type, bubbles, and cancelable, and constants AT_TARGET, BUBBLING_PHASE, CAPTURING_PHASE, and NONE. |
++| `EventTarget` | EventTarget class is the base class for objects that can receive DOM events, and its add_event_listener and dispatch_event methods raise TypeError or ValueError conditionally. |
++| `FocusEvent` | FocusEvent class represents a focus transition event with parameters type, bubbles, cancelable, and detail. |
++| `FormData` | FormData class is a snapshot collection of form control name/value pairs. |
++| `dom.HTMLAddressElement` | HTMLAddressElement class represents an HTML address element. |
++| `dom.HTMLAnchorElement` | HTMLAnchorElement class represents an HTML anchor element reflecting the href and target IDL attributes. |
++| `dom.HTMLAreaElement` | HTMLAreaElement class represents an HTML area element whose href resolves against document base URL. |
++| `dom.HTMLArticleElement` | HTMLArticleElement class represents an HTML article element. |
++| `dom.HTMLAsideElement` | HTMLAsideElement class represents an HTML aside element. |
++| `dom.HTMLAudioElement` | HTMLAudioElement class represents an HTML audio element. |
++| `dom.HTMLBRElement` | HTMLBRElement class represents an HTML br element. |
++| `dom.HTMLBaseElement` | HTMLBaseElement class represents an HTML base element reflecting the href and target IDL attributes. |
++| `dom.HTMLBodyElement` | HTMLBodyElement class represents an HTML body element. |
++| `dom.HTMLButtonElement` | HTMLButtonElement class represents an HTML button element reflecting the type, value, and disabled IDL attributes, and its will_validate getter always returns False. |
++| `dom.HTMLCanvasElement` | HTMLCanvasElement class represents an HTML canvas element, and its to_data_url method always returns 'data:,' and its transfer_control_to_offscreen method raises NotSupportedError conditionally. |
++| `HTMLCollection` | HTMLCollection class is a live, ordered collection of Element-type children only, supporting iteration and integer index access. |
++| `dom.HTMLDListElement` | HTMLDListElement class represents an HTML dl element. |
++| `dom.HTMLDataElement` | HTMLDataElement class represents an HTML data element. |
++| `dom.HTMLDataListElement` | HTMLDataListElement class represents an HTML datalist element providing autocomplete suggestions and implementing the options IDL attribute returning a live collection of option child elements. |
++| `dom.HTMLDetailsElement` | HTMLDetailsElement class represents an HTML details element reflecting the open IDL attribute. |
++| `dom.HTMLDialogElement` | HTMLDialogElement class represents an HTML dialog element reflecting the open IDL attribute. |
++| `dom.HTMLDivElement` | HTMLDivElement class represents an HTML div element with no IDL-reflected attributes beyond those inherited from HTMLElement. |
++| `HTMLElement` | HTMLElement class is the base class for all HTML-namespace element types, and its content_editable setter raises _SyntaxError and its outer_text setter raises NoModificationAllowedError conditionally, while its access_key_label getter always returns '' and its toggle_popover method always returns False. |
++| `dom.HTMLEmbedElement` | HTMLEmbedElement class represents an HTML embed element reflecting the src and type string properties and the width and height integer properties. |
++| `dom.HTMLFieldSetElement` | HTMLFieldSetElement class represents an HTML fieldset element for grouping form controls reflecting the name and disabled IDL attributes, and its type getter always returns 'fieldset'. |
++| `dom.HTMLFigCaptionElement` | HTMLFigCaptionElement class represents an HTML figcaption element. |
++| `dom.HTMLFigureElement` | HTMLFigureElement class represents an HTML figure element. |
++| `dom.HTMLFooterElement` | HTMLFooterElement class represents an HTML footer element. |
++| `dom.HTMLFormElement` | HTMLFormElement class represents an HTML form element reflecting the action, method, name, enctype, encoding, novalidate, target, and autocomplete IDL attributes, and its request_submit, reset, and submit methods raise NotSupportedError conditionally. |
++| `dom.HTMLHRElement` | HTMLHRElement class represents the HTML thematic-break element. |
 +| `dom.HTMLHeadElement` | HTMLHeadElement class represents the HTML head element. |
 +| `dom.HTMLHeaderElement` | HTMLHeaderElement class represents the HTML header element. |
-+| `dom.HTMLHeadingElement` | HTMLHeadingElement class represents the HTML heading element. |
-+| `dom.HTMLHtmlElement` | HTMLHtmlElement class represents the HTML HTML element. |
-+| `dom.HTMLIFrameElement` | HTMLIFrameElement class represents the HTML iframe element. |
-+| `dom.HTMLImageElement` | HTMLImageElement class represents the HTML image element; its decode method is not implemented, its complete, natural_height, natural_width, x, and y getters always return False, 0, 0, 0, and 0 respectively. |
-+| `dom.HTMLInputElement` | HTMLInputElement class represents the HTML input element; its selection_direction, selection_end, and selection_start getters always return 'none', 0, and 0, its set_range_text and show_picker methods raise NotSupportedError, and its value_as_number setter raises InvalidStateError. |
-+| `dom.HTMLLIElement` | HTMLLIElement class represents the HTML li element. |
-+| `dom.HTMLLabelElement` | HTMLLabelElement class represents the HTML label element. |
-+| `dom.HTMLLegendElement` | HTMLLegendElement class represents the HTML legend element. |
-+| `dom.HTMLLinkElement` | HTMLLinkElement class represents the HTML link element. |
++| `dom.HTMLHeadingElement` | HTMLHeadingElement class represents HTML heading elements. |
++| `dom.HTMLHtmlElement` | HTMLHtmlElement class represents the HTML document element. |
++| `dom.HTMLIFrameElement` | HTMLIFrameElement class represents the HTML iframe element and reflects src, name, allow, sandbox, width, and height properties. |
++| `dom.HTMLImageElement` | HTMLImageElement class represents the HTML image element and reflects src, alt, width, height, srcset, sizes, loading, decoding, and loading attributes; the decode method is not implemented, and complete, natural_height, natural_width, x, and y getters always return False, 0, 0, 0, and 0 respectively. |
++| `dom.HTMLInputElement` | HTMLInputElement class represents the HTML input form control element and reflects type, value, name, checked, and disabled attributes; the set_range_text and show_picker methods raise NotSupportedError, the value_as_number setter raises InvalidStateError, and selection_direction, selection_end, and selection_start getters always return 'none', 0, and 0 respectively. |
++| `dom.HTMLLIElement` | HTMLLIElement class represents the HTML list item element. |
++| `dom.HTMLLabelElement` | HTMLLabelElement class represents the HTML label element and reflects the for attribute. |
++| `dom.HTMLLegendElement` | HTMLLegendElement class represents the HTML legend element and reflects the form IDL attribute, which returns the owner form of the nearest ancestor fieldset, or None. |
++| `dom.HTMLLinkElement` | HTMLLinkElement class represents the HTML link element and reflects href, rel, and type attributes. |
 +| `dom.HTMLMainElement` | HTMLMainElement class represents the HTML main element. |
 +| `dom.HTMLMapElement` | HTMLMapElement class represents the HTML map element. |
 +| `dom.HTMLMarkElement` | HTMLMarkElement class represents the HTML mark element. |
-+| `dom.HTMLMediaElement` | HTMLMediaElement class represents the HTML media element; its can_play_type, current_src, current_time, ended, network_state, and paused getters always return '', '', 0.0, False, 0, and True respectively. |
++| `dom.HTMLMediaElement` | HTMLMediaElement class is the base class for HTML media elements and reflects can_play_type, current_src, current_time, ended, network_state, and paused properties. |
 +| `dom.HTMLMenuElement` | HTMLMenuElement class represents the HTML menu element. |
-+| `dom.HTMLMetaElement` | HTMLMetaElement class represents the HTML meta element. |
-+| `dom.HTMLMeterElement` | HTMLMeterElement class represents the HTML meter element. |
-+| `dom.HTMLModElement` | HTMLModElement class represents the HTML mod element. |
++| `dom.HTMLMetaElement` | Public class. |
++| `dom.HTMLMeterElement` | HTMLMeterElement class represents the HTML meter element for displaying a scalar value in a range and reflects value, min, max, low, high, and optimum attributes. |
++| `dom.HTMLModElement` | Public class. |
 +| `dom.HTMLNavElement` | HTMLNavElement class represents the HTML nav element. |
 +| `dom.HTMLNoScriptElement` | HTMLNoScriptElement class represents the HTML noscript element. |
-+| `dom.HTMLOListElement` | HTMLOListElement class represents the HTML ol element. |
-+| `dom.HTMLObjectElement` | HTMLObjectElement class represents the HTML object element; its will_validate getter always returns False. |
-+| `dom.HTMLOptGroupElement` | HTMLOptGroupElement class represents the HTML optgroup element. |
-+| `dom.HTMLOptionElement` | HTMLOptionElement class represents the HTML option element. |
-+| `HTMLOptionsCollection` | HTMLOptionsCollection class represents a collection of HTML option elements. |
-+| `dom.HTMLOutputElement` | HTMLOutputElement class represents the HTML output element; its type and will_validate getters always return 'output' and False respectively. |
-+| `dom.HTMLParagraphElement` | HTMLParagraphElement class represents the HTML p element. |
++| `dom.HTMLOListElement` | HTMLOListElement class represents the HTML ordered list element. |
++| `dom.HTMLObjectElement` | HTMLObjectElement class represents the HTML object element and reflects data, type, name, width, height, and will_validate properties. |
++| `dom.HTMLOptGroupElement` | HTMLOptGroupElement class represents the HTML optgroup element for grouping options in a select list and reflects label and disabled attributes. |
++| `dom.HTMLOptionElement` | Public class. |
++| `HTMLOptionsCollection` | HTMLOptionsCollection class represents a live collection of option elements for a select element. |
++| `dom.HTMLOutputElement` | Public class. |
++| `dom.HTMLParagraphElement` | HTMLParagraphElement class represents the HTML paragraph element. |
 +| `dom.HTMLParamElement` | HTMLParamElement class represents the HTML param element. |
 +| `dom.HTMLPictureElement` | HTMLPictureElement class represents the HTML picture element. |
-+| `dom.HTMLPreElement` | HTMLPreElement class represents the HTML pre element. |
-+| `dom.HTMLProgressElement` | HTMLProgressElement class represents the HTML progress element. |
++| `dom.HTMLPreElement` | HTMLPreElement class represents the HTML preformatted text element. |
++| `dom.HTMLProgressElement` | HTMLProgressElement class represents the HTML progress element showing task completion and reflects value and max attributes. |
 +| `dom.HTMLQuoteElement` | HTMLQuoteElement class represents the HTML quote element. |
 +| `dom.HTMLRubyElement` | HTMLRubyElement class represents the HTML ruby element. |
-+| `dom.HTMLScriptElement` | HTMLScriptElement class represents the HTML script element. |
++| `dom.HTMLScriptElement` | HTMLScriptElement class represents the HTML script element and reflects src, type, async_, and defer attributes. |
 +| `dom.HTMLSectionElement` | HTMLSectionElement class represents the HTML section element. |
-+| `dom.HTMLSelectElement` | HTMLSelectElement class represents the HTML select element; its add method raises HierarchyRequestError. |
++| `dom.HTMLSelectElement` | HTMLSelectElement class represents the HTML select element and reflects value, name, multiple, and disabled attributes; the add method raises HierarchyRequestError. |
 +| `dom.HTMLSmallElement` | HTMLSmallElement class represents the HTML small element. |
 +| `dom.HTMLSourceElement` | HTMLSourceElement class represents the HTML source element. |
-+| `dom.HTMLSpanElement` | HTMLSpanElement class represents an HTML span element. |
-+| `dom.HTMLStyleElement` | HTMLStyleElement class represents an HTML style element. |
-+| `dom.HTMLSummaryElement` | HTMLSummaryElement class represents an HTML summary element. |
-+| `dom.HTMLTableCaptionElement` | HTMLTableCaptionElement class represents an HTML table caption element. |
++| `dom.HTMLSpanElement` | HTMLSpanElement class represents an HTML span inline container element with no IDL-reflected attributes beyond those inherited from HTMLElement. |
++| `dom.HTMLStyleElement` | HTMLStyleElement class represents an HTML style element and reflects the media and type IDL attributes. |
++| `dom.HTMLSummaryElement` | HTMLSummaryElement class represents an HTML summary element, a disclosure summary for a details widget, with no IDL-reflected attributes beyond those inherited from HTMLElement. |
++| `dom.HTMLTableCaptionElement` | HTMLTableCaptionElement class represents an HTML caption element. |
 +| `dom.HTMLTableCellElement` | HTMLTableCellElement class represents an HTML table cell element. |
 +| `dom.HTMLTableColElement` | HTMLTableColElement class represents an HTML table column element. |
-+| `dom.HTMLTableElement` | HTMLTableElement class represents an HTML table element and its insert_row and delete_row methods raise IndexSizeError (conditionally). |
-+| `dom.HTMLTableRowElement` | HTMLTableRowElement class represents an HTML table row element and its insert_cell and delete_cell methods raise IndexSizeError (conditionally). |
-+| `dom.HTMLTableSectionElement` | HTMLTableSectionElement class represents an HTML table section element and its insert_row and delete_row methods raise IndexSizeError (conditionally). |
-+| `dom.HTMLTemplateElement` | HTMLTemplateElement class represents an HTML template element. |
-+| `dom.HTMLTextAreaElement` | HTMLTextAreaElement class represents an HTML text area element and its set_range_text method raises NotSupportedError (conditionally); its selection_direction, selection_end, selection_start, and type getters always return 'none', 0, 0, and 'textarea' respectively. |
-+| `dom.HTMLTimeElement` | HTMLTimeElement class represents an HTML time element. |
-+| `dom.HTMLTitleElement` | HTMLTitleElement class represents an HTML title element and its text setter raises NotSupportedError (conditionally). |
++| `dom.HTMLTableElement` | HTMLTableElement class represents an HTML table element and provides live collection properties for navigating table structure; its delete_row and insert_row methods raise IndexSizeError when the index is out of range. |
++| `dom.HTMLTableRowElement` | HTMLTableRowElement class represents an HTML table row element; its delete_cell and insert_cell methods raise IndexSizeError when the index is out of range. |
++| `dom.HTMLTableSectionElement` | HTMLTableSectionElement class represents an HTML table section element; its delete_row and insert_row methods raise IndexSizeError when the index is out of range. |
++| `dom.HTMLTemplateElement` | HTMLTemplateElement class represents an HTML template element holding inert content, with its content property returning a DocumentFragment that holds the template's child nodes. |
++| `dom.HTMLTextAreaElement` | HTMLTextAreaElement class represents an HTML textarea multi-line text input element reflecting several IDL attributes, with its selection_direction, selection_end, and selection_start getters always returning 'none', 0, and 0 respectively, its type getter always returning 'textarea', and its set_range_text method raising NotSupportedError (conditionally). |
++| `dom.HTMLTimeElement` | HTMLTimeElement class represents an HTML time element and reflects the HTML datetime attribute. |
++| `dom.HTMLTitleElement` | HTMLTitleElement class represents an HTML title element whose text property reads and writes the element's first Text child node directly, and its text setter raises NotSupportedError (conditionally). |
 +| `dom.HTMLTrackElement` | HTMLTrackElement class represents an HTML track element and its ready_state getter always returns 0. |
 +| `dom.HTMLUListElement` | HTMLUListElement class represents an HTML unordered list element. |
-+| `dom.HTMLUnknownElement` | HTMLUnknownElement class represents an HTML unknown element. |
-+| `dom.HTMLVideoElement` | HTMLVideoElement class represents an HTML video element and its request_picture_in_picture method raises NotSupportedError (conditionally); its video_height, video_width, webkit_decoded_frame_count, and webkit_dropped_frame_count getters always return 0. |
++| `dom.HTMLUnknownElement` | HTMLUnknownElement class is an HTML unknown element interface (export-only, not registry-dispatched). |
++| `dom.HTMLVideoElement` | HTMLVideoElement class represents an HTML video element, with its video_height, video_width, webkit_decoded_frame_count, and webkit_dropped_frame_count getters always returning 0, and its request_picture_in_picture method raising NotSupportedError (conditionally). |
 +| `dom.HTMLWBRElement` | HTMLWBRElement class represents an HTML wbr element. |
-+| `HashChangeEvent` | HashChangeEvent class represents a hashchange event. |
-+| `HierarchyRequestError` | HierarchyRequestError class represents a hierarchy request error. |
-+| `History` | History class represents the browser history. |
-+| `InUseAttributeError` | InUseAttributeError class represents an in use attribute error. |
-+| `IndexSizeError` | IndexSizeError class represents an index size error. |
-+| `InputEvent` | InputEvent class represents an input event. |
-+| `IntersectionObserver` | IntersectionObserver class represents an intersection observer. |
-+| `IntersectionObserverEntry` | IntersectionObserverEntry class represents an intersection observer entry. |
-+| `InvalidCharacterError` | InvalidCharacterError class represents an invalid character error. |
-+| `InvalidStateError` | InvalidStateError class represents an invalid state error. |
++| `HashChangeEvent` | HashChangeEvent class represents a same-document fragment navigation event. |
++| `HierarchyRequestError` | HierarchyRequestError class is raised when the tree hierarchy is violated. |
++| `History` | History class provides in-memory session history for a Window. |
++| `InUseAttributeError` | InUseAttributeError class is raised when an Attr is already in use by another element. |
++| `IndexSizeError` | IndexSizeError class is raised when an index or size is out of range. |
++| `InputEvent` | InputEvent class represents a text-input event. |
++| `IntersectionObserver` | IntersectionObserver class is provided for observing DOM intersections. |
++| `IntersectionObserverEntry` | IntersectionObserverEntry class is provided for intersection observation notifications. |
++| `InvalidCharacterError` | InvalidCharacterError class is raised when an invalid character is used. |
++| `InvalidStateError` | InvalidStateError class is raised when an operation is performed in an invalid state. |
 +| `KeyboardEvent` | KeyboardEvent class represents a keyboard event. |
-+| `Location` | Location class represents the document location. |
-+| `MediaQueryList` | MediaQueryList class represents a media query list. |
-+| `MessageChannel` | MessageChannel class represents a message channel. |
-+| `MessagePort` | MessagePort class represents a message port. |
-+| `MouseEvent` | MouseEvent class represents a mouse event and its offset_x, offset_y, page_x, and page_y getters always return 0. |
-+| `MutationObserver` | MutationObserver class represents a mutation observer and its observe method raises InvalidStateError (conditionally). |
-+| `MutationRecord` | MutationRecord class represents a mutation record. |
-+| `NamedNodeMap` | NamedNodeMap class represents a named node map and its remove_named_item method raises NotFoundError (conditionally). |
-+| `Navigator` | Navigator class represents the browser navigator. |
-+| `NoModificationAllowedError` | NoModificationAllowedError class represents a no modification allowed error. |
-+| `Node` | Node class represents a node and its insert_before, remove_child, and replace_child methods raise NotFoundError (conditionally). |
-+| `NodeFilter` | NodeFilter class provides constants for node filtering in tree traversals. |
-+| `NodeIterator` | NodeIterator class enables iteration over a subset of nodes in a document tree. |
-+| `NodeList` | NodeList class represents an ordered collection of nodes. |
-+| `NodeType` | NodeType class defines constants representing the type of a node. |
-+| `NotFoundError` | NotFoundError class represents an error when a requested object cannot be found. |
-+| `NotSupportedError` | NotSupportedError class represents an error when an operation is not supported. |
-+| `ParseError` | ParseError class represents an error that occurs during parsing. |
-+| `Performance` | Performance class provides access to performance-related information. |
-+| `PerformanceEntry` | PerformanceEntry class is the base class for performance entries. |
-+| `PerformanceTiming` | PerformanceTiming class provides timing information about the page load process. |
-+| `PopStateEvent` | PopStateEvent class represents a popstate event. |
-+| `ProcessingInstruction` | ProcessingInstruction class represents a processing instruction in the document. |
-+| `Range` | Range class represents a fragment of a document that can contain nodes and parts of text nodes. |
-+| `ResizeObserver` | ResizeObserver class observes changes to the size of elements. |
-+| `ResizeObserverEntry` | ResizeObserverEntry class represents the size of an observed element. |
-+| `Screen` | Screen class provides information about the user's screen. |
-+| `SecurityError` | SecurityError class represents a security-related error. |
-+| `Selection` | Selection class represents the text selected by the user or the current caret position. |
-+| `StaticRange` | StaticRange class represents a static range that does not update when the DOM changes. |
-+| `Storage` | Storage class provides access to a storage object for a particular domain. |
-+| `StyleSheetList` | StyleSheetList class represents a list of stylesheets. |
-+| `SubtleCrypto` | SubtleCrypto class provides cryptographic operations. |
-+| `SyntaxError` | SyntaxError class represents a syntax error. |
-+| `Text` | Text class represents a text node in the document. |
-+| `TreeWalker` | TreeWalker class provides methods to navigate a document tree. |
-+| `UIEvent` | UIEvent class represents a user interface event. |
-+| `ValidityState` | ValidityState class represents the validity state of an element. |
-+| `VisualViewport` | VisualViewport class represents the visual viewport of a document. |
-+| `Window` | Window class represents a browser window and provides access to the document and other browser features. |
-+| `WrongDocumentError` | WrongDocumentError class represents an error when a node is used in a different document than the one that created it. |
-+| `dom.XMLSerializer` | XMLSerializer class serializes a DOM tree into XML. |
-+| `html.HTMLAddressElement` | HTMLAddressElement class represents an address element in the document. |
-+| `html.HTMLAnchorElement` | HTMLAnchorElement class represents an anchor element in the document. |
-+| `html.HTMLAreaElement` | HTMLAreaElement class represents an area element in the document. |
-+| `html.HTMLArticleElement` | HTMLArticleElement class represents an article element in the document. |
-+| `html.HTMLAsideElement` | HTMLAsideElement class represents an aside element in the document. |
-+| `html.HTMLAudioElement` | HTMLAudioElement class represents an audio element in the document. |
-+| `html.HTMLBRElement` | HTMLBRElement class represents a line break element in the document. |
-+| `html.HTMLBaseElement` | HTMLBaseElement class represents a base element in the document. |
-+| `html.HTMLBodyElement` | HTMLBodyElement class represents the body element in the document. |
-+| `html.HTMLButtonElement` | HTMLButtonElement class represents a button element and its will_validate getter always returns False. |
-+| `html.HTMLCanvasElement` | HTMLCanvasElement class represents a canvas element and its to_data_url method always returns 'data:,' while its transfer_control_to_offscreen method raises NotSupportedError. |
-+| `html.HTMLDListElement` | HTMLDListElement class represents a description list element. |
-+| `html.HTMLDataElement` | HTMLDataElement class represents a data element. |
-+| `html.HTMLDataListElement` | HTMLDataListElement class represents a data list element. |
-+| `html.HTMLDetailsElement` | HTMLDetailsElement class represents a details element. |
-+| `html.HTMLDialogElement` | HTMLDialogElement class represents a dialog element. |
-+| `html.HTMLDivElement` | HTMLDivElement class represents a division or section element. |
-+| `html.HTMLEmbedElement` | HTMLEmbedElement class represents an embedded object element. |
-+| `html.HTMLFieldSetElement` | HTMLFieldSetElement class represents a field set element and its type getter always returns 'fieldset'. |
-+| `html.HTMLFigCaptionElement` | HTMLFigCaptionElement class represents a figure caption element. |
-+| `html.HTMLFigureElement` | HTMLFigureElement class represents a figure element. |
-+| `html.HTMLFooterElement` | HTMLFooterElement class represents a footer element. |
-+| `html.HTMLFormElement` | HTMLFormElement class represents a form element and its request_submit, reset, and submit methods raise NotSupportedError. |
-+| `html.HTMLHRElement` | HTMLHRElement class represents a horizontal rule element. |
-+| `html.HTMLHeadElement` | HTMLHeadElement class represents a head element. |
-+| `html.HTMLHeaderElement` | HTMLHeaderElement class represents a header element. |
-+| `html.HTMLHeadingElement` | HTMLHeadingElement class represents a heading element. |
-+| `html.HTMLHtmlElement` | HTMLHtmlElement class represents an HTML element. |
-+| `html.HTMLIFrameElement` | HTMLIFrameElement class represents an inline frame element. |
-+| `html.HTMLImageElement` | HTMLImageElement class represents an image element, its complete getter always returns False, its natural_height and natural_width getters always return 0, its x and y getters always return 0, and its decode method raises NotImplementedError. |
-+| `html.HTMLInputElement` | HTMLInputElement class represents an input element, its selection_direction getter always returns 'none', its selection_end and selection_start getters always return 0, its set_range_text and show_picker methods raise NotSupportedError, and its value_as_number setter raises InvalidStateError. |
-+| `html.HTMLLIElement` | HTMLLIElement class represents a list item element. |
-+| `html.HTMLLabelElement` | HTMLLabelElement class represents a label element. |
-+| `html.HTMLLegendElement` | HTMLLegendElement class represents a legend element. |
-+| `html.HTMLLinkElement` | HTMLLinkElement class represents a link element. |
-+| `html.HTMLMainElement` | HTMLMainElement class represents a main element. |
-+| `html.HTMLMapElement` | HTMLMapElement class represents a map element. |
-+| `html.HTMLMarkElement` | HTMLMarkElement class represents a mark element. |
-+| `html.HTMLMediaElement` | HTMLMediaElement class represents a media element, its can_play_type method always returns '', its current_src getter always returns '', its current_time getter always returns 0.0, its ended getter always returns False, its network_state getter always returns 0, and its paused getter always returns True. |
-+| `html.HTMLMenuElement` | HTMLMenuElement class represents a menu element. |
-+| `html.HTMLMetaElement` | HTMLMetaElement class represents a meta element. |
-+| `html.HTMLMeterElement` | HTMLMeterElement class represents a meter element. |
-+| `html.HTMLModElement` | HTMLModElement class represents a modification element. |
-+| `html.HTMLNavElement` | HTMLNavElement class represents a navigation element. |
-+| `html.HTMLNoScriptElement` | HTMLNoScriptElement class represents a noscript element. |
-+| `html.HTMLOListElement` | HTMLOListElement class represents an ordered list element. |
-+| `html.HTMLObjectElement` | HTMLObjectElement class represents an object element and its will_validate getter always returns False. |
-+| `html.HTMLOptGroupElement` | HTMLOptGroupElement class represents an option group element. |
-+| `html.HTMLOptionElement` | HTMLOptionElement class represents an option element. |
-+| `html.HTMLOutputElement` | HTMLOutputElement class represents an HTML output element; its type getter always returns 'output' and its will_validate getter always returns False. |
-+| `html.HTMLParagraphElement` | HTMLParagraphElement class represents an HTML paragraph element. |
-+| `html.HTMLParamElement` | HTMLParamElement class represents an HTML param element. |
-+| `html.HTMLPictureElement` | HTMLPictureElement class represents an HTML picture element. |
-+| `html.HTMLPreElement` | HTMLPreElement class represents an HTML pre element. |
-+| `html.HTMLProgressElement` | HTMLProgressElement class represents an HTML progress element. |
-+| `html.HTMLQuoteElement` | HTMLQuoteElement class represents an HTML quote element. |
-+| `html.HTMLRubyElement` | HTMLRubyElement class represents an HTML ruby element. |
-+| `html.HTMLScriptElement` | HTMLScriptElement class represents an HTML script element. |
-+| `html.HTMLSectionElement` | HTMLSectionElement class represents an HTML section element. |
-+| `html.HTMLSelectElement` | HTMLSelectElement class represents an HTML select element; its add method raises HierarchyRequestError (conditionally). |
-+| `html.HTMLSmallElement` | HTMLSmallElement class represents an HTML small element. |
-+| `html.HTMLSourceElement` | HTMLSourceElement class represents an HTML source element. |
-+| `html.HTMLSpanElement` | HTMLSpanElement class represents an HTML span element. |
-+| `html.HTMLStyleElement` | HTMLStyleElement class represents an HTML style element. |
-+| `html.HTMLSummaryElement` | HTMLSummaryElement class represents an HTML summary element. |
-+| `html.HTMLTableCaptionElement` | HTMLTableCaptionElement class represents an HTML table caption element. |
-+| `html.HTMLTableCellElement` | HTMLTableCellElement class represents an HTML table cell element. |
-+| `html.HTMLTableColElement` | HTMLTableColElement class represents an HTML table column element. |
-+| `html.HTMLTableElement` | HTMLTableElement class represents an HTML table element; its delete_row and insert_row methods raise IndexSizeError (conditionally). |
-+| `html.HTMLTableRowElement` | HTMLTableRowElement class represents an HTML table row element; its delete_cell and insert_cell methods raise IndexSizeError (conditionally). |
-+| `html.HTMLTableSectionElement` | HTMLTableSectionElement class represents an HTML table section element; its delete_row and insert_row methods raise IndexSizeError (conditionally). |
-+| `html.HTMLTemplateElement` | HTMLTemplateElement class represents an HTML template element. |
-+| `html.HTMLTextAreaElement` | HTMLTextAreaElement class represents an HTML text area element; its selection_direction getter always returns 'none', its selection_end and selection_start getters always return 0, its type getter always returns 'textarea', and its set_range_text method raises NotSupportedError (conditionally). |
-+| `html.HTMLTimeElement` | HTMLTimeElement class represents an HTML time element. |
-+| `html.HTMLTitleElement` | HTMLTitleElement class represents an HTML title element; its text setter raises NotSupportedError (conditionally). |
-+| `html.HTMLTrackElement` | HTMLTrackElement class represents an HTML track element; its ready_state getter always returns 0. |
-+| `html.HTMLUListElement` | HTMLUListElement class represents an HTML unordered list element. |
-+| `html.HTMLUnknownElement` | HTMLUnknownElement class represents an HTML unknown element. |
-+| `html.HTMLVideoElement` | HTMLVideoElement class represents an HTML video element; its video_height, video_width, webkit_decoded_frame_count, and webkit_dropped_frame_count getters always return 0, and its request_picture_in_picture method raises NotSupportedError (conditionally). |
-+| `html.HTMLWBRElement` | HTMLWBRElement class represents an HTML wbr element. |
++| `Location` | Location class provides the location of the current document. |
++| `MediaQueryList` | MediaQueryList class provides a list of media queries. |
++| `MessageChannel` | MessageChannel class provides a channel for messaging between browsing contexts. |
++| `MessagePort` | MessagePort class provides a port for messaging through a MessageChannel. |
++| `MouseEvent` | MouseEvent class represents a mouse or pointer event, with its offset_x, offset_y, page_x, and page_y getters always returning 0. |
++| `MutationObserver` | MutationObserver class observes DOM mutations on a target node; its observe method raises InvalidStateError (conditionally). |
++| `MutationRecord` | MutationRecord class represents one DOM mutation notification record. |
++| `NamedNodeMap` | NamedNodeMap class is an ordered map of Attr objects keyed by attribute name; its remove_named_item method raises NotFoundError (conditionally). |
++| `Navigator` | Navigator class provides information about the user agent. |
++| `NoModificationAllowedError` | NoModificationAllowedError class is raised when a node cannot be modified in its current context. |
++| `Node` | Node class is an abstract base class for all WHATWG DOM nodes; its insert_before, remove_child, and replace_child methods raise NotFoundError (conditionally). |
++| `NodeFilter` | NodeFilter class provides constants for TreeWalker and NodeIterator filtering, including bitmask constants for node type selection and filter return values. |
++| `NodeIterator` | Public class. |
++| `NodeList` | NodeList class represents a live, ordered collection of Node objects, wrapping a reference to the underlying _children list of a node with immediate mutation visibility. |
++| `NodeType` | Public class. |
++| `NotFoundError` | NotFoundError class is raised when a node is not found in the expected location, with code 8. |
++| `NotSupportedError` | NotSupportedError class is raised when an operation is not supported, with code 9. |
++| `ParseError` | ParseError class records a parse error during tree construction, with code, line, column, and message attributes. |
++| `Performance` | Performance class provides performance measurement capabilities. |
++| `PerformanceEntry` | PerformanceEntry class represents an individual performance entry. |
++| `PerformanceTiming` | PerformanceTiming class provides timing information for performance measurement. |
++| `PopStateEvent` | PopStateEvent class represents a history traversal event carrying the active entry state, with type 'popstate' and state attributes. |
++| `ProcessingInstruction` | Public class. |
++| `Range` | Range class represents a contiguous portion of a document tree, defined by two boundary points, with compare_boundary_points, compare_point, is_point_in_range, select_node, and set_end_after members raising specific errors conditionally. |
++| `ResizeObserver` | ResizeObserver class provides resize observation capabilities. |
++| `ResizeObserverEntry` | ResizeObserverEntry class represents a resize observer entry. |
++| `Screen` | Screen class represents the screen object. |
++| `SecurityError` | SecurityError class is raised when an operation is blocked for security reasons. |
++| `Selection` | Selection class represents document-scoped selection with single-range semantics, with add_range, collapse, collapse_to_end, collapse_to_start, and get_range_at members raising specific errors conditionally. |
++| `StaticRange` | StaticRange class represents an immutable boundary-point range initialized from an init object, with endpoints that do not auto-update on DOM mutations and cannot be changed after construction, and __init__ raising TypeError and WrongDocumentError conditionally. |
++| `Storage` | Storage class provides storage capabilities. |
++| `StyleSheetList` | StyleSheetList class represents a live ordered stylesheet collection. |
++| `SubtleCrypto` | SubtleCrypto class provides cryptographic capabilities. |
++| `SyntaxError` | Public class. |
++| `Text` | Text class represents a text node, with node_name getter always returning '#text' and split_text raising IndexSizeError conditionally. |
++| `TreeWalker` | Public class. |
++| `UIEvent` | UIEvent class is the base class for user-interface events, with type, bubbles, and cancelable parameters. |
++| `ValidityState` | Public class. |
++| `VisualViewport` | VisualViewport class represents the visual viewport. |
++| `Window` | Window class represents the per-document window object with EventTarget behavior, with confirm always returning False, crossorigin_isolated getter always returning False, device_pixel_ratio getter always returning 1.0, find always returning False, atob raising InvalidCharacterError conditionally, and btoa raising InvalidCharacterError conditionally. |
++| `WrongDocumentError` | WrongDocumentError class is raised when a node belongs to a different document, with code 4. |
++| `dom.XMLSerializer` | XMLSerializer class serializes DOM nodes to strings. |
++| `html.HTMLAddressElement` | HTMLAddressElement class represents the HTML address element. |
++| `html.HTMLAnchorElement` | HTMLAnchorElement class represents the HTML anchor element, reflecting the href and target IDL attributes. |
++| `html.HTMLAreaElement` | HTMLAreaElement class represents the HTML area image-map hyperlink area, with href resolving against document base URL. |
++| `html.HTMLArticleElement` | HTMLArticleElement class represents the HTML article element. |
++| `html.HTMLAsideElement` | HTMLAsideElement class represents the HTML aside element. |
++| `html.HTMLAudioElement` | HTMLAudioElement class represents the HTML audio element, with paused attribute accessible. |
++| `html.HTMLBRElement` | HTMLBRElement class represents the HTML br line-break element. |
++| `html.HTMLBaseElement` | HTMLBaseElement class represents the HTML base element, reflecting the href and target IDL attributes. |
++| `html.HTMLBodyElement` | HTMLBodyElement class represents the HTML body element. |
++| `html.HTMLButtonElement` | HTMLButtonElement class represents the button element and reflects the type, value, and disabled IDL attributes. |
++| `html.HTMLCanvasElement` | HTMLCanvasElement class represents the canvas element and its to_data_url method always returns 'data:,' while transfer_control_to_offscreen raises NotSupportedError. |
++| `html.HTMLDListElement` | HTMLDListElement class represents the definition list element. |
++| `html.HTMLDataElement` | HTMLDataElement class represents the data element. |
++| `html.HTMLDataListElement` | HTMLDataListElement class represents the datalist element providing autocomplete suggestions and implements the options IDL attribute returning a live collection of option child elements. |
++| `html.HTMLDetailsElement` | HTMLDetailsElement class represents the details disclosure widget element and reflects the open IDL attribute. |
++| `html.HTMLDialogElement` | HTMLDialogElement class represents the dialog modal non modal dialog element and reflects the open IDL attribute. |
++| `html.HTMLDivElement` | HTMLDivElement class represents the div block container element with no IDL reflected attributes beyond those inherited from HTMLElement. |
++| `html.HTMLEmbedElement` | HTMLEmbedElement class represents the embed element and reflects the src and type string properties as well as width and height integer properties. |
++| `html.HTMLFieldSetElement` | HTMLFieldSetElement class represents the fieldset element for grouping form controls, reflects the name and disabled IDL attributes, and its type getter always returns 'fieldset'. |
++| `html.HTMLFigCaptionElement` | HTMLFigCaptionElement class represents the figcaption element. |
++| `html.HTMLFigureElement` | HTMLFigureElement class represents the figure element. |
++| `html.HTMLFooterElement` | HTMLFooterElement class represents the footer element. |
++| `html.HTMLFormElement` | HTMLFormElement class represents the form element, reflects multiple IDL attributes including action, method, name, enctype, encoding, novalidate, target, and autocomplete, and its request_submit, reset, and submit methods raise NotSupportedError. |
++| `html.HTMLHRElement` | HTMLHRElement class represents the hr thematic break element. |
++| `html.HTMLHeadElement` | HTMLHeadElement class represents the head element. |
++| `html.HTMLHeaderElement` | HTMLHeaderElement class represents the header element. |
++| `html.HTMLHeadingElement` | HTMLHeadingElement class represents HTML heading elements h1 through h6 and preserves the actual tag name on the element. |
++| `html.HTMLHtmlElement` | HTMLHtmlElement class represents the HTML document element. |
++| `html.HTMLIFrameElement` | HTMLIFrameElement class represents the iframe element and reflects the src, name, allow, sandbox string properties as well as width and height integer properties. |
++| `html.HTMLImageElement` | HTMLImageElement class represents the image element, reflects multiple IDL attributes, its complete, natural_height, natural_width, x, and y getters always return False or 0, and its decode method raises NotImplementedError. |
++| `html.HTMLInputElement` | HTMLInputElement class represents the input form control element, reflects the type, value, name, checked, and disabled IDL attributes, its selection_direction, selection_end, and selection_start getters always return 'none' or 0, its set_range_text and show_picker methods raise NotSupportedError, and its value_as_number setter raises InvalidStateError. |
++| `html.HTMLLIElement` | HTMLLIElement class represents the li list item element. |
++| `html.HTMLLabelElement` | HTMLLabelElement class represents the label element and reflects the for attribute. |
++| `html.HTMLLegendElement` | HTMLLegendElement class represents the legend element and reflects the form IDL attribute which returns the owner form of the nearest ancestor fieldset or None. |
++| `html.HTMLLinkElement` | HTMLLinkElement class represents the link element and reflects the href, rel, and type IDL attributes. |
++| `html.HTMLMainElement` | HTMLMainElement class represents the main element. |
++| `html.HTMLMapElement` | HTMLMapElement class represents the map element. |
++| `html.HTMLMarkElement` | HTMLMarkElement class represents the mark element. |
++| `html.HTMLMediaElement` | HTMLMediaElement class is the base class for HTML media elements and its can_play_type, current_src, current_time, ended, network_state, and paused members always return empty string, 0.0, False, or 0. |
++| `html.HTMLMenuElement` | HTMLMenuElement class represents the menu element and carries no IDL reflected attributes beyond those inherited from HTMLElement. |
++| `html.HTMLMetaElement` | Public class. |
++| `html.HTMLMeterElement` | HTMLMeterElement class represents the meter element for displaying a scalar value in a range and reflects the value, min, max, low, high, and optimum IDL attributes. |
++| `html.HTMLModElement` | Public class. |
++| `html.HTMLNavElement` | HTMLNavElement class represents the nav element. |
++| `html.HTMLNoScriptElement` | HTMLNoScriptElement class represents the noscript element. |
++| `html.HTMLOListElement` | HTMLOListElement class represents the ol ordered list element. |
++| `html.HTMLObjectElement` | HTMLObjectElement class represents the object element, reflects the data, type, and name string properties as well as width and height integer properties, and its will_validate getter always returns False. |
++| `html.HTMLOptGroupElement` | HTMLOptGroupElement class represents the optgroup element for grouping options in a select list and reflects the label and disabled IDL attributes. |
++| `html.HTMLOptionElement` | Public class. |
++| `html.HTMLOutputElement` | Public class. |
++| `html.HTMLParagraphElement` | HTMLParagraphElement class represents the HTML paragraph element and exists for correct isinstance dispatch. |
++| `html.HTMLParamElement` | HTMLParamElement class represents the HTML param element. |
++| `html.HTMLPictureElement` | HTMLPictureElement class represents the HTML picture element as a structural subclass. |
++| `html.HTMLPreElement` | HTMLPreElement class represents the HTML preformatted text element as a structural subclass and is also used for legacy tags in registry dispatch. |
++| `html.HTMLProgressElement` | HTMLProgressElement class represents the HTML progress element showing task completion and reflects IDL attributes: value and max. |
++| `html.HTMLQuoteElement` | HTMLQuoteElement class represents the HTML quote element. |
++| `html.HTMLRubyElement` | HTMLRubyElement class represents the HTML ruby element. |
++| `html.HTMLScriptElement` | HTMLScriptElement class represents the HTML script element and reflects src, type, async_, and defer IDL attributes. |
++| `html.HTMLSectionElement` | HTMLSectionElement class represents the HTML section element. |
++| `html.HTMLSelectElement` | HTMLSelectElement class represents the HTML select element, reflects value, name, multiple, and disabled IDL attributes, and its add method raises HierarchyRequestError conditionally. |
++| `html.HTMLSmallElement` | HTMLSmallElement class represents the HTML small element. |
++| `html.HTMLSourceElement` | HTMLSourceElement class represents the HTML source element. |
++| `html.HTMLSpanElement` | HTMLSpanElement class represents the HTML span inline container element and exists for correct isinstance dispatch. |
++| `html.HTMLStyleElement` | HTMLStyleElement class represents the HTML style element and reflects media and type IDL attributes. |
++| `html.HTMLSummaryElement` | HTMLSummaryElement class represents an HTML summary element, a disclosure summary for a details widget, and carries no IDL-reflected attributes beyond those inherited from HTMLElement. |
++| `html.HTMLTableCaptionElement` | HTMLTableCaptionElement class represents the HTML table caption element. |
++| `html.HTMLTableCellElement` | HTMLTableCellElement class represents the HTML table cell element. |
++| `html.HTMLTableColElement` | HTMLTableColElement class represents the HTML table column element. |
++| `html.HTMLTableElement` | HTMLTableElement class represents the HTML table element, provides live collection properties for navigating table structure, and its delete_row and insert_row methods raise IndexSizeError conditionally. |
++| `html.HTMLTableRowElement` | HTMLTableRowElement class represents the HTML table row element and its delete_cell and insert_cell methods raise IndexSizeError conditionally. |
++| `html.HTMLTableSectionElement` | HTMLTableSectionElement class represents the HTML table section element and its delete_row and insert_row methods raise IndexSizeError conditionally. |
++| `html.HTMLTemplateElement` | HTMLTemplateElement class represents the HTML template element holding inert content and its content property returns the DocumentFragment that holds the template's child nodes. |
++| `html.HTMLTextAreaElement` | Public class. |
++| `html.HTMLTimeElement` | Public class. |
++| `html.HTMLTitleElement` | HTMLTitleElement class represents the HTML title element, its text property reads and writes the element's first Text child node directly, and its text setter raises NotSupportedError conditionally. |
++| `html.HTMLTrackElement` | HTMLTrackElement class represents the HTML track element and its ready_state getter always returns 0. |
++| `html.HTMLUListElement` | HTMLUListElement class represents the HTML unordered list element. |
++| `html.HTMLUnknownElement` | HTMLUnknownElement class represents the HTML unknown element interface and is export-only, not registry-dispatched. |
++| `html.HTMLVideoElement` | HTMLVideoElement class represents the HTML video element, its video_height, video_width, webkit_decoded_frame_count, and webkit_dropped_frame_count getters always return 0, and its request_picture_in_picture method raises NotSupportedError conditionally. |
++| `html.HTMLWBRElement` | HTMLWBRElement class represents the HTML wbr element. |
 +| `EncodingDetectionResult` | Result of encoding detection and decoding for an HTML byte stream. |
-+| `UnsupportedEncodingError` | UnsupportedEncodingError class represents an error raised when an unsupported encoding is encountered. |
-+| `JSContext` | JSContext class provides JavaScript execution context; its evaluate and eval_module methods raise JSEvaluationError (conditionally) and its import_stub method raises NotImplementedError. |
-+| `JSEvaluationError` | JSEvaluationError class represents an error raised during JavaScript evaluation. |
-+| `ModuleNotFoundError` | ModuleNotFoundError class represents an error raised when a JavaScript module is not found. |
-+| `ModuleRegistry` | ModuleRegistry class represents a registry for JavaScript modules. |
-+| `BlockFragment` | BlockFragment class represents a block-level fragment in the layout. |
-+| `BoxNode` | BoxNode class represents a box node in the layout. |
-+| `BoxRoot` | BoxRoot class represents the root box node in the layout. |
-+| `ComputedStyle` | ComputedStyle class represents computed CSS style properties for a layout node. |
-+| `Display` | Display class represents a CSS display type value. |
-+| `EdgeSizes` | EdgeSizes class holds the top, right, bottom, and left edge sizes. |
-+| `FragmentRoot` | FragmentRoot class serves as the root of a fragment tree. |
-+| `InlineTextFragment` | InlineTextFragment class represents a fragment of inline text. |
-+| `LineFragment` | LineFragment class represents a line of text in the layout. |
-+| `PageFragment` | PageFragment class represents a page in the layout. |
-+| `PageMarginBoxes` | PageMarginBoxes class holds the margin boxes for a page. |
-+| `ShapedRun` | ShapedRun class represents a run of shaped text. |
-+| `CharacterToken` | CharacterToken class represents a character token in the tokenizer. |
-+| `CommentToken` | CommentToken class represents a comment token in the tokenizer. |
-+| `DoctypeToken` | DoctypeToken class represents a doctype token in the tokenizer. |
-+| `EndTagToken` | EndTagToken class represents an end tag token in the tokenizer. |
-+| `EofToken` | EofToken class represents the end-of-file token in the tokenizer. |
-+| `StartTagToken` | StartTagToken class represents a start tag token in the tokenizer. |
-+| `Tokenizer` | Tokenizer class performs tokenization of HTML input. |
-+| `TreeBuilder` | TreeBuilder class builds the DOM tree from tokens. |
-+| `url.URL` | URL class represents a URL and provides methods to parse and manipulate it. |
-+| `url.URLParseError` | URLParseError class represents an error that occurs during URL parsing. |
-+| `url.URLSearchParams` | URLSearchParams class provides methods to work with the query string of a URL. |
++| `UnsupportedEncodingError` | Public class. |
++| `JSContext` | JSContext class is a JavaScript execution context backed by QuickJS, pre-wired to a DOM, its evaluate and eval_module methods raise JSEvaluationError conditionally, and its import_stub method is not implemented and raises NotImplementedError. |
++| `JSEvaluationError` | JSEvaluationError class is raised when a JavaScript expression throws an exception and wraps JSException so that callers do not need to import quickjs to handle JS errors. |
++| `ModuleNotFoundError` | Declares the field specifier. |
++| `ModuleRegistry` | ModuleRegistry class maps module specifiers to ES module source strings and holds an explicit mapping from module specifier strings to their ES module source code. |
++| `BlockFragment` | BlockFragment class represents geometry fragment for a block-level box. |
++| `BoxNode` | BoxNode class represents a single box-tree node produced by build_box_tree and carries the orthogonal display triple per CSS Display L3 section 2. |
++| `BoxRoot` | BoxRoot class represents the root wrapper returned by build_box_tree. |
++| `ComputedStyle` | ComputedStyle class represents an immutable layout-facing snapshot of an element's resolved style and wraps the ComputedStyleDeclaration produced by the cascade engine plus the Document style epoch at which it was produced. |
++| `Display` | Display class holds the outer and inner display roles per CSS Display L3 §2.1, representing the outer display role as block, inline, or run-in and the inner formatt... |
++| `EdgeSizes` | EdgeSizes class holds logical edge sizes in CSS px units. |
++| `FragmentRoot` | FragmentRoot class serves as the root wrapper for block-layout fragment output. |
++| `InlineTextFragment` | InlineTextFragment class represents a positioned inline text fragment for a single shaped run. |
++| `LineFragment` | LineFragment class represents a single inline formatting context line box. |
++| `PageFragment` | PageFragment class represents a single paginated fragmentainer (page box) with ordered content. |
++| `PageMarginBoxes` | PageMarginBoxes class serves as a placeholder page-margin-box container for later paint stages. |
++| `ShapedRun` | ShapedRun class holds shaped text-run payload with deterministic metrics. |
++| `CharacterToken` | CharacterToken class carries one or more Unicode characters, with the tokenizer buffering consecutive characters and emitting them as a single CharacterToken for efficiency. |
++| `CommentToken` | CommentToken class represents a comment token with data holding the comment content excluding the delimiters, and line and column indicating the source position. |
++| `DoctypeToken` | DoctypeToken class represents a DOCTYPE token emitted by the WHATWG tokeniser, with name, public_id, and system_id attributes. |
++| `EndTagToken` | EndTagToken class represents an end tag token with tag_name, line, and column attributes. |
++| `EofToken` | EofToken class represents an end-of-file token, always the last token in a stream, with line and column attributes indicating the EOF position. |
++| `StartTagToken` | StartTagToken class represents a start tag token with tag_name, self_closing, and attributes attributes. |
++| `Tokenizer` | Tokenizer class is the WHATWG HTML tokeniser that converts a Unicode string produced by encoding detection into a stream of typed tokens consumed by the tree constructor. |
++| `TreeBuilder` | TreeBuilder class drives the WHATWG tree construction algorithm, consuming tokens from a Tokenizer and building a Document tree. |
++| `url.URL` | URL class represents a URL. |
++| `url.URLParseError` | URLParseError class is raised when a string cannot be parsed as a URL. |
++| `url.URLSearchParams` | URLSearchParams class holds ordered query-string pairs with duplicate-key support. |
 +
 +#### Enumerations
 +
 +| Enumeration | Description |
 +| --- | --- |
-+| `TokenizerState` | TokenizerState enum lists the tokenizer states including AFTER_ATTRIBUTE_NAME, AFTER_ATTRIBUTE_VALUE_QUOTED, AFTER_DOCTYPE_NAME, AFTER_DOCTYPE_PUBLIC_IDENTIFIER, AFTER_DOCTYPE_PUBLIC_KEYWORD, AFTER_DOCTYPE_SYSTEM_IDENTIFIER, AFTER_DOCTYPE_SYSTEM_KEYWORD, AMBIGUOUS_AMPERSAND, ATTRIBUTE_NAME, ATTRIBUTE_VALUE_DOUBLE_QUOTED, ATTRIBUTE_VALUE_SINGLE_QUOTED, and ATTRIBUTE_VALUE_UNQUOTED. |
++| `TokenizerState` | TokenizerState class lists all tokeniser states defined in WHATWG HTML Living Standard §13.2.5, with each value being the integer identifier used internally. |
 +
 +#### Detailed Member Reference
 +
 +### HTMLDocument
 +
-+The `aspose_html.HTMLDocument` class provides parse, `parse_fragment`, and load methods to construct a DOM tree from HTML strings or files.
++The `aspose_html.HTMLDocument` class provides parse, `parse_fragment`, and load methods to construct HTML documents from strings or files, forming the main interface for loading and parsing HTML content.
 +
 +- `load`: Load an HTML document from a file path and return a Document tree.
 +- `parse`: Parse HTML and return a Document tree.
@@ -584,39 +563,31 @@
 +
 +### Document
 +
-+The `aspose_html.dom.Document` class serves as the root of a DOM tree and provides methods such as `create_element`, `append_child`, `get_element_by_id`, and `get_elements_by_tag_name` to build and query the tree.
++The `aspose_html.dom.Document` class serves as the root of a DOM tree and provides methods such as `create_element`, `append_child`, `get_element_by_id`, and `get_elements_by_tag_name` for building and querying the document structure.
 +
 +### CSSStyleSheet
 +
-+The `aspose_html.cssom.CSSStyleSheet` class represents a `CSS` stylesheet and works with `aspose_html.cssom.CSSStyleRule` and `aspose_html.dom.ComputedStyleDeclaration` to manage styles and computed values.
++The `aspose_html.cssom.CSSStyleSheet` class represents a `CSS` stylesheet and works with `aspose_html.cssom.CSSStyleRule` and `aspose_html.dom.ComputedStyleDeclaration` to manage styles and computed style information.
 +
 +### url.URL
 +
-+The `aspose_html.url.URL` class parses and represents URLs with properties such as href, protocol, host, and pathname, and exposes `aspose_html.url.URLSearchParams` via `search_params` for query-string handling.
++The `aspose_html.url.URL` class parses and represents URLs with properties such as href, protocol, host, and pathname, and includes `aspose_html.url.URLSearchParams` for handling query strings.
 +
 +### detect_encoding
 +
-+The `aspose_html.encoding.detect_encoding` function performs WHATWG-sequence BOM/meta-charset/UTF-8-default sniffing and returns an `aspose_html.encoding.EncodingDetectionResult`.
++The `aspose_html.encoding.detect_encoding` function performs WHATWG-compliant encoding detection on byte sequences, returning an `aspose_html.encoding.EncodingDetectionResult` with the detected encoding and confidence.
 +
 +### JSContext
 +
-+The `aspose_html.js.JSContext` class provides a QuickJS-backed execution context pre-wired to a `Document` and supports evaluate and module registration via `aspose_html.js.ModuleRegistry`.
-+
-+### serialise
-+
-+The `aspose_html.serialise` module provides `outer_html` to serialize DOM nodes back to markup strings.
++The `aspose_html.js.JSContext` class provides a QuickJS-backed execution context pre-wired to a `Document`, supporting JavaScript evaluation and module registration via `aspose_html.js.ModuleRegistry`.
 +
 +### Tokenizer
 +
-+The `aspose_html.tokenizer.Tokenizer` implements the WHATWG HTML tokeniser and emits tokens such as `aspose_html.tokenizer.StartTagToken`.
++The `aspose_html.tokenizer.Tokenizer` class implements the HTML tokenization algorithm, producing `aspose_html.tokenizer.StartTagToken` and `aspose_html.tokenizer.CharacterToken` instances for low-level parsing.
 +
-+### build_box_tree
++### serialise
 +
-+The `aspose_html.layout.build_box_tree` function constructs a box tree from a DOM tree, producing `aspose_html.layout.BoxNode` instances.
-+
-+### TreeBuilder
-+
-+The `aspose_html.tree.TreeBuilder` class drives the WHATWG tree construction algorithm and is used by `aspose_html.tree.parse_html` to produce a `Document`.
++The `aspose_html.serialise` function and `aspose_html.serialiser.outer_html` utility serialize DOM nodes to HTML strings, while `aspose_html.XMLSerializer` supports XML serialization.
  
  | Class | Description |
  |---|---|
@@ -658,7 +629,7 @@
  | `CSSFontFaceRule` | A `@font-face` rule holding font descriptor declarations (CSS Fonts §4.4). |
  | `CSSImportRule` | An `@import` statement rule (CSSOM §6.7). |
  | `CSSKeyframeRule` | A single keyframe descriptor within a `@keyframes` rule (CSSOM Animations §7). |
-@@ -270,8 +606,6 @@
+@@ -270,8 +588,6 @@
  | `CSSStyleSheet` | Minimal CSSOM stylesheet object (CSSOM §6.4). |
  | `CSSSupportsRule` | A `@supports` rule with a condition and nested style rules (CSS Conditional Rules §2). |
  
@@ -667,7 +638,7 @@
  | Class | Description |
  |---|---|
  | `AbortController` | Controls cancellation of operations via an `AbortSignal`. |
-@@ -280,7 +614,6 @@
+@@ -280,7 +596,6 @@
  | `Attr` | An attribute attached to an Element. |
  | `BarProp` | Represents a browser toolbar object (WHATWG HTML §7.7.3). |
  | `BroadcastChannel` | Deterministic same-runtime BroadcastChannel fan-out delivery. |
@@ -675,20 +646,20 @@
  | `CDATASection` | A CDATA section node (extends Text per WHATWG DOM Standard). |
  | `CSSStyleDeclaration` | A live view of an element's inline style attribute. |
  | `CharacterData` | Abstract base for Text, Comment, CDATASection, and ProcessingInstruction. |
-@@ -443,46 +776,12 @@
+@@ -443,46 +758,8 @@
  | `ValidityState` | Constraint-validation flags for a form control. |
  | `VisualViewport` | CSSOM View §9 VisualViewport — all values are headless stubs. |
  | `Window` | Per-document window object with EventTarget behavior. |
 -| `WindowEventLoop` | Internal task-source scheduler used by `Window`/`BrowsingContext`. |
  | `WrongDocumentError` | Raised when a node belongs to a different document. |
  | `XMLSerializer` | Serialise DOM nodes to strings. |
- 
+-
 -### Encoding
 -
- | Class | Description |
- |---|---|
+-| Class | Description |
+-|---|---|
 -| `EncodingDetectionResult` | Result of encoding detection and decoding for an HTML byte stream. |
- | `UnsupportedEncodingError` | Raised when the detected encoding has no Python codec. |
+-| `UnsupportedEncodingError` | Raised when the detected encoding has no Python codec. |
 -
 -### JS
 -
@@ -722,7 +693,7 @@
  
  | Class | Description |
  |---|---|
-@@ -494,14 +793,6 @@
+@@ -494,14 +771,6 @@
  | `StartTagToken` | A start tag token, e.g. `<div class="x">`. |
  | `Tokenizer` | WHATWG HTML tokeniser (§13.2.5). |
  
@@ -737,7 +708,7 @@
  | Class | Description |
  |---|---|
  | `ActiveFormattingList` | The list of active formatting elements as defined in §13.2.4.3. |
-@@ -509,51 +800,30 @@
+@@ -509,51 +778,30 @@
  | `TemplateInsertionModeStack` | The template insertion mode stack per §13.2.4.1. |
  | `TreeBuilder` | Drives the WHATWG tree construction algorithm. |
  
@@ -793,7 +764,7 @@
  - `JSContext(document)` — a QuickJS-backed execution context pre-wired to a `Document`; `evaluate(js_source)`, `register_module(specifier, source)`, `eval_module(source)`. Requires the `js` extra.
  - `ModuleRegistry`, `ModuleLoadPolicy` — maps module specifiers to ES module source and controls how `JSContext` resolves them.
  
-@@ -563,29 +833,51 @@
+@@ -563,29 +811,48 @@
  
  - **[Getting started guide](https://docs.aspose.org/html/python/)** — installation, walkthroughs, and feature guides for this library.
  - **[How-to guides & FAQ](https://kb.aspose.org/html/python/)** — task-focused answers for common HTML/DOM/CSS-processing questions.
@@ -801,13 +772,12 @@
 +- **[Full API reference](https://reference.aspose.org/html/python/)** — the complete, browsable reference for all 303 public types.
  - **[Public API surface](PUBLIC_API.md)** — the stable top-level entry points this library's compatibility guarantees cover.
 -- **[Runnable examples](examples/)** — real, scenario-focused scripts beyond Quick Start.
++- **[examples](examples/)** — real, scenario-focused scripts beyond Quick Start.
  - **[Contributing guide](CONTRIBUTING.md)** — development setup, test commands, and contribution guidelines.
  - **[Security policy](SECURITY.md)** — how to report a vulnerability.
  - **[Changelog](CHANGELOG.md)** — notable changes to this package by version.
 -- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/issues) on GitHub.
 +- Found a bug or have a feature request? [Open an issue](https://github.com/aspose-html-foss/Aspose.HTML-FOSS-for-Python/issues).
-+
-+- **[Runnable examples](examples/)** — real, scenario-focused scripts beyond Quick Start.
  
  ## Scope and Limitations
  
@@ -843,8 +813,6 @@
 +pip install "quickjs>=1.19,<2"
 +```
 +
-+- `skia-python` >=87.0,<145 — used internally for text-layout metrics.
-+
 +- `quickjs` >=1.19,<2 — enables the `JSContext` JavaScript execution bridge; gated behind the `js` extra, and the package builds and runs without it.
 +
 +- `pytest` >=8 — runs the test suite.
@@ -853,7 +821,7 @@
  
  ```bash
  pip install "skia-python>=87.0,<145" "pytest>=8"
-@@ -598,10 +890,7 @@
+@@ -598,10 +865,7 @@
  pip install "quickjs>=1.19,<2"
  ```
  

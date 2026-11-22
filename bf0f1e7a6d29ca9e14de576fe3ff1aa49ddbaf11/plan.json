@@ -19,7 +19,7 @@
       "fact_ids": [
         "public_symbol:aspose_html.dom.document",
         "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.nodelist"
+        "public_symbol:aspose_html.dom.treewalker"
       ],
       "symbol_fact_id": "public_symbol:aspose_html.dom.document"
     },
@@ -54,43 +54,31 @@
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.serialiser.outer_html"
-      ],
-      "symbol_fact_id": "public_symbol:aspose_html.serialise"
-    },
-    {
-      "fact_ids": [
         "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.tokenizer.starttagtoken"
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.charactertoken"
       ],
       "symbol_fact_id": "public_symbol:aspose_html.tokenizer.tokenizer"
     },
     {
       "fact_ids": [
-        "public_symbol:aspose_html.layout.build_box_tree",
-        "public_symbol:aspose_html.layout.boxnode"
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.xmlserializer"
       ],
-      "symbol_fact_id": "public_symbol:aspose_html.layout.build_box_tree"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.tree.treebuilder",
-        "public_symbol:aspose_html.tree.parse_html"
-      ],
-      "symbol_fact_id": "public_symbol:aspose_html.tree.treebuilder"
+      "symbol_fact_id": "public_symbol:aspose_html.serialise"
     }
   ],
   "at_a_glance": {
     "capability_titles": [
       "Parse HTML into DOM",
-      "DOM manipulation and querying",
-      "CSSOM styling and resolution",
+      "DOM manipulation and traversal",
+      "CSSOM and computed styles",
       "URL and encoding utilities",
-      "JavaScript execution",
-      "Serialization",
-      "Tokenizer control",
-      "Layout infrastructure"
+      "Optional JavaScript execution",
+      "Tokenizer and tree construction",
+      "HTML element APIs",
+      "Serialization"
     ],
     "input_format_ids": [],
     "output_format_ids": []
@@ -98,124 +86,102 @@
   "core_capabilities": [
     {
       "fact_ids": [
+        "example:001",
+        "example:004",
         "public_symbol:aspose_html.htmldocument.parse",
         "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.tree.parse_html",
-        "public_symbol:aspose_html.tree.treebuilder",
-        "public_symbol:aspose_html.tokenizer.tokenizer"
+        "public_symbol:aspose_html.htmldocument.load"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose_html.tokenizer.tokenizer"
+        "example:001"
       ],
       "title": "Parse HTML into DOM"
     },
     {
       "fact_ids": [
+        "example:001",
         "public_symbol:aspose_html.dom.document",
         "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.treewalker",
         "public_symbol:aspose_html.dom.nodelist",
-        "public_symbol:aspose_html.dom.htmlcollection",
-        "public_symbol:aspose_html.dom.htmlheadingelement",
-        "public_symbol:aspose_html.dom.htmlformelement",
-        "public_symbol:aspose_html.dom.htmlinputelement"
+        "public_symbol:aspose_html.dom.range"
       ],
-      "shared_fact_ids": [],
-      "title": "DOM manipulation and querying"
+      "shared_fact_ids": [
+        "example:001"
+      ],
+      "title": "DOM manipulation and traversal"
     },
     {
       "fact_ids": [
+        "example:002",
         "public_symbol:aspose_html.cssom.cssstylesheet",
         "public_symbol:aspose_html.cssom.cssstylerule",
         "public_symbol:aspose_html.cssom.cssmediarule",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.css.element_matches",
-        "public_symbol:aspose_html.css.select"
+        "public_symbol:aspose_html.dom.computedstyledeclaration"
       ],
       "shared_fact_ids": [],
-      "title": "CSSOM styling and resolution"
+      "title": "CSSOM and computed styles"
     },
     {
       "fact_ids": [
+        "example:003",
+        "example:005",
         "public_symbol:aspose_html.url.url",
         "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult"
+        "public_symbol:aspose_html.encoding.detect_encoding"
       ],
       "shared_fact_ids": [],
       "title": "URL and encoding utilities"
     },
     {
       "fact_ids": [
+        "example:006",
         "public_symbol:aspose_html.js.jscontext",
         "public_symbol:aspose_html.js.moduleregistry",
-        "public_symbol:aspose_html.js.jsevaluationerror",
-        "public_symbol:aspose_html.js.modulenotfounderror"
+        "dependency:optional.js.quickjs-1.19-2"
       ],
       "shared_fact_ids": [],
-      "title": "JavaScript execution"
+      "title": "Optional JavaScript execution"
     },
     {
       "fact_ids": [
+        "example:007",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.tree.parse_html"
+      ],
+      "shared_fact_ids": [],
+      "title": "Tokenizer and tree construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmltableelement"
+      ],
+      "shared_fact_ids": [],
+      "title": "HTML element APIs"
+    },
+    {
+      "fact_ids": [
+        "example:001",
         "public_symbol:aspose_html.serialise",
         "public_symbol:aspose_html.serialiser.outer_html",
-        "public_symbol:aspose_html.xmlserializer",
-        "public_symbol:aspose_html.dom.xmlserializer"
-      ],
-      "shared_fact_ids": [],
-      "title": "Serialization"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.commenttoken",
-        "public_symbol:aspose_html.tokenizer.doctypetoken"
+        "public_symbol:aspose_html.xmlserializer"
       ],
       "shared_fact_ids": [
-        "public_symbol:aspose_html.tokenizer.tokenizer"
+        "example:001"
       ],
-      "title": "Tokenizer control"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.layout.boxnode",
-        "public_symbol:aspose_html.layout.boxroot",
-        "public_symbol:aspose_html.layout.pagefragment",
-        "public_symbol:aspose_html.layout.build_box_tree",
-        "public_symbol:aspose_html.layout.paginate_fragments"
-      ],
-      "shared_fact_ids": [],
-      "title": "Layout infrastructure"
+      "title": "Serialization"
     }
   ],
   "deviations": [
     {
       "fact_ids": [
-        "inherited_unit:008.code_block"
+        "link_target:027"
       ],
-      "section_id": "at_a_glance",
-      "text": "The inherited Mermaid diagram is omitted; the renderer draws a deterministic diagram from verified capabilities and formats."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:049.table",
-        "inherited_unit:051.table",
-        "inherited_unit:053.table",
-        "inherited_unit:055.table",
-        "inherited_unit:057.table",
-        "inherited_unit:059.table"
-      ],
-      "section_id": "api_reference",
-      "text": "The inherited API tables are omitted; the renderer draws a deterministic API reference from verified public symbols."
-    },
-    {
-      "fact_ids": [
-        "inherited_unit:035.html_block",
-        "inherited_unit:044.html_block"
-      ],
-      "section_id": "additional_examples",
-      "text": "The promotional <details> wrapper is omitted; the renderer renders Additional Examples without it."
+      "section_id": "enterprise_relationship",
+      "text": "The Enterprise Edition link points to the Aspose product page for the commercial offering."
     }
   ],
   "flagship_example_id": "example:006",
@@ -238,7 +204,7 @@
     },
     {
       "link_fact_id": "link_target:018",
-      "section_id": "additional_examples"
+      "section_id": "documentation_resources"
     },
     {
       "link_fact_id": "link_target:023",
@@ -257,8 +223,68 @@
       "section_id": "documentation_resources"
     },
     {
-      "link_fact_id": "link_target:027",
+      "link_fact_id": "link_target:006",
       "section_id": "enterprise_relationship"
+    },
+    {
+      "link_fact_id": "link_target:001",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:003",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:004",
+      "section_id": "badges"
+    },
+    {
+      "link_fact_id": "link_target:002",
+      "section_id": "license"
+    },
+    {
+      "link_fact_id": "link_target:007",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:008",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:009",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:010",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:011",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:012",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:013",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:014",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:015",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:016",
+      "section_id": "navigation"
+    },
+    {
+      "link_fact_id": "link_target:017",
+      "section_id": "navigation"
     }
   ],
   "material_limitations": [],

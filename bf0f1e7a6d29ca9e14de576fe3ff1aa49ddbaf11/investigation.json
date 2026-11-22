@@ -2,180 +2,45 @@
   "audience": {
     "fact_ids": [
       "identity:ecosystem",
-      "identity:platform",
-      "package:python_requires",
+      "identity:family",
       "import_path:aspose_html"
     ],
-    "text": "Python developers building tools that parse, inspect, modify, or serialize HTML documents using WHATWG DOM APIs, CSSOM styling, and URL/encoding utilities."
+    "text": "Python developers building tools that parse, inspect, modify, and serialize HTML documents using WHATWG DOM and CSSOM APIs."
   },
   "capabilities": [
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.htmldocument.parse",
-        "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.tree.parse_html",
-        "public_symbol:aspose_html.tree.treebuilder",
-        "public_symbol:aspose_html.tokenizer.tokenizer"
-      ],
-      "text": "Parse HTML strings, bytes, fragments, and files into a DOM document using `HTMLDocument.parse`, `HTMLDocument.parse_fragment`, and `HTMLDocument.load`.",
-      "title": "Parse HTML into DOM"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.dom.document",
-        "public_symbol:aspose_html.dom.element",
-        "public_symbol:aspose_html.dom.nodelist",
-        "public_symbol:aspose_html.dom.htmlcollection",
-        "public_symbol:aspose_html.dom.htmlheadingelement",
-        "public_symbol:aspose_html.dom.htmlformelement",
-        "public_symbol:aspose_html.dom.htmlinputelement"
-      ],
-      "text": "Create, append, and mutate DOM nodes; access attributes, classes, datasets, and text content; query by ID, tag name, class, or selector helpers.",
-      "title": "DOM manipulation and querying"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssmediarule",
-        "public_symbol:aspose_html.dom.computedstyledeclaration",
-        "public_symbol:aspose_html.css.element_matches",
-        "public_symbol:aspose_html.css.select"
-      ],
-      "text": "Attach CSS stylesheets, inspect rule types, and compute final styles for elements using `get_computed_style` and `ComputedStyleDeclaration`.",
-      "title": "CSSOM styling and resolution"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.url.url",
-        "public_symbol:aspose_html.url.urlsearchparams",
-        "public_symbol:aspose_html.encoding.detect_encoding",
-        "public_symbol:aspose_html.encoding.encodingdetectionresult"
-      ],
-      "text": "Parse and manipulate URLs with `URL` and `URLSearchParams`; detect encoding from byte streams using `detect_encoding`.",
-      "title": "URL and encoding utilities"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.js.moduleregistry",
-        "public_symbol:aspose_html.js.jsevaluationerror",
-        "public_symbol:aspose_html.js.modulenotfounderror"
-      ],
-      "text": "Execute JavaScript against a parsed DOM using `JSContext` backed by QuickJS, with support for module registration and read-only DOM proxies.",
-      "title": "JavaScript execution"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.serialise",
-        "public_symbol:aspose_html.serialiser.outer_html",
-        "public_symbol:aspose_html.xmlserializer",
-        "public_symbol:aspose_html.dom.xmlserializer"
-      ],
-      "text": "Serialize documents, fragments, or elements to HTML strings using `serialise`, `outer_html`, or `XMLSerializer`.",
-      "title": "Serialization"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.tokenizer.starttagtoken",
-        "public_symbol:aspose_html.tokenizer.commenttoken",
-        "public_symbol:aspose_html.tokenizer.doctypetoken"
-      ],
-      "text": "Drive the WHATWG-compliant tokenizer directly using `Tokenizer` and inspect tokens like `StartTagToken`, `CommentToken`, or `DoctypeToken`.",
-      "title": "Tokenizer control"
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.layout.boxnode",
-        "public_symbol:aspose_html.layout.boxroot",
-        "public_symbol:aspose_html.layout.pagefragment",
-        "public_symbol:aspose_html.layout.build_box_tree",
-        "public_symbol:aspose_html.layout.paginate_fragments"
-      ],
-      "text": "Build internal layout structures (`BoxNode`, `FragmentRoot`, `PageFragment`) using `skia-python` for text-run metrics, though no public rendering API is exposed yet.",
-      "title": "Layout infrastructure"
-    }
-  ],
-  "limitations": [
-    {
-      "fact_ids": [
-        "install_command:pip",
-        "install_command:pip"
-      ],
-      "text": "CSS selector matching supports core Selectors Level 3 grammar; dynamic and legacy pseudo-classes raise `NotImplementedError`, and single-colon pseudo-elements are not parsed."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.cssom.cssrule",
-        "public_symbol:aspose_html.cssom.cssstylerule",
-        "public_symbol:aspose_html.cssom.cssmediarule"
-      ],
-      "text": "CSSOM base-rule stubs `CSSRule.type` and `CSSRule.css_text` are not implemented; concrete rule subclasses expose their own properties instead."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.dom.validitystate",
-        "public_symbol:aspose_html.dom.htmlimageelement"
-      ],
-      "text": "Form constraint validation (validity-state computation) and `HTMLImageElement.decode()` are present on the API surface but not yet implemented."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.layout.blockfragment",
-        "public_symbol:aspose_html.layout.inlinetextfragment",
-        "public_symbol:aspose_html.layout.shapedrun"
-      ],
-      "text": "The library builds internal layout structures but does not expose a public API for rendering documents to an image or PDF."
-    },
-    {
-      "fact_ids": [
-        "public_symbol:aspose_html.js.jscontext",
-        "public_symbol:aspose_html.js.moduleregistry",
-        "dependency:optional.js.quickjs-1.19-2"
-      ],
-      "text": "JavaScript execution via `JSContext` requires the optional `quickjs` extra and exposes a read-only DOM proxy; dynamic `import()` is not implemented."
-    },
-    {
-      "fact_ids": [
-        "package:python_requires",
-        "dependency:skia-python-87.0-145"
-      ],
-      "text": "The package requires Python 3.10 or later and `skia-python` >=87.0,<145 as a runtime dependency."
-    }
-  ],
-  "problems_solved": [
     {
       "fact_ids": [
         "example:001",
         "example:004",
         "public_symbol:aspose_html.htmldocument.parse",
         "public_symbol:aspose_html.htmldocument.parse_fragment",
-        "public_symbol:aspose_html.htmldocument.load",
-        "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.tree.treebuilder"
+        "public_symbol:aspose_html.htmldocument.load"
       ],
-      "text": "Enables parsing of HTML strings, bytes, fragments, and files into a standards-compliant DOM tree using WHATWG tokenization and tree-construction algorithms."
+      "text": "Parse HTML strings, fragments, and files into a DOM tree using HTMLDocument.parse, HTMLDocument.parse_fragment, and HTMLDocument.load.",
+      "title": "Parse HTML into DOM"
     },
     {
       "fact_ids": [
         "example:001",
         "public_symbol:aspose_html.dom.document",
         "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.treewalker",
         "public_symbol:aspose_html.dom.nodelist",
-        "public_symbol:aspose_html.dom.htmlheadingelement"
+        "public_symbol:aspose_html.dom.range"
       ],
-      "text": "Supports programmatic DOM manipulation, attribute access, text content updates, and querying by ID, tag name, class, or CSS selectors."
+      "text": "Create, append, and remove nodes; read/write attributes, text content, and classes; traverse with NodeList, TreeWalker, NodeIterator, and Range.",
+      "title": "DOM manipulation and traversal"
     },
     {
       "fact_ids": [
         "example:002",
         "public_symbol:aspose_html.cssom.cssstylesheet",
         "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.cssom.cssmediarule",
         "public_symbol:aspose_html.dom.computedstyledeclaration"
       ],
-      "text": "Provides CSSOM-based style resolution, including computed style calculation, stylesheet attachment, and selector matching."
+      "text": "Attach CSS stylesheets, inspect rule types like CSSStyleRule and CSSMediaRule, and resolve computed styles via ComputedStyleDeclaration.",
+      "title": "CSSOM and computed styles"
     },
     {
       "fact_ids": [
@@ -185,28 +50,151 @@
         "public_symbol:aspose_html.url.urlsearchparams",
         "public_symbol:aspose_html.encoding.detect_encoding"
       ],
-      "text": "Offers URL parsing, query parameter manipulation, and byte-stream encoding detection for robust handling of web resources."
+      "text": "Parse and manipulate URLs with URL and URLSearchParams; detect encoding from bytes using detect_encoding.",
+      "title": "URL and encoding utilities"
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose_html.js.jscontext",
+        "public_symbol:aspose_html.js.moduleregistry",
+        "dependency:optional.js.quickjs-1.19-2"
+      ],
+      "text": "Execute JavaScript against a parsed DOM using JSContext backed by QuickJS, with module registration support.",
+      "title": "Optional JavaScript execution"
+    },
+    {
+      "fact_ids": [
+        "example:007",
+        "public_symbol:aspose_html.tokenizer.tokenizer",
+        "public_symbol:aspose_html.tree.treebuilder",
+        "public_symbol:aspose_html.tree.parse_html"
+      ],
+      "text": "Drive the WHATWG-compliant tokenizer and tree builder directly via Tokenizer and TreeBuilder for low-level parsing control.",
+      "title": "Tokenizer and tree construction"
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.htmlinputelement",
+        "public_symbol:aspose_html.dom.htmlformelement",
+        "public_symbol:aspose_html.dom.htmltableelement"
+      ],
+      "text": "Access specialized element classes such as HTMLInputElement, HTMLFormElement, HTMLTableElement, and many more with their interface-specific properties.",
+      "title": "HTML element APIs"
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose_html.serialise",
+        "public_symbol:aspose_html.serialiser.outer_html",
+        "public_symbol:aspose_html.xmlserializer"
+      ],
+      "text": "Serialize documents, fragments, or elements back to HTML strings using serialise, outer_html, or XMLSerializer.",
+      "title": "Serialization"
+    }
+  ],
+  "limitations": [
+    {
+      "fact_ids": [
+        "install_command:pip",
+        "install_command:pip"
+      ],
+      "text": "CSS selector matching supports core Selectors Level 3 grammar; dynamic and legacy pseudo-classes raise NotImplementedError."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.cssom.cssrule"
+      ],
+      "text": "CSSRule.type and CSSRule.css_text are not implemented; concrete rule subclasses expose their own properties instead."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.dom.validitystate",
+        "public_symbol:aspose_html.dom.htmlimageelement"
+      ],
+      "text": "Form constraint validation and HTMLImageElement.decode are present on the API surface but not yet implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.layout.boxnode",
+        "public_symbol:aspose_html.layout.pagefragment"
+      ],
+      "text": "The library builds internal layout structures but does not expose a public API for rendering to image or PDF."
+    },
+    {
+      "fact_ids": [
+        "example:006",
+        "public_symbol:aspose_html.js.jscontext",
+        "dependency:optional.js.quickjs-1.19-2"
+      ],
+      "text": "JavaScript execution via JSContext requires the optional quickjs extra and exposes a read-only DOM proxy; dynamic import() is not implemented."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_html.css.select"
+      ],
+      "text": "Single-colon legacy pseudo-element forms are not parsed by the CSS selector parser."
+    }
+  ],
+  "problems_solved": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:004",
+        "public_symbol:aspose_html.htmldocument.parse",
+        "public_symbol:aspose_html.htmldocument.load",
+        "public_symbol:aspose_html.tokenizer.tokenizer"
+      ],
+      "text": "Enables parsing raw HTML strings or files into a standards-compliant DOM tree using the WHATWG tokenization and tree-construction algorithms."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
+        "public_symbol:aspose_html.dom.treewalker",
+        "public_symbol:aspose_html.dom.range"
+      ],
+      "text": "Supports querying and mutating DOM nodes programmatically with element creation, attribute manipulation, and traversal helpers like TreeWalker and Range."
+    },
+    {
+      "fact_ids": [
+        "example:002",
+        "public_symbol:aspose_html.cssom.cssstylesheet",
+        "public_symbol:aspose_html.cssom.cssstylerule",
+        "public_symbol:aspose_html.dom.computedstyledeclaration"
+      ],
+      "text": "Resolves computed styles by attaching CSS stylesheets and applying cascade rules including specificity, inheritance, and !important."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:005",
+        "public_symbol:aspose_html.url.url",
+        "public_symbol:aspose_html.encoding.detect_encoding"
+      ],
+      "text": "Provides URL parsing and manipulation, query-string editing, and byte-stream encoding detection for robust web content handling."
     }
   ],
   "product_summary": {
     "fact_ids": [
-      "identity:repository",
       "identity:ecosystem",
       "identity:family",
+      "identity:platform",
       "package:name",
       "package:version"
     ],
-    "text": "Aspose.HTML FOSS for Python is an open-source Python library for parsing HTML into a standards-based DOM tree, applying CSS, serializing markup, and optionally executing JavaScript via QuickJS."
+    "text": "Aspose.HTML FOSS for Python is an open-source Python library implementing a standards-based HTML parser, DOM tree, CSSOM, and serialization, with optional JavaScript execution via QuickJS."
   },
   "uncertainties": [
-    "The exact set of CSS pseudo-classes unsupported by the matcher and parser is not fully listed in the facts.",
-    "The scope of 'read-only DOM proxy' in `JSContext` is not detailed beyond `document.querySelector` and `window.getComputedStyle`.",
-    "Whether `HTMLImageElement.decode()` is stubbed or absent from the public surface is not confirmed by symbols.",
-    "The behavior of `HTMLDocument.load` for remote URLs is not specified in the examples or symbols.",
-    "The extent of `TreeWalker` and `NodeIterator` support for custom filters is not evident from available symbols.",
-    "The handling of `!important` and cascade layers in `get_computed_style` is not explicitly demonstrated.",
-    "Whether `DOMParser` supports non-HTML MIME types beyond the examples is not stated.",
-    "The behavior of `detect_encoding` when multiple conflicting encodings are detected is not detailed."
+    "The exact set of CSS pseudo-classes that raise NotImplementedError is not listed in the facts.",
+    "It is unclear whether the layout structures are used internally for any purpose beyond rendering, which is not yet exposed.",
+    "The scope of the 'read-only DOM proxy' in JSContext is not detailed beyond example:006.",
+    "It is not specified whether the tokenizer and tree builder are fully compliant with the latest WHATWG HTML Standard.",
+    "The behavior of detect_encoding when multiple conflicting encodings are detected is not described.",
+    "The exact conditions under which tests for JSContext and Skia are skipped are only partially described in the inherited README.",
+    "It is unclear whether HTMLDocument.load supports loading from URLs or only local paths.",
+    "The compatibility guarantees for public symbols beyond those listed in PUBLIC_API.md are not detailed in the facts."
   ],
   "workflows": [
     {
@@ -217,17 +205,17 @@
         "public_symbol:aspose_html.serialise"
       ],
       "name": "Parse and modify HTML",
-      "text": "Parse an HTML string using `HTMLDocument.parse`, create new elements with `Document.create_element`, append them to the DOM, and serialize the result using `serialise`."
+      "text": "Parse an HTML string with HTMLDocument.parse, create new elements with Document.create_element, append them to the DOM, and serialize the result with serialise."
     },
     {
       "fact_ids": [
         "example:002",
         "public_symbol:aspose_html.cssom.cssstylesheet",
-        "public_symbol:aspose_html.dom.document",
+        "public_symbol:aspose_html.dom.element",
         "public_symbol:aspose_html.dom.computedstyledeclaration"
       ],
-      "name": "Apply and resolve CSS",
-      "text": "Create a `CSSStyleSheet`, attach it to a `Document`, and resolve computed styles for elements using `get_computed_style` to determine final styling."
+      "name": "Apply and inspect CSS",
+      "text": "Attach a CSSStyleSheet to a Document, call Element.get_computed_style, and read resolved property values from ComputedStyleDeclaration."
     },
     {
       "fact_ids": [
@@ -236,16 +224,17 @@
         "public_symbol:aspose_html.dom.document"
       ],
       "name": "Execute JavaScript against DOM",
-      "text": "Wrap a `Document` in a `JSContext` and evaluate JavaScript expressions that access DOM properties like `document.querySelector` or `window.getComputedStyle`."
+      "text": "Create a JSContext with a Document, evaluate JavaScript strings, and access DOM properties through a read-only proxy."
     },
     {
       "fact_ids": [
         "example:007",
         "public_symbol:aspose_html.tokenizer.tokenizer",
-        "public_symbol:aspose_html.tokenizer.starttagtoken"
+        "public_symbol:aspose_html.tokenizer.starttagtoken",
+        "public_symbol:aspose_html.tokenizer.charactertoken"
       ],
-      "name": "Inspect tokenizer output",
-      "text": "Feed raw HTML to `Tokenizer`, call `tokenize`, and inspect tokens such as `StartTagToken` or `CommentToken` for low-level parsing control."
+      "name": "Tokenize HTML directly",
+      "text": "Instantiate Tokenizer with an HTML string, call tokenize(), and inspect tokens such as StartTagToken and CharacterToken."
     },
     {
       "fact_ids": [
@@ -254,15 +243,16 @@
         "public_symbol:aspose_html.url.urlsearchparams"
       ],
       "name": "Work with URLs and query parameters",
-      "text": "Construct a `URL`, modify its `search_params`, and serialize the updated URL to a string."
+      "text": "Construct a URL, access or modify search_params, and serialize the updated URL to a string."
     },
     {
       "fact_ids": [
         "example:005",
-        "public_symbol:aspose_html.encoding.detect_encoding"
+        "public_symbol:aspose_html.encoding.detect_encoding",
+        "public_symbol:aspose_html.encoding.encodingdetectionresult"
       ],
       "name": "Detect character encoding",
-      "text": "Pass byte data to `detect_encoding` to infer encoding, confidence, and decoded text content."
+      "text": "Pass byte data to detect_encoding to infer encoding, confidence, and decoded text using BOM and meta-charset sniffing."
     }
   ]
 }
