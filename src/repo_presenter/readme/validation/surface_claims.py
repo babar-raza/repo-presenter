@@ -1022,7 +1022,11 @@ def _base_names(fact: Fact) -> list[str]:
     attributes = fact.attributes or {}
     raw = attributes.get("bases", "")
     if not raw:
-        declaration = attributes.get("declaration", "")
+        # A declaration is the head of the type; a TypeScript one carries its whole body
+        # ("export interface MdCode { type: 'code'; value: string; }"), whose colons are member
+        # types, never a C# or C++ base list (BL-792: the body's last token, "}", was read as the
+        # base of fifteen PDF TypeScript rows and printed as "inherits from }").
+        declaration = str(attributes.get("declaration", "")).split("{", 1)[0]
         if ":" in declaration:
             raw = declaration.split(":", 1)[1]
         elif " extends " in declaration or " implements " in declaration:

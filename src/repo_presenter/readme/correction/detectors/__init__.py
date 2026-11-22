@@ -30,7 +30,7 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "dead_link": "2",
     "enterprise_edition_naming": "4",
     "failing_example": "1",
-    "format_overclaim": "2",
+    "format_overclaim": "3",
     "glance_layout": "2",
     "listed_type_count": "2",
     "report_gaps": "1",
@@ -38,7 +38,7 @@ DETECTOR_VERSIONS: dict[str, str] = {
     "stale_package_version": "5",
     "stale_type_count": "1",
     "stray_fence": "1",
-    "type_description": "4",
+    "type_description": "5",
     "unclosed_details": "1",
     "versioned_link_target": "1",
 }

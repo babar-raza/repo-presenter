@@ -1186,6 +1186,54 @@ def committed_document(budget_path: Path) -> dict[str, Any]:
     return _load_document(budget_path)
 
 
+#: How often a reserve step re-reads the ledger after a backend error before it gives up (BL-790).
+LEDGER_UPDATE_ATTEMPTS = 4
+
+
+def _ledger_error_text(error: Exception) -> str:
+    """The error's type and first line, with any credential in a URL masked: the reserve step's
+    refusal is printed in the job log and recorded in the reservation file."""
+    import re
+
+    text = (str(error).strip().splitlines() or [""])[0]
+    text = re.sub(r"(?<=://)[^@/\s]+@", "***@", text)
+    return f"{type(error).__name__}: {text[:200]}" if text else type(error).__name__
+
+
+def _update_ledger_with_retry(
+    remote: str, mutate: Any, outcome: dict[str, Any], *, attempts: int = LEDGER_UPDATE_ATTEMPTS,
+    sleep: Any = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """``store.update(mutate)``, retried on a backend error (BL-790).
+
+    Several hosted jobs reserve from the one ledger ref within seconds of each other; the store
+    already retries a lost compare-and-swap, but a job whose fetch or push failed for any other
+    transient reason (a refused connection while four runs start together) used to give up on the
+    first error and run with no reservation, so its one provider call was refused and the whole
+    Lane L review failed on a budget class that R45 says never blocks (hosted Lane L PDF Cpp, run
+    44993719030: 'provider-spend ledger unavailable: StateBackendError'). A reservation is
+    reservation-before-call and settle-after-call, so the retry changes nothing about the
+    measurement: ``mutate`` is pure and re-applied to the newer ledger. After the last attempt the
+    outage still fails closed (no reservation, zero-call work only), now with the error named."""
+    import random
+
+    sleep = sleep or time.sleep
+    last: Exception | None = None
+    for attempt in range(attempts):
+        try:
+            with ledger_store(remote, state_token()) as store:
+                return store.update(mutate), outcome
+        except Exception as error:  # noqa: BLE001 -- a ledger outage fails closed: no spend at all
+            last = error
+            outcome.clear()
+            if attempt + 1 < attempts:
+                sleep(min(20.0, 2.0 * 2**attempt) * (0.5 + random.random()))
+    return empty_ledger(), {
+        "entry": None,
+        "refusal": f"provider-spend ledger unavailable: {_ledger_error_text(last or Exception())}",
+    }
+
+
 def _cmd_reserve(args: Any) -> int:
     """Claim (or grant) this run's reservation, then materialise the local budget file."""
     committed = committed_document(args.budget)
@@ -1209,12 +1257,7 @@ def _cmd_reserve(args: Any) -> int:
         outcome.update({"entry": entry, "refusal": refusal})
         return ledger
 
-    try:
-        with ledger_store(args.remote, state_token()) as store:
-            ledger = store.update(mutate)
-    except Exception as error:  # noqa: BLE001 -- a ledger outage fails closed: no spend at all
-        ledger = empty_ledger()
-        outcome = {"entry": None, "refusal": f"provider-spend ledger unavailable: {type(error).__name__}"}
+    ledger, outcome = _update_ledger_with_retry(args.remote, mutate, outcome)
     entry, refusal = outcome.get("entry"), outcome.get("refusal")
     if entry is not None and find_entry(ledger, "settle", args.id) is not None:
         entry, refusal = None, f"reservation {args.id} is already settled; a re-run needs a new id"
