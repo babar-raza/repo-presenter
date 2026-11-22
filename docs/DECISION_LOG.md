@@ -8439,3 +8439,24 @@ R10: no sealed README changes (the memos return what the functions returned; the
 What remains. If Words Java still reaches the hard stop, its failure record names the stage and the 'provider call' lines give the call latencies: that is the next profile target. A reply-level contract error (invalid verdict, ACCEPT carrying findings) still loses the unit; no hosted run has shown one.
 
 Backlog: BL-710, BL-711, BL-712
+
+## 2026-11-22: TeX Python defect exercised end to end in the issue system, dry run (BL-740, BL-741, BL-742)
+
+Owner feedback R50 asked for TeX Python to be the case that assesses the issue system. The investigation found the old project's
+defect `c00f9615` ('102 of 119 .py files fail ast.parse at 181015d'), approved 2026-10-16 (expired 2026-11-15), never filed (registry
+`dry_run`, no `issues_mode`), and fixed upstream on 2026-11-06 (0 of 248 files fail at `de943bc` and `07db3203`). Done, all zero-call and
+dry run: (1) the recorded reproduction (`data/issue_reproductions/aspose-tex-foss__Aspose.TeX-FOSS-for-Python.json`, runtime python,
+`python -I` over the tree, `ast.parse` only) and a SIMULATED tracked record of the never-filed defect (issue_number 0, recorded
+revision `181015d`); TeX Python added to `data/issue_pilot.json` in `dry_run` (the R22 write allowlist and the registry are unchanged;
+the pilot never creates an issue). (2) The monitor decides VERIFIED_RESOLVED and plans the close comment and state change at `07db3203`,
+STILL_REPRODUCES (a dated comment) at `181015d`; a simulated record is never written for in any mode and a real issue with the
+fingerprint replaces it. (3) `issues/filing_report.py` shows what filing would produce and every gate that refuses it (registry
+`dry_run`, pilot guard, kill switch unset, approval expired, stale finding). (4) `issues.yml` is a matrix over the pilot repositories
+(TypeScript keeps minting its token; the dry-run TeX leg mints none); the run request `{"job": "issues"}` covers both with no input.
+(5) Naming: the kill switch is `REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED` (family name, as the old project and the proposal and
+candidates switches), the old `REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED` stays an accepted alias, a conflicting pair disables.
+Reading of R39: widening the pilot is the owner's call; the supervisor took R50 as that instruction for a dry-run entry only and the
+owner can drop the entry. Not proven (R41): the hosted dry-run cycle. What remains: owner variable and live mode, a real issue (or not:
+the defect is fixed, so filing is now refused as stale), the hosted filing job (WP-4) behind the sandbox, upstream tracker listing (WP-9).
+
+Backlog: BL-740, BL-741, BL-742

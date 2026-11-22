@@ -39,6 +39,13 @@ Mode = Literal["dry_run", "live"]
 MODES: tuple[Mode, ...] = ("dry_run", "live")
 Environment = Literal["checkout", "consumer_omit_dev"]
 ENVIRONMENTS: tuple[Environment, ...] = ("checkout", "consumer_omit_dev")
+#: The interpreter a recorded reproduction script runs under (``node`` is the original pilot's;
+#: ``python`` runs ``python -I <script>`` with the checkout as the working directory).
+Runtime = Literal["node", "python"]
+RUNTIMES: tuple[Runtime, ...] = ("node", "python")
+#: ``issue_number`` of a reproduction whose issue was never filed (a SIMULATED tracked record, dry
+#: run only); see :class:`SimulatedIssue`.
+SIMULATED_ISSUE_NUMBER = 0
 
 _REPOSITORY = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9_.-]+$")
 _FINGERPRINT = re.compile(r"^sha256:[0-9a-f]{64}$")
@@ -78,10 +85,29 @@ class Reproduction:
 
 
 @dataclass(frozen=True)
+class SimulatedIssue:
+    """A defect that was approved and recorded but never filed upstream, kept as a tracked
+    record so the monitor's whole decision path (re-verify, decide, plan the close comment) can
+    be exercised without an upstream issue. DRY RUN ONLY: ``monitor.execute`` refuses to write
+    for it in any mode, and a real upstream issue carrying the same fingerprint replaces it."""
+
+    defect_fingerprint: str
+    title: str
+    body: str
+    created_at: str
+    note: str
+
+
+@dataclass(frozen=True)
 class ReproductionSet:
     repository: str
     prepare: tuple[tuple[str, ...], ...]
     reproductions: tuple[Reproduction, ...]
+    runtime: Runtime = "node"
+    simulated: tuple[SimulatedIssue, ...] = ()
+
+    def simulated_by_fingerprint(self) -> dict[str, SimulatedIssue]:
+        return {s.defect_fingerprint: s for s in self.simulated}
 
     def by_fingerprint(self) -> dict[str, Reproduction]:
         return {r.defect_fingerprint: r for r in self.reproductions}
@@ -220,7 +246,14 @@ def load_reproductions(repository: str, path: Path | None = None) -> Reproductio
     for r in raw:
         if not isinstance(r, dict):
             _bad(path, "has a non-object reproduction")
-        number = _positive_int(path, r.get("issue_number"), "issue_number")
+        simulated_number = r.get("issue_number") == SIMULATED_ISSUE_NUMBER and not isinstance(
+            r.get("issue_number"), bool
+        )
+        number = (
+            SIMULATED_ISSUE_NUMBER
+            if simulated_number
+            else _positive_int(path, r.get("issue_number"), "issue_number")
+        )
         fp = r.get("defect_fingerprint")
         if not isinstance(fp, str) or not _FINGERPRINT.match(fp) or fp in seen_fp:
             _bad(path, f"issue {number}: defect_fingerprint missing, malformed or duplicated")
@@ -279,8 +312,42 @@ def load_reproductions(repository: str, path: Path | None = None) -> Reproductio
                 evidence=tuple(evidence),
             )
         )
+    runtime = data.get("runtime", "node")
+    if runtime not in RUNTIMES:
+        _bad(path, f"unknown runtime {runtime!r}")
+    simulated = _simulated(path, data.get("simulated_issues"), items)
+    if any(r.issue_number == SIMULATED_ISSUE_NUMBER for r in items) and not all(
+        r.defect_fingerprint in {s.defect_fingerprint for s in simulated}
+        for r in items
+        if r.issue_number == SIMULATED_ISSUE_NUMBER
+    ):
+        _bad(path, "a reproduction with issue_number 0 needs a simulated_issues record")
     return ReproductionSet(
         repository=repository,
         prepare=tuple(tuple(cmd) for cmd in prepare),
         reproductions=tuple(items),
+        runtime=runtime,
+        simulated=simulated,
     )
+
+
+def _simulated(path: Path, raw: Any, items: list[Reproduction]) -> tuple[SimulatedIssue, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list):
+        _bad(path, "simulated_issues must be a list")
+    by_fp = {r.defect_fingerprint: r for r in items}
+    out: list[SimulatedIssue] = []
+    for s in raw:
+        if not isinstance(s, dict):
+            _bad(path, "has a non-object simulated issue")
+        fp = s.get("defect_fingerprint")
+        if not isinstance(fp, str) or fp not in by_fp or any(o.defect_fingerprint == fp for o in out):
+            _bad(path, f"simulated issue fingerprint {fp!r} is not a reproduction of this file, or is repeated")
+        if by_fp[fp].issue_number != SIMULATED_ISSUE_NUMBER:
+            _bad(path, f"simulated issue {fp}: its reproduction must carry issue_number 0")
+        for field in ("title", "body", "created_at", "note"):
+            if not isinstance(s.get(field), str) or not s[field].strip():
+                _bad(path, f"simulated issue {fp}: {field} must be a non-empty string")
+        out.append(SimulatedIssue(fp, s["title"], s["body"], s["created_at"], s["note"]))
+    return tuple(out)

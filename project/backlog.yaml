@@ -3344,3 +3344,43 @@ items:
       - "BL-563's own comment: 'the present job is cancelled at 90 minutes with nothing recorded'"
     next_action: "supervisor integrates; if a cell still ends at the hard stop after BL-711, the stage named in its failure record is the next profile target"
     updated: "2026-11-22"
+
+  - id: BL-740
+    title: "TeX Python 'N of 119 .py files fail ast.parse' defect as the issue system's end-to-end case in dry run: tracked record, VERIFIED_RESOLVED at the fixed revision, planned close payload, hosted wiring (WP-5)"
+    type: gap
+    source: "owner ruling R50 (2026-11-22) 'Tex/python has solved some of the problems logged in issues upstream so it is a good candidate to assess how well issue system works'; docs/investigations/2026-11-22-github-app-delivery-and-issues.md section 3 (T5) and WP-5; BL-722, BL-723"
+    priority: P0
+    status: active
+    depends_on: [BL-723]
+    implementation_path: "data/issue_reproductions/aspose-tex-foss__Aspose.TeX-FOSS-for-Python.json (runtime python: `python -I` ast.parse over every .py file, reproduces_if_any 'FAILED/TOTAL <n>/...' with n>=1, resolved_if_all 'FAILED/TOTAL 0/...'; issue_number 0 + simulated_issues = a SIMULATED tracked record of the never-filed defect, fingerprint c00f9615, recorded revision 181015d); data/issue_pilot.json gains the repository in dry_run (effects issue, issue_comment: close/reopen/comment on existing issues only; the write allowlist is unchanged); issues/pilot.py (runtime, SimulatedIssue), issues/reproduce.py (python runtime, script kept outside the checkout, `-I`), issues/monitor.py (with_simulated_issues: dry run only, execute never writes for a simulated record, a real presenter issue with the fingerprint replaces it; planned comment/close payload in the audit row and summary; --head/--offline/--json-out for a zero-call run); .github/workflows/issues.yml matrix of both pilot repositories (mint only for the live-mode TypeScript leg); run-request {job: issues} covers both with no input"
+    acceptance: "(1) tests/issues/test_tex_python_issue.py: clean tree -> VERIFIED_RESOLVED -> CLOSE planned not posted; broken tree -> STILL_REPRODUCES -> dated comment planned; empty tree NOT_VERIFIABLE; the script never runs upstream code; a simulated record is never written for with every live gate open; workflow matrix equals the pilot file; (2) zero-call local evidence at 07db3203 (0 of 248) and 181015d (102 of 119); (3) hosted (not proven): a run-request {job: issues} dry-run cycle on refs/repository-presenter-state/issues/aspose-tex-foss__Aspose.TeX-FOSS-for-Python reports VERIFIED_RESOLVED; (4) live close (a real comment and close) only after the owner sets the kill switch and the pilot mode is live and a real issue exists (R17/R22 unchanged)"
+    evidence:
+      - "local zero-call decision 2026-11-22: revision 07db320334a0 -> VERIFIED_RESOLVED -> CLOSE (dry run, simulated record, output FAILED/TOTAL 0/248, digest sha256:0dd53d4f9ca165e25ccb90955554e663e2e5d0467d9273af03dff23dabfd0977); revision 181015d2eee3 -> STILL_REPRODUCES (FAILED/TOTAL 102/119)"
+    next_action: "supervisor integrates, dispatches a run request {job: issues}, reads the TeX dry-run cycle on the state ref; owner decides whether to widen the issue pilot (R39) and, separately, whether the defect is ever filed (it is fixed: filing now is refused as a stale finding)"
+    updated: "2026-11-22"
+
+  - id: BL-741
+    title: "Filing path dry run: what filing the TeX Python defect would produce and which gates refuse it (dedupe, issue body, labels, registry gate, allowlist/pilot guard, kill switch, approval, staleness)"
+    type: gap
+    source: "owner ruling R50 (2026-11-22); docs/investigations/2026-11-22-github-app-delivery-and-issues.md gap G4 and WP-4/WP-5; R22 (issue filing stays off), R39"
+    priority: P1
+    status: active
+    depends_on: [BL-740]
+    implementation_path: "issues/filing_report.py (python -m repo_presenter.issues.filing_report --handoff ... [--approval-file ... --checks ... --head ...]): read-only, zero-call; evaluates every gate independently next to the issue it would post (title, labels repo-presenter + defect:source_unparseable, body with the fingerprint marker) and the dedup verdict (upstream issues and non-simulated records block a filing; a simulated tracked record is only noted); data/issue_handoffs/<id>.json is the old project's handoff c00f9615 verbatim plus defect_class (digest unchanged: it equals the owner's 2026-10-16 approval digest 085fcb7e). The filing itself (a workflow that files) is NOT built: it stays WP-4 behind the sandbox (BL-028/R17)"
+    acceptance: "(1) tests in tests/issues/test_tex_python_issue.py: every closed gate reported, a valid approval shows open, today's approval expired, a fresh approval plus a clean checks artifact is refused as a stale finding, an upstream issue is a dedup; (2) the report for today: REFUSED (registry dry_run, pilot never creates, kill switch unset, approval expired 2026-11-15, defect no longer reproduces)"
+    evidence:
+      - "local report 2026-11-22 (offline): action REFUSED; registry_dry_run, pilot guard 'never creates one', kill switch not set, approval expired at 2026-11-15T11:28:29Z, recheck 'no longer reproduces'; on 2026-10-17 with the old tree the approval gate was open and the other three closed"
+    next_action: "WP-4 (a hosted filing job on a sandbox repository) after the owner supplies the sandbox (owner action 5)"
+    updated: "2026-11-22"
+
+  - id: BL-742
+    title: "Reconcile the issues kill-switch naming drift: this repository's REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED against the old project's and the proposal/candidates switches' REPOSITORY_PRESENTER_*_WRITE_AUTHORIZED"
+    type: debt
+    source: "docs/investigations/2026-11-22-github-app-delivery-and-issues.md section 1.3 and gap G8 (WP-8)"
+    priority: P2
+    status: done
+    implementation_path: "issues/file.py: AUTHORIZATION_VARIABLE is now REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED (the family name); REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED stays honoured as a legacy alias; write_authorized is true only when at least one is set and every one that is set is truthy (a conflicting pair disables; fail closed); issues.yml passes both variables to the maintain job only; the live blocker message names both"
+    acceptance: "tests/issues/test_tex_python_issue.py: unset, either name, both, conflicting, empty and invalid values; all existing issue tests pass unchanged (they use the legacy name)"
+    evidence:
+      - "pytest tests/issues: 256 passed (2026-11-22); the owner may set either variable name; the documented one is REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED"
+    updated: "2026-11-22"

@@ -5,6 +5,13 @@ name: issues
 # aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript; widening it is the owner's call). Scheduled daily
 # (R37), dispatchable by hand, and callable by run-request-execute.yml ({"job": "issues"}).
 #
+# One matrix leg per pilot repository (R50, 2026-11-22: TeX Python joined, dry run, as the end-to-end
+# test of the issue system: its tracked defect was fixed upstream, so the leg plans the CLOSE).
+# tests/issues/test_issues_workflow.py pins the matrix to data/issue_pilot.json. `runtime` picks the
+# toolchain the recorded reproductions need (node: npm install + build; python: `python -I` ast.parse
+# only, no install); `mint` is true only for a repository whose pilot mode is live (a dry-run leg
+# never holds a write-capable token), and today only the 3D TypeScript leg mints (unchanged behaviour).
+#
 # Two jobs with a trust boundary between them, modelled on present.yml's facts/present split:
 #
 #   reproduce  executes the upstream repository's own code (npm install, its build, each issue's
@@ -18,7 +25,8 @@ name: issues
 #              predicates, records/imports the App's issues (dedup by fingerprint marker), decides
 #              close / dated re-check / reopen, acts through the guarded client (dry run unless the
 #              pilot is mode: live, a dry-run cycle is already recorded, the kill switch
-#              REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is 1 and the token verifies), and records the
+#              REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED (legacy alias
+#              REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED) is 1 and the token verifies), and records the
 #              cycle on refs/repository-presenter-state/issues/<owner>__<name>.
 #
 # tests/issues/test_issues_workflow.py fails if the reproduce job gains a secret, a variable, a
@@ -38,16 +46,28 @@ concurrency:
   group: issues
   cancel-in-progress: false
 
-env:
-  PILOT_OWNER: aspose-3d-foss
-  PILOT_NAME: Aspose.3D-FOSS-for-TypeScript
-
 jobs:
   reproduce:
+    name: reproduce (${{ matrix.owner }}/${{ matrix.name }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - owner: aspose-3d-foss
+            name: Aspose.3D-FOSS-for-TypeScript
+            runtime: node
+            mint: true
+          - owner: aspose-tex-foss
+            name: Aspose.TeX-FOSS-for-Python
+            runtime: python
+            mint: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
       contents: read
+    env:
+      PILOT_OWNER: ${{ matrix.owner }}
+      PILOT_NAME: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,7 +82,8 @@ jobs:
 
       # The issues were reproduced on Node.js 22 (their own Environment sections); pinned like
       # present.yml's toolchains so a re-check is as reproducible as the toolchain that ran.
-      - uses: actions/setup-node@v4
+      - if: ${{ matrix.runtime == 'node' }}
+        uses: actions/setup-node@v4
         with:
           node-version: "22.23.4"
 
@@ -79,14 +100,27 @@ jobs:
       - name: Hand the observations to the maintain job
         uses: actions/upload-artifact@v4
         with:
-          name: issue-checks-${{ github.run_id }}-${{ github.run_attempt }}
+          name: issue-checks-${{ matrix.owner }}-${{ matrix.name }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: .issue-checks
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 30
 
   maintain:
+    name: maintain (${{ matrix.owner }}/${{ matrix.name }})
     needs: reproduce
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - owner: aspose-3d-foss
+            name: Aspose.3D-FOSS-for-TypeScript
+            runtime: node
+            mint: true
+          - owner: aspose-tex-foss
+            name: Aspose.TeX-FOSS-for-Python
+            runtime: python
+            mint: false
     # Runs after a failed reproduce job too: the issues are still recorded, every re-check is then
     # NOT_VERIFIABLE (nothing is closed or reopened), and the cycle is recorded.
     if: ${{ !cancelled() }}
@@ -96,6 +130,9 @@ jobs:
     # every upstream write uses the App installation token below, never this job's token.
     permissions:
       contents: write
+    env:
+      PILOT_OWNER: ${{ matrix.owner }}
+      PILOT_NAME: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -112,7 +149,7 @@ jobs:
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
-          name: issue-checks-${{ github.run_id }}-${{ github.run_attempt }}
+          name: issue-checks-${{ matrix.owner }}-${{ matrix.name }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: .issue-checks
 
       # The repository-presenter App's own identity (R39), minted inside this job and revoked at job
@@ -121,6 +158,7 @@ jobs:
       # token for writes.
       - name: Mint the App installation token (pilot repository only, issues write)
         id: app-token
+        if: ${{ matrix.mint }}
         continue-on-error: true
         uses: actions/create-github-app-token@v2
         with:
@@ -136,6 +174,7 @@ jobs:
           GH_APP_INSTALLATION_TOKEN: ${{ steps.app-token.outputs.token }}
           GITHUB_TOKEN: ${{ github.token }}
           REPOSITORY_PRESENTER_STATE_TOKEN: ${{ github.token }}
+          REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPOSITORY_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
           REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED: ${{ vars.REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED }}
         run: |
           git config --global user.name "github-actions[bot]"

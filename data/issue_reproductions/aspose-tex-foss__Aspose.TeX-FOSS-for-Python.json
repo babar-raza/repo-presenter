@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
+  "ruling": "R50 (owner, 2026-11-22), WP-5 of docs/investigations/2026-11-22-github-app-delivery-and-issues.md: the TeX Python defect as the issue system's end-to-end test case",
+  "meaning": "The one defect the old project found for this repository (handoff c00f9615, 'N of 119 .py files fail ast.parse at 181015d'), approved by the owner on 2026-10-16 (approval expired 2026-11-15) and NEVER filed upstream: the registry entry is dry_run with no issues_mode. Upstream fixed it on 2026-11-06 (0 of 248 files fail at de943bc and at 07db3203). runtime python: the script runs as `python -I <script>` with the checkout as the working directory, so the upstream tree is only ever data for ast.parse. issue_number 0 plus simulated_issues = a SIMULATED tracked record for the never-filed defect: the monitor decides on it (dry run only, never a write); a real presenter issue carrying the fingerprint replaces it automatically. Only reviewed commits change this file.",
+  "runtime": "python",
+  "prepare": [],
+  "reproductions": [
+    {
+      "issue_number": 0,
+      "defect_fingerprint": "sha256:c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188",
+      "check_id": "example:tex-python-ast-parse-all",
+      "defect_class": "SOURCE_UNPARSEABLE",
+      "recorded_revision": "181015d2eee3e19f8af3d84e4a932ac84ad47c7c",
+      "recorded_at": "2026-10-10",
+      "environment": "checkout",
+      "script": "import ast\nimport pathlib\n\nbad = ok = 0\nfirst = None\nfor p in sorted(pathlib.Path(\".\").rglob(\"*.py\")):\n    try:\n        ast.parse(p.read_text(encoding=\"utf-8\"))\n        ok += 1\n    except (SyntaxError, ValueError, UnicodeDecodeError) as exc:\n        bad += 1\n        if first is None:\n            first = f\"{p.as_posix()}: {type(exc).__name__}: {str(exc)[:160]}\"\nprint(f\"FAILED/TOTAL {bad}/{bad + ok}\")\nif first:\n    print(\"first failure:\", first)\n",
+      "reproduces_if_any": [
+        "(?m)^FAILED/TOTAL [1-9][0-9]*/[0-9]+$"
+      ],
+      "resolved_if_all": [
+        "(?m)^FAILED/TOTAL 0/[1-9][0-9]*$"
+      ],
+      "resolved_if_output_empty": false,
+      "evidence": [
+        {
+          "path": "src/aspose_tex/presentation/__init__.py",
+          "detail": "At revision 181015d2eee3e19f8af3d84e4a932ac84ad47c7c, ast.parse raises IndentationError at line 108: \"expected an indented block after function definition on line 107\". Independently re-fetched via https://raw.githubusercontent.com/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/181015d2eee3e19f8af3d84e4a932ac84ad47c7c/src/aspose_tex/presentation/__init__.py and re-parsed 2026-09-17, reproducing docs/DECISION_LOG.md:2232-2239 (G3-W04, 2026-09-07 12:20, confirmed by gh api against the pinned revision, not the clone)."
+        },
+        {
+          "path": "gh api repos/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/git/trees/181015d2eee3e19f8af3d84e4a932ac84ad47c7c?recursive=true",
+          "detail": "45 .py files exist under src/aspose_tex/ at this revision. Independently fetching and ast.parse-ing every one 2026-09-17 gives 35 IndentationError, 10 parse OK - the same 35-of-45 count docs/DECISION_LOG.md:2233-2234 and evidence/build/G3_PYTHON_COHORT/manifest.json (line 499) already recorded. Every failure is the same shape: 'expected an indented block after ...'."
+        },
+        {
+          "path": "repos/aspose-tex-foss/Aspose.TeX-FOSS-for-Python (default branch HEAD)",
+          "detail": "gh api confirms default branch HEAD is still 181015d2eee3e19f8af3d84e4a932ac84ad47c7c as of 2026-09-17 (pushed_at 2026-09-02T10:10:31Z) - no revision drift since the original finding; this handoff's re-verification is against the identical revision docs/DECISION_LOG.md and RESEARCH_LANE_E.md already recorded (RESEARCH_LANE_E.md:1233-1234: 'aspose-tex-foss is NOT_PROCESSABLE')."
+        },
+        {
+          "path": "python ast.parse over every .py file under src/aspose_tex (shallow clone at the live head, Python 3.13.15)",
+          "detail": "2026-10-09T20:50Z: 45 files, 35 IndentationError, 10 parse OK (first: src/aspose_tex/_engine/box_builder.py line 63 'expected an indented block after for statement on line 62')"
+        },
+        {
+          "path": "gh api repos/aspose-tex-foss/Aspose.TeX-FOSS-for-Python/commits/main --jq .sha",
+          "detail": "181015d2eee3e19f8af3d84e4a932ac84ad47c7c at 2026-10-09T20:50Z (no revision drift since 2026-09-17; the raw blob also carries one-space indentation)"
+        }
+      ]
+    }
+  ],
+  "simulated_issues": [
+    {
+      "defect_fingerprint": "sha256:c00f9615a81bb9f3c77f45df5ded5036d8da0cce6d6dee01634a27b3f3659188",
+      "title": "Aspose.TeX FOSS for Python: 102 of 119 .py files fail to parse (IndentationError) and 'import aspose_tex' fails",
+      "body": "Reproduced independently against the current default-branch head `181015d2eee3e19f8af3d84e4a932ac84ad47c7c` on 2026-10-10.\n\n## Summary\n\nMost of this repository's Python source does not parse. Indentation has been collapsed to one space per nesting level, so the files are not valid Python. The package cannot be imported from this source tree and the test suite cannot be collected.\n\n## Environment\n\n- Revision `181015d2eee3e19f8af3d84e4a932ac84ad47c7c` (default branch `main`)\n- Python 3.13.15, standard library only (`ast.parse`); any Python 3 interpreter reproduces it\n\n## Steps to reproduce\n\n```python\nimport ast, pathlib\nbad = ok = 0\nfor p in pathlib.Path(\".\").rglob(\"*.py\"):\n    try:\n        ast.parse(p.read_text(encoding=\"utf-8\")); ok += 1\n    except SyntaxError:\n        bad += 1\nprint(bad, ok)\n```\n\nand\n\n```sh\npip install -e .\npython -c \"import aspose_tex\"\n```\n\n## Expected\n\nEvery `.py` file parses, `import aspose_tex` succeeds and the test suite can be collected.\n\n## Actual result\n\n- 102 of the 119 `.py` files raise `IndentationError`: `src/aspose_tex/` 35 of 45, `tests/` 66 of 73 (including `tests/_verification/`), and `run_hello.py`.\n- `src/aspose_tex/presentation/__init__.py` (the module the package's own docstring calls the user-facing entry point; it defines `TeXJob`, `TeXOptions` and the `OutputDevice` hierarchy): `IndentationError: expected an indented block after function definition on line 107 (line 108)`. Lines 107 and 108 are indented by a single space.\n- `import aspose_tex` fails immediately: `aspose_tex/__init__.py` imports `aspose_tex._input`, which imports `_input/catcode.py`, line 66: `IndentationError: expected an indented block after 'for' statement on line 65`.\n- The same error shape (`expected an indented block after ...`) recurs in every failing file.\n\n## Suggested fix\n\nRestore the original indentation (re-export from the original formatted source), then add a CI step that runs `python -m compileall src tests` on every push so a collapsed-indentation commit cannot land again.\n",
+      "created_at": "2026-10-16T11:28:29Z",
+      "note": "never filed: approved 2026-10-16 (ops/issue_approvals record in the old project, expired 2026-11-15) but the registry entry is dry_run with no issues_mode; recorded here so the monitor tracks it as the issue it would have been"
+    }
+  ]
+}

@@ -17,7 +17,8 @@ name: run-request-execute
 #   cohort    the engine's override (owner R37, 2026-11-13): present.yml called with NO target runs only
 #             its cohort job -- the same authorization-gated planner the hourly schedule and
 #             cohort-chain.yml run, under the same one-planner group -- for when the cron is late.
-#   issues    calls issues.yml (owner R39, 2026-11-13): one pilot issue-maintenance cycle, no input.
+#   issues    calls issues.yml (owner R39, 2026-11-13): one maintenance cycle for every pilot repository (a
+#             matrix leg each: 3D TypeScript and, since R50 2026-11-22, TeX Python in dry run), no input.
 #   count     (BL-111, 2026-11-14) runs main's ops/checks/portfolio_delivery_count.py hosted, with
 #             attestations: read so each acceptance record's Sigstore attestation verifies, and writes the
 #             official per-lane delivered count to the job summary. Read-only: no secret, no write scope.
