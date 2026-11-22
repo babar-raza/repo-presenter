@@ -1,21 +1,6 @@
 {
  "history": [
   {
-   "at": "2026-11-18T16:24:42+00:00",
-   "classes": [
-    "BC-04|unresolved|code_span_q_is",
-    "BC-07|unresolved|example_heading_q_is",
-    "BC-07|unresolved|heading_q_is_not",
-    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve"
-   ],
-   "code": "223cabfa0c779ca0aa21c25eb993ab0e731d340d22314c97a638a915b4dd3fed",
-   "findings": 13,
-   "outcome": "failure",
-   "run_id": "44330589268",
-   "source_revision": "7c862a8a3c891c99c6cbe199bc700c6bde36529d",
-   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
-  },
-  {
    "at": "2026-11-18T20:34:37+00:00",
    "classes": [
     "job_error|job_error|JobError:section_authoring_gateway_answered_http"
@@ -244,79 +229,127 @@
    "run_id": "45028865276",
    "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T17:01:52+00:00",
+   "classes": [
+    "llm:factuality|inherited_unit|scope_limitations"
+   ],
+   "code": "23be31ef38f54a2baeed624a0d572145eb52e22bf2a9e94f8c5bca7f48123130",
+   "findings": 4,
+   "outcome": "failure",
+   "run_id": "45040357304",
+   "source_revision": "717d0cce139171bc2e47f9da114ab3c892b5998c",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T14:49:08+00:00",
+  "at": "2026-11-22T17:01:52+00:00",
   "classes": {
-   "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of": {
-    "example": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 300 reached in this invocation; no further calls are made and the run stops",
-    "findings": 1,
-    "origin_kind": "job_error",
+   "llm:factuality|inherited_unit|scope_limitations": {
+    "example": "  - **The content.** Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1's own script engine, so it is evidence from one producer and one version. Acrobat's XML encoding is recognised but not recomputed, and is reported.",
+    "findings": 4,
+    "origin_kind": "inherited_unit",
     "origins": [
-     "ProviderCallBudgetError"
+     "inherited_unit:572.002.list",
+     "inherited_unit:572.003.list"
     ],
-    "rule": "job_error",
-    "scope": "e31d5cddd3446ef6dfe6509eb9930b2f622404b064e0349001ec4e0895bceac9",
+    "rule": "llm:factuality",
+    "scope": "5832e934ad9f6da89b23fc15256470ad5591366a0d1e9f1b09074bd70f0e3086",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   },
-  "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+  "code": "23be31ef38f54a2baeed624a0d572145eb52e22bf2a9e94f8c5bca7f48123130",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 300 reached in this invocation; no further calls are made and the run stops",
-   "kind": "ProviderCallBudgetError",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 4 blocking finding(s) of 4; nothing sealed; F01 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F02 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F04 [unsupported_claim] in scope_limitations blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "ProviderCallBudgetError",
-    "message": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 300 reached in this invocation; no further calls are made and the run stops",
+    "label": "F01",
+    "message": "Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1's own script engine, so it is evidence from one producer and one version.",
     "origin": {
-     "id": "ProviderCallBudgetError",
-     "kind": "job_error"
+     "id": "inherited_unit:572.002.list",
+     "kind": "inherited_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of",
-    "source": "job",
-    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
+    "quote": "  - **The content.** Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1's own script engine, so it is evidence from one producer and one version. Acrobat's XML encoding is recognised but not recomputed, and is reported.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|inherited_unit|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "Reader neither recomputes nor draws these barcodes: Acrobat's script needs an object Reader lacks, so the value becomes a single space there.",
+    "origin": {
+     "id": "inherited_unit:572.002.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "  - **Reader.** Reader neither recomputes nor draws these barcodes: Acrobat's script needs an object Reader lacks, so the value becomes a single space there. A paper barcode therefore stays current only in Acrobat Pro or through this library.",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|inherited_unit|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "A larger run makes its line taller. (+2 identical findings merged)",
+    "origin": {
+     "id": "inherited_unit:572.003.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "- **Document JavaScript is stored, never executed, by decision** \u2014 scripts are written and read (`SetJavaScript`, `GetJavaScripts`, JavaScript actions, and a field's `format`, `keystroke`, `validate` and `calculate` actions through `SetActions`), but the library runs none of them. XFA's FormCalc doe",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|inherited_unit|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
+    "upstream": ""
+   },
+   {
+    "label": "F04",
+    "message": "Stream payloads are *not* decoded on open: page content, images and fonts are decompressed only when something reads them, and the decoded bytes are not retained by the object model.",
+    "origin": {
+     "id": "inherited_unit:572.003.list",
+     "kind": "inherited_unit"
+    },
+    "quote": "- **No lazy or streaming open, by decision** \u2014 `Document.Open` parses every object in the file (about 670 bytes each) and keeps the input bytes alive, because an encoded stream payload is a view into them rather than a copy. Stream payloads are *not* decoded on open: page content, images and fonts a",
+    "rule": "llm:factuality",
+    "section_id": "scope_limitations",
+    "signature": "llm:factuality|inherited_unit|scope_limitations",
+    "source": "review",
+    "sub_rule": "scope_limitations",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "2a8024ce6822d21209f0922b8b2bb3fa9ad53b7c",
+  "main_sha": "5dcd87542779d5189a9d8d71582fe963be53e0e4",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [
-   {
-    "facts_defects": [],
-    "label": "BC-14",
-    "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README names `PlaceOn` as a member of `Form` ('Template class represents a reusable piece of drawn content, placed on any number of pages from a single Form XObject, with members PlaceOn, constructor, and page, where PlaceOn draws this template onto page inside rect ([x, y, w, h]) and constructor is internal.'), but `Form` has no such member; `Place",
-    "section_id": "api_reference",
-    "stage": "S6"
-   }
-  ],
+  "repairs": [],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "45028865276",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45028865276",
+  "run_id": "45040357304",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45040357304",
   "schema_version": 1,
-  "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
+  "source_revision": "717d0cce139171bc2e47f9da114ab3c892b5998c",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
