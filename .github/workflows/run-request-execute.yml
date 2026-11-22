@@ -26,6 +26,8 @@ name: run-request-execute
 #             nothing written); `"dry_run": false` only asks for propose.yml's write job, which runs solely behind its
 #             own gates (allowlist, registry full, owner kill-switch variable, R15 portfolio predicate, sandbox target
 #             variable). validate fixes every field; the request carries no token, branch, title or path.
+#             `"sandbox": true` (R17, owner decision 2026-11-22) sends the candidate to the sandbox repository the
+#             variable names instead (draft PR under sandbox/, see propose.yml); it never widens any other gate.
 #   present / mint  call the default-branch copies of the reusable workflows (local `./` paths resolve to this
 #             run's commit, i.e. main) with `secrets: inherit`, only after validate passed.
 #   bridge    (BL-770) one zero-call DRY RUN of scripts/supervisor_bridge.py: what the planner says is due, the
@@ -80,6 +82,7 @@ jobs:
       lane: ${{ steps.check.outputs.lane }}
       refresh: ${{ steps.check.outputs.refresh }}
       dry_run: ${{ steps.check.outputs.dry_run }}
+      sandbox: ${{ steps.check.outputs.sandbox }}
       seed_run_id: ${{ steps.check.outputs.seed_run_id }}
       findings_path: ${{ steps.check.outputs.findings_path }}
       findings_ref: ${{ steps.check.outputs.findings_ref }}
@@ -266,6 +269,8 @@ jobs:
       repository: ${{ needs.validate.outputs.repository }}
       lane: ${{ needs.validate.outputs.lane }}
       dry_run: ${{ needs.validate.outputs.dry_run != 'false' }}
+      # R17 sandbox mode only when the request wrote `"sandbox": true`; anything else is the normal path
+      sandbox: ${{ needs.validate.outputs.sandbox == 'true' }}
     secrets: inherit
 
   audit-seed:

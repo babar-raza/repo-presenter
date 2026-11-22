@@ -3405,13 +3405,14 @@ items:
     type: defect
     source: "R50 WP-1 dry run 2026-11-22: payload.review.acceptance_state 'sealed' for a bundle whose seal is ACCEPTED and whose review is a model ACCEPT; src/repo_presenter/propose/effect.py gate 3b calls classify(repository, 'unspecified', sealed=True, mechanism_verdicts={'independent_review': review.pr_eligible}); acceptance/record.classify_record reaches PUBLICATION_READY only through audit_passed AND attested AND publication_ready_signal; R33 (acceptance contract, frozen calibration no longer gates), R15"
     priority: P0
-    status: open
+    status: active
     implementation_path: "supervisor decision (shared file, R15 adjacent): feed gate 3b the evidence the official count already verified instead of a bare seal: propose_candidate takes the cell's acceptance signals (audit_passed and attested from the content-bound attested M9 record that portfolio_delivery_count counts, publication_ready_signal from propose.portfolio_gate readiness) and still refuses unless classify() lands in PUBLISHABLE_STATES; stop deriving the review input from calibration_status (R33). The driver (propose/run.py) already reports the same classification read-only in the dry-run payload so the refusal is visible before a write"
     acceptance: "a unit test from the real shape (ACCEPTED seal, attested content-bound record, readiness true) reaches PUBLISHABLE_STATES and the effect proceeds to its token gate, while each of: no attested record, digest mismatch, readiness false, review REJECT still refuses with ACCEPTANCE_NOT_CERTIFIED; the five-gate write job then can complete on the sandbox (BL-732)"
     evidence:
       - "propose/effect.py lines around 'Gate 3b (TC-013)'; tests/propose/test_effect.py stubs effect.classify in an autouse fixture, so no test ever ran the real classify through the effect"
       - "dry run payload (BL-730 evidence): acceptance contract classified 'sealed', not one of ['delivered', 'live-verified', 'publication-ready']"
-    next_action: "supervisor decides the signal plumbing, then a worker with write_paths on propose/effect.py lands it with the test; blocks the first real draft PR (not the dry run)"
+      - "FIXED by BL-780 (2026-11-22): propose/acceptance_evidence.py + propose/effect.py gate 3b; tests/propose/test_acceptance_evidence.py (23 tests, real classify): accepted+attested+content-bound passes, sealed-only, revision-only, digest mismatch/malformed, unattested, no audit, failing verdict, other revision all refused"
+    next_action: "R41: code fix and unit proof are in; done only with the hosted proof (BL-784) and a portfolio-wide re-verification record (reverified: <run id>, lane R x/y, lane L x/y)"
     updated: "2026-11-22"
 
   - id: BL-732
@@ -3420,12 +3421,12 @@ items:
     source: "R17; R50 WP-2; BL-028 (blocked, owner action 5: sandbox repository with the App installed); R15; docs/investigations/2026-11-22-github-app-delivery-and-issues.md section 5 WP-2"
     priority: P1
     status: blocked
-    implementation_path: "the effect binds the write permit, the candidate hash and the acceptance state to ONE repository, so the sandbox must be a repository that is in data/registry.json (mode full) and on data/upstream_write_allowlist.json, with a sealed candidate of its own, and the repository-presenter App installed on it; ops/proposal-authorizations/<owner>__<name>__<hash12>.json committed to main before the run (authorization/proposal.py, at most 7 days); then set REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY to it and REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED to true. Conflict to decide: propose.yml requires the R15 portfolio gate for every write including the sandbox (owner brief: nothing before every candidate of both lanes passes), but R17 wants the mechanics proven BEFORE R15 holds; a sandbox-only R15 exemption would be a new owner ruling, not added here"
+    implementation_path: "the effect binds the write permit, the candidate hash and the acceptance state to ONE repository, so the sandbox must be a repository that is in data/registry.json (mode full) and on data/upstream_write_allowlist.json, with a sealed candidate of its own, and the repository-presenter App installed on it; ops/proposal-authorizations/<owner>__<name>__<hash12>.json committed to main before the run (authorization/proposal.py, at most 7 days); then set REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY to it and REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED to true. RESOLVED 2026-11-22 by the owner (interactive form): the sandbox is babar-raza/repo-presenter itself, sandbox writes are provable before R15 (R17), every upstream repository stays gated by R15; implemented by BL-781/BL-782 (supersedes the registry/allowlist/authorization-record requirements above for the sandbox path: data/sandbox_write_target.json, no authorization record)"
     acceptance: "sandbox draft PR created by repository-presenter[bot] from a hosted propose run, a second run refused or no-change, App scope verified via the API (verify_pull_request_app); run ids recorded; the R15/R17 ordering conflict decided by the owner"
     evidence:
       - "BL-028 evidence: no sandbox entry in the allowlist or registry as of 2026-11-13; the old project's sandbox was babar-raza/presenter-sandbox (propose-sandbox.yml, correction bundle, registry_sandbox.json)"
-    depends_on: [BL-730, BL-731]
-    next_action: "owner: supply or approve the sandbox repository and decide the R15/R17 ordering (interactive form, R48); then the registry/allowlist entries and the authorization record are one PR"
+    depends_on: [BL-730, BL-731, BL-781, BL-782]
+    next_action: "supervisor sets the two repository variables (decision log 2026-11-22 sandbox entry) and dispatches the run requests recorded in BL-784; blocked only on that hosted proof"
     updated: "2026-11-22"
 
   - id: BL-733
@@ -3520,4 +3521,71 @@ items:
     evidence:
       - "built and tested locally 2026-11-22 on branch wp6-review-page: tests/test_review_page_workflow.py + tests/test_run_request.py; hosted proof pending (R41)"
     next_action: "supervisor opens one labelled test issue after merge to prove the hosted path (or dispatches the workflow), records the run id; decides whether the intake branch should auto-merge once the cycle is proven"
+    updated: "2026-11-22"
+
+  - id: BL-780
+    title: "Gate 3b gets the evidence the official count verifies: a Lane R candidate with an attested, content-bound accepted record passes; sealed-only, legacy revision-only, mismatched, unattested or unaudited ones are refused (fixes BL-731)"
+    type: defect
+    source: "BL-731 (P0); owner brief 2026-11-22; R33 (acceptance contract, the frozen reviewer calibration no longer gates), R15, BL-189 (content-bound acceptance)"
+    priority: P0
+    status: active
+    implementation_path: "src/repo_presenter/propose/acceptance_evidence.py (AttestedAcceptance, read_acceptance_evidence: the same record files, schema, writer, clean_control role and dry_run rule as ops/checks/portfolio_delivery_count.read_attested_records but keeping mechanism verdicts, canaries, audit_passed and the attestation result; evaluate_acceptance: the REAL acceptance.record.classify per record at the candidate's revision, publication_ready_signal derived from the record's candidate_sha256 against the SHA-256 of the README bytes about to be written, best state kept); acceptance/record.build_record gains attestation_verified (a caller's own verification result, default False); propose/effect.propose_candidate takes lane, acceptance_records, readme_bytes_sha256 and no longer reads review.pr_eligible (R33); propose/run.py reads the evidence (--records-remote) for the payload and the write; Candidate.readme_sha256 is the sealed file's bytes"
+    acceptance: "tests/propose/test_acceptance_evidence.py runs the real classify (no stub): accepted+attested+content-bound reaches publication-ready and the effect proceeds to its token gate; sealed-only, a legacy revision-only record (counts as accepted but is independently-accepted only), a digest mismatch, a malformed or null digest, an unattested record, audit_passed false, a failing mechanism verdict, an empty verdict set, a failed canary and a record for another revision each refuse ACCEPTANCE_NOT_CERTIFIED with the state named; the reader and the official count agree on which records count; a review REJECT still refuses first"
+    evidence:
+      - "pytest tests/propose tests/acceptance tests/github tests/issues tests/test_propose_workflow.py tests/test_run_request.py: 1126 passed (2026-11-22)"
+      - "local offline dry run on the real state refs: aspose-page-foss/Aspose.Page-FOSS-for-Python lane R (ACCEPTED seal 43cef367cd0b): 3 clean_control records at the revision, binding content_bound; with the attestation assumed verified (gh attestation verify cannot run here: sigstore hosts refused) the state is publication-ready; offline it is provisionally-accepted"
+    next_action: "R41: code fix and unit proof are in; done only with the hosted proof (BL-784) and a portfolio-wide re-verification record (reverified: <run id>, lane R x/y, lane L x/y)"
+    updated: "2026-11-22"
+
+  - id: BL-781
+    title: "R17 sandbox exemption in the propose driver: the R15 portfolio predicate is not required when the target is exactly the sandbox the variable names; every other target stays gated; the wildcard is refused; the sandbox has its own data entry, not the nine-repository allowlist"
+    type: requirement
+    source: "owner decision 2026-11-22 (interactive form, relayed by the supervisor): sandbox = babar-raza/repo-presenter itself, sandbox writes provable before R15 (R17), every upstream repository stays gated by R15; BL-732"
+    priority: P0
+    status: done
+    implementation_path: "src/repo_presenter/sandbox_scope.py (the one reader of REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY: exact match with the entry of data/sandbox_write_target.json, '*', unset or anything else selects none) and data/sandbox_write_target.json (a separate file with the owner's choice recorded in _comment; data/upstream_write_allowlist.json is unchanged, still nine entries); propose/run.py gate_portfolio(target=, environment=) exempts only an exact sandbox target, evaluate_sandbox_gates (same five gate names: sandbox entry honoured only when the variable names it, candidate registered and active, kill switch, R15 exempt for the sandbox target, sandbox_target), the star lift (gate 5) never touches gate 4"
+    acceptance: "tests/propose/test_run_sandbox.py: sandbox passes gate 4 without consulting R15; a non-sandbox target and an unreadable predicate stay closed; '*', unset, 'babar-raza/*', another repository and the candidate itself never exempt; the star lift leaves R15 required; the sandbox repository is not writable through the normal upstream path (not allowlisted, not registered); tests/propose/test_sandbox.py: malformed or missing data file selects no sandbox, the committed entry is the owner's choice and the allowlist keeps nine entries"
+    evidence:
+      - "pytest tests/propose/test_run_sandbox.py tests/propose/test_sandbox.py: 46 passed (2026-11-22)"
+    next_action: "none"
+    updated: "2026-11-22"
+
+  - id: BL-782
+    title: "Complete sandbox write path: draft PR on a throwaway branch in babar-raza/repo-presenter through the App token, README under sandbox/<owner>__<name>/README.md, factual body without attribution or provenance wording, duplicates refused, hosted through propose.yml sandbox mode and run-request {sandbox: true}"
+    type: task
+    source: "owner decision 2026-11-22; R17; R9 (applied to the PR body as a factual-wording rule); BL-730, BL-732"
+    priority: P0
+    status: done
+    implementation_path: "src/repo_presenter/propose/sandbox.py (propose_sandbox: sandbox selected by the variable, kill switch, review ACCEPT by a model, gate 3b evidence, write token, token provenance against the sandbox repository, source freshness, then find_pull_requests any state => PR_DUPLICATE, create_ref, put_contents only under sandbox/, create_pull_request draft=True, verify_pull_request_app; compose_sandbox_pull_request: facts only, FORBIDDEN_BODY_WORDS enforced); github/client.create_pull_request gains draft= (the sandbox is the control repository, whose PRs are otherwise not drafts); authorization/refusals SANDBOX_NOT_SELECTED, PR_DUPLICATE; propose/run.py --sandbox [--offline] on gates, payload and write (build_sandbox_payload, run_sandbox_write); .github/workflows/propose.yml input sandbox (validate makes owner/name the WRITE TARGET so both mints are scoped to the sandbox repository alone; the write job's if: is unchanged), run-request-execute.yml, scripts/run_request.py ('sandbox': JSON boolean). No authorization record is required for the sandbox (it protects an upstream maintainer; the owner's variable selects the sandbox)"
+    acceptance: "tests/propose/test_sandbox.py: happy path writes ref, file under sandbox/ only and a draft PR, never the sandbox's own README; every candidate gate refuses before any call; the token is verified against the sandbox; a PR in any state for the same candidate refuses PR_DUPLICATE; a branch without a PR is completed; a PR from another identity is reported not effected; tests/test_propose_workflow.py and tests/test_run_request.py pin the sandbox wiring (mints scoped to the target, flag through env only, write if: unchanged, run-request boolean); zero-call dry-run payload shown for a real sealed Lane R candidate from the state refs"
+    evidence:
+      - "pytest (targeted suites above): 1126 passed (2026-11-22)"
+      - "offline sandbox payload (python -m repo_presenter.propose.run payload --sandbox --offline --repository aspose-page-foss/Aspose.Page-FOSS-for-Python --lane R, state ref, no GitHub call): branch repository-presenter/sandbox/aspose-page-foss__Aspose.Page-FOSS-for-Python-r-8bd7a50bf9f4, file sandbox/aspose-page-foss__Aspose.Page-FOSS-for-Python/README.md, draft true, writes_performed 0, five gates open (R15 exempt for the sandbox), body factual"
+    next_action: "hosted proof is BL-784 (supervisor sets the variables and dispatches)"
+    updated: "2026-11-22"
+
+  - id: BL-783
+    title: "Issue writes authorised for the sandbox only, enforced in code: file, remote close and the maintenance cycle refuse any repository other than the one the sandbox variable names"
+    type: requirement
+    source: "owner decision 2026-11-22 ('issue writes may be authorised for the sandbox only'); R39, R22, R17"
+    priority: P0
+    status: done
+    implementation_path: "sandbox_scope.issue_write_refusal (exact sandbox only; '*' and unset clear nothing); issues/file.file_handoff (after the kill switch, authorized=False), issues/close._remote_gates (CloseRefusal), issues/monitor.live_blockers (a blocker, so the cycle stays a dry run); issues.yml hands REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY to the maintain step; tests/issues/conftest.py lifts the scope for the stand-in-repository lifecycle tests only. Consequence recorded: the R39 live pilot on aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript cannot go live (WP-3) until the owner widens this scope by a reviewed code/data change; an issue lifecycle proof on the sandbox needs a sandbox pilot entry and a filing path (WP-4), neither built here"
+    acceptance: "tests/issues/test_sandbox_scope.py (14): upstream repositories refused whatever the variable says, '*' and unset clear nothing, filing/close/maintenance refuse upstream with every other gate open and make no call, the sandbox passes the scope gate and reaches the next gate, the workflow passes the variable; all 256 pre-existing issue tests unchanged and green"
+    evidence:
+      - "pytest tests/issues: 270 passed (2026-11-22)"
+    next_action: "WP-4 filing job and a sandbox pilot entry for an issue lifecycle proof on the sandbox (separate item when scheduled)"
+    updated: "2026-11-22"
+
+  - id: BL-784
+    title: "Hosted proof of the sandbox write path and the sandbox-only issue scope (R41: not proven until a hosted run exists)"
+    type: task
+    source: "BL-780..BL-783; R17; R38; owner decision 2026-11-22"
+    priority: P0
+    status: open
+    depends_on: [BL-780, BL-781, BL-782, BL-783]
+    implementation_path: "supervisor sets the repository variables REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY=babar-raza/repo-presenter and REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED=true (the App must be installed on babar-raza/repo-presenter with contents and pull-requests write), then dispatches through scripts/push_request.sh: dry run {\"job\":\"propose\",\"repository\":\"aspose-page-foss/Aspose.Page-FOSS-for-Python\",\"ecosystem\":\"python\",\"lane\":\"R\",\"sandbox\":true}; then the write {... , \"sandbox\": true, \"dry_run\": false}; then the same write again (must end refused PR_DUPLICATE)"
+    acceptance: "(1) dry-run run id: gates all open incl. portfolio_r15 exempt, payload.json shows acceptance state publication-ready (attestation verified hosted) and write_eligible true; (2) write run id: a draft PR authored by repository-presenter[bot] on branch repository-presenter/sandbox/..., one file sandbox/<owner>__<name>/README.md, base main, body without attribution words (gh api), App attribution verified; (3) the repeat run is refused as a duplicate and creates nothing; (4) a request for a non-sandbox repository with dry_run false is refused at gate 4 while R15 is incomplete"
+    evidence: []
+    next_action: "supervisor: set the variables, dispatch, record the run ids; if the dry run says provisionally-accepted the attestation or the audit record is the gap, not the sandbox path"
     updated: "2026-11-22"

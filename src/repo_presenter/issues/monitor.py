@@ -70,6 +70,7 @@ from repo_presenter.github.token_provenance import (
 )
 from repo_presenter.issues.close import RedetectionOutcome, closing_marker, redetect
 from repo_presenter.issues.dedup import body_with_marker, parse_fingerprint
+from repo_presenter import sandbox_scope
 from repo_presenter.issues.file import write_authorized
 from repo_presenter.issues.model import (
     EvidenceEntry,
@@ -598,6 +599,9 @@ def live_blockers(
         blockers.append(
             "kill switch REPO_PRESENTER_ISSUES_WRITE_AUTHORIZED is not set to 1"
         )
+    sandbox_refusal = sandbox_scope.issue_write_refusal(entry.repository, environment)
+    if sandbox_refusal is not None:  # owner decision 2026-11-22: issue writes are authorised for the sandbox only
+        blockers.append(sandbox_refusal)
     if token is None:
         blockers.append("no App installation token was minted for this run")
     elif not token.ok:

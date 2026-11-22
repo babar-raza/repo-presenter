@@ -379,6 +379,7 @@ def build_record(
     attestation_path: str | Path | None = None,
     expected_workflow: str | None = None,
     expected_ref: str = "refs/heads/main",
+    attestation_verified: bool = False,
     publication_ready_signal: bool = False,
     pr_opened: bool = False,
     pr_merged: bool = False,
@@ -392,11 +393,16 @@ def build_record(
     attestation bundle is actually given, a real ``verify_attestation`` call. ``attested`` is
     ``True`` only when BOTH ``attestation_path`` and ``expected_workflow`` are given AND the
     verification call itself returns ``True`` - absent either, this never claims a verification
-    that was never made."""
+    that was never made.
+
+    ``attestation_verified`` (BL-731) is for a caller that already ran ``verify_attestation`` itself
+    on the very file the record came from (``propose.acceptance_evidence`` reads the same attested
+    record files the portfolio count verifies, once per file) and must hand the result on: it is that
+    caller's real verification result, never a default - the default is ``False``."""
     certificates = load_certificates(calibration_path, responsibility_path)
-    attested = False
+    attested = attestation_verified is True
     if attestation_path is not None and expected_workflow is not None:
-        attested = verify_attestation(
+        attested = attested or verify_attestation(
             attestation_path, expected_workflow, expected_ref, runner=gh_runner
         )
     return AcceptanceRecord(

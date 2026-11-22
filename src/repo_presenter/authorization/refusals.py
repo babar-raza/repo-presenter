@@ -52,6 +52,11 @@ class Refusal(StrEnum):
     # all agreeing - is not eligible for a pull request, no matter what the reviewer's own verdict
     # or calibration status says.
     ACCEPTANCE_NOT_CERTIFIED = "acceptance_not_certified"
+    # The R17 sandbox write path (repo_presenter.propose.sandbox, 2026-11-22): the owner variable
+    # REPO_PRESENTER_PROPOSE_SANDBOX_REPOSITORY names no sandbox (unset, another repository or the
+    # wildcard), or a pull request/branch for this exact candidate already exists (never duplicated).
+    SANDBOX_NOT_SELECTED = "sandbox_not_selected"
+    PR_DUPLICATE = "pr_duplicate"
 
 
 class WriteRefusedError(Exception):
