@@ -146,68 +146,197 @@
    "run_id": "45004811070",
    "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T10:35:25+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|opening",
+    "llm:factuality|inherited_unit|additional_examples",
+    "llm:factuality|unresolved|key_capabilities"
+   ],
+   "code": "db979e1e7363dcda3a09d82fdcb3ac51fc511d9246a4b3e9aea876dbdd4a2073",
+   "findings": 3,
+   "outcome": "failure",
+   "run_id": "45010231103",
+   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T09:03:20+00:00",
+  "at": "2026-11-22T10:35:25+00:00",
   "classes": {
-   "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write": {
-    "example": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+   "llm:factuality|authored_unit|opening": {
+    "example": "Aspose.BarCode FOSS for Python reads and writes barcodes in Code 128, Code 39, QR, EAN-13, EAN-8, UPC-A, and UPC-E formats. It converts barcode data into PNG images and SVG vector graphics using the `to_png` and `to_svg` methods, and supports custom rendering through the render method with `SvgRende",
     "findings": 1,
-    "origin_kind": "job_error",
+    "origin_kind": "authored_unit",
     "origins": [
-     "OutputRejectedError"
+     "opening.opening"
     ],
-    "rule": "job_error",
-    "scope": "6a118faaa1d5aff00d45c2a58a248cad00d67095f33a29cb1e23697ccde07e16",
+    "rule": "llm:factuality",
+    "scope": "7f16c23e3b6dfb1800ada2b8da44876344f6ebff4b5182b0e9c93d7bfc044830",
     "scope_paths": [
      "prompts",
-     "pyproject.toml",
+     "prompts/section_authoring.yaml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/core",
-     "src/repo_presenter/present.py",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/repair"
+     "src/repo_presenter/readme/composition/authoring.py",
+     "src/repo_presenter/readme/composition/authoring_retry.py",
+     "src/repo_presenter/readme/composition/coherence.py",
+     "src/repo_presenter/readme/composition/text_hygiene.py",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
+    "sub_rule": "opening",
+    "upstream": ""
+   },
+   "llm:factuality|inherited_unit|additional_examples": {
+    "example": "Runnable scripts are available in the [`examples`](examples/) directory\n(`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional",
+    "findings": 1,
+    "origin_kind": "inherited_unit",
+    "origins": [
+     "inherited_unit:026.paragraph"
+    ],
+    "rule": "llm:factuality",
+    "scope": "464f8605039bf654708f52f49840db5f2aa88aa1a486db1d99699ea0dabe22e3",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/readme/evidence/facts/inherited.py",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "additional_examples",
+    "upstream": ""
+   },
+   "llm:factuality|unresolved|key_capabilities": {
+    "example": "- **Handle errors with typed exceptions.** It raises typed exceptions including `BarcodeError`, `EncodingError`, and `SymbologyNotFoundError` from the exceptions module to signal barcode generation and encoding failures.",
+    "findings": 1,
+    "origin_kind": "unresolved",
+    "origins": [
+     "-"
+    ],
+    "rule": "llm:factuality",
+    "scope": "f0fe82bcae4f999264a2ab6b50c0ec60eb4ab0a49c2090e18f3fc09b5e75d90a",
+    "scope_paths": [
+     "prompts",
+     "src/repo_presenter/cascade.py",
+     "src/repo_presenter/extractors",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/evidence",
+     "src/repo_presenter/readme/reconciliation",
+     "src/repo_presenter/readme/repair",
+     "src/repo_presenter/readme/review"
+    ],
+    "sub_rule": "key_capabilities",
     "upstream": ""
    }
   },
-  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "code": "db979e1e7363dcda3a09d82fdcb3ac51fc511d9246a4b3e9aea876dbdd4a2073",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
-   "classification": "transient",
-   "detail": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
-   "kind": "OutputRejectedError",
-   "transient": true
+   "classification": "validation_failed",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [contradiction] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in additional_examples blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "kind": "PresentFailure",
+   "transient": false
   },
   "findings": [
    {
-    "label": "OutputRejectedError",
-    "message": "attempt under version set 75b35954c877: model output was rejected by the job's own checks after its bounded re-asks (retryable: a re-run asks the model again): OutputRejectedError: section_authoring: output rejected twice; last rejection: unit opening: spells '3.12', '10.1.0'; Write no number, version, count (spelled or in digits), file or directory name, or manifest/config key name: the renderer prints those values from the facts around this text. Name the capability in words instead.",
+    "label": "F01",
+    "message": "Aspose.BarCode FOSS for Python reads and writes barcodes in Code 128, Code 39, QR, EAN-13, EAN-8, UPC-A, and UPC-E formats.",
     "origin": {
-     "id": "OutputRejectedError",
-     "kind": "job_error"
+     "id": "opening.opening",
+     "kind": "authored_unit"
     },
-    "quote": "",
-    "rule": "job_error",
-    "section_id": "",
-    "signature": "job_error|job_error|OutputRejectedError:section_authoring_spells_q_q_write",
-    "source": "job",
-    "sub_rule": "OutputRejectedError:section_authoring_spells_q_q_write",
+    "quote": "Aspose.BarCode FOSS for Python reads and writes barcodes in Code 128, Code 39, QR, EAN-13, EAN-8, UPC-A, and UPC-E formats. It converts barcode data into PNG images and SVG vector graphics using the `to_png` and `to_svg` methods, and supports custom rendering through the render method with `SvgRende",
+    "rule": "llm:factuality",
+    "section_id": "opening",
+    "signature": "llm:factuality|authored_unit|opening",
+    "source": "review",
+    "sub_rule": "opening",
+    "upstream": ""
+   },
+   {
+    "label": "F02",
+    "message": "Handle errors with typed exceptions. It raises typed exceptions including `BarcodeError`, `EncodingError`, and `SymbologyNotFoundError` from the exceptions module to signal barcode generation and encoding failures.",
+    "origin": {
+     "id": "-",
+     "kind": "unresolved"
+    },
+    "quote": "- **Handle errors with typed exceptions.** It raises typed exceptions including `BarcodeError`, `EncodingError`, and `SymbologyNotFoundError` from the exceptions module to signal barcode generation and encoding failures.",
+    "rule": "llm:factuality",
+    "section_id": "key_capabilities",
+    "signature": "llm:factuality|unresolved|key_capabilities",
+    "source": "review",
+    "sub_rule": "key_capabilities",
+    "upstream": ""
+   },
+   {
+    "label": "F03",
+    "message": "Runnable scripts are available in the [`examples`](examples/) directory (`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional worked examples cover the generic entry point and per-symbology encoding options below.",
+    "origin": {
+     "id": "inherited_unit:026.paragraph",
+     "kind": "inherited_unit"
+    },
+    "quote": "Runnable scripts are available in the [`examples`](examples/) directory\n(`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional",
+    "rule": "llm:factuality",
+    "section_id": "additional_examples",
+    "signature": "llm:factuality|inherited_unit|additional_examples",
+    "source": "review",
+    "sub_rule": "additional_examples",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
+  "main_sha": "d0f9c60069588cd838b5110b7d3908b3655c6132",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "F02+F03",
+    "outcome": "escalated",
+    "reason": "the revision cites public_symbol:aspose_barcode_foss.ean8, public_symbol:aspose_barcode_foss.upca, public_symbol:aspose_barcode_foss.upce outside the slot's planned facts; escalated once to a plan-level repair at S5",
+    "section_id": "key_capabilities",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F01",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "opening",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F02+F03",
+    "outcome": "repaired",
+    "reason": "the causing plan was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
+    "section_id": null,
+    "stage": "S5"
+   },
+   {
+    "facts_defects": [],
+    "label": "F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15",
+    "outcome": "repaired",
+    "reason": "api_reference#types-1: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: change R02 claims 'units.15.text' changed ('Renderer class is the abstract renderer interface; its render method is not implemented.' to 'Renderer class is the abstract renderer interface; its render method raises NotImplementedError.'), but the causal stage's own input and this revision hold the identical value there); api_reference#types-2: repaired",
+    "section_id": "api_reference",
+    "stage": "S6"
+   },
+   {
+    "facts_defects": [],
+    "label": "F04",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "additional_examples",
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-  "run_id": "45004811070",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45004811070",
+  "run_id": "45010231103",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45010231103",
   "schema_version": 1,
   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
