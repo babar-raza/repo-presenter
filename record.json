@@ -160,21 +160,37 @@
    "run_id": "45010231103",
    "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T11:13:03+00:00",
+   "classes": [
+    "llm:factuality|authored_unit|api_reference"
+   ],
+   "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+   "findings": 6,
+   "outcome": "failure",
+   "run_id": "45013871854",
+   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T10:35:25+00:00",
+  "at": "2026-11-22T11:13:03+00:00",
   "classes": {
-   "llm:factuality|authored_unit|opening": {
-    "example": "Aspose.BarCode FOSS for Python reads and writes barcodes in Code 128, Code 39, QR, EAN-13, EAN-8, UPC-A, and UPC-E formats. It converts barcode data into PNG images and SVG vector graphics using the `to_png` and `to_svg` methods, and supports custom rendering through the render method with `SvgRende",
-    "findings": 1,
+   "llm:factuality|authored_unit|api_reference": {
+    "example": "| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders a barcode into SVG output. |",
+    "findings": 6,
     "origin_kind": "authored_unit",
     "origins": [
-     "opening.opening"
+     "api_reference.hub:public_symbol:aspose_barcode_foss.svgrenderer",
+     "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.barcodeerror",
+     "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.unsupportedfeatureerror",
+     "api_reference.type:public_symbol:aspose_barcode_foss.options.code128options",
+     "api_reference.type:public_symbol:aspose_barcode_foss.options.code39options"
     ],
     "rule": "llm:factuality",
-    "scope": "7f16c23e3b6dfb1800ada2b8da44876344f6ebff4b5182b0e9c93d7bfc044830",
+    "scope": "c8ac754466ac600aad1fb5d7ad5a92736c5534a6254f6a9030ba0ee3f5ee5518",
     "scope_paths": [
      "prompts",
      "prompts/section_authoring.yaml",
@@ -186,157 +202,128 @@
      "src/repo_presenter/readme/repair",
      "src/repo_presenter/readme/review"
     ],
-    "sub_rule": "opening",
-    "upstream": ""
-   },
-   "llm:factuality|inherited_unit|additional_examples": {
-    "example": "Runnable scripts are available in the [`examples`](examples/) directory\n(`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:026.paragraph"
-    ],
-    "rule": "llm:factuality",
-    "scope": "464f8605039bf654708f52f49840db5f2aa88aa1a486db1d99699ea0dabe22e3",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "additional_examples",
-    "upstream": ""
-   },
-   "llm:factuality|unresolved|key_capabilities": {
-    "example": "- **Handle errors with typed exceptions.** It raises typed exceptions including `BarcodeError`, `EncodingError`, and `SymbologyNotFoundError` from the exceptions module to signal barcode generation and encoding failures.",
-    "findings": 1,
-    "origin_kind": "unresolved",
-    "origins": [
-     "-"
-    ],
-    "rule": "llm:factuality",
-    "scope": "f0fe82bcae4f999264a2ab6b50c0ec60eb4ab0a49c2090e18f3fc09b5e75d90a",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/cascade.py",
-     "src/repo_presenter/extractors",
-     "src/repo_presenter/readme/composition",
-     "src/repo_presenter/readme/evidence",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/review"
-    ],
-    "sub_rule": "key_capabilities",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   },
-  "code": "db979e1e7363dcda3a09d82fdcb3ac51fc511d9246a4b3e9aea876dbdd4a2073",
+  "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
   "durable_state": "INVALIDATED",
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [contradiction] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in additional_examples blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
+   "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 6 blocking finding(s) of 6; nothing sealed; S2-F06 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F07 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F13 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F14 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F15 [unsupported_claim] in api_reference blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); S2-F16 [unsupported_claim] in api_reference blocks",
    "kind": "PresentFailure",
    "transient": false
   },
   "findings": [
    {
-    "label": "F01",
-    "message": "Aspose.BarCode FOSS for Python reads and writes barcodes in Code 128, Code 39, QR, EAN-13, EAN-8, UPC-A, and UPC-E formats.",
+    "label": "S2-F06",
+    "message": "| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders a barcode into SVG output. |",
     "origin": {
-     "id": "opening.opening",
+     "id": "api_reference.hub:public_symbol:aspose_barcode_foss.svgrenderer",
      "kind": "authored_unit"
     },
-    "quote": "Aspose.BarCode FOSS for Python reads and writes barcodes in Code 128, Code 39, QR, EAN-13, EAN-8, UPC-A, and UPC-E formats. It converts barcode data into PNG images and SVG vector graphics using the `to_png` and `to_svg` methods, and supports custom rendering through the render method with `SvgRende",
+    "quote": "| `aspose_barcode_foss.SvgRenderer` | SvgRenderer class renders a barcode into SVG output. |",
     "rule": "llm:factuality",
-    "section_id": "opening",
-    "signature": "llm:factuality|authored_unit|opening",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
-    "sub_rule": "opening",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "F02",
-    "message": "Handle errors with typed exceptions. It raises typed exceptions including `BarcodeError`, `EncodingError`, and `SymbologyNotFoundError` from the exceptions module to signal barcode generation and encoding failures.",
+    "label": "S2-F07",
+    "message": "| `exceptions.BarcodeError` | aspose_barcode_foss.exceptions.BarcodeError class is the base exception for the barcode library. |",
     "origin": {
-     "id": "-",
-     "kind": "unresolved"
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.barcodeerror",
+     "kind": "authored_unit"
     },
-    "quote": "- **Handle errors with typed exceptions.** It raises typed exceptions including `BarcodeError`, `EncodingError`, and `SymbologyNotFoundError` from the exceptions module to signal barcode generation and encoding failures.",
+    "quote": "| `exceptions.BarcodeError` | aspose_barcode_foss.exceptions.BarcodeError class is the base exception for the barcode library. |",
     "rule": "llm:factuality",
-    "section_id": "key_capabilities",
-    "signature": "llm:factuality|unresolved|key_capabilities",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
-    "sub_rule": "key_capabilities",
+    "sub_rule": "api_reference",
     "upstream": ""
    },
    {
-    "label": "F03",
-    "message": "Runnable scripts are available in the [`examples`](examples/) directory (`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional worked examples cover the generic entry point and per-symbology encoding options below.",
+    "label": "S2-F13",
+    "message": "| `exceptions.UnsupportedFeatureError` | aspose_barcode_foss.exceptions.UnsupportedFeatureError class is raised when a requested feature is not supported by the library. |",
     "origin": {
-     "id": "inherited_unit:026.paragraph",
-     "kind": "inherited_unit"
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.exceptions.unsupportedfeatureerror",
+     "kind": "authored_unit"
     },
-    "quote": "Runnable scripts are available in the [`examples`](examples/) directory\n(`all_symbologies.py`, `render_options.py`, `error_handling.py`, `quickstart.py`). Additional",
+    "quote": "| `exceptions.UnsupportedFeatureError` | aspose_barcode_foss.exceptions.UnsupportedFeatureError class is raised when a requested feature is not supported by the library. |",
     "rule": "llm:factuality",
-    "section_id": "additional_examples",
-    "signature": "llm:factuality|inherited_unit|additional_examples",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
     "source": "review",
-    "sub_rule": "additional_examples",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "S2-F14",
+    "message": "| `options.Code128Options` | aspose_barcode_foss.options.Code128Options class provides encoding options for Code 128. |",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.options.code128options",
+     "kind": "authored_unit"
+    },
+    "quote": "| `options.Code128Options` | aspose_barcode_foss.options.Code128Options class provides encoding options for Code 128. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "S2-F15",
+    "message": "| `options.Code39Options` | aspose_barcode_foss.options.Code39Options class provides encoding options for Code 39. |",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.options.code39options",
+     "kind": "authored_unit"
+    },
+    "quote": "| `options.Code39Options` | aspose_barcode_foss.options.Code39Options class provides encoding options for Code 39. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
+    "upstream": ""
+   },
+   {
+    "label": "S2-F16",
+    "message": "| `options.Ean13Options` | aspose_barcode_foss.options.Ean13Options class provides encoding options for EAN-13. |",
+    "origin": {
+     "id": "api_reference.type:public_symbol:aspose_barcode_foss.options.ean13options",
+     "kind": "authored_unit"
+    },
+    "quote": "| `options.Ean13Options` | aspose_barcode_foss.options.Ean13Options class provides encoding options for EAN-13. |",
+    "rule": "llm:factuality",
+    "section_id": "api_reference",
+    "signature": "llm:factuality|authored_unit|api_reference",
+    "source": "review",
+    "sub_rule": "api_reference",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "d0f9c60069588cd838b5110b7d3908b3655c6132",
+  "main_sha": "e32adb6b07265f13112a78437ff030ad24238abf",
   "origin": "hosted",
   "outcome": "failure",
   "repairs": [
    {
     "facts_defects": [],
-    "label": "F02+F03",
-    "outcome": "escalated",
-    "reason": "the revision cites public_symbol:aspose_barcode_foss.ean8, public_symbol:aspose_barcode_foss.upca, public_symbol:aspose_barcode_foss.upce outside the slot's planned facts; escalated once to a plan-level repair at S5",
-    "section_id": "key_capabilities",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F01",
+    "label": "F01+F02+F03+F04+F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15+F16+F17+F18+F19+F20+F21+F22+F23+F24+F25+F26+F27",
     "outcome": "repaired",
-    "reason": "",
-    "section_id": "opening",
-    "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F02+F03",
-    "outcome": "repaired",
-    "reason": "the causing plan was not in the call store (restored from a sealed bundle); regenerated it fresh, then revised in place against this finding",
-    "section_id": null,
-    "stage": "S5"
-   },
-   {
-    "facts_defects": [],
-    "label": "F05+F06+F07+F08+F09+F10+F11+F12+F13+F14+F15",
-    "outcome": "repaired",
-    "reason": "api_reference#types-1: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: change R02 claims 'units.15.text' changed ('Renderer class is the abstract renderer interface; its render method is not implemented.' to 'Renderer class is the abstract renderer interface; its render method raises NotImplementedError.'), but the causal stage's own input and this revision hold the identical value there); api_reference#types-2: repaired",
+    "reason": "api_reference: repaired; api_reference#types-1: unrepairable (targeted_repair: output rejected twice; last rejection: revised_output: change R06 claims 'units.15.text' changed ('Renderer class is the abstract renderer interface; its render method is not implemented.' to 'Renderer class is an abstract base class whose render method raises NotImplementedError.'), but the causal stage's own input and this revision hold the identical value there; revised_output: change R08 claims 'units.19.text' cha",
     "section_id": "api_reference",
     "stage": "S6"
-   },
-   {
-    "facts_defects": [],
-    "label": "F04",
-    "outcome": "repaired",
-    "reason": "",
-    "section_id": "additional_examples",
-    "stage": "S4"
    }
   ],
   "repository": "aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python",
-  "run_id": "45010231103",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45010231103",
+  "run_id": "45013871854",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45013871854",
   "schema_version": 1,
   "source_revision": "06eca5c01e13ed6d59a640f1cf330c1c5a57d151",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
