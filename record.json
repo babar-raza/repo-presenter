@@ -203,63 +203,140 @@
    "run_id": "44977866731",
    "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
    "version_set": ""
+  },
+  {
+   "at": "2026-11-22T10:46:21+00:00",
+   "classes": [
+    "job_error|job_error|CascadeTimeBoxError:the_cascade_s_hard"
+   ],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45007006119",
+   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T04:57:06+00:00",
+  "at": "2026-11-22T10:46:21+00:00",
   "classes": {
-   "job_error|job_error|LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START": {
-    "example": "LaneStepCancelledError: [S_SETTLE_ROUND_COMPOSE_START] cancelled in stage S9 settle round 1 of 5: compose start after 3s with 0 provider calls",
+   "job_error|job_error|CascadeTimeBoxError:the_cascade_s_hard": {
+    "example": "attempt under version set 75b35954c877: the cascade reached its hard time limit before reaching a verdict, so nothing was sealed (retryable: a re-run resumes from the saved call store): CascadeTimeBoxError: the cascade's hard time limit of 4800s was reached after 5054s in stage 'S9 settle round 2 of 5: judged, 2 blocking check(s) failing, 1 blocking finding(s)'; no further provider call or stage starts, every completed call is in the call store, so a re-run resumes from it",
     "findings": 1,
     "origin_kind": "job_error",
     "origins": [
-     "LaneStepCancelledError"
+     "CascadeTimeBoxError"
     ],
     "rule": "job_error",
     "scope": "",
     "scope_paths": null,
-    "sub_rule": "LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START",
+    "sub_rule": "CascadeTimeBoxError:the_cascade_s_hard",
     "upstream": ""
    }
   },
-  "code": "6374e4c5333160c4b57b26df5bd8a3dd05a6ae41415aa1124c7d5afb833ff7b5",
-  "durable_state": "",
-  "exit_code": null,
+  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "durable_state": "FAILED_INTERNAL",
+  "exit_code": 1,
   "failure": {
-   "classification": "unknown",
-   "detail": "LaneStepCancelledError: [S_SETTLE_ROUND_COMPOSE_START] cancelled in stage S9 settle round 1 of 5: compose start after 3s with 0 provider calls",
-   "kind": "LaneStepCancelledError",
-   "transient": false
+   "classification": "transient",
+   "detail": "attempt under version set 75b35954c877: the cascade reached its hard time limit before reaching a verdict, so nothing was sealed (retryable: a re-run resumes from the saved call store): CascadeTimeBoxError: the cascade's hard time limit of 4800s was reached after 5054s in stage 'S9 settle round 2 of 5: judged, 2 blocking check(s) failing, 1 blocking finding(s)'; no further provider call or stage starts, every completed call is in the call store, so a re-run resumes from it",
+   "kind": "CascadeTimeBoxError",
+   "transient": true
   },
   "findings": [
    {
-    "label": "LaneStepCancelledError",
-    "message": "LaneStepCancelledError: [S_SETTLE_ROUND_COMPOSE_START] cancelled in stage S9 settle round 1 of 5: compose start after 3s with 0 provider calls",
+    "label": "CascadeTimeBoxError",
+    "message": "attempt under version set 75b35954c877: the cascade reached its hard time limit before reaching a verdict, so nothing was sealed (retryable: a re-run resumes from the saved call store): CascadeTimeBoxError: the cascade's hard time limit of 4800s was reached after 5054s in stage 'S9 settle round 2 of 5: judged, 2 blocking check(s) failing, 1 blocking finding(s)'; no further provider call or stage starts, every completed call is in the call store, so a re-run resumes from it",
     "origin": {
-     "id": "LaneStepCancelledError",
+     "id": "CascadeTimeBoxError",
      "kind": "job_error"
     },
     "quote": "",
     "rule": "job_error",
     "section_id": "",
-    "signature": "job_error|job_error|LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START",
+    "signature": "job_error|job_error|CascadeTimeBoxError:the_cascade_s_hard",
     "source": "job",
-    "sub_rule": "LaneStepCancelledError:S_SETTLE_ROUND_COMPOSE_START",
+    "sub_rule": "CascadeTimeBoxError:the_cascade_s_hard",
     "upstream": ""
    }
   ],
   "lane": "R",
-  "main_sha": "93eea3611dac95990bac15e8132dc1f5a408031e",
+  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
   "origin": "hosted",
   "outcome": "failure",
-  "repairs": [],
+  "repairs": [
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "duplicate_paragraph:0",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": "api_reference",
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-05",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "unrepairable",
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: matches the causal stage's own output unchanged; a no-op cannot repair a defect this stage's content did not change",
+    "section_id": null,
+    "stage": "S4"
+   },
+   {
+    "facts_defects": [],
+    "label": "BC-17",
+    "outcome": "repaired",
+    "reason": "",
+    "section_id": null,
+    "stage": "S4"
+   }
+  ],
   "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
-  "run_id": "44977866731",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44977866731",
+  "run_id": "45007006119",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45007006119",
   "schema_version": 1,
   "source_revision": "ea7a2e9303eba2f380b8a3d4c8be1bf38f043d15",
-  "version_set": ""
+  "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
  },
  "repository": "aspose-words-foss/Aspose.Words-FOSS-for-Java",
  "schema_version": 1
