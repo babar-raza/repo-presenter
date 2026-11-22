@@ -25,101 +25,38 @@
    "run_id": "44993635165",
    "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
    "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  },
+  {
+   "at": "2026-11-22T09:22:36+00:00",
+   "classes": [],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "45007060109",
+   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
+   "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
   }
  ],
  "lane": "L",
  "latest": {
-  "at": "2026-11-22T06:26:31+00:00",
-  "classes": {
-   "lane_l_unrepaired_defect|lane_l_correction|failing_example": {
-    "example": "from pathlib import Path",
-    "findings": 1,
-    "origin_kind": "lane_l_correction",
-    "origins": [
-     "failing_example"
-    ],
-    "rule": "lane_l_unrepaired_defect",
-    "scope": "2ac9cd2e6539c02cc16c37bd15833862aa76be4d03df1cd433102962552b04d8",
-    "scope_paths": [
-     "src/repo_presenter/lane_l.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/lane_l_run.py",
-     "src/repo_presenter/readme/correction"
-    ],
-    "sub_rule": "failing_example",
-    "upstream": "maintainer_example"
-   },
-   "lane_l_unrepaired_defect|lane_l_correction|format_overclaim": {
-    "example": "o3[\"SVG document (file path or in-memory bytes, multi-page)\"]",
-    "findings": 1,
-    "origin_kind": "lane_l_correction",
-    "origins": [
-     "format_overclaim"
-    ],
-    "rule": "lane_l_unrepaired_defect",
-    "scope": "2ac9cd2e6539c02cc16c37bd15833862aa76be4d03df1cd433102962552b04d8",
-    "scope_paths": [
-     "src/repo_presenter/lane_l.py",
-     "src/repo_presenter/lane_l_review.py",
-     "src/repo_presenter/lane_l_run.py",
-     "src/repo_presenter/readme/correction"
-    ],
-    "sub_rule": "format_overclaim",
-    "upstream": ""
-   }
-  },
-  "code": "a297189be023ee7fa1ef2cbf91f340b6b35695ba2d2396a7b444f19edd9c3f66",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 810f7969970a: PresentFailure: Lane L: independent review returned REJECT with 2 blocking finding(s) of 2; nothing sealed; lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim); lane_l_unrepaired_defect [contradiction] blocks until rule lane_l_unrepaired_defect no longer finds it (the example verifier recorded a failure for the example on lines 220-229: example 9: FAILED; aspose_tex.exceptions.InputError); Lane L left 2 defect(s) it may not repair (format_overclaim line 46: the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim; failing_example line 220: the example verifier recorded a fail",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "lane_l_unrepaired_defect",
-    "message": "format_overclaim found a defect at line 46 that no deterministic edit can repair: the README marks 'SVG' supported, but no SUPPORTED format or capability fact confirms it is actually wired up; a human reviewer should check whether it is reachable before trusting the claim",
-    "origin": {
-     "id": "format_overclaim",
-     "kind": "lane_l_correction"
-    },
-    "quote": "o3[\"SVG document (file path or in-memory bytes, multi-page)\"]",
-    "rule": "lane_l_unrepaired_defect",
-    "section_id": "",
-    "signature": "lane_l_unrepaired_defect|lane_l_correction|format_overclaim",
-    "source": "review",
-    "sub_rule": "format_overclaim",
-    "upstream": ""
-   },
-   {
-    "label": "lane_l_unrepaired_defect",
-    "message": "failing_example found a defect at line 220 that no deterministic edit can repair: the example verifier recorded a failure for the example on lines 220-229: example 9: FAILED; aspose_tex.exceptions.InputError",
-    "origin": {
-     "id": "failing_example",
-     "kind": "lane_l_correction"
-    },
-    "quote": "from pathlib import Path",
-    "rule": "lane_l_unrepaired_defect",
-    "section_id": "",
-    "signature": "lane_l_unrepaired_defect|lane_l_correction|failing_example",
-    "source": "review",
-    "sub_rule": "failing_example",
-    "upstream": "maintainer_example"
-   }
-  ],
+  "at": "2026-11-22T09:22:36+00:00",
+  "classes": {},
+  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "L",
-  "main_sha": "c9de0c9462a994ae9acfe2d76cb62f612333d0b3",
+  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
   "origin": "hosted",
-  "outcome": "failure",
+  "outcome": "success",
   "repairs": [],
   "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
-  "run_id": "44993635165",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44993635165",
+  "run_id": "45007060109",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45007060109",
   "schema_version": 1,
   "source_revision": "07db320334a0a58e11107b6ca8092b2e5047c1f8",
-  "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
  },
  "repository": "aspose-tex-foss/Aspose.TeX-FOSS-for-Python",
  "schema_version": 1
