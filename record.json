@@ -35,71 +35,38 @@
    "run_id": "44993604238",
    "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
    "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  },
+  {
+   "at": "2026-11-22T09:25:54+00:00",
+   "classes": [],
+   "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+   "findings": 0,
+   "outcome": "success",
+   "run_id": "45007328701",
+   "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
+   "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
   }
  ],
  "lane": "L",
  "latest": {
-  "at": "2026-11-22T06:26:12+00:00",
-  "classes": {
-   "claim_contradiction|inherited_unit|the_readme_lists_the": {
-    "example": "  to `.pptx` (the default) or the related `.pptm`, `.ppsx`, `.ppsm`, `.potx`, and `.potm` Office",
-    "findings": 1,
-    "origin_kind": "inherited_unit",
-    "origins": [
-     "inherited_unit:010.list"
-    ],
-    "rule": "claim_contradiction",
-    "scope": "70ee6f768b835f62c9d990c258bde4018d9f1235e4c79cc62b57d89df938df5a",
-    "scope_paths": [
-     "prompts",
-     "src/repo_presenter/lane_l.py",
-     "src/repo_presenter/lane_l_run.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/review/independent_reviewer.py",
-     "src/repo_presenter/readme/validation/claims.py"
-    ],
-    "sub_rule": "the_readme_lists_the",
-    "upstream": ""
-   }
-  },
-  "code": "a297189be023ee7fa1ef2cbf91f340b6b35695ba2d2396a7b444f19edd9c3f66",
-  "durable_state": "FAILED_INTERNAL",
-  "exit_code": 1,
-  "failure": {
-   "classification": "validation_failed",
-   "detail": "attempt under version set 810f7969970a: PresentFailure: Lane L: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; claim_contradiction [contradiction] blocks until rule claim_contradiction no longer finds it (the README lists the format(s) .pptm, .ppsx, .ppsm, .potx, .potm, but no SUPPORTED format fact states them)",
-   "kind": "PresentFailure",
-   "transient": false
-  },
-  "findings": [
-   {
-    "label": "claim_contradiction",
-    "message": "line 72 (COMPOSING): the README lists the format(s) .pptm, .ppsx, .ppsm, .potx, .potm, but no SUPPORTED format fact states them",
-    "origin": {
-     "id": "inherited_unit:010.list",
-     "kind": "inherited_unit"
-    },
-    "quote": "  to `.pptx` (the default) or the related `.pptm`, `.ppsx`, `.ppsm`, `.potx`, and `.potm` Office",
-    "rule": "claim_contradiction",
-    "section_id": "",
-    "signature": "claim_contradiction|inherited_unit|the_readme_lists_the",
-    "source": "review",
-    "sub_rule": "the_readme_lists_the",
-    "upstream": ""
-   }
-  ],
+  "at": "2026-11-22T09:25:54+00:00",
+  "classes": {},
+  "code": "7b5ad044bc878c52f148c7c2b7101007fc76f02e4b74fd06d76445f656ace993",
+  "durable_state": "ACCEPTED",
+  "exit_code": 0,
+  "failure": null,
+  "findings": [],
   "lane": "L",
-  "main_sha": "c9de0c9462a994ae9acfe2d76cb62f612333d0b3",
+  "main_sha": "5caa4f85ec081e4f3acb21a93623796c2ad37637",
   "origin": "hosted",
-  "outcome": "failure",
+  "outcome": "success",
   "repairs": [],
   "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
-  "run_id": "44993604238",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/44993604238",
+  "run_id": "45007328701",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45007328701",
   "schema_version": 1,
   "source_revision": "4e63447ba79d1c27a5192844847d9f872c5b92ad",
-  "version_set": "810f7969970a0904cb8c2e8acf28c8fec39639b577f4992c6a1caada2633f331"
+  "version_set": "9907e52c24f50b4a7090c24a35bef6880307f9766fd8c150949bf611d70b278b"
  },
  "repository": "aspose-slides-foss/Aspose.Slides-FOSS-for-Python",
  "schema_version": 1
