@@ -18,6 +18,7 @@ ADAPT from the old repository-presenter project's ``components/readme/validation
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from collections import Counter
 
 from markdown_it import MarkdownIt
@@ -294,12 +295,36 @@ def _reference_failures(candidate: Candidate) -> list[Failure]:
     return failures
 
 
+_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|[^A-Za-z0-9]+")
+_STEM = 5
+
+
+def _identifier_stems(raw_symbol_values: Iterable[str]) -> set[str]:
+    """Stems (first five letters, lowercased) of every word in the public symbols' own names, split
+    at camelCase / PascalCase / underscore / dot boundaries (``ValidationReport`` -> valid, repor)."""
+    return {
+        word.lower()[:_STEM]
+        for value in raw_symbol_values
+        for word in _CAMEL_BOUNDARY.split(value)
+        if word
+    }
+
+
+def _phrase_is_api_vocabulary(phrase: str, stems: set[str]) -> bool:
+    """A multi-word narration phrase every word of which is a word of the repository's own public
+    API (``validation status`` in a library exposing ``ValidationReport`` and ``RevocationStatus``)
+    describes that API, not the pipeline. A single-word phrase is left to the exact-name exemption."""
+    words = re.findall(r"[a-z]+", phrase)
+    return len(words) > 1 and all(word[:_STEM] in stems for word in words)
+
+
 def _narration_failures(
     readme: str,
     prose_text: str,
     symbol_names: set[str],
     inherited: str,
     docstrings: str,
+    api_stems: set[str] = frozenset(),  # type: ignore[assignment]
 ) -> list[Failure]:
     """plans/idea.md: internal assurance narration never appears in the document. A phrase that is
     itself a SUPPORTED public symbol's name, a phrase the upstream README already used, or a phrase
@@ -310,6 +335,7 @@ def _narration_failures(
         for phrase, pattern in narration_patterns(symbol_names)
         if pattern.search(lowered)
         and phrase not in symbol_names
+        and not _phrase_is_api_vocabulary(phrase, api_stems)
         and not pattern.search(inherited)
         and not pattern.search(docstrings)
     ]
@@ -561,6 +587,11 @@ def structure_failures(candidate: Candidate) -> list[Failure]:
             symbol_names,
             inherited_prose,
             docstring_prose,
+            _identifier_stems(
+                fact.value
+                for fact in candidate.facts.by_kind("public_symbol")
+                if fact.polarity == "SUPPORTED"
+            ),
         )
     )
     failures.extend(_reference_failures(candidate))

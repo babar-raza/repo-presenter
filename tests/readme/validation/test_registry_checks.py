@@ -1366,6 +1366,43 @@ def test_narration_exempts_a_phrase_inside_a_public_symbols_own_docstring(
     )
 
 
+def test_narration_exempts_a_multiword_phrase_made_of_the_public_api_own_words(
+    tmp_path: Path,
+) -> None:
+    """BL-893 (PDF for TypeScript, run 45064218783): `validation status` flagged in API Reference
+    for a library whose public API is `ValidationReport` / `RevocationStatus`. targeted_repair had
+    nothing to change and was rejected as a no-op twice. A multi-word phrase every word of which
+    is a word of the product's own public symbols describes that API; a phrase with a word the API
+    does not use is still narration, and so is the same prose with no such symbols."""
+    facts = FactsDocument(
+        ENTRY.repository,
+        REVISION,
+        (
+            *BASE_FACTS,
+            _fact("public_symbol:pdf.validationreport", "public_symbol", "pdf.ValidationReport"),
+            _fact("public_symbol:pdf.revocationstatus", "public_symbol", "pdf.RevocationStatus"),
+        ),
+    )
+    readme = _candidate(facts=facts).readme
+    prose_ = "## Scope and Limitations\n\nThe report carries a validation status per rule.\n\n"
+    narrated = readme.replace("## Scope and Limitations\n\n", prose_)
+    assert narrated != readme
+    document = validate_candidate(_candidate(narrated, facts=facts), tmp_path, ())
+    assert "BC-07" not in {f["id"] for f in blocking_failures(document)}
+
+    # Mutation: without those public symbols the identical prose still blocks.
+    document = validate_candidate(_candidate(narrated), tmp_path, ())
+    assert "internal narration 'validation status'" in _failed(document, "BC-07")["details"]
+
+    # Mutation: a phrase whose words the API does not use stays narration even with the symbols.
+    other = readme.replace(
+        "## Scope and Limitations\n\n",
+        "## Scope and Limitations\n\nSee the registry receipt for details.\n\n",
+    )
+    document = validate_candidate(_candidate(other, facts=facts), tmp_path, ())
+    assert "internal narration 'registry receipt'" in _failed(document, "BC-07")["details"]
+
+
 def test_fences_reads_commonmark_not_a_hand_rolled_backtick_scan() -> None:
     """TB-05, D5: the old line-scan only recognized a ```-fence; a tilde fence or a multi-word
     info string parsed however the substring happened to fall. The project's own CommonMark
