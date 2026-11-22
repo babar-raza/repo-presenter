@@ -3811,3 +3811,30 @@ items:
     next_action: "supervisor re-sends the PDF TypeScript refresh after merge"
     updated: "2026-11-22"
 
+
+  - id: BL-890
+    title: "PDF TypeScript Lane R refresh ends REJECT on four unsupported_claim findings in scope_limitations: the maintainers' limitation bullets kept verbatim (VERIFIED_PRESERVE, one public_symbol fact each) are judged like generated text although no fact can support what they say about behaviour (run 45040357304, 4 findings after 4 degrade passes, nothing sealed)"
+    type: defect
+    source: "owner rulings R10, R14, R36(a)(2), R44, R46; hosted run 45040357304; docs/MAINTAINER_CONTENT_PRESERVATION.md; BL-562, BL-660, BL-661, BL-710 precedents"
+    priority: P0
+    status: active
+    implementation_path: "readme/review/scope.maintainer_lines: a VERIFIED_PRESERVE/VERIFIED_MOVE unit destined to scope_limitations whose cited facts are only public_symbol (names exist) or none, and no CONTRADICTED fact touches, marks its verbatim lines as maintainer_lines; the existing contract (reply.resolve_cited_lines, drop_maintainer_unsupported_findings) then voids an unsupported_claim citing only them. Contradiction, quality, omission, absence, authored lines, other sections and units citing example/dependency/command facts are unchanged"
+    acceptance: "(1) tests/readme/review/test_scoped_contract.py: the marked lines, five negative controls (other section, content-verifying fact kind, no section, other disposition, contradicted/refuted/renderer-changed), the drop keeps every other kind; (2) lean recertify of every stored seal RECERTIFIED and the R10 gate OK; (3) hosted: PDF TypeScript refresh seals (R41, not yet proven)"
+    evidence:
+      - "run 45040357304 log: F01..F04 [llm:factuality] section=scope_limitations quote the maintainers' bullets 'Acrobat's tab-delimited content is reproduced from rules read off Adobe Reader 26.1', 'Reader neither recomputes nor draws these barcodes', 'A larger run makes its line taller', 'Stream payloads are not decoded on open'"
+      - "stored seal 5fa17750: inherited_unit:572.002.list and 572.003.list are VERIFIED_PRESERVE into scope_limitations citing one or three public_symbol facts; before the fix 363 lines are maintainer_lines and none of these units, after: 400 (25 of the 74 scope_limitations lines; the other 49 are authored and keep the full review)"
+    next_action: "supervisor integrates; hosted PDF TypeScript Lane R refresh"
+    updated: "2026-11-22"
+
+  - id: BL-891
+    title: "Lane R refresh cost and convergence (PDF TypeScript run 45040357304, 540 provider calls, 4277 s): each degrade pass re-reviews all ~95 units because withholding text shifts every later absolute line number; passes withhold 2, 1, 2 units, so the reviewer's fresh draws on verbatim maintainers' bullets converge slowly and the time allowance (3000 s time-box + 1200 s grace) stops pass 5"
+    type: task
+    source: "owner ruling R46 (robust, reliable, repeatable); hosted run 45040357304"
+    priority: P1
+    status: open
+    implementation_path: "none yet; options recorded in the BL-890 decision-log entry (review requests keyed by unit text instead of absolute line numbers; S4 reconciliation measured at 1378 s for 46 calls)"
+    acceptance: "a measured design that lets an unchanged unit replay its review after an earlier unit's text was withheld"
+    evidence:
+      - "log: S4 end 1437 s (46 calls), S6 end 2315 s, S10 review 99 calls, each degrade pass 93 to 97 review calls and 280 to 330 s; cumulative withheld units 7, 9, 10, 12; 'degrade stopped before pass 5: the job time allowance is nearly used'"
+    next_action: "supervisor decides after the BL-890 hosted result"
+    updated: "2026-11-22"
