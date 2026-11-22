@@ -1,0 +1,926 @@
+{
+  "dispositions": [
+    {
+      "destination_section": "identity",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version"
+      ],
+      "rationale": "The H1 product name is rendered by the identity section from facts.",
+      "unit_id": "inherited_unit:001.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:001",
+        "link_target:002",
+        "link_target:003",
+        "link_target:004",
+        "link_target:005",
+        "link_target:006",
+        "package:name"
+      ],
+      "rationale": "Redundant with the verified facts it names: link_target:001, link_target:002, link_target:003, link_target:004, link_target:005, link_target:006, package:name. ",
+      "unit_id": "inherited_unit:002.badge_row"
+    },
+    {
+      "destination_section": "banner",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "link_target:product.banner",
+        "link_target:product.enterprise",
+        "link_target:product.homepage"
+      ],
+      "rationale": "The banner image links to the enterprise product page and is moved to the enterprise relationship section.",
+      "unit_id": "inherited_unit:003.badge_row"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "package:name",
+        "package:version",
+        "public_symbol:aspose_tex"
+      ],
+      "rationale": "The paragraph describes the product, its purpose, and bundled fonts, supported by identity and package facts.",
+      "unit_id": "inherited_unit:004.paragraph"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The Navigation heading is moved to opening as it introduces the navigation list and is not rendered by the navigation section.",
+      "unit_id": "inherited_unit:005.heading"
+    },
+    {
+      "destination_section": "opening",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "link_target:009",
+        "link_target:010",
+        "link_target:011",
+        "link_target:012",
+        "link_target:013",
+        "link_target:014",
+        "link_target:015",
+        "link_target:016",
+        "link_target:017",
+        "link_target:018"
+      ],
+      "rationale": "The navigation list is preserved as it provides in-page links to document sections and is not superseded by the navigation section.",
+      "unit_id": "inherited_unit:006.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The At a Glance heading is omitted because the section is not placeable and no diagram is rendered.",
+      "unit_id": "inherited_unit:007.heading"
+    },
+    {
+      "destination_section": "at_a_glance",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The Mermaid diagram is superseded by the deterministic 'At a Glance' section, which renders exactly one diagram based on facts; identity:ecosystem confirms the图",
+      "unit_id": "inherited_unit:008.code_block"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texjob.run",
+        "public_symbol:aspose_tex.texoptions",
+        "public_symbol:aspose_tex.pdfdevice",
+        "public_symbol:aspose_tex.dvidevice",
+        "public_symbol:aspose_tex.svgdevice"
+      ],
+      "rationale": "The Key Capabilities heading is rendered by the key_capabilities section and its list is superseded.",
+      "unit_id": "inherited_unit:009.heading"
+    },
+    {
+      "destination_section": "key_capabilities",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "import_path:aspose_tex",
+        "public_symbol:aspose_tex",
+        "public_symbol:aspose_tex.dvidevice",
+        "public_symbol:aspose_tex.pdfdevice",
+        "public_symbol:aspose_tex.svgdevice",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texjob.run",
+        "public_symbol:aspose_tex.texoptions"
+      ],
+      "rationale": "The Key Capabilities list is superseded by the key_capabilities section, which re-authors its substance.",
+      "unit_id": "inherited_unit:010.list"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The Installation heading is rendered by the installation section and its content is superseded.",
+      "unit_id": "inherited_unit:011.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0-2",
+        "install_command:pip",
+        "package:python_requires"
+      ],
+      "rationale": "Not printed again: quick start already states this material from the facts it cites, so the kept unit is redundant.",
+      "unit_id": "inherited_unit:012.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The install instruction paragraph is preserved as it introduces the quick start example.",
+      "unit_id": "inherited_unit:013.paragraph"
+    },
+    {
+      "destination_section": "installation",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "install_command:pip"
+      ],
+      "rationale": "The pip install command is superseded by the installation section, which renders the exact command.",
+      "unit_id": "inherited_unit:014.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.mcp.mcp-1.0-2",
+        "import_path:aspose_tex",
+        "public_symbol:aspose_tex",
+        "public_symbol:aspose_tex.mcp"
+      ],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The MCP extra paragraph is preserved as it introduces the MCP server example.",
+      "unit_id": "inherited_unit:015.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:optional.mcp.mcp-1.0-2"
+      ],
+      "rationale": "Kept in development_testing: additional_examples holds no install material. The MCP install command is preserved as it is a real, supported install path even...",
+      "unit_id": "inherited_unit:016.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "build_test_asset:tests"
+      ],
+      "rationale": "Heading owned by the renderer: development testing prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:017.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0"
+      ],
+      "rationale": "The source install command is preserved as it is a real, supported install path for contributors.",
+      "unit_id": "inherited_unit:018.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0"
+      ],
+      "rationale": "The dev extra description is preserved as it provides useful context for the development setup.",
+      "unit_id": "inherited_unit:019.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0-2"
+      ],
+      "rationale": "The Dependencies heading is rendered by the dependencies section and its content is superseded.",
+      "unit_id": "inherited_unit:020.heading"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0-2"
+      ],
+      "rationale": "The 'Required Package Dependencies' heading is superseded by the 'Dependencies' section which renders dependency information from facts.",
+      "unit_id": "inherited_unit:021.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0-2"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:022.paragraph"
+    },
+    {
+      "destination_section": "dependencies",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0-2"
+      ],
+      "rationale": "The 'Native and System Requirements' heading is superseded by the 'Dependencies' section which renders system requirements from facts.",
+      "unit_id": "inherited_unit:023.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0",
+        "dependency:none",
+        "dependency:optional.mcp.mcp-1.0-2",
+        "package:python_requires"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:024.list"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Development Dependencies' heading is superseded by the 'Development and Testing' section which renders development tooling from facts.",
+      "unit_id": "inherited_unit:025.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "dependency:development.dev.build-1.2",
+        "dependency:development.dev.pytest-7.4",
+        "dependency:development.dev.ruff-0.4",
+        "dependency:development.dev.tomli-2.0-python_version-3.11",
+        "dependency:development.dev.twine-5.0"
+      ],
+      "rationale": "Kept as the maintainers wrote it: the published README prints this content and the candidate would otherwise lose it (BC-17 / BC-05).",
+      "unit_id": "inherited_unit:026.list"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Quick Start' heading is preserved as-is; the section is placeable and the heading matches standard naming.",
+      "unit_id": "inherited_unit:027.heading"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:001"
+      ],
+      "rationale": "The code block is a verified example (example:001) and matches the Quick Start example fact.",
+      "unit_id": "inherited_unit:028.code_block"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:029.paragraph"
+    },
+    {
+      "destination_section": "quick_start",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:002"
+      ],
+      "rationale": "The code block is a verified example (example:002) demonstrating file output and matches the Quick Start example fact.",
+      "unit_id": "inherited_unit:030.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'Additional Examples' heading is preserved as-is; the section is placeable and the heading matches standard naming.",
+      "unit_id": "inherited_unit:031.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The HTML details block is preserved as-is; it provides collapsible UI for additional examples and is not contradicted by facts.",
+      "unit_id": "inherited_unit:032.html_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'DVI Output' heading is preserved as-is; it names a supported output format and matches the example structure.",
+      "unit_id": "inherited_unit:033.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:003"
+      ],
+      "rationale": "The code block is a verified example (example:003) for DVI output and matches the example fact.",
+      "unit_id": "inherited_unit:034.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:035.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:004"
+      ],
+      "rationale": "The code block is a verified example (example:004) for DVI file output and matches the example fact.",
+      "unit_id": "inherited_unit:036.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "The 'SVG Output' heading is preserved as-is; it names a supported output format and matches the example structure.",
+      "unit_id": "inherited_unit:037.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:005"
+      ],
+      "rationale": "The code block is a verified example (example:005) for SVG output and matches the example fact.",
+      "unit_id": "inherited_unit:038.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:039.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:006"
+      ],
+      "rationale": "The code block is a verified example (example:006) for SVG file output and matches the example fact.",
+      "unit_id": "inherited_unit:040.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "Lead-in of the block that follows: carried together with it, never alone.",
+      "unit_id": "inherited_unit:041.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:007"
+      ],
+      "rationale": "The multi-page SVG example is verified and supported; matches example:007 exactly.",
+      "unit_id": "inherited_unit:042.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Job Options' heading is superseded by the 'Additional Examples' section heading; no standalone options content remains.",
+      "unit_id": "inherited_unit:043.heading"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:008"
+      ],
+      "rationale": "The job options example is verified and supported; matches example:008 exactly.",
+      "unit_id": "inherited_unit:044.code_block"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Messages and Logging' heading is superseded by the 'Additional Examples' section heading; no standalone logging content remains.",
+      "unit_id": "inherited_unit:045.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "The example uses extra_format_paths and job.messages but is CONTRADICTED by example:009.",
+      "unit_id": "inherited_unit:046.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "example:009"
+      ],
+      "rationale": "Describes extra_format_paths behavior and logging setup, but the example it introduces is CONTRADICTED.",
+      "unit_id": "inherited_unit:047.paragraph"
+    },
+    {
+      "destination_section": "additional_examples",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:010"
+      ],
+      "rationale": "The logging configuration example is verified and supported; matches example:010 exactly.",
+      "unit_id": "inherited_unit:048.code_block"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "HTML closing tag without matching opening tag; non-content and potentially confusing.",
+      "unit_id": "inherited_unit:049.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'API Reference' heading is standard and matches the destination section.",
+      "unit_id": "inherited_unit:050.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "package:name"
+      ],
+      "rationale": "Omitted by the BL-240 last-resort degrade (R14): a blocking check shows it contradicts the facts: The primary entry point is `TeXJob`, which combines an `InputS",
+      "unit_id": "inherited_unit:051.paragraph"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "HTML opening tag without matching closing tag; non-content and potentially confusing.",
+      "unit_id": "inherited_unit:052.html_block"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'Core API' heading is standard and matches the destination section.",
+      "unit_id": "inherited_unit:053.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "import_path:aspose_tex",
+        "public_symbol:aspose_tex",
+        "public_symbol:aspose_tex.exceptions.asposetexerror",
+        "public_symbol:aspose_tex.exceptions.engineerror",
+        "public_symbol:aspose_tex.exceptions.fonterror",
+        "public_symbol:aspose_tex.exceptions.inputerror"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists exception classes with verified public symbols.",
+      "unit_id": "inherited_unit:054.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "public_symbol:aspose_tex.cli.main",
+        "public_symbol:aspose_tex.create_input_source",
+        "public_symbol:aspose_tex.dvidevice",
+        "public_symbol:aspose_tex.dvidevice.finalize",
+        "public_symbol:aspose_tex.dvidevice.get_bytes",
+        "public_symbol:aspose_tex.exceptions",
+        "public_symbol:aspose_tex.exceptions.asposetexerror",
+        "public_symbol:aspose_tex.exceptions.engineerror",
+        "public_symbol:aspose_tex.exceptions.fonterror",
+        "public_symbol:aspose_tex.exceptions.inputerror",
+        "public_symbol:aspose_tex.fileinputsource",
+        "public_symbol:aspose_tex.mcp",
+        "public_symbol:aspose_tex.mcp.compile_tex",
+        "public_symbol:aspose_tex.mcp.tex_to_pdf",
+        "public_symbol:aspose_tex.mcp.tex_to_svg",
+        "public_symbol:aspose_tex.mcp.tex_version",
+        "public_symbol:aspose_tex.outputformat",
+        "public_symbol:aspose_tex.pdfdevice",
+        "public_symbol:aspose_tex.pdfdevice.finalize",
+        "public_symbol:aspose_tex.pdfdevice.get_bytes",
+        "public_symbol:aspose_tex.stringinputsource",
+        "public_symbol:aspose_tex.svgdevice",
+        "public_symbol:aspose_tex.svgdevice.finalize",
+        "public_symbol:aspose_tex.svgdevice.get_all_pages",
+        "public_symbol:aspose_tex.svgdevice.get_bytes",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texjob.messages",
+        "public_symbol:aspose_tex.texjob.run",
+        "public_symbol:aspose_tex.texoptions"
+      ],
+      "rationale": "Heading owned by the renderer: api reference prints its own headings, so this inherited heading is not printed as written.",
+      "unit_id": "inherited_unit:055.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.dvidevice",
+        "public_symbol:aspose_tex.outputdevice",
+        "public_symbol:aspose_tex.pdfdevice",
+        "public_symbol:aspose_tex.svgdevice",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texoptions"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists core classes with verified public symbols.",
+      "unit_id": "inherited_unit:056.table"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "The 'Enumerations' heading is standard and matches the destination section.",
+      "unit_id": "inherited_unit:057.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.outputformat"
+      ],
+      "rationale": "Kept in the collapsed API Reference: it lists public API members. Lists the OutputFormat enumeration with verified public symbol.",
+      "unit_id": "inherited_unit:058.table"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Detailed Member Reference' heading is not supported by any section structure or fact.",
+      "unit_id": "inherited_unit:059.heading"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "The 'Processing' heading is not supported by any section structure or fact.",
+      "unit_id": "inherited_unit:060.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.texjob.messages",
+        "public_symbol:aspose_tex.texjob.run"
+      ],
+      "rationale": "Lists core API symbols and methods supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:061.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [],
+      "rationale": "Lists TeXOptions attributes supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:061.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Output Devices' is superseded by the API Reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:062.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.svgdevice.get_all_pages"
+      ],
+      "rationale": "Lists output device classes and methods supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:063.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Input Sources' is superseded by the API Reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:064.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.create_input_source"
+      ],
+      "rationale": "Lists input source factory and classes supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:065.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "identity:ecosystem"
+      ],
+      "rationale": "Section heading 'Exceptions' is superseded by the API Reference section's structured public symbol inventory.",
+      "unit_id": "inherited_unit:066.heading"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.exceptions",
+        "public_symbol:aspose_tex.exceptions.asposetexerror"
+      ],
+      "rationale": "Lists exception classes supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:067.001.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.exceptions.inputerror"
+      ],
+      "rationale": "Lists exception classes supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:067.002.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.exceptions.engineerror"
+      ],
+      "rationale": "Lists exception classes supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:067.003.list"
+    },
+    {
+      "destination_section": "api_reference",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "public_symbol:aspose_tex.exceptions.fonterror"
+      ],
+      "rationale": "Lists exception classes supported by facts; moved to API Reference for structured presentation.",
+      "unit_id": "inherited_unit:067.004.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [],
+      "rationale": "HTML closing tag is non-content and serves no purpose in the generated README.",
+      "unit_id": "inherited_unit:068.html_block"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022"
+      ],
+      "rationale": "Section heading 'Documentation & Resources' is preserved as the destination section name matches.",
+      "unit_id": "inherited_unit:069.heading"
+    },
+    {
+      "destination_section": "documentation_resources",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "link_target:019",
+        "link_target:020",
+        "link_target:021",
+        "link_target:022"
+      ],
+      "rationale": "Lists verified documentation and resource links; all URLs are supported by facts.",
+      "unit_id": "inherited_unit:070.list"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Section heading 'Scope and Limitations' is preserved as the destination section name matches.",
+      "unit_id": "inherited_unit:071.heading"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "CORRECT_WITH_EVIDENCE",
+      "fact_ids": [
+        "inherited_unit:072.list"
+      ],
+      "rationale": "The unit is supported as an inherited unit; the phrase 'examples above' is retained as written per the unit's exact text, and the unit is preserved in its valid",
+      "unit_id": "inherited_unit:072.list"
+    },
+    {
+      "destination_section": null,
+      "disposition": "OMIT_UNSUPPORTED",
+      "fact_ids": [
+        "link_target:product.enterprise"
+      ],
+      "rationale": "Omitted by the BL-480 last-resort degrade (R14, R42): the independent review found no fact that supports what this paragraph says the commercial product adds, and this repository cannot verify a statement about a different product, so it is no longer made; the verified Enterprise Edition link stays in the closing sentence of Scope and Limitations",
+      "unit_id": "inherited_unit:073.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [],
+      "rationale": "Section heading 'Development and Testing' is preserved as the destination section name matches.",
+      "unit_id": "inherited_unit:074.heading"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "rationale": "Instructional lead-in to test command supported by facts.",
+      "unit_id": "inherited_unit:075.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests",
+        "dependency:development.dev.pytest-7.4"
+      ],
+      "rationale": "Test command snippet matches verified pytest usage and is not superseded by installation.",
+      "unit_id": "inherited_unit:076.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_MOVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "build_test_asset:tests"
+      ],
+      "rationale": "Describes the test suite structure and coverage, supporting the development and testing section.",
+      "unit_id": "inherited_unit:077.paragraph"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "build_test_asset:test-command",
+        "dependency:development.dev.ruff-0.4"
+      ],
+      "rationale": "The ruff check command is superseded by the development and testing section which specifies pytest as the test command and ruff as a development dependency.",
+      "unit_id": "inherited_unit:078.code_block"
+    },
+    {
+      "destination_section": "development_testing",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "example:010",
+        "import_path:aspose_tex",
+        "public_symbol:aspose_tex",
+        "public_symbol:aspose_tex.texjob.messages"
+      ],
+      "rationale": "Kept in development_testing: scope_limitations holds no build material. Describes the logging behavior accurately and adds value about opt-in logging configu...",
+      "unit_id": "inherited_unit:079.paragraph"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx"
+      ],
+      "rationale": "The heading '## License' is superseded by the deterministic license section.",
+      "unit_id": "inherited_unit:080.heading"
+    },
+    {
+      "destination_section": "license",
+      "disposition": "SUPERSEDE_REDUNDANT",
+      "fact_ids": [
+        "license:file",
+        "license:spdx",
+        "link_target:002"
+      ],
+      "rationale": "Superseded by the License section, which states the license from facts. Provides accurate license details and copyright notice requirements not fully covered by",
+      "unit_id": "inherited_unit:081.paragraph"
+    },
+    {
+      "destination_section": "scope_limitations",
+      "disposition": "VERIFIED_PRESERVE",
+      "fact_ids": [
+        "third_party_notices:file",
+        "link_target:024"
+      ],
+      "rationale": "Provides important information about bundled font licensing separate from the main license.",
+      "unit_id": "inherited_unit:082.paragraph"
+    }
+  ]
+}

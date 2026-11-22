@@ -1,0 +1,733 @@
+{
+  "coherence": {
+    "applied": true,
+    "revised": []
+  },
+  "degrade_records": [
+    {
+      "action": "capability_dropped",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "key_capabilities",
+      "slot": "capability:5"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.texjob"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.texoptions"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.pdfdevice"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.dvidevice"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.svgdevice"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.create_input_source"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.outputformat"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.exceptions"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.mcp"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "hub:public_symbol:aspose_tex.cli.main"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_tex.fileinputsource"
+    },
+    {
+      "action": "api_row_fallback",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_tex.stringinputsource"
+    },
+    {
+      "action": "inherited_unit_omitted",
+      "detail": "The primary entry point is `TeXJob`, which combines an `InputSource`, an `OutputDevice` (`PdfDevice`, `DviDevice`, or `SvgDevice`), and `TeXOptions` into one runnable job.",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-240",
+      "section": "api_reference",
+      "slot": "inherited_unit:051.paragraph"
+    },
+    {
+      "action": "enterprise_context_withheld",
+      "findings": [
+        "llm:factuality"
+      ],
+      "inherited_units": [
+        "inherited_unit:073.paragraph"
+      ],
+      "rule": "BL-480",
+      "section": "enterprise_relationship",
+      "slot": "context"
+    },
+    {
+      "action": "inherited_unit_omitted",
+      "detail": "the clause printed from this paragraph is withheld with the Enterprise clause",
+      "findings": [
+        "llm:factuality"
+      ],
+      "rule": "BL-480",
+      "section": "enterprise_relationship",
+      "slot": "inherited_unit:073.paragraph"
+    }
+  ],
+  "omitted": [
+    {
+      "fact_id": "dependency:optional.mcp.mcp-1.0-2",
+      "reason": "The dependency fact names an optional MCP dependency but the opening does not state any dependency information; it is omitted because the section does not describe dependencies.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:008",
+      "reason": "The example fact describes optional configuration options but the opening does not describe options; it is omitted because the section does not describe configuration.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "example:010",
+      "reason": "The example fact describes logging setup but the opening does not describe logging; it is omitted because the section does not describe diagnostics or logging.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "The identity fact names the ecosystem as python but the opening does not state the ecosystem; it is omitted because the section does not state platform or ecosystem.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "The identity fact names the family as tex but the opening does not state the family; it is omitted because the section does not state family.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "The identity fact names the platform as python but the opening does not state the platform; it is omitted because the section does not state platform.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "The identity fact describes a knowledge refresh but the opening does not state refresh or verification information; it is omitted because the section does not state provenance.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "The identity fact names the repository but the opening does not state the repository; it is omitted because the section does not state repository.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "The identity fact names a revision but the opening does not state revision; it is omitted because the section does not state provenance.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:005.heading",
+      "reason": "The inherited unit names a heading but the opening does not include navigation or headings; it is omitted because the section does not include navigation.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:006.list",
+      "reason": "The inherited unit names a navigation list but the opening does not include navigation or headings; it is omitted because the section does not include navigation.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:license",
+      "reason": "The package fact names the license as MIT but the opening does not state the license; it is omitted because the section does not state license.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "The package fact names the package as aspose-tex-foss but the opening does not state the package name; it is omitted because the section does not state package name.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "The package fact names a published version but the opening does not state version; it is omitted because the section does not state version.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:python_requires",
+      "reason": "The package fact names a Python requirement but the opening does not state runtime requirements; it is omitted because the section does not state dependencies or runtime.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "The package fact names a version but the opening does not state version; it is omitted because the section does not state version.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.cli.main",
+      "reason": "The public symbol fact names a CLI entry point but the opening does not describe CLI usage; it is omitted because the section does not describe CLI.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.create_input_source",
+      "reason": "The public symbol fact names an input source factory but the opening does not describe input sources; it is omitted because the section does not describe input handling.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.fileinputsource",
+      "reason": "The public symbol fact names a file input source but the opening does not describe input sources; it is omitted because the section does not describe input handling.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.mcp",
+      "reason": "The public symbol fact names an MCP module but the opening does not describe MCP; it is omitted because the section does not describe optional features.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.mcp.compile_tex",
+      "reason": "The public symbol fact names a compile_tex function but the opening does not describe MCP functions; it is omitted because the section does not describe optional features.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.mcp.tex_to_pdf",
+      "reason": "The public symbol fact names a tex_to_pdf function but the opening does not describe MCP functions; it is omitted because the section does not describe optional features.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.mcp.tex_to_svg",
+      "reason": "The public symbol fact names a tex_to_svg function but the opening does not describe MCP functions; it is omitted because the section does not describe optional features.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.mcp.tex_version",
+      "reason": "The public symbol fact names a tex_version function but the opening does not describe MCP functions; it is omitted because the section does not describe optional features.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.stringinputsource",
+      "reason": "The public symbol fact names a string input source but the opening does not describe input sources; it is omitted because the section does not describe input handling.",
+      "section": "opening"
+    },
+    {
+      "fact_id": "inherited_unit:010.list",
+      "reason": "The list is fully incorporated into the prose of capability:1, capability:2, capability:3, and capability:6 units; it is not omitted separately.",
+      "section": "key_capabilities"
+    },
+    {
+      "fact_id": "inherited_unit:013.paragraph",
+      "reason": "Not a product fact; an inherited unit describing an installation step, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:027.heading",
+      "reason": "Not a product fact; an inherited heading label, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:028.code_block",
+      "reason": "Not a product fact; an inherited code block, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:030.code_block",
+      "reason": "Not a product fact; an inherited code block, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:ecosystem",
+      "reason": "Not needed in this section; ecosystem identity is implied by the product name and package facts.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:family",
+      "reason": "Not needed in this section; family identity is implied by the product name and example facts.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:platform",
+      "reason": "Not needed in this section; platform identity is implied by the package and example facts.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:product-knowledge-refresh",
+      "reason": "Not needed in this section; provenance metadata, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:repository",
+      "reason": "Not needed in this section; provenance metadata, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "identity:revision",
+      "reason": "Not needed in this section; provenance metadata, not a capability or identity.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "package:license",
+      "reason": "Not needed in this section; license identity is not relevant to the quick start examples.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "package:name",
+      "reason": "Not needed in this section; package name is already evident in the examples.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "package:published_version",
+      "reason": "Not needed in this section; version is not mentioned in the examples.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "package:python_requires",
+      "reason": "Not needed in this section; runtime requirements are not mentioned in the examples.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "package:version",
+      "reason": "Not needed in this section; version is not mentioned in the examples.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "example:009",
+      "reason": "Contradicted example; not used per do_not_claim.",
+      "section": "quick_start"
+    },
+    {
+      "fact_id": "inherited_unit:050.heading",
+      "reason": "The renderer prints the heading; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:051.paragraph",
+      "reason": "The renderer prints the paragraph; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:053.heading",
+      "reason": "The renderer prints the heading; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:054.table",
+      "reason": "The renderer prints the table; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:056.table",
+      "reason": "The renderer prints the table; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:057.heading",
+      "reason": "The renderer prints the heading; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:058.table",
+      "reason": "The renderer prints the table; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:061.001.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:061.002.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:063.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:065.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:067.001.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:067.002.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:067.003.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "inherited_unit:067.004.list",
+      "reason": "The renderer prints the list; prose must not repeat it.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "example:009",
+      "reason": "The example is contradicted and must not be cited.",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.texjob",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.texoptions",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.pdfdevice",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.dvidevice",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.svgdevice",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.create_input_source",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.outputformat",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.exceptions",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.mcp",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.cli.main",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.fileinputsource",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "public_symbol:aspose_tex.stringinputsource",
+      "reason": "API-row fallback (R43(4)): the authored unit failed its checks after every ask, so the renderer prints the type's fact-true row; withheld by BL-240: a blocking check flags its text",
+      "section": "api_reference"
+    },
+    {
+      "fact_id": "link_target:product.enterprise",
+      "reason": "Enterprise clause withheld (BL-480, R14): the independent review found no fact that supports it, so the renderer prints the verified Enterprise Edition sentence alone",
+      "section": "enterprise_relationship"
+    }
+  ],
+  "schema_version": 1,
+  "units": [
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "format:input.dvi",
+        "format:input.pdf",
+        "public_symbol:aspose_tex.dvidevice",
+        "public_symbol:aspose_tex.pdfdevice",
+        "public_symbol:aspose_tex.svgdevice",
+        "public_symbol:aspose_tex.svgdevice.get_all_pages",
+        "public_symbol:aspose_tex.svgdevice.get_bytes",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texjob.messages",
+        "public_symbol:aspose_tex.texjob.run",
+        "public_symbol:aspose_tex.texoptions"
+      ],
+      "section": "opening",
+      "slot": "opening",
+      "text": "Aspose.TeX FOSS for Python reads TeX input and converts it to output formats including .pdf, .dvi, and .svg. It writes .pdf and .dvi files directly to disk or returns their bytes in memory, and it writes .svg output to disk or returns the bytes of one or more SVG pages. The product provides a TeXJob class that executes TeX processing with configurable options and exposes messages for diagnostics."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texjob.run",
+        "public_symbol:aspose_tex.texoptions"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:1",
+      "text": "It parses and interprets real TeX source through TeXJob, driving the tokenizer, macro expander, and mode-machine dispatch that process control sequences, groups, and paragraph text, then builds lines and pages from typeset boxes with a real line-breaking and page-building pipeline."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "format:input.dvi",
+        "format:input.pdf",
+        "public_symbol:aspose_tex.dvidevice",
+        "public_symbol:aspose_tex.pdfdevice",
+        "public_symbol:aspose_tex.svgdevice"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:2",
+      "text": "It produces output in PDF, DVI, and SVG formats by writing finished pages through PdfDevice, DviDevice, or SvgDevice, supporting file output via a Path or in-memory bytes when no destination is specified."
+    },
+    {
+      "fact_ids": [
+        "example:005",
+        "example:006",
+        "example:007",
+        "public_symbol:aspose_tex.svgdevice.get_all_pages",
+        "public_symbol:aspose_tex.svgdevice.get_bytes"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:3",
+      "text": "SvgDevice embeds glyph outlines straight from the bundled Computer Modern PFB fonts as path elements, so the rendered SVG needs no external fonts, and get_all_pages returns every page of a multi-page document as a list of byte strings."
+    },
+    {
+      "fact_ids": [
+        "example:001",
+        "example:002",
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "public_symbol:aspose_tex.create_input_source",
+        "public_symbol:aspose_tex.fileinputsource",
+        "public_symbol:aspose_tex.stringinputsource"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:4",
+      "text": "It supports input from strings, files, and bytes via create_input_source."
+    },
+    {
+      "fact_ids": [
+        "example:010",
+        "public_symbol:aspose_tex.cli.main",
+        "public_symbol:aspose_tex.texjob.messages"
+      ],
+      "section": "key_capabilities",
+      "slot": "capability:5",
+      "text": "It supports job diagnostics and logging by collecting run messages via TeXJob.messages and exposing a standard aspose_tex logger that can be configured with basicConfig and setLevel."
+    },
+    {
+      "fact_ids": [
+        "example:001"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in",
+      "text": "This example creates a PDF from a simple TeX string in memory and returns the PDF bytes in memory."
+    },
+    {
+      "fact_ids": [
+        "example:002"
+      ],
+      "section": "quick_start",
+      "slot": "lead_in:2",
+      "text": "This example writes the PDF output directly to a file named hello.pdf on disk."
+    },
+    {
+      "fact_ids": [
+        "example:003",
+        "example:004",
+        "example:005",
+        "example:006",
+        "example:007",
+        "example:008",
+        "example:010"
+      ],
+      "section": "additional_examples",
+      "slot": "preview",
+      "text": "The following examples demonstrate converting TeX content to DVI, SVG, and PDF formats, as well as enabling logging for the aspose-tex-foss package."
+    },
+    {
+      "fact_ids": [
+        "example:003"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:003",
+      "text": "Render TeX to DVI in memory."
+    },
+    {
+      "fact_ids": [
+        "example:004"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:004",
+      "text": "Save DVI output to a file."
+    },
+    {
+      "fact_ids": [
+        "example:005"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:005",
+      "text": "Render TeX to SVG in memory."
+    },
+    {
+      "fact_ids": [
+        "example:006"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:006",
+      "text": "Save SVG output to a file."
+    },
+    {
+      "fact_ids": [
+        "example:007"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:007",
+      "text": "Extract all pages as SVG bytes."
+    },
+    {
+      "fact_ids": [
+        "example:008"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:008",
+      "text": "Render TeX to PDF with options."
+    },
+    {
+      "fact_ids": [
+        "example:010"
+      ],
+      "section": "additional_examples",
+      "slot": "workflow:example:010",
+      "text": "Enable logging for the package."
+    },
+    {
+      "fact_ids": [
+        "identity:ecosystem",
+        "identity:family",
+        "identity:platform",
+        "identity:product-knowledge-refresh",
+        "identity:repository",
+        "identity:revision",
+        "package:license",
+        "package:name",
+        "package:published_version",
+        "package:python_requires",
+        "package:version",
+        "public_symbol:aspose_tex.texjob",
+        "public_symbol:aspose_tex.texjob.messages",
+        "public_symbol:aspose_tex.texjob.run"
+      ],
+      "section": "api_reference",
+      "slot": "intro",
+      "text": "The primary entry point is aspose_tex.TeXJob, which combines an input source, an output device (aspose_tex.PdfDevice, aspose_tex.DviDevice, or aspose_tex.SvgDevice), and aspose_tex.TeXOptions into one runnable job."
+    },
+    {
+      "fact_ids": [
+        "public_symbol:aspose_tex.inputsource"
+      ],
+      "section": "api_reference",
+      "slot": "type:public_symbol:aspose_tex.inputsource",
+      "text": "InputSource class serves as a base for input sources."
+    }
+  ]
+}
