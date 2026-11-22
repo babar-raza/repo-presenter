@@ -5,7 +5,7 @@
   "provider_repository_id": 1168969375,
   "registry_revision": null,
   "active_transaction_id": "acf5266a1d4f435da7daa5ab8b074ddd",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -19,11 +19,11 @@
   "proposal": null,
   "failure": {
     "classification": "transient",
-    "detail": "attempt under version set 75b35954c877: no valid independent review could be obtained, so nothing was sealed (retryable: a re-run asks the reviewer again): unit u3 (api_reference): the reviewer's reply broke the contract after the one re-ask; independent_review: output rejected twice; last rejection: finding F01: lines 9 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F02: lines 26 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F03: lines 28 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F04: lines 29 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F05: lines 33 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F06: lines 34 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F07: lines 15 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F08: lines 16 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F09: lines 30 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F10: lines 31 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F11: lines 7 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F12: lines 12 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F13: lines 18 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F14: lines 19 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines; finding F15: lines 20 were not shown to you (renderer-printed text or another review unit); cite only the numbered lines",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-21T16:38:23.724091+00:00",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-22T09:20:50.686611+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 77,
+  "state_version": 78,
   "recent_trigger_dedup_keys": {
     "run:41133521004:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "d87fa8e49fcb4e54a1dced96c2933b26",
     "run:41236496887:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "f0e03721a98e4dc49dce5ae223574f3a",
@@ -66,5 +66,5 @@
     "run:44924648803:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "630a64d9de0144be9adbd46dc2c3f55f",
     "run:44943342177:aspose-3d-foss/Aspose.3D-FOSS-for-TypeScript": "acf5266a1d4f435da7daa5ab8b074ddd"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
