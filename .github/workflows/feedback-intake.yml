@@ -1,0 +1,95 @@
+name: feedback-intake
+
+# Owner ruling R47 (2026-11-19): feedback starts the investigation > execution > verification cycle at once. The hosted
+# review page (review-page.yml) cannot write to the Claude artifact `db`, so its "Save feedback" button opens a
+# prefilled GitHub issue labelled `review-feedback`. This workflow turns each such issue into a `project/backlog.yaml`
+# item of type feedback on the runner, with no Claude session (BL-761, work package WP-6):
+#
+#   issues event   immediate: the one issue that was opened, edited or labelled.
+#   schedule       every 6 hours: a sweep of ALL open `review-feedback` issues (catches a missed event; filing is
+#                  idempotent by a hash of candidate id + verdict + note, so nothing is filed twice).
+#   dispatch/call  the same sweep, by hand or by run request ({"job": "feedback-intake"}).
+#
+# The issue is HOSTILE INPUT: the workflow runs main's code (an `issues` event always does), reads the body only as
+# data inside scripts/review_page/feedback_intake.py (fixed-shape validation; author must be owner, member or
+# collaborator), and never interpolates it into a shell. The result is pushed as the branch
+# `feedback-intake/run-<id>` (backlog_check must pass first), a pull request is opened when the repository allows
+# Actions to create them, and the issue gets one comment naming the backlog id. Nothing is merged here: the
+# supervisor integrates and starts the cycle (R47). No secret; no upstream repository is touched.
+#
+# tests/test_review_page_workflow.py fails if this file gains a secret, a checkout of another ref than main, or
+# interpolates issue text into a shell.
+
+on:
+  issues:
+    types: [opened, edited, labeled, reopened]
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feedback-intake
+  cancel-in-progress: false
+
+jobs:
+  intake:
+    if: github.event_name != 'issues' || contains(github.event.issue.labels.*.name, 'review-feedback')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write       # the feedback-intake/run-<id> branch only
+      issues: write         # one comment on the filed issue
+      pull-requests: write  # the pull request, when the repository allows Actions to open one
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: python -m pip install pyyaml
+      - name: File the feedback as backlog items (issue text is data, never a shell word)
+        id: intake
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "issues" ]; then
+            python scripts/review_page/feedback_intake.py --issue-event "$GITHUB_EVENT_PATH" > "$RUNNER_TEMP/result.json"
+          else
+            gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/issues?labels=review-feedback&state=open&per_page=100" > "$RUNNER_TEMP/issues.json"
+            python scripts/review_page/feedback_intake.py --issues-json "$RUNNER_TEMP/issues.json" > "$RUNNER_TEMP/result.json"
+          fi
+          cat "$RUNNER_TEMP/result.json"
+          python -c "import json,sys; r=json.load(open(sys.argv[1])); print('filed=%d' % len(r['filed']))" "$RUNNER_TEMP/result.json" >> "$GITHUB_OUTPUT"
+      - name: Check the backlog, push the branch, open the pull request, comment on the issue
+        if: steps.intake.outputs.filed != '0'
+        run: |
+          python ops/checks/backlog_check.py
+          branch="feedback-intake/run-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q -b "$branch"
+          git add project/backlog.yaml
+          git commit -q -m "Backlog: review feedback filed by feedback-intake (run ${GITHUB_RUN_ID}, R47)"
+          git push -q origin "HEAD:refs/heads/${branch}"
+          ids=$(python -c "import json,sys; print(', '.join(f['item'] for f in json.load(open(sys.argv[1]))['filed']))" "$RUNNER_TEMP/result.json")
+          gh pr create --base main --head "$branch" --title "Backlog: review feedback ${ids}" \
+            --body "Filed by the feedback-intake workflow from review-feedback issues (R47). The supervisor starts investigation > execution > verification on merge or at once from this branch. Run ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            || echo "pull request not opened (the repository may not allow Actions to create them); the branch ${branch} holds the change"
+          python - <<'PY' > "$RUNNER_TEMP/comments.tsv"
+          import json, os, re
+          for f in json.load(open(os.path.join(os.environ["RUNNER_TEMP"], "result.json")))["filed"]:
+              m = re.search(r"/issues/(\d+)$", f["source_url"])
+              if m:
+                  print(f"{m.group(1)}\t{f['item']}")
+          PY
+          while IFS=$'\t' read -r number item; do
+            gh issue comment "$number" --repo "$GITHUB_REPOSITORY" \
+              --body "Filed as backlog item ${item} on branch ${branch} (feedback-intake run ${GITHUB_RUN_ID}). The investigation > execution > verification cycle (R47) starts from it."
+          done < "$RUNNER_TEMP/comments.tsv"
+          echo "filed: ${ids} on ${branch}" >> "$GITHUB_STEP_SUMMARY"

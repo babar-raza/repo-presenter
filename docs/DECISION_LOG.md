@@ -8439,3 +8439,13 @@ R10: no sealed README changes (the memos return what the functions returned; the
 What remains. If Words Java still reaches the hard stop, its failure record names the stage and the 'provider call' lines give the call latencies: that is the next profile target. A reply-level contract error (invalid verdict, ACCEPT carrying findings) still loses the unit; no hosted run has shown one.
 
 Backlog: BL-710, BL-711, BL-712
+
+## 2026-11-22: WP-6 hosted review page and runner-side feedback intake (BL-760, BL-761)
+
+Owner rulings R47 (the review page refreshes itself once feedback is honored), R49 and R50 (every component on the runner). Until now the README Candidate Review page was rebuilt and republished from a Claude session and its feedback lived in the artifact `db`, which Actions cannot reach (inventory C14, WP-6).
+Decision (R27 stays: no new mechanism beyond reuse of `scripts/review_page/build.py`): (a) `review-page.yml` builds the same page on the runner and hosts it with no owner action as a workflow artifact plus a force-pushed `review-page` branch; GitHub Pages is an opt-in job (variable `REVIEW_PAGE_PAGES`), because the Pages API is not readable from the supervisor session (HTTP 403 through the proxy) and enabling Pages needs repository admin. Rejected: a release asset (downloads as a file), committing the page to main (tens of MB per rebuild in main's history), a state ref (not browsable). (b) The hosted page's Save feedback opens a prefilled GitHub issue labelled `review-feedback`; `feedback-intake.yml` validates it as hostile input (label, author association, fixed field shapes), keys it by a hash of candidate id, verdict and note (idempotent; a changed note files anew) and appends a `type: feedback` item to the backlog on a branch and PR, after `backlog_check`. Run-request jobs `review-page` and `feedback-intake` let the supervisor drive both.
+Evidence: tests/test_review_page_workflow.py (24 cases) and tests/test_run_request.py pass; the 8 stored 2026-11-13 feedback snapshots file 8 valid backlog items on a copy of the backlog; the local build from the state refs is recorded in BL-760. Hosted-unproven (R41): no run of either workflow exists until merge.
+What remains: merge, then one `review-page` run request and one labelled test issue; the owner opts into Pages for in-browser rendering; the Claude artifact republish stays a session step; whether intake branches auto-merge is a later decision once the cycle is proven.
+
+Backlog: BL-760, BL-761
+
