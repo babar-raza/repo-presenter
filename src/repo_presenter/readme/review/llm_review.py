@@ -335,9 +335,19 @@ def _merged_verdict(verdicts: Sequence[str]) -> str:
 
 def _merged_reply(
     replies: Sequence[tuple[ReviewUnit, dict[str, Any]]],
-) -> tuple[dict[str, Any], dict[str, str]]:
-    """The units' replies as one reply with findings renumbered F01..., and which unit each id
-    came from. Ids are renumbered before any clearance is issued: a clearance binds the finding id."""
+) -> tuple[dict[str, Any], dict[str, str], dict[str, list[str]]]:
+    """The units' replies as one reply with findings renumbered F01..., which unit each id came
+    from, and the notes of what was set aside (unit label -> notes; empty when nothing was).
+    Ids are renumbered before any clearance is issued: a clearance binds the finding id.
+
+    A merged reply may hold at most ``MAX_MERGED_FINDINGS`` findings (an id is ``F`` and two digits).
+    A candidate with many faulted lines makes the units file more (hosted Words Java run
+    44967430141: 105, 'finding F100: id must look like F01', the whole review lost on every call).
+    The first ``MAX_MERGED_FINDINGS`` are kept and ids are renumbered only when they would no
+    longer fit; each unit's record carries a note of how many of its findings were set aside
+    (BL-690). The verdict stays the units' own (a REJECT keeps its findings, so it never becomes an
+    ACCEPT), the repair and degrade rounds act on the kept findings, and the next round's review
+    finds the rest."""
     findings: list[dict[str, Any]] = []
     origin: dict[str, str] = {}
     preserve: list[str] = []
@@ -356,8 +366,27 @@ def _merged_reply(
         "preserve": preserve,
     }
     merge_repeated_findings(merged_reply)
-    kept = {f["id"] for f in merged_reply["findings"]}
-    return merged_reply, {fid: unit for fid, unit in origin.items() if fid in kept}
+    notes: dict[str, list[str]] = {}
+    if len(findings) > MAX_MERGED_FINDINGS:
+        set_aside: dict[str, int] = {}
+        for finding in findings[MAX_MERGED_FINDINGS:]:
+            label = origin[finding["id"]]
+            set_aside[label] = set_aside.get(label, 0) + 1
+        del findings[MAX_MERGED_FINDINGS:]
+        for label, count in set_aside.items():
+            notes[label] = [
+                f"{count} finding(s) of this unit were set aside: the merged reply holds at most "
+                f"{MAX_MERGED_FINDINGS} findings; the verdict is unchanged and the next review round "
+                "reports what remains"
+            ]
+    kept_origin = {f["id"]: origin[f["id"]] for f in findings}
+    if any(int(f["id"][1:]) > MAX_MERGED_FINDINGS for f in findings):
+        kept_origin = {}
+        for number, finding in enumerate(findings, 1):
+            old = finding["id"]
+            finding["id"] = f"F{number:02d}"
+            kept_origin[finding["id"]] = origin[old]
+    return merged_reply, kept_origin, notes
 
 
 def _m8_record(
@@ -636,7 +665,10 @@ def review_with_model(
         raise ReviewUnavailable(
             first.reason, [e for _, p in unavailable for e in p.errors]
         )
-    merged, origin = _merged_reply(replies)
+    merged, origin, set_aside = _merged_reply(replies)
+    for record in records:
+        if record["unit"] in set_aside:
+            record.setdefault(CONTRACT_NOTES_KEY, []).extend(set_aside[record["unit"]])
     verdict = review_from_reply(
         merged,
         candidate_readme=candidate_readme,

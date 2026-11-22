@@ -8379,3 +8379,12 @@ R9: no README text added beyond the maintainers' own badge; R10: lean recertify 
 Hosted-unproven (R41): TeX Python and PDF Python Lane R refreshes.
 
 Backlog: BL-670, BL-671
+
+## 2026-11-22: Words Java Lane R: a merged reply of more than 99 findings no longer loses the whole review (BL-690)
+
+Context. R44 needs 34 of 40 Lane R cells sealed and accepted. Hosted run 44967430141 (Words Java, 70 calls) ended 'no valid independent review could be obtained ... at most 99 findings; got 105; finding F100: id must look like F01'. Root cause: the sectionwise review asks each unit separately (each reply valid, at most 16 findings) and merges the replies, renumbering ids F01...; the merged reply is then validated against a merged limit of 99 because an id is `F` and two digits. A candidate with many faulted lines (a huge API reference) makes the units file more than 99 in all, the merged reply is refused, and the whole review is lost on every attempt.
+Alternatives (R36): (a) widen the id format and the limit: the repair packet and degrade claims grow with the findings, a changed contract and larger calls for no better outcome; (b) keep the first 99 with a recorded note: chosen. The verdict is unchanged, so a REJECT keeps its findings and cannot become an ACCEPT, and a no-review case is never counted clean (R14, rule 5). The kept findings go through the repair rounds and BL-240 degrade passes (at most 8) as any other; the following round's review of the changed candidate files what was set aside, so a 99-finding reject converges within those passes or ends honestly as a blocked candidate with the unit notes saying what was set aside. Ids are renumbered only when a kept id would exceed F99 (folding repeats can leave gaps), so a normal merged reply is byte-identical to before. Requests and the reply contract are unchanged, so replayed calls are byte-identical.
+Properties improved (R46): robust (a large candidate degrades the review to its first 99 findings, never loses it) and universal (any repository with a long faulted API reference). R10: the change only runs on a merged reply of more than 99 findings; no sealed candidate carries one.
+Hosted-unproven (R41): Words Java Lane R refresh.
+
+Backlog: BL-690
