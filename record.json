@@ -5,7 +5,7 @@
   "provider_repository_id": 1280393633,
   "registry_revision": null,
   "active_transaction_id": "8fac8aeb8c2a421288c5a4e6b7b5db3b",
-  "state": "INVALIDATED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 3 blocking finding(s) of 3; nothing sealed; F01 [contradiction] in opening blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a contradiction claim); F02 [unsupported_claim] in key_capabilities blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim); F03 [unsupported_claim] in additional_examples blocks until a revised candidate the reviewer no longer faults (no clearance can disprove a unsupported_claim claim)",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-22T10:35:19.551828+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "INVALIDATED",
+    "occurred_at": "2026-11-22T10:45:18.663669+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 10
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 94,
+  "state_version": 95,
   "recent_trigger_dedup_keys": {
     "run:41130099384:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "d6359e88b22f4a22b5dccadc051b4f39",
     "run:41295852203:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "81a03b4a7a3e42c682358a2960d2fa81",
@@ -56,5 +56,5 @@
     "run:44366290226:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "3c65bf202b5d46a19e71fd9903491de3",
     "run:44556523392:aspose-barcode-foss/Aspose.BarCode-FOSS-for-Python": "8fac8aeb8c2a421288c5a4e6b7b5db3b"
   },
-  "recovery_count": 9
+  "recovery_count": 10
 }
