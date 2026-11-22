@@ -1,21 +1,6 @@
 {
  "history": [
   {
-   "at": "2026-11-14T23:46:08+00:00",
-   "classes": [
-    "BC-04|unresolved|code_span_q_is",
-    "BC-07|unresolved|heading_q_is_not",
-    "disposition_coverage|inherited_unit|id_is_kept_verified_preserve",
-    "live_readme_loss|inherited_unit|code_block"
-   ],
-   "code": "0a4c0700bc1b9d9c9d6c87c766c3bd0fdf420b3b3b570b4353d6018383abe55f",
-   "findings": 12,
-   "outcome": "failure",
-   "run_id": "43652850518",
-   "source_revision": "034594822f58194a9ae937237090a60161f57055",
-   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
-  },
-  {
    "at": "2026-11-18T16:24:42+00:00",
    "classes": [
     "BC-04|unresolved|code_span_q_is",
@@ -247,32 +232,43 @@
    "run_id": "45022742708",
    "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
    "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
+  },
+  {
+   "at": "2026-11-22T14:49:08+00:00",
+   "classes": [
+    "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of"
+   ],
+   "code": "ab77c5c20f66b8e8c8c66556d1366942b1b48c18f2e4dfb66d5887e99a70f613",
+   "findings": 1,
+   "outcome": "failure",
+   "run_id": "45028865276",
+   "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
+   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
   }
  ],
  "lane": "R",
  "latest": {
-  "at": "2026-11-22T13:19:14+00:00",
+  "at": "2026-11-22T14:49:08+00:00",
   "classes": {
-   "BC-07|inherited_unit|id_is_kept_as": {
-    "example": "inherited_unit:589.paragraph is kept as written but says 'command above' but no code precedes it in this section: 'Run the command above to produce it, along with four siblings.'",
+   "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of": {
+    "example": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 300 reached in this invocation; no further calls are made and the run stops",
     "findings": 1,
-    "origin_kind": "inherited_unit",
+    "origin_kind": "job_error",
     "origins": [
-     "inherited_unit:589.paragraph"
+     "ProviderCallBudgetError"
     ],
-    "rule": "BC-07",
-    "scope": "976e1244ccbab5e9bf6ea04bf332ece2cb2b2919f88e9704faf23deb8f9b1c23",
+    "rule": "job_error",
+    "scope": "e31d5cddd3446ef6dfe6509eb9930b2f622404b064e0349001ec4e0895bceac9",
     "scope_paths": [
-     "data/readme_findings.json",
      "prompts",
+     "pyproject.toml",
      "src/repo_presenter/cascade.py",
-     "src/repo_presenter/readme/evidence/facts/inherited.py",
-     "src/repo_presenter/readme/parity_gate.py",
-     "src/repo_presenter/readme/reconciliation",
-     "src/repo_presenter/readme/repair",
-     "src/repo_presenter/readme/validation"
+     "src/repo_presenter/core",
+     "src/repo_presenter/present.py",
+     "src/repo_presenter/readme/composition",
+     "src/repo_presenter/readme/repair"
     ],
-    "sub_rule": "id_is_kept_as",
+    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
     "upstream": ""
    }
   },
@@ -281,24 +277,24 @@
   "exit_code": 1,
   "failure": {
    "classification": "validation_failed",
-   "detail": "attempt under version set 75b35954c877: PresentFailure: no LLM review of this candidate was made, and a deterministic-only verdict is never sealed; blocking checks still fail: BC-07; nothing sealed",
-   "kind": "PresentFailure",
+   "detail": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 300 reached in this invocation; no further calls are made and the run stops",
+   "kind": "ProviderCallBudgetError",
    "transient": false
   },
   "findings": [
    {
-    "label": "BC-07",
-    "message": "inherited_unit:589.paragraph is kept as written but says 'command above' but no code precedes it in this section: 'Run the command above to produce it, along with four siblings.'",
+    "label": "ProviderCallBudgetError",
+    "message": "attempt under version set 75b35954c877: ProviderCallBudgetError: provider-call budget of 300 reached in this invocation; no further calls are made and the run stops",
     "origin": {
-     "id": "inherited_unit:589.paragraph",
-     "kind": "inherited_unit"
+     "id": "ProviderCallBudgetError",
+     "kind": "job_error"
     },
     "quote": "",
-    "rule": "BC-07",
-    "section_id": "scope_limitations",
-    "signature": "BC-07|inherited_unit|id_is_kept_as",
-    "source": "validation",
-    "sub_rule": "id_is_kept_as",
+    "rule": "job_error",
+    "section_id": "",
+    "signature": "job_error|job_error|ProviderCallBudgetError:provider_call_budget_of",
+    "source": "job",
+    "sub_rule": "ProviderCallBudgetError:provider_call_budget_of",
     "upstream": ""
    }
   ],
@@ -309,16 +305,16 @@
   "repairs": [
    {
     "facts_defects": [],
-    "label": "BC-07",
+    "label": "BC-14",
     "outcome": "unrepairable",
-    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: inherited_unit:589.paragraph: CORRECT_WITH_EVIDENCE needs at least one fact ID as evidence",
-    "section_id": null,
-    "stage": "S4"
+    "reason": "targeted_repair: output rejected twice; last rejection: revised_output: revised_output: BC-14 still fails on this revision, which is the defect: the README names `PlaceOn` as a member of `Form` ('Template class represents a reusable piece of drawn content, placed on any number of pages from a single Form XObject, with members PlaceOn, constructor, and page, where PlaceOn draws this template onto page inside rect ([x, y, w, h]) and constructor is internal.'), but `Form` has no such member; `Place",
+    "section_id": "api_reference",
+    "stage": "S6"
    }
   ],
   "repository": "aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript",
-  "run_id": "45022742708",
-  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45022742708",
+  "run_id": "45028865276",
+  "run_url": "https://github.com/babar-raza/repo-presenter/actions/runs/45028865276",
   "schema_version": 1,
   "source_revision": "5fa177505944c82cba1432bdf173a55e5c0dfe37",
   "version_set": "75b35954c87749f3a9c3fa5e94ed8ea0260c45de532cbb1d5942bd4d4baa8dab"
