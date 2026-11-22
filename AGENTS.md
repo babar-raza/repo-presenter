@@ -295,3 +295,8 @@ code. `project/taskcards/TC-001.yaml` through `TC-012.yaml` are the first real u
 `recertify`, `gatecli` or other `python -m repo_presenter` run in a worktree must export `PYTHONPATH=$PWD/src`, and
 a verification report must name the tree it ran against (check `python -c "import repo_presenter; print(repo_presenter.__file__)"`).
 Found when a supervisor recertify of the BL-240 fix imported main's code and reported the opposite of the truth.
+
+## Never run a plain `present` on an ACCEPTED cell (lesson, 2026-11-22)
+
+A plain `present` request for a cell whose seal is `ACCEPTED` does not replay: the hosted preflight says "the sealed bundle is 'ACCEPTED', not READY_FOR_PROPOSAL: the rerun that proves the no-op has not happened yet, so the pipeline runs". On changed code that makes real provider calls, and a success writes a NEW seal. Acceptance is bound to the exact README bytes (R33, content-bound), so the new seal is not accepted until a later audit round. The 2026-11-22 frozen-code pass sent plain `present` for the first 10 cells before it was stopped and cost two acceptances (3D Java and 3D TypeScript; Lane R accepted 36 to 34). Rules: a proof or repeat pass that must not touch accepted seals uses zero-call `recertify` (or a run request whose request validator refuses an ACCEPTED target); only `refresh: true` is a deliberate re-seal, and only for a cell that needs one; before any bulk `present` dispatch, read the preflight decision of one cell first.
+

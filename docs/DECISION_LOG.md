@@ -8660,3 +8660,9 @@ Backlog: BL-870, BL-871
 Official count (run 45017744313): Lane R 38 of 40 sealed and 36 of 40 independently accepted (90 percent, above the 85 percent bar); Lane L 38 of 40 handled (33 accepted, 5 no-action). Hosted proofs of the R50 components are recorded in docs/PROGRESS_2026-11-22.md. The R46 repeat-agreement pass and the owner-set variables for sandbox writes are open.
 
 Backlog: BL-290
+
+## 2026-11-22: A plain present on ACCEPTED cells re-seals them (frozen-code pass stopped at 10 of 40)
+
+The R46 frozen-code pass sent plain present requests for sealed Lane R cells. For cells whose seal is ACCEPTED the pipeline runs (preflight: not READY_FOR_PROPOSAL), and on changed code it makes real calls. 3D Java and 3D TypeScript produced new seals, so their content-bound acceptance no longer covers the stored README (official count 45026892783: Lane R accepted 36 to 34). The pass was stopped; the R46 repeat-agreement measurement is reported as not measured. AGENTS.md records the rule. Audit round 10 re-accepts those cells.
+
+Backlog: BL-290
