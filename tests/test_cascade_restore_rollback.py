@@ -255,7 +255,8 @@ def test_a_restored_unit_whose_only_new_failure_is_a_reference_sentence_is_trimm
     def withhold(dispositions: dict[str, Any], document: Any, wanted: dict[str, list[str]]) -> dict[str, list[str]]:
         done = {}
         for row in dispositions["dispositions"]:
-            if row["unit_id"] in wanted and row["unit_id"] == _BAD:
+            # the real function records a sentence once (an already-recorded one returns nothing: BL-892 relies on it)
+            if row["unit_id"] in wanted and row["unit_id"] == _BAD and "degrade_withheld" not in row:
                 row["degrade_withheld"] = list(wanted[row["unit_id"]])
                 done[row["unit_id"]] = list(wanted[row["unit_id"]])
         return done

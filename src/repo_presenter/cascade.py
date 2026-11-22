@@ -1123,6 +1123,47 @@ def _unprinted_kept_unit_ids(settled: _Settled, document: FactsDocument) -> list
     ]
 
 
+def _kept_inherited_ids(dispositions: Mapping[str, Any]) -> set[str]:
+    """The inherited units a disposition set keeps (prints as written): the only units BC-07's
+    reference-sentence failure ("the command above" where no code precedes it) can be about."""
+    from repo_presenter.readme.composition.placement import PLACED
+
+    return {
+        str(entry.get("unit_id"))
+        for entry in dispositions.get("dispositions", [])
+        if str(entry.get("unit_id", "")).startswith("inherited_unit:") and entry.get("disposition") in PLACED
+    }
+
+
+def _withhold_pointing_sentences(
+    dispositions: dict[str, Any], failing: list[dict[str, Any]], document: FactsDocument,
+    restored: list[dict[str, str]],
+) -> bool:
+    """BL-892 (R14, R46 robust): withhold, on the disposition and recorded, the sentence of EVERY kept
+    inherited unit that BC-07 says points at something the README does not have ("Run the command
+    above" printed in a section with no code), whether or not the restore itself placed the unit.
+    BL-640 trimmed such a sentence only for a unit this restore placed AND whose failure was new
+    against the pre-restore candidate; the PDF TypeScript unit that holds the maintainers' "The PDF is
+    not checked in ... Run the command above ..." paragraph (hosted run 45052413270) was already
+    failing the same BC-07 detail before the restore moved it, so the trim never ran, BC-07 stayed,
+    and a deterministic-only verdict is never sealed. Nothing is dropped but the one pointing
+    sentence; the units keep everything else. Mutates ``dispositions`` and appends one record per
+    unit to ``restored``; returns whether anything was withheld."""
+    pointing = reference_sentences(failing, _kept_inherited_ids(dispositions))
+    trimmed = withhold_reference_sentences(dispositions, document, pointing) if pointing else {}
+    for unit, sentences in trimmed.items():
+        record = next((c for c in restored if c["unit_id"] == unit), None)
+        text = " | ".join(sentences)[:300]
+        if record is not None:
+            record["withheld"] = " | ".join(filter(None, [record.get("withheld", ""), text]))[:300]
+        else:
+            restored.append(
+                {"unit_id": unit, "was": "kept as written", "now": "kept as written, pointing sentence withheld",
+                 "withheld": text}
+            )
+    return bool(trimmed)
+
+
 def _restore_lost_content(
     settled: _Settled, *, entry: RegistryEntry, document: FactsDocument, investigation: dict,
     tree_paths: list[str], original: str, out_dir: Path, require_clean_review: bool = False,
@@ -1160,7 +1201,12 @@ def _restore_lost_content(
             [f"{c['id']}: {d}" for c in failing for d in c.get("details") or []]
         )
     )
-    if not failing_ids & RESTORABLE_CHECKS and not unprinted and not pointed:
+    # BL-892: a kept unit's BC-07 reference sentence ("the command above" with no code before it in its
+    # section) is answered here too, with no restorable check failing beside it.
+    referenced = "BC-07" in failing_ids and bool(
+        reference_sentences(failing, _kept_inherited_ids(composed.dispositions))
+    )
+    if not failing_ids & RESTORABLE_CHECKS and not unprinted and not pointed and not referenced:
         return settled
     # A non-restorable check failing beside the restorable ones (BC-02's unproven build command,
     # say) used to rule the whole restore out, which stranded the restorable losses: they are not
@@ -1191,6 +1237,19 @@ def _restore_lost_content(
             if _strictly_fewer_failures(failing, blocking_failures(trial[4])):
                 readme, tasks, accounted, dispositions, validation, verdict = trial
                 restored.extend(fit_changes)
+                failing = blocking_failures(validation)
+    if referenced:
+        trimmed_dispositions = copy.deepcopy(dispositions)
+        trim_changes: list[dict[str, str]] = []
+        if _withhold_pointing_sentences(trimmed_dispositions, failing, document, trim_changes):
+            trial = _judge_restore(
+                trimmed_dispositions, composed=composed, entry=entry, document=document,
+                investigation=investigation, tree_paths=tree_paths, original=original,
+                out_dir=out_dir, restored=restored + trim_changes,
+            )
+            if _strictly_fewer_failures(failing, blocking_failures(trial[4])):
+                readme, tasks, accounted, dispositions, validation, verdict = trial
+                restored.extend(trim_changes)
                 failing = blocking_failures(validation)
     for _round in range(RESTORE_ROUNDS):
         details = [
@@ -1235,6 +1294,17 @@ def _restore_lost_content(
                 out_dir=out_dir, restored=restored,
             )
             failing = blocking_failures(validation)
+            # BL-892: a pointing sentence of any kept unit is withheld first, in place and re-judged at once
+            # (never costing a rollback round): the failure is not "new" when the unit was already failing it.
+            for _trim in range(RESTORE_ROUNDS):
+                if not _withhold_pointing_sentences(restored_dispositions, failing, document, restored):
+                    break
+                readme, tasks, accounted, dispositions, validation, verdict = _judge_restore(
+                    restored_dispositions, composed=composed, entry=entry, document=document,
+                    investigation=investigation, tree_paths=tree_paths, original=original,
+                    out_dir=out_dir, restored=restored,
+                )
+                failing = blocking_failures(validation)
             # A restored unit that a non-restorable check now names for a failure the candidate did
             # not have before (BC-14 on a maintainers' row, BC-02 on a registry install, BC-07 on a
             # dangling colon) is rolled back ALONE and the rest of the restore re-judged: one such
