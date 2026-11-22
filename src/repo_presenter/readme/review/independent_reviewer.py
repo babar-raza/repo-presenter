@@ -697,6 +697,17 @@ def live_readme_loss_rule(
     def accounted(needle: str) -> bool:
         return any(needle in _code(unit) for unit in accounting)
 
+    def fence_accounted(fence: str, units: Sequence[str]) -> bool:
+        """Whether an accounting unit holds the fenced block. A block nested in a list item is read from the
+        live README without the item's indentation (the Markdown parser strips it) while the unit's own text
+        keeps it on every line, so a multi-line nested block never matched by plain substring and no
+        disposition could ever account for it (BL-671: PDF Python ``280.list``, ``with Document(...)`` under
+        the ``extract_blocks`` item, REJECT 'live_readme_loss' under VERIFIED_REWRITE and SUPERSEDE_REDUNDANT
+        alike). The comparison is made on whitespace-squeezed text, as ``_kept_text_printed`` already does for
+        a kept unit; the block's words, order and punctuation must all be the unit's."""
+        wanted = _squeezed(fence)
+        return bool(wanted) and any(wanted in _squeezed(unit) for unit in units)
+
     old = _read_markdown(original_readme)
     new = _read_markdown(readme_text)
     new_headings = {_heading_key(text) for text in new.headings}
@@ -723,7 +734,9 @@ def live_readme_loss_rule(
         if (
             not any(fence in other for other in new.fences)
             and not accounted(fence)
+            and not fence_accounted(fence, accounting)
             and not any(fence in _code(unit) for unit in fence_accounting)
+            and not fence_accounted(fence, fence_accounting)
             and not refused_install(fence)
             and fence not in withheld
         ):
