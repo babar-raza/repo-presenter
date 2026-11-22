@@ -5,7 +5,7 @@
   "provider_repository_id": 1345974189,
   "registry_revision": null,
   "active_transaction_id": "898eb50d67d64580a4eb78f5c76e7752",
-  "state": "RETRYABLE",
+  "state": "INVALIDATED",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -17,14 +17,7 @@
   },
   "accepted_artifact": null,
   "proposal": null,
-  "failure": {
-    "classification": "transient",
-    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
-    "resume_state": "INVALIDATED",
-    "occurred_at": "2026-11-22T13:43:24.386284+00:00",
-    "resume_predicate": null,
-    "recovery_count": 3
-  },
+  "failure": null,
   "lease": {
     "holder_id": "present:45028865276",
     "acquired_at": "2026-11-22T13:43:27.088623+00:00",
@@ -46,7 +39,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 85,
+  "state_version": 86,
   "recent_trigger_dedup_keys": {
     "run:41304473088:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "f2dd0b321c364d5f8a3b3aaa734b701e",
     "run:42685713384:aspose-pdf-foss/Aspose.PDF-FOSS-for-TypeScript": "3b81377c7b004742bf823317e960e501",
