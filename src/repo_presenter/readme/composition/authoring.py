@@ -1216,6 +1216,40 @@ def type_implementation_facts(
     return sorted(found, key=rank)[:limit]
 
 
+#: The longest doc comment a type record carries: the cut ``review.evidence.DOC_CHARS`` gives the reviewer
+#: (a test holds the two equal), so the author and the reviewer read the same text.
+TYPE_DOC_CHARS = 240
+
+
+def type_doc_comment(type_fact: Fact, facts: FactsDocument | None = None) -> str:
+    """The type's own doc comment as the reviewer is shown it (BL-803): ``docstring_full`` when the type
+    carries no first-sentence ``docstring`` (a type re-exported from a private module, every TypeScript type), cut
+    where ``review.evidence._record`` cuts it. Before BL-803 the review packet carried this text and the author's
+    packet did not, so an undocumented-looking type was described from its name (Aspose.BarCode Python:
+    "EncodingError represents errors that occur during barcode encoding." against the doc comment "Raised when
+    encoding fails.") and the audit judged the sentence against a doc comment the author never saw."""
+    if (type_fact.attributes or {}).get("docstring"):
+        return ""
+    full = str((type_fact.attributes or {}).get("docstring_full") or "")
+    if not full and facts is not None:
+        # a re-exported alias is the class its evidence names (``type_paths``), which holds the doc comment
+        paths = type_paths(type_fact, facts) - {type_fact.value}
+        full = next(
+            (
+                str((other.attributes or {}).get("docstring_full") or "")
+                for other in sorted(facts.by_kind("public_symbol"), key=lambda fact: fact.id)
+                if other.value in paths
+                and other.polarity == "SUPPORTED"
+                and (other.attributes or {}).get("symbol_kind") in {"class", "enum"}
+                and (other.attributes or {}).get("docstring_full")
+            ),
+            "",
+        )
+    if not full:
+        return ""
+    return full if len(full) <= TYPE_DOC_CHARS else full[:TYPE_DOC_CHARS] + " ..."
+
+
 def type_unit_facts(type_fact: Fact, facts: FactsDocument) -> tuple[list[str], list[Fact]]:
     """Everything one ``type:<fact id>`` unit is given to state, besides the type fact itself (its
     kind, value and signature): the verified member names and enum values listed with it
@@ -1273,6 +1307,7 @@ def _type_batches(
                     if (fact.attributes or {}).get("signature")
                     else {}
                 ),
+                **({"docstring": doc} if (doc := type_doc_comment(fact, facts)) else {}),
                 **({"members": members[fact.id]} if members[fact.id] else {}),
                 **({"member_kinds": member_kinds[fact.id]} if member_kinds[fact.id] else {}),
             }

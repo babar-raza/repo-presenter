@@ -258,14 +258,179 @@ def stub_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None:
             "as a type that only throws; the row is the renderer's fact-true 'Not implemented.'")
 
 
+#: ``| `Type` | <description> (some members not implemented). |``: the Core API row the renderer prints for a type
+#: with a stubbed member (``renderer._stub_marked``), and nothing else.
+_STUB_MEMBER_ROW = re.compile(
+    r"^\s*\|\s*`(?P<name>[^`|]+)`\s*\|\s*(?P<body>.*?)\s*\(some members not implemented\)\.\s*\|\s*$"
+)
+_K02_CUE = re.compile(dict(KNOWN_FALSE_PATTERNS)["K02 behaviour claim"], re.IGNORECASE)
+
+
+def stub_member_provenance(rows: Sequence[str], number: int, facts: Any) -> str | None:
+    """The verified basis of a ``| `Type` | <description> (some members not implemented). |`` row (BL-800): the
+    renderer appends that marker only for a type whose member the maintainers' own limitation statements say
+    only throws (``surface_claims.StubIndex.members``, read from SUPPORTED ``inherited_unit`` facts), so the K02
+    "behaviour claim" is that fact, stated back. Verified only when (1) the row is exactly the marker form,
+    (2) the description before the marker holds no behaviour cue of its own (a "raises ..." clause stays judged),
+    (3) the StubIndex names a member of the row's type whose source fact is SUPPORTED, and (4) no read body of
+    that member is a throw-free body (``code_path_claims``: the limitation statement would then be the false
+    one). A type no limitation statement names, or a member whose body returns a value, keeps the flag."""
+    from repo_presenter.readme.validation.code_path_claims import _Bodies
+    from repo_presenter.readme.validation.surface_claims import StubIndex
+
+    match = _STUB_MEMBER_ROW.match(rows[number - 1])
+    if match is None or _K02_CUE.search(match.group("body")):
+        return None
+    owner = match.group("name").strip().split(".", 1)[0]
+    index = facts.memo("stub_index", lambda: StubIndex(facts))
+    bodies = facts.memo("code_path_bodies", lambda: _Bodies(facts))
+    known = {fact.id: fact for fact in getattr(facts, "facts", ())}
+    for member, fact_id in sorted((index.members.get(owner) or {}).items()):
+        source = known.get(fact_id)
+        if source is not None and source.polarity == "SUPPORTED" and not bodies.member_does_not_throw(owner, member):
+            return (f"K02 verified: {fact_id} (SUPPORTED, the maintainers' limitation statement) names "
+                    f"`{owner}.{member}` as a member that only throws; the row's '(some members not implemented)' "
+                    "is the renderer's marker for it")
+    return None
+
+
 def class_provenance(label: str, rows: Sequence[str], number: int, facts: Any) -> str | None:
     if label.startswith("K05"):
         return count_provenance(rows, number, facts)
     if label.startswith("K10"):
         return enterprise_provenance(rows, number, facts)
     if label.startswith("K02"):
-        return not_thrown_provenance(rows, number, facts) or stub_provenance(rows, number, facts)
+        return (not_thrown_provenance(rows, number, facts) or stub_provenance(rows, number, facts)
+                or stub_member_provenance(rows, number, facts))
     return None
+
+
+# --- statements: what a line says, verified against SUPPORTED facts (BL-801, BL-802) ----------------------
+#
+# ``keep_reason`` clears a line the renderer prints as a whole from facts. Two shapes sit on lines the structural
+# reading calls prose, though what they say is the facts' own statement: a kept maintainers' line that carries a
+# sentence the renderer appended (the count pointer ``renderer._reference_pointer``), and a kept maintainers'
+# table row that does nothing but list the members of its type. Both are cleared only on a verified proof that is
+# written into the cleared row, and only on a line the facts-only render also prints (so no authored unit text).
+
+_MEMBER_LIST_ROW = re.compile(r"^\s*\|\s*`(?P<owner>[^`|]+)`\s*\|(?P<cell>[^|]*)\|\s*$")
+_CODE_SPAN = re.compile(r"`([^`]+)`")
+_ANNOTATION_LEAD = re.compile(r"\(\s*an?\s*$", re.IGNORECASE)
+_LIST_WORDS = frozenset({"and", "or"})
+
+
+def _member_facts(facts: Any) -> tuple[dict[str, Any], dict[str, Any]]:
+    """({type last segment: fact}, {"Type.member" (last owner segment): fact}) of the SUPPORTED symbols."""
+    def build() -> tuple[dict[str, Any], dict[str, Any]]:
+        types: dict[str, Any] = {}
+        members: dict[str, Any] = {}
+        for fact in facts.by_kind("public_symbol"):
+            if fact.polarity != "SUPPORTED":
+                continue
+            kind = (fact.attributes or {}).get("symbol_kind")
+            if kind in ("class", "enum"):
+                types.setdefault(fact.value.rsplit(".", 1)[-1], fact)
+            else:
+                owner, _, member = fact.value.rpartition(".")
+                if owner:
+                    members.setdefault(f"{owner.rsplit('.', 1)[-1]}.{member}", fact)
+        return types, members
+
+    return facts.memo("member_list_facts", build)
+
+
+def member_list_provenance(row: str, facts: Any) -> str | None:
+    """The verified basis of a table row whose description cell only lists members of its type (BL-802):
+    ``| `OpenOptions` | `password`, `recipient` and `limits` (a `LoadLimits`). |``. Every code span must be a
+    SUPPORTED member of the row's own SUPPORTED type (``public_symbol`` ``Type.member``), or, right after "(a" /
+    "(an", a SUPPORTED type the preceding member's own doc comment or signature names; the cell holds no other
+    word than the list connectors "and" and "or". Any other word, an unknown member, a member of another type or
+    a type the member's fact does not name returns ``None``: such a cell says more than the facts state."""
+    match = _MEMBER_LIST_ROW.match(row)
+    if match is None:
+        return None
+    owner = match.group("owner").strip().rsplit(".", 1)[-1]
+    types, members = _member_facts(facts)
+    if owner not in types:
+        return None
+    cell = match.group("cell")
+    spans = list(_CODE_SPAN.finditer(cell))
+    if not spans:
+        return None
+    previous_end, last_member, cited = 0, None, []
+    for span in spans:
+        gap = cell[previous_end : span.start()]
+        previous_end = span.end()
+        name = span.group(1).strip()
+        if _ANNOTATION_LEAD.search(gap) and last_member is not None:
+            annotated = types.get(name)
+            attributes = last_member.attributes or {}
+            text = " ".join(str(attributes.get(key) or "") for key in ("docstring", "docstring_full", "signature"))
+            if annotated is None or not re.search(rf"(?<![\w.]){re.escape(name)}(?![\w])", text):
+                return None
+            cited.append(annotated.id)
+            gap = _ANNOTATION_LEAD.sub("", gap)
+        else:
+            member = members.get(f"{owner}.{name}")
+            if member is None:
+                return None
+            last_member = member
+            cited.append(member.id)
+        if any(word.lower() not in _LIST_WORDS for word in re.findall(r"[A-Za-z]+", gap)):
+            return None
+    tail = cell[previous_end:]
+    if re.findall(r"[A-Za-z0-9]+", tail):
+        return None
+    return ("member list verified: every name in the cell is a SUPPORTED member of "
+            f"`{owner}` ({', '.join(dict.fromkeys(cited))})")
+
+
+def renderer_sentence_texts(row: str) -> list[str]:
+    """The sentences of ``row`` the renderer appended to a line an author or maintainer owns
+    (``scope._RENDERER_SENTENCES``), as printed."""
+    from repo_presenter.readme.review.scope import renderer_sentence_texts as found
+
+    return found(row)
+
+
+def _flat(text: str) -> str:
+    return " ".join(text.split())
+
+
+def flag_within_sentences(claim: str, sentences: Sequence[str]) -> bool:
+    """Whether the flag's quoted claim is nothing but ``sentences`` (the renderer-appended ones): the kind label
+    and the "Line N:" prefix aside, removing them leaves no word. A claim that also states the maintainers' text
+    of the same line is not within them."""
+    text = re.sub(r"^\s*\[[a-z_ ]+\]\s*", "", _flat(claim))
+    text = re.sub(r"^(?:line\s+\d+\s*(?:\([^)]*\))?\s*:\s*)", "", text, flags=re.IGNORECASE)
+    for sentence in sorted({_flat(s) for s in sentences}, key=len, reverse=True):
+        text = text.replace(sentence, " ")
+    return bool(sentences) and not re.search(r"[A-Za-z0-9]", text)
+
+
+def statement_clearances(
+    rows: Sequence[str], source_of: Mapping[int, Mapping[str, Any] | None], owned: Collection[int], facts: Any,
+    ask: Collection[int] | None, refuted: Mapping[int, str],
+) -> tuple[dict[int, str], dict[int, tuple[tuple[str, ...], str]]]:
+    """(whole rows verified as a member list, {line: (renderer-appended count sentences, the verified
+    computation)}) over the lines the facts-only render also prints (origin ``renderer``) that no structural
+    reading owns. A line a register row or claim detector refutes is never in either."""
+    whole: dict[int, str] = {}
+    sentences: dict[int, tuple[tuple[str, ...], str]] = {}
+    for number, origin in source_of.items():
+        if number in owned or not origin or origin.get("source") != "renderer" or number in refuted:
+            continue
+        if ask is not None and number not in ask:
+            continue
+        row = rows[number - 1]
+        proof = member_list_provenance(row, facts)
+        if proof:
+            whole[number] = proof
+            continue
+        counted = tuple(s for s in renderer_sentence_texts(row) if _K05_COUNT.search(s))
+        if counted and (computed := count_provenance(rows, number, facts)):
+            sentences[number] = (counted, computed)
+    return whole, sentences
 
 
 class Rederived(NamedTuple):
@@ -295,6 +460,12 @@ class Derivation(NamedTuple):
     #: facts' computation (BL-543): a flag on one is cleared only when it is about that count
     #: (``flag_is_about_count``), never for any other statement of the same paragraph
     corrected: frozenset[int] = frozenset()
+    #: BL-802: kept maintainers' table rows that only list the members of their type, with the proof (clearable
+    #: whole, like ``clearable``)
+    statements: Mapping[int, str] = {}
+    #: BL-801: lines whose renderer-appended count sentence verifies against the facts' computation: a flag is
+    #: cleared there only when its claim is nothing but those sentences (``flag_within_sentences``)
+    sentences: Mapping[int, tuple[tuple[str, ...], str]] = {}
 
 
 def owned_lines(lane: str, text: str, facts: Any) -> frozenset[int]:
@@ -470,7 +641,7 @@ def derivation(
         # BL-543: the maintainers' kept line whose count the renderer corrected
         owned = owned | {number for number, origin in source_of.items() if origin and origin.get("count_corrected")}
     derivable = frozenset(owned & set(source_of))
-    refuted = refuted_lines(text, facts, repository, register) if derivable and (ask is None or ask) else {}
+    refuted = refuted_lines(text, facts, repository, register) if (ask is None or ask) else {}
     kept: dict[int, str] = {}
     verified: dict[int, str] = {}
     for number in sorted(derivable):
@@ -482,12 +653,16 @@ def derivation(
         if why:
             kept[number] = why
     clearable = frozenset(derivable - set(kept))
+    statements, sentences = (
+        statement_clearances(rows, source_of, owned, facts, ask, refuted) if lane == "R" else ({}, {})
+    )
     return Derivation(derivable=derivable, underived=frozenset(owned - set(source_of)),
                       clearable=clearable, kept=kept,
                       provenance={n: p for n, p in verified.items() if n in clearable},
                       cited={n: tuple(str(f) for f in (source_of[n] or {}).get("fact_ids") or ())
                              for n in clearable if (source_of[n] or {}).get("fact_ids")},
-                      corrected=frozenset(n for n in clearable if (source_of[n] or {}).get("count_corrected")))
+                      corrected=frozenset(n for n in clearable if (source_of[n] or {}).get("count_corrected")),
+                      statements=statements, sentences=sentences)
 
 
 def _line_origins(text: str, spans: Sequence[tuple[int, int]], edits: Sequence[Any]) -> tuple[Mapping[str, Any], ...]:

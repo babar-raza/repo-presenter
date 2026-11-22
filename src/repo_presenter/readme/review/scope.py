@@ -103,6 +103,14 @@ def shown_text(row: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", text).strip() if text != row else row
 
 
+def renderer_sentence_texts(row: str) -> list[str]:
+    """The renderer-appended sentences ``shown_text`` would remove from ``row``, as printed (BL-801)."""
+    found: list[str] = []
+    for pattern in _RENDERER_SENTENCES:
+        found.extend(match.group(0).strip() for match in pattern.finditer(row) if match.group(0).strip())
+    return found
+
+
 def _first_heading(rows: list[str]) -> int | None:
     inside = False
     for index, row in enumerate(rows):
