@@ -16,7 +16,7 @@ Every gate below runs, in this order, before the first write, and each refusal i
    `require_write_permitted`: the registry entry is listed, active and `full`. A `dry_run` entry can
    never reach this function.
 2. `write_authorized(environment)` - the owner-controlled kill switch
-   `REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`. Never inferred from a credential.
+   `REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED`. Never inferred from a credential.
 3. `review` (required, `readme/review/independent_reviewer.py::ReviewVerdict`) - the independent
    reviewer's veto (mission section 11: "independent non-authoring criticism that can veto, with
    no quiet demotion"). A verdict other than `"ACCEPT"`, or one no model reviewed
@@ -57,7 +57,7 @@ Ported (ADAPT) from the old repository-presenter project's
 authorized PR" blocker -- a research fork confirmed it is a bounded port once
 ``authorization/proposal.py``+``record_provenance.py``, ``propose/pull_request.py``'s
 composition half, and the ~9 github/client.py REST primitives it uses are each pulled (all done
-the same day). Still never armed here either: ``REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED``
+the same day). Still never armed here either: ``REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED``
 has no production wiring, token_provenance.py's ``EXPECTED_APP_ID``/``EXPECTED_APP_SLUG`` are
 inherited placeholders pending confirmation of this repository's own App identity, and nothing
 calls ``propose_candidate`` from any live Lane R/L path yet. The one change beyond import
@@ -118,7 +118,7 @@ from repo_presenter.github.token_provenance import (
 from repo_presenter.propose.pull_request import PullRequestContent
 from repo_presenter.readme.review.independent_reviewer import ReviewVerdict
 
-AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
+AUTHORIZATION_VARIABLE = "REPO_PRESENTER_PROPOSAL_WRITE_AUTHORIZED"
 _AUTHORIZED_VALUES = frozenset({"1", "true", "yes"})
 
 #: The one stable presenter branch this project proposes README updates from, on every target

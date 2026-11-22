@@ -18,7 +18,7 @@ never hands this effect anything else). Every other gate ``AGENTS.md`` "Security
 requires still holds, in the same shape every other write path in this project uses:
 
 1. ``write_authorized(environment)`` - the owner-controlled kill switch
-   ``REPOSITORY_PRESENTER_CANDIDATES_WRITE_AUTHORIZED``. Never inferred from a credential.
+   ``REPO_PRESENTER_CANDIDATES_WRITE_AUTHORIZED``. Never inferred from a credential.
 2. A write-scoped token is supplied (``GH_CANDIDATES_WRITE_TOKEN`` - never ``GH_TOKEN``, and never
    ``REPOSITORY_PRESENTER_STATE_TOKEN``, ``present.yml``'s own distinctly-scoped state-ref
    credential). It is a short-lived Repository Presenter GitHub App installation token minted
@@ -78,7 +78,7 @@ from repo_presenter.github.token_provenance import (
     verify_pull_request_app as default_verify_pull_request_app,
 )
 
-AUTHORIZATION_VARIABLE = "REPOSITORY_PRESENTER_CANDIDATES_WRITE_AUTHORIZED"
+AUTHORIZATION_VARIABLE = "REPO_PRESENTER_CANDIDATES_WRITE_AUTHORIZED"
 _AUTHORIZED_VALUES = frozenset({"1", "true", "yes"})
 
 #: One stable branch per external target repository this control repository tracks a candidate
