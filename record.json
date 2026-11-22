@@ -5,7 +5,7 @@
   "provider_repository_id": 1276658443,
   "registry_revision": null,
   "active_transaction_id": "fa4ad26abe4d445c80e1cb9ef9306142",
-  "state": "ACCEPTED",
+  "state": "RETRYABLE",
   "source": null,
   "surfaces": {},
   "dependencies": {
@@ -18,12 +18,12 @@
   "accepted_artifact": null,
   "proposal": null,
   "failure": {
-    "classification": "validation_failed",
-    "detail": "attempt under version set 75b35954c877: PresentFailure: independent review returned REJECT with 1 blocking finding(s) of 1; nothing sealed; live_readme_loss [omission] blocks until rule live_readme_loss no longer finds it (code block 'with Document(\"report.pdf\") as document:')",
-    "resume_state": "SNAPSHOTTING",
-    "occurred_at": "2026-11-21T23:23:01.272511+00:00",
+    "classification": "transient",
+    "detail": "recovery_sweep: nonterminal transaction had no valid lease",
+    "resume_state": "ACCEPTED",
+    "occurred_at": "2026-11-22T11:36:48.881642+00:00",
     "resume_predicate": null,
-    "recovery_count": 0
+    "recovery_count": 1
   },
   "lease": null,
   "last_transition": {
@@ -40,7 +40,7 @@
     "policy_version": "readme-contract-v1-draft",
     "fencing_token": 1
   },
-  "state_version": 76,
+  "state_version": 77,
   "recent_trigger_dedup_keys": {
     "run:41142404776:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "fbc76990855041eb8011727b165ee2bd",
     "run:41276313821:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "45c3f42e6a9d431991bc33f6963548a2",
@@ -68,5 +68,5 @@
     "run:44959526325:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "9bdfa9e5919e4698a208f0d6e2269ecc",
     "run:44974941497:aspose-pdf-foss/Aspose-PDF-FOSS-for-Python": "fa4ad26abe4d445c80e1cb9ef9306142"
   },
-  "recovery_count": 0
+  "recovery_count": 1
 }
